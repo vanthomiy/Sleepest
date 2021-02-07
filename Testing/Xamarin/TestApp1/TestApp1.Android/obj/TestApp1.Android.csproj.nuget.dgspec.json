@@ -1,0 +1,54 @@
+{
+  "format": 1,
+  "restore": {
+    "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Testing\\Xamarin\\TestApp1\\TestApp1.Android\\TestApp1.Android.csproj": {}
+  },
+  "projects": {
+    "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Testing\\Xamarin\\TestApp1\\TestApp1.Android\\TestApp1.Android.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Testing\\Xamarin\\TestApp1\\TestApp1.Android\\TestApp1.Android.csproj",
+        "projectName": "TestApp1.Android",
+        "projectPath": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Testing\\Xamarin\\TestApp1\\TestApp1.Android\\TestApp1.Android.csproj",
+        "packagesPath": "C:\\Users\\vanth\\.nuget\\packages\\",
+        "outputPath": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Testing\\Xamarin\\TestApp1\\TestApp1.Android\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\vanth\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "monoandroid90"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "monoandroid90": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "monoandroid90": {
+          "dependencies": {
+            "Xamarin.Essentials": {
+              "target": "Package",
+              "version": "[1.5.3.2, )"
+            },
+            "Xamarin.Forms": {
+              "target": "Package",
+              "version": "[4.8.0.1451, )"
+            }
+          }
+        }
+      }
+    }
+  }
+}
