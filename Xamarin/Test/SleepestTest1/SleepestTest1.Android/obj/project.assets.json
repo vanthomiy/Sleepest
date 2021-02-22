@@ -1745,6 +1745,7 @@
         ".nupkg.metadata",
         ".signature.p7s",
         "lib/MonoAndroid10/Xamarin.Auth.dll",
+        "lib/MonoAndroid10/Xamarin.Auth.dll.mdb",
         "lib/MonoAndroid10/Xamarin.Auth.pdb",
         "lib/Xamarin.iOS10/Xamarin.Auth.dll",
         "lib/Xamarin.iOS10/Xamarin.Auth.pdb",
@@ -2167,11 +2168,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Testing\\Xamarin\\SleepestTest1\\SleepestTest1.Android\\SleepestTest1.Android.csproj",
+      "projectUniqueName": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1.Android\\SleepestTest1.Android.csproj",
       "projectName": "SleepestTest1.Android",
-      "projectPath": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Testing\\Xamarin\\SleepestTest1\\SleepestTest1.Android\\SleepestTest1.Android.csproj",
+      "projectPath": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1.Android\\SleepestTest1.Android.csproj",
       "packagesPath": "C:\\Users\\vanth\\.nuget\\packages\\",
-      "outputPath": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Testing\\Xamarin\\SleepestTest1\\SleepestTest1.Android\\obj\\",
+      "outputPath": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1.Android\\obj\\",
       "projectStyle": "PackageReference",
       "skipContentFileWrite": true,
       "fallbackFolders": [
@@ -2192,8 +2193,8 @@
       "frameworks": {
         "monoandroid90": {
           "projectReferences": {
-            "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Testing\\Xamarin\\SleepestTest1\\SleepestTest1\\SleepestTest1.csproj": {
-              "projectPath": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Testing\\Xamarin\\SleepestTest1\\SleepestTest1\\SleepestTest1.csproj"
+            "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1\\SleepestTest1.csproj": {
+              "projectPath": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1\\SleepestTest1.csproj"
             }
           }
         }

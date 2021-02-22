@@ -7,7 +7,7 @@ using RaleWears.AuthHelpers;
 
 namespace RaleWears.Droid
 {
-	[Activity(Label = "CustomUrlSchemeInterceptorActivity", NoHistory = true, LaunchMode = LaunchMode.SingleTop)]
+    [Activity(Label = "CustomUrlSchemeInterceptorActivity", NoHistory = true, LaunchMode = LaunchMode.SingleTop)]
 	[IntentFilter(
 	new[] { Intent.ActionView },
 	Categories = new[] { Intent.CategoryDefault, Intent.CategoryBrowsable },
@@ -21,10 +21,9 @@ namespace RaleWears.Droid
 
 			// Convert Android.Net.Url to Uri
 			var uri = new Uri(Intent.Data.ToString());
-
+			 
 			// Load redirectUrl page
 			AuthenticationState.Authenticator.OnPageLoading(uri);
-
 			Finish();
 		}
 	}

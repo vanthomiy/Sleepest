@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "dQ8oTftFB2nxA5pSkZdY2wWbmO4G8H2dTFc2G8H7wy0mNYoRzHBEIwynmY4uDYYd1ZTXcxvvaRqSc0DCkh87Pw==",
+  "dgSpecHash": "vKt9ECsNzHRB051TDNSg+Okw03NkvmLhV0WQzcCKwAnR75iN6DT81BN3rad4WRf2O93OP+xkZCK8IXkBrZPAEQ==",
   "success": true,
-  "projectFilePath": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Testing\\Xamarin\\SleepestTest1\\SleepestTest1.Android\\SleepestTest1.Android.csproj",
+  "projectFilePath": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1.Android\\SleepestTest1.Android.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\vanth\\.nuget\\packages\\google.apis\\1.50.0\\google.apis.1.50.0.nupkg.sha512",
     "C:\\Users\\vanth\\.nuget\\packages\\google.apis.auth\\1.50.0\\google.apis.auth.1.50.0.nupkg.sha512",

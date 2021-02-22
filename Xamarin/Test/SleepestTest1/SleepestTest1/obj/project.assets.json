@@ -853,11 +853,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Testing\\Xamarin\\SleepestTest1\\SleepestTest1\\SleepestTest1.csproj",
+      "projectUniqueName": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1\\SleepestTest1.csproj",
       "projectName": "SleepestTest1",
-      "projectPath": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Testing\\Xamarin\\SleepestTest1\\SleepestTest1\\SleepestTest1.csproj",
+      "projectPath": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1\\SleepestTest1.csproj",
       "packagesPath": "C:\\Users\\vanth\\.nuget\\packages\\",
-      "outputPath": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Testing\\Xamarin\\SleepestTest1\\SleepestTest1\\obj\\",
+      "outputPath": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Microsoft\\Xamarin\\NuGet\\",

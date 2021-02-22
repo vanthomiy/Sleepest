@@ -1,1 +1,10 @@
-xml/xamarin_essentials_fileprovider_file_paths.xml;xml/xamarin_essentials_fileprovider_file_paths.xml
+layout/activity_webview.xml;layout/activity_webview.xml
+values/strings.xml;values/strings.xml
+drawable/ic_arrow_back.png;drawable/ic_arrow_back.png
+anim/slide_in_right.xml;anim/slide_in_right.xml
+anim/slide_out_left.xml;anim/slide_out_left.xml
+drawable-hdpi/ic_arrow_back.png;drawable-hdpi/ic_arrow_back.png
+drawable-mdpi/ic_arrow_back.png;drawable-mdpi/ic_arrow_back.png
+drawable-xhdpi/ic_arrow_back.png;drawable-xhdpi/ic_arrow_back.png
+drawable-xxhdpi/ic_arrow_back.png;drawable-xxhdpi/ic_arrow_back.png
+drawable-xxxhdpi/ic_arrow_back.png;drawable-xxxhdpi/ic_arrow_back.png

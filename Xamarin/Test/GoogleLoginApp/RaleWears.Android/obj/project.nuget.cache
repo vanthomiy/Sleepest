@@ -1,12 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "cVJBMTLEq0gMn3V7Degl3VhTj9t8PP9EyN2RJxkARe2cURbdm5k59vbmtaOl+Ty9Iv02FUgjW2FeG9gykIgG/A==",
+  "dgSpecHash": "KTunh38RFlJrd1vY57ZRioUd6yTQCrmTwDxMy3OfD+J5MnP67XhcZ5eMQkuDk9KGq3cKYcOdNXWnPZCk6R5PHQ==",
   "success": true,
   "projectFilePath": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Xamarin\\Test\\GoogleLoginApp\\RaleWears.Android\\RaleWears.Android.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\vanth\\.nuget\\packages\\cardsview\\2.4.0\\cardsview.2.4.0.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\cardsview\\2.7.0\\cardsview.2.7.0.nupkg.sha512",
     "C:\\Users\\vanth\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
-    "C:\\Users\\vanth\\.nuget\\packages\\plugin.googleclient\\1.1.1\\plugin.googleclient.1.1.1.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\plugin.googleclient\\2.1.12\\plugin.googleclient.2.1.12.nupkg.sha512",
     "C:\\Users\\vanth\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",
     "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.arch.core.common\\1.1.1.3\\xamarin.android.arch.core.common.1.1.1.3.nupkg.sha512",
     "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.arch.core.runtime\\1.1.1.3\\xamarin.android.arch.core.runtime.1.1.1.3.nupkg.sha512",
@@ -15,7 +15,6 @@
     "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.arch.lifecycle.livedata.core\\1.1.1.3\\xamarin.android.arch.lifecycle.livedata.core.1.1.1.3.nupkg.sha512",
     "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.arch.lifecycle.runtime\\1.1.1.3\\xamarin.android.arch.lifecycle.runtime.1.1.1.3.nupkg.sha512",
     "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.arch.lifecycle.viewmodel\\1.1.1.3\\xamarin.android.arch.lifecycle.viewmodel.1.1.1.3.nupkg.sha512",
-    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.support.animated.vector.drawable\\28.0.0.3\\xamarin.android.support.animated.vector.drawable.28.0.0.3.nupkg.sha512",
     "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.support.annotations\\28.0.0.3\\xamarin.android.support.annotations.28.0.0.3.nupkg.sha512",
     "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.support.asynclayoutinflater\\28.0.0.3\\xamarin.android.support.asynclayoutinflater.28.0.0.3.nupkg.sha512",
     "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.support.collections\\28.0.0.3\\xamarin.android.support.collections.28.0.0.3.nupkg.sha512",
@@ -26,35 +25,100 @@
     "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.support.cursoradapter\\28.0.0.3\\xamarin.android.support.cursoradapter.28.0.0.3.nupkg.sha512",
     "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.support.customtabs\\28.0.0.3\\xamarin.android.support.customtabs.28.0.0.3.nupkg.sha512",
     "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.support.customview\\28.0.0.3\\xamarin.android.support.customview.28.0.0.3.nupkg.sha512",
-    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.support.design\\28.0.0.3\\xamarin.android.support.design.28.0.0.3.nupkg.sha512",
     "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.support.documentfile\\28.0.0.3\\xamarin.android.support.documentfile.28.0.0.3.nupkg.sha512",
     "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.support.drawerlayout\\28.0.0.3\\xamarin.android.support.drawerlayout.28.0.0.3.nupkg.sha512",
     "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.support.fragment\\28.0.0.3\\xamarin.android.support.fragment.28.0.0.3.nupkg.sha512",
     "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.support.interpolator\\28.0.0.3\\xamarin.android.support.interpolator.28.0.0.3.nupkg.sha512",
     "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.support.loader\\28.0.0.3\\xamarin.android.support.loader.28.0.0.3.nupkg.sha512",
     "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.support.localbroadcastmanager\\28.0.0.3\\xamarin.android.support.localbroadcastmanager.28.0.0.3.nupkg.sha512",
-    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.support.media.compat\\28.0.0.3\\xamarin.android.support.media.compat.28.0.0.3.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.support.media.compat\\28.0.0.1\\xamarin.android.support.media.compat.28.0.0.1.nupkg.sha512",
     "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.support.print\\28.0.0.3\\xamarin.android.support.print.28.0.0.3.nupkg.sha512",
     "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.support.slidingpanelayout\\28.0.0.3\\xamarin.android.support.slidingpanelayout.28.0.0.3.nupkg.sha512",
     "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.support.swiperefreshlayout\\28.0.0.3\\xamarin.android.support.swiperefreshlayout.28.0.0.3.nupkg.sha512",
-    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.support.transition\\28.0.0.3\\xamarin.android.support.transition.28.0.0.3.nupkg.sha512",
-    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.support.v4\\28.0.0.3\\xamarin.android.support.v4.28.0.0.3.nupkg.sha512",
-    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.support.v7.appcompat\\28.0.0.3\\xamarin.android.support.v7.appcompat.28.0.0.3.nupkg.sha512",
-    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.support.v7.cardview\\28.0.0.3\\xamarin.android.support.v7.cardview.28.0.0.3.nupkg.sha512",
-    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.support.v7.recyclerview\\28.0.0.3\\xamarin.android.support.v7.recyclerview.28.0.0.3.nupkg.sha512",
-    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.support.vector.drawable\\28.0.0.3\\xamarin.android.support.vector.drawable.28.0.0.3.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.support.v4\\28.0.0.1\\xamarin.android.support.v4.28.0.0.1.nupkg.sha512",
     "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.support.versionedparcelable\\28.0.0.3\\xamarin.android.support.versionedparcelable.28.0.0.3.nupkg.sha512",
     "C:\\Users\\vanth\\.nuget\\packages\\xamarin.android.support.viewpager\\28.0.0.3\\xamarin.android.support.viewpager.28.0.0.3.nupkg.sha512",
     "C:\\Users\\vanth\\.nuget\\packages\\xamarin.auth\\1.7.0\\xamarin.auth.1.7.0.nupkg.sha512",
-    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.build.download\\0.4.9\\xamarin.build.download.0.4.9.nupkg.sha512",
-    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.essentials\\1.3.1\\xamarin.essentials.1.3.1.nupkg.sha512",
-    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.forms\\4.3.0.908675\\xamarin.forms.4.3.0.908675.nupkg.sha512",
-    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.googleplayservices.auth\\60.1142.1\\xamarin.googleplayservices.auth.60.1142.1.nupkg.sha512",
-    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.googleplayservices.auth.api.phone\\60.1142.1\\xamarin.googleplayservices.auth.api.phone.60.1142.1.nupkg.sha512",
-    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.googleplayservices.auth.base\\60.1142.1\\xamarin.googleplayservices.auth.base.60.1142.1.nupkg.sha512",
-    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.googleplayservices.base\\60.1142.1\\xamarin.googleplayservices.base.60.1142.1.nupkg.sha512",
-    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.googleplayservices.basement\\60.1142.1\\xamarin.googleplayservices.basement.60.1142.1.nupkg.sha512",
-    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.googleplayservices.tasks\\60.1142.1\\xamarin.googleplayservices.tasks.60.1142.1.nupkg.sha512"
+    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.build.download\\0.4.11\\xamarin.build.download.0.4.11.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.essentials\\1.6.1\\xamarin.essentials.1.6.1.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.forms\\5.0.0.2012\\xamarin.forms.5.0.0.2012.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.googleplayservices.auth\\71.1600.0\\xamarin.googleplayservices.auth.71.1600.0.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.googleplayservices.auth.api.phone\\71.1600.0\\xamarin.googleplayservices.auth.api.phone.71.1600.0.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.googleplayservices.auth.base\\71.1600.0\\xamarin.googleplayservices.auth.base.71.1600.0.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.googleplayservices.base\\71.1610.0\\xamarin.googleplayservices.base.71.1610.0.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.googleplayservices.basement\\71.1620.0\\xamarin.googleplayservices.basement.71.1620.0.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.googleplayservices.tasks\\71.1601.0\\xamarin.googleplayservices.tasks.71.1601.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1608",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Erkannte Paketversion außerhalb der Abhängigkeitseinschränkung: \"Xamarin.Android.Support.v4 28.0.0.1\" erfordert Xamarin.Android.Support.Compat (= 28.0.0.1), aber es wurde Version Xamarin.Android.Support.Compat 28.0.0.3 aufgelöst.",
+      "libraryId": "Xamarin.Android.Support.Compat",
+      "targetGraphs": [
+        "MonoAndroid,Version=v9.0"
+      ]
+    },
+    {
+      "code": "NU1608",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Erkannte Paketversion außerhalb der Abhängigkeitseinschränkung: \"Xamarin.Android.Support.v4 28.0.0.1\" erfordert Xamarin.Android.Support.Core.UI (= 28.0.0.1), aber es wurde Version Xamarin.Android.Support.Core.UI 28.0.0.3 aufgelöst.",
+      "libraryId": "Xamarin.Android.Support.Core.UI",
+      "targetGraphs": [
+        "MonoAndroid,Version=v9.0"
+      ]
+    },
+    {
+      "code": "NU1608",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Erkannte Paketversion außerhalb der Abhängigkeitseinschränkung: \"Xamarin.Android.Support.v4 28.0.0.1\" erfordert Xamarin.Android.Support.Core.Utils (= 28.0.0.1), aber es wurde Version Xamarin.Android.Support.Core.Utils 28.0.0.3 aufgelöst.",
+      "libraryId": "Xamarin.Android.Support.Core.Utils",
+      "targetGraphs": [
+        "MonoAndroid,Version=v9.0"
+      ]
+    },
+    {
+      "code": "NU1608",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Erkannte Paketversion außerhalb der Abhängigkeitseinschränkung: \"Xamarin.Android.Support.v4 28.0.0.1\" erfordert Xamarin.Android.Support.Fragment (= 28.0.0.1), aber es wurde Version Xamarin.Android.Support.Fragment 28.0.0.3 aufgelöst.",
+      "libraryId": "Xamarin.Android.Support.Fragment",
+      "targetGraphs": [
+        "MonoAndroid,Version=v9.0"
+      ]
+    },
+    {
+      "code": "NU1608",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Erkannte Paketversion außerhalb der Abhängigkeitseinschränkung: \"Xamarin.Android.Support.Media.Compat 28.0.0.1\" erfordert Xamarin.Android.Support.Annotations (= 28.0.0.1), aber es wurde Version Xamarin.Android.Support.Annotations 28.0.0.3 aufgelöst.",
+      "libraryId": "Xamarin.Android.Support.Annotations",
+      "targetGraphs": [
+        "MonoAndroid,Version=v9.0"
+      ]
+    },
+    {
+      "code": "NU1608",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Erkannte Paketversion außerhalb der Abhängigkeitseinschränkung: \"Xamarin.Android.Support.Media.Compat 28.0.0.1\" erfordert Xamarin.Android.Support.Compat (= 28.0.0.1), aber es wurde Version Xamarin.Android.Support.Compat 28.0.0.3 aufgelöst.",
+      "libraryId": "Xamarin.Android.Support.Compat",
+      "targetGraphs": [
+        "MonoAndroid,Version=v9.0"
+      ]
+    },
+    {
+      "code": "NU1608",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Erkannte Paketversion außerhalb der Abhängigkeitseinschränkung: \"Xamarin.Android.Support.Media.Compat 28.0.0.1\" erfordert Xamarin.Android.Support.VersionedParcelable (= 28.0.0.1), aber es wurde Version Xamarin.Android.Support.VersionedParcelable 28.0.0.3 aufgelöst.",
+      "libraryId": "Xamarin.Android.Support.VersionedParcelable",
+      "targetGraphs": [
+        "MonoAndroid,Version=v9.0"
+      ]
+    }
+  ]
 }
