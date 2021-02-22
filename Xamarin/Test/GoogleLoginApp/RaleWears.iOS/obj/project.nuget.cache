@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "dgSpecHash": "DGVqDBoAdyHP8uA0CzO/b2ikInYiPB0SNt77BhoyM9fmtWtpisD1Yu0jdmGXWnwEpUTB/47L0/fW/BbR2atqJg==",
+  "success": true,
+  "projectFilePath": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Xamarin\\Test\\GoogleLoginApp\\RaleWears.iOS\\RaleWears.iOS.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\vanth\\.nuget\\packages\\cardsview\\2.4.0\\cardsview.2.4.0.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\plugin.googleclient\\1.1.1\\plugin.googleclient.1.1.1.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.auth\\1.7.0\\xamarin.auth.1.7.0.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.build.download\\0.4.6\\xamarin.build.download.0.4.6.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.essentials\\1.3.1\\xamarin.essentials.1.3.1.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.firebase.ios.analytics\\4.0.5\\xamarin.firebase.ios.analytics.4.0.5.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.firebase.ios.core\\4.0.13\\xamarin.firebase.ios.core.4.0.13.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.firebase.ios.instanceid\\2.0.8\\xamarin.firebase.ios.instanceid.2.0.8.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.forms\\4.3.0.908675\\xamarin.forms.4.3.0.908675.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.google.ios.signin\\4.1.1\\xamarin.google.ios.signin.4.1.1.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,16 @@
+E:\Downloads\GoogleLoginApp\RaleWears\bin\Debug\netstandard2.0\RaleWears.deps.json
+E:\Downloads\GoogleLoginApp\RaleWears\bin\Debug\netstandard2.0\RaleWears.dll
+E:\Downloads\GoogleLoginApp\RaleWears\bin\Debug\netstandard2.0\ref\RaleWears.dll
+E:\Downloads\GoogleLoginApp\RaleWears\bin\Debug\netstandard2.0\RaleWears.pdb
+E:\Downloads\GoogleLoginApp\RaleWears\obj\Debug\netstandard2.0\RaleWears.csprojAssemblyReference.cache
+E:\Downloads\GoogleLoginApp\RaleWears\obj\Debug\netstandard2.0\App.xaml.g.cs
+E:\Downloads\GoogleLoginApp\RaleWears\obj\Debug\netstandard2.0\MainPage.xaml.g.cs
+E:\Downloads\GoogleLoginApp\RaleWears\obj\Debug\netstandard2.0\Views\DashBoard\MyDashBoardPage.xaml.g.cs
+E:\Downloads\GoogleLoginApp\RaleWears\obj\Debug\netstandard2.0\Views\Login\LoginPage.xaml.g.cs
+E:\Downloads\GoogleLoginApp\RaleWears\obj\Debug\netstandard2.0\RaleWears.AssemblyInfoInputs.cache
+E:\Downloads\GoogleLoginApp\RaleWears\obj\Debug\netstandard2.0\RaleWears.AssemblyInfo.cs
+E:\Downloads\GoogleLoginApp\RaleWears\obj\Debug\netstandard2.0\RaleWears.csproj.CoreCompileInputs.cache
+E:\Downloads\GoogleLoginApp\RaleWears\obj\Debug\netstandard2.0\XamlC.stamp
+E:\Downloads\GoogleLoginApp\RaleWears\obj\Debug\netstandard2.0\RaleWears.dll
+E:\Downloads\GoogleLoginApp\RaleWears\obj\Debug\netstandard2.0\ref\RaleWears.dll
+E:\Downloads\GoogleLoginApp\RaleWears\obj\Debug\netstandard2.0\RaleWears.pdb

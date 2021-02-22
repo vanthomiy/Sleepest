@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "dgSpecHash": "e+7P6xcfBgwTvBGNgbNfi1KQhV40wr5RFsGKLgUl2Q9GkV6WVyZttCjyxLTUNzsKScSJpJNxt7ldIpWBPk28fw==",
+  "success": true,
+  "projectFilePath": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Testing\\Xamarin\\SleepestTest1\\SleepestTest1\\SleepestTest1.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\vanth\\.nuget\\packages\\google.apis\\1.50.0\\google.apis.1.50.0.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\google.apis.auth\\1.50.0\\google.apis.auth.1.50.0.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\google.apis.core\\1.50.0\\google.apis.core.1.50.0.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.auth\\1.7.0\\xamarin.auth.1.7.0.nupkg.sha512",
+    "C:\\Users\\vanth\\.nuget\\packages\\xamarin.auth.xamarinforms\\1.7.0\\xamarin.auth.xamarinforms.1.7.0.nupkg.sha512",
+    "C:\\Microsoft\\Xamarin\\NuGet\\xamarin.essentials\\1.5.3.2\\xamarin.essentials.1.5.3.2.nupkg.sha512",
+    "C:\\Microsoft\\Xamarin\\NuGet\\xamarin.forms\\4.8.0.1451\\xamarin.forms.4.8.0.1451.nupkg.sha512"
+  ],
+  "logs": []
+}
