@@ -12,25 +12,79 @@ namespace SleepestTest1.ViewModels
 {
     public class AboutViewModel : BaseViewModel
     {
+        #region Xaml Bindings
+        private string authState = "Not Authentificated";
 
-		public string LabelState = "Click to login";
+		public string AuthState
+		{
+            get { return authState; }
+            set { 
+				authState = value;
+				OnPropertyChanged();
+			}
+		}
+
+        private string requestUrl = AppConstant.Constants.SleepDataUrl;
+
+		public string RequestUrl
+		{
+            get { return requestUrl; }
+            set { requestUrl = value;
+				OnPropertyChanged();
+			}
+		}
+
+		private string textResponse;
+
+		public string TextResponse
+		{
+			get { return textResponse; }
+			set { textResponse = value;
+				OnPropertyChanged();
+			}
+		}
+
+		private bool authSuccess = false;
+
+        public bool AuthSuccess
+		{
+            get { return authSuccess; }
+            set { authSuccess = value;
+				OnPropertyChanged();
+			}
+		}
+
+		private bool canRequest = false;
+
+		public bool CanRequest
+		{
+			get { return canRequest; }
+			set { canRequest = value;
+				OnPropertyChanged();
+			}
+		}
+
+        #endregion
 
         public AboutViewModel()
         {
             Title = "About";
             LoginCommand = new Command(StartAuth);
-            Request1Command = new Command(RequestData);
+			GetCommand = new Command(GetRequest);
+			PostCommand = new Command(PostRequest);
 
 			store = AccountStore.Create();
 
 		}
 
 		public ICommand LoginCommand { get; }
-        public ICommand Request1Command { get; }
+        public ICommand GetCommand { get; }
+        public ICommand PostCommand { get; }
 
+        [Obsolete]
         public void StartAuth()
         {
-			LabelState = "Wait for response";
+			AuthState = "Wait for response";
 			string clientId = null;
 			string redirectUri = null;
 
@@ -59,16 +113,6 @@ namespace SleepestTest1.ViewModels
 				null,
 				true);
 
-			//authenticator.Completed += OnAuthCompleted;
-			//authenticator.Error += OnAuthError;
-
-			//AuthenticationState.Authenticator = authenticator;
-
-			//var presenter = new Xamarin.Auth.Presenters.OAuthLoginPresenter();
-			//presenter.Login(authenticator);
-
-
-
 			authenticator.Completed += OnAuthCompleted;
 			authenticator.Error += OnAuthError;
 			authenticator.IsLoadableRedirectUri = true;
@@ -78,58 +122,77 @@ namespace SleepestTest1.ViewModels
 			presenter.Login(authenticator);
 		}
 
-        public void RequestData()
+        public async void GetRequest()
         {
+			CanRequest = false;
+			// If the user is authenticated, request their basic user data from Google
+			var request = new OAuth2Request("GET", new Uri(RequestUrl), null, account);
+			var response = await request.GetResponseAsync();
+
+			if (response != null)
+			{
+				// Deserialize the data and store it in the account store
+				// The users email address will be used to identify data in SimpleDB
+				string userJson = await response.GetResponseTextAsync();
+				TextResponse = userJson;
+				//dataSource = JsonConvert.DeserializeObject<DataSourceRoot>(userJson);
+			}
+
+			//await store.SaveAsync(account = e.Account, AppConstant.Constants.AppName);
+			//await DisplayAlert("Email address", user.Email, "OK");
+			CanRequest = true;
+
+		}
+
+		public async void PostRequest()
+		{
+			CanRequest = false;
+
+			// If the user is authenticated, request their basic user data from Google
+			var request = new OAuth2Request("POST", new Uri(RequestUrl), null, account);
+			var response = await request.GetResponseAsync();
 
 
+			if (response != null)
+			{
+				// Deserialize the data and store it in the account store
+				// The users email address will be used to identify data in SimpleDB
+				string userJson = await response.GetResponseTextAsync();
+				TextResponse = userJson;
+				//dataSource = JsonConvert.DeserializeObject<DataSourceRoot>(userJson);
+			}
 
-        }
+			CanRequest = true;
+
+		}
+
 
 		Account account;
 		AccountStore store;
 
 
-		async void OnAuthCompleted(object sender, AuthenticatorCompletedEventArgs e)
-		{
-			LabelState = "Success";
+        void OnAuthCompleted(object sender, AuthenticatorCompletedEventArgs e)
+        {
+            AuthState = "Auth Sucessfull";
 
-			var authenticator = sender as OAuth2Authenticator;
-			if (authenticator != null)
-			{
-				authenticator.Completed -= OnAuthCompleted;
-				authenticator.Error -= OnAuthError;
-			}
+            var authenticator = sender as OAuth2Authenticator;
+            if (authenticator != null)
+            {
+                authenticator.Completed -= OnAuthCompleted;
+                authenticator.Error -= OnAuthError;
+            }
 
-			DataSourceRoot dataSource = null;
-			if (e.IsAuthenticated)
-			{
-				// If the user is authenticated, request their basic user data from Google
-				// UserInfoUrl = https://www.googleapis.com/oauth2/v2/userinfo
-				var request = new OAuth2Request("GET", new Uri(AppConstant.Constants.SleepDataUrl), null, e.Account);
-				var response = await request.GetResponseAsync();
-				if (response != null)
-				{
-					// Deserialize the data and store it in the account store
-					// The users email address will be used to identify data in SimpleDB
-					string userJson = await response.GetResponseTextAsync();
-					dataSource = JsonConvert.DeserializeObject<DataSourceRoot>(userJson);
-				}
+            if (e.IsAuthenticated)
+            {
+                account = e.Account;
+                AuthSuccess = CanRequest = true;
+            }
+        }
 
-				if (dataSource != null)
-				{
-					//App.Current.MainPage = new NavigationPage(new MyDashBoardPage());
-					LabelState = "Data Retrived";
-				}
-
-				//await store.SaveAsync(account = e.Account, AppConstant.Constants.AppName);
-				//await DisplayAlert("Email address", user.Email, "OK");
-			}
-		}
-
-		void OnAuthError(object sender, AuthenticatorErrorEventArgs e)
+        void OnAuthError(object sender, AuthenticatorErrorEventArgs e)
 		{
 
-			LabelState = "Error";
+			AuthState = "Auth Error";
 
 			var authenticator = sender as OAuth2Authenticator;
 			if (authenticator != null)
