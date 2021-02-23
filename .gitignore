@@ -89,8 +89,9 @@ lint/tmp/
 *.props
 
 
-Xamarin/Test/SleepestTest1/SleepestTest1/obj/
-Xamarin/Test/SleepestTest1/SleepestTest1.Android/obj
-Xamarin/Test/SleepestTest1/SleepestTest1.Android/bin
-Xamarin/Test/SleepestTest1/SleepestTest1/bin
+#Exlcude all bin and obj folders and their subfolders
+**/bin/*
+**/obj/*
+
+
 
