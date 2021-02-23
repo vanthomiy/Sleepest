@@ -1,24 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1\\SleepestTest1.csproj": {}
+    "D:\\GitHub\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1\\SleepestTest1.csproj": {}
   },
   "projects": {
-    "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1\\SleepestTest1.csproj": {
+    "D:\\GitHub\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1\\SleepestTest1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1\\SleepestTest1.csproj",
+        "projectUniqueName": "D:\\GitHub\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1\\SleepestTest1.csproj",
         "projectName": "SleepestTest1",
-        "projectPath": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1\\SleepestTest1.csproj",
-        "packagesPath": "C:\\Users\\vanth\\.nuget\\packages\\",
-        "outputPath": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1\\obj\\",
+        "projectPath": "D:\\GitHub\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1\\SleepestTest1.csproj",
+        "packagesPath": "C:\\Users\\timlk\\.nuget\\packages\\",
+        "outputPath": "D:\\GitHub\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet\\",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
         ],
         "configFilePaths": [
-          "C:\\Users\\vanth\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\timlk\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
@@ -82,7 +81,7 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.103\\RuntimeIdentifierGraph.json"
         }
       }
     }
