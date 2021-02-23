@@ -2162,24 +2162,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\vanth\\.nuget\\packages\\": {},
+    "C:\\Users\\timlk\\.nuget\\packages\\": {},
     "C:\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1.Android\\SleepestTest1.Android.csproj",
+      "projectUniqueName": "D:\\GitHub\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1.Android\\SleepestTest1.Android.csproj",
       "projectName": "SleepestTest1.Android",
-      "projectPath": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1.Android\\SleepestTest1.Android.csproj",
-      "packagesPath": "C:\\Users\\vanth\\.nuget\\packages\\",
-      "outputPath": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1.Android\\obj\\",
+      "projectPath": "D:\\GitHub\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1.Android\\SleepestTest1.Android.csproj",
+      "packagesPath": "C:\\Users\\timlk\\.nuget\\packages\\",
+      "outputPath": "D:\\GitHub\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1.Android\\obj\\",
       "projectStyle": "PackageReference",
       "skipContentFileWrite": true,
       "fallbackFolders": [
         "C:\\Microsoft\\Xamarin\\NuGet\\"
       ],
       "configFilePaths": [
-        "C:\\Users\\vanth\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\timlk\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
@@ -2193,8 +2193,8 @@
       "frameworks": {
         "monoandroid90": {
           "projectReferences": {
-            "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1\\SleepestTest1.csproj": {
-              "projectPath": "E:\\Dokumente\\Programmieren\\Projekte\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1\\SleepestTest1.csproj"
+            "D:\\GitHub\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1\\SleepestTest1.csproj": {
+              "projectPath": "D:\\GitHub\\Sleepest\\Xamarin\\Test\\SleepestTest1\\SleepestTest1\\SleepestTest1.csproj"
             }
           }
         }

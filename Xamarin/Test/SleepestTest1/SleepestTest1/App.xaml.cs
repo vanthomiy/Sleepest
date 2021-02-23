@@ -14,7 +14,7 @@ namespace SleepestTest1
             InitializeComponent();
 
             DependencyService.Register<MockDataStore>();
-            MainPage = new AppShell();
+            MainPage = new AppShell(); //Hallo
         }
 
         protected override void OnStart()
