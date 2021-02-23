@@ -83,3 +83,15 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+*.props
+*.force
+*.props
+*.props
+Xamarin/Test/SleepestTest1/SleepestTest1/obj/Debug/netstandard2.0/SleepestTest1.assets.cache
+Xamarin/Test/SleepestTest1/SleepestTest1.Android/obj/Debug/90/SleepestTest1.Android.csprojAssemblyReference.cache
+Xamarin/Test/SleepestTest1/SleepestTest1.Android/obj/Debug/90/libraryprojectimports.cache
+Xamarin/Test/SleepestTest1/SleepestTest1.Android/obj/Debug/90/designtime/Resource.designer.cs
+Xamarin/Test/SleepestTest1/SleepestTest1.Android/obj/Debug/90/designtime/build.props
+Xamarin/Test/SleepestTest1/SleepestTest1.Android/obj/Debug/90/SleepestTest1.Android.csprojAssemblyReference.cache
+Xamarin/Test/SleepestTest1/SleepestTest1/obj/Debug/netstandard2.0/SleepestTest1.csprojAssemblyReference.cache
+Xamarin/Test/SleepestTest1/SleepestTest1/obj/Debug/netstandard2.0/SleepestTest1.assets.cache
