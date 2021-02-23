@@ -48,7 +48,7 @@
                 <Label Text="Request String:" FontAttributes="Bold" FontSize="16" Padding="0,0,0,0"/>
                 <Entry Text="{Binding RequestUrl}" ></Entry>
                 <Label Text="Response String:" FontAttributes="Bold" FontSize="16" Padding="0,0,0,0"/>
-                <Editor Text="{Binding TextResponse}" AutoSize="TextChanges" ></Editor>
+                <Editor IsReadOnly="True" Text="{Binding TextResponse}" AutoSize="TextChanges" ></Editor>
             </StackLayout>
         </ScrollView>
     </Grid>
