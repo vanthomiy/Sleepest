@@ -14,7 +14,9 @@ namespace SleepestTest1.AppConstant
 		public static string AndroidClientId = "951458878515-gu0je92adp23lb3lofuro7kb36skdrkj.apps.googleusercontent.com";
 
 		// These values do not need changing
-		public static string Scope = "https://www.googleapis.com/auth/fitness.sleep.read https://www.googleapis.com/auth/fitness.activity.read https://www.googleapis.com/auth/fitness.heart_rate.read ";
+		public static string Scope = "https://www.googleapis.com/auth/fitness.sleep.read https://www.googleapis.com/auth/fitness.sleep.write " +
+			"https://www.googleapis.com/auth/fitness.activity.read https://www.googleapis.com/auth/fitness.activity.read " +
+			"https://www.googleapis.com/auth/fitness.heart_rate.read ";
 		public static string AuthorizeUrl = "https://accounts.google.com/o/oauth2/auth";
 		public static string AccessTokenUrl = "https://www.googleapis.com/oauth2/v4/token";
 		public static string UserInfoUrl = "https://www.googleapis.com/oauth2/v2/userinfo";
