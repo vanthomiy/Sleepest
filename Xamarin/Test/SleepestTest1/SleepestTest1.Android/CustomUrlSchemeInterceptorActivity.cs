@@ -24,7 +24,10 @@ namespace SleepestTest1.Droid
 
 			// Load redirectUrl page
 			AuthenticationState.Authenticator.OnPageLoading(uri);
-			Finish();
+
+			this.Finish();
+
+			return;
 		}
 	}
 }

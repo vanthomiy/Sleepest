@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using SleepestTest1.Authentification;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
@@ -75,6 +76,7 @@ namespace SleepestTest1.ViewModels
 
 			store = AccountStore.Create();
 
+
 		}
 
 		public ICommand LoginCommand { get; }
@@ -102,6 +104,24 @@ namespace SleepestTest1.ViewModels
 			}
 
 			account = store.FindAccountsForService(AppConstant.Constants.AppName).FirstOrDefault();
+
+			/// todo check if accesstoken is available, then dont use authentificator...
+			/// Check with valid time when we have to refresh the token again! and store in account
+			if (account.Properties.ContainsKey("access_token") && account.Properties["access_token"] != "")
+			{
+				// check when its expires
+				if (account.Properties.ContainsKey("expires_in") && account.Properties["expires_in"] != "" )
+				{
+					int expiresIn = 0;
+					Int32.TryParse(account.Properties["expires_in"], out expiresIn);
+
+                    if (expiresIn > 100)
+                    {
+						AuthSuccess = CanRequest = true;
+						return;
+					}
+				}	
+			}
 
 			var authenticator = new OAuth2Authenticator(
 				clientId,
@@ -138,8 +158,7 @@ namespace SleepestTest1.ViewModels
 				//dataSource = JsonConvert.DeserializeObject<DataSourceRoot>(userJson);
 			}
 
-			//await store.SaveAsync(account = e.Account, AppConstant.Constants.AppName);
-			//await DisplayAlert("Email address", user.Email, "OK");
+
 			CanRequest = true;
 
 		}
@@ -148,8 +167,12 @@ namespace SleepestTest1.ViewModels
 		{
 			CanRequest = false;
 
+			// We need to provide params here that contain our code
+			Dictionary<string, string> parameters = new Dictionary<string, string>();
+			parameters.Add("oauth2_access_token", account.Properties["access_token"]);
+
 			// If the user is authenticated, request their basic user data from Google
-			var request = new OAuth2Request("POST", new Uri(RequestUrl), null, account);
+			var request = new OAuth2Request("POST", new Uri(RequestUrl), parameters, account);
 			var response = await request.GetResponseAsync();
 
 
@@ -166,12 +189,10 @@ namespace SleepestTest1.ViewModels
 
 		}
 
-
 		Account account;
 		AccountStore store;
 
-
-        void OnAuthCompleted(object sender, AuthenticatorCompletedEventArgs e)
+		async void OnAuthCompleted(object sender, AuthenticatorCompletedEventArgs e)
         {
             AuthState = "Auth Sucessfull";
 
@@ -185,7 +206,9 @@ namespace SleepestTest1.ViewModels
             if (e.IsAuthenticated)
             {
                 account = e.Account;
-                AuthSuccess = CanRequest = true;
+				await store.SaveAsync(account, AppConstant.Constants.AppName);
+
+				AuthSuccess = CanRequest = true;
             }
         }
 
