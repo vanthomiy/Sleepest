@@ -7,6 +7,7 @@ namespace SleepestTest1.AppConstant
 	public class Constants
 	{
 		public static string AppName = "OAuthNativeFlow";
+		public static string GoogleData = "GOOGLE_DATA";
 
 		// OAuth
 		// For Google login, configure at https://console.developers.google.com/
