@@ -2,6 +2,7 @@
 using SleepestTest1.AppConstant;
 using SleepestTest1.Authentification;
 using SleepestTest1.Authentification.Service;
+using SleepestTest1.Authentification.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -75,53 +76,34 @@ namespace SleepestTest1.ViewModels
             LoginCommand = new Command(StartAuth);
 			GetCommand = new Command(GetRequest);
 			PostCommand = new Command(PostRequest);
+
+			// Check for auth automaticaly after start
+			StartAuth();
+
 		}
+
+
+		// Stores actual acount of the retrived google auth data
+		Account googleAccount;
 
 		public ICommand LoginCommand { get; }
         public ICommand GetCommand { get; }
         public ICommand PostCommand { get; }
 
-        [Obsolete]
-        public void StartAuth()
+        public async void StartAuth()
         {
 			AuthState = "Wait for response";
-			string clientId = null;
-			string redirectUri = null;
 
-			switch (Xamarin.Forms.Device.RuntimePlatform)
+			// get account if available
+			if (await AuthRenewal.CheckTokenAndRenewIfNeccessary())
 			{
-				case Xamarin.Forms.Device.iOS:
-					clientId = AppConstant.Constants.iOSClientId;
-					redirectUri = AppConstant.Constants.iOSRedirectUrl;
-					break;
-
-				case Xamarin.Forms.Device.Android:
-					clientId = AppConstant.Constants.AndroidClientId;
-					redirectUri = AppConstant.Constants.AndroidRedirectUrl;
-					break;
+				AuthState = "Authorized with refresh token";
+				AuthSuccess = CanRequest = true;
+				return;
 			}
 
-			//account = store.FindAccountsForService(AppConstant.Constants.AppName).FirstOrDefault();
-
-			/// todo check if accesstoken is available, then dont use authentificator...
-			/// Check with valid time when we have to refresh the token again! and store in account
-			/// Expires in müsste eig nicht abgefragt werden denke ich
-			/// Nur allgemein mal schauen was passiert wenn der token expired und man einen request sendet
-			//if (account.Properties.ContainsKey("access_token") && account.Properties["access_token"] != "")
-			//{
-			//	// check when its expires
-			//	if (account.Properties.ContainsKey("expires_in") && account.Properties["expires_in"] != "" )
-			//	{
-			//		int expiresIn = 0;
-			//		Int32.TryParse(account.Properties["expires_in"], out expiresIn);
-
-   //                 if (expiresIn > 100)
-   //                 {
-			//			AuthSuccess = CanRequest = true;
-			//			return;
-			//		}
-			//	}	
-			//}
+			string clientId = AppConstant.Constants.AndroidClientId;
+			string redirectUri = AppConstant.Constants.AndroidRedirectUrl;
 
 			var authenticator = new OAuth2Authenticator(
 				clientId,
@@ -146,29 +128,27 @@ namespace SleepestTest1.ViewModels
         {
 			CanRequest = false;
             // If the user is authenticated, request their basic user data from Google
-            var request = new OAuth2Request("GET", new Uri(RequestUrl), null, account);
-            var response = await request.GetResponseAsync();
+            //var request = new OAuth2Request("GET", new Uri(RequestUrl), null, account);
+            //var response = await request.GetResponseAsync();
+
+            //if (response != null)
+            //{
+            //    // Deserialize the data and store it in the account store
+            //    // The users email address will be used to identify data in SimpleDB
+            //    string userJson = await response.GetResponseTextAsync();
+            //    TextResponse = userJson;
+            //    //dataSource = JsonConvert.DeserializeObject<DataSourceRoot>(userJson);
+            //}
+
+
+            var response = await ProviderService.GetGoogleAsync(RequestUrl);
 
             if (response != null)
             {
-                // Deserialize the data and store it in the account store
-                // The users email address will be used to identify data in SimpleDB
-                string userJson = await response.GetResponseTextAsync();
-                TextResponse = userJson;
-                //dataSource = JsonConvert.DeserializeObject<DataSourceRoot>(userJson);
-            }
+				TextResponse = response;
+			}
 
-
-            // var response = await ProviderService.GetGoogleAsync("https://www.googleapis.com/fitness/v1/users/me/dataSources");
-
-
-            //if (response == null)
-            //{
-            //    return;
-            //}
-
-            CanRequest = true;
-
+			CanRequest = true;
 		}
 
 		public async void PostRequest()
@@ -179,33 +159,20 @@ namespace SleepestTest1.ViewModels
 
 
 			// If the user is authenticated, request their basic user data from Google
-			var request = new OAuth2Request("POST", new Uri(RequestUrl), null, account);
-			var response = await request.GetResponseAsync();
+			var reqUri = "https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate";
+			var reqJson = textResponse;
+
+			var response = await ProviderService.PostGoogleAsync(reqUri, reqJson);
+
 
 			if (response != null)
 			{
-				// Deserialize the data and store it in the account store
-				// The users email address will be used to identify data in SimpleDB
-				string userJson = await response.GetResponseTextAsync();
-				TextResponse = userJson;
-				//dataSource = JsonConvert.DeserializeObject<DataSourceRoot>(userJson);
+				TextResponse = response;
 			}
-
-
-			// var response = await ProviderService.GetGoogleAsync("https://www.googleapis.com/fitness/v1/users/me/dataSources");
-
-
-			//if (response == null)
-			//{
-			//    return;
-			//}
 
 			CanRequest = true;
 
 		}
-
-		Account account;
-		//AccountStore store;
 
 		async void OnAuthCompleted(object sender, AuthenticatorCompletedEventArgs e)
         {
@@ -220,12 +187,16 @@ namespace SleepestTest1.ViewModels
 
 			if (e.IsAuthenticated)
 			{
-				//await store.SaveAsync(account, AppConstant.Constants.AppName);
-
 				try
 				{
-					account = e.Account;
-					await SecureStorage.SetAsync(Constants.GoogleData, JsonConvert.SerializeObject(e.Account.Properties));
+					googleAccount = e.Account;
+					await SecureStorage.SetAsync(Constants.GoogleAccount, JsonConvert.SerializeObject(e.Account));
+
+					var googleTokenString = JsonConvert.SerializeObject(googleAccount.Properties);
+					var tokenExpires = JsonConvert.DeserializeObject<GoogleToken>(googleTokenString).ExpiresIn;
+
+					// Save tokenExpires
+					await SecureStorage.SetAsync(Constants.GoogleTokenExpires, JsonConvert.SerializeObject(tokenExpires));
 				}
 				catch (Exception ex)
 				{

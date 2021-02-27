@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace SleepestTest1.Authentification
+namespace SleepestTest1.Authentification.Models
 {
 	[JsonObject]
 	public class User
