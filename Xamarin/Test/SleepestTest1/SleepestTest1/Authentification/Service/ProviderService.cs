@@ -59,6 +59,12 @@ namespace SleepestTest1.Authentification.Service
         /// <returns>A json response as string</returns>
         public static async Task<string> GetGoogleAsync(string url)
         {
+            if (!await AuthRenewal.CheckTokenAndRenewIfNeccessary())
+            {
+                // wild
+   
+            }
+
             string googleAccountString = await SecureStorage.GetAsync(Constants.GoogleAccount);
             var account = JsonConvert.DeserializeObject<Account>(googleAccountString);
             var googleTokenString = JsonConvert.SerializeObject(account.Properties);
