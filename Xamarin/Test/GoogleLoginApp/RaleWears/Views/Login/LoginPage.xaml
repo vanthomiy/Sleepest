@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             BackgroundColor="Black"
+             x:Class="RaleWears.Views.Login.LoginPage">
+    <ContentPage.Content>
+      <ScrollView>
+            <Grid Margin="50,0" RowSpacing="50" VerticalOptions="CenterAndExpand"  HorizontalOptions="FillAndExpand" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid  Grid.Row="1" HorizontalOptions="FillAndExpand" >
+                    <Button TextColor="Black" Clicked="Button_Clicked" Text="Login With Google" BackgroundColor="White"/>
+                </Grid>
+                </Grid>
+      </ScrollView>
+    </ContentPage.Content>
+</ContentPage>
