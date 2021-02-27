@@ -2,6 +2,7 @@
 using SleepestTest1.AppConstant;
 using SleepestTest1.Authentification;
 using SleepestTest1.Authentification.Service;
+using SleepestTest1.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -146,29 +147,27 @@ namespace SleepestTest1.ViewModels
         {
 			CanRequest = false;
             // If the user is authenticated, request their basic user data from Google
-            var request = new OAuth2Request("GET", new Uri(RequestUrl), null, account);
-            var response = await request.GetResponseAsync();
+            //var request = new OAuth2Request("GET", new Uri(RequestUrl), null, account);
+            //var response = await request.GetResponseAsync();
+
+            //if (response != null)
+            //{
+            //    // Deserialize the data and store it in the account store
+            //    // The users email address will be used to identify data in SimpleDB
+            //    string userJson = await response.GetResponseTextAsync();
+            //    TextResponse = userJson;
+            //    //dataSource = JsonConvert.DeserializeObject<DataSourceRoot>(userJson);
+            //}
+
+
+            var response = await ProviderService.GetGoogleAsync(RequestUrl);
 
             if (response != null)
             {
-                // Deserialize the data and store it in the account store
-                // The users email address will be used to identify data in SimpleDB
-                string userJson = await response.GetResponseTextAsync();
-                TextResponse = userJson;
-                //dataSource = JsonConvert.DeserializeObject<DataSourceRoot>(userJson);
-            }
+				TextResponse = response;
+			}
 
-
-            // var response = await ProviderService.GetGoogleAsync("https://www.googleapis.com/fitness/v1/users/me/dataSources");
-
-
-            //if (response == null)
-            //{
-            //    return;
-            //}
-
-            CanRequest = true;
-
+			CanRequest = true;
 		}
 
 		public async void PostRequest()
@@ -178,30 +177,30 @@ namespace SleepestTest1.ViewModels
 			Dictionary<string, string> content = new Dictionary<string, string>();
 
 
-			// If the user is authenticated, request their basic user data from Google
-			var request = new OAuth2Request("POST", new Uri(RequestUrl), null, account);
-			var response = await request.GetResponseAsync();
+            // If the user is authenticated, request their basic user data from Google
+            //var request = new OAuth2Request("POST", new Uri(RequestUrl), null, account);
+            //var response = await request.GetResponseAsync();
 
-			if (response != null)
-			{
-				// Deserialize the data and store it in the account store
-				// The users email address will be used to identify data in SimpleDB
-				string userJson = await response.GetResponseTextAsync();
-				TextResponse = userJson;
-				//dataSource = JsonConvert.DeserializeObject<DataSourceRoot>(userJson);
-			}
-
-
-			// var response = await ProviderService.GetGoogleAsync("https://www.googleapis.com/fitness/v1/users/me/dataSources");
+            //if (response != null)
+            //{
+            //	// Deserialize the data and store it in the account store
+            //	// The users email address will be used to identify data in SimpleDB
+            //	string userJson = await response.GetResponseTextAsync();
+            //	TextResponse = userJson;
+            //	//dataSource = JsonConvert.DeserializeObject<DataSourceRoot>(userJson);
+            //}
 
 
-			//if (response == null)
-			//{
-			//    return;
-			//}
+            var response = await ProviderService.PostGoogleAsync("https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate"); //Convert response to json class
 
-			CanRequest = true;
 
+            if (response != null) 
+            {
+				TextResponse = response;
+				string puffer = Session.convertJson(response);
+            }
+
+            CanRequest = true;
 		}
 
 		Account account;
