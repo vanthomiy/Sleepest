@@ -182,7 +182,8 @@ namespace SleepestTest1.ViewModels
 					await SecureStorage.SetAsync(Constants.GoogleAccount, JsonConvert.SerializeObject(e.Account));
 
 					var googleTokenString = JsonConvert.SerializeObject(googleAccount.Properties);
-					var tokenExpires = JsonConvert.DeserializeObject<GoogleToken>(googleTokenString).ExpiresIn;
+					var expiresIn = JsonConvert.DeserializeObject<GoogleToken>(googleTokenString).ExpiresIn;
+					var tokenExpires = DateTime.Now.AddSeconds(Convert.ToInt32(expiresIn));
 
 					// Save tokenExpires
 					await SecureStorage.SetAsync(Constants.GoogleTokenExpires, JsonConvert.SerializeObject(tokenExpires));
