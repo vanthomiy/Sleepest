@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SleepestTest1.Authentification.Tokens
+namespace SleepestTest1.Authentification.Models
 {
     public class GoogleToken
     {
