@@ -8,13 +8,14 @@ namespace SleepestTest1.AppConstant
 	{
 		public static string AppName = "OAuthNativeFlow";
 		public static string GoogleAccount = "GOOGLE_ACCOUNT"; // Key to store/retrive the account in SecurityStorage
-		public static string GoogleTokenExpires = "GOOGLE_TOKEN_EXPIRES"; // Key to store/retrive the account in SecurityStorage
+		public static string GoogleTokenExpires = "GOOGLE_TOKEN_EXPIRES"; // Key to store/retrive the expires time in SecurityStorage
 
 		// OAuth
 		public static string AndroidClientId = "951458878515-gu0je92adp23lb3lofuro7kb36skdrkj.apps.googleusercontent.com";
 
 		// These values do not need changing
-		public static string Scope = "https://www.googleapis.com/auth/fitness.sleep.read https://www.googleapis.com/auth/fitness.sleep.write " +
+		public static string Scope = 
+			"https://www.googleapis.com/auth/fitness.sleep.read https://www.googleapis.com/auth/fitness.sleep.write " +
 			"https://www.googleapis.com/auth/fitness.activity.read https://www.googleapis.com/auth/fitness.activity.read " +
 			"https://www.googleapis.com/auth/fitness.heart_rate.read ";
 		public static string AuthorizeUrl = "https://accounts.google.com/o/oauth2/auth";

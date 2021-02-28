@@ -41,7 +41,7 @@ namespace SleepestTest1.Authentification
                     return true;
                 }
 
-                var response = await ProviderService.RefreshTokenRequest(googleAccount);
+                var response = await AuthentificationService.RefreshTokenRequest(googleAccount);
 
                 if (response != null && response.AccessToken != null && response.AccessToken != "")
                 {

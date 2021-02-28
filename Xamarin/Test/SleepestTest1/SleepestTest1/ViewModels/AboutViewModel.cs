@@ -12,6 +12,8 @@ using System.Windows.Input;
 using Xamarin.Auth;
 using Xamarin.Essentials;
 using Xamarin.Forms;
+using SleepestTest1.Authentification.Helper;
+using SleepestTest1.FitnessData.Service;
 
 namespace SleepestTest1.ViewModels
 {
@@ -82,9 +84,6 @@ namespace SleepestTest1.ViewModels
 			StartAuth();
 		}
 
-		// Stores actual acount of the retrived google auth data
-		Account googleAccount;
-
 		public ICommand LoginCommand { get; }
         public ICommand GetCommand { get; }
         public ICommand PostCommand { get; }
@@ -93,36 +92,40 @@ namespace SleepestTest1.ViewModels
         {
 			AuthState = "Wait for response";
 
-			if (await AuthRenewal.CheckTokenAndRenewIfNeccessary())
-			{
-				AuthState = "Authorized with refresh token";
-				AuthSuccess = CanRequest = true;
-				return;
-			}
+			//if (await AuthRenewal.CheckTokenAndRenewIfNeccessary())
+			//{
+			//	AuthState = "Authorized with refresh token";
+			//	AuthSuccess = CanRequest = true;
+			//	return;
+			//}
 
-			string clientId = AppConstant.Constants.AndroidClientId;
-			string redirectUri = AppConstant.Constants.AndroidRedirectUrl;
+			AuthentificationService.AuthRequest(this);
 
-			var authenticator = new OAuth2Authenticator(
-				clientId,
-				null,
-				AppConstant.Constants.Scope,
-				new Uri(AppConstant.Constants.AuthorizeUrl),
-				new Uri(redirectUri),
-				new Uri(AppConstant.Constants.AccessTokenUrl),
-				null,
-				true);
+			//string clientId = AppConstant.Constants.AndroidClientId;
+			//string redirectUri = AppConstant.Constants.AndroidRedirectUrl;
 
-			authenticator.Completed += OnAuthCompleted;
-			authenticator.Error += OnAuthError;
-			authenticator.IsLoadableRedirectUri = true;
-			AuthenticationState.Authenticator = authenticator;
+			//var authenticator = new OAuth2Authenticator(
+			//	clientId,
+			//	null,
+			//	AppConstant.Constants.Scope,
+			//	new Uri(AppConstant.Constants.AuthorizeUrl),
+			//	new Uri(redirectUri),
+			//	new Uri(AppConstant.Constants.AccessTokenUrl),
+			//	null,
+			//	true);
 
-			var presenter = new Xamarin.Auth.Presenters.OAuthLoginPresenter();
-			presenter.Login(authenticator);
+			//authenticator.Completed += OnAuthCompleted;
+			//authenticator.Error += OnAuthError;
+			//authenticator.IsLoadableRedirectUri = true;
+			//AuthenticationState.Authenticator = authenticator;
+
+			//var presenter = new Xamarin.Auth.Presenters.OAuthLoginPresenter();
+			//presenter.Login(authenticator);
+
+
 		}
 
-        public async void GetRequest()
+		public async void GetRequest()
         {
 			CanRequest = false;
             // If the user is authenticated, request their basic user data from Google
@@ -141,26 +144,20 @@ namespace SleepestTest1.ViewModels
 		{
 			CanRequest = false;
 
-			Dictionary<string, string> content = new Dictionary<string, string>();
-
-
             // If the user is authenticated, request their basic user data from Google
-			string url = "https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate";
-			string reqBody = ""; // hier zuweisen
 
-			var response = await ProviderService.PostGoogleAsync(url, reqBody); //Convert response to json class
+			//Request req = RequestBuilder.
+			//var response = await ProviderService.PostGoogleAsync(url, reqBody); //Convert response to json class
 
 
-            if (response != null) 
-            {
-				TextResponse = response;
-				string puffer = Session.convertJson(response);
-            }
+    //        if (response != null) 
+    //        {
+				//TextResponse = response;
+				//string puffer = Session.convertJson(response);
+    //        }
 
             CanRequest = true;
 		}
-
-		Account account;
 
 		async void OnAuthCompleted(object sender, AuthenticatorCompletedEventArgs e)
         {
@@ -178,11 +175,10 @@ namespace SleepestTest1.ViewModels
 
 				try
 				{
-					googleAccount = e.Account;
 					await SecureStorage.SetAsync(Constants.GoogleAccount, JsonConvert.SerializeObject(e.Account));
 
-					var googleTokenString = JsonConvert.SerializeObject(googleAccount.Properties);
-					var expiresIn = JsonConvert.DeserializeObject<GoogleToken>(googleTokenString).ExpiresIn;
+					var googleToken = await DirectConvert.GetGoogleToken();
+					var expiresIn = googleToken.ExpiresIn;
 					var tokenExpires = DateTime.Now.AddSeconds(Convert.ToInt32(expiresIn));
 
 					// Save tokenExpires
