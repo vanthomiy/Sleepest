@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SleepestTest1.FitnessData.Models
 {
-    public class Request
+    public class FitRequest
     {
         public Uri uri;
         public string requestBody;

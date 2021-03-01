@@ -14,6 +14,9 @@ using Xamarin.Essentials;
 using Xamarin.Forms;
 using SleepestTest1.Authentification.Helper;
 using SleepestTest1.FitnessData.Service;
+using Google.Apis.Requests;
+using SleepestTest1.FitnessData.Builder;
+using SleepestTest1.FitnessData.Models;
 
 namespace SleepestTest1.ViewModels
 {
@@ -92,37 +95,16 @@ namespace SleepestTest1.ViewModels
         {
 			AuthState = "Wait for response";
 
-			//if (await AuthRenewal.CheckTokenAndRenewIfNeccessary())
-			//{
-			//	AuthState = "Authorized with refresh token";
-			//	AuthSuccess = CanRequest = true;
-			//	return;
-			//}
+            if (await AuthRenewal.CheckTokenAndRenewIfNeccessary())
+            {
+                AuthState = "Authorized with refresh token";
+                AuthSuccess = CanRequest = true;
+                return;
+            }
 
-			AuthentificationService.AuthRequest(this);
-
-			//string clientId = AppConstant.Constants.AndroidClientId;
-			//string redirectUri = AppConstant.Constants.AndroidRedirectUrl;
-
-			//var authenticator = new OAuth2Authenticator(
-			//	clientId,
-			//	null,
-			//	AppConstant.Constants.Scope,
-			//	new Uri(AppConstant.Constants.AuthorizeUrl),
-			//	new Uri(redirectUri),
-			//	new Uri(AppConstant.Constants.AccessTokenUrl),
-			//	null,
-			//	true);
-
-			//authenticator.Completed += OnAuthCompleted;
-			//authenticator.Error += OnAuthError;
-			//authenticator.IsLoadableRedirectUri = true;
-			//AuthenticationState.Authenticator = authenticator;
-
-			//var presenter = new Xamarin.Auth.Presenters.OAuthLoginPresenter();
-			//presenter.Login(authenticator);
-
-
+			// Auth request in extra Service class... no listeners needed anymore
+			// just provide from where you access it "this"
+            AuthentificationService.AuthRequest(this);
 		}
 
 		public async void GetRequest()
@@ -135,6 +117,7 @@ namespace SleepestTest1.ViewModels
             if (response != null)
             {
 				TextResponse = response;
+				var dataSources = JsonConvert.DeserializeObject<DataSources>(response);
 			}
 
 			CanRequest = true;
@@ -144,72 +127,24 @@ namespace SleepestTest1.ViewModels
 		{
 			CanRequest = false;
 
-            // If the user is authenticated, request their basic user data from Google
+			RequestBuilder rb = new RequestBuilder();
 
-			//Request req = RequestBuilder.
-			//var response = await ProviderService.PostGoogleAsync(url, reqBody); //Convert response to json class
+			var a = new Google.Apis.Fitness.v1.FitnessService.Initializer();
 
+			
+			
+			// Request builder helps to create specific requests
+			DataSourcesRequest dsr = new DataSourcesRequest(FitRequestBuilder<DataSourcesRequest>.RequestDataType[DataSourceType.SleepSegments], DateTimeOffset.Now.AddDays(-20));
+			var req = FitRequestBuilder<DataSourcesRequest>.CreateRequest(RequestType.AllDataSources, dsr);
+			var response = await ProviderService.PostGoogleAsync(req); //Convert response to json class
 
-    //        if (response != null) 
-    //        {
-				//TextResponse = response;
-				//string puffer = Session.convertJson(response);
-    //        }
+            if (response != null)
+            {
+                TextResponse = response;
+				var dataSources = JsonConvert.DeserializeObject<Session>(response);
+            }
 
             CanRequest = true;
 		}
-
-		async void OnAuthCompleted(object sender, AuthenticatorCompletedEventArgs e)
-        {
-            AuthState = "Auth Sucessfull";
-
-            var authenticator = sender as OAuth2Authenticator;
-            if (authenticator != null)
-            {
-                authenticator.Completed -= OnAuthCompleted;
-                authenticator.Error -= OnAuthError;
-            }
-
-			if (e.IsAuthenticated)
-			{
-
-				try
-				{
-					await SecureStorage.SetAsync(Constants.GoogleAccount, JsonConvert.SerializeObject(e.Account));
-
-					var googleToken = await DirectConvert.GetGoogleToken();
-					var expiresIn = googleToken.ExpiresIn;
-					var tokenExpires = DateTime.Now.AddSeconds(Convert.ToInt32(expiresIn));
-
-					// Save tokenExpires
-					await SecureStorage.SetAsync(Constants.GoogleTokenExpires, JsonConvert.SerializeObject(tokenExpires));
-
-				}
-				catch (Exception ex)
-				{
-					Debug.WriteLine(ex.Message);
-				}
-
-				AuthSuccess = CanRequest = true;
-
-			}
-		}
-
-		void OnAuthError(object sender, AuthenticatorErrorEventArgs e)
-		{
-
-			AuthState = "Auth Error";
-
-			var authenticator = sender as OAuth2Authenticator;
-			if (authenticator != null)
-			{
-				authenticator.Completed -= OnAuthCompleted;
-				authenticator.Error -= OnAuthError;
-			}
-
-			Debug.WriteLine("Authentication error: " + e.Message);
-		}
-
-
 	}
 }

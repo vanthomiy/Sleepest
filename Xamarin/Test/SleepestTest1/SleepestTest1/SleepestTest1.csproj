@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="Google.Apis.Auth" Version="1.50.0" />
+    <PackageReference Include="Google.Apis.Fitness.v1" Version="1.50.0.2237" />
     <PackageReference Include="Xamarin.Auth" Version="1.7.0" />
     <PackageReference Include="Xamarin.Auth.XamarinForms" Version="1.7.0" />
     <PackageReference Include="Xamarin.Forms" Version="4.8.0.1451" />  
