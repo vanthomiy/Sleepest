@@ -84,7 +84,7 @@ namespace SleepestTest1.ViewModels
 			PostCommand = new Command(PostRequest);
 
 			// Check for auth automaticaly after start
-			StartAuth();
+			//StartAuth();
 		}
 
 		public ICommand LoginCommand { get; }
@@ -126,12 +126,7 @@ namespace SleepestTest1.ViewModels
 		public async void PostRequest()
 		{
 			CanRequest = false;
-
-			RequestBuilder rb = new RequestBuilder();
-
-			var a = new Google.Apis.Fitness.v1.FitnessService.Initializer();
-
-			
+		
 			
 			// Request builder helps to create specific requests
 			DataSourcesRequest dsr = new DataSourcesRequest(FitRequestBuilder<DataSourcesRequest>.RequestDataType[DataSourceType.SleepSegments], DateTimeOffset.Now.AddDays(-20));
