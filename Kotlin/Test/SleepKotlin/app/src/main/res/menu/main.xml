@@ -18,8 +18,16 @@ limitations under the License.
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity" >
 
-    <item android:id="@+id/read_sleep_all"
-        android:title="@string/action_raw_by_day"
+    <item android:id="@+id/sensor_Clients"
+        android:title="@string/find_sensors_clients"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/recording_Clients"
+        android:title="@string/find_recording_clients"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/session_Clients"
+        android:title="@string/find_session_clients"
         android:orderInCategory="100"
         app:showAsAction="never" />
 </menu>

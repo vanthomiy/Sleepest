@@ -15,6 +15,7 @@
  */
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android'
 
 android {
@@ -22,7 +23,7 @@ android {
     buildToolsVersion '29.0.3'
 
     defaultConfig {
-        applicationId "com.google.android.gms.fit.samples.basicsleepkotlin"
+        applicationId "com.google.android.gms.fit.samples.basicsleepkotlin1"
         minSdkVersion 14
         targetSdkVersion 29
         versionCode 1

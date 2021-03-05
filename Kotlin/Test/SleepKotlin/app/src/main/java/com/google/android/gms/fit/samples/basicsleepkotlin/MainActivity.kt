@@ -37,6 +37,7 @@ import com.google.android.gms.fitness.Fitness
 import com.google.android.gms.fitness.FitnessActivities
 import com.google.android.gms.fitness.FitnessOptions
 import com.google.android.gms.fitness.data.*
+import com.google.android.gms.fitness.request.DataSourcesRequest
 import com.google.android.gms.fitness.request.SessionInsertRequest
 import com.google.android.gms.fitness.request.SessionReadRequest
 import com.google.android.gms.fitness.result.SessionReadResponse
@@ -59,8 +60,9 @@ const val PERIOD_END_DATE_TIME = "2020-08-17T12:00:00Z"
  * subsequent execution of the desired action.
  */
 enum class FitActionRequestCode {
-    INSERT_SLEEP_SESSIONS,
-    READ_SLEEP_SESSIONS
+    FIND_SENSOR_CLIENTS,
+    FIND_RECORDING_CLIENTS,
+    FIND_SESSION_CLIENTS
 }
 
 /**
@@ -90,6 +92,7 @@ class MainActivity : AppCompatActivity() {
     private val fitnessOptions = FitnessOptions.builder()
             .addDataType(DataType.TYPE_ACTIVITY_SEGMENT, FitnessOptions.ACCESS_WRITE)
             .addDataType(DataType.TYPE_SLEEP_SEGMENT, FitnessOptions.ACCESS_WRITE)
+            .addDataType(DataType.TYPE_SLEEP_SEGMENT, FitnessOptions.ACCESS_READ)
             .build()
 
     private val runningQOrLater =
@@ -106,117 +109,7 @@ class MainActivity : AppCompatActivity() {
         // When permissions are revoked the app is restarted so onCreate is sufficient to check for
         // permissions core to the Activity's functionality.
 
-        checkPermissionsAndRun(FitActionRequestCode.INSERT_SLEEP_SESSIONS)
-    }
-
-    /**
-     * Creates a list of data sets, one for each night of sleep for a given week, for inserting data
-     * into Google Fit. (DSL used to simplify code.)
-     *
-     * @return A list of sleep data sets, one data set per night of sleep.
-     */
-    private fun createSleepDataSets(): List<DataSet> {
-        val dataSource = getSleepDataSource()
-
-        return listOf(
-                dataSource.createDataSet("2020-08-10T23:00:00Z",
-                        // Monday
-                        Pair(SleepStages.SLEEP_LIGHT, 60),
-                        Pair(SleepStages.SLEEP_DEEP, 60),
-                        Pair(SleepStages.SLEEP_LIGHT, 60),
-                        Pair(SleepStages.SLEEP_REM, 60),
-                        Pair(SleepStages.SLEEP_DEEP, 60),
-                        Pair(SleepStages.SLEEP_LIGHT, 120)
-                ),
-                dataSource.createDataSet("2020-08-11T22:30:00Z",
-                        // Tuesday
-                        Pair(SleepStages.SLEEP_LIGHT, 60),
-                        Pair(SleepStages.SLEEP_DEEP, 60),
-                        Pair(SleepStages.SLEEP_LIGHT, 30),
-                        Pair(SleepStages.AWAKE, 30),
-                        Pair(SleepStages.SLEEP_DEEP, 60),
-                        Pair(SleepStages.SLEEP_REM, 60),
-                        Pair(SleepStages.SLEEP_LIGHT, 120)
-                ),
-                dataSource.createDataSet("2020-08-12T22:00:00Z",
-                        // Wednesday
-                        Pair(SleepStages.SLEEP_LIGHT, 120),
-                        Pair(SleepStages.SLEEP_DEEP, 60),
-                        Pair(SleepStages.SLEEP_REM, 60),
-                        Pair(SleepStages.SLEEP_DEEP, 120),
-                        Pair(SleepStages.SLEEP_LIGHT, 120)
-                ),
-                dataSource.createDataSet("2020-08-13T23:00:00Z",
-                        // Thursday
-                        Pair(SleepStages.SLEEP_LIGHT, 120),
-                        Pair(SleepStages.SLEEP_DEEP, 60),
-                        Pair(SleepStages.AWAKE, 30),
-                        Pair(SleepStages.SLEEP_DEEP, 120),
-                        Pair(SleepStages.SLEEP_LIGHT, 120)
-                ),
-                dataSource.createDataSet("2020-08-14T22:30:00Z",
-                        // Friday
-                        Pair(SleepStages.SLEEP_LIGHT, 60),
-                        Pair(SleepStages.SLEEP_DEEP, 60),
-                        Pair(SleepStages.SLEEP_LIGHT, 30),
-                        Pair(SleepStages.SLEEP_DEEP, 60),
-                        Pair(SleepStages.SLEEP_REM, 60),
-                        Pair(SleepStages.SLEEP_LIGHT, 90)
-                ),
-                dataSource.createDataSet("2020-08-15T23:00:00Z",
-                        // Saturday
-                        Pair(SleepStages.SLEEP_LIGHT, 60),
-                        Pair(SleepStages.SLEEP_DEEP, 60),
-                        Pair(SleepStages.SLEEP_LIGHT, 60),
-                        Pair(SleepStages.SLEEP_DEEP, 60),
-                        Pair(SleepStages.SLEEP_REM, 60),
-                        Pair(SleepStages.SLEEP_LIGHT, 120)
-                ),
-                dataSource.createDataSet("2020-08-16T22:30:00Z",
-                        // Sunday
-                        Pair(SleepStages.SLEEP_LIGHT, 60),
-                        Pair(SleepStages.SLEEP_DEEP, 60),
-                        Pair(SleepStages.SLEEP_LIGHT, 30),
-                        Pair(SleepStages.AWAKE, 30),
-                        Pair(SleepStages.SLEEP_DEEP, 60),
-                        Pair(SleepStages.SLEEP_REM, 60),
-                        Pair(SleepStages.SLEEP_LIGHT, 120)
-                )
-        )
-    }
-
-    private fun insertSleepSessions() {
-        val requests = createSleepSessionRequests()
-        val client = Fitness.getSessionsClient(this, getGoogleAccount())
-        for (request in requests) {
-            client.insertSession(request)
-                    .addOnSuccessListener {
-                        val (start, end) = getSessionStartAndEnd(request.session)
-                        Log.i(TAG, "Added sleep: $start - $end")
-                    }
-                    .addOnFailureListener {
-                        Log.e(TAG, "Failed to insert session for ", it)
-                        it.printStackTrace()
-                    }
-        }
-    }
-
-    /**
-     * Transforms each data set into a request to create a sleep entry in Google Fit. Each request
-     * consists of session metadata and the underlying granular sleep data.
-     *
-     * @return A list of session requests for the Fit API.
-     */
-    private fun createSleepSessionRequests(): List<SessionInsertRequest> {
-        val dataSets = createSleepDataSets()
-
-        return dataSets.map {
-            val session = createSleepSession(it)
-            val request = SessionInsertRequest.Builder()
-            request.addDataSet(it)
-            request.setSession(session)
-            request.build()
-        }
+        //checkPermissionsAndRun(FitActionRequestCode.INSERT_SLEEP_SESSIONS)
     }
 
     private fun getSleepDataSource(): DataSource {
@@ -305,14 +198,7 @@ class MainActivity : AppCompatActivity() {
         return startDateTime to endDateTime
     }
 
-    private fun createSleepSession(dataSet: DataSet): Session {
-        return Session.Builder()
-                .setActivity(FitnessActivities.SLEEP)
-                .setStartTime(dataSet.dataPoints.first().getStartTime(TimeUnit.NANOSECONDS), TimeUnit.NANOSECONDS)
-                .setEndTime(dataSet.dataPoints.last().getEndTime(TimeUnit.NANOSECONDS), TimeUnit.NANOSECONDS)
-                .setName("Sleep")
-                .build()
-    }
+
 
     private fun millisFromRfc339DateString(dateString: String) =
             SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
@@ -334,7 +220,8 @@ class MainActivity : AppCompatActivity() {
      */
     private fun fitSignIn(requestCode: FitActionRequestCode) {
         if (oAuthPermissionsApproved()) {
-            performActionForRequestCode(requestCode)
+            //performActionForRequestCode(requestCode)
+            GetData(requestCode)
         } else {
             requestCode.let {
                 GoogleSignIn.requestPermissions(
@@ -363,8 +250,9 @@ class MainActivity : AppCompatActivity() {
 
         when (resultCode) {
             RESULT_OK -> {
-                val postSignInAction = FitActionRequestCode.values()[requestCode]
-                performActionForRequestCode(postSignInAction)
+                //val postSignInAction = FitActionRequestCode.values()[requestCode]
+               // performActionForRequestCode(postSignInAction)
+                //GetData(Reqest)
             }
             else -> oAuthErrorMsg(requestCode, resultCode)
         }
@@ -377,9 +265,19 @@ class MainActivity : AppCompatActivity() {
      *
      * @param requestCode The code corresponding to the action to perform.
      */
-    private fun performActionForRequestCode(requestCode: FitActionRequestCode) = when (requestCode) {
-        FitActionRequestCode.INSERT_SLEEP_SESSIONS -> insertSleepSessions()
+    /*private fun performActionForRequestCode(requestCode: FitActionRequestCode) = when (requestCode) {
         FitActionRequestCode.READ_SLEEP_SESSIONS -> readSleepSessions()
+    }*/
+
+    private fun GetData(requestCode: FitActionRequestCode)
+    {
+        if (requestCode == FitActionRequestCode.FIND_SENSOR_CLIENTS)
+        //readSleepSessions()
+            availableSensorDataSources()
+        else if (requestCode == FitActionRequestCode.FIND_RECORDING_CLIENTS)
+            availableRecordingDataSources()
+        else
+            availableSessionDataSources()
     }
 
     private fun oAuthErrorMsg(requestCode: Int, resultCode: Int) {
@@ -400,11 +298,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.read_sleep_all -> {
-                checkPermissionsAndRun(FitActionRequestCode.READ_SLEEP_SESSIONS)
+        return when (item.itemId)
+        {
+            R.id.sensor_Clients -> {
+                checkPermissionsAndRun(FitActionRequestCode.FIND_SENSOR_CLIENTS)
                 true
             }
+
+            R.id.recording_Clients -> {
+                checkPermissionsAndRun(FitActionRequestCode.FIND_RECORDING_CLIENTS)
+                true
+            }
+
+            R.id.session_Clients -> {
+                checkPermissionsAndRun(FitActionRequestCode.FIND_SESSION_CLIENTS)
+                true
+            }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -449,7 +359,82 @@ class MainActivity : AppCompatActivity() {
                         requestCode.ordinal)
             }
         }
+
     }
+    // Access Raw Sensor Data
+
+    private fun availableSensorDataSources(){
+
+        val client = Fitness.getSensorsClient(this, getGoogleAccount())
+        val source = client.findDataSources(
+                DataSourcesRequest.Builder()
+                        .setDataTypes(DataType.TYPE_SLEEP_SEGMENT)
+                        .setDataTypes(DataType.TYPE_HEART_RATE_BPM)
+                        .setDataSourceTypes(DataSource.TYPE_RAW)
+                        .setDataSourceTypes(DataSource.TYPE_DERIVED)
+                        .build())
+        source.addOnSuccessListener {
+            datasources ->
+            Log.i(TAG, "We found ${datasources.size} items")
+            datasources.forEach {
+            Log.i(TAG, "Data source found: ${it.streamIdentifier}")
+            Log.i(TAG, "Data source found: ${it.dataType.name}")
+            Log.i(TAG, "Data source found: ${it.device.manufacturer}")
+            Log.i(TAG, "Data source found: ${it.dataType.aggregateType}")
+        } }
+        source.addOnFailureListener { Log.i(TAG, "Nothing found :(") }
+
+    }
+
+
+    private fun availableRecordingDataSources(){
+
+        Fitness.getRecordingClient(this, getGoogleAccount())
+                // This example shows subscribing to a DataType. Alternatively, a DataSource can be used.
+                .subscribe(DataType.TYPE_SLEEP_SEGMENT)
+                .addOnSuccessListener {
+                    Log.i(TAG, "Successfully subscribed to sleep!")
+                }
+                .addOnFailureListener { e ->
+                    Log.w(TAG, "There was a problem subscribing zo sleep.", e)
+                }
+
+        Fitness.getRecordingClient(this, getGoogleAccount())
+                .listSubscriptions()
+                .addOnSuccessListener { subscriptions ->
+                    for (sc in subscriptions) {
+                        val dt = sc.dataType
+                        Log.i(TAG, "Active subscription for data type: ${dt.name}")
+                    }
+                }
+
+    }
+
+    private fun availableSessionDataSources(){
+
+        Fitness.getRecordingClient(this, getGoogleAccount())
+                // This example shows subscribing to a DataType. Alternatively, a DataSource can be used.
+                .subscribe(DataType.TYPE_SLEEP_SEGMENT)
+                .addOnSuccessListener {
+                    Log.i(TAG, "Successfully subscribed to sleep!")
+                }
+                .addOnFailureListener { e ->
+                    Log.w(TAG, "There was a problem subscribing zo sleep.", e)
+                }
+
+        Fitness.getRecordingClient(this, getGoogleAccount())
+                .listSubscriptions()
+                .addOnSuccessListener { subscriptions ->
+                    for (sc in subscriptions) {
+                        val dt = sc.dataType
+                        Log.i(TAG, "Active subscription for data type: ${dt.name}")
+                    }
+                }
+
+    }
+
+//endregion
+
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
                                             grantResults: IntArray) {
