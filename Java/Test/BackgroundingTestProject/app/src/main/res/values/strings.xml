@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">reminder.</string>
+    <string name="about_app">This app is made by me as a task for academic evaluation. This app comprises of features like setting up reminder, repeating it, and dark &amp; light mode support.</string>
+    <string-array name="repeat_after">
+        <item>Never</item>
+        <item>1</item>
+        <item>5</item>
+        <item>10</item>
+        <item>30</item>
+    </string-array>
+</resources>
