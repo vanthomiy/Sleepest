@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
     // the live data coming in).
     private var sleepSegmentOutput: String = ""
     private var sleepClassifyOutput: String = ""
-    private var sleepClassifyOutputExport: String = "Datum;Uhrzeit;Schlaf;Licht;Bewegung;Wahre Zeiten\n"
+    private var sleepClassifyOutputExport: String = ""
 
     // Status of subscription to sleep data. This is stored in [SleepSubscriptionStatus] which saves
     // the data in a [DataStore] in case the user navigates away from the app.
@@ -154,6 +154,14 @@ class MainActivity : AppCompatActivity() {
     fun onClickExportSleepData(view: View) {
 
 
+        var switchExportFile =  "Datum;Uhrzeit;Schlaf;Licht;Bewegung;Wahre Zeiten"
+
+        val split  = sleepClassifyOutputExport.split("\n")
+        split.reversed().forEach {
+            switchExportFile += "${it}\n";
+        }
+
+
         /*val shareIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_STREAM, file)
@@ -162,7 +170,7 @@ class MainActivity : AppCompatActivity() {
 
         val shareIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TEXT, sleepClassifyOutputExport)
+            putExtra(Intent.EXTRA_TEXT, switchExportFile)
             type = "text/csv"
         }
 
