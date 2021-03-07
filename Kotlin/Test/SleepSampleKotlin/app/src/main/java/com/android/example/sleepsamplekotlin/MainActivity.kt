@@ -35,11 +35,12 @@ import com.android.example.sleepsamplekotlin.receiver.SleepReceiver
 import com.google.android.gms.location.ActivityRecognition
 import com.google.android.gms.location.SleepSegmentRequest
 import com.google.android.material.snackbar.Snackbar
+import java.io.File
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Calendar
+import java.util.*
 
 /**
  * Demos Android's Sleep APIs; subscribe/unsubscribe to sleep data, save that data, and display it.
@@ -56,6 +57,7 @@ class MainActivity : AppCompatActivity() {
     // the live data coming in).
     private var sleepSegmentOutput: String = ""
     private var sleepClassifyOutput: String = ""
+    private var sleepClassifyOutputExport: String = "Datum;Uhrzeit;Schlaf;Licht;Bewegung;Wahre Zeiten\n"
 
     // Status of subscription to sleep data. This is stored in [SleepSubscriptionStatus] which saves
     // the data in a [DataStore] in case the user navigates away from the app.
@@ -97,8 +99,8 @@ class MainActivity : AppCompatActivity() {
 
                 sleepSegmentEventEntities.forEach {
                    sleepSegmentOutput += "Status: ${it.status} \n" +
-                           "Starttime: ${MillisToDateTime(it.startTimeMillis)} \n" +
-                           "Endtime: ${MillisToDateTime(it.endTimeMillis)} \n"
+                           "Starttime: ${millisToDateTime(it.startTimeMillis)} \n" +
+                           "Endtime: ${millisToDateTime(it.endTimeMillis)} \n"
                 }
                 updateOutput()
             }
@@ -116,11 +118,19 @@ class MainActivity : AppCompatActivity() {
 
                     val time = it.timestampSeconds.toLong() * 1000; // wokraround to change format
 
+                    val instantNow = Instant.now()
+
+                    sleepClassifyOutputExport += "${millisToDateTime(time).toLocalDate()};${millisToDateTime(time).toLocalTime()};${it.confidence};${(it.light)};${(it.motion)};\n"
+                    // Just display values that are shorter than 24Hours away
+                    if (instantNow.minusSeconds(86400).epochSecond > it.timestampSeconds)
+                        return@forEach
+
                     sleepClassifyOutput += "Status: ${it.confidence} " +
                             "Light ${(it.light)} " +
                             "Motion ${(it.motion)} \n" +
-                            "time ${MillisToDateTime(time)}\n"
+                            "time ${millisToStringDateTime(time)}\n"
                 }
+
                 updateOutput()
             }
         }
@@ -141,17 +151,24 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun onClickRequestActivityData(view: View) {
-        if (activityRecognitionPermissionApproved()) {
-            if (subscribedToSleepData) {
-                unsubscribeToSleepSegmentUpdates(applicationContext, sleepPendingIntent)
-            } else {
-                subscribeToSleepSegmentUpdates(applicationContext, sleepPendingIntent)
-            }
-        } else {
-            requestPermissionLauncher.launch(permission.ACTIVITY_RECOGNITION)
+    fun onClickExportSleepData(view: View) {
+
+
+        /*val shareIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_STREAM, file)
+            type = "text/plain"
+        }*/
+
+        val shareIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, sleepClassifyOutputExport)
+            type = "text/csv"
         }
+
+        startActivity(Intent.createChooser(shareIntent, "Export data"))
     }
+
 
     // Permission is checked before this method is called.
     @SuppressLint("MissingPermission")
@@ -228,11 +245,11 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
-    /**
+     /**
      * Redimentary implementation of the output from multiple tables. The [LiveData] observers just
      * save their data to one of the strings (segmentOutput or classifyOutput) and triggers this
      * function.
-     */
+      **/
     private fun updateOutput() {
         Log.d(TAG, "updateOutput()")
 
@@ -254,13 +271,12 @@ class MainActivity : AppCompatActivity() {
         val newOutput = header + sleepData
         binding.outputTextView.text = newOutput
     }
-
+    
     companion object {
         private const val TAG = "MainActivity"
     }
 
-    private fun MillisToDateTime(millis: Long) : String
-    {
+    private fun millisToStringDateTime(millis: Long) : String {
         // define once somewhere in order to reuse it
         val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
@@ -270,6 +286,17 @@ class MainActivity : AppCompatActivity() {
         // Adding the timezone information to be able to format it (change accordingly)
         val date = LocalDateTime.ofInstant(instant, ZoneId.systemDefault())//.plusHours(1) //reudiger workaround haha
        return formatter.format(date) // 10/12/2019 06:35:45
+    }
+
+    private fun millisToDateTime(millis: Long) : LocalDateTime {
+        // define once somewhere in order to reuse it
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+
+        // JVM representation of a millisecond epoch absolute instant
+        val instant = Instant.ofEpochMilli(millis)
+
+        // Adding the timezone information to be able to format it (change accordingly)
+        return LocalDateTime.ofInstant(instant, ZoneId.systemDefault())//.plusHours(1) //reudiger workaround haha
     }
 
 }

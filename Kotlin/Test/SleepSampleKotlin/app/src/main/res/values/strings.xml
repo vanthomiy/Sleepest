@@ -19,8 +19,7 @@
     <string name="default_greeting_message">Click on the button below to subscribe to Sleep Transitions!</string>
     <string name="sleep_button_subscribe_text">Subscribe to Sleep Data</string>
     <string name="sleep_button_unsubscribe_text">Unsubscribe to Sleep Data</string>
-    <string name="activity_button_subscribe_text">Subscribe to Activity Data</string>
-    <string name="activity_button_unsubscribe_text">Unsubscribe to Activity Data</string>
+    <string name="activity_button_export_text">Export Sleep Data</string>
 
     <string name="action_settings">Settings</string>
     <string name="permission_rational">Sample requires activity transition permissions to function.</string>
