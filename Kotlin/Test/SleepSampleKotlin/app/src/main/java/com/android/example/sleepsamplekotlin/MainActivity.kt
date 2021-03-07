@@ -119,8 +119,8 @@ class MainActivity : AppCompatActivity() {
                     val time = it.timestampSeconds.toLong() * 1000; // wokraround to change format
 
                     val instantNow = Instant.now()
-
-                    sleepClassifyOutputExport += "${millisToDateTime(time).toLocalDate()};${millisToDateTime(time).toLocalTime()};${it.confidence};${(it.light)};${(it.motion)};\n"
+                    val date = millisToDateTime(time)
+                    sleepClassifyOutputExport += "${date.toLocalDate()};${date.hour}:${date.minute};${it.confidence};${(it.light)};${(it.motion)};\n"
                     // Just display values that are shorter than 24Hours away
                     if (instantNow.minusSeconds(86400).epochSecond > it.timestampSeconds)
                         return@forEach
