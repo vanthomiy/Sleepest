@@ -1,4 +1,3 @@
-from typing import List
 
 
 class Parameter:
@@ -18,13 +17,6 @@ class Parameter:
         self.faktor = faktor
 
 
-class ParamsObject:
-    start_parameter: List[Parameter]
-    actual_parameter: List[Parameter]
-
-    def __init__(self, start_parameter: List[Parameter], actual_parameter: List[Parameter]) -> None:       
-        self.start_parameter = start_parameter
-        self.actual_parameter = actual_parameter
 
 
 

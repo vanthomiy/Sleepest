@@ -4,25 +4,25 @@
          "art":"SleepThreshold",
          "min":0,
          "max":100,
-         "set":25,
+         "set":34,
          "offset":0,
-         "faktor":0.59
+         "faktor":0.66
       },
       {
          "art":"LightThreshold",
          "min":0,
          "max":5,
-         "set":3,
+         "set":2,
          "offset":0,
-         "faktor":0.14
+         "faktor":0.33
       },
       {
          "art":"MotionThreshold",
          "min":0,
          "max":5,
-         "set":5,
+         "set":4,
          "offset":0,
-         "faktor":0.16
+         "faktor":0.49
       },
       {
          "art":"MinAwakeDuration",
@@ -36,9 +36,9 @@
          "art":"MinSleepDuration",
          "min":0,
          "max":10,
-         "set":10,
+         "set":7,
          "offset":0,
-         "faktor":0.65
+         "faktor":0.93
       },
       {
          "art":"AwakeBackCalculation",
@@ -60,7 +60,7 @@
          "art":"MaxDataSetsForCaluclation",
          "min":10,
          "max":150,
-         "set":94,
+         "set":57,
          "offset":0,
          "faktor":0.1
       }

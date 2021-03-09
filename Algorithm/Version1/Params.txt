@@ -1,32 +1,22 @@
 {
-    "startParameter": 
-[
-
-{"art": "SleepThreshold", "min": 0, "max": 100, "set": 75, "offset":0, "faktor" : 1}, 
-{"art": "LightThreshold", "min": 0, "max": 6, "set": 3, "offset":0, "faktor" : 1},   
-{"art": "MotionThreshold", "min": 0, "max": 6, "set": 3, "offset":0, "faktor" : 1}, 
-{"art": "MinAwakeDuration", "min": 0, "max": 10, "set": 2, "offset":0, "faktor" : 1},  
-{"art": "MinSleepDuration", "min": 0, "max": 10, "set": 2, "offset":0, "faktor" : 1}, 
-{"art": "AwakeBackCalculation", "min": 0, "max": 100, "set": 50, "offset":0, "faktor" : 1},  
-{"art": "MinBackCalculation", "min": 0, "max": 100, "set": 50, "offset":0, "faktor" : 1},
-{"art": "MaxDataSetsForCaluclation", "min": 10, "max": 150, "set": 25, "offset":0, "faktor" : 1}
-
-],
 
 "actualParameter": 
 [
 
-{"art": "SleepThreshold", "min": 0, "max": 100, "set": 75, "offset":0, "faktor" : 1}, 
-{"art": "LightThreshold", "min": 0, "max": 6, "set": 3, "offset":0, "faktor" : 1},   
-{"art": "MotionThreshold", "min": 0, "max": 6, "set": 3, "offset":0, "faktor" : 1}, 
-{"art": "MinAwakeDuration", "min": 0, "max": 10, "set": 2, "offset":0, "faktor" : 1},  
-{"art": "MinSleepDuration", "min": 0, "max": 10, "set": 2, "offset":0, "faktor" : 1}, 
-{"art": "AwakeBackCalculation", "min": 0, "max": 100, "set": 50, "offset":0, "faktor" : 1},  
-{"art": "MinBackCalculation", "min": 0, "max": 100, "set": 50, "offset":0, "faktor" : 1},
-{"art": "MaxDataSetsForCaluclation", "min": 10, "max": 150, "set": 25, "offset":0, "faktor" : 1}
+{"art": "SleepThreshold", "min": 0, "max": 100, "set": 80, "offset":0, "faktor" : 1}, 
+{"art": "LightThreshold", "min": 0, "max": 5, "set": 3, "offset":0, "faktor" : 0.1},   
+{"art": "MotionThreshold", "min": 0, "max": 5, "set": 3, "offset":0, "faktor" : 0.1}, 
+{"art": "MinAwakeDuration", "min": 0, "max": 10, "set": 2, "offset":0, "faktor" : 0.1},  
+{"art": "MinSleepDuration", "min": 0, "max": 10, "set": 2, "offset":0, "faktor" : 0.1}, 
+{"art": "AwakeBackCalculation", "min": 0, "max": 100, "set": 50, "offset":0, "faktor" : 0.1},  
+{"art": "SleepBackCalculation", "min": 0, "max": 100, "set": 50, "offset":0, "faktor" : 0.1},
+{"art": "MaxDataSetsForCaluclation", "min": 10, "max": 150, "set": 25, "offset":0, "faktor" : 0.1}
 
-]
+],
 
-
+"amountAll" : 0,
+"percentageAll" : 0,
+"percentageAllSleep" : 0,
+"percentageAllAwake" : 0
 
 }
