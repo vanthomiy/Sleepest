@@ -20,16 +20,19 @@ import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.View
+import android.widget.ToggleButton
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.viewbinding.BuildConfig
 import com.android.example.sleepsamplekotlin.databinding.ActivityMainBinding
 import com.android.example.sleepsamplekotlin.receiver.SleepReceiver
 import com.google.android.gms.location.ActivityRecognition
@@ -46,6 +49,9 @@ import java.util.*
  * Demos Android's Sleep APIs; subscribe/unsubscribe to sleep data, save that data, and display it.
  */
 class MainActivity : AppCompatActivity() {
+
+    private var PRIVATE_MODE = 0
+    private val PREF_NAME = "phone_Placement"
 
     private lateinit var binding: ActivityMainBinding
 
@@ -79,6 +85,11 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Setup values from shared prefs
+        val toggle: ToggleButton = findViewById(R.id.toggleButtonBedOutside)
+        val sharedPref: SharedPreferences = getSharedPreferences(PREF_NAME, PRIVATE_MODE)
+        toggle.isChecked = sharedPref.getBoolean(PREF_NAME, false)
 
         mainViewModel.subscribedToSleepDataLiveData.observe(this) { newSubscribedToSleepData ->
             if (subscribedToSleepData != newSubscribedToSleepData) {
@@ -177,6 +188,15 @@ class MainActivity : AppCompatActivity() {
         startActivity(Intent.createChooser(shareIntent, "Export data"))
     }
 
+    fun onClickChangeBedOut(view: View) {
+
+        val toggle: ToggleButton = findViewById(R.id.toggleButtonBedOutside)
+        val sharedPref: SharedPreferences = getSharedPreferences(PREF_NAME, PRIVATE_MODE)
+        val editor = sharedPref.edit()
+        editor.putBoolean(PREF_NAME, toggle.isChecked)
+        editor.apply()
+    }
+
 
     // Permission is checked before this method is called.
     @SuppressLint("MissingPermission")
@@ -243,7 +263,8 @@ class MainActivity : AppCompatActivity() {
                 intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
                 val uri = Uri.fromParts(
                     "package",
-                    BuildConfig.APPLICATION_ID,
+                        //BuildConfig.APPLICATION_ID,
+                        BuildConfig.VERSION_NAME,
                     null
                 )
                 intent.data = uri

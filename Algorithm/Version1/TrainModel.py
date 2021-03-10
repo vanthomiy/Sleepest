@@ -1,4 +1,3 @@
-from io import StringIO
 from RecordDataObject import RecordDataObject
 from ParamsObject import Parameter
 import json
@@ -19,7 +18,7 @@ def LoadExcelSheetsData():
   for sheetName in sheets:
     sheet = workbook[sheetName]
     maxRow = sheet.max_row
-    for i in range(2,maxRow+1):
+    for i in range(2,maxRow):
 
       datum=sheet.cell(row=i,column=1)
       time=sheet.cell(row=i,column=2)
@@ -28,8 +27,10 @@ def LoadExcelSheetsData():
       motion=sheet.cell(row=i,column=5)
       real=sheet.cell(row=i,column=6)
 
-      record = RecordDataObject(datum.value, time.value, sleep.value, light.value, motion.value, real.value)
-      sheetData.setdefault(sheetName, []).append(record)
+      if(sleep.value != None):    
+        record = RecordDataObject(datum.value, time.value, sleep.value, light.value, motion.value, real.value)
+        sheetData.setdefault(sheetName, []).append(record)
+
 
   return sheetData
 
@@ -63,9 +64,6 @@ def evaluateCalculation(calculation, personData):
     #just easy compare, without sleepstates
     for i in range(len(calculation)):
 
-        if(personData[i].realSleep > 0):
-            w = 3
-
         if(calculation[i] < 0.5 and personData[i].realSleep == 0):
             awakeRight+=1
         elif (calculation[i] > 0.5 and personData[i].realSleep > 0):
@@ -90,7 +88,11 @@ async def main():
     bestParams = loadedParams
     bestAlloverAttempt = 0
 
-    for attempt in range(1000):
+    maxattems = 1000
+    prozent = 0
+    lastProzent = 0
+
+    for attempt in range(maxattems):
 
         sleepRightAll = 0
         awakeRightAll = 0
@@ -124,10 +126,10 @@ async def main():
             sleepWrongAll += sleepWrongPerson
             awakeWrongAll += awakeWrongPerson
 
-            amountPerson = sleepRightPerson + awakeRightPerson + sleepWrongPerson + awakeWrongPerson
-            pecentagePerson = ((sleepRightPerson + awakeRightPerson) / amountPerson) * 100
-            percentagePersonSleep = (sleepRightPerson / (sleepRightPerson + sleepWrongPerson + 0.000001)) * 100
-            percentagePersonAwake = (awakeRightPerson / (awakeRightPerson + awakeWrongPerson + 0.000001)) * 100
+            #amountPerson = sleepRightPerson + awakeRightPerson + sleepWrongPerson + awakeWrongPerson
+            #pecentagePerson = ((sleepRightPerson + awakeRightPerson) / amountPerson) * 100
+            #percentagePersonSleep = (sleepRightPerson / (sleepRightPerson + sleepWrongPerson + 0.000001)) * 100
+            #percentagePersonAwake = (awakeRightPerson / (awakeRightPerson + awakeWrongPerson + 0.000001)) * 100
 
 
             #print(person[0] + " Amount: %i" % amountPerson)
@@ -141,8 +143,6 @@ async def main():
         percentageAllSleep = (sleepRightAll / (sleepRightAll + sleepWrongAll + 0.00001)) * 100
         percentageAllAwake = (awakeRightAll / (awakeRightAll + awakeWrongAll+ 0.00001)) * 100
 
-        print("Versuch %i" % attempt + " Value: %0.2f" % pecentageAll)
-
         #Save if its better then before
         if(bestAlloverAttempt < pecentageAll):
             bestParams = actualParams
@@ -153,15 +153,11 @@ async def main():
         #adjust the parameters random
         actualParams = adjustParamsRandom(bestParams)
 
-
-
-
-    #print("Amount: %i" % amountAll)
-    #print("Allover %0.2f"  % pecentageAll)
-    #print("Sleep %0.2f"  % percentageAllSleep)
-    #print("Awake  %0.2f"  % percentageAllAwake + "\n")
-
-
+        #percent output
+        prozent += (100/maxattems)
+        if (prozent - int(prozent)) != 0 and lastProzent != int(prozent):
+            print("Prozent: %i" % prozent)
+            lastProzent = int(prozent)
    
 asyncio.run(main())
 

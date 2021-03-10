@@ -71,9 +71,9 @@ async def importNewSleepDataSet(sleepDataSet, _actualParams):
 
     #foreach dataset in recorddata
     for dataset in recordData:
-      e1 = ((dataset.sleep/(SleepThreshold*2+0.00001)) if dataset.sleep < SleepThreshold else (0.5+(dataset.sleep-SleepThreshold) * (1/((2 * 100 - SleepThreshold)+0.00001))))
-      e2 = 1 - ((dataset.light/(LightThreshold*2+0.00001)) if dataset.light > LightThreshold else (0.5+(dataset.light-LightThreshold) * (1/((2 * 5 - LightThreshold)+0.00001))))
-      e3 = 1 - ((dataset.motion/(MotionThreshold*2+0.00001)) if dataset.motion > MotionThreshold else (0.5+(dataset.motion-MotionThreshold) * (1/((2 * 5 - MotionThreshold)+0.00001))))
+      e1 = ((dataset.sleep/(SleepThreshold*2+0.00001)) if dataset.sleep < SleepThreshold else (0.5+(dataset.sleep-SleepThreshold) * (1/((2 * (100 - SleepThreshold))+0.00001))))
+      e2 = 1 - ((dataset.light/(LightThreshold*2+0.00001)) if dataset.light > LightThreshold else (0.5+(dataset.light-LightThreshold) * (1/((2 * (5 - LightThreshold))+0.00001))))
+      e3 = 1 - ((dataset.motion/(MotionThreshold*2+0.00001)) if dataset.motion > MotionThreshold else (0.5+(dataset.motion-MotionThreshold) * (1/((2 * (5 - MotionThreshold))+0.00001))))
 
       #calculate the result without e4
       maxPrevSleep = (SleepThresholdFaktor +  SleepThresholdOffset) + (LightThresholdFaktor +  LightThresholdOffset) + (MotionThresholdFaktor +  MotionThresholdOffset)
@@ -92,9 +92,6 @@ async def importNewSleepDataSet(sleepDataSet, _actualParams):
 
       #put all in a list
       calculation.append(sleepCalc)
-
-      #print("At: " + " Calculated Raw: %.2f" % sleepCalc + " RealSleep: %.2f" % dataset.realSleep)
-
 
     return calculation, recordData
 

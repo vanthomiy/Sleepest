@@ -1,7 +1,6 @@
 #Create history
 import json
 import random
-import pickle  
 
 
 def historyCreater(amountAll,percentageAll,percentageAllSleep,percentageAllAwake, actualParams):
@@ -17,6 +16,8 @@ def historyCreater(amountAll,percentageAll,percentageAllSleep,percentageAllAwake
 
         newData = {}
         myList = []
+
+        #change when update
         for i in range(len(actualParams)):
             value = {}
             value['art'] = actualParams[i].art
@@ -29,7 +30,6 @@ def historyCreater(amountAll,percentageAll,percentageAllSleep,percentageAllAwake
 
 
         newData['actualParameter'] = myList
-        #newData['actualParameter'] = actualParams
         newData['amountAll'] = amountAll
         newData['percentageAll'] = percentageAll
         newData['percentageAllSleep'] = percentageAllSleep
@@ -48,32 +48,21 @@ def adjustParamsRandom(actualParams):
     _actualParams = actualParams
     _actualParams[0].set = random.randint(_actualParams[0].min, _actualParams[0].max)
     _actualParams[0].faktor = random.randint(0, 100) / 100
-    _actualParams[0].offset = 0
+    _actualParams[0].offset = random.randint(0, 1) / 100
     _actualParams[1].set = random.randint(_actualParams[1].min, _actualParams[1].max)
     _actualParams[1].faktor = random.randint(0, 100) / 100
-    _actualParams[1].offset = 0
+    _actualParams[1].offset = random.randint(0, 1) / 100
     _actualParams[2].set = random.randint(_actualParams[2].min, _actualParams[2].max)
     _actualParams[2].faktor = random.randint(0, 100) / 100
-    _actualParams[2].offset = 0
+    _actualParams[2].offset = random.randint(0, 1) / 100
     _actualParams[4].set = random.randint(_actualParams[4].min, _actualParams[4].max)
     _actualParams[4].faktor = random.randint(0, 100) / 100
-    _actualParams[4].offset = 0
+    _actualParams[4].offset = random.randint(0, 1) / 100
     _actualParams[7].set = random.randint(_actualParams[7].min, _actualParams[7].max)
     return _actualParams
 
-#Adjust the params random
+#Adjust the params specific with curve
 def adjustParamsSpecific():
     a = 1
 
 
-
-"""
-        for i in range(len(actualParams)):
-            newData
-            newData['actualParameter'][i]['art'] = actualParams[i].art
-            newData['actualParameter'][i]['min'] = actualParams[i].min
-            newData['actualParameter'][i]['max'] = actualParams[i].max
-            newData['actualParameter'][i]['set'] = actualParams[i].set
-            newData['actualParameter'][i]['offset'] = actualParams[i].offset
-            newData['actualParameter'][i]['faktor'] = actualParams[i].faktor
-"""
