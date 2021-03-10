@@ -61,9 +61,10 @@ class MainActivity : AppCompatActivity() {
 
     // Used to construct the output from multiple tables (very basic implementation just to show
     // the live data coming in).
-    private var sleepSegmentOutput: String = ""
-    private var sleepClassifyOutput: String = ""
-    private var sleepClassifyOutputExport: String = ""
+    private var sleepBedClassifyOutput: String = ""
+    private var sleepBedClassifyOutputExport: String = ""
+    private var sleepOutClassifyOutput: String = ""
+    private var sleepOutClassifyOutputExport: String = ""
 
     // Status of subscription to sleep data. This is stored in [SleepSubscriptionStatus] which saves
     // the data in a [DataStore] in case the user navigates away from the app.
@@ -77,6 +78,7 @@ class MainActivity : AppCompatActivity() {
             }
             updateOutput()
         }
+    private var phoneOnBed = false
 
     private lateinit var sleepPendingIntent: PendingIntent
 
@@ -97,33 +99,26 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        /*mainViewModel.phoneOnBedStatusLiveData.observe(this) { phoneOnBedData ->
+            if (phoneOnBed != phoneOnBedData) {
+                phoneOnBed = phoneOnBedData
+            }
+        }*/
+
+
         // Adds observers on LiveData from [SleepRepository]. Data is saved to the database via
         // [SleepReceiver] and when that data changes, we get notified of changes.
         // Note: The data returned is Entity versions of the sleep classes, so they don't contain
         // all the data, as I just saved the minimum to show it's being saved.
-        mainViewModel.allSleepSegments.observe(this) { sleepSegmentEventEntities ->
-            Log.d(TAG, "sleepSegmentEventEntities: $sleepSegmentEventEntities")
 
-            if (sleepSegmentEventEntities.isNotEmpty())
-            {
-                sleepSegmentOutput = "We found ${sleepSegmentEventEntities.size} items  \n"
-
-                sleepSegmentEventEntities.forEach {
-                   sleepSegmentOutput += "Status: ${it.status} \n" +
-                           "Starttime: ${millisToDateTime(it.startTimeMillis)} \n" +
-                           "Endtime: ${millisToDateTime(it.endTimeMillis)} \n"
-                }
-                updateOutput()
-            }
-        }
-
-        mainViewModel.allSleepClassifyEventEntities.observe(this) {
+        /*
+        mainViewModel.allSleepBedClassifyEventEntities.observe(this) {
                 sleepClassifyEventEntities ->
             Log.d(TAG, "sleepClassifyEventEntities: $sleepClassifyEventEntities")
 
             if (sleepClassifyEventEntities.isNotEmpty())
             {
-                sleepClassifyOutput = "We found ${sleepClassifyEventEntities.size} items  \n"
+                sleepBedClassifyOutput = "We found ${sleepClassifyEventEntities.size} items  \n"
 
                 sleepClassifyEventEntities.forEach {
 
@@ -131,12 +126,41 @@ class MainActivity : AppCompatActivity() {
 
                     val instantNow = Instant.now()
                     val date = millisToDateTime(time)
-                    sleepClassifyOutputExport += "${date.toLocalDate()};${date.hour}:${date.minute};${it.confidence};${(it.light)};${(it.motion)};\n"
+                    sleepBedClassifyOutputExport += "${date.toLocalDate()};${date.hour}:${date.minute};${it.confidence};${(it.light)};${(it.motion)};\n"
                     // Just display values that are shorter than 24Hours away
                     if (instantNow.minusSeconds(86400).epochSecond > it.timestampSeconds)
                         return@forEach
 
-                    sleepClassifyOutput += "Status: ${it.confidence} " +
+                    sleepBedClassifyOutput += "Status: ${it.confidence} " +
+                            "Light ${(it.light)} " +
+                            "Motion ${(it.motion)} \n" +
+                            "time ${millisToStringDateTime(time)}\n"
+                }
+
+                updateOutput()
+            }
+        }
+*/
+        mainViewModel.allSleepClassifyEventEntities.observe(this) {
+                sleepClassifyEventEntities ->
+            Log.d(TAG, "sleepClassifyEventEntities: $sleepClassifyEventEntities")
+
+            if (sleepClassifyEventEntities.isNotEmpty())
+            {
+                sleepOutClassifyOutput = "We found ${sleepClassifyEventEntities.size} items  \n"
+
+                sleepClassifyEventEntities.forEach {
+
+                    val time = it.timestampSeconds.toLong() * 1000; // wokraround to change format
+
+                    val instantNow = Instant.now()
+                    val date = millisToDateTime(time)
+                    sleepOutClassifyOutputExport += "${date.toLocalDate()};${date.hour}:${date.minute};${it.confidence};${(it.light)};${(it.motion)};\n"
+                    // Just display values that are shorter than 24Hours away
+                    if (instantNow.minusSeconds(86400).epochSecond > it.timestampSeconds)
+                        return@forEach
+
+                    sleepOutClassifyOutput += "Status: ${it.confidence} " +
                             "Light ${(it.light)} " +
                             "Motion ${(it.motion)} \n" +
                             "time ${millisToStringDateTime(time)}\n"
@@ -165,13 +189,20 @@ class MainActivity : AppCompatActivity() {
     fun onClickExportSleepData(view: View) {
 
 
-        var switchExportFile =  "Datum;Uhrzeit;Schlaf;Licht;Bewegung;Wahre Zeiten"
+        var switchExportFile =  "Bed\nDatum;Uhrzeit;Schlaf;Licht;Bewegung;Wahre Zeiten"
 
-        val split  = sleepClassifyOutputExport.split("\n")
-        split.reversed().forEach {
+        val splitOut  = sleepOutClassifyOutputExport.split("\n")
+        val splitBed  = sleepBedClassifyOutputExport.split("\n")
+
+        splitBed.reversed().forEach {
             switchExportFile += "${it}\n";
         }
 
+        switchExportFile +=  "\n\n\nOut\nDatum;Uhrzeit;Schlaf;Licht;Bewegung;Wahre Zeiten"
+
+        splitOut.reversed().forEach {
+            switchExportFile += "${it}\n";
+        }
 
         /*val shareIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
@@ -191,10 +222,12 @@ class MainActivity : AppCompatActivity() {
     fun onClickChangeBedOut(view: View) {
 
         val toggle: ToggleButton = findViewById(R.id.toggleButtonBedOutside)
-        val sharedPref: SharedPreferences = getSharedPreferences(PREF_NAME, PRIVATE_MODE)
+        //mainViewModel.updateSubscribedToSleepData(toggle.isChecked)
+
+        /*val sharedPref: SharedPreferences = getSharedPreferences(PREF_NAME, PRIVATE_MODE)
         val editor = sharedPref.edit()
         editor.putBoolean(PREF_NAME, toggle.isChecked)
-        editor.apply()
+        editor.apply()*/
     }
 
 
@@ -293,8 +326,8 @@ class MainActivity : AppCompatActivity() {
 
         val sleepData = getString(
             R.string.main_output_header2_and_sleep_data,
-            sleepSegmentOutput,
-            sleepClassifyOutput
+            sleepOutClassifyOutput,
+            sleepBedClassifyOutput
         )
 
         val newOutput = header + sleepData
