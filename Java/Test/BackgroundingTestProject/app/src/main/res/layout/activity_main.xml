@@ -7,10 +7,64 @@
     tools:context=".MainActivity"
     android:background="?attr/colorOnPrimary">
 
-
-    <Button
-        android:id="@+id/btnAddAlarm"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New Alarm" />
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/layoutTimeset">
+
+            <Spinner
+                android:id="@+id/spHour"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/spMinute"
+                android:layout_weight="1"/>
+            <Spinner
+                android:id="@id/spMinute"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnAddAlarm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="New Alarm"
+            android:layout_marginTop="50dp"
+            android:layout_below="@+id/layoutTimeset"/>
+
+        <EditText
+            android:id="@+id/etDuration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Add workmanager duration in minutes"
+            android:layout_below="@+id/btnAddAlarm"
+            android:inputType="number"/>
+
+        <Button
+            android:id="@+id/btnStartWorkmanager"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="New Alarm"
+            android:layout_marginTop="50dp"
+            android:layout_below="@+id/etDuration"/>
+
+
+    </RelativeLayout>
+
+
+
 </RelativeLayout>
