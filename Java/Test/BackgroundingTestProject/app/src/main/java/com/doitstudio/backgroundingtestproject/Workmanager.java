@@ -4,6 +4,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -37,7 +38,8 @@ public class Workmanager extends Worker {
 
         Context context = getApplicationContext();
         Log.i(TAG, "doWork");
-        showNotification(getApplicationContext());
+        //showNotification(getApplicationContext());
+        saveActualTime();
         //setTimer();
 
         return Result.success();
@@ -93,5 +95,18 @@ public class Workmanager extends Worker {
         }
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(100, mBuilder.build());
+    }
+
+    private void saveActualTime() {
+        Calendar cal = new GregorianCalendar();
+        cal.setTimeInMillis(System.currentTimeMillis());
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        int minute = cal.get(Calendar.MINUTE);
+
+        SharedPreferences timePref = context.getSharedPreferences("time", 0);
+        SharedPreferences.Editor editor = timePref.edit();
+        editor.putString("hour", Integer.toString(hour));
+        editor.putString("minute", Integer.toString(minute));
+        editor.apply();
     }
 }

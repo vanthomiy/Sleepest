@@ -18,6 +18,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button btnAddAlarm, btnStartWorkmanager;
     Spinner spHour, spMinute, spDay;
     EditText etDuration;
+    TextView tvLastTime;
     String[] days = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
     static MediaPlayer mediaPlayer;
@@ -71,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         spMinute = (Spinner) findViewById(R.id.spMinute);
         spDay = (Spinner) findViewById(R.id.spDay);
         etDuration = (EditText) findViewById(R.id.etDuration);
+        tvLastTime = (TextView) findViewById(R.id.tvLastTime);
 
         btnAddAlarm.setOnClickListener(this);
         btnStartWorkmanager.setOnClickListener(this);
@@ -89,6 +92,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         ArrayAdapter<Integer> minutesAdapter = new ArrayAdapter<Integer>(this,android.R.layout.simple_spinner_item, minutes);
         spMinute.setAdapter(minutesAdapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences timePref = getSharedPreferences("time", 0);
+        tvLastTime.setText(timePref.getString("hour", "00") + ":" + timePref.getString("minute", "00"));
+
     }
 
     //Funktioniert ziemlich gut, Auslösung an bestimmter Uhrzeit
@@ -170,6 +181,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         showNotification(getApplicationContext());
     }
 
+    private void startForegroundService(Actions action) {
+        Intent intent = new Intent(this, EndlessService.class);
+        intent.setAction(action.name());
+        if (new ServiceTracker().getServiceState(this) == ServiceState.STOPPED && action == Actions.STOP)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(intent);
+                return;
+            }
+        startService(intent);
+    }
+
     private void showNotification(Context context) {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
@@ -200,6 +222,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btnStartWorkmanager:
                 startPeriodicWorkmanager();
+                startForegroundService(Actions.START);
                 // scheduleAlarm();
                 break;
         }

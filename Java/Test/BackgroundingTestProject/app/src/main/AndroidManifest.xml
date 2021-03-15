@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.doitstudio.backgroundingtestproject">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,6 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BackgroundingTestProject"
         tools:ignore="AllowBackup">
+        <service
+            android:name=".EndlessService"
+            android:enabled="true"
+            android:exported="false" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,6 +29,11 @@
         <receiver
             android:name=".AlarmReceiver"
             android:exported="true">
+        </receiver>
+        <receiver android:enabled="true" android:name=".BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
         </receiver>
     </application>
 

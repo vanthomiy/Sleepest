@@ -16,6 +16,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         this.context = context;
 
+        /** TODO: High Sensitive Notification for Alarm, like System Alarm (Snooze, turn off) **/
+
         //Audio only with media sound on!!
         mediaPlayer = MediaPlayer.create(context, R.raw.single_beep);
         mediaPlayer.start();
