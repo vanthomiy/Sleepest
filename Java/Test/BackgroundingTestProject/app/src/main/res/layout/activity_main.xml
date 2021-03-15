@@ -14,11 +14,19 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp">
 
+        <Spinner
+            android:id="@+id/spDay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_weight="1"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:id="@+id/layoutTimeset">
+            android:id="@+id/layoutTimeset"
+            android:layout_below="@+id/spDay">
 
             <Spinner
                 android:id="@+id/spHour"

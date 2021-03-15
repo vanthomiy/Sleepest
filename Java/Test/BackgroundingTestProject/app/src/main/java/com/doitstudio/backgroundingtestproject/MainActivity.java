@@ -55,8 +55,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String CHANNEL_ID = "VERBOSE_NOTIFICATION" ;
 
     Button btnAddAlarm, btnStartWorkmanager;
-    Spinner spHour, spMinute;
+    Spinner spHour, spMinute, spDay;
     EditText etDuration;
+    String[] days = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
     static MediaPlayer mediaPlayer;
 
@@ -68,10 +69,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnStartWorkmanager = (Button) findViewById(R.id.btnStartWorkmanager);
         spHour = (Spinner) findViewById(R.id.spHour);
         spMinute = (Spinner) findViewById(R.id.spMinute);
+        spDay = (Spinner) findViewById(R.id.spDay);
         etDuration = (EditText) findViewById(R.id.etDuration);
 
         btnAddAlarm.setOnClickListener(this);
         btnStartWorkmanager.setOnClickListener(this);
+
+
+        ArrayAdapter<String> dayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, days);
+        spDay.setAdapter(dayAdapter);
 
         Integer[] hours = new Integer[]{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23};
         ArrayAdapter<Integer> hoursAdapter = new ArrayAdapter<Integer>(this,android.R.layout.simple_spinner_item, hours);
@@ -97,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (cal_alarm.before(Calendar.getInstance())) {
             Toast.makeText(getApplicationContext(), "Date passed moved to next date.", Toast.LENGTH_SHORT).show();
-            cal_alarm.add(Calendar.DATE, 1);
+            cal_alarm.add(Calendar.DATE, spDay.getSelectedItemPosition() + 1);
         }
 
         Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
@@ -110,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             am.setExact(AlarmManager.RTC_WAKEUP, cal_alarm.getTimeInMillis(), pi);
         }
 
-        Toast.makeText(getApplicationContext(), "Alarm set", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Alarm set to " + days[spDay.getSelectedItemPosition()] + ": " + hour + ":" + min, Toast.LENGTH_LONG).show();
     }
 
     //Geht bisher garnicht, nur sporadisch
