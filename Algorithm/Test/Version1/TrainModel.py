@@ -9,7 +9,7 @@ from AdjustModel import historyCreater
 
 #Lade die Excelliste mit allen verfügbaren Daten
 def LoadExcelSheetsData():
-  workbook = load_workbook(filename="Schlafdaten.xlsx")
+  workbook = load_workbook(filename="SchlafdatenBett.xlsx")
   
   sheets = workbook.sheetnames
   
@@ -88,7 +88,7 @@ async def main():
     bestParams = loadedParams
     bestAlloverAttempt = 0
 
-    maxattems = 1000
+    maxattems = 100
     prozent = 0
     lastProzent = 0
 
