@@ -50,6 +50,10 @@ class SleepRepository(
         sleepSegmentEventDao.insert(sleepSegmentEventEntity)
     }
 
+    suspend fun deleteSleepSegments() {
+        sleepSegmentEventDao.deleteAll()
+    }
+
     // By default Room runs suspend queries off the main thread. Therefore, we don't need to
     // implement anything else to ensure we're not doing long-running database work off the
     // main thread.
@@ -64,6 +68,10 @@ class SleepRepository(
 
     suspend fun insertSleepClassifyEvent(sleepClassifyEventEntity: SleepClassifyEventEntity) {
         sleepClassifyEventDao.insert(sleepClassifyEventEntity)
+    }
+
+    suspend fun deleteSleepClassifyEvent() {
+        sleepClassifyEventDao.deleteAll()
     }
 
     suspend fun insertSleepClassifyEvents(sleepClassifyEventEntities: List<SleepClassifyEventEntity>) {

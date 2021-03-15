@@ -33,6 +33,12 @@ class MainViewModel(private val repository: SleepRepository) : ViewModel() {
         repository.updateSubscribedToSleepData(subscribed)
     }
 
+    fun deleteAllSleepData() = viewModelScope.launch {
+        repository.deleteSleepClassifyEvent()
+        repository.deleteSleepSegments()
+    }
+
+
     // Using LiveData and caching what allWords returns has several benefits:
     // - We can put an observer on the data (instead of polling for changes) and only update the
     //   UI when the data actually changes.
