@@ -88,59 +88,12 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Setup values from shared prefs
-        val toggle: ToggleButton = findViewById(R.id.toggleButtonBedOutside)
-        val sharedPref: SharedPreferences = getSharedPreferences(PREF_NAME, PRIVATE_MODE)
-        toggle.isChecked = sharedPref.getBoolean(PREF_NAME, false)
-
         mainViewModel.subscribedToSleepDataLiveData.observe(this) { newSubscribedToSleepData ->
             if (subscribedToSleepData != newSubscribedToSleepData) {
                 subscribedToSleepData = newSubscribedToSleepData
             }
         }
 
-        /*mainViewModel.phoneOnBedStatusLiveData.observe(this) { phoneOnBedData ->
-            if (phoneOnBed != phoneOnBedData) {
-                phoneOnBed = phoneOnBedData
-            }
-        }*/
-
-
-        // Adds observers on LiveData from [SleepRepository]. Data is saved to the database via
-        // [SleepReceiver] and when that data changes, we get notified of changes.
-        // Note: The data returned is Entity versions of the sleep classes, so they don't contain
-        // all the data, as I just saved the minimum to show it's being saved.
-
-        /*
-        mainViewModel.allSleepBedClassifyEventEntities.observe(this) {
-                sleepClassifyEventEntities ->
-            Log.d(TAG, "sleepClassifyEventEntities: $sleepClassifyEventEntities")
-
-            if (sleepClassifyEventEntities.isNotEmpty())
-            {
-                sleepBedClassifyOutput = "We found ${sleepClassifyEventEntities.size} items  \n"
-
-                sleepClassifyEventEntities.forEach {
-
-                    val time = it.timestampSeconds.toLong() * 1000; // wokraround to change format
-
-                    val instantNow = Instant.now()
-                    val date = millisToDateTime(time)
-                    sleepBedClassifyOutputExport += "${date.toLocalDate()};${date.hour}:${date.minute};${it.confidence};${(it.light)};${(it.motion)};\n"
-                    // Just display values that are shorter than 24Hours away
-                    if (instantNow.minusSeconds(86400).epochSecond > it.timestampSeconds)
-                        return@forEach
-
-                    sleepBedClassifyOutput += "Status: ${it.confidence} " +
-                            "Light ${(it.light)} " +
-                            "Motion ${(it.motion)} \n" +
-                            "time ${millisToStringDateTime(time)}\n"
-                }
-
-                updateOutput()
-            }
-        }
-*/
         mainViewModel.allSleepClassifyEventEntities.observe(this) {
                 sleepClassifyEventEntities ->
             Log.d(TAG, "sleepClassifyEventEntities: $sleepClassifyEventEntities")
@@ -172,9 +125,16 @@ class MainActivity : AppCompatActivity() {
 
         sleepPendingIntent =
             SleepReceiver.createSleepReceiverPendingIntent(context = applicationContext)
+
+        requestData()
+
     }
 
     fun onClickRequestSleepData(view: View) {
+        requestData()
+    }
+
+    private fun requestData(){
         if (activityRecognitionPermissionApproved()) {
             if (subscribedToSleepData) {
                 unsubscribeToSleepSegmentUpdates(applicationContext, sleepPendingIntent)
@@ -219,17 +179,9 @@ class MainActivity : AppCompatActivity() {
         startActivity(Intent.createChooser(shareIntent, "Export data"))
     }
 
-    fun onClickChangeBedOut(view: View) {
-
-        val toggle: ToggleButton = findViewById(R.id.toggleButtonBedOutside)
-        //mainViewModel.updateSubscribedToSleepData(toggle.isChecked)
-
-        /*val sharedPref: SharedPreferences = getSharedPreferences(PREF_NAME, PRIVATE_MODE)
-        val editor = sharedPref.edit()
-        editor.putBoolean(PREF_NAME, toggle.isChecked)
-        editor.apply()*/
+    fun onClickDeleteOldData(view: View){
+        mainViewModel.deleteAllSleepData()
     }
-
 
     // Permission is checked before this method is called.
     @SuppressLint("MissingPermission")
@@ -257,6 +209,8 @@ class MainActivity : AppCompatActivity() {
         task.addOnSuccessListener {
             mainViewModel.updateSubscribedToSleepData(false)
             Log.d(TAG, "Successfully unsubscribed to sleep data.")
+            // request data again
+            requestData()
         }
         task.addOnFailureListener { exception ->
             Log.d(TAG, "Exception when unsubscribing to sleep data: $exception")

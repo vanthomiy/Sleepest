@@ -20,8 +20,7 @@
     <string name="sleep_button_subscribe_text">Subscribe to Sleep Data</string>
     <string name="sleep_button_unsubscribe_text">Unsubscribe to Sleep Data</string>
     <string name="activity_button_export_text">Export Sleep Data</string>
-    <string name="activity_button_bed_outside_OUT">Actual: Outside Bed</string>
-    <string name="activity_button_bed_outside_BED">Actual: Inside Bed</string>
+    <string name="delete_Sleep_Data">Delete Sleep Data</string>
 
     <string name="action_settings">Settings</string>
     <string name="permission_rational">Sample requires activity transition permissions to function.</string>
