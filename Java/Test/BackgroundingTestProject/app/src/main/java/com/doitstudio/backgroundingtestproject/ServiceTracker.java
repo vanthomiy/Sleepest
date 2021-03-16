@@ -33,25 +33,13 @@ class ServiceTracker {
         editor.apply();
     }
 
-    /**
-     * Get service state with SharedPreference.
-     *
-     * @param context : App context.
-     * @return ServiceState : STARTED or STOPPED
-     */
     ServiceState getServiceState(Context context) {
         SharedPreferences settings = getPreferences(context);
         return ServiceState.valueOf(settings.getString(key, ServiceState.STOPPED.name()));
     }
 
-    /**
-     * To simplify the use of SharedPreference.
-     *
-     * @param context : App context.
-     * @return SharedPreferences.
-     */
     private SharedPreferences getPreferences(Context context) {
-        // SharedPreference name.
+
         String name = "SPYSERVICE_KEY";
         return context.getSharedPreferences(name, 0);
     }

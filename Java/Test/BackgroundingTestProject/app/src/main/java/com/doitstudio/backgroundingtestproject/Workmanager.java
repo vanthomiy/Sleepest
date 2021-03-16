@@ -14,17 +14,23 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
 
 public class Workmanager extends Worker {
 
     private static final String TAG = Workmanager.class.getSimpleName();
     public static final String CHANNEL_ID = "VERBOSE_NOTIFICATION" ;
-    Context context;
+    private static final String TAG_WORK = "Workmanager 1";
+    private static Context context;
 
     public Workmanager(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
@@ -36,7 +42,6 @@ public class Workmanager extends Worker {
     @Override
     public Result doWork() {
 
-        Context context = getApplicationContext();
         Log.i(TAG, "doWork");
         /**Hinweis: Hier dürfen nur Prozesse stattfinden, die nicht länger als 10 Minuten dauern
          * Allerdings werden Notifications erst angezeigt, wenn der Bildschirm angeht. Somit bricht
@@ -47,34 +52,8 @@ public class Workmanager extends Worker {
         //showNotification(getApplicationContext());
         
         saveActualTime();
-        //setTimer();
 
         return Result.success();
-    }
-
-    //Intent aus Background starten, bisher nicht möglich...
-    private void setTimer() {
-
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                /*Intent intent = new Intent(mcontext, NewScreen.class);
-                intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
-                mcontext.startActivity(intent);*/
-
-                Calendar cal = new GregorianCalendar();
-                cal.setTimeInMillis(System.currentTimeMillis());
-                int hour = cal.get(Calendar.HOUR_OF_DAY);
-                int minute = cal.get(Calendar.MINUTE);
-
-                Intent intent2 = new Intent(context, AlarmClock.ACTION_SET_ALARM.getClass());
-                //Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);
-                intent2.putExtra(AlarmClock.EXTRA_HOUR, hour);
-                intent2.putExtra(AlarmClock.EXTRA_MINUTES, minute + 13);
-                intent2.putExtra(AlarmClock.EXTRA_SKIP_UI, true);
-                context.startActivity(intent2);
-            }
-        });
     }
 
     private void showNotification(Context context) {
@@ -115,5 +94,31 @@ public class Workmanager extends Worker {
         editor.putString("hour", Integer.toString(hour));
         editor.putString("minute", Integer.toString(minute));
         editor.apply();
+    }
+
+    static void startPeriodicWorkmanager(int duration) {
+
+        //Constraints not necessary, but useful
+        Constraints constraints = new Constraints.Builder()
+                .setRequiresBatteryNotLow(true)
+                .setRequiresStorageNotLow(true)
+                .build();
+
+        PeriodicWorkRequest periodicDataWork =
+                new PeriodicWorkRequest.Builder(Workmanager.class, duration, TimeUnit.MINUTES)
+                        .addTag(TAG_WORK)
+                        .setConstraints(constraints)
+                        // setting a backoff on case the work needs to retry
+                        //.setBackoffCriteria(BackoffPolicy.LINEAR, PeriodicWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS)
+                        .build();
+
+        WorkManager workManager = WorkManager.getInstance(context);
+        //workManager.enqueue(periodicDataWork);
+        workManager.enqueueUniquePeriodicWork(TAG_WORK, ExistingPeriodicWorkPolicy.KEEP, periodicDataWork);
+
+    }
+
+    static void stopPeriodicWorkmanager() {
+        WorkManager.getInstance(context).cancelAllWorkByTag(TAG_WORK);
     }
 }

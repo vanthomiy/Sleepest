@@ -11,10 +11,14 @@ public class BootReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (Objects.equals(intent.getAction(), Intent.ACTION_BOOT_COMPLETED) && new ServiceTracker().getServiceState(context) == ServiceState.STARTED) {
+        if (Objects.equals(intent.getAction(), Intent.ACTION_BOOT_COMPLETED)
+                && new ServiceTracker().getServiceState(context) == ServiceState.STARTED) {
+
             intent = new Intent(context, EndlessService.class);
             intent.setAction(Actions.START.name());
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
                 context.startForegroundService(intent);
                 return;
             }

@@ -35,8 +35,12 @@ public class EndlessService extends Service {
             String action = intent.getAction();
 
             if (action != null) {
-                if (action.equals(Actions.START.name())) {startService();}
-                else if (action.equals(Actions.STOP.name())) {stopService();}
+
+                if (action.equals(Actions.START.name())) {
+                    startService();
+                } else if (action.equals(Actions.STOP.name())) {
+                    stopService();
+                }
             }
         }
 
@@ -71,7 +75,6 @@ public class EndlessService extends Service {
             wakeLock.acquire(60 * 1000L /*1 minute*/);
         }
 
-        /** TODO: Test Thread **/
         // Create a thread and loop while the service is running.
         Thread thread = new Thread(() -> {
             while (isServiceStarted) {
@@ -170,4 +173,15 @@ public class EndlessService extends Service {
         notificationManager.notify(100, mBuilder.build());
     }
 
+    static void startForegroundService(Actions action, Context context) {
+        Intent intent = new Intent(context, EndlessService.class);
+        intent.setAction(action.name());
+        if (new ServiceTracker().getServiceState(context) == ServiceState.STOPPED && action == Actions.STOP)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(intent);
+
+                return;
+            }
+        context.startService(intent);
+    }
 }

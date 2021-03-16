@@ -102,34 +102,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    //Funktioniert ziemlich gut, Auslösung an bestimmter Uhrzeit
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT) //KITKAT is minimum version!
-    public void startAlarmManager(int hour, int min) {
-
-        Calendar cal_alarm = Calendar.getInstance();
-        cal_alarm.set(Calendar.HOUR_OF_DAY, hour);
-        cal_alarm.set(Calendar.MINUTE, min);
-        cal_alarm.set(Calendar.SECOND, 0);
-        cal_alarm.set(Calendar.MILLISECOND, 0);
-
-        if (cal_alarm.before(Calendar.getInstance())) {
-            Toast.makeText(getApplicationContext(), "Date passed moved to next date.", Toast.LENGTH_SHORT).show();
-            cal_alarm.add(Calendar.DATE, spDay.getSelectedItemPosition() + 1);
-        }
-
-        Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
-        PendingIntent pi = PendingIntent.getBroadcast(getApplicationContext(), 1, intent, 0);
-        AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, cal_alarm.getTimeInMillis(), pi);
-        } else {
-            am.setExact(AlarmManager.RTC_WAKEUP, cal_alarm.getTimeInMillis(), pi);
-        }
-
-        Toast.makeText(getApplicationContext(), "Alarm set to " + days[spDay.getSelectedItemPosition()] + ": " + hour + ":" + min, Toast.LENGTH_LONG).show();
-    }
-
     //Geht bisher garnicht, nur sporadisch
     public void scheduleAlarm() {
         // Construct an intent that will execute the AlarmReceiver
@@ -149,80 +121,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mediaPlayer.start();
     }
 
-    //Geht nur eine bestimmte Zeit lang, dann hörts auf einmal auf
-    private void startPeriodicWorkmanager() {
-
-        int duration;
-
-        if (etDuration.getText().toString().trim().length() <= 0) {
-            duration = 15;
-        } else {
-            duration = Integer.parseInt(etDuration.getText().toString());
-            if (duration < 15) { duration = 15; }
-        }
-
-        //Constraints not necessary, but useful
-        Constraints constraints = new Constraints.Builder()
-                .setRequiresBatteryNotLow(true)
-                .setRequiresStorageNotLow(true)
-                .build();
-
-        PeriodicWorkRequest periodicDataWork =
-                new PeriodicWorkRequest.Builder(Workmanager.class, duration, TimeUnit.MINUTES)
-                        .addTag(TAG_WORK)
-                        .setConstraints(constraints)
-                        // setting a backoff on case the work needs to retry
-                        //.setBackoffCriteria(BackoffPolicy.LINEAR, PeriodicWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS)
-                        .build();
-
-        WorkManager workManager = WorkManager.getInstance(this);
-        //workManager.enqueue(periodicDataWork);
-        workManager.enqueueUniquePeriodicWork(TAG_WORK, ExistingPeriodicWorkPolicy.KEEP, periodicDataWork);
-        showNotification(getApplicationContext());
-    }
-
-    private void startForegroundService(Actions action) {
-        Intent intent = new Intent(this, EndlessService.class);
-        intent.setAction(action.name());
-        if (new ServiceTracker().getServiceState(this) == ServiceState.STOPPED && action == Actions.STOP)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                startForegroundService(intent);
-                return;
-            }
-        startService(intent);
-    }
-
-    private void showNotification(Context context) {
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("My notification")
-                .setContentText("ddd")
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText("ddd"))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Channel_name";
-            String description = "description";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.notify(100, mBuilder.build());
-    }
-
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnAddAlarm:
-                startAlarmManager( (int) spHour.getSelectedItem(), (int) spMinute.getSelectedItem() );
+
+                int day = spDay.getSelectedItemPosition();
+                AlarmReceiver.startAlarmManager(day, (int) spHour.getSelectedItem(), (int) spMinute.getSelectedItem(), getApplicationContext());
                 break;
             case R.id.btnStartWorkmanager:
-                startPeriodicWorkmanager();
-                startForegroundService(Actions.START);
+
+                int duration;
+
+                if (etDuration.getText().toString().trim().length() <= 0) {
+                    duration = 15;
+                } else {
+                    duration = Integer.parseInt(etDuration.getText().toString());
+                    if (duration < 15) { duration = 15; }
+                }
+
+                Workmanager.startPeriodicWorkmanager(duration);
+                EndlessService.startForegroundService(Actions.START, getApplicationContext());
+                //EndlessService.startForegroundService(Actions.STOP, getApplicationContext());
                 // scheduleAlarm();
                 break;
         }
