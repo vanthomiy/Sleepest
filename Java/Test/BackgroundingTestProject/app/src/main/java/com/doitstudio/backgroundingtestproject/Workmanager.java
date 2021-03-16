@@ -38,7 +38,14 @@ public class Workmanager extends Worker {
 
         Context context = getApplicationContext();
         Log.i(TAG, "doWork");
+        /**Hinweis: Hier dürfen nur Prozesse stattfinden, die nicht länger als 10 Minuten dauern
+         * Allerdings werden Notifications erst angezeigt, wenn der Bildschirm angeht. Somit bricht
+         * der Workmanager ab, sobald die Notification nicht innerhalb 10 Minuten nach Triggerung
+         * angeschaut wird. Prozesse, die den Nutzer nicht benötigen, sind hier aber im Normalfall
+         * Problemlos möglich.
+         */
         //showNotification(getApplicationContext());
+        
         saveActualTime();
         //setTimer();
 

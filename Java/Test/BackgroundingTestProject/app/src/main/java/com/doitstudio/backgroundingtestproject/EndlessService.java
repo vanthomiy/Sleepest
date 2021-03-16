@@ -12,6 +12,12 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.widget.Toast;
 
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 public class EndlessService extends Service {
 
     private PowerManager.WakeLock wakeLock = null;
@@ -70,7 +76,8 @@ public class EndlessService extends Service {
         Thread thread = new Thread(() -> {
             while (isServiceStarted) {
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(60000);
+                    showNotification(getApplicationContext());
                     //pingFakeServer();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -135,4 +142,32 @@ public class EndlessService extends Service {
                 .setPriority(Notification.PRIORITY_HIGH) // for under android 26 compatibility
                 .build();
     }
+
+    private void showNotification(Context context) {
+
+        Calendar cal = new GregorianCalendar();
+        cal.setTimeInMillis(System.currentTimeMillis());
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        int minute = cal.get(Calendar.MINUTE);
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, "Channel")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("My notification")
+                .setContentText(hour + ":" + minute)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(hour + ":" + minute))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Channel_name";
+            String description = "description";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("Channel", name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        notificationManager.notify(100, mBuilder.build());
+    }
+
 }
