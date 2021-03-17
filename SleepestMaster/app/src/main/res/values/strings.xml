@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Sleepest-Master</string>
+    <string name="alarm_active">Alarm Active</string>
+    <string name="alarm_disabled">Alarm Disabled</string>
+
 </resources>
