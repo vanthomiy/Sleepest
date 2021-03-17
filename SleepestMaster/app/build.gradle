@@ -42,4 +42,8 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    //Background dependencies:
+    implementation "androidx.work:work-runtime:2.2.0"
+    implementation "android.arch.work:work-firebase:1.0.0-alpha11"
 }
