@@ -1,17 +1,13 @@
 package com.doitstudio.sleepest_master.sleepcalculation
 
 import android.content.Context
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
-import androidx.room.Room
 import com.doitstudio.sleepest_master.MainApplication
-import com.doitstudio.sleepest_master.MainViewModel
 import com.doitstudio.sleepest_master.model.data.SleepSegmentEntity
 import com.doitstudio.sleepest_master.model.data.SleepState
-import com.doitstudio.sleepest_master.storage.StorageRepository
-import com.doitstudio.sleepest_master.storage.db.SleepDatabase
+import com.doitstudio.sleepest_master.storage.DataStoreRepository
+import com.doitstudio.sleepest_master.storage.DbRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,17 +38,23 @@ class SleepCalculationHandler(private val context:Context){
         }
     }
 
-    private val repository: StorageRepository by lazy {
-        (context.applicationContext as MainApplication).repository
+    private val dbRepository: DbRepository by lazy {
+        (context.applicationContext as MainApplication).dbRepository
     }
-    private val alarmActiveLiveData = repository.alarmActiveFlow.asLiveData()
+
+    private val storeRepository: DataStoreRepository by lazy {
+        (context.applicationContext as MainApplication).dataStoreRepository
+    }
+
+    private val alarmActiveLiveData = storeRepository.alarmFlow.asLiveData()
+
     private var alarmActive:Boolean = false
 
     init{
 
-        alarmActiveLiveData.observe(context as LifecycleOwner) { newAlarmActive ->
-            if (alarmActive != newAlarmActive) {
-                alarmActive = newAlarmActive
+        alarmActiveLiveData.observe(context as LifecycleOwner) { alarmData ->
+            if (alarmActive != alarmData?.isActive) {
+                alarmActive = alarmData?.isActive == true
             }
         }
     }
@@ -63,18 +65,30 @@ class SleepCalculationHandler(private val context:Context){
      */
     fun calculateSleepData(){
 
+        updateAlarmTime()
+        updateAlarmActive()
+    }
+
+    private var counter:Int =0
+
+    private fun updateAlarmActive(){
         CoroutineScope(Dispatchers.Default).launch {
-            repository.updateAlarmActive(!alarmActive)
+            storeRepository.updateAlarmActive(!alarmActive)
         }
     }
 
-    fun insertSleepValue(){
+    private fun updateAlarmTime(){
+        CoroutineScope(Dispatchers.Default).launch {
+            storeRepository.updateAlarmName("Aufruf Nr. " + counter++)
+        }
+    }
+
+    private fun insertSleepSegmentValue(){
         val sleepSegment: SleepSegmentEntity = SleepSegmentEntity(a++,2 +a,SleepState.awake)
 
         CoroutineScope(Dispatchers.Default).launch {
-            repository.insertSleepSegment(sleepSegment)
+            dbRepository.insertSleepSegment(sleepSegment)
         }
-
     }
 
 

@@ -1,0 +1,35 @@
+//https://developers.google.com/protocol-buffers/docs/proto3
+syntax = "proto3";
+
+option java_package = "com.doitstudio.sleepest_master";
+option java_multiple_files = true;
+
+/**
+ * This is a Alarm Model
+ * It stores the preferences that are setup by the User
+ */
+message  Alarm{
+  /**
+   * The alarm sound id
+   */
+  int32 soundId = 1;
+  /**
+ * Is the alarm active or not
+ */
+  bool isActive = 2;
+  /**
+ * The actual alarm name
+ */
+  string alarmName = 3;
+  /**
+ * The time where the alarm will be fired
+ */
+  uint64 alarmTime = 4;
+}
+
+message  Alogrithmus{
+  string setting1 = 1;
+  bool setting2 = 2;
+  uint64 setting3 = 3;
+  uint64 setting4 = 4;
+}

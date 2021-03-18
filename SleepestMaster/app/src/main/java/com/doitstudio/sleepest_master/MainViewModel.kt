@@ -2,41 +2,42 @@ package com.doitstudio.sleepest_master
 
 import androidx.lifecycle.*
 import com.doitstudio.sleepest_master.model.data.SleepSegmentEntity
-import com.doitstudio.sleepest_master.storage.StorageRepository
+import com.doitstudio.sleepest_master.storage.DataStoreRepository
+import com.doitstudio.sleepest_master.storage.DbRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import kotlinx.coroutines.launch
 
-class MainViewModel(private val repository: StorageRepository) : ViewModel() {
+class MainViewModel(private val dbRepository: DbRepository, private val storageRepository: DataStoreRepository) : ViewModel() {
 
 
-    val alarmActiveLiveData = repository.alarmActiveFlow.asLiveData()
+    val alarmLiveData = storageRepository.alarmFlow.asLiveData()
+
     fun updateAlarmActive(alarmActive: Boolean) = viewModelScope.launch {
-        repository.updateAlarmActive(alarmActive)
+        storageRepository.updateAlarmActive(alarmActive)
     }
 
-    val alarmTimeLiveData = repository.alarmTimeFlow.asLiveData()
     fun updateAlarmTime(alarmTime: Int) = viewModelScope.launch {
-        repository.updateAlarmTime(alarmTime)
+        storageRepository.updateAlarmTime(alarmTime)
     }
 
     fun deleteAllSleepData() = viewModelScope.launch {
-        repository.deleteSleepApiRawData()
-        repository.deleteSleepSegments()
+        dbRepository.deleteSleepApiRawData()
+        dbRepository.deleteSleepSegments()
     }
 
     val allSleepSegmentsEntities: LiveData<List<SleepSegmentEntity>> =
-            repository.allSleepSegments.asLiveData()
+        dbRepository.allSleepSegments.asLiveData()
 
     val allSleepApiRawDataEntities: LiveData<List<SleepApiRawDataEntity>> =
-            repository.allSleepApiRawData.asLiveData()
+        dbRepository.allSleepApiRawData.asLiveData()
 
 }
 
-class MainViewModelFactory(private val repository: StorageRepository) : ViewModelProvider.Factory {
+class MainViewModelFactory(private val dbRepository: DbRepository, private val storageRepository: DataStoreRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return MainViewModel(repository) as T
+            return MainViewModel(dbRepository,storageRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

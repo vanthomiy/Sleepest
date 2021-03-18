@@ -1,10 +1,12 @@
 package com.doitstudio.sleepest_master
 
 import android.app.Application
+import android.content.Context
+import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.createDataStore
-import com.doitstudio.sleepest_master.storage.StorageRepository
-import com.doitstudio.sleepest_master.storage.datastorage.ALARM_PREFERENCES_NAME
-import com.doitstudio.sleepest_master.storage.datastorage.AlarmPreferencesStatus
+import com.doitstudio.sleepest_master.storage.DataStoreRepository
+import com.doitstudio.sleepest_master.storage.DbRepository
+import com.doitstudio.sleepest_master.storage.datastorage.*
 import com.doitstudio.sleepest_master.storage.db.SleepDatabase
 
 /**
@@ -18,12 +20,15 @@ class MainApplication : Application() {
        SleepDatabase.getDatabase(applicationContext)
     }
 
-    val repository by lazy {
-        StorageRepository(
-                alarmPreferencesStatus = AlarmPreferencesStatus(
-                        applicationContext.createDataStore(name = ALARM_PREFERENCES_NAME)),
+    val dbRepository by lazy {
+        DbRepository(
                         database.sleepDataDao(),
                         database.sleepApiRawDataDao()
         )
     }
+
+    val dataStoreRepository by lazy {
+        DataStoreRepository(applicationContext)
+    }
+
 }

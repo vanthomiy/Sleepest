@@ -11,7 +11,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-
     // Status of subscription to sleep data. This is stored in [SleepSubscriptionStatus] which saves
     // the data in a [DataStore] in case the user navigates away from the app.
     private var alarmActive = false
@@ -32,26 +31,17 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        mainViewModel.alarmActiveLiveData.observe(this) { newSubscribedToSleepData ->
-            if (alarmActive != newSubscribedToSleepData) {
-                alarmActive = newSubscribedToSleepData
-            }
-        }
-
-        mainViewModel.allSleepSegmentsEntities.observe(this) { sleeptexts ->
-            var text:String =""
-
-            sleeptexts.forEach {
-                text += "State: " + it.sleepState + " Time: " + it.timestampSecondsStart + "\n"
+        mainViewModel.alarmLiveData.observe(this) { alarmData ->
+            if (alarmActive != alarmData?.isActive) {
+                alarmActive = alarmData?.isActive == true
             }
 
-            binding.sleepSegmentsText.text = text
-
+            binding.sleepSegmentsText.text = alarmData.alarmName
         }
     }
 
     private val mainViewModel: MainViewModel by lazy {
-        MainViewModel((application as MainApplication).repository)
+        MainViewModel((application as MainApplication).dbRepository, (application as MainApplication).dataStoreRepository)
     }
 
     private val sch:SleepCalculationHandler by lazy {
@@ -64,6 +54,6 @@ class MainActivity : AppCompatActivity() {
 
 
     fun buttonClick2(view: View){
-        sch.insertSleepValue()
+
     }
 }

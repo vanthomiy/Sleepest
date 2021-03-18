@@ -4,8 +4,8 @@ import com.doitstudio.sleepest_master.model.data.SleepSegmentEntity
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataDao
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.SleepSegmentDao
-import com.doitstudio.sleepest_master.storage.datastorage.AlarmPreferencesStatus
 import kotlinx.coroutines.flow.Flow
+
 
 /**
  * This contains the interface for each SQL-Database and for DataStore.
@@ -14,31 +14,10 @@ import kotlinx.coroutines.flow.Flow
  * More information about DataStore @see [link](https://developer.android.com/topic/libraries/architecture/datastore) and about ROOM SQL @see [link](https://developer.android.com/training/data-storage/room/#kotlin).
  *
  */
-class StorageRepository(
-        private val alarmPreferencesStatus: AlarmPreferencesStatus,
-        private val sleepSegmentDao: SleepSegmentDao,
-        private val sleepApiRawDataDao: SleepApiRawDataDao
+class DbRepository(
+    private val sleepSegmentDao: SleepSegmentDao,
+    private val sleepApiRawDataDao: SleepApiRawDataDao
 ) {
-
-    //region Data Storage Flows
-
-    // Methods for SleepSubscriptionStatus
-    // Uses [DataStore] to save the subscription to sleep data status. This is used to check if the
-    // app is still listening to changes in sleep data when the app is brought back into
-    // the foreground.
-    val alarmActiveFlow: Flow<Boolean> = alarmPreferencesStatus.alarmActiveFlow
-
-    suspend fun updateAlarmActive(alarmActive: Boolean) =
-            alarmPreferencesStatus.updateAlarmActive(alarmActive)
-
-    val alarmTimeFlow: Flow<Int> = alarmPreferencesStatus.alarmTimeFlow
-
-    suspend fun updateAlarmTime(alarmTime: Int) =
-            alarmPreferencesStatus.updateAlarmTime(alarmTime)
-
-    //endregion
-
-    //region SQL-Database using Room
 
     // Link to the documentation https://developer.android.com/training/data-storage/room/#kotlin
 
@@ -89,6 +68,5 @@ class StorageRepository(
 
     //endregion
 
-    //endregion
 
 }

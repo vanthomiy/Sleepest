@@ -5,18 +5,16 @@ import androidx.datastore.preferences.core.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-const val ALARM_PREFERENCES_NAME = "alarm_preferences"
+const val PREFERENCES_STATUS_NAME = "preferences_name"
 
 /**
- * Saves the algorithm data subscription status into a [DataStore].
- * Used to check if the app is still listening to changes in sleep data when the app is brought
- * back into the foreground.
+ * Save/Access single preferences over this class [DataStore].
+ * Provides functions for update the values and flows to access the values
  */
-class AlarmPreferencesStatus(private val dataStore: DataStore<Preferences>) {
+class PreferencesStatus(private val dataStore: DataStore<Preferences>) {
 
     private object PreferencesKeys {
         val ALARM_TIME = intPreferencesKey("alarm_time")
-        val ALARM_ACTIVE = booleanPreferencesKey("alarm_active")
     }
 
     //region Observe Flows
@@ -27,11 +25,7 @@ class AlarmPreferencesStatus(private val dataStore: DataStore<Preferences>) {
         preferences[PreferencesKeys.ALARM_TIME] ?: 0
     }
 
-    // Observed Flow will notify the observer when the the sleep subscription status has changed.
-    val alarmActiveFlow: Flow<Boolean> = dataStore.data.map { preferences ->
-        // Get the subscription value, defaults to false if not set:
-        preferences[PreferencesKeys.ALARM_ACTIVE] ?: false
-    }
+
 
     //endregion
 
@@ -44,12 +38,6 @@ class AlarmPreferencesStatus(private val dataStore: DataStore<Preferences>) {
         }
     }
 
-    // Updates Alarm Active status.
-    suspend fun updateAlarmActive(alarmActive: Boolean) {
-        dataStore.edit { preferences ->
-            preferences[PreferencesKeys.ALARM_ACTIVE] = alarmActive
-        }
-    }
 
     //endregion
 
