@@ -3,31 +3,41 @@ package com.doitstudio.backgroundingtestproject;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+enum Actions {
+    START,
+    STOP
+}
+
 public class EndlessService extends Service {
 
     private PowerManager.WakeLock wakeLock = null;
     private boolean isServiceStarted = false;
+    private String notificationChannelId = "ENDLESS SERVICE CHANNEL";
+
+    Test test;
 
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -48,10 +58,13 @@ public class EndlessService extends Service {
         return START_STICKY; // by returning this we make sure the service is restarted if the system kills the service
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onCreate() {
         super.onCreate();
-        startForeground(1, createNotification());
+        startForeground(1, createNotification("Hallo"));
+        test = new Test(1,2);
+        //Observe einfügen
     }
 
     @Override
@@ -60,6 +73,7 @@ public class EndlessService extends Service {
         Toast.makeText(this, "Service destroyed", Toast.LENGTH_SHORT).show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void startService() {
         // If the service already running, do nothing.
         if (isServiceStarted) {return;}
@@ -79,8 +93,16 @@ public class EndlessService extends Service {
         Thread thread = new Thread(() -> {
             while (isServiceStarted) {
                 try {
-                    Thread.sleep(60000);
+                    Thread.sleep(10000);
                     showNotification(getApplicationContext());
+
+                    int oldTest1 = test.getTest1();
+                    int oldTest2 = test.getTest2();
+
+                    test.setTest1(++oldTest1);
+                    test.setTest2(++oldTest2);
+
+                    updateNotification(Integer.toString(oldTest1) + "," + Integer.toString(oldTest2));
                     //pingFakeServer();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -105,8 +127,17 @@ public class EndlessService extends Service {
         new ServiceTracker().setServiceState(this, ServiceState.STOPPED);
     }
 
-    private Notification createNotification() {
-        String notificationChannelId = "ENDLESS SERVICE CHANNEL";
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void updateNotification(String text) {
+
+        Notification notification = createNotification(text);
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(1, notification);
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private Notification createNotification(String text) {
 
         // depending on the Android API that we're dealing with we will have
         // to use a specific method to create the notification
@@ -139,11 +170,27 @@ public class EndlessService extends Service {
 
         return builder
                 .setContentTitle("Endless Service")
-                .setContentText("This is your favorite endless service working")
+                .setContentText(text)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setTicker("Ticker text")
                 .setPriority(Notification.PRIORITY_HIGH) // for under android 26 compatibility
                 .build();
+
+        /*Intent notificationIntent = new Intent(this, EndlessService.class);
+        PendingIntent pendingIntent =
+                PendingIntent.getActivity(this, 123, notificationIntent, 0);
+
+        Notification notification =
+                new Notification.Builder(this, notificationChannelId)
+                        .setContentTitle("Endless Service")
+                        .setContentText("Hallo")
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentIntent(pendingIntent)
+                        .setTicker("Ticker text")
+                        .build();
+
+        return notification;*/
+
     }
 
     private void showNotification(Context context) {
