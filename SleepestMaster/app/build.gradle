@@ -68,6 +68,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-common-java8:2.2.0"
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
 
+    // Play services library required for activity recognition.
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
 
 }
 

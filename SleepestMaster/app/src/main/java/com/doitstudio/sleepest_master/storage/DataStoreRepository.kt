@@ -41,10 +41,10 @@ class DataStoreRepository(context: Context) {
         )
     }
 
-    val alarmTimeFlow: Flow<Int> = preferencesStatus.alarmTimeFlow
+    val subscribedToSleepDataFlow: Flow<Boolean> = preferencesStatus.subscribedToSleepDataFlow
 
-    suspend fun updateAlarmTime(alarmTime: Int) =
-        preferencesStatus.updateAlarmTime(alarmTime)
+    suspend fun updateSubscribeToSleepData(subscribe: Boolean) =
+        preferencesStatus.updateSubscribeToSleepData(subscribe)
 
     //endregion
 
