@@ -14,18 +14,30 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.widget.Toast;
-import com.doitstudio.sleepest_master.R;
 
-// Enum actions for service start/stop
-enum Actions {
-    START,
-    STOP
-}
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+
+import com.doitstudio.sleepest_master.Alarm;
+import com.doitstudio.sleepest_master.R;
+import com.doitstudio.sleepest_master.model.data.Actions;
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
+import com.doitstudio.sleepest_master.storage.DataStoreRepository;
+
+import java.util.Observable;
+
+
 
 public class ForegroundService extends Service {
 
     private PowerManager.WakeLock wakeLock = null;
     private boolean isServiceStarted = false;
+    public SleepCalculationHandler sleepCalculationHandler;
+
+    private DataStoreRepository storeRepository;
+    private LiveData<Alarm> alarmActiveLiveData;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -55,7 +67,22 @@ public class ForegroundService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        startForeground(1, createNotification()); /** TODO: Id zentral anlegen */
+
+        storeRepository = new DataStoreRepository(getApplicationContext());
+        alarmActiveLiveData = (LiveData) storeRepository.getAlarmFlow();
+
+        final Observer<Alarm> nameObserver = new Observer<Alarm>() {
+            @Override
+            public void onChanged(Alarm a) {
+                String alarmName = a.getAlarmName();
+                updateNotification(alarmName);
+            }
+        };
+
+        alarmActiveLiveData.observe((LifecycleOwner) this, nameObserver);
+
+
+        startForeground(1, createNotification("Test")); /** TODO: Id zentral anlegen */
     }
 
     @Override
@@ -111,9 +138,17 @@ public class ForegroundService extends Service {
         new ServiceTracker().setServiceState(this, ServiceState.STOPPED);
     }
 
+    public void updateNotification(String text) {
+
+        Notification notification = createNotification(text);
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(1, notification);
+
+    }
+
     /**TODO Notification noch selbst machen mit eigenem Layout*/
     //Creats a notification banner, that is permament to show that the app is still running. Only since Oreo
-    private Notification createNotification() {
+    private Notification createNotification(String text) {
         String notificationChannelId = "ENDLESS SERVICE CHANNEL"; /**TODO: zentral definieren*/
 
         // Since Oreo there is a Notification Service needed
@@ -146,7 +181,7 @@ public class ForegroundService extends Service {
 
         return builder
                 .setContentTitle("Endless Service")
-                .setContentText("This is your favorite endless service working")
+                .setContentText(text)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setTicker("Ticker text")
                 .setPriority(Notification.PRIORITY_HIGH) // for under android Oreo (26) compatibility
@@ -157,7 +192,7 @@ public class ForegroundService extends Service {
      * @param action Enum Action (START or STOP)
      * @param context Application context
      */
-    static void startOrStopForegroundService(Actions action, Context context) {
+    public static void startOrStopForegroundService(Actions action, Context context) {
 
         Intent intent = new Intent(context, ForegroundService.class);
         intent.setAction(action.name());

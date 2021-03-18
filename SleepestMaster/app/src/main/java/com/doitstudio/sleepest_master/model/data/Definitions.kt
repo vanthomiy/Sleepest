@@ -9,3 +9,8 @@ enum class SleepState {
     deep,
     rem
 }
+
+// Enum actions for service start/stop
+internal enum class Actions {
+    START, STOP
+}

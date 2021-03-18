@@ -1,9 +1,13 @@
 package com.doitstudio.sleepest_master
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.media.session.PlaybackStateCompat
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import com.doitstudio.sleepest_master.Background.ForegroundService
+import com.doitstudio.sleepest_master.Background.Workmanager
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
+import com.doitstudio.sleepest_master.model.data.Actions
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 
 
@@ -41,11 +45,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val mainViewModel: MainViewModel by lazy {
-        MainViewModel((application as MainApplication).dbRepository, (application as MainApplication).dataStoreRepository)
+        MainViewModel(
+            (application as MainApplication).dbRepository,
+            (application as MainApplication).dataStoreRepository
+        )
     }
 
     private val sch:SleepCalculationHandler by lazy {
-        SleepCalculationHandler(this)
+        SleepCalculationHandler.getDatabase(this)
     }
 
     fun buttonClick1(view: View){
@@ -54,6 +61,7 @@ class MainActivity : AppCompatActivity() {
 
 
     fun buttonClick2(view: View){
-
+        ForegroundService.startOrStopForegroundService(Actions.START, this)
+        Workmanager.startPeriodicWorkmanager(15);
     }
 }

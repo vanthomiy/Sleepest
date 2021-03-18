@@ -13,6 +13,9 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
+
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
+
 import java.util.concurrent.TimeUnit;
 
 public class Workmanager extends Worker {
@@ -21,10 +24,12 @@ public class Workmanager extends Worker {
     public static final String CHANNEL_ID = "VERBOSE_NOTIFICATION" ;
     private static final String TAG_WORK = "Workmanager 1";
     private static Context context;
+    private SleepCalculationHandler sleepCalculationHandler;
 
     public Workmanager(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
         this.context = context;
+        sleepCalculationHandler = SleepCalculationHandler.Companion.getDatabase(context);
     }
 
     //Workmanager do his work here at the desired time intervals
@@ -39,13 +44,15 @@ public class Workmanager extends Worker {
          * problemlos möglich.
          */
 
+        sleepCalculationHandler.calculateSleepData();
+
         return Result.success();
     }
 
     /** Start the workmanager with a specific duration
      * @param duration Number <=15 stands for duration in minutes
      */
-    static void startPeriodicWorkmanager(int duration) {
+    public static void startPeriodicWorkmanager(int duration) {
 
         //Constraints not necessary, but useful
         Constraints constraints = new Constraints.Builder()
@@ -64,7 +71,7 @@ public class Workmanager extends Worker {
 
     }
 
-    static void stopPeriodicWorkmanager() {
+    public static void stopPeriodicWorkmanager() {
         //Cancel periodic work by tag
         WorkManager.getInstance(context).cancelAllWorkByTag(TAG_WORK);
     }

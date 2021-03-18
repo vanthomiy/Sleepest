@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
+import com.doitstudio.sleepest_master.model.data.Actions;
+
 import java.util.Objects;
 
 public class BootReceiver extends BroadcastReceiver {
@@ -19,7 +21,7 @@ public class BootReceiver extends BroadcastReceiver {
         if (Objects.equals(intent.getAction(), Intent.ACTION_BOOT_COMPLETED)
                 && new ServiceTracker().getServiceState(context) == ServiceState.STARTED) {
 
-            intent = new Intent(context, EndlessService.class);
+            intent = new Intent(context, ForegroundService.class);
             intent.setAction(Actions.START.name());
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
