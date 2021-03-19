@@ -27,9 +27,41 @@ message  Alarm{
   uint64 alarmTime = 4;
 }
 
-message  Alogrithmus{
-  string setting1 = 1;
-  bool setting2 = 2;
-  uint64 setting3 = 3;
-  uint64 setting4 = 4;
+
+/**
+ * This is a SleepApiData Model
+ * It stores information/status about sleep api data
+ */
+message  SleepApiData{
+
+  /**
+  * Request to subscribe/unsubscribe data
+  */
+  bool subscribeRequest = 1;
+  /**
+   * If the user authenticated the needed permissions
+   */
+  bool isPermissionActive = 2;
+  /**
+  * Status of the actual subscribed state
+  */
+  bool isSubscribed = 3;
+  /**
+ * The permission is not given anymore
+ */
+  bool permissionRemovedError = 4;
+  /**
+ * The subscribe failed because of an unidentified error
+ */
+  bool subscribeFailed = 5;
+  /**
+ * The unsubscribe failed because of an unidentified error
+*/
+  bool unsubscribeFailed = 6;
+
+  /**
+  * Count of the sleep api data
+  */
+  int32 sleepApiValuesAmount = 7;
+
 }

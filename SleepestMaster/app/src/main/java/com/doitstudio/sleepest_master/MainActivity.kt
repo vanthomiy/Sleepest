@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
+import com.doitstudio.sleepest_master.sleepapi.SleepHandler
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 
 
@@ -52,8 +53,9 @@ class MainActivity : AppCompatActivity() {
         sch.calculateSleepData()
     }
 
+    private val sleepHandler : SleepHandler by lazy {SleepHandler.getHandler(this)}
 
     fun buttonClick2(view: View){
-
+        sleepHandler.StartSleepHandler()
     }
 }

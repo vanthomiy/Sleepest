@@ -19,8 +19,9 @@ data class SleepSegmentEntity(
 
         @ColumnInfo(name = "sleep_state")
         val sleepState: SleepState,
-) {
+)  {
 
 }
+
 
 

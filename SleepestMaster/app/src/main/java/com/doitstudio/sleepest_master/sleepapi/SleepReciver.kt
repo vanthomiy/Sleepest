@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DbRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.google.android.gms.location.SleepClassifyEvent
@@ -27,17 +28,19 @@ class SleepReceiver : BroadcastReceiver() {
         Log.d(TAG, "onReceive(): $intent")
 
         val repository: DbRepository = (context.applicationContext as MainApplication).dbRepository
+        val storeRepository: DataStoreRepository = (context.applicationContext as MainApplication).dataStoreRepository
 
        if (SleepClassifyEvent.hasEvents(intent)) {
             val sleepClassifyEvents: List<SleepClassifyEvent> =
                     SleepClassifyEvent.extractEvents(intent)
             Log.d(TAG, "SleepClassifyEvent List: $sleepClassifyEvents")
-            addSleepClassifyEventsToDatabase(repository, sleepClassifyEvents)
-        }
+            addSleepClassifyEventsToDatabase(repository,storeRepository, sleepClassifyEvents)
+       }
     }
 
     private fun addSleepClassifyEventsToDatabase(
             repository: DbRepository,
+            storeRepository: DataStoreRepository,
             sleepClassifyEvents: List<SleepClassifyEvent>
     ) {
         if (sleepClassifyEvents.isNotEmpty()) {
@@ -47,6 +50,7 @@ class SleepReceiver : BroadcastReceiver() {
                             SleepApiRawDataEntity.from(it)
                         }
                 repository.insertSleepApiRawData(convertedToEntityVersion)
+                storeRepository.updateSleepApiValuesAmount(1)
             }
         }
     }

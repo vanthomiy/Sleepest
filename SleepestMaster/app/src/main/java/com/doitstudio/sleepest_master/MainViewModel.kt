@@ -16,7 +16,7 @@ class MainViewModel(private val dbRepository: DbRepository, private val storageR
         storageRepository.updateAlarmActive(alarmActive)
     }
 
-    fun updateAlarmTime(alarmTime: Int) = viewModelScope.launch {
+    fun updateAlarmTime(alarmTime: Long) = viewModelScope.launch {
         storageRepository.updateAlarmTime(alarmTime)
     }
 

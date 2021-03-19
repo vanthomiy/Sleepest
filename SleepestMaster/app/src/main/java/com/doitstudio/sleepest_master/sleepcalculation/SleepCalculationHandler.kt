@@ -21,23 +21,6 @@ import kotlinx.coroutines.launch
  */
 class SleepCalculationHandler(private val context:Context){
 
-    companion object {
-        // For Singleton instantiation
-        @Volatile
-        private var INSTANCE: SleepCalculationHandler? = null
-
-        var a:Int = 0
-
-        fun getDatabase(context: Context): SleepCalculationHandler {
-            return INSTANCE ?: synchronized(this) {
-                val instance = SleepCalculationHandler(context)
-                INSTANCE = instance
-                // return instance
-                instance
-            }
-        }
-    }
-
     private val dbRepository: DbRepository by lazy {
         (context.applicationContext as MainApplication).dbRepository
     }
@@ -50,6 +33,22 @@ class SleepCalculationHandler(private val context:Context){
 
     private var alarmActive:Boolean = false
 
+
+    companion object {
+        // For Singleton instantiation
+        @Volatile
+        private var INSTANCE: SleepCalculationHandler? = null
+
+        fun getHandler(context: Context): SleepCalculationHandler {
+            return INSTANCE ?: synchronized(this) {
+                val instance = SleepCalculationHandler(context)
+                INSTANCE = instance
+                // return instance
+                instance
+            }
+        }
+    }
+
     init{
 
         alarmActiveLiveData.observe(context as LifecycleOwner) { alarmData ->
@@ -58,6 +57,10 @@ class SleepCalculationHandler(private val context:Context){
             }
         }
     }
+
+
+
+
 
 
     /**
@@ -84,7 +87,7 @@ class SleepCalculationHandler(private val context:Context){
     }
 
     private fun insertSleepSegmentValue(){
-        val sleepSegment: SleepSegmentEntity = SleepSegmentEntity(a++,2 +a,SleepState.awake)
+        val sleepSegment: SleepSegmentEntity = SleepSegmentEntity(counter++,2 +counter,SleepState.awake)
 
         CoroutineScope(Dispatchers.Default).launch {
             dbRepository.insertSleepSegment(sleepSegment)
