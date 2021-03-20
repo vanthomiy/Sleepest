@@ -68,7 +68,7 @@ public class ForegroundService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        storeRepository = new DataStoreRepository(getApplicationContext());
+        /*storeRepository = new DataStoreRepository(getApplicationContext());
         alarmActiveLiveData = (LiveData) storeRepository.getAlarmFlow();
 
         final Observer<Alarm> nameObserver = new Observer<Alarm>() {
@@ -79,7 +79,7 @@ public class ForegroundService extends Service {
             }
         };
 
-        alarmActiveLiveData.observe((LifecycleOwner) this, nameObserver);
+        alarmActiveLiveData.observe((LifecycleOwner) this, nameObserver);*/
 
 
         startForeground(1, createNotification("Test")); /** TODO: Id zentral anlegen */

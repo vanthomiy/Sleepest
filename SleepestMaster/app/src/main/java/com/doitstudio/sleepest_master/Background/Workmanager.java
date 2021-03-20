@@ -5,8 +5,15 @@ package com.doitstudio.sleepest_master.Background;
  * workmanager stops.
  */
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.os.Build;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.PeriodicWorkRequest;
@@ -14,8 +21,11 @@ import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
 
 public class Workmanager extends Worker {
@@ -29,7 +39,8 @@ public class Workmanager extends Worker {
     public Workmanager(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
         this.context = context;
-        sleepCalculationHandler = SleepCalculationHandler.Companion.getDatabase(context);
+        //sleepCalculationHandler = SleepCalculationHandler.Companion.getDatabase(context);
+        //showNotification(context);
     }
 
     //Workmanager do his work here at the desired time intervals
@@ -44,7 +55,8 @@ public class Workmanager extends Worker {
          * problemlos möglich.
          */
 
-        sleepCalculationHandler.calculateSleepData();
+        //sleepCalculationHandler.calculateSleepData();
+        showNotification(context);
 
         return Result.success();
     }
@@ -52,7 +64,7 @@ public class Workmanager extends Worker {
     /** Start the workmanager with a specific duration
      * @param duration Number <=15 stands for duration in minutes
      */
-    public static void startPeriodicWorkmanager(int duration) {
+    public static void startPeriodicWorkmanager(int duration, Context context1) {
 
         //Constraints not necessary, but useful
         Constraints constraints = new Constraints.Builder()
@@ -69,7 +81,37 @@ public class Workmanager extends Worker {
         WorkManager workManager = WorkManager.getInstance(context);
         workManager.enqueueUniquePeriodicWork(TAG_WORK, ExistingPeriodicWorkPolicy.KEEP, periodicDataWork);
 
+        Toast.makeText(context1, "Workmanager started", Toast.LENGTH_LONG).show();
+
     }
+
+    private void showNotification(Context context) {
+
+        Calendar cal = new GregorianCalendar();
+        cal.setTimeInMillis(System.currentTimeMillis());
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        int minute = cal.get(Calendar.MINUTE);
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("My notification")
+                .setContentText(hour + ":" + minute)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(hour + ":" + minute))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Channel_name";
+            String description = "description";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        notificationManager.notify(100, mBuilder.build());
+    }
+
 
     public static void stopPeriodicWorkmanager() {
         //Cancel periodic work by tag

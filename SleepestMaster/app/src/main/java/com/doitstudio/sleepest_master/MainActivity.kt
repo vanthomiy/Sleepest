@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.doitstudio.sleepest_master.Background.AlarmReceiver
 import com.doitstudio.sleepest_master.Background.ForegroundService
 import com.doitstudio.sleepest_master.Background.Workmanager
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
@@ -61,7 +62,8 @@ class MainActivity : AppCompatActivity() {
 
 
     fun buttonClick2(view: View){
-        ForegroundService.startOrStopForegroundService(Actions.START, this)
-        Workmanager.startPeriodicWorkmanager(15);
+        //ForegroundService.startOrStopForegroundService(Actions.START, this)
+        //Workmanager.startPeriodicWorkmanager(15, applicationContext)
+        AlarmReceiver.startAlarmManager(6,17,5, applicationContext)
     }
 }

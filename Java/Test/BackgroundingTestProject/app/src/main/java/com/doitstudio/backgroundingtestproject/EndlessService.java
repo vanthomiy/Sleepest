@@ -73,6 +73,8 @@ public class EndlessService extends Service {
         Toast.makeText(this, "Service destroyed", Toast.LENGTH_SHORT).show();
     }
 
+
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void startService() {
         // If the service already running, do nothing.

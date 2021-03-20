@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final String TAG_WORK = "Workmanager 1";
     public static final String CHANNEL_ID = "VERBOSE_NOTIFICATION" ;
+    //private AudioManager audioManager;
 
     Button btnAddAlarm, btnStartWorkmanager;
     Spinner spHour, spMinute, spDay;
@@ -87,13 +89,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mediaPlayer.start();
     }
 
+    public void adjustStreamVolume() {
+
+        AudioManager audioManager =
+                (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, audioManager.getStreamMaxVolume(audioManager.STREAM_ALARM), AudioManager.FLAG_PLAY_SOUND);
+        
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnAddAlarm:
-
-                int day = spDay.getSelectedItemPosition();
-                AlarmReceiver.startAlarmManager(day, (int) spHour.getSelectedItem(), (int) spMinute.getSelectedItem(), getApplicationContext());
+                //int day = spDay.getSelectedItemPosition();
+                //AlarmReceiver.startAlarmManager(day, (int) spHour.getSelectedItem(), (int) spMinute.getSelectedItem(), getApplicationContext());
+                adjustStreamVolume();
                 break;
             case R.id.btnStartWorkmanager:
 
