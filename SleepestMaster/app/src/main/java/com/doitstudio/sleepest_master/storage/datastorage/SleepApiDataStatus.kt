@@ -22,12 +22,6 @@ class SleepApiDataStatus(private val dataStore: DataStore<SleepApiData>) {
                 }
             }
 
-    suspend fun updateSubscribeRequest(isActive:Boolean){
-        dataStore.updateData{preference->
-            preference.toBuilder().setSubscribeRequest(isActive).build()
-        }
-    }
-
     suspend fun updateIsSubscribed(isActive:Boolean){
         dataStore.updateData{preference->
             preference.toBuilder().setIsSubscribed(isActive).build()

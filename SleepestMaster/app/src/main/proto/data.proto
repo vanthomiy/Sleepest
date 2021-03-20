@@ -27,17 +27,12 @@ message  Alarm{
   uint64 alarmTime = 4;
 }
 
-
 /**
- * This is a SleepApiData Model
+ * This is a SleepApiData StatusModel
  * It stores information/status about sleep api data
  */
-message  SleepApiData{
+message  SleepApiDataStatus{
 
-  /**
-  * Request to subscribe/unsubscribe data
-  */
-  bool subscribeRequest = 1;
   /**
    * If the user authenticated the needed permissions
    */
@@ -65,3 +60,25 @@ message  SleepApiData{
   int32 sleepApiValuesAmount = 7;
 
 }
+
+/**
+ * This is a CalculationHandler StatusModel
+ * It stores information/status about calculation of sleep data
+ * Is data available for the calculation? is no data available? when was the last data recived?
+ */
+message  SleepCalculationHandlerStatus{
+
+  /**
+   * The time of the last sleep api data
+   */
+  int32 lastSleepApiData = 1;
+  /**
+  * Can calculation handler access the sleep data
+  */
+  bool dataAvailable = 2;
+  /**
+  * How long does the calculation take ( in seconds)
+  */
+  int32 calcTimeSeconds = 3;
+}
+

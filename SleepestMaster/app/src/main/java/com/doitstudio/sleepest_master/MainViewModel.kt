@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(private val dbRepository: DbRepository, private val storageRepository: DataStoreRepository) : ViewModel() {
 
+    val sleepApiLiveData = storageRepository.sleepApiDataFlow.asLiveData()
 
     val alarmLiveData = storageRepository.alarmFlow.asLiveData()
 

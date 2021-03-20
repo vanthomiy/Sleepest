@@ -25,15 +25,12 @@ class SleepReceiver : BroadcastReceiver() {
     private val scope: CoroutineScope = MainScope()
 
     override fun onReceive(context: Context, intent: Intent) {
-        Log.d(TAG, "onReceive(): $intent")
-
         val repository: DbRepository = (context.applicationContext as MainApplication).dbRepository
         val storeRepository: DataStoreRepository = (context.applicationContext as MainApplication).dataStoreRepository
 
        if (SleepClassifyEvent.hasEvents(intent)) {
             val sleepClassifyEvents: List<SleepClassifyEvent> =
                     SleepClassifyEvent.extractEvents(intent)
-            Log.d(TAG, "SleepClassifyEvent List: $sleepClassifyEvents")
             addSleepClassifyEventsToDatabase(repository,storeRepository, sleepClassifyEvents)
        }
     }
@@ -49,8 +46,10 @@ class SleepReceiver : BroadcastReceiver() {
                         sleepClassifyEvents.map {
                             SleepApiRawDataEntity.from(it)
                         }
+                // Update the raw sleep api data
                 repository.insertSleepApiRawData(convertedToEntityVersion)
-                storeRepository.updateSleepApiValuesAmount(1)
+                // update the amount of data that is beeing recived
+                storeRepository.updateSleepApiValuesAmount(convertedToEntityVersion.size)
             }
         }
     }

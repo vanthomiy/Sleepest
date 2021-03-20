@@ -25,7 +25,6 @@ import kotlinx.coroutines.launch
 class SleepHandler(private val context: Context) {
 
     private val scope: CoroutineScope = MainScope()
-    private var subscribedState = false
 
     private var sleepPendingIntent: PendingIntent = SleepReceiver.createSleepReceiverPendingIntent(context = context)
 
@@ -50,14 +49,11 @@ class SleepHandler(private val context: Context) {
      * Listens to sleep data subscribed or not and subscribe or unsubscribe from it automatically
      */
     fun StartSleepHandler() {
-        repository.subscribedToSleepDataFlow.asLiveData().observe(context as LifecycleOwner){ subscribed ->
-            if (subscribed && !subscribedState)
-                subscribeToSleepSegmentUpdates(context, sleepPendingIntent)
-            else if(!subscribed && !subscribedState)
-                unsubscribeToSleepSegmentUpdates(context, sleepPendingIntent)
+        subscribeToSleepSegmentUpdates(context, sleepPendingIntent)
+    }
 
-            subscribedState = subscribed
-        }
+    fun StopSleepHandler(){
+        unsubscribeToSleepSegmentUpdates(context, sleepPendingIntent)
     }
 
     /**

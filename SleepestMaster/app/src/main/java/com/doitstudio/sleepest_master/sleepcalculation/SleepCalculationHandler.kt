@@ -59,10 +59,6 @@ class SleepCalculationHandler(private val context:Context){
     }
 
 
-
-
-
-
     /**
      * Calculates all neccessary steps with the values
      */
