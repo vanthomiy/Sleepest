@@ -48,11 +48,11 @@ class SleepHandler(private val context: Context) {
     /**
      * Listens to sleep data subscribed or not and subscribe or unsubscribe from it automatically
      */
-    fun StartSleepHandler() {
+    fun startSleepHandler() {
         subscribeToSleepSegmentUpdates(context, sleepPendingIntent)
     }
 
-    fun StopSleepHandler(){
+    fun stopSleepHandler(){
         unsubscribeToSleepSegmentUpdates(context, sleepPendingIntent)
     }
 

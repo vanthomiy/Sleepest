@@ -86,9 +86,9 @@ class MainActivity : AppCompatActivity() {
     private fun requestData(){
         if (activityRecognitionPermissionApproved()) {
             if (isTimerRunning) {
-                sleepHandler.StopSleepHandler()
+                sleepHandler.stopSleepHandler()
             } else {
-                sleepHandler.StartSleepHandler()
+                sleepHandler.startSleepHandler()
             }
         } else {
             requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
