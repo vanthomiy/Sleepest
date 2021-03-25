@@ -9,9 +9,9 @@ namespace ExcelCalculationAddin.Model
 {
     public class SleepType
     {
+
         public Parameters pm;
         public Strukture st;
-
 
     }
 }

@@ -9,13 +9,20 @@ namespace ExcelCalculationAddin.Model
 {
     public class SleepDataEntry
     {
+        public int row;
+
         public DateTime time;
         public int sleep;
         public int motion;
         public int light;
         public SleepState realSleepState;
+        public SleepState calcSleepState;
 
-
+        // für calculation
+        public bool isPersonSleeping;
+        public bool isSoundCleanup;
+        public int sleepStartValue;
+        public float timeOverCleanup;
 
         public Task<bool> AddValue(string value, DataPoints dp)
         {
@@ -66,6 +73,7 @@ namespace ExcelCalculationAddin.Model
 
             return Task.FromResult(true);
         }
+
 
     }
 

@@ -9,6 +9,28 @@ namespace ExcelCalculationAddin.ListHelp
 {
     public static class CellHelper
     {
+        public static void WriteCellValue(string value, int row, string letter, Worksheet sheet)
+        {
+
+            int column = ExcelColumnNameToNumber(letter);
+            if (column > 40)
+                return;
+
+            sheet.Cells[row, column].Value2 = value;
+            return;
+        }
+
+        public static void WriteCellValue(float value, int row, string letter, Worksheet sheet)
+        {
+
+            int column = ExcelColumnNameToNumber(letter);
+            if (column > 40)
+                return;
+
+            sheet.Cells[row, column].Value2 = value;
+            return;
+        }
+
         public static string GetCellValue(int row, string letter, Worksheet sheet)
         {
 
@@ -29,6 +51,15 @@ namespace ExcelCalculationAddin.ListHelp
             return value != null ? value.ToString() : null;
         }
 
+        public static float GetCellValueFloat(int row, int column, Worksheet sheet)
+        {
+            if (column > 50)
+                return 0;
+
+            var value = sheet.Cells[row, column].Value2;
+            return value != null ? (float)value : 0;
+        }
+
         public static int ExcelColumnNameToNumber(string columnName)
         {
             if (string.IsNullOrEmpty(columnName)) throw new ArgumentNullException("columnName");
@@ -44,6 +75,21 @@ namespace ExcelCalculationAddin.ListHelp
             }
 
             return sum;
+        }
+
+        public static string GetColumnName(int index)
+        {
+            index = index - 1;
+            const string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+            var value = "";
+
+            if (index >= letters.Length)
+                value += letters[index / letters.Length - 1];
+
+            value += letters[index % letters.Length];
+
+            return value;
         }
     }
 }

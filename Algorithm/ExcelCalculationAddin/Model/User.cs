@@ -18,8 +18,10 @@ namespace ExcelCalculationAddin.Model
             SleepSession ss = null;
             bool isSleepTime;
 
-            foreach (var item in allSleepData)
+            for (int i = 0; i < allSleepData.Count; i++)
             {
+                SleepDataEntry item = allSleepData[i];
+
                 if (item.time == default || item.time == null)
                 {
                     continue;
@@ -31,9 +33,9 @@ namespace ExcelCalculationAddin.Model
                     if (ss == null)
                     {
                         ss = new SleepSession();
-                        ss.sleepDataEntrie = new List<SleepDataEntry>();
+                        ss.sleepDataEntrieSleepTime = new List<SleepDataEntry>();
                     }
-                    ss.sleepDataEntrie.Add(item);
+                    ss.sleepDataEntrieSleepTime.Add(item);
                 }
                 else
                 {
@@ -41,11 +43,8 @@ namespace ExcelCalculationAddin.Model
                 }
 
 
-                if (ss != null && !isSleepTime)
+                if (ss != null && (!isSleepTime || i+1 == allSleepData.Count))
                 {
-
-                    await ss.CalcData();
-
                     sleepSession.Add(ss);
                     ss = null;
                 }

@@ -28,7 +28,7 @@ namespace ExcelCalculationAddin
             foreach (Worksheet worksheet in workbook.Worksheets)
             {
 
-                if (worksheet.Name == "Berechnung" || worksheet.Name == "WeckerParameter")
+                if (worksheet.Name == "Berechnung" || worksheet.Name == "WeckerParameter" || worksheet.Name == "Sleeptypes")
                 {
                     continue;
                 }
@@ -50,7 +50,7 @@ namespace ExcelCalculationAddin
                         {
                             continue;
                         }
-
+                        sde.row = i;
                         await sde.AddValue(value, set.Key);
                     }
 
@@ -80,7 +80,7 @@ namespace ExcelCalculationAddin
                     continue;
                 }
 
-                parameters.AddValue(value, set.Key);
+                //parameters.AddValue(value, set.Key);
             }
         }
 

@@ -11,6 +11,7 @@ namespace ExcelCalculationAddin.Model
     {
 
 
+        /*
         public int GeneralSleep;
         public int GeneralLight;
         public int GeneralMotion;
@@ -121,5 +122,6 @@ namespace ExcelCalculationAddin.Model
             {
             }     
         }
+        */
     }
 }

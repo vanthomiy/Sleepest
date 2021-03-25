@@ -156,11 +156,15 @@
     can be found.
   -->
   <ItemGroup>
+    <Compile Include="Calclulate\CalculateSleep.cs" />
     <Compile Include="ListHelp\CellHelper.cs" />
     <Compile Include="ListHelp\SheetParams.cs" />
     <Compile Include="Model\AlarmSettings.cs" />
     <Compile Include="Model\Parameters.cs" />
+    <Compile Include="Model\SleepCleanModel.cs" />
+    <Compile Include="Model\SleepCleanType.cs" />
     <Compile Include="Model\SleepDataEntry.cs" />
+    <Compile Include="Model\SleepParameter.cs" />
     <Compile Include="Model\SleepSession.cs" />
     <Compile Include="Model\SleepType.cs" />
     <Compile Include="Model\Strukture.cs" />
