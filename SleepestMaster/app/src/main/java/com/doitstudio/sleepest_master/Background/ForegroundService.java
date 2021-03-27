@@ -16,18 +16,16 @@ import android.os.PowerManager;
 import android.widget.Toast;
 
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LifecycleService;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 import com.doitstudio.sleepest_master.Alarm;
+import com.doitstudio.sleepest_master.MainApplication;
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.model.data.Actions;
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
-
-import java.util.Observable;
-
 
 
 public class ForegroundService extends Service {
@@ -35,6 +33,8 @@ public class ForegroundService extends Service {
     private PowerManager.WakeLock wakeLock = null;
     private boolean isServiceStarted = false;
     public SleepCalculationHandler sleepCalculationHandler;
+
+    //DataStoreRepository dataStoreRepository;
 
     private DataStoreRepository storeRepository;
     private LiveData<Alarm> alarmActiveLiveData;
@@ -68,7 +68,7 @@ public class ForegroundService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        /*storeRepository = new DataStoreRepository(getApplicationContext());
+        storeRepository = ((MainApplication) getApplicationContext()).getDataStoreRepository();
         alarmActiveLiveData = (LiveData) storeRepository.getAlarmFlow();
 
         final Observer<Alarm> nameObserver = new Observer<Alarm>() {
@@ -79,7 +79,7 @@ public class ForegroundService extends Service {
             }
         };
 
-        alarmActiveLiveData.observe((LifecycleOwner) this, nameObserver);*/
+        alarmActiveLiveData.observe((LifecycleOwner) this, nameObserver);
 
 
         startForeground(1, createNotification("Test")); /** TODO: Id zentral anlegen */

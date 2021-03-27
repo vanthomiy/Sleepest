@@ -62,8 +62,10 @@ class MainActivity : AppCompatActivity() {
 
 
     fun buttonClick2(view: View){
-        //ForegroundService.startOrStopForegroundService(Actions.START, this)
+        ForegroundService.startOrStopForegroundService(Actions.START, this)
+
+
         //Workmanager.startPeriodicWorkmanager(15, applicationContext)
-        AlarmReceiver.startAlarmManager(6,17,5, applicationContext)
+        //AlarmReceiver.startAlarmManager(6,17,5, applicationContext)
     }
 }
