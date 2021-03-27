@@ -36,12 +36,12 @@ namespace ExcelCalculationAddin.Model
                 //motion = new MaxMinHelper();
                 //light = new MaxMinHelper();
 
-                foreach (var item in data[SleepCleanModelType.Schlaf].maxmintype)
+                foreach (var item in awake.data[SleepCleanModelType.Schlaf].maxmintype)
                 {
-                    foreach (var item2 in data)
-                    {
-                        item2.Value.maxmintype[item.Key] = sleep.data[item2.Key].maxmintype[item.Key] - awake.data[item2.Key].maxmintype[item.Key];
-                    }
+                    data[SleepCleanModelType.Schlaf].maxmintype[item.Key] = sleep.data[SleepCleanModelType.Schlaf].maxmintype[item.Key] - awake.data[SleepCleanModelType.Schlaf].maxmintype[item.Key];
+                    data[SleepCleanModelType.Motion].maxmintype[item.Key] = sleep.data[SleepCleanModelType.Motion].maxmintype[item.Key] - awake.data[SleepCleanModelType.Motion].maxmintype[item.Key];
+                    data[SleepCleanModelType.Licht].maxmintype[item.Key] = sleep.data[SleepCleanModelType.Licht].maxmintype[item.Key] - awake.data[SleepCleanModelType.Licht].maxmintype[item.Key];
+
 
                     //sleepLikely.maxmintype[item.Key] = sleep.sleepLikely.maxmintype[item.Key] - awake.sleepLikely.maxmintype[item.Key];
                     //motion.maxmintype[item.Key] = sleep.motion.maxmintype[item.Key] - awake.motion.maxmintype[item.Key];

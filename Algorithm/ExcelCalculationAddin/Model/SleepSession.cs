@@ -6,13 +6,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static ExcelCalculationAddin.Model.SleepType;
 
 namespace ExcelCalculationAddin.Model
 {
     public class SleepSession
     {
+        public SleepUserType sleepUserType = SleepUserType.standard;
+
         public static int actualRow = 3;
         public DateTime dateTime;
+
+        public bool foundSleep = false;
+        public int times = 0;
 
         public List<SleepDataEntry> sleepDataEntrieSleepTime;
 
@@ -23,26 +29,26 @@ namespace ExcelCalculationAddin.Model
         public Strukture structureAwake;
         public Strukture diffrence;
 
-        public string rw = "";
+        public string rw1 = "", rw2 = "", nf1 = "", nf2 = "";
 
         // Find the sleep points and the wakeup points
         public Task<bool> CalcSleepTimesRealTime(SleepParameter parameters, int count = 0)
         {
-            List<int> awakeF1 = new List<int>();
-            List<int> sleepF1 = new List<int>();
-            List<int> wakeUpF1 = new List<int>();
-            List<int> diffSleepF1 = new List<int>();
-            List<int> diffSleepF2 = new List<int>();
-            List<int> diffAwakeF1 = new List<int>();
+            List<int> awakeF1 = new List<int>(); // median awake over last x time
+            List<int> sleepF1 = new List<int>(); // median sleep over last x time
+            List<int> wakeUpF1 = new List<int>(); // median sleep over nect x times 
+            List<int> diffSleepF1 = new List<int>(); // Median sleep diff between sleep and wakeup
+            List<int> diffSleepF2 = new List<int>(); // Future Median sleep diff between sleep and wakeup
+            List<int> diffAwakeF1 = new List<int>(); // Median sleep diff between awake and wakeup
 
-            TimeSpan awakeTime = parameters.awakeTime;
+            TimeSpan awakeTime = parameters.awakeTime; 
             TimeSpan sleepTime = parameters.sleepTime;
             TimeSpan wakeUpTime = parameters.wakeUpTime;
 
-            int sleepSleep = parameters.sleepSleep, sleepAwake = parameters.sleepAwake;
-            int motionSleep = parameters.motionSleep, sleep = parameters.sleep, diffSleep = parameters.diffSleep, diffSleepFuture = parameters.diffSleepFuture;
-            int awake = parameters.awake, diffAwake = parameters.diffAwake;
-            int motionAwake = parameters.motionAwake;
+            int sleepSleep = (int)parameters.sleepSleepBorder, sleepAwake = (int)parameters.awakeSleepBorder;
+            int motionSleep = (int)parameters.sleepMotionBorder, sleep = (int)parameters.sleepMedianOverTime, diffSleep = (int)parameters.diffSleep, diffSleepFuture = (int)parameters.diffSleepFuture;
+            int awake = (int)parameters.awakeMedianOverTime, diffAwake = (int)parameters.diffAwake;
+            int motionAwake = (int)parameters.awakeMotionBorder;
 
             List<int> sleepPoint = new List<int>();
             List<int> wakeupPoint = new List<int>();
@@ -120,6 +126,11 @@ namespace ExcelCalculationAddin.Model
             {
                 if (sleepPoint.Contains(i))
                 {
+                    if (!sleeping)
+                    {
+                        times++;
+                    }
+
                     sleeping = true;
                 }
                 else if (wakeupPoint.Contains(i))
@@ -129,6 +140,7 @@ namespace ExcelCalculationAddin.Model
 
                 if (sleeping)
                 {
+                    foundSleep = true;
                     sleepDataEntrieSleep[count].Add(sleepDataEntrieSleepTime[i]);
                 }
                 else
@@ -178,7 +190,7 @@ namespace ExcelCalculationAddin.Model
             return true;
         }
 
-        public Task<bool> WriteCalcData(string user)
+        public Task<bool> WriteCalcData(bool isWhile, string user)
         {
             if (sleepDataEntrieSleep == null || sleepDataEntrieSleep.Count == 0 || !sleepDataEntrieSleep.ContainsKey(0) ||sleepDataEntrieSleep[0].Count == 0)
             {
@@ -191,8 +203,10 @@ namespace ExcelCalculationAddin.Model
             }
 
             var workbook = (Workbook)Globals.ThisAddIn.Application.ActiveWorkbook;
-            Worksheet worksheet1 = (Worksheet)workbook.Worksheets["Sleeptypes"];
+            Worksheet worksheet1 = isWhile ? (Worksheet)workbook.Worksheets["SleeptypesWhile"] : (Worksheet)workbook.Worksheets["SleeptypesAfter"];
             Worksheet worksheet = (Worksheet)workbook.Worksheets[user];
+
+            int off = isWhile ? 4 : 0;
 
             foreach (var list in sleepDataEntrieSleep)
             {
@@ -200,37 +214,51 @@ namespace ExcelCalculationAddin.Model
                 foreach (var item in list.Value)
                 {
                     // find if right or wrong
-                    if (list.Key == 0 && item == list.Value.FirstOrDefault())
+                    if (item == list.Value.FirstOrDefault())
                     {
-                        var same = CellHelper.GetCellValue(item.row, 6, worksheet);
-                        var before =  CellHelper.GetCellValue(item.row-1, 6, worksheet);
-                        if (same == "0")
+                        var same = (int)CellHelper.GetCellValueFloat(item.row, 6, worksheet);
+                        var before = (int)CellHelper.GetCellValueFloat(item.row-1, 6, worksheet);
+                        var before1 = (int)CellHelper.GetCellValueFloat(item.row-2, 6, worksheet);
+                        if (same == 0)
                         {
-                            rw += "4";
+                            if (list.Key == 0)
+                                rw1 += "4";
+                            else
+                                rw2 += "4";
                         }
-                        if (before == "1")
+                        if (before > 0 || before1 > 0)
                         {
-                            rw += "5";
+                            if (list.Key == 0)
+                                rw1 += "5";
+                            else
+                                rw2 += "5";
                         }
 
 
                     }
-                    else if (list.Key == 0 && item == list.Value.LastOrDefault())
+                    else if (item == list.Value.LastOrDefault())
                     {
-                        var same = CellHelper.GetCellValue(item.row, 6, worksheet);
-                        var after = CellHelper.GetCellValue(item.row + 1, 6, worksheet);
-                        if (same == "0")
+                        var same = (int)CellHelper.GetCellValueFloat(item.row, 6, worksheet);
+                        var after = (int)CellHelper.GetCellValueFloat(item.row + 1, 6, worksheet);
+                        var after1 = (int)CellHelper.GetCellValueFloat(item.row + 2, 6, worksheet);
+                        if (same ==0)
                         {
-                            rw += "3";
+                            if (list.Key == 0)
+                                rw1 += "3";
+                            else
+                                rw2 += "3";
                         }
-                        if (after == "1")
+                        if ((after > 0 || after1 > 0) && sleepDataEntrieSleepTime.LastOrDefault().time > item.time)
                         {
-                            rw += "2";
+                            if (list.Key == 0)
+                                rw1 += "2";
+                            else
+                                rw2 += "2";
                         }
                     }
 
                     //ListHelp.CellHelper.WriteCellValue("Sleeping", item.row, DataSetup.dataSetPoints[DataPoints.Caculated], worksheet);
-                    ListHelp.CellHelper.WriteCellValue("Sleeping", item.row, CellHelper.GetColumnName(7+list.Key) , worksheet);
+                    ListHelp.CellHelper.WriteCellValue("Sleeping", item.row, CellHelper.GetColumnName(7+list.Key + off) , worksheet);
                 }
             }
 
@@ -238,17 +266,21 @@ namespace ExcelCalculationAddin.Model
             {
                 foreach (var item in list.Value)
                 {
-                    ListHelp.CellHelper.WriteCellValue("", item.row, CellHelper.GetColumnName(7 + list.Key), worksheet);
+                    ListHelp.CellHelper.WriteCellValue("", item.row, CellHelper.GetColumnName(7 + list.Key + off), worksheet);
                 }
             }
+
+
 
             var row = sleepDataEntrieSleep[0].FirstOrDefault().row;
 
             ListHelp.CellHelper.WriteCellValue(row.ToString(), actualRow, "A", worksheet1);
             ListHelp.CellHelper.WriteCellValue(user, actualRow, "B", worksheet1);
             ListHelp.CellHelper.WriteCellValue(sleepDataEntrieSleep.Count().ToString(), actualRow, "AD", worksheet1);
-            ListHelp.CellHelper.WriteCellValue(rw, actualRow, "AE", worksheet1);
-
+            ListHelp.CellHelper.WriteCellValue(rw1, actualRow, "AE", worksheet1);
+            ListHelp.CellHelper.WriteCellValue(rw2, actualRow, "AF", worksheet1);
+            ListHelp.CellHelper.WriteCellValue(nf1, actualRow, "AG", worksheet1);
+            ListHelp.CellHelper.WriteCellValue(nf2, actualRow, "AH", worksheet1);
 
             diffrence?.WriteData(actualRow, worksheet1, 6);
             structureSleep?.WriteData(actualRow, worksheet1, 3);
@@ -257,6 +289,24 @@ namespace ExcelCalculationAddin.Model
             return Task.FromResult(true);
         }
 
+        public Task<bool> WriteFailData(string user)
+        {
+            
+
+            var workbook = (Workbook)Globals.ThisAddIn.Application.ActiveWorkbook;
+            Worksheet worksheet1 = (Worksheet)workbook.Worksheets["Sleeptypes"];
+
+            var row = sleepDataEntrieSleepTime.FirstOrDefault().row;
+
+            ListHelp.CellHelper.WriteCellValue(row.ToString(), actualRow, "A", worksheet1);
+            ListHelp.CellHelper.WriteCellValue(user, actualRow, "B", worksheet1);
+            ListHelp.CellHelper.WriteCellValue(sleepDataEntrieSleep.Count().ToString(), actualRow, "AD", worksheet1);
+            ListHelp.CellHelper.WriteCellValue(nf1, actualRow, "AG", worksheet1);
+            ListHelp.CellHelper.WriteCellValue(nf2, actualRow, "AH", worksheet1);
+
+            actualRow++;
+            return Task.FromResult(true);
+        }
 
     }
 

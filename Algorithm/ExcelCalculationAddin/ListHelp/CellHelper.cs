@@ -13,7 +13,7 @@ namespace ExcelCalculationAddin.ListHelp
         {
 
             int column = ExcelColumnNameToNumber(letter);
-            if (column > 40)
+            if (column > 100)
                 return;
 
             sheet.Cells[row, column].Value2 = value;
@@ -24,7 +24,7 @@ namespace ExcelCalculationAddin.ListHelp
         {
 
             int column = ExcelColumnNameToNumber(letter);
-            if (column > 40)
+            if (column > 100)
                 return;
 
             sheet.Cells[row, column].Value2 = value;
@@ -35,7 +35,7 @@ namespace ExcelCalculationAddin.ListHelp
         {
 
             int column = ExcelColumnNameToNumber(letter);
-            if (column > 40)
+            if (column > 100)
                 return null;
 
             var value = sheet.Cells[row, column].Value2;
@@ -44,7 +44,7 @@ namespace ExcelCalculationAddin.ListHelp
 
         public static string GetCellValue(int row, int column, Worksheet sheet)
         {
-            if (column > 40)
+            if (column > 100)
                 return null;
 
             var value = sheet.Cells[row, column].Value2;
@@ -53,7 +53,7 @@ namespace ExcelCalculationAddin.ListHelp
 
         public static float GetCellValueFloat(int row, int column, Worksheet sheet)
         {
-            if (column > 50)
+            if (column > 100)
                 return 0;
 
             var value = sheet.Cells[row, column].Value2;

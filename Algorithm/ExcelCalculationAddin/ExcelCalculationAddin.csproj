@@ -159,6 +159,7 @@
     <Compile Include="Calclulate\CalculateSleep.cs" />
     <Compile Include="ListHelp\CellHelper.cs" />
     <Compile Include="ListHelp\SheetParams.cs" />
+    <Compile Include="Live\CalcSleepLive.cs" />
     <Compile Include="Model\AlarmSettings.cs" />
     <Compile Include="Model\Parameters.cs" />
     <Compile Include="Model\SleepCleanModel.cs" />

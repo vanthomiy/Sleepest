@@ -162,17 +162,17 @@ namespace ExcelCalculationAddin.Model
         }
 
 
-        public static Dictionary<SleepCleanType, SleepCleanModel> CreateAllModels()
+        public static Dictionary<SleepCleanType, SleepCleanModel> CreateAllModels(bool isWhile)
         {
             Dictionary<SleepCleanType, SleepCleanModel> asss = new Dictionary<SleepCleanType, SleepCleanModel>();
 
 
             var workbook = (Workbook)Globals.ThisAddIn.Application.ActiveWorkbook;
-            Worksheet worksheet1 = (Worksheet)workbook.Worksheets["Sleeptypes"];
+            Worksheet worksheet1 = isWhile ? (Worksheet)workbook.Worksheets["SleeptypesWhile"] : (Worksheet)workbook.Worksheets["SleeptypesAfter"];
 
 
 
-            int finde = CellHelper.ExcelColumnNameToNumber("AJ");
+            int finde = CellHelper.ExcelColumnNameToNumber("AM");
             int offWach = 1, offSleep = 4, offDiff = 7;
 
             for (int i = 4; i < 200; i+=12)

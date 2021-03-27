@@ -37,8 +37,9 @@ namespace ExcelCalculationAddin
         {
             this.tab1 = this.Factory.CreateRibbonTab();
             this.group1 = this.Factory.CreateRibbonGroup();
-            this.btnCalculieren = this.Factory.CreateRibbonButton();
             this.btnEinlesen = this.Factory.CreateRibbonButton();
+            this.btnCalculieren = this.Factory.CreateRibbonButton();
+            this.btnCalcLive = this.Factory.CreateRibbonButton();
             this.tab1.SuspendLayout();
             this.group1.SuspendLayout();
             this.SuspendLayout();
@@ -52,10 +53,17 @@ namespace ExcelCalculationAddin
             // 
             // group1
             // 
+            this.group1.Items.Add(this.btnCalcLive);
             this.group1.Items.Add(this.btnEinlesen);
             this.group1.Items.Add(this.btnCalculieren);
             this.group1.Label = "group1";
             this.group1.Name = "group1";
+            // 
+            // btnEinlesen
+            // 
+            this.btnEinlesen.Label = "Einlesen";
+            this.btnEinlesen.Name = "btnEinlesen";
+            this.btnEinlesen.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnEinlesen_Click);
             // 
             // btnCalculieren
             // 
@@ -63,11 +71,11 @@ namespace ExcelCalculationAddin
             this.btnCalculieren.Name = "btnCalculieren";
             this.btnCalculieren.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnCalculieren_Click);
             // 
-            // btnEinlesen
+            // btnCalcLive
             // 
-            this.btnEinlesen.Label = "Einlesen";
-            this.btnEinlesen.Name = "btnEinlesen";
-            this.btnEinlesen.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnEinlesen_Click);
+            this.btnCalcLive.Label = "Kalk Live";
+            this.btnCalcLive.Name = "btnCalcLive";
+            this.btnCalcLive.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnCalcLive_Click);
             // 
             // Ribbon1
             // 
@@ -89,6 +97,7 @@ namespace ExcelCalculationAddin
         internal Microsoft.Office.Tools.Ribbon.RibbonGroup group1;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btnCalculieren;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btnEinlesen;
+        internal Microsoft.Office.Tools.Ribbon.RibbonButton btnCalcLive;
     }
 
     partial class ThisRibbonCollection

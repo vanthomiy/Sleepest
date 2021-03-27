@@ -10,8 +10,21 @@ namespace ExcelCalculationAddin.Model
     public class SleepType
     {
 
-        public Parameters pm;
-        public Strukture st;
+        public enum SleepUserType
+        {
+            heavy = 2,
+            standard = 5,
+            light = 1,
+
+        }
+
+
+
+
+       // public static Dictionary<SleepUserType, SleepCleanModel> sleepTypeModels;
+        public static Dictionary<SleepUserType, SleepParameter> sleepTypeParamsWhile;
+        public static Dictionary<SleepUserType, SleepParameter> sleepTypeParamsAfter;
+
 
     }
 }

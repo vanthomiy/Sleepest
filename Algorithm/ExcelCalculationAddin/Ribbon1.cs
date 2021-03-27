@@ -1,4 +1,5 @@
 ﻿using ExcelCalculationAddin.Calclulate;
+using ExcelCalculationAddin.Live;
 using ExcelCalculationAddin.Model;
 using Microsoft.Office.Tools.Ribbon;
 using System;
@@ -33,10 +34,25 @@ namespace ExcelCalculationAddin
             // Kalkulieren und abspeichern der daten
             ReadParameter.GetAlarmSettings();
             ReadParameter.ReadSleepTypeParameter();
+            SleepClean.sleepCleanParamsAfter = SleepParameter.CreateAllModels(false);
+            SleepClean.sleepCleanModelsAfter = SleepCleanModel.CreateAllModels(false);
+            SleepType.sleepTypeParamsAfter = SleepParameter.CreateAllFactorModels(false);
 
-            SleepClean.sleepCleanModels = SleepCleanModel.CreateAllModels();
+            SleepClean.sleepCleanParamsWhile= SleepParameter.CreateAllModels(true);
+            SleepClean.sleepCleanModelsWhile = SleepCleanModel.CreateAllModels(true);
+            SleepType.sleepTypeParamsWhile = SleepParameter.CreateAllFactorModels(true);
 
             await ReadParameter.GetAllUserData();
+        }
+
+        private async void btnCalcLive_Click(object sender, RibbonControlEventArgs e)
+        {
+            // Kalkulieren und abspeichern der daten
+            ReadParameter.GetAlarmSettings();
+            ReadParameter.ReadSleepTypeParameter();
+
+
+            await CalcSleepLive.CalcAllSleepData();
         }
     }
 }
