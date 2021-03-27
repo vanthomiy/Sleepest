@@ -15,10 +15,13 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleService;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ServiceLifecycleDispatcher;
 
 import com.doitstudio.sleepest_master.Alarm;
 import com.doitstudio.sleepest_master.MainApplication;
@@ -27,25 +30,30 @@ import com.doitstudio.sleepest_master.model.data.Actions;
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 
+import kotlinx.coroutines.flow.Flow;
 
-public class ForegroundService extends Service {
 
+public class ForegroundService extends LifecycleService {
+
+    //private final ServiceLifecycleDispatcher mDispatcher = new ServiceLifecycleDispatcher( this);
     private PowerManager.WakeLock wakeLock = null;
     private boolean isServiceStarted = false;
     public SleepCalculationHandler sleepCalculationHandler;
 
-    //DataStoreRepository dataStoreRepository;
+    DataStoreRepository dataStoreRepository;
 
-    private DataStoreRepository storeRepository;
-    private LiveData<Alarm> alarmActiveLiveData;
 
     @Override
     public IBinder onBind(Intent intent) {
+        super.onBind(intent);
+        //mDispatcher.onServicePreSuperOnBind();
         return null;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        super.onStartCommand(intent, flags,startId);
 
         if (intent != null) {
             String action = intent.getAction();
@@ -60,33 +68,27 @@ public class ForegroundService extends Service {
             }
         }
 
-
         return START_STICKY; // by returning this we make sure the service is restarted if the system kills the service
     }
+
+    ForegroundObserver fo;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        storeRepository = ((MainApplication) getApplicationContext()).getDataStoreRepository();
-        alarmActiveLiveData = (LiveData) storeRepository.getAlarmFlow();
-
-        final Observer<Alarm> nameObserver = new Observer<Alarm>() {
-            @Override
-            public void onChanged(Alarm a) {
-                String alarmName = a.getAlarmName();
-                updateNotification(alarmName);
-            }
-        };
-
-        alarmActiveLiveData.observe((LifecycleOwner) this, nameObserver);
-
-
         startForeground(1, createNotification("Test")); /** TODO: Id zentral anlegen */
+
+        fo = new ForegroundObserver (this);
+    }
+
+    public void OnAlarmChanged(Alarm alarm){
+            updateNotification("Alarm Active: " + alarm.getIsActive());
     }
 
     @Override
     public void onDestroy() {
+        //mDispatcher.onServicePreSuperOnDestroy();
         super.onDestroy();
     }
 
@@ -205,4 +207,11 @@ public class ForegroundService extends Service {
             }
         context.startService(intent);
     }
+
+    /*
+    @NonNull
+    @Override
+    public Lifecycle getLifecycle() {
+        return mDispatcher.getLifecycle();
+    }*/
 }

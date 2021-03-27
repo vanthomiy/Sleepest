@@ -21,14 +21,14 @@ class MainApplication : Application() {
     }
 
     val dbRepository by lazy {
-        DbRepository(
+        DbRepository.getRepo(
                         database.sleepDataDao(),
                         database.sleepApiRawDataDao()
         )
     }
 
     val dataStoreRepository by lazy {
-        DataStoreRepository(applicationContext)
+        DataStoreRepository.getRepo(applicationContext)
     }
 
 }

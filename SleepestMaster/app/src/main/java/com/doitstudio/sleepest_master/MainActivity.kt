@@ -5,6 +5,7 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.doitstudio.sleepest_master.Background.AlarmReceiver
+import com.doitstudio.sleepest_master.Background.ForegroundObserver
 import com.doitstudio.sleepest_master.Background.ForegroundService
 import com.doitstudio.sleepest_master.Background.Workmanager
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
@@ -35,6 +36,8 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        //val fs = ForegroundObserver(this, this)
 
         mainViewModel.alarmLiveData.observe(this) { alarmData ->
             if (alarmActive != alarmData?.isActive) {

@@ -1,5 +1,6 @@
 package com.doitstudio.sleepest_master.storage
 
+import android.content.Context
 import com.doitstudio.sleepest_master.model.data.SleepSegmentEntity
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataDao
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
@@ -18,6 +19,23 @@ class DbRepository(
     private val sleepSegmentDao: SleepSegmentDao,
     private val sleepApiRawDataDao: SleepApiRawDataDao
 ) {
+
+    companion object {
+        // For Singleton instantiation
+        @Volatile
+        private var INSTANCE: DbRepository? = null
+
+        var a:Int = 0
+
+        fun getRepo(sleepSegmentDao: SleepSegmentDao, sleepApiRawDataDao: SleepApiRawDataDao): DbRepository {
+            return INSTANCE ?: synchronized(this) {
+                val instance = DbRepository(sleepSegmentDao, sleepApiRawDataDao)
+                INSTANCE = instance
+                // return instance
+                instance
+            }
+        }
+    }
 
     // Link to the documentation https://developer.android.com/training/data-storage/room/#kotlin
 
