@@ -94,6 +94,7 @@ namespace ExcelCalculationAddin.Live
                     // Check for sleep times adjustment types
                     try
                     {
+                        session.rw2 = "nf";
                         foreach (var item in SleepClean.sleepCleanModelsWhile)
                         {
                             if (session.structureAwake == null || session.structureSleep == null || session.diffrence == null)
@@ -106,7 +107,7 @@ namespace ExcelCalculationAddin.Live
 
                             if (item.Value.CheckIfIsTypeModel(session.structureAwake, session.structureSleep, session.diffrence))
                             {
-
+                                session.rw2 = "Type " + (int)item.Key + ":";
                                 a.Add(new Tuple<string, string, string>(user.sheetname, item.Key.ToString(), session.sleepDataEntrieSleep[0].FirstOrDefault().row.ToString()));
                                 // a specific type was found
 
@@ -116,6 +117,7 @@ namespace ExcelCalculationAddin.Live
                                 foundCando++;
                                 break;
                             }
+
                         }
                     }
                     catch (Exception)

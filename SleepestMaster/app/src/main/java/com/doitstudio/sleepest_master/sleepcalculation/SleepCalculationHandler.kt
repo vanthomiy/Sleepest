@@ -52,11 +52,11 @@ class SleepCalculationHandler(private val context:Context){
 
     init{
 
-        alarmActiveLiveData.observe(context as LifecycleOwner) { alarmData ->
+        /*alarmActiveLiveData.observe(context as LifecycleOwner) { alarmData ->
             if (alarmActive != alarmData?.isActive) {
                 alarmActive = alarmData?.isActive == true
             }
-        }
+        }*/
     }
 
 

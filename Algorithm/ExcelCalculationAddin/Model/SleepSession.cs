@@ -278,7 +278,7 @@ namespace ExcelCalculationAddin.Model
             ListHelp.CellHelper.WriteCellValue(user, actualRow, "B", worksheet1);
             ListHelp.CellHelper.WriteCellValue(sleepDataEntrieSleep.Count().ToString(), actualRow, "AD", worksheet1);
             ListHelp.CellHelper.WriteCellValue(rw1, actualRow, "AE", worksheet1);
-            ListHelp.CellHelper.WriteCellValue(rw2, actualRow, "AF", worksheet1);
+            ListHelp.CellHelper.WriteCellValue(rw1 != "" ? rw2:"", actualRow, "AF", worksheet1);
             ListHelp.CellHelper.WriteCellValue(nf1, actualRow, "AG", worksheet1);
             ListHelp.CellHelper.WriteCellValue(nf2, actualRow, "AH", worksheet1);
 
