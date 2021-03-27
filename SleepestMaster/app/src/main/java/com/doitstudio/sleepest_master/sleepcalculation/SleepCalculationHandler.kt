@@ -67,6 +67,7 @@ class SleepCalculationHandler(private val context:Context){
 
         updateAlarmTime()
         updateAlarmActive()
+
     }
 
     private var counter:Int =0

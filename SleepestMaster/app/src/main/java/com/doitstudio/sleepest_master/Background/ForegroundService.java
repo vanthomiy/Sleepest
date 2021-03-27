@@ -35,7 +35,6 @@ public class ForegroundService extends Service {
     public SleepCalculationHandler sleepCalculationHandler;
 
     private DataStoreRepository storeRepository;
-    private LiveData<Alarm> alarmActiveLiveData;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -62,28 +61,28 @@ public class ForegroundService extends Service {
         return START_STICKY; // by returning this we make sure the service is restarted if the system kills the service
     }
 
-    //Flowable<Alarm> exampleCounterFlow;
+    ForeHelper fh;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
+        // repo holen
         storeRepository = ((MainApplication)getApplicationContext()).getDataStoreRepository();
-        alarmActiveLiveData = (LiveData) storeRepository.getAlarmFlow();
 
-        final Observer<Alarm> nameObserver = new Observer<Alarm>() {
-            @Override
-            public void onChanged(Alarm a) {
-                String alarmName = a.getAlarmName();
-                updateNotification(alarmName);
-            }
-        };
-
-        alarmActiveLiveData.observe((LifecycleOwner) this, nameObserver);
-
+        // kotlin handler starten
+        fh = new ForeHelper(storeRepository,(LifecycleOwner) this);
+        fh.ObserveAlarm(this);
 
         startForeground(1, createNotification("Test")); /** TODO: Id zentral anlegen */
     }
+
+    public void OnAlarmChanged(Alarm alarm){
+
+        // hier sollte dann der aufruf kommen evtl.
+
+    }
+
 
     @Override
     public void onDestroy() {
