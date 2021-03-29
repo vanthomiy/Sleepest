@@ -12,9 +12,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.viewbinding.BuildConfig
-import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
 import com.doitstudio.sleepest_master.sleepapi.SleepHandler
-import android.support.v4.media.session.PlaybackStateCompat
 import com.doitstudio.sleepest_master.Background.ForegroundService
 import com.doitstudio.sleepest_master.Background.Workmanager
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
@@ -38,7 +36,6 @@ class MainActivity : AppCompatActivity() {
                 binding.buttonAlarmToogle.text = getString(R.string.alarm_disabled)
             }
         }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,7 +74,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val sch:SleepCalculationHandler by lazy {
-        SleepCalculationHandler.getDatabase(this)
+        SleepCalculationHandler.getHandler(this)
     }
 
     fun buttonClick1(view: View){
@@ -109,7 +106,6 @@ class MainActivity : AppCompatActivity() {
             requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
         }
     }
-
 
     // region get permission for sleep api at first start etc.
     private fun activityRecognitionPermissionApproved(): Boolean {
@@ -157,4 +153,5 @@ class MainActivity : AppCompatActivity() {
                 .show()
     }
     // endregion
+
 }
