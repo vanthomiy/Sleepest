@@ -27,6 +27,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import android.widget.ToggleButton
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -39,6 +40,8 @@ import com.google.android.gms.location.ActivityRecognition
 import com.google.android.gms.location.SleepSegmentRequest
 import com.google.android.material.snackbar.Snackbar
 import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStreamWriter
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -61,8 +64,7 @@ class MainActivity : AppCompatActivity() {
 
     // Used to construct the output from multiple tables (very basic implementation just to show
     // the live data coming in).
-    private var sleepBedClassifyOutput: String = ""
-    private var sleepBedClassifyOutputExport: String = ""
+
     private var sleepOutClassifyOutput: String = ""
     private var sleepOutClassifyOutputExport: String = ""
 
@@ -108,7 +110,7 @@ class MainActivity : AppCompatActivity() {
 
                     val instantNow = Instant.now()
                     val date = millisToDateTime(time)
-                    sleepOutClassifyOutputExport += "${date.toLocalDate()};${date.hour}:${date.minute};${it.confidence};${(it.light)};${(it.motion)};\n"
+                    sleepOutClassifyOutputExport += "${date.toLocalDate()};${date.hour}:${date.minute};${it.confidence};${(it.light)};${(it.motion)};0\n"
                     // Just display values that are shorter than 24Hours away
                     if (instantNow.minusSeconds(86400).epochSecond > it.timestampSeconds)
                         return@forEach
@@ -149,14 +151,14 @@ class MainActivity : AppCompatActivity() {
     fun onClickExportSleepData(view: View) {
 
 
-        var switchExportFile =  "Bed\nDatum;Uhrzeit;Schlaf;Licht;Bewegung;Wahre Zeiten"
+        var switchExportFile =  "Datum;Uhrzeit;Schlaf;Licht;Bewegung;Wahre Zeiten"
 
         val splitOut  = sleepOutClassifyOutputExport.split("\n")
-        val splitBed  = sleepBedClassifyOutputExport.split("\n")
+        //val splitBed  = sleepBedClassifyOutputExport.split("\n")
 
-        splitBed.reversed().forEach {
+        /*splitBed.reversed().forEach {
             switchExportFile += "${it}\n";
-        }
+        }*/
 
         switchExportFile +=  "\n\n\nOut\nDatum;Uhrzeit;Schlaf;Licht;Bewegung;Wahre Zeiten"
 
@@ -177,7 +179,91 @@ class MainActivity : AppCompatActivity() {
         }
 
         startActivity(Intent.createChooser(shareIntent, "Export data"))
+
+        //CreateFile()
+        //saveTextFile()
     }
+
+    private fun CreateFile(){
+        val HEADER = "Datum;Uhrzeit;Schlaf;Licht;Bewegung;Wahre Zeiten"
+
+        var filename = "export.csv"
+
+        var path = getExternalFilesDir(null)   //get file directory for this package
+        //(Android/data/.../files | ... is your app package)
+
+//create fileOut object
+        var fileOut = File(path, filename)
+
+//delete any file object with path and filename that already exists
+        fileOut.delete()
+
+//create a new file
+        fileOut.createNewFile()
+
+        //append the header and a newline
+        fileOut.appendText(HEADER)
+
+
+        val splitOut  = sleepOutClassifyOutputExport.split("\n")
+
+        splitOut.reversed().forEach {
+            fileOut.appendText("${it}\n")
+        }
+
+
+/*
+        val sendIntent = Intent(Intent.ACTION_SEND)
+        sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(fileOut))
+        sendIntent.type = "text/csv"
+        startActivity(Intent.createChooser(sendIntent, "SHARE"))
+*/
+
+        val shareIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_STREAM, Uri.fromFile(fileOut))
+            type = "text/csv"
+        }
+
+        startActivity(Intent.createChooser(shareIntent, "Export data"))
+
+    }
+
+    fun saveTextFile() {
+
+        var text = "Datum;Uhrzeit;Schlaf;Licht;Bewegung;Wahre Zeiten\n"
+
+        val splitOut  = sleepOutClassifyOutputExport.split("\n")
+
+        splitOut.reversed().forEach {
+            text += ("${it}\n")
+        }
+
+
+
+
+        try {
+
+            val shareIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_STREAM, text)
+                type = "text/csv"
+            }
+
+
+
+            startActivity(Intent.createChooser(shareIntent, "Export data"))
+
+            //display file saved message
+            Toast.makeText(baseContext, "File saved successfully!", Toast.LENGTH_SHORT).show()
+        }
+        catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+
+    }
+
 
     fun onClickDeleteOldData(view: View){
         mainViewModel.deleteAllSleepData()
@@ -281,7 +367,7 @@ class MainActivity : AppCompatActivity() {
         val sleepData = getString(
             R.string.main_output_header2_and_sleep_data,
             sleepOutClassifyOutput,
-            sleepBedClassifyOutput
+                ""
         )
 
         val newOutput = header + sleepData

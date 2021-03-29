@@ -14,30 +14,23 @@ const val PREFERENCES_STATUS_NAME = "preferences_name"
 class PreferencesStatus(private val dataStore: DataStore<Preferences>) {
 
     private object PreferencesKeys {
-        val ALARM_TIME = intPreferencesKey("alarm_time")
+        val SUBSCRIBE_TO_SLEEP_DATA = booleanPreferencesKey("subscribe_to_sleep_data")
     }
 
-    //region Observe Flows
+    //region Sleep Data Subscription
 
     // Observed Flow will notify the observer when the the sleep subscription status has changed.
-    val alarmTimeFlow: Flow<Int> = dataStore.data.map { preferences ->
+    val subscribedToSleepDataFlow: Flow<Boolean> = dataStore.data.map { preferences ->
         // Get the subscription value, defaults to false if not set:
-        preferences[PreferencesKeys.ALARM_TIME] ?: 0
+        preferences[PreferencesKeys.SUBSCRIBE_TO_SLEEP_DATA] ?: false
     }
 
-
-
-    //endregion
-
-    //region Update Values
-
-    // Updates Alarm Time status.
-    suspend fun updateAlarmTime(alarmTime: Int) {
+    // Updates subscription to sleep data
+    suspend fun updateSubscribeToSleepData(subscribe: Boolean) {
         dataStore.edit { preferences ->
-            preferences[PreferencesKeys.ALARM_TIME] = alarmTime
+            preferences[PreferencesKeys.SUBSCRIBE_TO_SLEEP_DATA] = subscribe
         }
     }
-
 
     //endregion
 

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.createDataStore
 import androidx.datastore.preferences.createDataStore
 import com.doitstudio.sleepest_master.Alarm
+import com.doitstudio.sleepest_master.SleepApiData
 import com.doitstudio.sleepest_master.storage.datastorage.*
 import kotlinx.coroutines.flow.Flow
 
@@ -33,6 +34,37 @@ class DataStoreRepository(context: Context) {
 
     //endregion
 
+    //region SleepApiData Status
+
+    private val sleepApiDataStatus by lazy{ SleepApiDataStatus(context.createDataStore(
+            SLEEP_API_DATA_NAME,
+            serializer = SleepApiDataSerializer())
+    )}
+
+
+    val sleepApiDataFlow: Flow<SleepApiData> = sleepApiDataStatus.sleepApiData
+
+    suspend fun updateIsSubscribed(isActive:Boolean) =
+            sleepApiDataStatus.updateIsSubscribed(isActive)
+
+    suspend fun updatePermissionActive(isActive:Boolean) =
+            sleepApiDataStatus.updatePermissionActive(isActive)
+
+    suspend fun updatePermissionRemovedError(isActive:Boolean) =
+            sleepApiDataStatus.updatePermissionRemovedError(isActive)
+
+    suspend fun updateSubscribeFailed(isActive:Boolean) =
+            sleepApiDataStatus.updateSubscribeFailed(isActive)
+
+    suspend fun updateUnsubscribeFailed(isActive:Boolean) =
+            sleepApiDataStatus.updateUnsubscribeFailed(isActive)
+
+    suspend fun updateSleepApiValuesAmount(amount:Int) =
+            sleepApiDataStatus.updateSleepApiValuesAmount(amount)
+
+
+    //endregion
+
     //region Single Preferences
 
     private val preferencesStatus by lazy {
@@ -41,10 +73,16 @@ class DataStoreRepository(context: Context) {
         )
     }
 
-    val alarmTimeFlow: Flow<Int> = preferencesStatus.alarmTimeFlow
+    /**
+     * Is subscribed to sleep data ?
+     */
+    val subscribedToSleepDataFlow: Flow<Boolean> = preferencesStatus.subscribedToSleepDataFlow
 
-    suspend fun updateAlarmTime(alarmTime: Int) =
-        preferencesStatus.updateAlarmTime(alarmTime)
+    /**
+     * Update is subscribed to sleep data ?
+     */
+    suspend fun updateSubscribeToSleepData(subscribe: Boolean) =
+        preferencesStatus.updateSubscribeToSleepData(subscribe)
 
     //endregion
 

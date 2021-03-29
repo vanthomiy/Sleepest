@@ -10,6 +10,7 @@ import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DbRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 /**
@@ -21,22 +22,8 @@ import kotlinx.coroutines.launch
  */
 class SleepCalculationHandler(private val context:Context){
 
-    companion object {
-        // For Singleton instantiation
-        @Volatile
-        private var INSTANCE: SleepCalculationHandler? = null
-
-        var a:Int = 0
-
-        fun getDatabase(context: Context): SleepCalculationHandler {
-            return INSTANCE ?: synchronized(this) {
-                val instance = SleepCalculationHandler(context)
-                INSTANCE = instance
-                // return instance
-                instance
-            }
-        }
-    }
+    // Used to launch coroutines (non-blocking way to insert data).
+    private val scope: CoroutineScope = MainScope()
 
     private val dbRepository: DbRepository by lazy {
         (context.applicationContext as MainApplication).dbRepository
@@ -50,6 +37,21 @@ class SleepCalculationHandler(private val context:Context){
 
     private var alarmActive:Boolean = false
 
+    companion object {
+        // For Singleton instantiation
+        @Volatile
+        private var INSTANCE: SleepCalculationHandler? = null
+
+        fun getHandler(context: Context): SleepCalculationHandler {
+            return INSTANCE ?: synchronized(this) {
+                val instance = SleepCalculationHandler(context)
+                INSTANCE = instance
+                // return instance
+                instance
+            }
+        }
+    }
+
     init{
 
         alarmActiveLiveData.observe(context as LifecycleOwner) { alarmData ->
@@ -61,7 +63,7 @@ class SleepCalculationHandler(private val context:Context){
 
 
     /**
-     * Calculates all neccessary steps with the values
+     * Calculates all necessary steps with the values
      */
     fun calculateSleepData(){
 
@@ -77,16 +79,25 @@ class SleepCalculationHandler(private val context:Context){
         }
     }
 
+    /**
+     * Create new Alarm time
+     */
     private fun updateAlarmTime(){
-        CoroutineScope(Dispatchers.Default).launch {
+        scope.launch {
             storeRepository.updateAlarmName("Aufruf Nr. " + counter++)
         }
     }
 
-    private fun insertSleepSegmentValue(){
-        val sleepSegment: SleepSegmentEntity = SleepSegmentEntity(a++,2 +a,SleepState.awake)
+    /**
+     * Update sleep segments
+     */
+    private fun insertSleepSegmentValue( timestampSecondsStart: Int,
+                                         timestampSecondsEnd: Int,
+                                         sleepState: SleepState)
+    {
+        val sleepSegment: SleepSegmentEntity = SleepSegmentEntity(timestampSecondsStart,timestampSecondsEnd,sleepState)
 
-        CoroutineScope(Dispatchers.Default).launch {
+        scope.launch {
             dbRepository.insertSleepSegment(sleepSegment)
         }
     }
