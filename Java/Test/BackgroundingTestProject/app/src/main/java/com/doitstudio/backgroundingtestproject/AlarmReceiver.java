@@ -22,7 +22,9 @@ public class AlarmReceiver extends BroadcastReceiver {
     static MediaPlayer mediaPlayer;
     private static Context context;
     public static final int REQUEST_CODE = 12345;
+    EndlessService endlessService;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -33,6 +35,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         //Audio only with media sound on!!
         mediaPlayer = MediaPlayer.create(context, R.raw.single_beep);
         mediaPlayer.start();
+
+        //endlessService.updateNotification("Chillige Sache");
 
     }
 

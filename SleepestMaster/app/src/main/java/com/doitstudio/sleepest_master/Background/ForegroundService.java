@@ -1,9 +1,12 @@
-package com.doitstudio.backgroundingtestproject;
+package com.doitstudio.sleepest_master.Background;
+
+/** This class inherits from Service. It implements all functions of the foreground service
+ * like start, stop and foreground notification
+ */
 
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -12,32 +15,35 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import com.doitstudio.sleepest_master.Alarm;
+import com.doitstudio.sleepest_master.R;
+import com.doitstudio.sleepest_master.model.data.Actions;
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
+import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 
-enum Actions {
-    START,
-    STOP
-}
+import java.util.Observable;
 
-public class EndlessService extends Service {
+
+
+public class ForegroundService extends Service {
 
     private PowerManager.WakeLock wakeLock = null;
     private boolean isServiceStarted = false;
-    private String notificationChannelId = "ENDLESS SERVICE CHANNEL";
+    public SleepCalculationHandler sleepCalculationHandler;
 
-    Test test;
+    private DataStoreRepository storeRepository;
+    private LiveData<Alarm> alarmActiveLiveData;
 
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -58,31 +64,42 @@ public class EndlessService extends Service {
         return START_STICKY; // by returning this we make sure the service is restarted if the system kills the service
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onCreate() {
         super.onCreate();
-        startForeground(1, createNotification("Hallo"));
-        test = new Test(1,2);
-        //Observe einfügen
+
+        storeRepository = new DataStoreRepository(getApplicationContext());
+        alarmActiveLiveData = (LiveData) storeRepository.getAlarmFlow();
+
+        final Observer<Alarm> nameObserver = new Observer<Alarm>() {
+            @Override
+            public void onChanged(Alarm a) {
+                String alarmName = a.getAlarmName();
+                updateNotification(alarmName);
+            }
+        };
+
+        alarmActiveLiveData.observe((LifecycleOwner) this, nameObserver);
+
+
+        startForeground(1, createNotification("Test")); /** TODO: Id zentral anlegen */
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Toast.makeText(this, "Service destroyed", Toast.LENGTH_SHORT).show();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    // Starts the service and start a thread for foreground processes
     private void startService() {
-        // If the service already running, do nothing.
+        // If the service is already running, do nothing.
         if (isServiceStarted) {return;}
 
-        Toast.makeText(this, "Service starting its task", Toast.LENGTH_SHORT).show();
+        //Set start boolean and save it in preferences
         isServiceStarted = true;
         new ServiceTracker().setServiceState(this, ServiceState.STARTED);
 
-        // we need this lock so our service gets not affected by Doze Mode
+        // lock that service is not affected by Doze Mode
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         if (pm != null) {
             wakeLock = pm.newWakeLock(1, "EndlessService::lock");
@@ -93,17 +110,8 @@ public class EndlessService extends Service {
         Thread thread = new Thread(() -> {
             while (isServiceStarted) {
                 try {
-                    Thread.sleep(10000);
-                    showNotification(getApplicationContext());
-
-                    int oldTest1 = test.getTest1();
-                    int oldTest2 = test.getTest2();
-
-                    test.setTest1(++oldTest1);
-                    test.setTest2(++oldTest2);
-
-                    updateNotification(Integer.toString(oldTest1) + "," + Integer.toString(oldTest2));
-                    //pingFakeServer();
+                    Thread.sleep(60000); //milliseconds
+                    /** TODO: do something if neccessary */
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -113,6 +121,7 @@ public class EndlessService extends Service {
         thread.start();
     }
 
+    // Stop the foreground service
     private void stopService() {
         Toast.makeText(this, "Service stopping", Toast.LENGTH_SHORT).show();
         try {
@@ -122,12 +131,13 @@ public class EndlessService extends Service {
             stopForeground(true);
             stopSelf();
         } catch (Exception e) {
+
         }
+        //Save state in preferences
         isServiceStarted = false;
         new ServiceTracker().setServiceState(this, ServiceState.STOPPED);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public void updateNotification(String text) {
 
         Notification notification = createNotification(text);
@@ -136,11 +146,12 @@ public class EndlessService extends Service {
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    /**TODO Notification noch selbst machen mit eigenem Layout*/
+    //Creats a notification banner, that is permament to show that the app is still running. Only since Oreo
     private Notification createNotification(String text) {
+        String notificationChannelId = "ENDLESS SERVICE CHANNEL"; /**TODO: zentral definieren*/
 
-        // depending on the Android API that we're dealing with we will have
-        // to use a specific method to create the notification
+        // Since Oreo there is a Notification Service needed
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             NotificationChannel channel = new NotificationChannel(
@@ -173,56 +184,19 @@ public class EndlessService extends Service {
                 .setContentText(text)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setTicker("Ticker text")
-                .setPriority(Notification.PRIORITY_HIGH) // for under android 26 compatibility
+                .setPriority(Notification.PRIORITY_HIGH) // for under android Oreo (26) compatibility
                 .build();
-
-        /*Intent notificationIntent = new Intent(this, EndlessService.class);
-        PendingIntent pendingIntent =
-                PendingIntent.getActivity(this, 123, notificationIntent, 0);
-
-        Notification notification =
-                new Notification.Builder(this, notificationChannelId)
-                        .setContentTitle("Endless Service")
-                        .setContentText("Hallo")
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentIntent(pendingIntent)
-                        .setTicker("Ticker text")
-                        .build();
-
-        return notification;*/
-
     }
 
-    private void showNotification(Context context) {
+    /** Starts oder stops the foreground service. This function must be called to start or stop service
+     * @param action Enum Action (START or STOP)
+     * @param context Application context
+     */
+    public static void startOrStopForegroundService(Actions action, Context context) {
 
-        Calendar cal = new GregorianCalendar();
-        cal.setTimeInMillis(System.currentTimeMillis());
-        int hour = cal.get(Calendar.HOUR_OF_DAY);
-        int minute = cal.get(Calendar.MINUTE);
-
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, "Channel")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("My notification")
-                .setContentText(hour + ":" + minute)
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(hour + ":" + minute))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Channel_name";
-            String description = "description";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel("Channel", name, importance);
-            channel.setDescription(description);
-            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.notify(100, mBuilder.build());
-    }
-
-    static void startForegroundService(Actions action, Context context) {
-        Intent intent = new Intent(context, EndlessService.class);
+        Intent intent = new Intent(context, ForegroundService.class);
         intent.setAction(action.name());
+
         if (new ServiceTracker().getServiceState(context) == ServiceState.STOPPED && action == Actions.STOP)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 context.startForegroundService(intent);
