@@ -13,24 +13,12 @@ class MainViewModel(private val dbRepository: DbRepository, private val storageR
 
     val alarmLiveData = storageRepository.alarmFlow.asLiveData()
 
-    fun updateAlarmActive(alarmActive: Boolean) = viewModelScope.launch {
-        storageRepository.updateAlarmActive(alarmActive)
+
+    fun updatePermissionActive(permissionActive: Boolean) = viewModelScope.launch {
+        storageRepository.updatePermissionActive(permissionActive)
     }
 
-    fun updateAlarmTime(alarmTime: Long) = viewModelScope.launch {
-        storageRepository.updateAlarmTime(alarmTime)
-    }
 
-    fun deleteAllSleepData() = viewModelScope.launch {
-        dbRepository.deleteSleepApiRawData()
-        dbRepository.deleteSleepSegments()
-    }
-
-    val allSleepSegmentsEntities: LiveData<List<SleepSegmentEntity>> =
-        dbRepository.allSleepSegments.asLiveData()
-
-    val allSleepApiRawDataEntities: LiveData<List<SleepApiRawDataEntity>> =
-        dbRepository.allSleepApiRawData.asLiveData()
 
 }
 

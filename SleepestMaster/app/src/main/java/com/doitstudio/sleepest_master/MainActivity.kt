@@ -57,6 +57,11 @@ class MainActivity : AppCompatActivity() {
 
             isTimerRunning = sleepApiData.isSubscribed
         }
+
+        // check permission
+        if (!activityRecognitionPermissionApproved()) {
+            requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
+        }
     }
 
     private val mainViewModel: MainViewModel by lazy {
@@ -81,6 +86,7 @@ class MainActivity : AppCompatActivity() {
 
     fun buttonClick3(view: View) {
         requestData()
+
     }
 
     private fun requestData(){
@@ -96,6 +102,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    // region get permission for sleep api at first start etc.
     private fun activityRecognitionPermissionApproved(): Boolean {
         // Because this app targets 29 and above (recommendation for using the Sleep APIs), we
         // don't need to check if this is on a device before runtime permissions, that is, a device
@@ -109,9 +116,11 @@ class MainActivity : AppCompatActivity() {
     private val requestPermissionLauncher: ActivityResultLauncher<String> =
             registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
                 if (!isGranted) {
+                    mainViewModel.updatePermissionActive(false)
                     // Permission denied on Android platform that supports runtime permissions.
                     displayPermissionSettingsSnackBar()
                 } else {
+                    mainViewModel.updatePermissionActive(true)
                     // Permission was granted (either by approval or Android version below Q).
                 }
             }
@@ -138,5 +147,5 @@ class MainActivity : AppCompatActivity() {
                 }
                 .show()
     }
-
+    // endregion
 }
