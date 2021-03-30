@@ -80,7 +80,7 @@ class SleepCalculationHandler(private val context:Context){
     }
 
 
-    private lateinit var userSleepSessionEntity:UserSleepSessionEntity
+    private var userSleepSessionEntity:UserSleepSessionEntity? = null
 
     /**
      * Calculates the alarm time for the user. This should be called before the first wake up time
@@ -88,23 +88,25 @@ class SleepCalculationHandler(private val context:Context){
      */
     fun calculateUserWakup()
     {
-        //if (userSleepSessionEntity == null)
-          //  userSleepSessionEntity = UserSleepSessionEntity.BuildDefault()
+        if (userSleepSessionEntity == null)
+            userSleepSessionEntity = UserSleepSessionEntity(
+                    sleepTimes = SleepTimes(0,0,0,0,0,0,0),
+                    sleepUserType = SleepUserType(MobilePosition.UNIDENTIFIED),
+                    userSleepRating = UserSleepRating(),
+                    userCalculationRating = UserCalculationRating()
+            )
 
         //userSleepSessionEntity.sleepTimes = SleepTimes(0,0,0,0)
 
-        userSleepSessionEntity = UserSleepSessionEntity(
-            sleepTimes = SleepTimes(0,0,0,0,0,0,0),
-            sleepUserType = SleepUserType(MobilePosition.UNIDENTIFIED),
-            userSleepRating = UserSleepRating(),
-            userCalculationRating = UserCalculationRating()
-        )
 
 
-        userSleepSessionEntity.sleepTimes.sleepDuration += 30
+
+        userSleepSessionEntity!!.sleepTimes.sleepDuration += 30
 
         scope.launch {
-            dbRepository.insertUserSleepSession(userSleepSessionEntity)
+            dbRepository.deleteUserSleepSession(userSleepSessionEntity!!)
+
+            dbRepository.insertUserSleepSession(userSleepSessionEntity!!)
         }
     }
 
@@ -116,8 +118,9 @@ class SleepCalculationHandler(private val context:Context){
     {
         scope.launch {
 
-            userSleepSessionEntity.sleepUserType?.mobilePosition = MobilePosition.INBED
-            dbRepository.insertUserSleepSession(userSleepSessionEntity)
+            if (userSleepSessionEntity != null && userSleepSessionEntity!!.sleepUserType != null)
+                userSleepSessionEntity!!.sleepUserType!!.mobilePosition = MobilePosition.INBED
+                dbRepository.insertUserSleepSession(userSleepSessionEntity!!)
             dbRepository.deleteSleepApiRawData()
             storeRepository.resetSleepApiValuesAmount()
         }

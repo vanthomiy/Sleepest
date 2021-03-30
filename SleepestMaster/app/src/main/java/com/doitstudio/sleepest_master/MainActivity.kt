@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         mainViewModel.userSleepSessionLiveData.observe(this) { data ->
-            val lastdata = data.lastOrNull() ?: return@observe
+            val lastdata = data.firstOrNull() ?: return@observe
 
             var text = "Sleep Time: " + lastdata?.sleepTimes.sleepDuration + "\n"
             text += "Sleep Type Phone: " + lastdata?.sleepUserType?.mobilePosition + "\n"
