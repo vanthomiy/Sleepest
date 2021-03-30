@@ -3,13 +3,19 @@ package com.doitstudio.sleepest_master.sleepcalculation
 import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.map
 import com.doitstudio.sleepest_master.MainApplication
-import com.doitstudio.sleepest_master.model.data.SleepSegmentEntity
+import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.SleepState
+import com.doitstudio.sleepest_master.model.data.sleepcalculation.*
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DbRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 
 /**
@@ -21,22 +27,8 @@ import kotlinx.coroutines.launch
  */
 class SleepCalculationHandler(private val context:Context){
 
-    companion object {
-        // For Singleton instantiation
-        @Volatile
-        private var INSTANCE: SleepCalculationHandler? = null
-
-        var a:Int = 0
-
-        fun getDatabase(context: Context): SleepCalculationHandler {
-            return INSTANCE ?: synchronized(this) {
-                val instance = SleepCalculationHandler(context)
-                INSTANCE = instance
-                // return instance
-                instance
-            }
-        }
-    }
+    // Used to launch coroutines (non-blocking way to insert data).
+    private val scope: CoroutineScope = MainScope()
 
     private val dbRepository: DbRepository by lazy {
         (context.applicationContext as MainApplication).dbRepository
@@ -46,47 +38,105 @@ class SleepCalculationHandler(private val context:Context){
         (context.applicationContext as MainApplication).dataStoreRepository
     }
 
-    private val alarmActiveLiveData = storeRepository.alarmFlow.asLiveData()
+    private val rawSleepApiDataFlow = dbRepository.allSleepApiRawData.asLiveData()
 
-    private var alarmActive:Boolean = false
+    companion object {
+        // For Singleton instantiation
+        @Volatile
+        private var INSTANCE: SleepCalculationHandler? = null
 
-    init{
-
-        alarmActiveLiveData.observe(context as LifecycleOwner) { alarmData ->
-            if (alarmActive != alarmData?.isActive) {
-                alarmActive = alarmData?.isActive == true
+        fun getHandler(context: Context): SleepCalculationHandler {
+            return INSTANCE ?: synchronized(this) {
+                val instance = SleepCalculationHandler(context)
+                INSTANCE = instance
+                // return instance
+                instance
             }
+        }
+    }
+
+    /**
+     * Calculates wheter a user is sleeping or not (around 30 mins delay)
+     * TESTING: Call this every 30 min while sleeptime
+     * It writes in the [LiveUserSleepActivity]
+     */
+    fun calculateLiveuserSleepActivity()
+    {
+        scope.launch {
+
+            // Some fake values for the testing
+
+            rawSleepApiDataFlow.map {  }
+            val a = dbRepository.allSleepApiRawData?.first()
+
+            if (a == null || a.count() == 0)
+                return@launch
+
+            val b = a?.last()
+
+            storeRepository.updateIsUserSleeping(b?.confidence!! > 50)
+            storeRepository.updateIsDataAvailable(a?.count()!! > 1)
+        }
+    }
+
+
+    private var userSleepSessionEntity:UserSleepSessionEntity? = null
+
+    /**
+     * Calculates the alarm time for the user. This should be called before the first wake up time
+     * TESTING: Call this before the user alarm time
+     */
+    fun calculateUserWakup()
+    {
+        if (userSleepSessionEntity == null)
+            userSleepSessionEntity = UserSleepSessionEntity(
+                    sleepTimes = SleepTimes(0,0,0,0,0,0,0),
+                    sleepUserType = SleepUserType(MobilePosition.UNIDENTIFIED),
+                    userSleepRating = UserSleepRating(),
+                    userCalculationRating = UserCalculationRating()
+            )
+
+        //userSleepSessionEntity.sleepTimes = SleepTimes(0,0,0,0)
+
+
+
+
+        userSleepSessionEntity!!.sleepTimes.sleepDuration += 30
+
+        scope.launch {
+            dbRepository.deleteUserSleepSession(userSleepSessionEntity!!)
+
+            dbRepository.insertUserSleepSession(userSleepSessionEntity!!)
+        }
+    }
+
+    /**
+     * Re-Calculates the sleep of the user after the sleep time ( to save the complete sleep). This should be called after user sleep time
+     * TESTING: // Call this after the sleep time and it will delete all raw sleep api data and reset the raw sleep api status counter
+     */
+    fun recalculateUserSleep()
+    {
+        scope.launch {
+
+            if (userSleepSessionEntity != null && userSleepSessionEntity!!.sleepUserType != null)
+                userSleepSessionEntity!!.sleepUserType!!.mobilePosition = MobilePosition.INBED
+                dbRepository.insertUserSleepSession(userSleepSessionEntity!!)
+            dbRepository.deleteSleepApiRawData()
+            storeRepository.resetSleepApiValuesAmount()
         }
     }
 
 
     /**
-     * Calculates all neccessary steps with the values
+     * Update sleep segments
      */
-    fun calculateSleepData(){
+    private fun insertSleepSegmentValue( timestampSecondsStart: Int,
+                                         timestampSecondsEnd: Int,
+                                         sleepState: SleepState)
+    {
+        val sleepSegment: SleepSegmentEntity = SleepSegmentEntity(timestampSecondsStart,timestampSecondsEnd,sleepState)
 
-        updateAlarmTime()
-        updateAlarmActive()
-    }
-
-    private var counter:Int =0
-
-    private fun updateAlarmActive(){
-        CoroutineScope(Dispatchers.Default).launch {
-            storeRepository.updateAlarmActive(!alarmActive)
-        }
-    }
-
-    private fun updateAlarmTime(){
-        CoroutineScope(Dispatchers.Default).launch {
-            storeRepository.updateAlarmName("Aufruf Nr. " + counter++)
-        }
-    }
-
-    private fun insertSleepSegmentValue(){
-        val sleepSegment: SleepSegmentEntity = SleepSegmentEntity(a++,2 +a,SleepState.awake)
-
-        CoroutineScope(Dispatchers.Default).launch {
+        scope.launch {
             dbRepository.insertSleepSegment(sleepSegment)
         }
     }

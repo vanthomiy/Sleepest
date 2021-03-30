@@ -4,7 +4,12 @@ import android.content.Context
 import androidx.datastore.createDataStore
 import androidx.datastore.preferences.createDataStore
 import com.doitstudio.sleepest_master.Alarm
+
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
+
+import com.doitstudio.sleepest_master.LiveUserSleepActivity
+import com.doitstudio.sleepest_master.SleepApiData
+
 import com.doitstudio.sleepest_master.storage.datastorage.*
 import kotlinx.coroutines.flow.Flow
 
@@ -51,6 +56,73 @@ class DataStoreRepository(context: Context) {
 
     //endregion
 
+    //region SleepApiData Status
+
+    private val sleepApiDataStatus by lazy{ SleepApiDataStatus(context.createDataStore(
+            SLEEP_API_DATA_NAME,
+            serializer = SleepApiDataSerializer())
+    )}
+
+
+    val sleepApiDataFlow: Flow<SleepApiData> = sleepApiDataStatus.sleepApiData
+
+    suspend fun updateIsSubscribed(isActive:Boolean) =
+            sleepApiDataStatus.updateIsSubscribed(isActive)
+
+    suspend fun updatePermissionActive(isActive:Boolean) =
+            sleepApiDataStatus.updatePermissionActive(isActive)
+
+    suspend fun updatePermissionRemovedError(isActive:Boolean) =
+            sleepApiDataStatus.updatePermissionRemovedError(isActive)
+
+    suspend fun updateSubscribeFailed(isActive:Boolean) =
+            sleepApiDataStatus.updateSubscribeFailed(isActive)
+
+    suspend fun updateUnsubscribeFailed(isActive:Boolean) =
+            sleepApiDataStatus.updateUnsubscribeFailed(isActive)
+
+    suspend fun updateSleepApiValuesAmount(amount:Int) =
+            sleepApiDataStatus.updateSleepApiValuesAmount(amount)
+
+    suspend fun resetSleepApiValuesAmount() =
+        sleepApiDataStatus.resetSleepApiValuesAmount()
+
+
+    //endregion
+
+
+    //region LiveUserSleepActivity Status
+
+    private val liveUserSleepActivityStatus by lazy{ LiveUserSleepActivityStatus(context.createDataStore(
+        LIVE_USER_ACTIVITY_DATA_NAME,
+        serializer = LiveUserSleepActivitySerializer())
+    )}
+
+
+    val liveUserSleepActivityFlow: Flow<LiveUserSleepActivity> = liveUserSleepActivityStatus.liveUserSleepActivity
+
+    suspend fun updateIsUserSleeping(isActive:Boolean) =
+        liveUserSleepActivityStatus.updateIsUserSleeping(isActive)
+
+    suspend fun updateIsDataAvailable(isActive:Boolean) =
+        liveUserSleepActivityStatus.updateIsDataAvailable(isActive)
+
+    suspend fun updateUserSleepTime(sleepTime:Int) =
+        liveUserSleepActivityStatus.updateUserSleepTime(sleepTime)
+
+    suspend fun addUserSleepHistory(sleepHistory:Int) =
+        liveUserSleepActivityStatus.addUserSleepHistory(sleepHistory)
+
+    suspend fun setUserSleepHistory(sleepHistory:List<Int>) =
+        liveUserSleepActivityStatus.setUserSleepHistory(sleepHistory)
+
+    suspend fun clearUserSleepHistory() =
+        liveUserSleepActivityStatus.clearUserSleepHistory()
+
+
+    //endregion
+
+
     //region Single Preferences
 
     private val preferencesStatus by lazy {
@@ -59,10 +131,16 @@ class DataStoreRepository(context: Context) {
         )
     }
 
-    val alarmTimeFlow: Flow<Int> = preferencesStatus.alarmTimeFlow
+    /**
+     * Is subscribed to sleep data ?
+     */
+    val subscribedToSleepDataFlow: Flow<Boolean> = preferencesStatus.subscribedToSleepDataFlow
 
-    suspend fun updateAlarmTime(alarmTime: Int) =
-        preferencesStatus.updateAlarmTime(alarmTime)
+    /**
+     * Update is subscribed to sleep data ?
+     */
+    suspend fun updateSubscribeToSleepData(subscribe: Boolean) =
+        preferencesStatus.updateSubscribeToSleepData(subscribe)
 
     //endregion
 

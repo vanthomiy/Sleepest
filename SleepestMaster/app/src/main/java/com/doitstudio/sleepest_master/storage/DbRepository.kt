@@ -1,10 +1,18 @@
 package com.doitstudio.sleepest_master.storage
 
+
 import android.content.Context
 import com.doitstudio.sleepest_master.model.data.SleepSegmentEntity
+
+import com.doitstudio.sleepest_master.model.data.sleepcalculation.SleepSegmentEntity
+import com.doitstudio.sleepest_master.model.data.sleepcalculation.UserCalculationRating
+import com.doitstudio.sleepest_master.model.data.sleepcalculation.UserSleepRating
+import com.doitstudio.sleepest_master.model.data.sleepcalculation.UserSleepSessionEntity
+
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataDao
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.SleepSegmentDao
+import com.doitstudio.sleepest_master.storage.db.UserSleepSessionDao
 import kotlinx.coroutines.flow.Flow
 
 
@@ -17,7 +25,9 @@ import kotlinx.coroutines.flow.Flow
  */
 class DbRepository(
     private val sleepSegmentDao: SleepSegmentDao,
-    private val sleepApiRawDataDao: SleepApiRawDataDao
+    private val sleepApiRawDataDao: SleepApiRawDataDao,
+    private val userSleepSessionDataDao: UserSleepSessionDao
+
 ) {
 
     companion object {
@@ -83,6 +93,39 @@ class DbRepository(
     suspend fun insertSleepSegments(sleepClassifyEventEntities: List<SleepSegmentEntity>) {
         sleepSegmentDao.insertAll(sleepClassifyEventEntities)
     }
+
+    //endregion
+
+    //region User Sleep Segment
+
+    // Methods for UserSleepSegmentDao
+    // Observed Flow will notify the observer when the data has changed.
+    val userSleepSessionFlow: Flow<List<UserSleepSessionEntity>> =
+        userSleepSessionDataDao.getAll()
+
+
+
+    suspend fun insertUserSleepSession(userSleepSessionEntity: UserSleepSessionEntity) {
+        userSleepSessionDataDao.insert(userSleepSessionEntity)
+    }
+/*
+    suspend fun updateUserSleepSession(userSleepRating: UserSleepRating, userCalculationRating: UserCalculationRating, sleepTimeStart: Int) {
+        userSleepSessionDataDao.update(userSleepRating, userCalculationRating, sleepTimeStart)
+    }
+*/
+
+    suspend fun insertSleepSession(userSleepSessionEntity: List<UserSleepSessionEntity>) {
+        userSleepSessionDataDao.insertAll(userSleepSessionEntity)
+    }
+
+    suspend fun deleteUserSleepSessions() {
+        userSleepSessionDataDao.deleteAll()
+    }
+
+    suspend fun deleteUserSleepSession(userSleepSessionEntity: UserSleepSessionEntity) {
+        userSleepSessionDataDao.delete(userSleepSessionEntity)
+    }
+
 
     //endregion
 

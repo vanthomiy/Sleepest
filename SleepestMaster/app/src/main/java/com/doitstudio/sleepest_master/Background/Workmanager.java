@@ -39,8 +39,12 @@ public class Workmanager extends Worker {
     public Workmanager(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
         this.context = context;
+
         //sleepCalculationHandler = SleepCalculationHandler.Companion.getDatabase(context);
         //showNotification(context);
+
+        sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
+
     }
 
     //Workmanager do his work here at the desired time intervals
@@ -56,8 +60,12 @@ public class Workmanager extends Worker {
          * problemlos möglich.
          */
 
+
         //sleepCalculationHandler.calculateSleepData();
         //showNotification(context);
+
+        sleepCalculationHandler.calculateLiveuserSleepActivity();
+
 
         return Result.success();
     }

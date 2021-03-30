@@ -3,11 +3,12 @@ package com.doitstudio.sleepest_master.storage.db
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.doitstudio.sleepest_master.model.data.SleepSegmentEntity
+import com.doitstudio.sleepest_master.model.data.sleepcalculation.SleepSegmentEntity
+import com.google.android.gms.location.SleepClassifyEvent
 
 /**
  * Entity class (table version of the class) for [SleepApiRawDataEntity] which represents a sleep
- * classification event including the classification timestamp, the sleep confidence, and the
+ * classification event [SleepClassifyEvent] including the classification timestamp, the sleep confidence, and the
  * supporting data such as device motion and ambient light level. Classification events are
  * reported regularly.
  *
@@ -29,5 +30,14 @@ data class SleepApiRawDataEntity(
         @ColumnInfo(name = "light")
         val light: Int
 ) {
-
+        companion object {
+                fun from(sleepClassifyEvent: SleepClassifyEvent): SleepApiRawDataEntity {
+                        return SleepApiRawDataEntity(
+                                timestampSeconds = (sleepClassifyEvent.timestampMillis / 1000).toInt(),
+                                confidence = sleepClassifyEvent.confidence,
+                                motion = sleepClassifyEvent.motion,
+                                light = sleepClassifyEvent.light
+                        )
+                }
+        }
 }

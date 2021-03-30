@@ -1,3 +1,0 @@
-E:\Dokumente\Programmieren\Projekte\Sleepest\Xamarin\Test\GoogleLoginApp\RaleWears.Android\obj\Debug\90\MonoAndroid,Version=v9.0.AssemblyAttributes.cs
-E:\Dokumente\Programmieren\Projekte\Sleepest\Xamarin\Test\GoogleLoginApp\RaleWears.Android\obj\Debug\90\build.props
-E:\Dokumente\Programmieren\Projekte\Sleepest\Xamarin\Test\GoogleLoginApp\RaleWears.Android\obj\Debug\90\adb.props
