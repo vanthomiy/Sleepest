@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.content.ComponentName;
@@ -22,7 +23,9 @@ public class AlarmReceiver extends BroadcastReceiver {
     static MediaPlayer mediaPlayer;
     private static Context context;
     public static final int REQUEST_CODE = 12345;
-    EndlessService endlessService;
+    AudioManager audioManager;
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -74,4 +77,5 @@ public class AlarmReceiver extends BroadcastReceiver {
         AlarmManager alarmManager = (AlarmManager) context1.getSystemService(ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
     }
+
 }

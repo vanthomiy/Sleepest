@@ -4,12 +4,33 @@ import android.content.Context
 import androidx.datastore.createDataStore
 import androidx.datastore.preferences.createDataStore
 import com.doitstudio.sleepest_master.Alarm
+
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
+
 import com.doitstudio.sleepest_master.LiveUserSleepActivity
 import com.doitstudio.sleepest_master.SleepApiData
+
 import com.doitstudio.sleepest_master.storage.datastorage.*
 import kotlinx.coroutines.flow.Flow
 
 class DataStoreRepository(context: Context) {
+
+    companion object {
+        // For Singleton instantiation
+        @Volatile
+        private var INSTANCE: DataStoreRepository? = null
+
+        var a:Int = 0
+
+        fun getRepo(context: Context): DataStoreRepository {
+            return INSTANCE ?: synchronized(this) {
+                val instance = DataStoreRepository(context)
+                INSTANCE = instance
+                // return instance
+                instance
+            }
+        }
+    }
 
     //region Alarm
 

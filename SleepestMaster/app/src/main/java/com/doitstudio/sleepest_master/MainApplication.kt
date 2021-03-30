@@ -21,7 +21,7 @@ class MainApplication : Application() {
     }
 
     val dbRepository by lazy {
-        DbRepository(
+        DbRepository.getRepo(
                         database.sleepDataDao(),
                         database.sleepApiRawDataDao(),
                         database.userSleepSegmentDataDao()
@@ -30,7 +30,7 @@ class MainApplication : Application() {
     }
 
     val dataStoreRepository by lazy {
-        DataStoreRepository(applicationContext)
+        DataStoreRepository.getRepo(applicationContext)
     }
 
 }

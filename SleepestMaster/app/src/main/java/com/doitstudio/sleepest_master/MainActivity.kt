@@ -6,6 +6,12 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import com.doitstudio.sleepest_master.AlarmClock.AlarmClockReceiver
+import com.doitstudio.sleepest_master.Background.ForegroundService
+
 import android.provider.Settings
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
@@ -13,6 +19,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.viewbinding.BuildConfig
 import com.doitstudio.sleepest_master.sleepapi.SleepHandler
+
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.google.android.material.snackbar.Snackbar
@@ -33,10 +40,19 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        //val fs = ForegroundObserver(this, this)
+
+        mainViewModel.alarmLiveData.observe(this) { alarmData ->
+            if (alarmActive != alarmData?.isActive) {
+                alarmActive = alarmData?.isActive == true
+            }
+
         mainViewModel.liveUserSleepActivityLiveData.observe(this) { data ->
 
             var text = "User Sleeping: " + data.isUserSleeping + "\n"
             text += "Is Data Available: " + data.isDataAvailable + "\n"
+
 
             binding.status2.text = text
         }
@@ -70,8 +86,8 @@ class MainActivity : AppCompatActivity() {
 
     private val mainViewModel: MainViewModel by lazy {
         MainViewModel(
-            (application as MainApplication).dbRepository,
-            (application as MainApplication).dataStoreRepository
+                (application as MainApplication).dbRepository,
+                (application as MainApplication).dataStoreRepository
         )
     }
 
@@ -86,6 +102,13 @@ class MainActivity : AppCompatActivity() {
     private val sleepHandler : SleepHandler by lazy {SleepHandler.getHandler(this)}
 
     fun buttonClick2(view: View){
+
+        ForegroundService.startOrStopForegroundService(Actions.START, this)
+
+
+        //Workmanager.startPeriodicWorkmanager(15, applicationContext)
+        //AlarmReceiver.startAlarmManager(6,17,5, applicationContext)
+
         //ForegroundService.startOrStopForegroundService(Actions.START, this)
         //Workmanager.startPeriodicWorkmanager(15);
         sch.calculateUserWakup()
@@ -108,6 +131,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
         }
+
     }
 
     // region get permission for sleep api at first start etc.

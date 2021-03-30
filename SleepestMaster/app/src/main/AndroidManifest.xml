@@ -7,7 +7,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
 
 
     <application
@@ -18,19 +19,47 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SleepestMaster">
-        <activity android:name=".MainActivity">
+        <activity android:name=".AlarmClock.LockScreenAlarmActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+
+        <service
+            android:name=".Background.ForegroundService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
 
         <receiver
+            android:name=".Background.AlarmReceiver"
+            android:exported="true"/>
+        <receiver
+            android:name=".Background.BootReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".AlarmClock.AlarmClockReceiver"
+            android:enabled="true"
+            android:exported="true" />
+
+
+        <receiver
             android:name=".sleepapi.SleepReceiver"
             android:enabled="true"
             android:exported="true" />
+
 
     </application>
 
