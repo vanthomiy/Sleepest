@@ -37,12 +37,11 @@ public class AlarmReceiver extends BroadcastReceiver {
         /** TODO: High Sensitive Notification for Alarm, like System Alarm (Snooze, turn off) **/
 
         ForegroundService.startOrStopForegroundService(Actions.START, context);
-        startAlarmManager(6,17,9, context);
-
-
+        //startAlarmManager(6,17,9, context);
     }
 
-    /**Start a alarm at a specific time
+    /**
+     * Start a alarm at a specific time
      * @param day Number from 1-7, Sunday=1, Saturday=7
      * @param hour Hour from 0-23
      * @param min Minute from 0-59
@@ -76,7 +75,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         //Toast.makeText(context, "Alarm set to " + days[spDay.getSelectedItemPosition()] + ": " + hour + ":" + min, Toast.LENGTH_LONG).show();
     }
 
-    /** Cancel a specific alarm by pending Intent
+    /**
+     * Cancel a specific alarm by pending Intent
      * @param context1 Application Context
      */
     static void cancelAlarm(Context context1) {

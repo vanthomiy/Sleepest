@@ -1,13 +1,10 @@
 package com.doitstudio.sleepest_master
 
 import android.os.Bundle
-import android.support.v4.media.session.PlaybackStateCompat
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.doitstudio.sleepest_master.Background.AlarmReceiver
-import com.doitstudio.sleepest_master.Background.ForegroundObserver
+import com.doitstudio.sleepest_master.AlarmClock.AlarmClockReceiver
 import com.doitstudio.sleepest_master.Background.ForegroundService
-import com.doitstudio.sleepest_master.Background.Workmanager
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
 import com.doitstudio.sleepest_master.model.data.Actions
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
@@ -50,8 +47,8 @@ class MainActivity : AppCompatActivity() {
 
     private val mainViewModel: MainViewModel by lazy {
         MainViewModel(
-            (application as MainApplication).dbRepository,
-            (application as MainApplication).dataStoreRepository
+                (application as MainApplication).dbRepository,
+                (application as MainApplication).dataStoreRepository
         )
     }
 

@@ -1,6 +1,7 @@
 package com.doitstudio.sleepest_master.Background;
 
-/** This Workmanager is for periodic work. The minimum duration is 15 minutes.
+/**
+ * This Workmanager is for periodic work. The minimum duration is 15 minutes.
  * You can handle only processes with a maximal duration of 10 minutes, otherwise the
  * workmanager stops.
  */
@@ -31,8 +32,7 @@ import java.util.concurrent.TimeUnit;
 public class Workmanager extends Worker {
 
     private static final String TAG = Workmanager.class.getSimpleName();
-    public static final String CHANNEL_ID = "VERBOSE_NOTIFICATION" ;
-    private static final String TAG_WORK = "Workmanager 1";
+    public static final String CHANNEL_ID = "VERBOSE_NOTIFICATION";
     private static Context context;
     private SleepCalculationHandler sleepCalculationHandler;
 
@@ -48,7 +48,8 @@ public class Workmanager extends Worker {
     @Override
     public Result doWork() {
 
-        /**Hinweis: Hier dürfen nur Prozesse stattfinden, die nicht länger als 10 Minuten dauern
+        /**
+         * Hinweis: Hier dürfen nur Prozesse stattfinden, die nicht länger als 10 Minuten dauern
          * Allerdings werden Notifications erst angezeigt, wenn der Bildschirm angeht. Somit bricht
          * der Workmanager ab, sobald die Notification nicht innerhalb 10 Minuten nach Triggerung
          * angeschaut wird. Prozesse, die den Nutzer nicht benötigen, sind hier aber im Normalfall
@@ -56,12 +57,13 @@ public class Workmanager extends Worker {
          */
 
         //sleepCalculationHandler.calculateSleepData();
-        showNotification(context);
+        //showNotification(context);
 
         return Result.success();
     }
 
-    /** Start the workmanager with a specific duration
+    /**
+     * Start the workmanager with a specific duration
      * @param duration Number <=15 stands for duration in minutes
      */
     public static void startPeriodicWorkmanager(int duration, Context context1) {
@@ -74,18 +76,18 @@ public class Workmanager extends Worker {
 
         PeriodicWorkRequest periodicDataWork =
                 new PeriodicWorkRequest.Builder(Workmanager.class, duration, TimeUnit.MINUTES)
-                        .addTag(TAG_WORK) //Tag is needed for canceling the periodic work
+                        .addTag(context1.getString(R.string.workmanager_tag)) //Tag is needed for canceling the periodic work
                         .setConstraints(constraints)
                         .build();
 
         WorkManager workManager = WorkManager.getInstance(context);
-        workManager.enqueueUniquePeriodicWork(TAG_WORK, ExistingPeriodicWorkPolicy.KEEP, periodicDataWork);
+        workManager.enqueueUniquePeriodicWork(context1.getString(R.string.workmanager_tag), ExistingPeriodicWorkPolicy.KEEP, periodicDataWork);
 
         Toast.makeText(context1, "Workmanager started", Toast.LENGTH_LONG).show();
 
     }
 
-    private void showNotification(Context context) {
+    /*private void showNotification(Context context) {
 
         Calendar cal = new GregorianCalendar();
         cal.setTimeInMillis(System.currentTimeMillis());
@@ -110,11 +112,11 @@ public class Workmanager extends Worker {
         }
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(100, mBuilder.build());
-    }
+    }*/
 
 
     public static void stopPeriodicWorkmanager() {
         //Cancel periodic work by tag
-        WorkManager.getInstance(context).cancelAllWorkByTag(TAG_WORK);
+        WorkManager.getInstance(context).cancelAllWorkByTag(context.getString(R.string.workmanager_tag));
     }
 }

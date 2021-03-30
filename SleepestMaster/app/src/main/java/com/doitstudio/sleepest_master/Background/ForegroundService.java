@@ -1,6 +1,7 @@
 package com.doitstudio.sleepest_master.Background;
 
-/** This class inherits from Service. It implements all functions of the foreground service
+/**
+ * This class inherits from LifecycleService. It implements all functions of the foreground service
  * like start, stop and foreground notification
  */
 
@@ -14,24 +15,13 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleService;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ServiceLifecycleDispatcher;
-
 import com.doitstudio.sleepest_master.Alarm;
-import com.doitstudio.sleepest_master.MainApplication;
+import com.doitstudio.sleepest_master.AlarmClock.AlarmClockReceiver;
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.model.data.Actions;
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
-
-import kotlinx.coroutines.flow.Flow;
-
 
 public class ForegroundService extends LifecycleService {
 
@@ -71,7 +61,7 @@ public class ForegroundService extends LifecycleService {
         return START_STICKY; // by returning this we make sure the service is restarted if the system kills the service
     }
 
-    ForegroundObserver fo;
+    ForegroundObserver foregroundObserver;
 
     @Override
     public void onCreate() {
@@ -79,7 +69,9 @@ public class ForegroundService extends LifecycleService {
 
         startForeground(1, createNotification("Test")); /** TODO: Id zentral anlegen */
 
-        fo = new ForegroundObserver (this);
+        foregroundObserver = new ForegroundObserver (this);
+
+
     }
 
     public void OnAlarmChanged(Alarm alarm){
@@ -121,6 +113,11 @@ public class ForegroundService extends LifecycleService {
         });
         // Start thread.
         thread.start();
+
+        /**
+         * TEST
+         * */
+        AlarmClockReceiver.startAlarmManager(3,20,26, getApplicationContext());
     }
 
     // Stop the foreground service
@@ -140,6 +137,10 @@ public class ForegroundService extends LifecycleService {
         new ServiceTracker().setServiceState(this, ServiceState.STOPPED);
     }
 
+    /**
+     * Updates the notification banner with a new text
+     * @param text The text at the notification banner
+     */
     public void updateNotification(String text) {
 
         Notification notification = createNotification(text);
@@ -149,48 +150,44 @@ public class ForegroundService extends LifecycleService {
     }
 
     /**TODO Notification noch selbst machen mit eigenem Layout*/
-    //Creats a notification banner, that is permament to show that the app is still running. Only since Oreo
+    /**
+     * Creats a notification banner, that is permament to show that the app is still running. Only since Oreo
+     * @param text The text at the notification banner
+     * @return Notification.Builder
+     */
     private Notification createNotification(String text) {
-        String notificationChannelId = "ENDLESS SERVICE CHANNEL"; /**TODO: zentral definieren*/
+        String notificationChannelId = getString(R.string.foregroundservice_channel);
 
         // Since Oreo there is a Notification Service needed
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            NotificationChannel channel = new NotificationChannel(
-                    notificationChannelId,
-                    "Endless Service notifications channel",
-                    NotificationManager.IMPORTANCE_HIGH
-            );
-            channel.setDescription("Endless Service channel");
-            //channel.enableLights(true);
-            //channel.setLightColor(Color.RED);
-            //channel.enableVibration(true);
-            //channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
-            if (notificationManager != null) {
-                notificationManager.createNotificationChannel(channel);
-            }
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationChannel channel = new NotificationChannel(
+                notificationChannelId,
+                getString(R.string.foregroundservice_channel_name),
+                NotificationManager.IMPORTANCE_HIGH
+        );
+        channel.setDescription(getString(R.string.foregroundservice_channel_description));
+        //channel.enableLights(true);
+        //channel.setLightColor(Color.RED);
+        //channel.enableVibration(true);
+        //channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+        if (notificationManager != null) {
+            notificationManager.createNotificationChannel(channel);
         }
+
 
         Notification.Builder builder;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            builder = new Notification.Builder(
-                    this,
-                    notificationChannelId
-            );
-        } else {
-            builder = new Notification.Builder(this);
-        }
+        builder = new Notification.Builder(this, notificationChannelId);
 
         return builder
-                .setContentTitle("Endless Service")
+                .setContentTitle(getString(R.string.foregroundservice_notification_title))
                 .setContentText(text)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setTicker("Ticker text")
-                .setPriority(Notification.PRIORITY_HIGH) // for under android Oreo (26) compatibility
                 .build();
     }
 
-    /** Starts oder stops the foreground service. This function must be called to start or stop service
+    /**
+     * Starts oder stops the foreground service. This function must be called to start or stop service
      * @param action Enum Action (START or STOP)
      * @param context Application context
      */
