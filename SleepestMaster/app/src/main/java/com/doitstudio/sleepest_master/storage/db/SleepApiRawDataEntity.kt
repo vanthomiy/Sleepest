@@ -3,9 +3,8 @@ package com.doitstudio.sleepest_master.storage.db
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.doitstudio.sleepest_master.model.data.SleepSegmentEntity
+import com.doitstudio.sleepest_master.model.data.sleepcalculation.SleepSegmentEntity
 import com.google.android.gms.location.SleepClassifyEvent
-import com.google.android.gms.location.SleepSegmentEvent
 
 /**
  * Entity class (table version of the class) for [SleepApiRawDataEntity] which represents a sleep

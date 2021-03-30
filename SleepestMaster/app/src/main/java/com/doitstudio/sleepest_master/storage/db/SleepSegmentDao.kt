@@ -5,7 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.doitstudio.sleepest_master.model.data.SleepSegmentEntity
+import com.doitstudio.sleepest_master.model.data.sleepcalculation.SleepSegmentEntity
 import kotlinx.coroutines.flow.Flow
 
 /**

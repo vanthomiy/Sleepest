@@ -13,10 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.viewbinding.BuildConfig
 import com.doitstudio.sleepest_master.sleepapi.SleepHandler
-import com.doitstudio.sleepest_master.Background.ForegroundService
-import com.doitstudio.sleepest_master.Background.Workmanager
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
-import com.doitstudio.sleepest_master.model.data.Actions
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.google.android.material.snackbar.Snackbar
 
@@ -27,15 +24,7 @@ class MainActivity : AppCompatActivity() {
 
     // Status of subscription to sleep data. This is stored in [SleepSubscriptionStatus] which saves
     // the data in a [DataStore] in case the user navigates away from the app.
-    private var alarmActive = false
-        set(newAlarmActive) {
-            field = newAlarmActive
-            if (newAlarmActive) {
-                binding.buttonAlarmToogle.text = getString(R.string.alarm_active)
-            } else {
-                binding.buttonAlarmToogle.text = getString(R.string.alarm_disabled)
-            }
-        }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,26 +33,39 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        mainViewModel.alarmLiveData.observe(this) { alarmData ->
-            if (alarmActive != alarmData?.isActive) {
-                alarmActive = alarmData?.isActive == true
-            }
+        mainViewModel.liveUserSleepActivityLiveData.observe(this) { data ->
 
-            binding.sleepSegmentsText.text = alarmData.alarmName
+            var text = "User Sleeping: " + data.isUserSleeping + "\n"
+            text += "Is Data Available: " + data.isDataAvailable + "\n"
+
+            binding.status2.text = text
         }
 
-        mainViewModel.sleepApiLiveData.observe(this) { sleepApiData ->
-            var text:String = sleepApiData.isSubscribed.toString() + "\n"
-            text += sleepApiData.subscribeFailed.toString()
-            binding.sleepApiDataStatus.text = text
+        mainViewModel.userSleepSessionLiveData.observe(this) { data ->
+            val lastdata = data.lastOrNull() ?: return@observe
 
-            isTimerRunning = sleepApiData.isSubscribed
+            var text = "Sleep Time: " + lastdata?.sleepTimes.sleepDuration + "\n"
+            text += "Sleep Type Phone: " + lastdata?.sleepUserType?.mobilePosition + "\n"
+
+            binding.status1.text = text
+        }
+
+        mainViewModel.sleepApiLiveData.observe(this) { data ->
+
+            var text = "Permission Active: " + data.isPermissionActive + "\n"
+            text += "Subscribed: " + data.isSubscribed + "\n"
+            text += "Sleep Values: " + data.sleepApiValuesAmount + "\n"
+
+            binding.status0.text = text
         }
 
         // check permission
         if (!activityRecognitionPermissionApproved()) {
             requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
         }
+
+        requestData()
+
     }
 
     private val mainViewModel: MainViewModel by lazy {
@@ -78,21 +80,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun buttonClick1(view: View){
-        sch.calculateSleepData()
+        sch.calculateLiveuserSleepActivity()
     }
 
     private val sleepHandler : SleepHandler by lazy {SleepHandler.getHandler(this)}
 
     fun buttonClick2(view: View){
-        ForegroundService.startOrStopForegroundService(Actions.START, this)
-        Workmanager.startPeriodicWorkmanager(15);
+        //ForegroundService.startOrStopForegroundService(Actions.START, this)
+        //Workmanager.startPeriodicWorkmanager(15);
+        sch.calculateUserWakup()
+
     }
 
     var isTimerRunning = false
 
     fun buttonClick3(view: View) {
-        requestData()
-
+        sch.recalculateUserSleep()
     }
 
     private fun requestData(){

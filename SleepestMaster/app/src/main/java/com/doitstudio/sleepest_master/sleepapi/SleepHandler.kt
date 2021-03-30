@@ -84,7 +84,6 @@ class SleepHandler(private val context: Context) {
             }
         } else {
             scope.launch {
-                repository.updateSubscribeToSleepData(false)
                 repository.updatePermissionRemovedError(true)
                 repository.updatePermissionActive(false)
             }

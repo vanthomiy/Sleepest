@@ -59,4 +59,10 @@ class SleepApiDataStatus(private val dataStore: DataStore<SleepApiData>) {
         }
     }
 
+    suspend fun resetSleepApiValuesAmount(){
+        dataStore.updateData{preference->
+            preference.toBuilder().setSleepApiValuesAmount(0).build()
+        }
+    }
+
 }

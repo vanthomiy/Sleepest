@@ -8,26 +8,35 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/sleepSegmentsText"
-        android:layout_width="224dp"
-        android:layout_height="41dp"
-        android:text="@string/sleep_segments"
+        android:id="@+id/status0"
+        android:layout_width="217dp"
+        android:layout_height="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/sleepApiDataStatus"
+        android:id="@+id/status1"
         android:layout_width="224dp"
-        android:layout_height="41dp"
-        android:text=""
+        android:layout_height="93dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.672" />
+
+    <TextView
+        android:id="@+id/status2"
+        android:layout_width="222dp"
+        android:layout_height="106dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.62" />
+        app:layout_constraintVertical_bias="0.876" />
 
     <Button
         android:id="@+id/buttonAlarmToogle"
@@ -37,7 +46,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
         android:onClick="buttonClick1"
-        android:text="@string/alarm_disabled"
+        android:text="Live"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,7 +59,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:onClick="buttonClick2"
-        android:text="@string/insert_data"
+        android:text="Calc Wakeup"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -65,7 +74,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:onClick="buttonClick3"
-        android:text="Foreground"
+        android:text="Recalc Wakeup"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
