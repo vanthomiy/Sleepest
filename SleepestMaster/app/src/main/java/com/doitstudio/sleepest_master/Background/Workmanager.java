@@ -44,7 +44,7 @@ public class Workmanager extends Worker {
          * problemlos möglich.
          */
 
-        sleepCalculationHandler.calculateSleepData();
+        sleepCalculationHandler.calculateLiveuserSleepActivity();
 
         return Result.success();
     }

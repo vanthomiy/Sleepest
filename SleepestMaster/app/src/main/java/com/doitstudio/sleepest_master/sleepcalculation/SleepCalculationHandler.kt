@@ -3,14 +3,19 @@ package com.doitstudio.sleepest_master.sleepcalculation
 import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.map
 import com.doitstudio.sleepest_master.MainApplication
-import com.doitstudio.sleepest_master.model.data.SleepSegmentEntity
+import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.SleepState
+import com.doitstudio.sleepest_master.model.data.sleepcalculation.*
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DbRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 
 /**
@@ -33,9 +38,7 @@ class SleepCalculationHandler(private val context:Context){
         (context.applicationContext as MainApplication).dataStoreRepository
     }
 
-    private val alarmActiveLiveData = storeRepository.alarmFlow.asLiveData()
-
-    private var alarmActive:Boolean = false
+    private val rawSleepApiDataFlow = dbRepository.allSleepApiRawData.asLiveData()
 
     companion object {
         // For Singleton instantiation
@@ -52,41 +55,74 @@ class SleepCalculationHandler(private val context:Context){
         }
     }
 
-    init{
-
-        alarmActiveLiveData.observe(context as LifecycleOwner) { alarmData ->
-            if (alarmActive != alarmData?.isActive) {
-                alarmActive = alarmData?.isActive == true
-            }
-        }
-    }
-
-
     /**
-     * Calculates all necessary steps with the values
+     * Calculates wheter a user is sleeping or not (around 30 mins delay)
+     * TESTING: Call this every 30 min while sleeptime
+     * It writes in the [LiveUserSleepActivity]
      */
-    fun calculateSleepData(){
-
-        updateAlarmTime()
-        updateAlarmActive()
-    }
-
-    private var counter:Int =0
-
-    private fun updateAlarmActive(){
-        CoroutineScope(Dispatchers.Default).launch {
-            storeRepository.updateAlarmActive(!alarmActive)
-        }
-    }
-
-    /**
-     * Create new Alarm time
-     */
-    private fun updateAlarmTime(){
+    fun calculateLiveuserSleepActivity()
+    {
         scope.launch {
-            storeRepository.updateAlarmName("Aufruf Nr. " + counter++)
+
+            // Some fake values for the testing
+
+            rawSleepApiDataFlow.map {  }
+            val a = dbRepository.allSleepApiRawData?.first()
+
+            if (a == null || a.count() == 0)
+                return@launch
+
+            val b = a?.last()
+
+            storeRepository.updateIsUserSleeping(b?.confidence!! > 50)
+            storeRepository.updateIsDataAvailable(a?.count()!! > 1)
         }
     }
+
+
+    private lateinit var userSleepSessionEntity:UserSleepSessionEntity
+
+    /**
+     * Calculates the alarm time for the user. This should be called before the first wake up time
+     * TESTING: Call this before the user alarm time
+     */
+    fun calculateUserWakup()
+    {
+        //if (userSleepSessionEntity == null)
+          //  userSleepSessionEntity = UserSleepSessionEntity.BuildDefault()
+
+        //userSleepSessionEntity.sleepTimes = SleepTimes(0,0,0,0)
+
+        userSleepSessionEntity = UserSleepSessionEntity(
+            sleepTimes = SleepTimes(0,0,0,0,0,0,0),
+            sleepUserType = SleepUserType(MobilePosition.UNIDENTIFIED),
+            userSleepRating = UserSleepRating(),
+            userCalculationRating = UserCalculationRating()
+        )
+
+
+        userSleepSessionEntity.sleepTimes.sleepDuration += 30
+
+        scope.launch {
+            dbRepository.insertUserSleepSession(userSleepSessionEntity)
+        }
+    }
+
+    /**
+     * Re-Calculates the sleep of the user after the sleep time ( to save the complete sleep). This should be called after user sleep time
+     * TESTING: // Call this after the sleep time and it will delete all raw sleep api data and reset the raw sleep api status counter
+     */
+    fun recalculateUserSleep()
+    {
+        scope.launch {
+
+            userSleepSessionEntity.sleepUserType?.mobilePosition = MobilePosition.INBED
+            dbRepository.insertUserSleepSession(userSleepSessionEntity)
+            dbRepository.deleteSleepApiRawData()
+            storeRepository.resetSleepApiValuesAmount()
+        }
+    }
+
 
     /**
      * Update sleep segments

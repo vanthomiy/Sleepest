@@ -1,8 +1,9 @@
-package com.doitstudio.sleepest_master.model.data
+package com.doitstudio.sleepest_master.model.data.sleepcalculation
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.doitstudio.sleepest_master.model.data.SleepState
 
 /**
  * Entity class (table version of the class) for [SleepSegmentEntity] which represents a sleep

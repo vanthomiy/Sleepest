@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.createDataStore
 import androidx.datastore.preferences.createDataStore
 import com.doitstudio.sleepest_master.Alarm
+import com.doitstudio.sleepest_master.LiveUserSleepActivity
 import com.doitstudio.sleepest_master.SleepApiData
 import com.doitstudio.sleepest_master.storage.datastorage.*
 import kotlinx.coroutines.flow.Flow
@@ -62,8 +63,44 @@ class DataStoreRepository(context: Context) {
     suspend fun updateSleepApiValuesAmount(amount:Int) =
             sleepApiDataStatus.updateSleepApiValuesAmount(amount)
 
+    suspend fun resetSleepApiValuesAmount() =
+        sleepApiDataStatus.resetSleepApiValuesAmount()
+
 
     //endregion
+
+
+    //region LiveUserSleepActivity Status
+
+    private val liveUserSleepActivityStatus by lazy{ LiveUserSleepActivityStatus(context.createDataStore(
+        LIVE_USER_ACTIVITY_DATA_NAME,
+        serializer = LiveUserSleepActivitySerializer())
+    )}
+
+
+    val liveUserSleepActivityFlow: Flow<LiveUserSleepActivity> = liveUserSleepActivityStatus.liveUserSleepActivity
+
+    suspend fun updateIsUserSleeping(isActive:Boolean) =
+        liveUserSleepActivityStatus.updateIsUserSleeping(isActive)
+
+    suspend fun updateIsDataAvailable(isActive:Boolean) =
+        liveUserSleepActivityStatus.updateIsDataAvailable(isActive)
+
+    suspend fun updateUserSleepTime(sleepTime:Int) =
+        liveUserSleepActivityStatus.updateUserSleepTime(sleepTime)
+
+    suspend fun addUserSleepHistory(sleepHistory:Int) =
+        liveUserSleepActivityStatus.addUserSleepHistory(sleepHistory)
+
+    suspend fun setUserSleepHistory(sleepHistory:List<Int>) =
+        liveUserSleepActivityStatus.setUserSleepHistory(sleepHistory)
+
+    suspend fun clearUserSleepHistory() =
+        liveUserSleepActivityStatus.clearUserSleepHistory()
+
+
+    //endregion
+
 
     //region Single Preferences
 

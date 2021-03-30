@@ -1,6 +1,7 @@
 package com.doitstudio.sleepest_master.storage.db
 
 import androidx.room.TypeConverter
+import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.SleepState
 
 /**
@@ -17,6 +18,16 @@ class Converters {
     @TypeConverter
     fun toSleepState(sleepState: Int) : SleepState {
         return SleepState.values()[sleepState]
+    }
+
+    @TypeConverter
+    fun fromMobilePosition(mobilePosition: MobilePosition) : Int {
+        return mobilePosition.ordinal
+    }
+
+    @TypeConverter
+    fun toMobilePosition(mobilePosition: Int) : MobilePosition {
+        return MobilePosition.values()[mobilePosition]
     }
 
 }
