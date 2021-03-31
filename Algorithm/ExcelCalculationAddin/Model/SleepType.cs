@@ -19,8 +19,6 @@ namespace ExcelCalculationAddin.Model
         }
 
 
-
-
        // public static Dictionary<SleepUserType, SleepCleanModel> sleepTypeModels;
         public static Dictionary<SleepUserType, SleepParameter> sleepTypeParamsWhile;
         public static Dictionary<SleepUserType, SleepParameter> sleepTypeParamsAfter;

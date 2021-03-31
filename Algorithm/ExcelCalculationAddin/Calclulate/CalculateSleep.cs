@@ -126,8 +126,23 @@ namespace ExcelCalculationAddin.Calclulate
                     }
 
 
-                    // finde einen passenden schlaftyp später
-                    //await session.CalcSleepData(ReadParameter.parameters);
+                    var paramState = SleepStateParameter.GetDefault();
+                    //paramState = SleepParameter.AddFactorToParameter(paramState, SleepType.sleepTypeParamsAfter[session.sleepUserType]);
+
+                    // Define diffrent sleep states in the sleep time 
+                    try
+                    {
+                       
+
+                        await session.CalcSleepStatesWhileSleep(param);
+
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+
+
 
                     // die Berechnung einspeichern
                     try

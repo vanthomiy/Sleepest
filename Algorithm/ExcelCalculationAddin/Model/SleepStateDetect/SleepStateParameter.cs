@@ -8,118 +8,124 @@ using System.Threading.Tasks;
 using static ExcelCalculationAddin.Model.SleepClean;
 using static ExcelCalculationAddin.Model.SleepType;
 
-namespace ExcelCalculationAddin.Model
+namespace ExcelCalculationAddin.Model.SleepStateDetect
 {
-    public class SleepParameter
+    public class SleepStateParameter
     {
-        public TimeSpan awakeTime; // wie lange soll die awake zeit gezählt werden (Zukunft)
-        public TimeSpan sleepTime; // wie lange sollen vergangenheitswerte für einschlaf gezählt werden
-        public TimeSpan wakeUpTime; // wie lange sollen vergangenheitswerte für aufwachen gezählt werden
+        public Drittel first;
+        public Drittel second;
+        public Drittel third;
 
-        public float sleepSleepBorder; // grenze zum einschlafen
-        public float awakeSleepBorder; // grenze zum aufwachen
-        public float sleepMotionBorder; // grenze zum einschlafen
-        public float awakeMotionBorder; // grenze zum aufwachen
-        public float sleepMedianOverTime; // grenze welche der median für einschlafen haben sollte
-        public float diffSleep; // grenze welche die diff im median für einschlafen haben sollte
-        public float diffSleepFuture;  // grenze welche die diff im median für einschlafen in zukunft haben sollte
-        public float awakeMedianOverTime; // grenze welche der median für aufwachen haben sollte
-        public float diffAwake; // grenze welche die diff im median für aufwachen haben sollte
 
-        public static SleepParameter AddFactorToParameter(SleepParameter normal, SleepParameter factor)
+        public class Drittel
         {
-            SleepParameter pm = SleepParameter.GetDefault();
+            public float sleepSleepBorder; // grenze zum einschlafen
+            public float deepSleepSleepBorder; // grenze zum aufwachen
+            public float remSleepSleepBorder; // grenze zum einschlafen
+            public float sleepMotionBorder; // grenze zum einschlafen
+            public float deepSleepMotionBorder; // grenze zum aufwachen
+            public float remSleepMotionBorder; // grenze zum einschlafen
+            public float sleepLightBorder; // grenze zum einschlafen
+            public float deepSleepLightBorder; // grenze zum aufwachen
+            public float remSleepLightBorder; // grenze zum einschlafen
+
+            public static Drittel GetDefault()
+            {
+                return new Drittel()
+                {
+
+                    sleepSleepBorder = 20,
+                    deepSleepSleepBorder = 90,
+                    remSleepSleepBorder = 95,
+                    sleepMotionBorder = 5,
+                    deepSleepMotionBorder = 3,
+                    remSleepMotionBorder = 1,
+                    sleepLightBorder = 5,
+                    deepSleepLightBorder = 3,
+                    remSleepLightBorder = 1,
+
+                };
+            }
+
+            public static Drittel GetDefaulFactor()
+            {
+                return new Drittel()
+                {
+
+                    sleepSleepBorder = 1,
+                    deepSleepSleepBorder = 1,
+                    remSleepSleepBorder = 1,
+                    sleepMotionBorder = 1,
+                    deepSleepMotionBorder = 1,
+                    remSleepMotionBorder = 1,
+                    sleepLightBorder = 1,
+                    deepSleepLightBorder = 1,
+                    remSleepLightBorder = 1,
+
+                };
+            }
+
+            public static Drittel AddFactorToParameter(Drittel normal, Drittel factor)
+            {
+                Drittel pm = Drittel.GetDefault();
 
 
-            pm.sleepSleepBorder = normal.sleepSleepBorder * factor.sleepSleepBorder;
-            pm.awakeSleepBorder = normal.awakeSleepBorder * factor.awakeSleepBorder;
-            pm.sleepMotionBorder = normal.sleepMotionBorder * factor.sleepMotionBorder;
-            pm.awakeMotionBorder = normal.awakeMotionBorder * factor.awakeMotionBorder;
-            pm.sleepMedianOverTime = normal.sleepMedianOverTime * factor.sleepMedianOverTime;
-            pm.diffSleep = normal.diffSleep * factor.diffSleep;
-            pm.diffSleepFuture = normal.diffSleepFuture * factor.diffSleepFuture;
-            pm.awakeMedianOverTime = normal.awakeMedianOverTime * factor.awakeMedianOverTime;
-            pm.diffAwake = normal.diffAwake * factor.diffAwake;
+                pm.sleepSleepBorder = normal.sleepSleepBorder * factor.sleepSleepBorder;
+                pm.sleepSleepBorder = normal.sleepSleepBorder * factor.sleepSleepBorder;
+                pm.remSleepSleepBorder = normal.remSleepSleepBorder * factor.remSleepSleepBorder;
+                pm.sleepMotionBorder = normal.sleepMotionBorder * factor.sleepMotionBorder;
+                pm.deepSleepMotionBorder = normal.deepSleepMotionBorder * factor.deepSleepMotionBorder;
+                pm.remSleepMotionBorder = normal.remSleepMotionBorder * factor.remSleepMotionBorder;
+                pm.sleepLightBorder = normal.sleepLightBorder * factor.sleepLightBorder;
+                pm.deepSleepLightBorder = normal.deepSleepLightBorder * factor.deepSleepLightBorder;
+                pm.remSleepLightBorder = normal.remSleepLightBorder * factor.remSleepLightBorder;
+
+                return pm;
+            }
+
+        }
+
+
+        public static SleepStateParameter AddFactorToParameter(SleepStateParameter normal, SleepStateParameter factor)
+        {
+            SleepStateParameter pm = SleepStateParameter.GetDefault();
+
+            pm.first = Drittel.AddFactorToParameter(normal.first, factor.first);
+            pm.second = Drittel.AddFactorToParameter(normal.second, factor.second);
+            pm.third = Drittel.AddFactorToParameter(normal.third, factor.third);
 
             return pm;
         }
 
 
-        public static SleepParameter GetDefault()
+        public static SleepStateParameter GetDefault()
         {
-            return new SleepParameter()
+            return new SleepStateParameter()
             {
-                awakeTime = new TimeSpan(00, 30, 00),
-                sleepTime = new TimeSpan(00, 50, 00),
-                wakeUpTime = new TimeSpan(01, 30, 00),
 
-                sleepSleepBorder = 50,
-                awakeSleepBorder = 20,
-                sleepMotionBorder = 4,
-                awakeMotionBorder = 0,
-                sleepMedianOverTime = 75,
-                diffSleep = 50,
-                diffSleepFuture = 0,
-                awakeMedianOverTime = 30,
-                diffAwake = -5
+                first = Drittel.GetDefault(),
+                second = Drittel.GetDefault(),
+                third = Drittel.GetDefault()
+
             };
         }
 
-        public static SleepParameter GetDefaultFactor()
+        public static SleepStateParameter GetDefaultFactor()
         {
-            return new SleepParameter()
+            return new SleepStateParameter()
             {
-                awakeTime = new TimeSpan(0),
-                sleepTime = new TimeSpan(0),
-                wakeUpTime = new TimeSpan(0),
-
-                sleepSleepBorder = 1,
-                awakeSleepBorder = 1,
-                sleepMotionBorder = 1,
-                awakeMotionBorder = 1,
-                sleepMedianOverTime = 1,
-                diffSleep = 1,
-                diffSleepFuture = 1,
-                awakeMedianOverTime = 1,
-                diffAwake = 1
+                first = Drittel.GetDefaulFactor(),
+                second = Drittel.GetDefaulFactor(),
+                third = Drittel.GetDefaulFactor()
             };
         }
 
 
 
-        /*
-        public static SleepParameter CreateBySleepCleanType(SleepCleanType sct)
+
+        public static Dictionary<SleepCleanType, SleepStateParameter> CreateAllModels(bool isWhile)
         {
-            var sp = SleepParameter.GetDefault();
-
-            switch (sct)
-            {
-                case SleepCleanType.stoppedToLate:
-                    sp.awakeSleepBorder = 60;
-                    sp.sleepMotionBorder = 3;
-                    sp.awakeMedianOverTime = 40;
-                    break;
-                case SleepCleanType.stoppedToEarly:
-                    sp.sleepSleepBorder = 10;
-                    break;
-                case SleepCleanType.startToEarlyStoppedToEarly:
-                    sp.awakeSleepBorder = 60;
-                    sp.sleepMotionBorder = 3;
-                    sp.awakeMedianOverTime = 30;
-                    sp.sleepSleepBorder = 80;
-                    break;
-                default:
-                    break;
-            }
-
-
-            return sp;
-
-        }*/
-
-        public static Dictionary<SleepCleanType, SleepParameter> CreateAllModels(bool isWhile)
-        {
-            Dictionary<SleepCleanType, SleepParameter> asss = new Dictionary<SleepCleanType, SleepParameter>();
+            Dictionary<SleepCleanType, SleepStateParameter> asss = new Dictionary<SleepCleanType, SleepStateParameter>();
 
 
             var workbook = (Workbook)Globals.ThisAddIn.Application.ActiveWorkbook;
@@ -139,10 +145,10 @@ namespace ExcelCalculationAddin.Model
                     break;
                 }
 
-                var sp = SleepParameter.GetDefault();
+                var sp = SleepStateParameter.GetDefault();
 
                 var fValue = (int)CellHelper.GetCellValueFloat(8, finde, worksheet1);
-                sp.sleepSleepBorder = fValue != 0 ? fValue: sp.sleepSleepBorder;
+                sp.sleepSleepBorder = fValue != 0 ? fValue : sp.sleepSleepBorder;
                 fValue = (int)CellHelper.GetCellValueFloat(9, finde, worksheet1);
                 sp.awakeSleepBorder = fValue != 0 ? fValue : sp.awakeSleepBorder;
                 fValue = (int)CellHelper.GetCellValueFloat(10, finde, worksheet1);
@@ -212,12 +218,11 @@ namespace ExcelCalculationAddin.Model
                 sp.diffAwake = fValue != 0 ? fValue : sp.diffAwake;
 
                 asss.Add((SleepUserType)Convert.ToInt32(value), sp);
-                finde+=2;
+                finde += 2;
             }
 
             return asss;
         }
-
 
     }
 }

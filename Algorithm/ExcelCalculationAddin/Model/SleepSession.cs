@@ -1,4 +1,5 @@
 ﻿using ExcelCalculationAddin.ListHelp;
+using ExcelCalculationAddin.Model.SleepStateDetect;
 using ExcelCalculationAddin.Read;
 using Microsoft.Office.Interop.Excel;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static ExcelCalculationAddin.Model.SleepStateDetect.SleepStateParameter;
 using static ExcelCalculationAddin.Model.SleepType;
 
 namespace ExcelCalculationAddin.Model
@@ -305,6 +307,29 @@ namespace ExcelCalculationAddin.Model
             ListHelp.CellHelper.WriteCellValue(nf2, actualRow, "AH", worksheet1);
 
             actualRow++;
+            return Task.FromResult(true);
+        }
+
+        public Task<bool> CalcSleepStatesWhileSleep(SleepStateParameter parameters)
+        {
+            if (sleepDataEntrieSleep == null || sleepDataEntrieSleep.Count == 0)
+            {
+                return Task.FromResult(false);
+            }
+
+            Drittel actualParam = parameters.first;
+            int index = sleepDataEntrieSleep.Count > 1 ? 1 : 0;
+
+            foreach (var item in sleepDataEntrieSleep[index])
+            {
+
+                if (item.)
+                {
+
+                }
+            }
+
+
             return Task.FromResult(true);
         }
 
