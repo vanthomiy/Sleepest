@@ -8,12 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import com.doitstudio.sleepest_master.AlarmClock.AlarmClockReceiver
 import com.doitstudio.sleepest_master.Background.ForegroundService
 
 import android.provider.Settings
-import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -21,6 +19,7 @@ import androidx.viewbinding.BuildConfig
 import com.doitstudio.sleepest_master.sleepapi.SleepHandler
 
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
+import com.doitstudio.sleepest_master.model.data.Actions
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.google.android.material.snackbar.Snackbar
 
@@ -43,10 +42,6 @@ class MainActivity : AppCompatActivity() {
 
         //val fs = ForegroundObserver(this, this)
 
-        mainViewModel.alarmLiveData.observe(this) { alarmData ->
-            if (alarmActive != alarmData?.isActive) {
-                alarmActive = alarmData?.isActive == true
-            }
 
         mainViewModel.liveUserSleepActivityLiveData.observe(this) { data ->
 
@@ -81,8 +76,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         requestData()
-
     }
+
+
+    
 
     private val mainViewModel: MainViewModel by lazy {
         MainViewModel(
