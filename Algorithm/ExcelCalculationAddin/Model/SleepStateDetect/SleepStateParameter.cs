@@ -121,7 +121,7 @@ namespace ExcelCalculationAddin.Model.SleepStateDetect
         }
 
 
-
+        /*
 
         public static Dictionary<SleepCleanType, SleepStateParameter> CreateAllModels(bool isWhile)
         {
@@ -223,6 +223,6 @@ namespace ExcelCalculationAddin.Model.SleepStateDetect
 
             return asss;
         }
-
+        */
     }
 }

@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Parameters = ExcelCalculationAddin.Model.Parameters;
 
 namespace ExcelCalculationAddin
 {
@@ -70,8 +69,6 @@ namespace ExcelCalculationAddin
         {
             var workbook = (Workbook)Globals.ThisAddIn.Application.ActiveWorkbook;
             Worksheet worksheet = (Worksheet)workbook.Worksheets["Berechnung"];
-
-            parameters = new Parameters();
 
             foreach (var set in DataSetup.paramsSetPoints)
             {

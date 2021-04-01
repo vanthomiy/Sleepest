@@ -1,4 +1,5 @@
 ﻿using ExcelCalculationAddin.Model;
+using ExcelCalculationAddin.Model.SleepStateDetect;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -134,7 +135,7 @@ namespace ExcelCalculationAddin.Calclulate
                     {
                        
 
-                        await session.CalcSleepStatesWhileSleep(param);
+                        await session.CalcSleepStatesWhileSleep(paramState);
 
                     }
                     catch (Exception ex)

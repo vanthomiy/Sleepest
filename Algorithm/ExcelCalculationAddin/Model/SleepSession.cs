@@ -261,6 +261,7 @@ namespace ExcelCalculationAddin.Model
 
                     //ListHelp.CellHelper.WriteCellValue("Sleeping", item.row, DataSetup.dataSetPoints[DataPoints.Caculated], worksheet);
                     ListHelp.CellHelper.WriteCellValue("Sleeping", item.row, CellHelper.GetColumnName(7+list.Key + off) , worksheet);
+                    ListHelp.CellHelper.WriteCellValue((int)item.calcSleepState, item.row, CellHelper.GetColumnName(15 + list.Key + off), worksheet);
                 }
             }
 
@@ -269,6 +270,7 @@ namespace ExcelCalculationAddin.Model
                 foreach (var item in list.Value)
                 {
                     ListHelp.CellHelper.WriteCellValue("", item.row, CellHelper.GetColumnName(7 + list.Key + off), worksheet);
+                   // ListHelp.CellHelper.WriteCellValue("", item.row, CellHelper.GetColumnName(15 + list.Key + off), worksheet);
                 }
             }
 
@@ -320,12 +322,33 @@ namespace ExcelCalculationAddin.Model
             Drittel actualParam = parameters.first;
             int index = sleepDataEntrieSleep.Count > 1 ? 1 : 0;
 
-            foreach (var item in sleepDataEntrieSleep[index])
+            for (int i = 0; i < sleepDataEntrieSleep[index].Count; i++)
             {
-
-                if (item.)
+                // is awake?
+                if (sleepDataEntrieSleep[index][i].sleep <= actualParam.sleepSleepBorder ||
+                    sleepDataEntrieSleep[index][i].motion >= actualParam.sleepMotionBorder ||
+                    sleepDataEntrieSleep[index][i].light >= actualParam.sleepLightBorder)
                 {
-
+                    sleepDataEntrieSleep[index][i].calcSleepState = SleepState.awake;
+                }
+                // is normal?
+                else if (sleepDataEntrieSleep[index][i].sleep <= actualParam.deepSleepSleepBorder ||
+                   sleepDataEntrieSleep[index][i].motion >= actualParam.deepSleepMotionBorder ||
+                   sleepDataEntrieSleep[index][i].light >= actualParam.deepSleepLightBorder)
+                {
+                    sleepDataEntrieSleep[index][i].calcSleepState = SleepState.light;
+                }
+                // is deep
+                else if (sleepDataEntrieSleep[index][i].sleep <= actualParam.remSleepSleepBorder ||
+                  sleepDataEntrieSleep[index][i].motion >= actualParam.remSleepMotionBorder ||
+                  sleepDataEntrieSleep[index][i].light >= actualParam.remSleepLightBorder)
+                {
+                    sleepDataEntrieSleep[index][i].calcSleepState = SleepState.deep;
+                }
+                // is rem
+                else
+                {
+                    sleepDataEntrieSleep[index][i].calcSleepState = SleepState.rem;
                 }
             }
 

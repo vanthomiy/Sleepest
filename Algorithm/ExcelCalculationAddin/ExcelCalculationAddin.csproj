@@ -161,12 +161,12 @@
     <Compile Include="ListHelp\SheetParams.cs" />
     <Compile Include="Live\CalcSleepLive.cs" />
     <Compile Include="Model\AlarmSettings.cs" />
-    <Compile Include="Model\Parameters.cs" />
-    <Compile Include="Model\SleepCleanModel.cs" />
-    <Compile Include="Model\SleepCleanType.cs" />
+    <Compile Include="Model\SleepDetect\SleepCleanModel.cs" />
+    <Compile Include="Model\SleepDetect\SleepCleanType.cs" />
     <Compile Include="Model\SleepDataEntry.cs" />
-    <Compile Include="Model\SleepParameter.cs" />
+    <Compile Include="Model\SleepDetect\SleepParameter.cs" />
     <Compile Include="Model\SleepSession.cs" />
+    <Compile Include="Model\SleepStateDetect\SleepStateParameter.cs" />
     <Compile Include="Model\SleepType.cs" />
     <Compile Include="Model\Strukture.cs" />
     <Compile Include="Model\User.cs" />
@@ -196,9 +196,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Read\ReadParameter.cs" />
-    <Compile Include="Ribbon1.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="Ribbon1.cs" />
     <Compile Include="Ribbon1.Designer.cs">
       <DependentUpon>Ribbon1.cs</DependentUpon>
     </Compile>
