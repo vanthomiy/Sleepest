@@ -52,7 +52,7 @@
     <com.appyvet.rangebar.RangeBar
         android:id="@+id/rangebar"
         android:layout_width="320dp"
-        android:layout_height="28dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="52dp"
         app:layout_constraintEnd_toEndOf="@+id/view_settings"
         app:layout_constraintStart_toStartOf="@+id/view_settings"

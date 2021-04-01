@@ -10,22 +10,20 @@ option java_multiple_files = true;
  */
 message  Alarm{
   /**
-   * The alarm sound id
+   * The amount of sleep the user preferres to recieve
    */
-  int32 soundId = 1;
-  /**
- * Is the alarm active or not
- */
-  bool isActive = 2;
-  /**
- * The actual alarm name
- */
-  string alarmName = 3;
-  /**
- * The time where the alarm will be fired
- */
-  uint64 alarmTime = 4;
-}
+  int32 sleepDuration = 1;
+
+ /**
+  * The earliest moment, the user wants to be awaked
+  */
+  int32 wakeupEarly = 2;
+
+ /**
+  * The latest moment, the user want to be awaked
+  */
+  int32 wakeupLate = 3;
+ }
 
 /**
  * This is a SleepApiData StatusModel

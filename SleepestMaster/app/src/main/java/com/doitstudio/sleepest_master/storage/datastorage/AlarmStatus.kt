@@ -23,28 +23,23 @@ class AlarmStatus(private val dataStore: DataStore<Alarm>) {
         }
 
 
-    suspend fun updateAlarmActive(isActive:Boolean){
+    suspend fun updateSleepDuration(duration:Int){
         dataStore.updateData{preference->
-            preference.toBuilder().setIsActive(isActive).build()
+            preference.toBuilder().setSleepDuration(duration).build()
         }
     }
 
-    suspend fun updateSoundId(soundId:Int){
+    suspend fun updateWakeUpEarly(timeOfDay:Int){
         dataStore.updateData{preference->
-            preference.toBuilder().setSoundId(soundId).build()
+            preference.toBuilder().setWakeupEarly(timeOfDay).build()
         }
     }
 
-    suspend fun updateAlarmName(name:String){
+    suspend fun updateWakeUpLate(timeOfDay:Int){
         dataStore.updateData{preference->
-            preference.toBuilder().setAlarmName(name).build()
+            preference.toBuilder().setWakeupLate(timeOfDay).build()
         }
     }
 
-    suspend fun updateAlarmTime(time:Long){
-        dataStore.updateData{preference->
-            preference.toBuilder().setAlarmTime(time).build()
-        }
-    }
 
 }

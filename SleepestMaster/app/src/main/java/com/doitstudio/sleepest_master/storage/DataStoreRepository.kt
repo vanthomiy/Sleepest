@@ -42,17 +42,14 @@ class DataStoreRepository(context: Context) {
 
     val alarmFlow: Flow<Alarm> = alarmStatus.alarm
 
-    suspend fun updateAlarmActive(alarmActive: Boolean) =
-        alarmStatus.updateAlarmActive(alarmActive)
+    suspend fun updateSleepDuration(duration: Int) =
+        alarmStatus.updateSleepDuration(duration)
 
-    suspend fun updateSoundId(alarmActive: Int) =
-        alarmStatus.updateSoundId(alarmActive)
+    suspend fun updateWakeUpEarly(timeOfDay: Int) =
+        alarmStatus.updateWakeUpEarly(timeOfDay)
 
-    suspend fun updateAlarmName(alarmActive: String) =
-        alarmStatus.updateAlarmName(alarmActive)
-
-    suspend fun updateAlarmTime(alarmActive: Long) =
-            alarmStatus.updateAlarmTime(alarmActive)
+    suspend fun updateWakeUpLate(timeOfDay: Int) =
+        alarmStatus.updateWakeUpLate(timeOfDay)
 
     //endregion
 
