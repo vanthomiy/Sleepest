@@ -1,4 +1,4 @@
-package com.doitstudio.sleepest_master.Background;
+package com.doitstudio.sleepest_master.background;
 
 /** This receiver is there to handle the restart of a foregroundservide after reboot of device */
 

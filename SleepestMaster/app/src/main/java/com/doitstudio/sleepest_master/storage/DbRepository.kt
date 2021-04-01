@@ -1,14 +1,8 @@
 package com.doitstudio.sleepest_master.storage
 
 
-import android.content.Context
-import com.doitstudio.sleepest_master.model.data.SleepSegmentEntity
-
 import com.doitstudio.sleepest_master.model.data.sleepcalculation.SleepSegmentEntity
-import com.doitstudio.sleepest_master.model.data.sleepcalculation.UserCalculationRating
-import com.doitstudio.sleepest_master.model.data.sleepcalculation.UserSleepRating
 import com.doitstudio.sleepest_master.model.data.sleepcalculation.UserSleepSessionEntity
-
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataDao
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.SleepSegmentDao
@@ -37,9 +31,9 @@ class DbRepository(
 
         var a:Int = 0
 
-        fun getRepo(sleepSegmentDao: SleepSegmentDao, sleepApiRawDataDao: SleepApiRawDataDao): DbRepository {
+        fun getRepo(sleepSegmentDao: SleepSegmentDao, sleepApiRawDataDao: SleepApiRawDataDao, userSleepSessionDataDao: UserSleepSessionDao): DbRepository {
             return INSTANCE ?: synchronized(this) {
-                val instance = DbRepository(sleepSegmentDao, sleepApiRawDataDao)
+                val instance = DbRepository(sleepSegmentDao, sleepApiRawDataDao, userSleepSessionDataDao)
                 INSTANCE = instance
                 // return instance
                 instance

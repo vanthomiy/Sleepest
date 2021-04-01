@@ -1,4 +1,4 @@
-package com.doitstudio.sleepest_master.Background;
+package com.doitstudio.sleepest_master.background;
 
 /**
  * This Workmanager is for periodic work. The minimum duration is 15 minutes.
@@ -6,15 +6,10 @@ package com.doitstudio.sleepest_master.Background;
  * workmanager stops.
  */
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Context;
-import android.os.Build;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.PeriodicWorkRequest;
@@ -25,8 +20,6 @@ import androidx.work.WorkerParameters;
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
 
 public class Workmanager extends Worker {

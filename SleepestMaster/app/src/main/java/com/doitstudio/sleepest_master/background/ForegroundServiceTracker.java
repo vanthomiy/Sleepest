@@ -1,4 +1,4 @@
-package com.doitstudio.sleepest_master.Background;
+package com.doitstudio.sleepest_master.background;
 
 /**State of service will be saved in shared preferences here */
 

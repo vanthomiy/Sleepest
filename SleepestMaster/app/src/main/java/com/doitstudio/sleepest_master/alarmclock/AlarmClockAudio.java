@@ -1,4 +1,4 @@
-package com.doitstudio.sleepest_master.AlarmClock;
+package com.doitstudio.sleepest_master.alarmclock;
 
 /** This class is singleton and you can start the alarm audio from everywhere */
 

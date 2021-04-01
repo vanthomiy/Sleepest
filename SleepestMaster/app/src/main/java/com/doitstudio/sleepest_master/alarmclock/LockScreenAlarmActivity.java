@@ -1,4 +1,4 @@
-package com.doitstudio.sleepest_master.AlarmClock;
+package com.doitstudio.sleepest_master.alarmclock;
 
 /**This Activity shows a view on the lock screen when alarm was fired. The user can
  * cancel or snooze the alarm with buttons.

@@ -1,4 +1,4 @@
-package com.doitstudio.sleepest_master.AlarmClock;
+package com.doitstudio.sleepest_master.alarmclock;
 
 /**This class inherits from Broadcastreceiver and starts an alarm at a specific time and date
  * When alarm was fired, the alarm audio will start */
@@ -10,10 +10,8 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.PowerManager;
 
-import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 

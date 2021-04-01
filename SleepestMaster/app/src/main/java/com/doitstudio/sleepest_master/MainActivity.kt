@@ -8,8 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
 import android.view.View
-import com.doitstudio.sleepest_master.AlarmClock.AlarmClockReceiver
-import com.doitstudio.sleepest_master.Background.ForegroundService
+import com.doitstudio.sleepest_master.background.ForegroundService
 
 import android.provider.Settings
 import androidx.activity.result.ActivityResultLauncher

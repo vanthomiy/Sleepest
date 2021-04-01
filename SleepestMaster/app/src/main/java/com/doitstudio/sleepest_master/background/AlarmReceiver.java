@@ -1,4 +1,4 @@
-package com.doitstudio.sleepest_master.Background;
+package com.doitstudio.sleepest_master.background;
 
 /**This class inherits from Broadcastreceiver and starts an alarm at a specific time and date*/
 
