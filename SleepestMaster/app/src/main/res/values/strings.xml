@@ -26,5 +26,11 @@
     <string name="workmanager_tag">Workmanager 1</string>
     <!--endregion-->
 
+    <!--region AlarmSettings-->
+    <string name="einstellungen">Einstellungen</string>
+    <string name="schlafdauer">Schlafdauer:</string>
+    <string name="aufwachzeitpunkt">Aufwachzeitpunkt:</string>
+    <!--endregion-->
+
 
 </resources>

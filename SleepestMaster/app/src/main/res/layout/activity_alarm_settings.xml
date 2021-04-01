@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AlarmSettings">
+
+    <View
+        android:id="@+id/view_settings"
+        android:layout_width="0dp"
+        android:layout_height="300dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView_settings"
+        android:layout_width="171dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/einstellungen"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="@+id/view_settings"
+        app:layout_constraintStart_toStartOf="@+id/view_settings"
+        app:layout_constraintTop_toTopOf="@+id/view_settings" />
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        style="@android:style/Widget.DeviceDefault.Light.SeekBar"
+        android:layout_width="320dp"
+        android:layout_height="28dp"
+        android:layout_marginTop="52dp"
+        android:backgroundTint="#230529"
+        android:contextClickable="false"
+        android:indeterminate="false"
+        android:max="10"
+        android:min="0"
+        android:progress="5"
+        android:progressBackgroundTint="#673AB7"
+        android:progressTint="#3F51B5"
+        app:layout_constraintEnd_toEndOf="@+id/view_settings"
+        app:layout_constraintHorizontal_bias="0.487"
+        app:layout_constraintStart_toStartOf="@+id/view_settings"
+        app:layout_constraintTop_toBottomOf="@+id/textView_settings" />
+
+    <com.appyvet.rangebar.RangeBar
+        android:id="@+id/rangebar"
+        android:layout_width="320dp"
+        android:layout_height="28dp"
+        android:layout_marginTop="52dp"
+        app:layout_constraintEnd_toEndOf="@+id/view_settings"
+        app:layout_constraintStart_toStartOf="@+id/view_settings"
+        app:layout_constraintTop_toBottomOf="@+id/seekBar"
+        app:tickEnd="10"
+        app:tickInterval="0.5"
+        app:tickStart="5"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/textView_schlafdauer"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginStart="16dp"
+        android:text="@string/schlafdauer"
+        app:layout_constraintBottom_toTopOf="@+id/seekBar"
+        app:layout_constraintStart_toStartOf="@+id/seekBar" />
+
+    <TextView
+        android:id="@+id/textView_schlafdauerAuswahl"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/seekBar"
+        app:layout_constraintStart_toEndOf="@+id/textView_schlafdauer" />
+
+    <TextView
+        android:id="@+id/textView_aufwachzeitpunkt"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginStart="16dp"
+        android:text="@string/aufwachzeitpunkt"
+        app:layout_constraintBottom_toTopOf="@+id/rangebar"
+        app:layout_constraintStart_toStartOf="@+id/rangebar" />
+
+    <TextView
+        android:id="@+id/textView_aufwachzeitpunktAuswahl"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/rangebar"
+        app:layout_constraintStart_toEndOf="@+id/textView_aufwachzeitpunkt" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

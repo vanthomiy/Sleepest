@@ -178,4 +178,8 @@ class MainActivity : AppCompatActivity() {
     }
     // endregion
 
+    fun switchToSettings(view: View) {
+        val intent = Intent(this, AlarmSettings::class.java)
+        startActivity(intent)
+    }
 }
