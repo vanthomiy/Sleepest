@@ -166,6 +166,8 @@
     <Compile Include="Model\SleepDataEntry.cs" />
     <Compile Include="Model\SleepDetect\SleepParameter.cs" />
     <Compile Include="Model\SleepSession.cs" />
+    <Compile Include="Model\SleepStateDetect\SleepStateClean.cs" />
+    <Compile Include="Model\SleepStateDetect\SleepStateModel.cs" />
     <Compile Include="Model\SleepStateDetect\SleepStateParameter.cs" />
     <Compile Include="Model\SleepType.cs" />
     <Compile Include="Model\Strukture.cs" />
@@ -196,7 +198,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Read\ReadParameter.cs" />
-    <Compile Include="Ribbon1.cs" />
+    <Compile Include="Ribbon1.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Ribbon1.Designer.cs">
       <DependentUpon>Ribbon1.cs</DependentUpon>
     </Compile>

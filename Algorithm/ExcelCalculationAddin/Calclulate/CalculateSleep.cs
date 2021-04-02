@@ -106,7 +106,7 @@ namespace ExcelCalculationAddin.Calclulate
 
                             found++;
 
-                            if (item.Value.CheckIfIsTypeModel(session.structureAwake, session.structureSleep, session.diffrence))
+                            if (item.Value.CheckIfIsTypeModel(param, session.structureAwake, session.structureSleep, session.diffrence))
                             {
 
                                 a.Add(new Tuple<string, string, string>(user.sheetname, item.Key.ToString(), session.sleepDataEntrieSleep[0].FirstOrDefault().row.ToString()));
@@ -133,10 +133,7 @@ namespace ExcelCalculationAddin.Calclulate
                     // Define diffrent sleep states in the sleep time 
                     try
                     {
-                       
-
-                        await session.CalcSleepStatesWhileSleep(paramState);
-
+                        await session.CalcSleepStatesWhileSleep(paramState,0);
                     }
                     catch (Exception ex)
                     {

@@ -26,6 +26,8 @@ namespace ExcelCalculationAddin.Model
         public float awakeMedianOverTime; // grenze welche der median für aufwachen haben sollte
         public float diffAwake; // grenze welche die diff im median für aufwachen haben sollte
 
+        public float modelMatchPercentage;
+
         public static SleepParameter AddFactorToParameter(SleepParameter normal, SleepParameter factor)
         {
             SleepParameter pm = SleepParameter.GetDefault();
@@ -44,7 +46,6 @@ namespace ExcelCalculationAddin.Model
             return pm;
         }
 
-
         public static SleepParameter GetDefault()
         {
             return new SleepParameter()
@@ -61,7 +62,8 @@ namespace ExcelCalculationAddin.Model
                 diffSleep = 50,
                 diffSleepFuture = 0,
                 awakeMedianOverTime = 30,
-                diffAwake = -5
+                diffAwake = -5,
+                modelMatchPercentage = 95
             };
         }
 
@@ -81,7 +83,8 @@ namespace ExcelCalculationAddin.Model
                 diffSleep = 1,
                 diffSleepFuture = 1,
                 awakeMedianOverTime = 1,
-                diffAwake = 1
+                diffAwake = 1,
+                modelMatchPercentage = 1
             };
         }
 

@@ -16,13 +16,15 @@ namespace ExcelCalculationAddin.Model
         public int motion;
         public int light;
         public SleepState realSleepState;
-        public SleepState calcSleepState;
+        public SleepState[] calcSleepState = new SleepState[2];
 
         // für calculation
         public bool isPersonSleeping;
         public bool isSoundCleanup;
         public int sleepStartValue;
         public float timeOverCleanup;
+
+        public bool issecond;
 
         public Task<bool> AddValue(string value, DataPoints dp)
         {

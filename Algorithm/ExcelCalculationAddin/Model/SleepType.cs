@@ -1,4 +1,5 @@
-﻿using ExcelCalculationAddin.Read;
+﻿using ExcelCalculationAddin.Model.SleepStateDetect;
+using ExcelCalculationAddin.Read;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,11 +19,20 @@ namespace ExcelCalculationAddin.Model
 
         }
 
+        public enum SleepStateType
+        {
+            light = 1,
+            heavy = 2,
+            superheavy = 3,
 
-       // public static Dictionary<SleepUserType, SleepCleanModel> sleepTypeModels;
+        }
+
+
+        // public static Dictionary<SleepUserType, SleepCleanModel> sleepTypeModels;
         public static Dictionary<SleepUserType, SleepParameter> sleepTypeParamsWhile;
         public static Dictionary<SleepUserType, SleepParameter> sleepTypeParamsAfter;
 
+        public static Dictionary<SleepStateType, SleepStateParameter> sleepStateParameter;
 
     }
 }

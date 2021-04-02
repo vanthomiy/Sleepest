@@ -106,7 +106,7 @@ namespace ExcelCalculationAddin.Live
 
                             found++;
 
-                            if (item.Value.CheckIfIsTypeModel(session.structureAwake, session.structureSleep, session.diffrence))
+                            if (item.Value.CheckIfIsTypeModel(param, session.structureAwake, session.structureSleep, session.diffrence))
                             {
                                 session.rw2 = "Type " + (int)item.Key + ":";
                                 a.Add(new Tuple<string, string, string>(user.sheetname, item.Key.ToString(), session.sleepDataEntrieSleep[0].FirstOrDefault().row.ToString()));
@@ -118,7 +118,6 @@ namespace ExcelCalculationAddin.Live
                                 foundCando++;
                                 break;
                             }
-
                         }
                     }
                     catch (Exception)
@@ -134,9 +133,43 @@ namespace ExcelCalculationAddin.Live
                     // Define diffrent sleep states in the sleep time 
                     try
                     {
+                        await session.CalcSleepStatesWhileSleep(paramState, 0);
 
 
-                        await session.CalcSleepStatesWhileSleep(paramState);
+                        List<SleepStateParameter> ssp = new List<SleepStateParameter>();
+                        session.f1 = "Type ";
+                        // Check if model is available
+                        foreach (var item in SleepStateClean.sleepStateModels)
+                        {
+                            if (session.structureAwake == null || session.structureSleep == null || session.diffrence == null)
+                            {
+                                notpossible++;
+                                continue;
+                            }
+
+                            found++;
+
+                            if (item.Value.CheckIfIsTypeModel(paramState, session.structureAwake, session.structureSleep, session.diffrence))
+                            {
+                                session.f1 += item.Key;
+
+                                //a.Add(new Tuple<string, string, string>(user.sheetname, item.Key.ToString(), session.sleepDataEntrieSleep[0].FirstOrDefault().row.ToString()));
+                                // a specific type was found
+
+                                bool isNormal = (item.Key.StartsWith("3") || item.Key.StartsWith("5") || item.Key.StartsWith("7"));
+
+                                ssp.Add(SleepStateParameter.AddFactorToParameter(SleepStateClean.sleepStateParams[item.Value.sleepStateModel], SleepType.sleepStateParameter[item.Value.sleepStateType], isNormal));
+                            }
+                        }
+
+                        paramState = SleepStateParameter.Combine(ssp);
+
+                        if (session.f1 == "Type ")
+                        {
+                            session.f1 = "nt";
+                        }
+
+                        await session.CalcSleepStatesWhileSleep(paramState, 1);
 
                     }
                     catch (Exception ex)

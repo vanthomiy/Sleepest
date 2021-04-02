@@ -5,12 +5,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static ExcelCalculationAddin.Model.SleepClean;
+using static ExcelCalculationAddin.Model.SleepCleanModel;
+using static ExcelCalculationAddin.Model.SleepStateDetect.SleepStateClean;
+using static ExcelCalculationAddin.Model.SleepType;
 
-namespace ExcelCalculationAddin.Model
+namespace ExcelCalculationAddin.Model.SleepStateDetect
 {
-    public class SleepCleanModel
+    public class SleepStateModel
     {
+        public SleepStateType sleepStateType;
+        public SleepStateCleanType sleepStateModel;
+
         public Dictionary<SleepCleanModelType, MaxMinHelper> valuesWach = new Dictionary<SleepCleanModelType, MaxMinHelper>() {
             { SleepCleanModelType.MaxLicht, new MaxMinHelper() },
             { SleepCleanModelType.MinLicht, new MaxMinHelper() },
@@ -39,7 +44,7 @@ namespace ExcelCalculationAddin.Model
 
             };
 
-        public bool CheckIfIsTypeModel(SleepParameter sleepParam, Strukture awake, Strukture sleep, Strukture diff)
+        public bool CheckIfIsTypeModel(SleepStateParameter sleepParam, Strukture awake, Strukture sleep, Strukture diff)
         {
             // es muss gecheckt werden ob alles in den bounds ist
             bool isAType = true;
@@ -167,44 +172,46 @@ namespace ExcelCalculationAddin.Model
 
             int amount = isright + iswrong;
 
-            if ((isright * 100) / amount > sleepParam.modelMatchPercentage)
+            if ((isright * 100) / amount > sleepParam.first.modelMatchPercentage)
             {
                 return true;
             }
-           
+
 
 
             return false;
         }
 
 
-        public static Dictionary<SleepCleanType, SleepCleanModel> CreateAllModels(bool isWhile)
+        public static Dictionary<string, SleepStateModel> CreateAllModels(bool isWhile)
         {
-            Dictionary<SleepCleanType, SleepCleanModel> asss = new Dictionary<SleepCleanType, SleepCleanModel>();
+            Dictionary<string, SleepStateModel> asss = new Dictionary<string, SleepStateModel>();
 
 
             var workbook = (Workbook)Globals.ThisAddIn.Application.ActiveWorkbook;
-            Worksheet worksheet1 = isWhile ? (Worksheet)workbook.Worksheets["SleeptypesWhile"] : (Worksheet)workbook.Worksheets["SleeptypesAfter"];
+            Worksheet worksheet1 = (Worksheet)workbook.Worksheets["SleepAnalyse"];
 
 
 
-            int finde = CellHelper.ExcelColumnNameToNumber("AM");
+            int finde = CellHelper.ExcelColumnNameToNumber("AE");
             int offWach = 1, offSleep = 4, offDiff = 7;
 
-            for (int i = 4; i < 200; i+=12)
+            string key = "";
+            for (int i = 4; i < 200; i += 12)
             {
+
                 string value = CellHelper.GetCellValue(i, finde, worksheet1);
-                if (value == null)
+                string value1 = CellHelper.GetCellValue(i - 1, finde, worksheet1);
+
+                if (value == null || value1 == null)
                 {
-                    break; 
+                    break;
                 }
 
-                SleepCleanType cleanModelType;
                 try
                 {
-                    cleanModelType = (SleepCleanType)Convert.ToInt32(value);
-
-                    asss.Add(cleanModelType, new SleepCleanModel());
+                    key = (value).ToString() + (value1).ToString();
+                    asss.Add(key, new SleepStateModel());
                 }
                 catch (Exception)
                 {
@@ -212,44 +219,33 @@ namespace ExcelCalculationAddin.Model
                     continue;
                 }
 
-                foreach (var item in asss[cleanModelType].valuesWach)
+
+
+                asss[key].sleepStateType = (SleepStateType)Convert.ToInt32(value1);
+                asss[key].sleepStateModel = (SleepStateCleanType)Convert.ToInt32(value);
+                foreach (var item in asss[key].valuesWach)
                 {
                     for (int k = 0; k < 3; k++)
                     {
-                        float vv = CellHelper.GetCellValueFloat(i+k+ offWach, finde+1+(int)item.Key, worksheet1);
-                        asss[cleanModelType].valuesWach[item.Key].maxmintype[(MaxMinHelperType)k] = (float)vv;
+                        float vv = CellHelper.GetCellValueFloat(i + k + offWach, finde + 1 + (int)item.Key, worksheet1);
+                        asss[key].valuesWach[item.Key].maxmintype[(MaxMinHelperType)k] = (float)vv;
                     }
 
                     for (int k = 0; k < 3; k++)
                     {
                         float vv = CellHelper.GetCellValueFloat(i + k + offSleep, finde + 1 + (int)item.Key, worksheet1);
-                        asss[cleanModelType].valuesSleep[item.Key].maxmintype[(MaxMinHelperType)k] = (float)vv;
+                        asss[key].valuesSleep[item.Key].maxmintype[(MaxMinHelperType)k] = (float)vv;
                     }
 
                     for (int k = 0; k < 3; k++)
                     {
                         float vv = CellHelper.GetCellValueFloat(i + k + offDiff, finde + 1 + (int)item.Key, worksheet1);
-                        asss[cleanModelType].valuesDiff[item.Key].maxmintype[(MaxMinHelperType)k] = (float)vv;
+                        asss[key].valuesDiff[item.Key].maxmintype[(MaxMinHelperType)k] = (float)vv;
                     }
                 }
             }
 
             return asss;
         }
-
-        public enum SleepCleanModelType
-        {
-            MaxSchlaf,
-            MinSchlaf,
-            MaxLicht,
-            MinLicht,
-            MaxMotion,
-            MinMotion,
-            Schlaf,
-            Licht,
-            Motion
-                
-        }
-
     }
 }

@@ -1,11 +1,9 @@
 ﻿using ExcelCalculationAddin.Calclulate;
 using ExcelCalculationAddin.Live;
 using ExcelCalculationAddin.Model;
+using ExcelCalculationAddin.Model.SleepStateDetect;
 using Microsoft.Office.Tools.Ribbon;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
 
 namespace ExcelCalculationAddin
 {
@@ -41,6 +39,11 @@ namespace ExcelCalculationAddin
             SleepClean.sleepCleanParamsWhile= SleepParameter.CreateAllModels(true);
             SleepClean.sleepCleanModelsWhile = SleepCleanModel.CreateAllModels(true);
             SleepType.sleepTypeParamsWhile = SleepParameter.CreateAllFactorModels(true);
+
+
+            SleepStateClean.sleepStateParams = SleepStateParameter.CreateAllModels(true);
+            SleepStateClean.sleepStateModels = SleepStateModel.CreateAllModels(true);
+            SleepType.sleepStateParameter= SleepStateParameter.CreateAllFactorModels(true);
 
             await ReadParameter.GetAllUserData();
         }

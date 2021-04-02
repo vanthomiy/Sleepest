@@ -32,7 +32,8 @@ namespace ExcelCalculationAddin.Model
         public Strukture diffrence;
 
         public string rw1 = "", rw2 = "", nf1 = "", nf2 = "";
-
+        public string rws1 = "", rws2 = "", rws3 = "", f1 = "";
+        public string rwas = "";
         // Find the sleep points and the wakeup points
         public Task<bool> CalcSleepTimesRealTime(SleepParameter parameters, int count = 0)
         {
@@ -206,15 +207,27 @@ namespace ExcelCalculationAddin.Model
 
             var workbook = (Workbook)Globals.ThisAddIn.Application.ActiveWorkbook;
             Worksheet worksheet1 = isWhile ? (Worksheet)workbook.Worksheets["SleeptypesWhile"] : (Worksheet)workbook.Worksheets["SleeptypesAfter"];
+            Worksheet worksheet2 = (Worksheet)workbook.Worksheets["SleepAnalyse"];
+
             Worksheet worksheet = (Worksheet)workbook.Worksheets[user];
 
             int off = isWhile ? 4 : 0;
 
+            int[] realSleep = new int[5];
+            int[] caclSleep = new int[5];
+            int[] caclSleep1 = new int[5];
+
+            bool isjust4 = false;
+
             foreach (var list in sleepDataEntrieSleep)
             {
-                
+                realSleep = new int[5];
+                caclSleep = new int[5];
+                caclSleep1 = new int[5];
+
                 foreach (var item in list.Value)
                 {
+                   
                     // find if right or wrong
                     if (item == list.Value.FirstOrDefault())
                     {
@@ -235,7 +248,6 @@ namespace ExcelCalculationAddin.Model
                             else
                                 rw2 += "5";
                         }
-
 
                     }
                     else if (item == list.Value.LastOrDefault())
@@ -259,9 +271,44 @@ namespace ExcelCalculationAddin.Model
                         }
                     }
 
+                    if (isWhile)
+                    {
+                        var sl = (int)CellHelper.GetCellValueFloat(item.row, 6, worksheet);
+                        realSleep[sl]++;
+
+                        caclSleep[(int)item.calcSleepState[0]]++;
+                        caclSleep1[(int)item.calcSleepState[1]]++;
+
+                        if ((int)item.calcSleepState[0] != 4 && (int)item.calcSleepState[0] != 0)
+                        {
+                            caclSleep[4]++;
+                        }
+
+                        if ((int)item.calcSleepState[1] != 4 && (int)item.calcSleepState[1] != 0)
+                        {
+                            caclSleep1[4]++;
+                        }
+
+
+                        if ((int)item.realSleepState != 4 && (int)item.realSleepState != 0)
+                        {
+                            realSleep[4]++;
+                        }
+
+                        if (!isjust4 && (int)item.realSleepState == 4)
+                        {
+                            isjust4 = true;
+                        }
+                    }
+                    
+
                     //ListHelp.CellHelper.WriteCellValue("Sleeping", item.row, DataSetup.dataSetPoints[DataPoints.Caculated], worksheet);
                     ListHelp.CellHelper.WriteCellValue("Sleeping", item.row, CellHelper.GetColumnName(7+list.Key + off) , worksheet);
-                    ListHelp.CellHelper.WriteCellValue((int)item.calcSleepState, item.row, CellHelper.GetColumnName(15 + list.Key + off), worksheet);
+                    ListHelp.CellHelper.WriteCellValue((int)item.calcSleepState[0], item.row, CellHelper.GetColumnName(15 + list.Key + off), worksheet);
+                    if (item.issecond)
+                    {
+                        ListHelp.CellHelper.WriteCellValue((int)item.calcSleepState[1], item.row, CellHelper.GetColumnName(16 + list.Key + off), worksheet);
+                    }
                 }
             }
 
@@ -285,6 +332,91 @@ namespace ExcelCalculationAddin.Model
             ListHelp.CellHelper.WriteCellValue(rw1 != "" ? rw2:"", actualRow, "AF", worksheet1);
             ListHelp.CellHelper.WriteCellValue(nf1, actualRow, "AG", worksheet1);
             ListHelp.CellHelper.WriteCellValue(nf2, actualRow, "AH", worksheet1);
+
+            if (isWhile)
+            {
+
+                ListHelp.CellHelper.WriteCellValue(row.ToString(), actualRow, "A", worksheet2);
+                ListHelp.CellHelper.WriteCellValue(user, actualRow, "B", worksheet2);
+
+                if (realSleep[0] < caclSleep[0])
+                {
+                    rws1 = "3";
+                }
+                else if (realSleep[0] > caclSleep[0])
+                {
+                    rws1 = "2";
+                }
+
+                if (realSleep[2] < caclSleep[2] && !isjust4)
+                {
+                    rws2 = "5";
+                }
+                else if (realSleep[2] > caclSleep[2] && !isjust4)
+                {
+                    rws2 = "4";
+                }
+
+                if (realSleep[3] < caclSleep[3] && !isjust4)
+                {
+                    rws3 = "7";
+                }
+                else if (realSleep[3] > caclSleep[3] && !isjust4)
+                {
+                    rws3 = "6";
+                }
+
+                if (realSleep[0] < caclSleep1[0])
+                {
+                    rwas += "3";
+                }
+                else if (realSleep[0] > caclSleep1[0])
+                {
+                    rwas += "2";
+                }
+
+                if (realSleep[2] < caclSleep1[2] && !isjust4)
+                {
+                    rwas += "5";
+                }
+                else if (realSleep[2] > caclSleep1[2] && !isjust4)
+                {
+                    rwas += "4";
+                }
+
+                if (realSleep[3] < caclSleep1[3] && !isjust4)
+                {
+                    rwas += "7";
+                }
+                else if (realSleep[3] > caclSleep1[3] && !isjust4)
+                {
+                    rwas += "6";
+                }
+
+
+                ListHelp.CellHelper.WriteCellValue(rws1, actualRow, "V", worksheet2);
+                ListHelp.CellHelper.WriteCellValue(rws2, actualRow, "W", worksheet2);
+                ListHelp.CellHelper.WriteCellValue(rws3, actualRow, "X", worksheet2);
+                ListHelp.CellHelper.WriteCellValue(f1, actualRow, "Y", worksheet2);
+                ListHelp.CellHelper.WriteCellValue(rwas, actualRow, "Z", worksheet2);
+
+                for (int i = 0; i < 5; i++)
+                {
+                    ListHelp.CellHelper.WriteCellValue(realSleep[i], actualRow, ListHelp.CellHelper.GetColumnName(i * 2 + 3), worksheet2);
+                    ListHelp.CellHelper.WriteCellValue(caclSleep[i], actualRow, ListHelp.CellHelper.GetColumnName(i * 2 + 4), worksheet2);
+
+                    if (isjust4 && i > 0)
+                    {
+                        ListHelp.CellHelper.WriteCellValue(0, actualRow, ListHelp.CellHelper.GetColumnName(i + 13), worksheet2);
+                        continue;
+                    }
+
+                    ListHelp.CellHelper.WriteCellValue(realSleep[i] - caclSleep[i], actualRow, ListHelp.CellHelper.GetColumnName(i + 13), worksheet2);
+
+                }
+            }
+
+
 
             diffrence?.WriteData(actualRow, worksheet1, 6);
             structureSleep?.WriteData(actualRow, worksheet1, 3);
@@ -312,8 +444,10 @@ namespace ExcelCalculationAddin.Model
             return Task.FromResult(true);
         }
 
-        public Task<bool> CalcSleepStatesWhileSleep(SleepStateParameter parameters)
+        public Task<bool> CalcSleepStatesWhileSleep(SleepStateParameter parameters, int index1)
         {
+           
+
             if (sleepDataEntrieSleep == null || sleepDataEntrieSleep.Count == 0)
             {
                 return Task.FromResult(false);
@@ -324,31 +458,45 @@ namespace ExcelCalculationAddin.Model
 
             for (int i = 0; i < sleepDataEntrieSleep[index].Count; i++)
             {
+                if (index1 == 1)
+                {
+                    sleepDataEntrieSleep[index][i].issecond = true;
+                }
+
                 // is awake?
                 if (sleepDataEntrieSleep[index][i].sleep <= actualParam.sleepSleepBorder ||
                     sleepDataEntrieSleep[index][i].motion >= actualParam.sleepMotionBorder ||
                     sleepDataEntrieSleep[index][i].light >= actualParam.sleepLightBorder)
                 {
-                    sleepDataEntrieSleep[index][i].calcSleepState = SleepState.awake;
+
+                    if (sleepDataEntrieSleep[index][i].sleep <= actualParam.soundClearSleepBorder ||
+                    sleepDataEntrieSleep[index][i].motion <= actualParam.soundClearMotionBorder)
+                    {
+                        sleepDataEntrieSleep[index][i].calcSleepState[index1] = SleepState.light;
+                    }
+                    else
+                    {
+                        sleepDataEntrieSleep[index][i].calcSleepState[index1] = SleepState.awake;
+                    }
                 }
                 // is normal?
                 else if (sleepDataEntrieSleep[index][i].sleep <= actualParam.deepSleepSleepBorder ||
                    sleepDataEntrieSleep[index][i].motion >= actualParam.deepSleepMotionBorder ||
                    sleepDataEntrieSleep[index][i].light >= actualParam.deepSleepLightBorder)
                 {
-                    sleepDataEntrieSleep[index][i].calcSleepState = SleepState.light;
+                    sleepDataEntrieSleep[index][i].calcSleepState[index1] = SleepState.light;
                 }
                 // is deep
                 else if (sleepDataEntrieSleep[index][i].sleep <= actualParam.remSleepSleepBorder ||
                   sleepDataEntrieSleep[index][i].motion >= actualParam.remSleepMotionBorder ||
                   sleepDataEntrieSleep[index][i].light >= actualParam.remSleepLightBorder)
                 {
-                    sleepDataEntrieSleep[index][i].calcSleepState = SleepState.deep;
+                    sleepDataEntrieSleep[index][i].calcSleepState[index1] = SleepState.deep;
                 }
                 // is rem
                 else
                 {
-                    sleepDataEntrieSleep[index][i].calcSleepState = SleepState.rem;
+                    sleepDataEntrieSleep[index][i].calcSleepState[index1] = SleepState.rem;
                 }
             }
 
