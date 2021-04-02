@@ -16,11 +16,15 @@ import android.os.PowerManager;
 import android.widget.Toast;
 import androidx.lifecycle.LifecycleService;
 import com.doitstudio.sleepest_master.Alarm;
+import com.doitstudio.sleepest_master.LiveUserSleepActivity;
+import com.doitstudio.sleepest_master.SleepApiData;
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver;
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.model.data.Actions;
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
+
+import java.util.Calendar;
 
 public class ForegroundService extends LifecycleService {
 
@@ -28,6 +32,12 @@ public class ForegroundService extends LifecycleService {
     private PowerManager.WakeLock wakeLock = null;
     private boolean isServiceStarted = false;
     public SleepCalculationHandler sleepCalculationHandler;
+
+    private boolean isAlarmActive = false;
+    private int sleepValueAmount = 0;
+    private boolean isSubscribed = false;
+    private int userSleepTime = 0;
+    private boolean isSleeping = false;
 
     DataStoreRepository dataStoreRepository;
 
@@ -69,12 +79,23 @@ public class ForegroundService extends LifecycleService {
         startForeground(1, createNotification("Test")); /** TODO: Id zentral anlegen */
 
         foregroundObserver = new ForegroundObserver (this);
-
-
     }
 
     public void OnAlarmChanged(Alarm alarm){
-            updateNotification("Alarm Active: " + alarm.getIsActive());
+        isAlarmActive = alarm.getIsActive();
+        updateNotification("test");
+    }
+
+    public void OnSleepApiDataChanged(SleepApiData sleepApiData){
+        sleepValueAmount = sleepApiData.getSleepApiValuesAmount();
+        isSubscribed = sleepApiData.getIsSubscribed();
+        updateNotification("test");
+    }
+
+    public void OnSleepTimeChanged(LiveUserSleepActivity liveUserSleepActivity){
+        userSleepTime = liveUserSleepActivity.getUserSleepTime();
+        isSleeping = liveUserSleepActivity.getIsUserSleeping();
+        updateNotification("test");
     }
 
     @Override
@@ -116,7 +137,13 @@ public class ForegroundService extends LifecycleService {
         /**
          * TEST
          * */
-        AlarmClockReceiver.startAlarmManager(3,20,26, getApplicationContext());
+        Calendar calenderAlarm = Calendar.getInstance();
+        int day = calenderAlarm.get(Calendar.DAY_OF_WEEK) + 1;
+        if (day > 7) {
+            day = 1;
+        }
+        AlarmReceiver.startAlarmManager(day,9,0, getApplicationContext(), 2);
+        Workmanager.startPeriodicWorkmanager(30, getApplicationContext());
     }
 
     // Stop the foreground service
@@ -134,6 +161,14 @@ public class ForegroundService extends LifecycleService {
         //Save state in preferences
         isServiceStarted = false;
         new ServiceTracker().setServiceState(this, ServiceState.STOPPED);
+
+        /**
+         * TEST
+         */
+        Workmanager.stopPeriodicWorkmanager();
+        Calendar calenderAlarm = Calendar.getInstance();
+        int day = calenderAlarm.get(Calendar.DAY_OF_WEEK);
+        AlarmReceiver.startAlarmManager(day,20,0, getApplicationContext(), 1);
     }
 
     /**
@@ -180,6 +215,11 @@ public class ForegroundService extends LifecycleService {
         return builder
                 .setContentTitle(getString(R.string.foregroundservice_notification_title))
                 .setContentText(text)
+                .setStyle(new Notification.BigTextStyle().bigText("Alarm active: " + isAlarmActive
+                + "\nSleepValueAmount: " + sleepValueAmount
+                + "\nIsSubscribed: " + isSubscribed
+                + "\nSleepTime: " + userSleepTime
+                + "\nIsSleeping: " + isSleeping))
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setTicker("Ticker text")
                 .build();

@@ -10,6 +10,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.widget.Toast;
+
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -34,10 +36,17 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         this.context = context;
 
-        /** TODO: High Sensitive Notification for Alarm, like System Alarm (Snooze, turn off) **/
+        switch (intent.getIntExtra(context.getString(R.string.alarmmanager_key), 0)) {
+            case 0:
+                break;
+            case 1:
+                ForegroundService.startOrStopForegroundService(Actions.START, context);
+                break;
+            case 2:
+                ForegroundService.startOrStopForegroundService(Actions.STOP, context);
+                break;
+        }
 
-        ForegroundService.startOrStopForegroundService(Actions.START, context);
-        //startAlarmManager(6,17,9, context);
     }
 
     /**
@@ -48,7 +57,7 @@ public class AlarmReceiver extends BroadcastReceiver {
      * @param alarmContext Application Context
      */
     @RequiresApi(api = Build.VERSION_CODES.KITKAT) //Android KITKAT is minimum version!
-    public static void startAlarmManager(int day, int hour, int min, Context alarmContext) {
+    public static void startAlarmManager(int day, int hour, int min, Context alarmContext, int usage) {
 
         //Get an instance of calendar and set time, when alarm should be fired
         Calendar calenderAlarm = Calendar.getInstance();
@@ -63,16 +72,11 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
 
         Intent intent = new Intent(alarmContext, AlarmReceiver.class);
+        intent.putExtra(alarmContext.getString(R.string.alarmmanager_key), usage);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(alarmContext, 1, intent, 0); /** TODO: Request Code zentral anlegen */
         AlarmManager alarmManager = (AlarmManager) alarmContext.getSystemService(ALARM_SERVICE);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calenderAlarm.getTimeInMillis(), pendingIntent);
-        } else {
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calenderAlarm.getTimeInMillis(), pendingIntent);
-        }
-
-        //Toast.makeText(context, "Alarm set to " + days[spDay.getSelectedItemPosition()] + ": " + hour + ":" + min, Toast.LENGTH_LONG).show();
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calenderAlarm.getTimeInMillis(), pendingIntent);
     }
 
     /**

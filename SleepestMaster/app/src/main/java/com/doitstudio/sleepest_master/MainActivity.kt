@@ -4,23 +4,20 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-
-import android.view.View
-import com.doitstudio.sleepest_master.background.ForegroundService
-
 import android.provider.Settings
+import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.viewbinding.BuildConfig
-import com.doitstudio.sleepest_master.sleepapi.SleepHandler
-
+import com.doitstudio.sleepest_master.background.AlarmReceiver
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
-import com.doitstudio.sleepest_master.model.data.Actions
+import com.doitstudio.sleepest_master.sleepapi.SleepHandler
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.google.android.material.snackbar.Snackbar
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -82,8 +79,8 @@ class MainActivity : AppCompatActivity() {
 
     private val mainViewModel: MainViewModel by lazy {
         MainViewModel(
-                (application as MainApplication).dbRepository,
-                (application as MainApplication).dataStoreRepository
+            (application as MainApplication).dbRepository,
+            (application as MainApplication).dataStoreRepository
         )
     }
 
@@ -99,14 +96,20 @@ class MainActivity : AppCompatActivity() {
 
     fun buttonClick2(view: View){
 
-        ForegroundService.startOrStopForegroundService(Actions.START, this)
+        /**
+         * TEST
+         */
+        val calenderAlarm = Calendar.getInstance()
+        var day = calenderAlarm[Calendar.DAY_OF_WEEK]
+        var hour = calenderAlarm[Calendar.HOUR_OF_DAY]
+        if (hour > 20) {
+            day += 1
+            if (day > 7) {
+                day = 1
+            }
+        }
+        AlarmReceiver.startAlarmManager(day, 19, 31, applicationContext, 1)
 
-
-        //Workmanager.startPeriodicWorkmanager(15, applicationContext)
-        //AlarmReceiver.startAlarmManager(6,17,5, applicationContext)
-
-        //ForegroundService.startOrStopForegroundService(Actions.START, this)
-        //Workmanager.startPeriodicWorkmanager(15);
         sch.calculateUserWakup()
 
     }
@@ -136,8 +139,8 @@ class MainActivity : AppCompatActivity() {
         // don't need to check if this is on a device before runtime permissions, that is, a device
         // prior to 29 / Q.
         return PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACTIVITY_RECOGNITION
+            this,
+            Manifest.permission.ACTIVITY_RECOGNITION
         )
     }
 
@@ -155,19 +158,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun displayPermissionSettingsSnackBar() {
         Snackbar.make(
-                binding.mainActivity,
-                "hiHo",
-                Snackbar.LENGTH_LONG
+            binding.mainActivity,
+            "hiHo",
+            Snackbar.LENGTH_LONG
         )
                 .setAction("Settings") {
                     // Build intent that displays the App settings screen.
                     val intent = Intent()
                     intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
                     val uri = Uri.fromParts(
-                            "package",
-                            //BuildConfig.APPLICATION_ID,
-                            BuildConfig.VERSION_NAME,
-                            null
+                        "package",
+                        //BuildConfig.APPLICATION_ID,
+                        BuildConfig.VERSION_NAME,
+                        null
                     )
                     intent.data = uri
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
