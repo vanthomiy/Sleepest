@@ -75,7 +75,7 @@ public class ForegroundService extends LifecycleService {
     }
 
     public void OnAlarmChanged(Alarm alarm){
-            updateNotification("Alarm Active: " + alarm.getIsActive());
+            //updateNotification("Alarm Active: " + alarm.getIsActive());
     }
 
     @Override

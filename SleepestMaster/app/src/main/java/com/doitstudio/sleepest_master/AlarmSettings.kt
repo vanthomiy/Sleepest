@@ -4,29 +4,66 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.SeekBar
 import android.widget.TextView
+import androidx.lifecycle.asLiveData
 import com.appyvet.rangebar.RangeBar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.time.LocalTime
-import java.util.*
+import kotlin.concurrent.fixedRateTimer
+import kotlin.properties.Delegates
 
 class AlarmSettings : AppCompatActivity() {
 
-
     private val repository by lazy { (this.applicationContext as MainApplication).dataStoreRepository }
     private val scope: CoroutineScope = MainScope()
-
+    private val alarmSettingsLiveData by lazy{ repository.alarmFlow.asLiveData()}
 
     lateinit var sBar : SeekBar
     lateinit var rBar : RangeBar //https://github.com/Fedorkz/material-range-bar
     lateinit var tViewSleepAmount : TextView
     lateinit var tViewWakeupTime : TextView
+    var firstSetupBars by Delegates.notNull<Boolean>()
 
-    lateinit var sleepDuration : Date //in LocalTime ändern
-    lateinit var wakeupEarly : Date //in LocalTime ändern
-    lateinit var wakeupLate : Date //in LocalTime ändern
+    fun SetupAlarmSettings() {
+        // Listener for live data changes. Is used for the setup when building up the activity and reasigning the values
+        alarmSettingsLiveData.observe(this)
+        {
+            alarmSettings ->
+            alarmSettings.sleepDuration
+            alarmSettings.wakeupEarly
+            alarmSettings.wakeupLate
 
+            if (firstSetupBars) {
+                val wakeupTime = LocalTime.ofSecondOfDay(alarmSettings.sleepDuration.toLong())
+                val wakeupEarly = LocalTime.ofSecondOfDay(alarmSettings.wakeupEarly.toLong())
+                val wakeupLate = LocalTime.ofSecondOfDay(alarmSettings.wakeupLate.toLong())
+
+                // Setup the sleepAmount bar
+                if (wakeupTime.minute == 30) { sBar.progress = (wakeupTime.hour - 5) * 2 + 1 }
+                else { sBar.progress = (wakeupTime.hour - 5) * 2 }
+
+                //Setup the wakeupRange bar
+                var rBarLeft = 0.0
+                var rBarRight = 0.0
+
+                if (wakeupEarly.minute == 30) { rBarLeft = wakeupEarly.hour.toDouble() + 0.5 }
+                else { rBarLeft = wakeupEarly.hour.toDouble() }
+
+                if (wakeupLate.minute == 30) { rBarRight = wakeupLate.hour.toDouble() + 0.5 }
+                else { rBarRight = wakeupLate.hour.toDouble() }
+
+                rBar.setRangePinsByValue(rBarLeft.toFloat(), rBarRight.toFloat())
+
+                //UpdateViews
+                tViewSleepAmount.text = wakeupTime.toString()
+                tViewWakeupTime.text = wakeupEarly.toString() + " " + wakeupLate.toString()
+
+                // Prevent from looping while the user manually changes the bar values
+                firstSetupBars = false
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,44 +73,36 @@ class AlarmSettings : AppCompatActivity() {
         rBar = findViewById(R.id.rangebar)
         tViewSleepAmount = findViewById(R.id.textView_schlafdauerAuswahl)
         tViewWakeupTime = findViewById(R.id.textView_aufwachzeitpunktAuswahl)
-        tViewSleepAmount.text = " Select Time"
-        tViewWakeupTime.text = " Select Time Range"
+        firstSetupBars = true
+
+        // First Setup Value, doesn´t work right now
+        //if (alarmSettingsLiveData.value?.sleepDuration == null) { saveSleepAmount(LocalTime.of(7, 0))}
+
+        SetupAlarmSettings()
 
         sBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(sBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 val progressTemp = progress*0.5 + 5
                 var minutes = 0
                 if (progressTemp % 1 == 0.5) { minutes = 30 }
-                sleepDuration = Date(2021, 4, 1, progressTemp.toInt(), minutes)
-                val time = LocalTime.of(progressTemp.toInt(), minutes)
-                val temp = time.toSecondOfDay()
-                tViewSleepAmount.text =  " " + time.hour.toString() + " h " + time.minute.toString() + " min"
-                //tViewSleepAmount.text =  " " + alarmTime.hours.toString() + " h " + alarmTime.minutes.toString() + " min"
 
-                scope.launch {
-                    repository.updateSleepDuration(time.toSecondOfDay())
-                }
-
+                saveSleepAmount(LocalTime.of(progressTemp.toInt(), minutes))
             }
 
             override fun onStartTrackingTouch(sBar: SeekBar) {
                 val progressTemp = sBar.progress*0.5 + 5
                 var minutes = 0
                 if (progressTemp % 1 == 0.5) { minutes = 30 }
-                sleepDuration = Date(2021, 4, 1, progressTemp.toInt(), minutes)
-                val time = LocalTime.of(progressTemp.toInt(), minutes)
-                tViewSleepAmount.text =  " " + time.hour.toString() + " h " + time.minute.toString() + " min"
-                //tViewSleepAmount.text = " " + alarmTime.hours.toString() + " h " + alarmTime.minutes.toString() + " min"
+
+                saveSleepAmount(LocalTime.of(progressTemp.toInt(), minutes))
             }
 
             override fun onStopTrackingTouch(sBar: SeekBar) {
                 val progressTemp = sBar.progress*0.5 + 5
                 var minutes = 0
                 if (progressTemp % 1 == 0.5) { minutes = 30 }
-                sleepDuration = Date(2021, 4, 1, progressTemp.toInt(), minutes)
-                val time = LocalTime.of(progressTemp.toInt(), minutes)
-                tViewSleepAmount.text =  " " + time.hour.toString() + " h " + time.minute.toString() + " min"
-                //tViewSleepAmount.text = " " + alarmTime.hours.toString() + " h " + alarmTime.minutes.toString() + " min"
+
+                saveSleepAmount(LocalTime.of(progressTemp.toInt(), minutes))
             }
         })
 
@@ -86,16 +115,27 @@ class AlarmSettings : AppCompatActivity() {
                 rightPinValue: String?
             ) {
 
-                var minutes = 0
-                if (rBar.leftPinValue.contains(".5")) { minutes = 30 }
-                wakeupEarly = Date(2021, 4, 1, rBar.leftPinValue.toFloat().toInt(), minutes)
+                var minutesLeft = 0
+                var minutesRight = 0
+                if (rBar.leftPinValue.contains(".5")) { minutesLeft = 30 }
+                if (rBar.rightPinValue.contains(".5")) { minutesRight = 30 }
 
-                if (rBar.rightPinValue.contains(".5")) { minutes = 30 } else {minutes = 0 }
-                wakeupLate = Date(2021, 4, 1, rBar.rightPinValue.toFloat().toInt(), minutes)
-
-                tViewWakeupTime.text = "  " + wakeupEarly.hours.toString() + ":" + wakeupEarly.minutes.toString() + " - " +
-                        wakeupLate.hours.toString() + ":" + wakeupLate.minutes.toString()
+                saveWakeupRange(LocalTime.of(rBar.leftPinValue.toFloat().toInt(), minutesLeft), LocalTime.of(rBar.rightPinValue.toFloat().toInt(), minutesRight))
             }
         })
+    }
+
+    fun saveSleepAmount(time: LocalTime) {
+        tViewSleepAmount.text = time.toString()
+        scope.launch {
+            repository.updateSleepDuration(time.toSecondOfDay()) }
+    }
+
+    fun saveWakeupRange(wakeupEarly: LocalTime, wakeupLate: LocalTime) {
+        tViewWakeupTime.text = wakeupEarly.toString() + " " + wakeupLate.toString()
+        scope.launch {
+            repository.updateWakeUpEarly(wakeupEarly.toSecondOfDay())
+            repository.updateWakeUpLate(wakeupLate.toSecondOfDay())
+        }
     }
 }
