@@ -9,6 +9,7 @@ import com.appyvet.rangebar.RangeBar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import java.lang.reflect.WildcardType
 import java.time.LocalTime
 import kotlin.concurrent.fixedRateTimer
 import kotlin.properties.Delegates
@@ -25,6 +26,20 @@ class AlarmSettings : AppCompatActivity() {
     lateinit var tViewWakeupTime : TextView
     var firstSetupBars by Delegates.notNull<Boolean>()
 
+    fun saveSleepAmount(time: LocalTime) {
+        tViewSleepAmount.text = " " + time.toString() + " Stunden"
+        scope.launch {
+            repository.updateSleepDuration(time.toSecondOfDay()) }
+    }
+
+    fun saveWakeupRange(wakeupEarly: LocalTime, wakeupLate: LocalTime) {
+        tViewWakeupTime.text = " " + wakeupEarly.toString() + " - " + wakeupLate.toString() + " Uhr"
+        scope.launch {
+            repository.updateWakeUpLate(wakeupLate.toSecondOfDay())
+            repository.updateWakeUpEarly(wakeupEarly.toSecondOfDay())
+        }
+    }
+
     fun SetupAlarmSettings() {
         // Listener for live data changes. Is used for the setup when building up the activity and reasigning the values
         alarmSettingsLiveData.observe(this)
@@ -35,9 +50,15 @@ class AlarmSettings : AppCompatActivity() {
             alarmSettings.wakeupLate
 
             if (firstSetupBars) {
-                val wakeupTime = LocalTime.ofSecondOfDay(alarmSettings.sleepDuration.toLong())
-                val wakeupEarly = LocalTime.ofSecondOfDay(alarmSettings.wakeupEarly.toLong())
-                val wakeupLate = LocalTime.ofSecondOfDay(alarmSettings.wakeupLate.toLong())
+
+                var wakeupTime = LocalTime.ofSecondOfDay(alarmSettings.sleepDuration.toLong())
+                if (wakeupTime == LocalTime.of(0, 0)) { wakeupTime = LocalTime.of(8, 0) }
+
+                var wakeupEarly = LocalTime.ofSecondOfDay(alarmSettings.wakeupEarly.toLong())
+                if (wakeupEarly < LocalTime.of(5, 0)) { wakeupEarly = LocalTime.of(6, 0) }
+
+                var wakeupLate = LocalTime.ofSecondOfDay(alarmSettings.wakeupLate.toLong())
+                if (wakeupLate == LocalTime.of(0, 0)) { wakeupLate = LocalTime.of(9, 0) }
 
                 // Setup the sleepAmount bar
                 if (wakeupTime.minute == 30) { sBar.progress = (wakeupTime.hour - 5) * 2 + 1 }
@@ -56,8 +77,8 @@ class AlarmSettings : AppCompatActivity() {
                 rBar.setRangePinsByValue(rBarLeft.toFloat(), rBarRight.toFloat())
 
                 //UpdateViews
-                tViewSleepAmount.text = wakeupTime.toString()
-                tViewWakeupTime.text = wakeupEarly.toString() + " " + wakeupLate.toString()
+                tViewSleepAmount.text = " " + wakeupTime.toString() + " Stunden"
+                tViewWakeupTime.text = " " + wakeupEarly.toString() + " - " + wakeupLate.toString() + " Uhr"
 
                 // Prevent from looping while the user manually changes the bar values
                 firstSetupBars = false
@@ -76,7 +97,10 @@ class AlarmSettings : AppCompatActivity() {
         firstSetupBars = true
 
         // First Setup Value, doesn´t work right now
-        //if (alarmSettingsLiveData.value?.sleepDuration == null) { saveSleepAmount(LocalTime.of(7, 0))}
+        if (alarmSettingsLiveData.value?.sleepDuration == null) {
+            saveSleepAmount(LocalTime.of(7, 0))
+            saveWakeupRange(LocalTime.of(6, 0), LocalTime.of(9, 0))
+        }
 
         SetupAlarmSettings()
 
@@ -123,19 +147,5 @@ class AlarmSettings : AppCompatActivity() {
                 saveWakeupRange(LocalTime.of(rBar.leftPinValue.toFloat().toInt(), minutesLeft), LocalTime.of(rBar.rightPinValue.toFloat().toInt(), minutesRight))
             }
         })
-    }
-
-    fun saveSleepAmount(time: LocalTime) {
-        tViewSleepAmount.text = time.toString()
-        scope.launch {
-            repository.updateSleepDuration(time.toSecondOfDay()) }
-    }
-
-    fun saveWakeupRange(wakeupEarly: LocalTime, wakeupLate: LocalTime) {
-        tViewWakeupTime.text = wakeupEarly.toString() + " " + wakeupLate.toString()
-        scope.launch {
-            repository.updateWakeUpEarly(wakeupEarly.toSecondOfDay())
-            repository.updateWakeUpLate(wakeupLate.toSecondOfDay())
-        }
     }
 }

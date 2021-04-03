@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background_1"
     tools:context=".AlarmSettings">
 
     <View
@@ -25,6 +26,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/einstellungen"
         android:textAlignment="center"
+        android:textColor="@color/purple_200"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="@+id/view_settings"
         app:layout_constraintStart_toStartOf="@+id/view_settings"
@@ -51,7 +53,7 @@
     <com.appyvet.rangebar.RangeBar
         android:id="@+id/rangebar"
         android:layout_width="320dp"
-        android:layout_height="wrap_content"
+        android:layout_height="65dp"
         android:layout_marginTop="52dp"
         android:forceHasOverlappingRendering="false"
         app:layout_constraintEnd_toEndOf="@+id/view_settings"
@@ -68,6 +70,7 @@
         android:layout_width="wrap_content"
         android:layout_height="24dp"
         android:layout_marginStart="16dp"
+        android:textColor="@color/purple_200"
         android:text="@string/schlafdauer"
         app:layout_constraintBottom_toTopOf="@+id/seekBar"
         app:layout_constraintStart_toStartOf="@+id/seekBar" />
@@ -76,6 +79,7 @@
         android:id="@+id/textView_schlafdauerAuswahl"
         android:layout_width="wrap_content"
         android:layout_height="24dp"
+        android:textColor="@color/purple_200"
         app:layout_constraintBottom_toTopOf="@+id/seekBar"
         app:layout_constraintStart_toEndOf="@+id/textView_schlafdauer" />
 
@@ -84,6 +88,7 @@
         android:layout_width="wrap_content"
         android:layout_height="24dp"
         android:layout_marginStart="16dp"
+        android:textColor="@color/purple_200"
         android:text="@string/aufwachzeitpunkt"
         app:layout_constraintBottom_toTopOf="@+id/rangebar"
         app:layout_constraintStart_toStartOf="@+id/rangebar" />
@@ -92,6 +97,7 @@
         android:id="@+id/textView_aufwachzeitpunktAuswahl"
         android:layout_width="wrap_content"
         android:layout_height="24dp"
+        android:textColor="@color/purple_200"
         app:layout_constraintBottom_toTopOf="@+id/rangebar"
         app:layout_constraintStart_toEndOf="@+id/textView_aufwachzeitpunkt" />
 
