@@ -21,13 +21,13 @@
 
     <TextView
         android:id="@+id/textView_settings"
-        android:layout_width="171dp"
-        android:layout_height="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/einstellungen"
         android:textAlignment="center"
         android:textColor="@color/teal_200"
-        android:textSize="24sp"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="@+id/view_settings"
         app:layout_constraintStart_toStartOf="@+id/view_settings"
         app:layout_constraintTop_toTopOf="@+id/view_settings" />
@@ -35,7 +35,7 @@
     <SeekBar
         android:id="@+id/seekBar"
         style="@android:style/Widget.DeviceDefault.Light.SeekBar"
-        android:layout_width="320dp"
+        android:layout_width="340dp"
         android:layout_height="28dp"
         android:layout_marginTop="52dp"
         android:backgroundTint="#230529"
@@ -53,17 +53,17 @@
     <com.appyvet.rangebar.RangeBar
         android:id="@+id/rangebar"
         android:layout_width="320dp"
-        android:layout_height="65dp"
+        android:layout_height="40dp"
         android:layout_marginTop="52dp"
         android:forceHasOverlappingRendering="false"
         app:connectingLineWeight="1dp"
         app:layout_constraintEnd_toEndOf="@+id/view_settings"
         app:layout_constraintStart_toStartOf="@+id/view_settings"
         app:layout_constraintTop_toBottomOf="@+id/seekBar"
+        app:pinRadius="0dp"
         app:rangeBarColor="@color/teal_200"
         app:selectorColor="@color/teal_200"
         app:selectorSize="6dp"
-        app:pinRadius="0dp"
         app:temporaryPins="true"
         app:tickColor="#00FFFFFF"
         app:tickEnd="10"
@@ -74,36 +74,39 @@
     <TextView
         android:id="@+id/textView_schlafdauer"
         android:layout_width="wrap_content"
-        android:layout_height="24dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:text="@string/schlafdauer"
         android:textColor="@color/teal_200"
+        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/seekBar"
         app:layout_constraintStart_toStartOf="@+id/seekBar" />
 
     <TextView
         android:id="@+id/textView_schlafdauerAuswahl"
         android:layout_width="wrap_content"
-        android:layout_height="24dp"
+        android:layout_height="wrap_content"
         android:textColor="@color/teal_200"
+        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/seekBar"
         app:layout_constraintStart_toEndOf="@+id/textView_schlafdauer" />
 
     <TextView
         android:id="@+id/textView_aufwachzeitpunkt"
         android:layout_width="wrap_content"
-        android:layout_height="24dp"
-        android:layout_marginStart="16dp"
-        android:textColor="@color/teal_200"
+        android:layout_height="wrap_content"
         android:text="@string/aufwachzeitpunkt"
+        android:textColor="@color/teal_200"
+        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/rangebar"
-        app:layout_constraintStart_toStartOf="@+id/rangebar" />
+        app:layout_constraintStart_toStartOf="@+id/textView_schlafdauer" />
 
     <TextView
         android:id="@+id/textView_aufwachzeitpunktAuswahl"
         android:layout_width="wrap_content"
-        android:layout_height="24dp"
+        android:layout_height="wrap_content"
         android:textColor="@color/teal_200"
+        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/rangebar"
         app:layout_constraintStart_toEndOf="@+id/textView_aufwachzeitpunkt" />
 
