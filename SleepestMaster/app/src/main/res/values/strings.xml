@@ -27,9 +27,9 @@
     <!--endregion-->
 
     <!--region AlarmSettings-->
-    <string name="einstellungen">Einstellungen</string>
+    <string name="einstellungen">Schlafeinstellungen</string>
     <string name="schlafdauer">Schlafdauer:</string>
-    <string name="aufwachzeitpunkt">Aufwachzeitpunkt:</string>
+    <string name="aufwachzeitpunkt">Aufweckzeitpunkt:</string>
     <!--endregion-->
 
 

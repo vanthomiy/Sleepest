@@ -10,7 +10,7 @@
     <View
         android:id="@+id/view_settings"
         android:layout_width="0dp"
-        android:layout_height="300dp"
+        android:layout_height="230dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
@@ -38,13 +38,13 @@
         android:layout_width="340dp"
         android:layout_height="28dp"
         android:layout_marginTop="52dp"
-        android:backgroundTint="#230529"
-        android:contextClickable="false"
-        android:indeterminate="false"
         android:max="10"
         android:min="0"
-        android:progressBackgroundTint="@color/teal_200"
+        android:progressBackgroundTint="#00FFFFFF"
         android:progressTint="#3F51B5"
+        android:rotation="0"
+        android:rotationX="0"
+        android:rotationY="0"
         app:layout_constraintEnd_toEndOf="@+id/view_settings"
         app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toStartOf="@+id/view_settings"
@@ -55,16 +55,15 @@
         android:layout_width="320dp"
         android:layout_height="40dp"
         android:layout_marginTop="52dp"
-        android:forceHasOverlappingRendering="false"
+        app:connectingLineColor="#3F51B5"
         app:connectingLineWeight="1dp"
         app:layout_constraintEnd_toEndOf="@+id/view_settings"
         app:layout_constraintStart_toStartOf="@+id/view_settings"
         app:layout_constraintTop_toBottomOf="@+id/seekBar"
         app:pinRadius="0dp"
-        app:rangeBarColor="@color/teal_200"
+        app:rangeBarColor="#00FFFFFF"
         app:selectorColor="@color/teal_200"
         app:selectorSize="6dp"
-        app:temporaryPins="true"
         app:tickColor="#00FFFFFF"
         app:tickEnd="10"
         app:tickInterval="0.5"
@@ -109,5 +108,34 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/rangebar"
         app:layout_constraintStart_toEndOf="@+id/textView_aufwachzeitpunkt" />
+
+    <View
+        android:id="@+id/view_analysis"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_settings" />
+
+    <com.faskn.lib.ClickablePieChart
+        android:id="@+id/chart"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:background="#00FFFFFF"
+        app:centerColor="@color/teal_200"
+        app:showPopup="false"
+        app:layout_constraintBottom_toBottomOf="@+id/view_analysis"
+        app:layout_constraintStart_toStartOf="@+id/view_analysis"
+        app:layout_constraintTop_toTopOf="@+id/view_analysis" />
+
+    <FrameLayout
+        android:id="@+id/legendLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/chart"
+        app:layout_constraintTop_toTopOf="@+id/chart" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

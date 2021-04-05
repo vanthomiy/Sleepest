@@ -6,6 +6,10 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.lifecycle.asLiveData
 import com.appyvet.rangebar.RangeBar
+import com.faskn.lib.PieChart
+import com.faskn.lib.Slice
+import com.faskn.lib.buildChart
+import kotlinx.android.synthetic.main.activity_alarm_settings.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -13,6 +17,7 @@ import java.lang.reflect.WildcardType
 import java.time.LocalTime
 import kotlin.concurrent.fixedRateTimer
 import kotlin.properties.Delegates
+import kotlin.random.Random
 
 class AlarmSettings : AppCompatActivity() {
 
@@ -25,6 +30,8 @@ class AlarmSettings : AppCompatActivity() {
     lateinit var tViewSleepAmount : TextView
     lateinit var tViewWakeupTime : TextView
     var firstSetupBars by Delegates.notNull<Boolean>()
+
+    lateinit var text: String
 
     fun saveSleepAmount(time: LocalTime) {
         tViewSleepAmount.text = " " + time.toString() + " Stunden"
@@ -86,17 +93,65 @@ class AlarmSettings : AppCompatActivity() {
         }
     }
 
+    private fun provideSlices(): ArrayList<Slice> {
+        return arrayListOf(
+                Slice(
+                        Random.nextInt(1000, 3000).toFloat(),
+                        R.color.purple,
+                        "Non-REM 1"
+                ),
+                Slice(
+                        Random.nextInt(1000, 2000).toFloat(),
+                        R.color.purple_200,
+                        "Non-REM 2"
+                ),
+                Slice(
+                        Random.nextInt(1000, 5000).toFloat(),
+                        R.color.purple_500,
+                        "REM"
+                ),
+                Slice(
+                        Random.nextInt(1000, 10000).toFloat(),
+                        R.color.purple_700,
+                        "Non-Sleep"
+                ),
+        )
+    }
+
+    fun func(index: Float) {
+        when (index) {
+            0.0.toFloat() -> text = "Non-REM 1"
+            1.0.toFloat() -> text = "Non-REM 2"
+            2.0.toFloat() -> text = "REM"
+            else -> {
+                text = "Wach"
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alarm_settings)
 
+        // SeekBar and Rangebar
         sBar = findViewById(R.id.seekBar)
         rBar = findViewById(R.id.rangebar)
         tViewSleepAmount = findViewById(R.id.textView_schlafdauerAuswahl)
         tViewWakeupTime = findViewById(R.id.textView_aufwachzeitpunktAuswahl)
         firstSetupBars = true
 
-        // First Setup Value, doesn´t work right now
+        // Piechart https://github.com/furkanaskin/ClickablePieChart
+        val pieChartDSL = buildChart {
+            slices { provideSlices() }
+            sliceWidth { 80f }
+            sliceStartPoint { 0f }
+            clickListener { angle, index ->
+                //func(index)
+            }
+        }
+        chart.setPieChart(pieChartDSL)
+        chart.showLegend(legendLayout)
+
         if (alarmSettingsLiveData.value?.sleepDuration == null) {
             saveSleepAmount(LocalTime.of(7, 0))
             saveWakeupRange(LocalTime.of(6, 0), LocalTime.of(9, 0))
