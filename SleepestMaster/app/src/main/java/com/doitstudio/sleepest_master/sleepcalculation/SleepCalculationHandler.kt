@@ -1,22 +1,11 @@
 package com.doitstudio.sleepest_master.sleepcalculation
 
 import android.content.Context
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.map
 import com.doitstudio.sleepest_master.MainApplication
-import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.SleepState
-import com.doitstudio.sleepest_master.model.data.sleepcalculation.*
-import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DbRepository
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
 
 /**
  * This is the actual sleep calculation class.
@@ -33,12 +22,6 @@ class SleepCalculationHandler(private val context:Context){
     private val dbRepository: DbRepository by lazy {
         (context.applicationContext as MainApplication).dbRepository
     }
-
-    private val storeRepository: DataStoreRepository by lazy {
-        (context.applicationContext as MainApplication).dataStoreRepository
-    }
-
-    private val rawSleepApiDataFlow = dbRepository.allSleepApiRawData.asLiveData()
 
     companion object {
         // For Singleton instantiation
@@ -62,25 +45,10 @@ class SleepCalculationHandler(private val context:Context){
      */
     fun calculateLiveuserSleepActivity()
     {
-        scope.launch {
 
-            // Some fake values for the testing
-
-            rawSleepApiDataFlow.map {  }
-            val a = dbRepository.allSleepApiRawData?.first()
-
-            if (a == null || a.count() == 0)
-                return@launch
-
-            val b = a?.last()
-
-            storeRepository.updateIsUserSleeping(b?.confidence!! > 50)
-            storeRepository.updateIsDataAvailable(a?.count()!! > 1)
-        }
     }
 
 
-    private var userSleepSessionEntity:UserSleepSessionEntity? = null
 
     /**
      * Calculates the alarm time for the user. This should be called before the first wake up time
@@ -88,26 +56,7 @@ class SleepCalculationHandler(private val context:Context){
      */
     fun calculateUserWakup()
     {
-        if (userSleepSessionEntity == null)
-            userSleepSessionEntity = UserSleepSessionEntity(
-                    sleepTimes = SleepTimes(0,0,0,0,0,0,0),
-                    sleepUserType = SleepUserType(MobilePosition.UNIDENTIFIED),
-                    userSleepRating = UserSleepRating(),
-                    userCalculationRating = UserCalculationRating()
-            )
 
-        //userSleepSessionEntity.sleepTimes = SleepTimes(0,0,0,0)
-
-
-
-
-        userSleepSessionEntity!!.sleepTimes.sleepDuration += 30
-
-        scope.launch {
-            dbRepository.deleteUserSleepSession(userSleepSessionEntity!!)
-
-            dbRepository.insertUserSleepSession(userSleepSessionEntity!!)
-        }
     }
 
     /**
@@ -116,14 +65,7 @@ class SleepCalculationHandler(private val context:Context){
      */
     fun recalculateUserSleep()
     {
-        scope.launch {
 
-            if (userSleepSessionEntity != null && userSleepSessionEntity!!.sleepUserType != null)
-                userSleepSessionEntity!!.sleepUserType!!.mobilePosition = MobilePosition.INBED
-                dbRepository.insertUserSleepSession(userSleepSessionEntity!!)
-            dbRepository.deleteSleepApiRawData()
-            storeRepository.resetSleepApiValuesAmount()
-        }
     }
 
 
@@ -134,11 +76,7 @@ class SleepCalculationHandler(private val context:Context){
                                          timestampSecondsEnd: Int,
                                          sleepState: SleepState)
     {
-        val sleepSegment: SleepSegmentEntity = SleepSegmentEntity(timestampSecondsStart,timestampSecondsEnd,sleepState)
 
-        scope.launch {
-            dbRepository.insertSleepSegment(sleepSegment)
-        }
     }
 
 

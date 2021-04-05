@@ -1,15 +1,17 @@
 package com.doitstudio.sleepest_master.storage.db
 
+import android.util.JsonReader
 import androidx.room.TypeConverter
 import com.doitstudio.sleepest_master.model.data.MobilePosition
+import com.doitstudio.sleepest_master.model.data.SleepModelType
 import com.doitstudio.sleepest_master.model.data.SleepState
+import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepModelValues
+import java.io.StringReader
+import java.util.*
+import kotlin.collections.ArrayList
 
-/**
- * Converters are beeing used to convert complex datatypes to single types
- * E.g you have to implicit convert a enum to a int and back, to store the value in the DB
- */
+
 class Converters {
-
     @TypeConverter
     fun fromSleepState(sleepState: SleepState) : Int {
         return sleepState.ordinal
@@ -20,14 +22,5 @@ class Converters {
         return SleepState.values()[sleepState]
     }
 
-    @TypeConverter
-    fun fromMobilePosition(mobilePosition: MobilePosition) : Int {
-        return mobilePosition.ordinal
-    }
-
-    @TypeConverter
-    fun toMobilePosition(mobilePosition: Int) : MobilePosition {
-        return MobilePosition.values()[mobilePosition]
-    }
 
 }

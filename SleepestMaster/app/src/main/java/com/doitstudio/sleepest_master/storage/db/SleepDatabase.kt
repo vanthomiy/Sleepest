@@ -2,8 +2,6 @@ package com.doitstudio.sleepest_master.storage.db
 
 import android.content.Context
 import androidx.room.*
-import com.doitstudio.sleepest_master.model.data.sleepcalculation.SleepSegmentEntity
-import com.doitstudio.sleepest_master.model.data.sleepcalculation.UserSleepSessionEntity
 
 private const val DATABASE_NAME = "sleepest_database"
 
@@ -12,7 +10,7 @@ private const val DATABASE_NAME = "sleepest_database"
  */
 
 @Database(
-        entities = [SleepApiRawDataEntity::class, SleepSegmentEntity::class, UserSleepSessionEntity::class],
+        entities = [SleepApiRawDataEntity::class, SleepSegmentEntity::class],
         version = 3,
         exportSchema = false
 )
@@ -22,7 +20,6 @@ abstract class SleepDatabase : RoomDatabase() {
 
     abstract fun sleepApiRawDataDao(): SleepApiRawDataDao
     abstract fun sleepDataDao(): SleepSegmentDao
-    abstract fun userSleepSegmentDataDao(): UserSleepSessionDao
 
     companion object {
         // For Singleton instantiation

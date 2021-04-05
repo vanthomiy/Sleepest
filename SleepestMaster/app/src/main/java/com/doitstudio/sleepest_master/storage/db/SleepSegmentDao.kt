@@ -5,7 +5,6 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.doitstudio.sleepest_master.model.data.sleepcalculation.SleepSegmentEntity
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -13,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
  */
 @Dao
 interface SleepSegmentDao {
-    @Query("SELECT * FROM sleep_segment_table ORDER BY time_stamp_seconds_start DESC")
+    @Query("SELECT * FROM sleep_segment_table ORDER BY id DESC")
     fun getAll(): Flow<List<SleepSegmentEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

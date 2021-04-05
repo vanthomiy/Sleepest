@@ -86,3 +86,22 @@ message  LiveUserSleepActivity{
   repeated int32 userSleepHistory = 4;
 }
 
+/**
+ * Defines the id of the actual default patterns for the user sleep calculation
+ */
+message  ActualSleepUserParameter{
+
+  /**
+   * Defines the id of the actual pattern
+   */
+  int32 sleepTimePattern = 1;
+  /**
+   * Defines the id of the actual pattern
+  */
+  int32 sleepStatePattern = 2;
+  /**
+   * Defines the id of the actual pattern
+  */
+  int32 userStartPattern = 3;
+
+}

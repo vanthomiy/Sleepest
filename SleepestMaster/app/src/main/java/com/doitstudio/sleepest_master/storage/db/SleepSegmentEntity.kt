@@ -1,4 +1,4 @@
-package com.doitstudio.sleepest_master.model.data.sleepcalculation
+package com.doitstudio.sleepest_master.storage.db
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -11,18 +11,14 @@ import com.doitstudio.sleepest_master.model.data.SleepState
  */
 @Entity(tableName = "sleep_segment_table")
 data class SleepSegmentEntity(
+
         @PrimaryKey
-        @ColumnInfo(name = "time_stamp_seconds_start")
+        val id:Int,
+
         val timestampSecondsStart: Int,
-
-        @ColumnInfo(name = "time_stamp_seconds_end")
         val timestampSecondsEnd: Int,
-
-        @ColumnInfo(name = "sleep_state")
         val sleepState: SleepState,
-)  {
-
-}
+)
 
 
 

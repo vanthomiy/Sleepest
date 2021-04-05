@@ -48,15 +48,6 @@ class MainActivity : AppCompatActivity() {
             binding.status2.text = text
         }
 
-        mainViewModel.userSleepSessionLiveData.observe(this) { data ->
-            val lastdata = data.firstOrNull() ?: return@observe
-
-            var text = "Sleep Time: " + lastdata?.sleepTimes.sleepDuration + "\n"
-            text += "Sleep Type Phone: " + lastdata?.sleepUserType?.mobilePosition + "\n"
-
-            binding.status1.text = text
-        }
-
         mainViewModel.sleepApiLiveData.observe(this) { data ->
 
             var text = "Permission Active: " + data.isPermissionActive + "\n"
@@ -80,7 +71,7 @@ class MainActivity : AppCompatActivity() {
     private val mainViewModel: MainViewModel by lazy {
         MainViewModel(
             (application as MainApplication).dbRepository,
-            (application as MainApplication).dataStoreRepository
+            (application as MainApplication).sleepCalculationRepository
         )
     }
 
