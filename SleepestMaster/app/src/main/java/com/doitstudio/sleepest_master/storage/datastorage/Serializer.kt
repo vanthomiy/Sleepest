@@ -23,7 +23,11 @@ class AlarmSerializer() : Serializer<Alarm> {
         t.writeTo(output)
     }
 
-    override val defaultValue: Alarm = Alarm.getDefaultInstance()
+    override val defaultValue: Alarm = Alarm.newBuilder()
+            .setSleepDuration(28800)
+            .setWakeupEarly(21600)
+            .setWakeupLate(32400)
+            .build()
 }
 
 class SleepApiDataSerializer() : Serializer<SleepApiData> {
