@@ -17,6 +17,7 @@ import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
 import com.doitstudio.sleepest_master.sleepapi.SleepHandler
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 
@@ -48,14 +49,18 @@ class MainActivity : AppCompatActivity() {
             binding.status2.text = text
         }
 
-        mainViewModel.userSleepSessionLiveData.observe(this) { data ->
+        /*mainViewModel.userSleepSessionLiveData.observe(this) { data ->
             val lastdata = data.firstOrNull() ?: return@observe
 
             var text = "Sleep Time: " + lastdata?.sleepTimes.sleepDuration + "\n"
             text += "Sleep Type Phone: " + lastdata?.sleepUserType?.mobilePosition + "\n"
 
             binding.status1.text = text
-        }
+        }*/
+
+        val pref = getSharedPreferences("Alarm", MODE_PRIVATE)
+        val logText = pref.getString("Log", "No Data")
+        status1.text = logText
 
         mainViewModel.sleepApiLiveData.observe(this) { data ->
 
@@ -79,8 +84,8 @@ class MainActivity : AppCompatActivity() {
 
     private val mainViewModel: MainViewModel by lazy {
         MainViewModel(
-            (application as MainApplication).dbRepository,
-            (application as MainApplication).dataStoreRepository
+                (application as MainApplication).dbRepository,
+                (application as MainApplication).dataStoreRepository
         )
     }
 
@@ -108,7 +113,7 @@ class MainActivity : AppCompatActivity() {
                 day = 1
             }
         }
-        AlarmReceiver.startAlarmManager(day, 19, 31, applicationContext, 1)
+        AlarmReceiver.startAlarmManager(day, 10, 0, applicationContext, 1)
 
         sch.calculateUserWakup()
 
@@ -139,8 +144,8 @@ class MainActivity : AppCompatActivity() {
         // don't need to check if this is on a device before runtime permissions, that is, a device
         // prior to 29 / Q.
         return PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACTIVITY_RECOGNITION
+                this,
+                Manifest.permission.ACTIVITY_RECOGNITION
         )
     }
 
@@ -158,19 +163,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun displayPermissionSettingsSnackBar() {
         Snackbar.make(
-            binding.mainActivity,
-            "hiHo",
-            Snackbar.LENGTH_LONG
+                binding.mainActivity,
+                "hiHo",
+                Snackbar.LENGTH_LONG
         )
                 .setAction("Settings") {
                     // Build intent that displays the App settings screen.
                     val intent = Intent()
                     intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
                     val uri = Uri.fromParts(
-                        "package",
-                        //BuildConfig.APPLICATION_ID,
-                        BuildConfig.VERSION_NAME,
-                        null
+                            "package",
+                            //BuildConfig.APPLICATION_ID,
+                            BuildConfig.VERSION_NAME,
+                            null
                     )
                     intent.data = uri
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK

@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
         SharedPreferences timePref = getSharedPreferences("time", 0);
-        tvLastTime.setText(timePref.getString("hour", "00") + ":" + timePref.getString("minute", "00"));
+        tvLastTime.setText(timePref.getString("hour", "XX") + ":" + timePref.getString("minute", "XX"));
 
     }
 
@@ -102,9 +102,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnAddAlarm:
-                //int day = spDay.getSelectedItemPosition();
-                //AlarmReceiver.startAlarmManager(day, (int) spHour.getSelectedItem(), (int) spMinute.getSelectedItem(), getApplicationContext());
-                adjustStreamVolume();
+                int day = spDay.getSelectedItemPosition();
+                AlarmReceiver.startAlarmManager(day, (int) spHour.getSelectedItem(), (int) spMinute.getSelectedItem(), getApplicationContext(), 1);
+                //adjustStreamVolume();
                 break;
             case R.id.btnStartWorkmanager:
 

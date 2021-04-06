@@ -36,16 +36,27 @@ public class AlarmReceiver extends BroadcastReceiver {
         /** TODO: High Sensitive Notification for Alarm, like System Alarm (Snooze, turn off) **/
 
         //Audio only with media sound on!!
-        mediaPlayer = MediaPlayer.create(context, R.raw.single_beep);
-        mediaPlayer.start();
+        //mediaPlayer = MediaPlayer.create(context, R.raw.single_beep);
+        //mediaPlayer.start();
 
         //endlessService.updateNotification("Chillige Sache");
+
+        switch (intent.getIntExtra("com.doitstudio.backgroundingtestproject.AlarmIntentKey", 0)) {
+            case 0:
+                break;
+            case 1:
+                EndlessService.startForegroundService(Actions.START, context);
+                break;
+            case 2:
+                EndlessService.startForegroundService(Actions.STOP, context);
+                break;
+        }
 
     }
 
     //Start a alarm at a specific time
     @RequiresApi(api = Build.VERSION_CODES.KITKAT) //KITKAT is minimum version!
-    static void startAlarmManager(int day, int hour, int min, Context context1) {
+    static void startAlarmManager(int day, int hour, int min, Context context1, int usage) {
 
         Calendar cal_alarm = Calendar.getInstance();
         cal_alarm.set(Calendar.HOUR_OF_DAY, hour);
@@ -59,6 +70,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
 
         Intent intent = new Intent(context1, AlarmReceiver.class);
+        intent.putExtra("com.doitstudio.backgroundingtestproject.AlarmIntentKey", usage);
         PendingIntent pi = PendingIntent.getBroadcast(context1, 1, intent, 0);
         AlarmManager am = (AlarmManager) context1.getSystemService(ALARM_SERVICE);
 
