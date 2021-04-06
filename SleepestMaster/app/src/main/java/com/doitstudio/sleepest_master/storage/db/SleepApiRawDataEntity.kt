@@ -21,7 +21,7 @@ data class SleepApiRawDataEntity(
         val timestampSeconds: Int,
 
         @ColumnInfo(name = "confidence")
-        val confidence: Int,
+        var confidence: Int,
 
         @ColumnInfo(name = "motion")
         val motion: Int,

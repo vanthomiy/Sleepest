@@ -52,8 +52,7 @@ class SleepHandler(private val context: Context) {
     /**
      * Listens to sleep data subscribed or not and subscribe or unsubscribe from it automatically
      */
-    @InternalCoroutinesApi
-    suspend fun startSleepHandler() {
+    fun startSleepHandler() {
         subscribeToSleepSegmentUpdates(context, sleepPendingIntent)
     }
 

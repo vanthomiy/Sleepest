@@ -1,11 +1,10 @@
 package com.doitstudio.sleepest_master.sleepcalculation.db
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 
 /**
  * Defines [SleepStateModelDao] database operations for the [SleepStateModelEntity] class.
@@ -26,4 +25,12 @@ interface SleepStateModelDao {
 
     @Query("DELETE FROM sleep_state_model_entity")
     suspend fun deleteAll()
+
+    fun setupDatabase(){
+        val scope: CoroutineScope = MainScope()
+
+        scope.launch{
+            insertAll(SleepStateModelEntity.setupDefaultEntities())
+        }
+    }
 }

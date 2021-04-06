@@ -11,7 +11,8 @@ class SleepCalculationDbRepository(
     private val sleepStateModelDao: SleepStateModelDao,
     private val sleepTimeModelDao: SleepTimeModelDao,
     private val sleepStateFactorModelDao: SleepStateFactorModelDao,
-    private val sleepTimeFactorModelDao: SleepTimeFactorModelDao
+    private val sleepTimeFactorModelDao: SleepTimeFactorModelDao,
+    private val userSleepSessionDao: UserSleepSessionDao
 ) {
 
     companion object {
@@ -19,9 +20,9 @@ class SleepCalculationDbRepository(
         @Volatile
         private var INSTANCE: SleepCalculationDbRepository? = null
 
-        fun getRepo(sleepStateModelDao: SleepStateModelDao, sleepTimeModelDao: SleepTimeModelDao, sleepStateFactorModelDao: SleepStateFactorModelDao, sleepTimeFactorModelDao: SleepTimeFactorModelDao): SleepCalculationDbRepository {
+        fun getRepo(sleepStateModelDao: SleepStateModelDao, sleepTimeModelDao: SleepTimeModelDao, sleepStateFactorModelDao: SleepStateFactorModelDao, sleepTimeFactorModelDao: SleepTimeFactorModelDao, userSleepSessionDao: UserSleepSessionDao): SleepCalculationDbRepository {
             return INSTANCE ?: synchronized(this) {
-                val instance = SleepCalculationDbRepository(sleepStateModelDao, sleepTimeModelDao, sleepStateFactorModelDao, sleepTimeFactorModelDao)
+                val instance = SleepCalculationDbRepository(sleepStateModelDao, sleepTimeModelDao, sleepStateFactorModelDao, sleepTimeFactorModelDao, userSleepSessionDao)
                 INSTANCE = instance
                 // return instance
                 instance
@@ -34,6 +35,9 @@ class SleepCalculationDbRepository(
     val allSleepTimeModels: Flow<List<SleepTimeModelEntity>> =
         sleepTimeModelDao.getAll()
 
+    suspend fun insertSleepTimeSegment(sleepTimeModel: SleepTimeModelEntity) {
+        sleepTimeModelDao.insert(sleepTimeModel)
+    }
 
     suspend fun insertSleepTimeSegments(sleepTimeModels: List<SleepTimeModelEntity>) {
         sleepTimeModelDao.insertAll(sleepTimeModels)
@@ -73,6 +77,18 @@ class SleepCalculationDbRepository(
 
     suspend fun insertSleepStateFactorSegments(sleepStateFactorModels: List<SleepStateFactorModelEntity>) {
         sleepStateFactorModelDao.insertAll(sleepStateFactorModels)
+    }
+
+    //endregion
+
+    //region User Sleep Sessions
+
+    val allUserSleepSessions: Flow<List<UserSleepSessionEntity>> =
+        userSleepSessionDao.getAll()
+
+
+    suspend fun insertUserSleepSessions(userSleepSessions: List<UserSleepSessionEntity>) {
+        userSleepSessionDao.insertAll(userSleepSessions)
     }
 
     //endregion

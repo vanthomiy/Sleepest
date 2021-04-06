@@ -1,7 +1,9 @@
 package com.doitstudio.sleepest_master
 
 import android.app.Application
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationDbRepository
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationStoreRepository
+import com.doitstudio.sleepest_master.sleepcalculation.db.SleepCalculationDatabase
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DbRepository
 import com.doitstudio.sleepest_master.storage.db.SleepDatabase
@@ -17,11 +19,25 @@ class MainApplication : Application() {
        SleepDatabase.getDatabase(applicationContext)
     }
 
+    private val sleepCalcDatabase by lazy {
+        SleepCalculationDatabase.getDatabase(applicationContext)
+    }
+
     val dbRepository by lazy {
         DbRepository.getRepo(
                         database.sleepDataDao(),
                         database.sleepApiRawDataDao()
 
+        )
+    }
+
+    val sleepCalculationDbRepository by lazy {
+        SleepCalculationDbRepository.getRepo(
+            sleepCalcDatabase.sleepStateModelDao(),
+            sleepCalcDatabase.sleepTimeModelDao(),
+            sleepCalcDatabase.sleepStateFactorModelDao(),
+            sleepCalcDatabase.sleepTimeFactorModelDao(),
+            sleepCalcDatabase.userSleepSessionDao()
         )
     }
 

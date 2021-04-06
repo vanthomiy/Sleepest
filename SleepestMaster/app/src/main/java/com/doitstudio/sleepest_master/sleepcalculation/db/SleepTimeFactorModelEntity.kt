@@ -20,3 +20,22 @@ data class SleepTimeFactorModelEntity(
         @Embedded val sleepTimeParameter: SleepTimeParameter,//	Die Parameterwerte für den Algorithmus
 
 )
+{
+
+        companion object {
+
+                // load defaults from json
+                fun setupDefaultEntities() : List<SleepTimeFactorModelEntity>{
+
+                        return listOf(
+                                SleepTimeFactorModelEntity(1,
+                                        userStartPattern = UserStartPattern.HEAVY,
+                                        SleepTimeParameter(1f,1f,1f,1f,1f,1f,1f,1f,1f, 1f, 1f, 1f,20)),
+                                SleepTimeFactorModelEntity(2,
+                                        userStartPattern = UserStartPattern.HEAVY,
+                                        SleepTimeParameter(1f,1f,1f,1f,1f,1f,1f,1f,1f, 1f, 1f, 1f,20))
+                        )
+                }
+
+        }
+}

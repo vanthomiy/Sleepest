@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.doitstudio.sleepest_master.storage.db.*
 
 
@@ -15,9 +16,9 @@ private const val DATABASE_NAME = "sleep_calculation_database"
  */
 
 @Database(
-    entities = [SleepStateModelEntity::class, SleepTimeModelEntity::class, SleepStateFactorModelEntity::class, SleepTimeFactorModelEntity::class],
+    entities = [SleepStateModelEntity::class, SleepTimeModelEntity::class, SleepStateFactorModelEntity::class, SleepTimeFactorModelEntity::class, UserSleepSessionEntity::class],
     version = 3,
-    exportSchema = false
+    exportSchema = true
 )
 
 @TypeConverters(Converters::class)
@@ -27,22 +28,34 @@ abstract class SleepCalculationDatabase : RoomDatabase() {
     abstract fun sleepTimeModelDao(): SleepTimeModelDao
     abstract fun sleepStateFactorModelDao(): SleepStateFactorModelDao
     abstract fun sleepTimeFactorModelDao(): SleepTimeFactorModelDao
+    abstract fun userSleepSessionDao(): UserSleepSessionDao
 
     companion object {
         // For Singleton instantiation
         @Volatile
-        private var INSTANCE: SleepDatabase? = null
+        private var INSTANCE: SleepCalculationDatabase? = null
 
-        fun getDatabase(context: Context): SleepDatabase {
+        lateinit var instance: SleepCalculationDatabase
+
+        fun getDatabase(context: Context): SleepCalculationDatabase {
             return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
+                instance = Room.databaseBuilder(
                     context,
-                    SleepDatabase::class.java,
+                    SleepCalculationDatabase::class.java,
                     DATABASE_NAME
                 )
                     // Wipes and rebuilds instead of migrating if no Migration object.
                     // Migration is not part of this sample.
                     .fallbackToDestructiveMigration()
+                        .addCallback(object : RoomDatabase.Callback() {
+                            override fun onCreate(db: SupportSQLiteDatabase) {
+                                super.onCreate(db)
+                                instance.sleepStateModelDao().setupDatabase()
+                                instance.sleepTimeModelDao().setupDatabase(context)
+                                instance.sleepStateFactorModelDao().setupDatabase()
+                                instance.sleepTimeFactorModelDao().setupDatabase()
+                            }
+                        })
                     .build()
                 INSTANCE = instance
                 // return instance

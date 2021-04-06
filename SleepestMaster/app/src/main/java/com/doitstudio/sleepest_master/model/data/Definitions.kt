@@ -1,5 +1,6 @@
 package com.doitstudio.sleepest_master.model.data
 
+import androidx.room.Entity
 
 
 // Enum actions for service start/stop

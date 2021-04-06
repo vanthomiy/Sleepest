@@ -5,7 +5,10 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 
 /**
  * Defines [SleepTimeFactorModelDao] database operations for the [SleepTimeFactorModelEntity] class.
@@ -26,4 +29,12 @@ interface SleepTimeFactorModelDao {
 
     @Query("DELETE FROM sleep_time_factor_model_entity")
     suspend fun deleteAll()
+
+    fun setupDatabase(){
+        val scope: CoroutineScope = MainScope()
+
+        scope.launch{
+            insertAll(SleepTimeFactorModelEntity.setupDefaultEntities())
+        }
+    }
 }

@@ -17,7 +17,7 @@ data class SleepSegmentEntity(
 
         val timestampSecondsStart: Int,
         val timestampSecondsEnd: Int,
-        val sleepState: SleepState,
+        val sleepState: SleepState
 )
 
 

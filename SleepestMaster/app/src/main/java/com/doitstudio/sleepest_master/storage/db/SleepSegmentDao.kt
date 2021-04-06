@@ -26,4 +26,8 @@ interface SleepSegmentDao {
 
     @Query("DELETE FROM sleep_segment_table")
     suspend fun deleteAll()
+
+
+
+
 }

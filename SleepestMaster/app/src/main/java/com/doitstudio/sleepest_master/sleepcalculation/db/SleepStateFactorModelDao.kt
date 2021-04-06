@@ -5,7 +5,11 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 
 /**
  * Defines [SleepStateFactorModelDao] database operations for the [SleepStateFactorModelEntity] class.
@@ -26,4 +30,13 @@ interface SleepStateFactorModelDao {
 
     @Query("DELETE FROM sleep_state_factor_model_entity")
     suspend fun deleteAll()
+
+
+    fun setupDatabase(){
+        val scope: CoroutineScope = MainScope()
+
+        scope.launch{
+            insertAll(SleepStateFactorModelEntity.setupDefaultEntities())
+        }
+    }
 }

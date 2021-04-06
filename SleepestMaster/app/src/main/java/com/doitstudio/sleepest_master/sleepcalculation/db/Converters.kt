@@ -26,6 +26,16 @@ class Converters {
     }
 
     @TypeConverter
+    fun fromArrayListOfFloats(list: ArrayList<Int>?): String {
+        return list?.joinToString(separator = ";") { it.toString() } ?: ""
+    }
+
+    @TypeConverter
+    fun toArrayListOfFloats(string: String?): ArrayList<Int> {
+        return ArrayList(string?.split(";")?.mapNotNull { it.toIntOrNull() } ?: emptyList())
+    }
+
+    @TypeConverter
     fun fromUserStartPattern(userStartPattern: UserStartPattern) : Int {
         return userStartPattern.ordinal
     }

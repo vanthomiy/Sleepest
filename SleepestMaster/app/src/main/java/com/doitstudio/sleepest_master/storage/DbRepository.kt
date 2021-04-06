@@ -25,8 +25,6 @@ class DbRepository(
         @Volatile
         private var INSTANCE: DbRepository? = null
 
-        var a:Int = 0
-
         fun getRepo(sleepSegmentDao: SleepSegmentDao, sleepApiRawDataDao: SleepApiRawDataDao): DbRepository {
             return INSTANCE ?: synchronized(this) {
                 val instance = DbRepository(sleepSegmentDao, sleepApiRawDataDao)
@@ -62,6 +60,8 @@ class DbRepository(
     suspend fun insertSleepApiRawData(sleepClassifyEventEntities: List<SleepApiRawDataEntity>) {
         sleepApiRawDataDao.insertAll(sleepClassifyEventEntities)
     }
+
+
 
     //endregion
 

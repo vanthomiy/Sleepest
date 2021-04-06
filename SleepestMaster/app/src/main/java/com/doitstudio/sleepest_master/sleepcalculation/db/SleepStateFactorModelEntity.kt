@@ -1,12 +1,8 @@
 package com.doitstudio.sleepest_master.sleepcalculation.db
 
 import androidx.room.*
-import com.doitstudio.sleepest_master.model.data.SleepStatePattern
-import com.doitstudio.sleepest_master.model.data.SleepTimePattern
 import com.doitstudio.sleepest_master.model.data.UserStartPattern
-import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepModel
 import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepStateParameter
-import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepTimeParameter
 
 @Entity(tableName = "sleep_state_factor_model_entity")
 data class SleepStateFactorModelEntity(
@@ -19,4 +15,26 @@ data class SleepStateFactorModelEntity(
 
         @Embedded val sleepTimeParameter: SleepStateParameter,//	Die Parameterwerte für den Algorithmus
 
+
+
+
 )
+{
+
+        companion object {
+
+                // load defaults from json
+                fun setupDefaultEntities() : List<SleepStateFactorModelEntity>{
+
+                        return listOf(
+                                SleepStateFactorModelEntity(1,
+                                        userStartPattern = UserStartPattern.HEAVY,
+                                        SleepStateParameter(1f,1f,1f,1f,1f,1f,1f,1f,1f, 1f, 1f, 20)),
+                                SleepStateFactorModelEntity(2,
+                                        userStartPattern = UserStartPattern.HEAVY,
+                                        SleepStateParameter(1f,1f,1f,1f,1f,1f,1f,1f,1f, 1f, 1f, 20))
+                        )
+                }
+
+        }
+}

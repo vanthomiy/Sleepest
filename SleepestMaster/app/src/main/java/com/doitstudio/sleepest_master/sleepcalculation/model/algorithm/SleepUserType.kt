@@ -15,11 +15,12 @@ data class SleepUserType(
         val id:Int,
 
         val mobilePosition: MobilePosition,
-        @Embedded val sleepLiveModel : SleepModel,	// Das Berechnete Live Model aus den Daten
-        @Embedded val sleepFullModel : SleepModel,	 //Das Berechnete Model aus den Daten
+        @Embedded(prefix = "live") val sleepLiveModel : SleepModel,	// Das Berechnete Live Model aus den Daten
+        @Embedded(prefix = "full") val sleepFullModel : SleepModel,	 //Das Berechnete Model aus den Daten
 
         val userStartPattern:	UserStartPattern, //	Faktor, je nach dem wie die allgemeinen werte kommt
-        val sleepTimeLiveParams :	List<SleepTimePattern>, //	Erkanntes muster während des Schlafs
-        val sleepStateLiveParams : List<SleepTimePattern> //	Erkanntes muster während des Schlafs
+
+        val sleepTimeLiveParams :	ArrayList<Int>, //	Erkanntes muster während des Schlafs
+        val sleepStateLiveParams : ArrayList<Int> //	Erkanntes muster während des Schlafs
 
 )
