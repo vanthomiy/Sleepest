@@ -2,11 +2,10 @@ package com.doitstudio.sleepest_master
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.SeekBar
-import android.widget.TextView
-import androidx.lifecycle.asLiveData
+import android.view.View
+import android.widget.*
+import androidx.core.view.isVisible
 import com.appyvet.rangebar.RangeBar
-import com.faskn.lib.PieChart
 import com.faskn.lib.Slice
 import com.faskn.lib.buildChart
 import kotlinx.android.synthetic.main.activity_alarm_settings.*
@@ -14,9 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.lang.reflect.WildcardType
 import java.time.LocalTime
-import kotlin.concurrent.fixedRateTimer
 import kotlin.properties.Delegates
 import kotlin.random.Random
 
@@ -29,6 +26,9 @@ class AlarmSettings : AppCompatActivity() {
     lateinit var rBar : RangeBar //https://github.com/Fedorkz/material-range-bar
     lateinit var tViewSleepAmount : TextView
     lateinit var tViewWakeupTime : TextView
+    lateinit var tViewExpandAlarmSettings: TextView
+    lateinit var tViewTest : View
+    lateinit var btnWeekday : Button
     var firstSetupBars by Delegates.notNull<Boolean>()
 
     lateinit var text: String
@@ -111,16 +111,48 @@ class AlarmSettings : AppCompatActivity() {
         }
     }
 
+    fun onClickWeek() {
+        WeekdayDialog().show(supportFragmentManager, "Test")
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alarm_settings)
 
         // SeekBar and Rangebar
-        sBar = findViewById(R.id.seekBar)
-        rBar = findViewById(R.id.rangebar)
-        tViewSleepAmount = findViewById(R.id.textView_schlafdauerAuswahl)
-        tViewWakeupTime = findViewById(R.id.textView_aufwachzeitpunktAuswahl)
+        sBar = findViewById(R.id.sBar_sleepAmount)
+        rBar = findViewById(R.id.rBar_wakeupRange)
+        tViewSleepAmount = findViewById(R.id.tV_sleepAmountSelection)
+        tViewWakeupTime = findViewById(R.id.tV_swakeupRangeSelection)
+        tViewExpandAlarmSettings = findViewById(R.id.tV_expandAlarmSettings)
+        tViewTest = findViewById(R.id.cL_extendedAlarmSettings)
+        btnWeekday = findViewById(R.id.btn_alarmDaysWeek)
         firstSetupBars = true
+
+        btnWeekday.setOnClickListener {
+            onClickWeek()
+        }
+
+        /*
+              btnWeekday.setOnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Wähle Wochentage")
+            builder.setPositiveButton("Ok") {dialog, which -> Toast.makeText(applicationContext, "Wochentage angepasst", Toast.LENGTH_SHORT).show() }
+            builder.setNeutralButton("Abbrechen") {_,_ -> }
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+        }
+         */
+
+
+        tViewExpandAlarmSettings.setOnClickListener {
+            if (tViewTest.isVisible) {
+                tViewTest.isVisible = false
+            }
+            else {
+                tViewTest.isVisible = true
+            }
+        }
 
         scope.launch {
             SetupAlarmSettings()

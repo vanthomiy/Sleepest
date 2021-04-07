@@ -7,129 +7,185 @@
     android:background="@drawable/background_1"
     tools:context=".AlarmSettings">
 
-    <View
-        android:id="@+id/view_settings"
-        android:layout_width="0dp"
-        android:layout_height="230dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
-        android:id="@+id/textView_settings"
+        android:id="@+id/tV_topic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="@string/einstellungen"
         android:textAlignment="center"
         android:textColor="@color/teal_200"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="@+id/view_settings"
-        app:layout_constraintStart_toStartOf="@+id/view_settings"
-        app:layout_constraintTop_toTopOf="@+id/view_settings" />
-
-    <SeekBar
-        android:id="@+id/seekBar"
-        style="@android:style/Widget.DeviceDefault.Light.SeekBar"
-        android:layout_width="340dp"
-        android:layout_height="28dp"
-        android:layout_marginTop="52dp"
-        android:max="10"
-        android:min="0"
-        android:progressBackgroundTint="#00FFFFFF"
-        android:progressTint="#3F51B5"
-        android:rotation="0"
-        android:rotationX="0"
-        android:rotationY="0"
-        app:layout_constraintEnd_toEndOf="@+id/view_settings"
-        app:layout_constraintHorizontal_bias="0.487"
-        app:layout_constraintStart_toStartOf="@+id/view_settings"
-        app:layout_constraintTop_toBottomOf="@+id/textView_settings" />
-
-    <com.appyvet.rangebar.RangeBar
-        android:id="@+id/rangebar"
-        android:layout_width="320dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="52dp"
-        app:connectingLineColor="#3F51B5"
-        app:connectingLineWeight="1dp"
-        app:layout_constraintEnd_toEndOf="@+id/view_settings"
-        app:layout_constraintStart_toStartOf="@+id/view_settings"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar"
-        app:pinRadius="0dp"
-        app:rangeBarColor="#00FFFFFF"
-        app:selectorColor="@color/teal_200"
-        app:selectorSize="6dp"
-        app:tickColor="#00FFFFFF"
-        app:tickEnd="10"
-        app:tickInterval="0.5"
-        app:tickStart="5"
-        tools:ignore="MissingConstraints" />
-
-    <TextView
-        android:id="@+id/textView_schlafdauer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="@string/schlafdauer"
-        android:textColor="@color/teal_200"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/seekBar"
-        app:layout_constraintStart_toStartOf="@+id/seekBar" />
-
-    <TextView
-        android:id="@+id/textView_schlafdauerAuswahl"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/teal_200"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/seekBar"
-        app:layout_constraintStart_toEndOf="@+id/textView_schlafdauer" />
-
-    <TextView
-        android:id="@+id/textView_aufwachzeitpunkt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/aufwachzeitpunkt"
-        android:textColor="@color/teal_200"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/rangebar"
-        app:layout_constraintStart_toStartOf="@+id/textView_schlafdauer" />
-
-    <TextView
-        android:id="@+id/textView_aufwachzeitpunktAuswahl"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/teal_200"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/rangebar"
-        app:layout_constraintStart_toEndOf="@+id/textView_aufwachzeitpunkt" />
-
-    <View
-        android:id="@+id/view_analysis"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_settings" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cL_alarmSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tV_AlarmViewTopic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/alarm_TextView"
+            android:textAlignment="center"
+            android:textColor="@color/teal_200"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.502"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <Switch
+            android:id="@+id/sw_alarmOnOff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="80dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
+            android:trackTint="@color/teal_200"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/tV_AlarmViewTopic"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints,UseSwitchCompatOrMaterialXml" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cL_extendedAlarmSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/tV_expandAlarmSettings"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tV_AlarmViewTopic"
+            app:layout_constraintVertical_bias="0.0"
+            tools:visibility="visible">
+
+            <TextView
+                android:id="@+id/tV_sleepAmountTopic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/schlafdauer"
+                android:textColor="@color/teal_200"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tV_sleepAmountSelection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/teal_200"
+                android:textSize="18sp"
+                app:layout_constraintStart_toEndOf="@+id/tV_sleepAmountTopic"
+                app:layout_constraintTop_toTopOf="@+id/tV_sleepAmountTopic" />
+
+            <SeekBar
+                android:id="@+id/sBar_sleepAmount"
+                style="@android:style/Widget.DeviceDefault.Light.SeekBar"
+                android:layout_width="340dp"
+                android:layout_height="28dp"
+                android:max="10"
+                android:min="0"
+                android:progressBackgroundTint="#00FFFFFF"
+                android:progressTint="#3F51B5"
+                android:rotation="0"
+                android:rotationX="0"
+                android:rotationY="0"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tV_sleepAmountTopic" />
+
+            <TextView
+                android:id="@+id/tV_wakeupRangeTopic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/aufwachzeitpunkt"
+                android:textColor="@color/teal_200"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sBar_sleepAmount" />
+
+            <TextView
+                android:id="@+id/tV_swakeupRangeSelection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/teal_200"
+                android:textSize="18sp"
+                app:layout_constraintStart_toEndOf="@+id/tV_wakeupRangeTopic"
+                app:layout_constraintTop_toTopOf="@+id/tV_wakeupRangeTopic" />
+
+            <com.appyvet.rangebar.RangeBar
+                android:id="@+id/rBar_wakeupRange"
+                android:layout_width="320dp"
+                android:layout_height="40dp"
+                app:connectingLineColor="#3F51B5"
+                app:connectingLineWeight="1dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tV_wakeupRangeTopic"
+                app:pinRadius="0dp"
+                app:rangeBarColor="#00FFFFFF"
+                app:selectorColor="@color/teal_200"
+                app:selectorSize="6dp"
+                app:tickColor="#00FFFFFF"
+                app:tickEnd="10"
+                app:tickInterval="0.5"
+                app:tickStart="5"
+                tools:ignore="MissingConstraints" />
+
+            <Button
+                android:id="@+id/btn_alarmDaysWeek"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="Wochentage"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rBar_wakeupRange"
+                tools:layout_constraintStart_toEndOf="@+id" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/tV_expandAlarmSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Klicke für mehr Einstellungen"
+            android:textColor="@color/teal_200"
+            android:textSize="14sp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tV_AlarmViewTopic"
+            app:layout_constraintVertical_bias="1.0"
+            tools:ignore="MissingConstraints,SmallSp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.faskn.lib.ClickablePieChart
         android:id="@+id/chart"
         android:layout_width="160dp"
         android:layout_height="160dp"
+        android:layout_marginTop="50dp"
         android:background="#00FFFFFF"
         app:centerColor="@color/teal_200"
-        app:showPopup="false"
-        app:layout_constraintBottom_toBottomOf="@+id/view_analysis"
-        app:layout_constraintStart_toStartOf="@+id/view_analysis"
-        app:layout_constraintTop_toTopOf="@+id/view_analysis" />
+        app:layout_constraintStart_toStartOf="@+id/cL_alarmSettings"
+        app:layout_constraintTop_toBottomOf="@+id/cL_alarmSettings"
+        app:showPopup="false" />
 
     <FrameLayout
         android:id="@+id/legendLayout"
