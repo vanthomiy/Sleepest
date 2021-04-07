@@ -1,6 +1,8 @@
 package com.doitstudio.sleepest_master.storage
 
 
+import com.doitstudio.sleepest_master.sleepcalculation.db.UserSleepSessionDao
+import com.doitstudio.sleepest_master.sleepcalculation.db.UserSleepSessionEntity
 import com.doitstudio.sleepest_master.storage.db.SleepSegmentEntity
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataDao
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
@@ -17,7 +19,7 @@ import kotlinx.coroutines.flow.Flow
  */
 class DbRepository(
         private val sleepSegmentDao: SleepSegmentDao,
-        private val sleepApiRawDataDao: SleepApiRawDataDao,
+        private val userSleepSessionDao: UserSleepSessionDao
 ) {
 
     companion object {
@@ -25,9 +27,9 @@ class DbRepository(
         @Volatile
         private var INSTANCE: DbRepository? = null
 
-        fun getRepo(sleepSegmentDao: SleepSegmentDao, sleepApiRawDataDao: SleepApiRawDataDao): DbRepository {
+        fun getRepo(sleepSegmentDao: SleepSegmentDao, userSleepSessionDao: UserSleepSessionDao): DbRepository {
             return INSTANCE ?: synchronized(this) {
-                val instance = DbRepository(sleepSegmentDao, sleepApiRawDataDao)
+                val instance = DbRepository(sleepSegmentDao, userSleepSessionDao)
                 INSTANCE = instance
                 // return instance
                 instance
@@ -42,28 +44,20 @@ class DbRepository(
     // implement anything else to ensure we're not doing long-running database work off the
     // main thread.
 
-    //region Sleep API Data
 
-    // Methods for SleepApiRawDataDao
-    // Observed Flow will notify the observer when the data has changed.
-    val allSleepApiRawData: Flow<List<SleepApiRawDataEntity>> =
-            sleepApiRawDataDao.getAll()
 
-    suspend fun insertSleepApiRawData(sleepClassifyEventEntity: SleepApiRawDataEntity) {
-        sleepApiRawDataDao.insert(sleepClassifyEventEntity)
+    //region User Sleep Sessions
+
+    val allUserSleepSessions: Flow<List<UserSleepSessionEntity>> =
+        userSleepSessionDao.getAll()
+
+
+    suspend fun insertUserSleepSessions(userSleepSessions: List<UserSleepSessionEntity>) {
+        userSleepSessionDao.insertAll(userSleepSessions)
     }
-
-    suspend fun deleteSleepApiRawData() {
-        sleepApiRawDataDao.deleteAll()
-    }
-
-    suspend fun insertSleepApiRawData(sleepClassifyEventEntities: List<SleepApiRawDataEntity>) {
-        sleepApiRawDataDao.insertAll(sleepClassifyEventEntities)
-    }
-
-
 
     //endregion
+
 
     //region Sleep Segments
 

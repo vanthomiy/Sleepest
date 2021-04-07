@@ -16,7 +16,7 @@ private const val DATABASE_NAME = "sleep_calculation_database"
  */
 
 @Database(
-    entities = [SleepStateModelEntity::class, SleepTimeModelEntity::class, SleepStateFactorModelEntity::class, SleepTimeFactorModelEntity::class, UserSleepSessionEntity::class],
+    entities = [SleepStateModelEntity::class, SleepTimeModelEntity::class, SleepStateFactorModelEntity::class, SleepTimeFactorModelEntity::class, SleepApiRawDataEntity::class],
     version = 3,
     exportSchema = true
 )
@@ -28,7 +28,7 @@ abstract class SleepCalculationDatabase : RoomDatabase() {
     abstract fun sleepTimeModelDao(): SleepTimeModelDao
     abstract fun sleepStateFactorModelDao(): SleepStateFactorModelDao
     abstract fun sleepTimeFactorModelDao(): SleepTimeFactorModelDao
-    abstract fun userSleepSessionDao(): UserSleepSessionDao
+    abstract fun sleepApiRawDataDao(): SleepApiRawDataDao
 
     companion object {
         // For Singleton instantiation

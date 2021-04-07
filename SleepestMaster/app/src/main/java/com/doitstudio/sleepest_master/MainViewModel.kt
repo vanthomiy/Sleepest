@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(private val dbRepository: DbRepository, private val storageStoreRepository: SleepCalculationStoreRepository, private val sleepCalculationDbRepository: SleepCalculationDbRepository) : ViewModel() {
 
-    val rawSleepApiData = dbRepository.allSleepApiRawData.asLiveData()
+    val rawSleepApiData = sleepCalculationDbRepository.allSleepApiRawData.asLiveData()
 
     val allSleepTimeModels = sleepCalculationDbRepository.allSleepTimeModels.asLiveData()
     val allSleepStateModels = sleepCalculationDbRepository.allSleepStateModels.asLiveData()
@@ -29,11 +29,11 @@ class MainViewModel(private val dbRepository: DbRepository, private val storageS
     }
 
     fun insertApi()= viewModelScope.launch {
-        dbRepository.insertSleepApiRawData(SleepApiRawDataEntity(1,2,3,2))
-        dbRepository.insertSleepApiRawData(SleepApiRawDataEntity(2,5,3,2))
-        dbRepository.insertSleepApiRawData(SleepApiRawDataEntity(3,7,3,2))
-        dbRepository.insertSleepApiRawData(SleepApiRawDataEntity(4,2,3,2))
-        dbRepository.insertSleepApiRawData(SleepApiRawDataEntity(5,24,3,2))
+        sleepCalculationDbRepository.insertSleepApiRawData(SleepApiRawDataEntity(1,2,3,2))
+        sleepCalculationDbRepository.insertSleepApiRawData(SleepApiRawDataEntity(2,5,3,2))
+        sleepCalculationDbRepository.insertSleepApiRawData(SleepApiRawDataEntity(3,7,3,2))
+        sleepCalculationDbRepository.insertSleepApiRawData(SleepApiRawDataEntity(4,2,3,2))
+        sleepCalculationDbRepository.insertSleepApiRawData(SleepApiRawDataEntity(5,24,3,2))
         //dbRepository.insertSleepSegment(SleepSegmentEntity(1,2,3,sleepState = SleepState.AWAKE))
     }
 

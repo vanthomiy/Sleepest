@@ -1,11 +1,14 @@
 package com.doitstudio.sleepest_master.sleepcalculation
 
 import android.content.Context
+import androidx.lifecycle.asLiveData
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.model.data.SleepState
 import com.doitstudio.sleepest_master.storage.DbRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 /**
  * This is the actual sleep calculation class.
@@ -19,8 +22,11 @@ class SleepCalculationHandler(private val context:Context){
     // Used to launch coroutines (non-blocking way to insert data).
     private val scope: CoroutineScope = MainScope()
 
-    private val dbRepository: DbRepository by lazy {
-        (context.applicationContext as MainApplication).dbRepository
+    private val dbRepository: SleepCalculationDbRepository by lazy {
+        (context.applicationContext as MainApplication).sleepCalculationDbRepository
+    }
+    private val storeRepository: SleepCalculationStoreRepository by lazy {
+        (context.applicationContext as MainApplication).sleepCalculationRepository
     }
 
     companion object {
@@ -43,12 +49,39 @@ class SleepCalculationHandler(private val context:Context){
      * TESTING: Call this every 30 min while sleeptime
      * It writes in the [LiveUserSleepActivity]
      */
-    fun calculateLiveuserSleepActivity()
+    suspend fun calculateLiveuserSleepActivity()
     {
+        // We are using the default values for the user to check whether sleeping or not
+        // Get them from the [ActualSleepUserParameterStatus]
+        val defaultTimeParameterId = storeRepository.actualSleepUserParameterFlow.first().sleepTimePattern
+
+        // Now retrieve the time parameter for the live user sleep activity
+        val defaultParameter = dbRepository.getSleepTimeModelById(defaultTimeParameterId).first()
+
+        if (defaultParameter.count() == 0)
+            // assign param not found later
+                return
+
+        // Get all available raw sleep api data
+        val rawApiData = dbRepository.allSleepApiRawData.first()
+
+        // Check if enough data is available
+        if (rawApiData.count() < 5)
+            // No/To less data available
+            storeRepository.updateIsDataAvailable(false)
+            return
+
+        storeRepository.updateIsDataAvailable(true)
+
+
+        
+
+
+
+
+
 
     }
-
-
 
     /**
      * Calculates the alarm time for the user. This should be called before the first wake up time
@@ -68,16 +101,6 @@ class SleepCalculationHandler(private val context:Context){
 
     }
 
-
-    /**
-     * Update sleep segments
-     */
-    private fun insertSleepSegmentValue( timestampSecondsStart: Int,
-                                         timestampSecondsEnd: Int,
-                                         sleepState: SleepState)
-    {
-
-    }
 
 
 }

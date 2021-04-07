@@ -1,11 +1,7 @@
 package com.doitstudio.sleepest_master.sleepcalculation.db
 
 import android.content.Context
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.Flow
@@ -18,6 +14,9 @@ import kotlinx.coroutines.launch
 interface SleepTimeModelDao {
     @Query("SELECT * FROM sleep_time_model_entity ORDER BY id DESC")
     fun getAll(): Flow<List<SleepTimeModelEntity>>
+
+    @Query("SELECT * FROM sleep_time_model_entity WHERE id LIKE :parameterId")
+    fun getModelById(parameterId: Int): Flow<List<SleepTimeModelEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(sleepSegmentEventEntityRaw: SleepTimeModelEntity)
