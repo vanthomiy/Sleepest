@@ -29,50 +29,38 @@ data class SleepStateModelEntity(
                                 SleepStateModelEntity(1, SleepStatePattern.TOLESSDEEP,
                                         SleepModel(
                                                 SleepModelTypes(
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f)
-                                                ),
-                                                SleepModelTypes(
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
+
                                                         SleepModelValues(1f,1f,1f,1f,1f),
                                                         SleepModelValues(1f,1f,1f,1f,1f),
                                                         SleepModelValues(1f,1f,1f,1f,1f)
                                                 ),
                                                 SleepModelTypes(
+
                                                         SleepModelValues(1f,1f,1f,1f,1f),
                                                         SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
+                                                        SleepModelValues(1f,1f,1f,1f,1f)
+                                                ),
+                                                SleepModelTypes(
+
                                                         SleepModelValues(1f,1f,1f,1f,1f),
                                                         SleepModelValues(1f,1f,1f,1f,1f),
                                                         SleepModelValues(1f,1f,1f,1f,1f)
                                                 )),
                                         SleepModel(
                                                 SleepModelTypes(
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f)
-                                                ),
-                                                SleepModelTypes(
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
+
                                                         SleepModelValues(1f,1f,1f,1f,1f),
                                                         SleepModelValues(1f,1f,1f,1f,1f),
                                                         SleepModelValues(1f,1f,1f,1f,1f)
                                                 ),
                                                 SleepModelTypes(
+
                                                         SleepModelValues(1f,1f,1f,1f,1f),
                                                         SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
+                                                        SleepModelValues(1f,1f,1f,1f,1f)
+                                                ),
+                                                SleepModelTypes(
+
                                                         SleepModelValues(1f,1f,1f,1f,1f),
                                                         SleepModelValues(1f,1f,1f,1f,1f),
                                                         SleepModelValues(1f,1f,1f,1f,1f)
@@ -82,50 +70,38 @@ data class SleepStateModelEntity(
                                 SleepStateModelEntity(1, SleepStatePattern.TOLESSDEEP,
                                         SleepModel(
                                                 SleepModelTypes(
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f)
-                                                ),
-                                                SleepModelTypes(
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
+
                                                         SleepModelValues(1f,1f,1f,1f,1f),
                                                         SleepModelValues(1f,1f,1f,1f,1f),
                                                         SleepModelValues(1f,1f,1f,1f,1f)
                                                 ),
                                                 SleepModelTypes(
+
                                                         SleepModelValues(1f,1f,1f,1f,1f),
                                                         SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
+                                                        SleepModelValues(1f,1f,1f,1f,1f)
+                                                ),
+                                                SleepModelTypes(
+
                                                         SleepModelValues(1f,1f,1f,1f,1f),
                                                         SleepModelValues(1f,1f,1f,1f,1f),
                                                         SleepModelValues(1f,1f,1f,1f,1f)
                                                 )),
                                         SleepModel(
                                                 SleepModelTypes(
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f)
-                                                ),
-                                                SleepModelTypes(
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
+
                                                         SleepModelValues(1f,1f,1f,1f,1f),
                                                         SleepModelValues(1f,1f,1f,1f,1f),
                                                         SleepModelValues(1f,1f,1f,1f,1f)
                                                 ),
                                                 SleepModelTypes(
+
                                                         SleepModelValues(1f,1f,1f,1f,1f),
                                                         SleepModelValues(1f,1f,1f,1f,1f),
-                                                        SleepModelValues(1f,1f,1f,1f,1f),
+                                                        SleepModelValues(1f,1f,1f,1f,1f)
+                                                ),
+                                                SleepModelTypes(
+
                                                         SleepModelValues(1f,1f,1f,1f,1f),
                                                         SleepModelValues(1f,1f,1f,1f,1f),
                                                         SleepModelValues(1f,1f,1f,1f,1f)

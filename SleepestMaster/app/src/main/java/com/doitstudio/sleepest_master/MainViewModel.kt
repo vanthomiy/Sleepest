@@ -44,23 +44,14 @@ class MainViewModel(private val dbRepository: DbRepository, private val storageS
                 SleepModelTypes(
                     SleepModelValues(1f,1f,1f,1f,1f),
                     SleepModelValues(1f,1f,1f,1f,1f),
-                    SleepModelValues(1f,1f,1f,1f,1f),
-                    SleepModelValues(1f,1f,1f,1f,1f),
-                    SleepModelValues(1f,1f,1f,1f,1f),
                     SleepModelValues(1f,1f,1f,1f,1f)
                     ),
                 SleepModelTypes(
                     SleepModelValues(1f,1f,1f,1f,1f),
                     SleepModelValues(1f,1f,1f,1f,1f),
-                    SleepModelValues(1f,1f,1f,1f,1f),
-                    SleepModelValues(1f,1f,1f,1f,1f),
-                    SleepModelValues(1f,1f,1f,1f,1f),
                     SleepModelValues(1f,1f,1f,1f,1f)
                 ),
                 SleepModelTypes(
-                    SleepModelValues(1f,1f,1f,1f,1f),
-                    SleepModelValues(1f,1f,1f,1f,1f),
-                    SleepModelValues(1f,1f,1f,1f,1f),
                     SleepModelValues(1f,1f,1f,1f,1f),
                     SleepModelValues(1f,1f,1f,1f,1f),
                     SleepModelValues(1f,1f,1f,1f,1f)
@@ -69,23 +60,14 @@ class MainViewModel(private val dbRepository: DbRepository, private val storageS
                 SleepModelTypes(
                     SleepModelValues(1f,1f,1f,1f,1f),
                     SleepModelValues(1f,1f,1f,1f,1f),
-                    SleepModelValues(1f,1f,1f,1f,1f),
-                    SleepModelValues(1f,1f,1f,1f,1f),
-                    SleepModelValues(1f,1f,1f,1f,1f),
                     SleepModelValues(1f,1f,1f,1f,1f)
                 ),
                 SleepModelTypes(
                     SleepModelValues(1f,1f,1f,1f,1f),
                     SleepModelValues(1f,1f,1f,1f,1f),
-                    SleepModelValues(1f,1f,1f,1f,1f),
-                    SleepModelValues(1f,1f,1f,1f,1f),
-                    SleepModelValues(1f,1f,1f,1f,1f),
                     SleepModelValues(1f,1f,1f,1f,1f)
                 ),
                 SleepModelTypes(
-                    SleepModelValues(1f,1f,1f,1f,1f),
-                    SleepModelValues(1f,1f,1f,1f,1f),
-                    SleepModelValues(1f,1f,1f,1f,1f),
                     SleepModelValues(1f,1f,1f,1f,1f),
                     SleepModelValues(1f,1f,1f,1f,1f),
                     SleepModelValues(1f,1f,1f,1f,1f)

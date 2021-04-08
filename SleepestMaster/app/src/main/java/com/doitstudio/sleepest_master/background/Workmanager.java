@@ -57,7 +57,7 @@ public class Workmanager extends Worker {
         //sleepCalculationHandler.calculateSleepData();
         //showNotification(context);
 
-        sleepCalculationHandler.calculateLiveuserSleepActivity();
+        //sleepCalculationHandler.calculateLiveuserSleepActivity();
 
 
         return Result.success();

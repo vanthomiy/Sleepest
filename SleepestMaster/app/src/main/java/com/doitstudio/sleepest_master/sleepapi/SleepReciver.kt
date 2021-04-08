@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationDbRepository
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationStoreRepository
 import com.doitstudio.sleepest_master.storage.DbRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
@@ -22,7 +23,7 @@ class SleepReceiver : BroadcastReceiver() {
     private val scope: CoroutineScope = MainScope()
 
     override fun onReceive(context: Context, intent: Intent) {
-        val repository: DbRepository = (context.applicationContext as MainApplication).dbRepository
+        val repository: SleepCalculationDbRepository = (context.applicationContext as MainApplication).sleepCalculationDbRepository
         val sleepCalculationStoreRepository: SleepCalculationStoreRepository = (context.applicationContext as MainApplication).sleepCalculationRepository
 
        if (SleepClassifyEvent.hasEvents(intent)) {
@@ -33,7 +34,7 @@ class SleepReceiver : BroadcastReceiver() {
     }
 
     private fun addSleepClassifyEventsToDatabase(
-        repository: DbRepository,
+        repository: SleepCalculationDbRepository,
         sleepCalculationStoreRepository: SleepCalculationStoreRepository,
         sleepClassifyEvents: List<SleepClassifyEvent>
     ) {

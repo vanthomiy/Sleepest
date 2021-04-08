@@ -3,42 +3,21 @@
     "id": 1,
     "sleepTimeModelMax": {
       "valuesAwake": {
-        "maxLicht": {
+        "light": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
           "Median": 1,
           "Min": 1
         },
-        "maxMotion": {
+        "motion": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
           "Median": 1,
           "Min": 1
         },
-        "maxSchlaf": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minLicht": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minMotion": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minSchlaf": {
+        "sleep": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
@@ -47,42 +26,21 @@
         }
       },
       "valuesDiff": {
-        "maxLicht": {
+        "light": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
           "Median": 1,
           "Min": 1
         },
-        "maxMotion": {
+        "motion": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
           "Median": 1,
           "Min": 1
         },
-        "maxSchlaf": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minLicht": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minMotion": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minSchlaf": {
+        "sleep": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
@@ -91,42 +49,21 @@
         }
       },
       "valuesSleep": {
-        "maxLicht": {
+        "light": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
           "Median": 1,
           "Min": 1
         },
-        "maxMotion": {
+        "motion": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
           "Median": 1,
           "Min": 1
         },
-        "maxSchlaf": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minLicht": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minMotion": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minSchlaf": {
+        "sleep": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
@@ -137,42 +74,21 @@
     },
     "sleepTimeModelMin": {
       "valuesAwake": {
-        "maxLicht": {
+        "light": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
           "Median": 1,
           "Min": 1
         },
-        "maxMotion": {
+        "motion": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
           "Median": 1,
           "Min": 1
         },
-        "maxSchlaf": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minLicht": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minMotion": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minSchlaf": {
+        "sleep": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
@@ -181,42 +97,21 @@
         }
       },
       "valuesDiff": {
-        "maxLicht": {
+        "light": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
           "Median": 1,
           "Min": 1
         },
-        "maxMotion": {
+        "motion": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
           "Median": 1,
           "Min": 1
         },
-        "maxSchlaf": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minLicht": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minMotion": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minSchlaf": {
+        "sleep": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
@@ -225,42 +120,21 @@
         }
       },
       "valuesSleep": {
-        "maxLicht": {
+        "light": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
           "Median": 1,
           "Min": 1
         },
-        "maxMotion": {
+        "motion": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
           "Median": 1,
           "Min": 1
         },
-        "maxSchlaf": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minLicht": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minMotion": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minSchlaf": {
+        "sleep": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
@@ -290,42 +164,21 @@
     "id": 2,
     "sleepTimeModelMax": {
       "valuesAwake": {
-        "maxLicht": {
+        "light": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
           "Median": 1,
           "Min": 1
         },
-        "maxMotion": {
+        "motion": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
           "Median": 1,
           "Min": 1
         },
-        "maxSchlaf": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minLicht": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minMotion": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minSchlaf": {
+        "sleep": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
@@ -334,42 +187,21 @@
         }
       },
       "valuesDiff": {
-        "maxLicht": {
+        "light": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
           "Median": 1,
           "Min": 1
         },
-        "maxMotion": {
+        "motion": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
           "Median": 1,
           "Min": 1
         },
-        "maxSchlaf": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minLicht": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minMotion": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minSchlaf": {
+        "sleep": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
@@ -378,42 +210,21 @@
         }
       },
       "valuesSleep": {
-        "maxLicht": {
+        "light": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
           "Median": 1,
           "Min": 1
         },
-        "maxMotion": {
+        "motion": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
           "Median": 1,
           "Min": 1
         },
-        "maxSchlaf": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minLicht": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minMotion": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minSchlaf": {
+        "sleep": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
@@ -424,42 +235,21 @@
     },
     "sleepTimeModelMin": {
       "valuesAwake": {
-        "maxLicht": {
+        "light": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
           "Median": 1,
           "Min": 1
         },
-        "maxMotion": {
+        "motion": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
           "Median": 1,
           "Min": 1
         },
-        "maxSchlaf": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minLicht": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minMotion": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minSchlaf": {
+        "sleep": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
@@ -468,42 +258,21 @@
         }
       },
       "valuesDiff": {
-        "maxLicht": {
+        "light": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
           "Median": 1,
           "Min": 1
         },
-        "maxMotion": {
+        "motion": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
           "Median": 1,
           "Min": 1
         },
-        "maxSchlaf": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minLicht": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minMotion": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minSchlaf": {
+        "sleep": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
@@ -512,42 +281,21 @@
         }
       },
       "valuesSleep": {
-        "maxLicht": {
+        "light": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
           "Median": 1,
           "Min": 1
         },
-        "maxMotion": {
+        "motion": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,
           "Median": 1,
           "Min": 1
         },
-        "maxSchlaf": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minLicht": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minMotion": {
-          "Average": 1,
-          "Factor": 1,
-          "Max": 1,
-          "Median": 1,
-          "Min": 1
-        },
-        "minSchlaf": {
+        "sleep": {
           "Average": 1,
           "Factor": 1,
           "Max": 1,

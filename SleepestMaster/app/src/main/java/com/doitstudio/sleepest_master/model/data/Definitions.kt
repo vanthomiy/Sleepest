@@ -88,16 +88,3 @@ enum class UserStartPattern{
     SUPERHEAVY
 
 }
-
-/**
- * Defines the definitions of each model
- */
-enum class SleepModelType{
-    MAXSCHLAF,
-    MINSCHLAF,
-    MAXLICHT,
-    MINLICHT,
-    MAXMOTION,
-    MINMOTION
-
-}

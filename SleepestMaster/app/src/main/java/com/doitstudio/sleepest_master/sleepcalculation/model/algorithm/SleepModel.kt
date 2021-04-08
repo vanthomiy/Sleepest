@@ -16,12 +16,12 @@ data class SleepModel(
     )
 
 data class SleepModelTypes(
-    @Embedded(prefix = "maxSleep") val maxSchlaf:SleepModelValues,
-    @Embedded(prefix = "minSleep") val minSchlaf:SleepModelValues,
-    @Embedded(prefix = "maxLight") val maxLicht:SleepModelValues,
-    @Embedded(prefix = "minLight") val minLicht:SleepModelValues,
-    @Embedded(prefix = "maxMotion") val maxMotion:SleepModelValues,
-    @Embedded(prefix = "minMotion") val minMotion:SleepModelValues
+    @Embedded(prefix = "sleep") val sleep:SleepModelValues,
+    //@Embedded(prefix = "minSleep") val minSchlaf:SleepModelValues,
+    @Embedded(prefix = "light") val light:SleepModelValues,
+    //@Embedded(prefix = "minLight") val minLicht:SleepModelValues,
+    @Embedded(prefix = "motion") val motion:SleepModelValues,
+    //@Embedded(prefix = "minMotion") val minMotion:SleepModelValues
 )
 
 data class SleepModelValues(
