@@ -8,22 +8,19 @@ option java_multiple_files = true;
  * This is a Alarm Model
  * It stores the preferences that are setup by the User
  */
+
+/*
 message  Alarm{
-  /**
-   * The amount of sleep the user preferres to recieve
-   */
+   // The amount of sleep the user preferres to recieve
   int32 sleepDuration = 1;
 
- /**
-  * The earliest moment, the user wants to be awaked
-  */
+  // The earliest moment, the user wants to be awaked
   int32 wakeupEarly = 2;
 
- /**
-  * The latest moment, the user want to be awaked
-  */
+  // The latest moment, the user want to be awaked
   int32 wakeupLate = 3;
  }
+ */
 
 /**
  * This is a SleepApiData StatusModel

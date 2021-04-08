@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.*
 import androidx.core.view.isVisible
 import com.appyvet.rangebar.RangeBar
+import com.doitstudio.sleepest_master.storage.db.AlarmEntity
 import com.faskn.lib.Slice
 import com.faskn.lib.buildChart
 import kotlinx.android.synthetic.main.activity_alarm_settings.*
@@ -13,13 +14,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.time.DayOfWeek
 import java.time.LocalTime
 import kotlin.properties.Delegates
 import kotlin.random.Random
 
 class AlarmSettings : AppCompatActivity() {
 
-    private val repository by lazy { (this.applicationContext as MainApplication).dataStoreRepository }
+    private val repository by lazy { (this.applicationContext as MainApplication).dbRepository }
     private val scope: CoroutineScope = MainScope()
 
     lateinit var sBar : SeekBar
@@ -30,25 +32,26 @@ class AlarmSettings : AppCompatActivity() {
     lateinit var tViewTest : View
     lateinit var btnWeekday : Button
     var firstSetupBars by Delegates.notNull<Boolean>()
-
     lateinit var text: String
+    //lateinit var alarmEntity: AlarmEntity
 
     fun saveSleepAmount(time: LocalTime) {
         tViewSleepAmount.text = " " + time.toString() + " Stunden"
         scope.launch {
-            repository.updateSleepDuration(time.toSecondOfDay()) }
+            repository.updateSleepDuration(time.toSecondOfDay(), 1) }
     }
 
     fun saveWakeupRange(wakeupEarly: LocalTime, wakeupLate: LocalTime) {
         tViewWakeupTime.text = " " + wakeupEarly.toString() + " - " + wakeupLate.toString() + " Uhr"
         scope.launch {
-            repository.updateWakeUpLate(wakeupLate.toSecondOfDay())
-            repository.updateWakeUpEarly(wakeupEarly.toSecondOfDay())
+            repository.updateWakeupEarly(wakeupEarly.toSecondOfDay(), 1)
+            repository.updateWakeupLate(wakeupLate.toSecondOfDay(), 1)
         }
     }
 
     suspend fun SetupAlarmSettings() {
-        val alarmSettings = repository.alarmFlow.first()
+        //val alarmSettings = repository.alarmFlow.first()
+        val alarmSettings = repository.getAlarmById(1).first()
 
         val wakeupTime = LocalTime.ofSecondOfDay(alarmSettings.sleepDuration.toLong())
         val wakeupEarly = LocalTime.ofSecondOfDay(alarmSettings.wakeupEarly.toLong())
@@ -128,6 +131,8 @@ class AlarmSettings : AppCompatActivity() {
         tViewTest = findViewById(R.id.cL_extendedAlarmSettings)
         btnWeekday = findViewById(R.id.btn_alarmDaysWeek)
         firstSetupBars = true
+        //alarmEntity = AlarmEntity()
+
 
         btnWeekday.setOnClickListener {
             onClickWeek()
@@ -155,6 +160,7 @@ class AlarmSettings : AppCompatActivity() {
         }
 
         scope.launch {
+            //repository.insertAlarm(alarmEntity)
             SetupAlarmSettings()
         }
 

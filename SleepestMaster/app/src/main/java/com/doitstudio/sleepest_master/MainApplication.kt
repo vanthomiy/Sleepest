@@ -24,7 +24,8 @@ class MainApplication : Application() {
         DbRepository.getRepo(
                         database.sleepDataDao(),
                         database.sleepApiRawDataDao(),
-                        database.userSleepSegmentDataDao()
+                        database.userSleepSegmentDataDao(),
+                        database.alarmDao()
 
         )
     }

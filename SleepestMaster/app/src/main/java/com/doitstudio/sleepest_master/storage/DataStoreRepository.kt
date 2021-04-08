@@ -32,6 +32,7 @@ class DataStoreRepository(context: Context) {
         }
     }
 
+    /*
     //region Alarm
 
     private val alarmStatus by lazy{ AlarmStatus(context.createDataStore(
@@ -51,7 +52,7 @@ class DataStoreRepository(context: Context) {
     suspend fun updateWakeUpLate(timeOfDay: Int) =
         alarmStatus.updateWakeUpLate(timeOfDay)
 
-    //endregion
+    //endregion*/
 
     //region SleepApiData Status
 
