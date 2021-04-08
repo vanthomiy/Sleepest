@@ -1,9 +1,10 @@
 ﻿using ExcelCalculationAddin.Calclulate;
+using ExcelCalculationAddin.Export;
 using ExcelCalculationAddin.Live;
 using ExcelCalculationAddin.Model;
 using ExcelCalculationAddin.Model.SleepStateDetect;
 using Microsoft.Office.Tools.Ribbon;
-using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace ExcelCalculationAddin
 {
@@ -65,7 +66,25 @@ namespace ExcelCalculationAddin
                 return;
             }
 
-            //JsonConvert.SerializeObject()
+
+            // first we have to create the classes
+            List<RootTime> rootTime = new List<RootTime>();
+
+            foreach (var item in SleepTimeClean.sleepTimeModelsWhile)
+            {
+                //SleepTimeClean.sleepTimeParamsWhile
+
+                RootTime rt = new RootTime();
+
+                rt.id = (int)item.Key;
+                rt.sleepTimeParameter = SleepTimeClean.sleepTimeParamsWhile[item.Key];
+                rt.sleepTimePattern = item.Key;
+
+                rt.sleepTimeModelMax = new SleepTimeModelMaxMin();
+                rt.sleepTimeModelMax.valuesAwake = new ValuesTimeModel();
+                rt.sleepTimeModelMax.valuesAwake.
+
+            }
 
             
         }
