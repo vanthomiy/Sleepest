@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static ExcelCalculationAddin.Model.SleepCleanModel;
+using static ExcelCalculationAddin.Model.SleepTimeModel;
 
 namespace ExcelCalculationAddin.Model
 {

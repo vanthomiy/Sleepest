@@ -30,8 +30,8 @@ namespace ExcelCalculationAddin.Calclulate
                 foreach (var session in user.sleepSessionAfter)
                 {
                     session.times = 0;
-                    var param = SleepParameter.GetDefault();
-                    param = SleepParameter.AddFactorToParameter(param, SleepType.sleepTypeParamsAfter[session.sleepUserType]);
+                    var param = SleepTimeParameter.GetDefault();
+                    param = SleepTimeParameter.AddFactorToParameter(param, SleepType.sleepTypeParamsAfter[session.sleepUserType], false);
 
                     try
                     {                     
@@ -45,7 +45,8 @@ namespace ExcelCalculationAddin.Calclulate
 
                     try
                     {
-                        session.rw1 = "";
+                        session.rw11 = "";
+                        session.rw12 = "";
                         session.rw2 = "";
 
                         // if no session was found
@@ -53,7 +54,7 @@ namespace ExcelCalculationAddin.Calclulate
                         {
                             session.nf1 = "nf";
                             session.sleepUserType = SleepType.SleepUserType.light;
-                            param = SleepParameter.AddFactorToParameter(param, SleepType.sleepTypeParamsAfter[session.sleepUserType]);
+                            param = SleepTimeParameter.AddFactorToParameter(param, SleepType.sleepTypeParamsAfter[session.sleepUserType], false);
 
                             await session.CalcSleepTimesRealTime(param, 0);
 
@@ -68,7 +69,7 @@ namespace ExcelCalculationAddin.Calclulate
                             session.nf1 = "tm: "+ session.times;
                             session.sleepUserType = SleepType.SleepUserType.heavy;
                             session.times = 0;
-                            param = SleepParameter.AddFactorToParameter(param, SleepType.sleepTypeParamsAfter[session.sleepUserType]);
+                            param = SleepTimeParameter.AddFactorToParameter(param, SleepType.sleepTypeParamsAfter[session.sleepUserType], false);
 
                             await session.CalcSleepTimesRealTime(param, 0);
 
@@ -96,7 +97,7 @@ namespace ExcelCalculationAddin.Calclulate
                     // Check for sleep times adjustment types
                     try
                     {
-                        foreach (var item in SleepClean.sleepCleanModelsAfter)
+                        foreach (var item in SleepTimeClean.sleepCleanModelsAfter)
                         {
                             if (session.structureAwake == null ||  session.structureSleep == null || session.diffrence == null)
                             {
@@ -112,7 +113,7 @@ namespace ExcelCalculationAddin.Calclulate
                                 a.Add(new Tuple<string, string, string>(user.sheetname, item.Key.ToString(), session.sleepDataEntrieSleep[0].FirstOrDefault().row.ToString()));
                                 // a specific type was found
 
-                                param = SleepParameter.AddFactorToParameter(SleepClean.sleepCleanParamsAfter[item.Key], SleepType.sleepTypeParamsAfter[session.sleepUserType]);
+                                param = SleepTimeParameter.AddFactorToParameter(SleepTimeClean.sleepCleanParamsAfter[item.Key], SleepType.sleepTypeParamsAfter[session.sleepUserType], false);
 
                                 await session.CalcSleepTimesRealTime(param, 1);
                                 foundCando++;

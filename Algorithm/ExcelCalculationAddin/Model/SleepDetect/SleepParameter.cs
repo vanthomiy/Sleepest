@@ -5,12 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static ExcelCalculationAddin.Model.SleepClean;
+using static ExcelCalculationAddin.Model.SleepTimeClean;
 using static ExcelCalculationAddin.Model.SleepType;
 
 namespace ExcelCalculationAddin.Model
 {
-    public class SleepParameter
+    public class SleepTimeParameter
     {
         public TimeSpan awakeTime; // wie lange soll die awake zeit gezählt werden (Zukunft)
         public TimeSpan sleepTime; // wie lange sollen vergangenheitswerte für einschlaf gezählt werden
@@ -28,9 +28,73 @@ namespace ExcelCalculationAddin.Model
 
         public float modelMatchPercentage;
 
-        public static SleepParameter AddFactorToParameter(SleepParameter normal, SleepParameter factor)
+
+        public static SleepTimeParameter Combine(List<SleepTimeParameter> ssp)
         {
-            SleepParameter pm = SleepParameter.GetDefault();
+            var paramdefault = SleepTimeParameter.GetDefault();
+            var params2 = SleepTimeParameter.GetDefault();
+
+            foreach (var item in ssp)
+            {
+                if (Math.Abs(item.sleepSleepBorder - paramdefault.sleepSleepBorder) > Math.Abs(params2.sleepSleepBorder - paramdefault.sleepSleepBorder))
+                {
+                    params2.sleepSleepBorder = item.sleepSleepBorder;
+                }
+
+                if (Math.Abs(item.awakeSleepBorder - paramdefault.awakeSleepBorder) > Math.Abs(params2.awakeSleepBorder - paramdefault.awakeSleepBorder))
+                {
+                    params2.awakeSleepBorder = item.awakeSleepBorder;
+                }
+
+                if (Math.Abs(item.sleepMotionBorder - paramdefault.sleepMotionBorder) > Math.Abs(params2.sleepMotionBorder - paramdefault.sleepMotionBorder))
+                {
+                    params2.sleepMotionBorder = item.sleepMotionBorder;
+                }
+
+                if (Math.Abs(item.sleepMotionBorder - paramdefault.sleepMotionBorder) > Math.Abs(params2.sleepMotionBorder - paramdefault.sleepMotionBorder))
+                {
+                    params2.sleepMotionBorder = item.sleepMotionBorder;
+                }
+
+                if (Math.Abs(item.awakeMotionBorder - paramdefault.awakeMotionBorder) > Math.Abs(params2.awakeMotionBorder - paramdefault.awakeMotionBorder))
+                {
+                    params2.awakeMotionBorder = item.awakeMotionBorder;
+                }
+
+                if (Math.Abs(item.sleepMedianOverTime - paramdefault.sleepMedianOverTime) > Math.Abs(params2.sleepMedianOverTime - paramdefault.sleepMedianOverTime))
+                {
+                    params2.sleepMedianOverTime = item.sleepMedianOverTime;
+                }
+
+                if (Math.Abs(item.diffSleep - paramdefault.diffSleep) > Math.Abs(params2.diffSleep - paramdefault.diffSleep))
+                {
+                    params2.diffSleep = item.diffSleep;
+                }
+
+                if (Math.Abs(item.diffSleepFuture - paramdefault.diffSleepFuture) > Math.Abs(params2.diffSleepFuture - paramdefault.diffSleepFuture))
+                {
+                    params2.diffSleepFuture = item.diffSleepFuture;
+                }
+
+                if (Math.Abs(item.awakeMedianOverTime - paramdefault.awakeMedianOverTime) > Math.Abs(params2.awakeMedianOverTime - paramdefault.awakeMedianOverTime))
+                {
+                    params2.awakeMedianOverTime = item.awakeMedianOverTime;
+                }
+
+                if (Math.Abs(item.diffAwake - paramdefault.diffAwake) > Math.Abs(params2.diffAwake - paramdefault.diffAwake))
+                {
+                    params2.diffAwake = item.diffAwake;
+                }
+
+            }
+
+            return params2;
+        }
+
+
+        public static SleepTimeParameter AddFactorToParameter(SleepTimeParameter normal, SleepTimeParameter factor, bool isNormal)
+        {
+            SleepTimeParameter pm = SleepTimeParameter.GetDefault();
 
 
             pm.sleepSleepBorder = normal.sleepSleepBorder * factor.sleepSleepBorder;
@@ -46,9 +110,9 @@ namespace ExcelCalculationAddin.Model
             return pm;
         }
 
-        public static SleepParameter GetDefault()
+        public static SleepTimeParameter GetDefault()
         {
-            return new SleepParameter()
+            return new SleepTimeParameter()
             {
                 awakeTime = new TimeSpan(00, 30, 00),
                 sleepTime = new TimeSpan(00, 50, 00),
@@ -67,9 +131,9 @@ namespace ExcelCalculationAddin.Model
             };
         }
 
-        public static SleepParameter GetDefaultFactor()
+        public static SleepTimeParameter GetDefaultFactor()
         {
-            return new SleepParameter()
+            return new SleepTimeParameter()
             {
                 awakeTime = new TimeSpan(0),
                 sleepTime = new TimeSpan(0),
@@ -88,9 +152,9 @@ namespace ExcelCalculationAddin.Model
             };
         }
 
-        public static Dictionary<SleepCleanType, SleepParameter> CreateAllModels(bool isWhile)
+        public static Dictionary<SleepTimeCleanType, SleepTimeParameter> CreateAllModels(bool isWhile)
         {
-            Dictionary<SleepCleanType, SleepParameter> asss = new Dictionary<SleepCleanType, SleepParameter>();
+            Dictionary<SleepTimeCleanType, SleepTimeParameter> asss = new Dictionary<SleepTimeCleanType, SleepTimeParameter>();
 
 
             var workbook = (Workbook)Globals.ThisAddIn.Application.ActiveWorkbook;
@@ -98,7 +162,7 @@ namespace ExcelCalculationAddin.Model
 
 
 
-            int finde = CellHelper.ExcelColumnNameToNumber("AV");
+            int finde = CellHelper.ExcelColumnNameToNumber("AW");
 
             bool available = true;
             while (available)
@@ -110,7 +174,7 @@ namespace ExcelCalculationAddin.Model
                     break;
                 }
 
-                var sp = SleepParameter.GetDefault();
+                var sp = SleepTimeParameter.GetDefault();
 
                 var fValue = (int)CellHelper.GetCellValueFloat(8, finde, worksheet1);
                 sp.sleepSleepBorder = fValue != 0 ? fValue: sp.sleepSleepBorder;
@@ -131,25 +195,25 @@ namespace ExcelCalculationAddin.Model
                 fValue = (int)CellHelper.GetCellValueFloat(16, finde, worksheet1);
                 sp.diffAwake = fValue != 0 ? fValue : sp.diffAwake;
 
-                asss.Add((SleepCleanType)Convert.ToInt32(value), sp);
+                asss.Add((SleepTimeCleanType)Convert.ToInt32(value), sp);
                 finde++;
             }
 
             return asss;
         }
 
-        public static Dictionary<SleepUserType, SleepParameter> CreateAllFactorModels(bool isWhile)
+        public static Dictionary<SleepUserType, SleepTimeParameter> CreateAllFactorModels(bool isWhile)
         {
-            Dictionary<SleepUserType, SleepParameter> asss = new Dictionary<SleepUserType, SleepParameter>();
+            Dictionary<SleepUserType, SleepTimeParameter> asss = new Dictionary<SleepUserType, SleepTimeParameter>();
 
-            asss.Add(SleepUserType.standard, SleepParameter.GetDefaultFactor());
+            asss.Add(SleepUserType.standard, SleepTimeParameter.GetDefaultFactor());
 
             var workbook = (Workbook)Globals.ThisAddIn.Application.ActiveWorkbook;
             Worksheet worksheet1 = isWhile ? (Worksheet)workbook.Worksheets["SleeptypesWhile"] : (Worksheet)workbook.Worksheets["SleeptypesAfter"];
 
 
 
-            int finde = CellHelper.ExcelColumnNameToNumber("AX");
+            int finde = CellHelper.ExcelColumnNameToNumber("AY");
 
             bool available = true;
             while (available)
@@ -161,7 +225,7 @@ namespace ExcelCalculationAddin.Model
                     break;
                 }
 
-                var sp = SleepParameter.GetDefaultFactor();
+                var sp = SleepTimeParameter.GetDefaultFactor();
 
                 var fValue = CellHelper.GetCellValueFloat(24, finde, worksheet1);
                 sp.sleepSleepBorder = fValue != 0 ? fValue : sp.sleepSleepBorder;

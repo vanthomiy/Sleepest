@@ -29,8 +29,8 @@ namespace ExcelCalculationAddin.Live
                 foreach (var session in user.sleepSessionWhile)
                 {
                     session.times = 0;
-                    var param = SleepParameter.GetDefault();
-                    param = SleepParameter.AddFactorToParameter(param, SleepType.sleepTypeParamsWhile[session.sleepUserType]);
+                    var param = SleepTimeParameter.GetDefault();
+                    param = SleepTimeParameter.AddFactorToParameter(param, SleepType.sleepTimeParameter[session.sleepUserType], false);
 
                     try
                     {
@@ -44,15 +44,16 @@ namespace ExcelCalculationAddin.Live
 
                     try
                     {
-                        session.rw1 = "";
+                        session.rw11 = "";
+                        session.rw12 = "";
                         session.rw2 = "";
 
                         // if no session was found
                         if (!session.foundSleep)
                         {
                             session.nf1 = "nf";
-                            session.sleepUserType = SleepType.SleepUserType.light;
-                            param = SleepParameter.AddFactorToParameter(param, SleepType.sleepTypeParamsWhile[session.sleepUserType]);
+                            session.sleepUserType = SleepType.SleepUserType.standard;
+                            param = SleepTimeParameter.AddFactorToParameter(param, SleepType.sleepTimeParameter[session.sleepUserType], false);
 
                             await session.CalcSleepTimesRealTime(param, 0);
 
@@ -67,7 +68,7 @@ namespace ExcelCalculationAddin.Live
                             session.nf1 = "tm: " + session.times;
                             session.sleepUserType = SleepType.SleepUserType.heavy;
                             session.times = 0;
-                            param = SleepParameter.AddFactorToParameter(param, SleepType.sleepTypeParamsWhile[session.sleepUserType]);
+                            param = SleepTimeParameter.AddFactorToParameter(param, SleepType.sleepTimeParameter[session.sleepUserType], false);
 
                             await session.CalcSleepTimesRealTime(param, 0);
 
@@ -95,6 +96,41 @@ namespace ExcelCalculationAddin.Live
                     // Check for sleep times adjustment types
                     try
                     {
+                        List<SleepTimeParameter> ssp = new List<SleepTimeParameter>();
+                        session.rw2 = "Type ";
+                        // Check if model is available
+                        foreach (var item in SleepTimeClean.sleepTimeModelsWhile)
+                        {
+                            if (session.structureAwake == null || session.structureSleep == null || session.diffrence == null)
+                            {
+                                notpossible++;
+                                continue;
+                            }
+
+                            found++;
+
+                            if (item.Value.CheckIfIsTypeModel(param, session.structureAwake, session.structureSleep, session.diffrence))
+                            {
+                                session.rw2 += item.Key;
+
+                                //a.Add(new Tuple<string, string, string>(user.sheetname, item.Key.ToString(), session.sleepDataEntrieSleep[0].FirstOrDefault().row.ToString()));
+                                // a specific type was found
+
+                                bool isNormal = (int)item.Key == 3 || (int)item.Key == 5;
+                               // var aa = SleepTimeClean.sleepTimeParamsWhile[item.Value.sleepTimeModel];
+                               // var bb = SleepType.sleepTimeParameter[session.sleepUserType];
+                                ssp.Add(SleepTimeParameter.AddFactorToParameter(SleepTimeClean.sleepTimeParamsWhile[item.Key], SleepType.sleepTimeParameter[session.sleepUserType], isNormal));
+                            }
+                        }
+
+                        param = SleepTimeParameter.Combine(ssp);
+
+                        if (session.rw2 == "Type ")
+                        {
+                            session.rw2 = "nt";
+                        }
+
+                        /*
                         session.rw2 = "nf";
                         foreach (var item in SleepClean.sleepCleanModelsWhile)
                         {
@@ -119,8 +155,10 @@ namespace ExcelCalculationAddin.Live
                                 break;
                             }
                         }
+
+                        */
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
 
                         throw;

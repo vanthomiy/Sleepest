@@ -13,9 +13,11 @@ namespace ExcelCalculationAddin.Model
 
         public enum SleepUserType
         {
-            heavy = 2,
-            standard = 5,
-            light = 1,
+            standard = 0,
+            superLight = 1,
+            light = 2,
+            heavy = 3,
+            superHeavy = 4,
 
         }
 
@@ -29,8 +31,8 @@ namespace ExcelCalculationAddin.Model
 
 
         // public static Dictionary<SleepUserType, SleepCleanModel> sleepTypeModels;
-        public static Dictionary<SleepUserType, SleepParameter> sleepTypeParamsWhile;
-        public static Dictionary<SleepUserType, SleepParameter> sleepTypeParamsAfter;
+        public static Dictionary<SleepUserType, SleepTimeParameter> sleepTimeParameter;
+        public static Dictionary<SleepUserType, SleepTimeParameter> sleepTypeParamsAfter;
 
         public static Dictionary<SleepStateType, SleepStateParameter> sleepStateParameter;
 

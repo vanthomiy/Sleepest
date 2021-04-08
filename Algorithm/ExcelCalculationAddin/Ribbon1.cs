@@ -3,7 +3,7 @@ using ExcelCalculationAddin.Live;
 using ExcelCalculationAddin.Model;
 using ExcelCalculationAddin.Model.SleepStateDetect;
 using Microsoft.Office.Tools.Ribbon;
-
+using Newtonsoft.Json;
 
 namespace ExcelCalculationAddin
 {
@@ -32,13 +32,13 @@ namespace ExcelCalculationAddin
             // Kalkulieren und abspeichern der daten
             ReadParameter.GetAlarmSettings();
             ReadParameter.ReadSleepTypeParameter();
-            SleepClean.sleepCleanParamsAfter = SleepParameter.CreateAllModels(false);
-            SleepClean.sleepCleanModelsAfter = SleepCleanModel.CreateAllModels(false);
-            SleepType.sleepTypeParamsAfter = SleepParameter.CreateAllFactorModels(false);
+            SleepTimeClean.sleepCleanParamsAfter = SleepTimeParameter.CreateAllModels(false);
+            SleepTimeClean.sleepCleanModelsAfter = SleepTimeModel.CreateAllModels(false);
+            SleepType.sleepTypeParamsAfter = SleepTimeParameter.CreateAllFactorModels(false);
 
-            SleepClean.sleepCleanParamsWhile= SleepParameter.CreateAllModels(true);
-            SleepClean.sleepCleanModelsWhile = SleepCleanModel.CreateAllModels(true);
-            SleepType.sleepTypeParamsWhile = SleepParameter.CreateAllFactorModels(true);
+            SleepTimeClean.sleepTimeParamsWhile= SleepTimeParameter.CreateAllModels(true);
+            SleepTimeClean.sleepTimeModelsWhile = SleepTimeModel.CreateAllModels(true);
+            SleepType.sleepTimeParameter = SleepTimeParameter.CreateAllFactorModels(true);
 
 
             SleepStateClean.sleepStateParams = SleepStateParameter.CreateAllModels(true);
@@ -56,6 +56,18 @@ namespace ExcelCalculationAddin
 
 
             await CalcSleepLive.CalcAllSleepData();
+        }
+
+        private void btnJsonExport_Click(object sender, RibbonControlEventArgs e)
+        {
+            if (SleepStateClean.sleepStateParams == null)
+            {
+                return;
+            }
+
+            //JsonConvert.SerializeObject()
+
+            
         }
     }
 }

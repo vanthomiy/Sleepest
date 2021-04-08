@@ -5,12 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static ExcelCalculationAddin.Model.SleepClean;
+using static ExcelCalculationAddin.Model.SleepTimeClean;
+using static ExcelCalculationAddin.Model.SleepType;
 
 namespace ExcelCalculationAddin.Model
 {
-    public class SleepCleanModel
+    public class SleepTimeModel
     {
+
         public Dictionary<SleepCleanModelType, MaxMinHelper> valuesWach = new Dictionary<SleepCleanModelType, MaxMinHelper>() {
             { SleepCleanModelType.MaxLicht, new MaxMinHelper() },
             { SleepCleanModelType.MinLicht, new MaxMinHelper() },
@@ -39,7 +41,7 @@ namespace ExcelCalculationAddin.Model
 
             };
 
-        public bool CheckIfIsTypeModel(SleepParameter sleepParam, Strukture awake, Strukture sleep, Strukture diff)
+        public bool CheckIfIsTypeModel(SleepTimeParameter sleepParam, Strukture awake, Strukture sleep, Strukture diff)
         {
             // es muss gecheckt werden ob alles in den bounds ist
             bool isAType = true;
@@ -178,9 +180,9 @@ namespace ExcelCalculationAddin.Model
         }
 
 
-        public static Dictionary<SleepCleanType, SleepCleanModel> CreateAllModels(bool isWhile)
+        public static Dictionary<SleepTimeCleanType, SleepTimeModel> CreateAllModels(bool isWhile)
         {
-            Dictionary<SleepCleanType, SleepCleanModel> asss = new Dictionary<SleepCleanType, SleepCleanModel>();
+            Dictionary<SleepTimeCleanType, SleepTimeModel> asss = new Dictionary<SleepTimeCleanType, SleepTimeModel>();
 
 
             var workbook = (Workbook)Globals.ThisAddIn.Application.ActiveWorkbook;
@@ -188,7 +190,7 @@ namespace ExcelCalculationAddin.Model
 
 
 
-            int finde = CellHelper.ExcelColumnNameToNumber("AM");
+            int finde = CellHelper.ExcelColumnNameToNumber("AN");
             int offWach = 1, offSleep = 4, offDiff = 7;
 
             for (int i = 4; i < 200; i+=12)
@@ -199,12 +201,12 @@ namespace ExcelCalculationAddin.Model
                     break; 
                 }
 
-                SleepCleanType cleanModelType;
+                SleepTimeCleanType cleanModelType;
                 try
                 {
-                    cleanModelType = (SleepCleanType)Convert.ToInt32(value);
+                    cleanModelType = (SleepTimeCleanType)Convert.ToInt32(value);
 
-                    asss.Add(cleanModelType, new SleepCleanModel());
+                    asss.Add(cleanModelType, new SleepTimeModel());
                 }
                 catch (Exception)
                 {
