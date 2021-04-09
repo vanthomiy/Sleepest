@@ -37,10 +37,10 @@ namespace ExcelCalculationAddin
         {
             this.tab1 = this.Factory.CreateRibbonTab();
             this.group1 = this.Factory.CreateRibbonGroup();
+            this.btnJsonExport = this.Factory.CreateRibbonButton();
             this.btnCalcLive = this.Factory.CreateRibbonButton();
             this.btnEinlesen = this.Factory.CreateRibbonButton();
             this.btnCalculieren = this.Factory.CreateRibbonButton();
-            this.btnJsonExport = this.Factory.CreateRibbonButton();
             this.tab1.SuspendLayout();
             this.group1.SuspendLayout();
             this.SuspendLayout();
@@ -61,6 +61,12 @@ namespace ExcelCalculationAddin
             this.group1.Label = "group1";
             this.group1.Name = "group1";
             // 
+            // btnJsonExport
+            // 
+            this.btnJsonExport.Label = "JsonExport";
+            this.btnJsonExport.Name = "btnJsonExport";
+            this.btnJsonExport.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnJsonExport_Click);
+            // 
             // btnCalcLive
             // 
             this.btnCalcLive.Label = "Kalk Live";
@@ -78,12 +84,6 @@ namespace ExcelCalculationAddin
             this.btnCalculieren.Label = "Kalkulieren";
             this.btnCalculieren.Name = "btnCalculieren";
             this.btnCalculieren.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnCalculieren_Click);
-            // 
-            // btnJsonExport
-            // 
-            this.btnJsonExport.Label = "JsonExport";
-            this.btnJsonExport.Name = "btnJsonExport";
-            this.btnJsonExport.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnJsonExport_Click);
             // 
             // Ribbon1
             // 

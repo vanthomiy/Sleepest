@@ -10,6 +10,7 @@ namespace ExcelCalculationAddin.Model
     {
         public enum SleepTimeCleanType
         {
+            zero = 0,
             stoppedToLate = 3,
             stoppedToEarly = 2,
             startToEarly = 4,

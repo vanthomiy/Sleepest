@@ -1,4 +1,5 @@
-﻿using ExcelCalculationAddin.ListHelp;
+﻿using ExcelCalculationAddin.Export;
+using ExcelCalculationAddin.ListHelp;
 using ExcelCalculationAddin.Model.SleepStateDetect;
 using ExcelCalculationAddin.Read;
 using Microsoft.Office.Interop.Excel;
@@ -14,7 +15,7 @@ namespace ExcelCalculationAddin.Model
 {
     public class SleepSession
     {
-        public SleepUserType sleepUserType = SleepUserType.light;
+        public UserFactorPattern sleepUserType = UserFactorPattern.light;
 
         public static int actualRow = 3;
         public DateTime dateTime;
@@ -539,6 +540,20 @@ namespace ExcelCalculationAddin.Model
             }
 
 
+        }
+
+
+        public DataSetter getMaxValues()
+        {
+            DataSetter ds = new DataSetter();
+
+            ds.Average = maxmintype[MaxMinHelperType.Average];
+            ds.Factor = maxmintype[MaxMinHelperType.Factor];
+            ds.Max = Max;
+            ds.Min = Min;
+            ds.Median = maxmintype[MaxMinHelperType.Median];
+
+            return ds;
         }
 
         public static MaxMinHelper GetMax()

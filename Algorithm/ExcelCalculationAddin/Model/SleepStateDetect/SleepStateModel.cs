@@ -8,12 +8,13 @@ using System.Threading.Tasks;
 using static ExcelCalculationAddin.Model.SleepTimeModel;
 using static ExcelCalculationAddin.Model.SleepStateDetect.SleepStateClean;
 using static ExcelCalculationAddin.Model.SleepType;
+using ExcelCalculationAddin.Export;
 
 namespace ExcelCalculationAddin.Model.SleepStateDetect
 {
     public class SleepStateModel
     {
-        public SleepStateType sleepStateType;
+        public UserFactorPattern sleepStateType;
         public SleepStateCleanType sleepStateModel;
 
         public Dictionary<SleepCleanModelType, MaxMinHelper> valuesWach = new Dictionary<SleepCleanModelType, MaxMinHelper>() {
@@ -43,6 +44,51 @@ namespace ExcelCalculationAddin.Model.SleepStateDetect
             { SleepCleanModelType.MinSchlaf, new MaxMinHelper() },
 
             };
+
+        public SleepTimeModelMaxMin getMaxValues()
+        {
+            SleepTimeModelMaxMin stmmm = new SleepTimeModelMaxMin();
+
+            stmmm.valuesAwake = getTimeModelsMax(valuesWach);
+            stmmm.valuesSleep = getTimeModelsMax(valuesSleep);
+            stmmm.valuesDiff = getTimeModelsMax(valuesDiff);
+
+            return stmmm;
+        }
+
+        public SleepTimeModelMaxMin getMinValues()
+        {
+            SleepTimeModelMaxMin stmmm = new SleepTimeModelMaxMin();
+
+            stmmm.valuesAwake = getTimeModelsMin(valuesWach);
+            stmmm.valuesSleep = getTimeModelsMin(valuesSleep);
+            stmmm.valuesDiff = getTimeModelsMin(valuesDiff);
+
+            return stmmm;
+        }
+
+        private ValuesTimeModel getTimeModelsMax(Dictionary<SleepCleanModelType, MaxMinHelper> values)
+        {
+            ValuesTimeModel vtm = new ValuesTimeModel();
+
+            vtm.light = values[SleepCleanModelType.MaxLicht].getMaxValues();
+            vtm.motion = values[SleepCleanModelType.MaxMotion].getMaxValues();
+            vtm.sleep = values[SleepCleanModelType.MaxSchlaf].getMaxValues();
+
+            return vtm;
+        }
+
+        private ValuesTimeModel getTimeModelsMin(Dictionary<SleepCleanModelType, MaxMinHelper> values)
+        {
+            ValuesTimeModel vtm = new ValuesTimeModel();
+
+            vtm.light = values[SleepCleanModelType.MinLicht].getMaxValues();
+            vtm.motion = values[SleepCleanModelType.MinMotion].getMaxValues();
+            vtm.sleep = values[SleepCleanModelType.MinSchlaf].getMaxValues();
+
+            return vtm;
+        }
+
 
         public bool CheckIfIsTypeModel(SleepStateParameter sleepParam, Strukture awake, Strukture sleep, Strukture diff)
         {
@@ -221,7 +267,7 @@ namespace ExcelCalculationAddin.Model.SleepStateDetect
 
 
 
-                asss[key].sleepStateType = (SleepStateType)Convert.ToInt32(value1);
+                asss[key].sleepStateType = (UserFactorPattern)Convert.ToInt32(value1);
                 asss[key].sleepStateModel = (SleepStateCleanType)Convert.ToInt32(value);
                 foreach (var item in asss[key].valuesWach)
                 {

@@ -241,9 +241,9 @@ namespace ExcelCalculationAddin.Model.SleepStateDetect
             return asss;
         }
 
-        public static Dictionary<SleepStateType, SleepStateParameter> CreateAllFactorModels(bool isWhile)
+        public static Dictionary<UserFactorPattern, SleepStateParameter> CreateAllFactorModels(bool isWhile)
         {
-            Dictionary<SleepStateType, SleepStateParameter> asss = new Dictionary<SleepStateType, SleepStateParameter>();
+            Dictionary<UserFactorPattern, SleepStateParameter> asss = new Dictionary<UserFactorPattern, SleepStateParameter>();
 
             //asss.Add(SleepStateType.light, SleepStateParameter.GetDefaultFactor());
 
@@ -287,7 +287,7 @@ namespace ExcelCalculationAddin.Model.SleepStateDetect
 
                 sp.third = sp.second = sp.first;
 
-                asss.Add((SleepStateType)Convert.ToInt32(value), sp);
+                asss.Add((UserFactorPattern)Convert.ToInt32(value), sp);
                 finde += 2;
             }
 

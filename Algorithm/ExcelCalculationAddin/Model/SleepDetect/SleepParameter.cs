@@ -202,11 +202,11 @@ namespace ExcelCalculationAddin.Model
             return asss;
         }
 
-        public static Dictionary<SleepUserType, SleepTimeParameter> CreateAllFactorModels(bool isWhile)
+        public static Dictionary<UserFactorPattern, SleepTimeParameter> CreateAllFactorModels(bool isWhile)
         {
-            Dictionary<SleepUserType, SleepTimeParameter> asss = new Dictionary<SleepUserType, SleepTimeParameter>();
+            Dictionary<UserFactorPattern, SleepTimeParameter> asss = new Dictionary<UserFactorPattern, SleepTimeParameter>();
 
-            asss.Add(SleepUserType.standard, SleepTimeParameter.GetDefaultFactor());
+            asss.Add(UserFactorPattern.standard, SleepTimeParameter.GetDefaultFactor());
 
             var workbook = (Workbook)Globals.ThisAddIn.Application.ActiveWorkbook;
             Worksheet worksheet1 = isWhile ? (Worksheet)workbook.Worksheets["SleeptypesWhile"] : (Worksheet)workbook.Worksheets["SleeptypesAfter"];
@@ -246,7 +246,7 @@ namespace ExcelCalculationAddin.Model
                 fValue = CellHelper.GetCellValueFloat(32, finde, worksheet1);
                 sp.diffAwake = fValue != 0 ? fValue : sp.diffAwake;
 
-                asss.Add((SleepUserType)Convert.ToInt32(value), sp);
+                asss.Add((UserFactorPattern)Convert.ToInt32(value), sp);
                 finde+=2;
             }
 
