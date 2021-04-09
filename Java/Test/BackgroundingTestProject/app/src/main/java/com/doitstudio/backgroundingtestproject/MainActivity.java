@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String CHANNEL_ID = "VERBOSE_NOTIFICATION" ;
     //private AudioManager audioManager;
 
-    Button btnAddAlarm, btnStartWorkmanager;
+    Button btnAddAlarm, btnStartWorkmanager, btnStopForegroundservice;
     Spinner spHour, spMinute, spDay;
     EditText etDuration;
     TextView tvLastTime;
@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         btnAddAlarm = (Button) findViewById(R.id.btnAddAlarm);
         btnStartWorkmanager = (Button) findViewById(R.id.btnStartWorkmanager);
+        btnStopForegroundservice = (Button) findViewById(R.id.btnStopForegroundservice);
         spHour = (Spinner) findViewById(R.id.spHour);
         spMinute = (Spinner) findViewById(R.id.spMinute);
         spDay = (Spinner) findViewById(R.id.spDay);
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         btnAddAlarm.setOnClickListener(this);
         btnStartWorkmanager.setOnClickListener(this);
-
+        btnStopForegroundservice.setOnClickListener(this);
 
         ArrayAdapter<String> dayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, days);
         spDay.setAdapter(dayAdapter);
@@ -102,11 +103,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnAddAlarm:
-                int day = spDay.getSelectedItemPosition();
-                AlarmReceiver.startAlarmManager(day, (int) spHour.getSelectedItem(), (int) spMinute.getSelectedItem(), getApplicationContext(), 1);
+                int day = spDay.getSelectedItemPosition() + 1;
+                AlarmReceiver.startAlarmManager(day, (int) spHour.getSelectedItem(), (int) spMinute.getSelectedItem(), MainActivity.this, 1);
+
+                //EndlessService.startForegroundService(Actions.START, getApplicationContext());
+                //AlarmReceiver.startAlarmManager(day, (int) spHour.getSelectedItem(), (int) spMinute.getSelectedItem(), getApplicationContext(), 2);
                 //adjustStreamVolume();
                 break;
-            case R.id.btnStartWorkmanager:
+            /*case R.id.btnStartWorkmanager:
 
                 int duration;
 
@@ -122,6 +126,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //EndlessService.startForegroundService(Actions.STOP, getApplicationContext());
                 // scheduleAlarm();
                 break;
+            case R.id.btnStopForegroundservice:
+                EndlessService.startForegroundService(Actions.STOP, getApplicationContext());
+                break;*/
         }
     }
 }

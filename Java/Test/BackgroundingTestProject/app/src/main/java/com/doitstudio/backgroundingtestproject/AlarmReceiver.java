@@ -25,13 +25,11 @@ public class AlarmReceiver extends BroadcastReceiver {
     public static final int REQUEST_CODE = 12345;
     AudioManager audioManager;
 
-
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        this.context = context;
+        this.context = context.getApplicationContext();
 
         /** TODO: High Sensitive Notification for Alarm, like System Alarm (Snooze, turn off) **/
 
@@ -42,13 +40,23 @@ public class AlarmReceiver extends BroadcastReceiver {
         //endlessService.updateNotification("Chillige Sache");
 
         switch (intent.getIntExtra("com.doitstudio.backgroundingtestproject.AlarmIntentKey", 0)) {
-            case 0:
-                break;
+            case 0: break;
             case 1:
                 EndlessService.startForegroundService(Actions.START, context);
+                Calendar calenderAlarm = Calendar.getInstance();
+                int day = calenderAlarm.get(Calendar.DAY_OF_WEEK) + 1;
+                if (day > 7) {
+                    day = 1;
+                }
+                AlarmReceiver.startAlarmManager(day,9,0, context, 2);
+                Workmanager.startPeriodicWorkmanager(30);
                 break;
             case 2:
                 EndlessService.startForegroundService(Actions.STOP, context);
+                Workmanager.stopPeriodicWorkmanager();
+                Calendar calenderbla = Calendar.getInstance();
+                int day1 = calenderbla.get(Calendar.DAY_OF_WEEK);
+                AlarmReceiver.startAlarmManager(day1,20,0, context, 1);
                 break;
         }
 
@@ -56,7 +64,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     //Start a alarm at a specific time
     @RequiresApi(api = Build.VERSION_CODES.KITKAT) //KITKAT is minimum version!
-    static void startAlarmManager(int day, int hour, int min, Context context1, int usage) {
+    public static void startAlarmManager(int day, int hour, int min, Context context1, int usage) {
 
         Calendar cal_alarm = Calendar.getInstance();
         cal_alarm.set(Calendar.HOUR_OF_DAY, hour);
@@ -71,7 +79,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         Intent intent = new Intent(context1, AlarmReceiver.class);
         intent.putExtra("com.doitstudio.backgroundingtestproject.AlarmIntentKey", usage);
-        PendingIntent pi = PendingIntent.getBroadcast(context1, 1, intent, 0);
+        PendingIntent pi = PendingIntent.getBroadcast(context1, usage, intent, 0);
         AlarmManager am = (AlarmManager) context1.getSystemService(ALARM_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -80,12 +88,12 @@ public class AlarmReceiver extends BroadcastReceiver {
             am.setExact(AlarmManager.RTC_WAKEUP, cal_alarm.getTimeInMillis(), pi);
         }
 
-        //Toast.makeText(context, "Alarm set to " + days[spDay.getSelectedItemPosition()] + ": " + hour + ":" + min, Toast.LENGTH_LONG).show();
+        Toast.makeText(context1, "Alarm set to " + day + ": " + hour + ":" + min, Toast.LENGTH_LONG).show();
     }
 
-    static void cancelAlarm(Context context1) {
+    static void cancelAlarm(Context context1, int usage) {
         Intent intent = new Intent(context1, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context1, 1, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context1, usage, intent, 0);
         AlarmManager alarmManager = (AlarmManager) context1.getSystemService(ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
     }

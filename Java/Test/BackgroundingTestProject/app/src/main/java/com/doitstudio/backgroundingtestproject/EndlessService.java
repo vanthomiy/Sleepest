@@ -79,6 +79,7 @@ public class EndlessService extends LifecycleService {
 
 
 
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void startService() {
         // If the service already running, do nothing.
@@ -118,13 +119,13 @@ public class EndlessService extends LifecycleService {
         // Start thread.
         thread.start();
 
-        Calendar calenderAlarm = Calendar.getInstance();
-        int day = calenderAlarm.get(Calendar.DAY_OF_WEEK) + 1;
+        /*Calendar calenderAlarm = Calendar.getInstance();
+        int day = calenderAlarm.get(Calendar.DAY_OF_WEEK);
         if (day > 7) {
             day = 1;
         }
-        AlarmReceiver.startAlarmManager(day,9,0, getApplicationContext(), 2);
-        Workmanager.startPeriodicWorkmanager(30);
+        AlarmReceiver.startAlarmManager(day,10,55, EndlessService.this, 2);
+        Workmanager.startPeriodicWorkmanager(30);*/
     }
 
     private void stopService() {
@@ -140,10 +141,10 @@ public class EndlessService extends LifecycleService {
         isServiceStarted = false;
         new ServiceTracker().setServiceState(this, ServiceState.STOPPED);
 
-        Workmanager.stopPeriodicWorkmanager();
+        /*Workmanager.stopPeriodicWorkmanager();
         Calendar calenderAlarm = Calendar.getInstance();
         int day = calenderAlarm.get(Calendar.DAY_OF_WEEK);
-        AlarmReceiver.startAlarmManager(day,20,0, getApplicationContext(), 1);
+        AlarmReceiver.startAlarmManager(day,20,0, getApplicationContext(), 1);*/
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
