@@ -79,7 +79,7 @@ namespace ExcelCalculationAddin
 
                 RootTime rt = new RootTime();
 
-                rt.id = (int)item.Key;
+                rt.id = ((int)item.Key).ToString();
                 //rt.sleepTimeParameter = SleepTimeClean.sleepTimeParamsWhile[item.Key];
                 rt.sleepTimePattern = item.Key;
 
