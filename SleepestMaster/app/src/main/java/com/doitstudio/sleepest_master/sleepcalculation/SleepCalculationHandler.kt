@@ -2,9 +2,12 @@ package com.doitstudio.sleepest_master.sleepcalculation
 
 import android.content.Context
 import androidx.lifecycle.asLiveData
+import com.doitstudio.sleepest_master.LiveUserSleepActivity
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.model.data.SleepState
+import com.doitstudio.sleepest_master.sleepcalculation.db.SleepTimeParameterEntity
 import com.doitstudio.sleepest_master.storage.DbRepository
+import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -49,18 +52,17 @@ class SleepCalculationHandler(private val context:Context){
      * TESTING: Call this every 30 min while sleeptime
      * It writes in the [LiveUserSleepActivity]
      */
-    suspend fun calculateLiveuserSleepActivity()
+    suspend fun calculateLiveUserSleepActivity()
     {
+
+        //region inital
+
         // We are using the default values for the user to check whether sleeping or not
         // Get them from the [ActualSleepUserParameterStatus]
         val defaultTimeParameterId = storeRepository.actualSleepUserParameterFlow.first().sleepTimePattern
 
         // Now retrieve the time parameter for the live user sleep activity
-        val defaultParameter = dbRepository.getSleepTimeModelById(defaultTimeParameterId).first()
-
-        if (defaultParameter.count() == 0)
-            // assign param not found later
-                return
+        val defaultParameter = dbRepository.getSleepTimeParameterById(defaultTimeParameterId)?: return
 
         // Get all available raw sleep api data
         val rawApiData = dbRepository.allSleepApiRawData.first()
@@ -73,13 +75,47 @@ class SleepCalculationHandler(private val context:Context){
 
         storeRepository.updateIsDataAvailable(true)
 
+        //endregion
 
-        
+        // Now we have everything we need to calculate the first sleep/no sleep segments
+
+        //region calculation
+
+        //Call the sleep analyse function
+        val sleep = CalculateSleepTime(defaultParameter, rawApiData)
+
+        //Define the time model out of the data
 
 
 
+        //endregion
 
 
+    }
+
+    fun CalculateSleepTime(parameter:SleepTimeParameterEntity, rawApiData:List<SleepApiRawDataEntity>) : List<Int>
+    {
+        var sleepList = mutableListOf<Int>(rawApiData.first().timestampSeconds)
+
+        var isSleeping = false
+
+        rawApiData.forEach {
+            apiData ->
+            if (!isSleeping && apiData.... )
+                sleepList.add(apiData.timestampSeconds)
+                isSleeping = true
+            else if(isSleeping && ....)
+                sleepList.add(apiData.timestampSeconds)
+                isSleeping = false
+        }
+
+        sleepList.add(rawApiData.last().timestampSeconds)
+
+        return sleepList
+    }
+
+    fun DefineActualModel(sleep:List<Int>, rawApiData:List<SleepApiRawDataEntity>) : List<Int>
+    {
 
     }
 

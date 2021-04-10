@@ -37,9 +37,6 @@ class SleepCalculationDbRepository(
     val allSleepTimeModels: Flow<List<SleepTimeModelEntity>> =
         sleepTimeModelDao.getAll()
 
-    suspend fun getSleepTimeModelById(parameterId: Int) : Flow<List<SleepTimeModelEntity>> {
-        return sleepTimeModelDao.getModelById(parameterId)
-    }
 
     suspend fun insertSleepTimeSegment(sleepTimeModel: SleepTimeModelEntity) {
         sleepTimeModelDao.insert(sleepTimeModel)
@@ -63,11 +60,15 @@ class SleepCalculationDbRepository(
 
     //endregion
 
-    //region Sleep Time Factor Models
+    //region Sleep Time Parameters
 
     val allSleepTimeParameters: Flow<List<SleepTimeParameterEntity>> =
         sleepTimeParameterDao.getAll()
 
+
+    suspend fun getSleepTimeParameterById(parameterId: Int) : SleepTimeParameterEntity? {
+        return sleepTimeParameterDao.getParameterById(parameterId)
+    }
 
     suspend fun insertSleepTimeParameters(sleepTimeParameters: List<SleepTimeParameterEntity>) {
         sleepTimeParameterDao.insertAll(sleepTimeParameters)
@@ -75,11 +76,14 @@ class SleepCalculationDbRepository(
 
     //endregion
 
-    //region Sleep State Models
+    //region Sleep State Parameters
 
     val allSleepStateParameters: Flow<List<SleepStateParameterEntity>> =
         sleepStateParameterDao.getAll()
 
+    suspend fun getSleepStateParameterById(parameterId: Int) : SleepStateParameterEntity {
+        return sleepStateParameterDao.getParameterById(parameterId)
+    }
 
     suspend fun insertSleepStateParameters(sleepStateParameterEntity: List<SleepStateParameterEntity>) {
         sleepStateParameterDao.insertAll(sleepStateParameterEntity)

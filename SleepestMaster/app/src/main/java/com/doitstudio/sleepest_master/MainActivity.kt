@@ -115,14 +115,6 @@ class MainActivity : AppCompatActivity() {
 
     fun buttonClick2(view: View){
 
-        val aaaa = 1
-        //mainViewModel.insertSometing()
-        scope.launch {
-            val a = (application as MainApplication).sleepCalculationDbRepository.allSleepStateModels.first()
-            val b = (application as MainApplication).sleepCalculationDbRepository.allSleepStateParameters.first()
-            val c = (application as MainApplication).sleepCalculationDbRepository.allSleepTimeModels.first()
-            val d = (application as MainApplication).sleepCalculationDbRepository.allSleepTimeParameters.first()
-        }
     }
 
     var isTimerRunning = false

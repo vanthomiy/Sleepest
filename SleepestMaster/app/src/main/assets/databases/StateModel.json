@@ -143,8 +143,8 @@
         }
       }
     },
-    "sleepStatePattern":49,
-    "userFactorPattern":51
+    "sleepStatePattern":"TOMANYSLEEP",
+    "userFactorPattern":"NORMAL"
   },
   {
     "id":"53",
@@ -290,8 +290,8 @@
         }
       }
     },
-    "sleepStatePattern":53,
-    "userFactorPattern":51
+    "sleepStatePattern":"TOLESSSLEEP",
+    "userFactorPattern":"NORMAL"
   },
   {
     "id":"73",
@@ -437,8 +437,8 @@
         }
       }
     },
-    "sleepStatePattern":55,
-    "userFactorPattern":51
+    "sleepStatePattern":"TOLESSDEEP",
+    "userFactorPattern":"NORMAL"
   },
   {
     "id":"33",
@@ -584,8 +584,8 @@
         }
       }
     },
-    "sleepStatePattern":51,
-    "userFactorPattern":51
+    "sleepStatePattern":"TOMANYDEEP",
+    "userFactorPattern":"NORMAL"
   },
   {
     "id":"83",
@@ -731,8 +731,8 @@
         }
       }
     },
-    "sleepStatePattern":56,
-    "userFactorPattern":51
+    "sleepStatePattern":"TOLESSREM",
+    "userFactorPattern":"NORMAL"
   },
   {
     "id":"43",
@@ -878,8 +878,8 @@
         }
       }
     },
-    "sleepStatePattern":52,
-    "userFactorPattern":51
+    "sleepStatePattern":"TOMANYREM",
+    "userFactorPattern":"NORMAL"
   },
   {
     "id":"14",
@@ -1025,8 +1025,8 @@
         }
       }
     },
-    "sleepStatePattern":49,
-    "userFactorPattern":52
+    "sleepStatePattern":"TOMANYSLEEP",
+    "userFactorPattern":"HEAVY"
   },
   {
     "id":"54",
@@ -1172,8 +1172,8 @@
         }
       }
     },
-    "sleepStatePattern":53,
-    "userFactorPattern":52
+    "sleepStatePattern":"TOLESSSLEEP",
+    "userFactorPattern":"HEAVY"
   },
   {
     "id":"74",
@@ -1319,8 +1319,8 @@
         }
       }
     },
-    "sleepStatePattern":55,
-    "userFactorPattern":52
+    "sleepStatePattern":"TOLESSDEEP",
+    "userFactorPattern":"HEAVY"
   },
   {
     "id":"34",
@@ -1466,8 +1466,8 @@
         }
       }
     },
-    "sleepStatePattern":51,
-    "userFactorPattern":52
+    "sleepStatePattern":"TOMANYDEEP",
+    "userFactorPattern":"HEAVY"
   },
   {
     "id":"84",
@@ -1613,8 +1613,8 @@
         }
       }
     },
-    "sleepStatePattern":56,
-    "userFactorPattern":52
+    "sleepStatePattern":"TOLESSREM",
+    "userFactorPattern":"HEAVY"
   },
   {
     "id":"44",
@@ -1760,8 +1760,8 @@
         }
       }
     },
-    "sleepStatePattern":52,
-    "userFactorPattern":52
+    "sleepStatePattern":"TOMANYREM",
+    "userFactorPattern":"HEAVY"
   },
   {
     "id":"15",
@@ -1907,8 +1907,8 @@
         }
       }
     },
-    "sleepStatePattern":49,
-    "userFactorPattern":53
+    "sleepStatePattern":"TOMANYSLEEP",
+    "userFactorPattern":"SUPERHEAVY"
   },
   {
     "id":"55",
@@ -2054,8 +2054,8 @@
         }
       }
     },
-    "sleepStatePattern":53,
-    "userFactorPattern":53
+    "sleepStatePattern":"TOLESSSLEEP",
+    "userFactorPattern":"SUPERHEAVY"
   },
   {
     "id":"75",
@@ -2201,8 +2201,8 @@
         }
       }
     },
-    "sleepStatePattern":55,
-    "userFactorPattern":53
+    "sleepStatePattern":"TOLESSDEEP",
+    "userFactorPattern":"SUPERHEAVY"
   },
   {
     "id":"35",
@@ -2348,8 +2348,8 @@
         }
       }
     },
-    "sleepStatePattern":51,
-    "userFactorPattern":53
+    "sleepStatePattern":"TOMANYDEEP",
+    "userFactorPattern":"SUPERHEAVY"
   },
   {
     "id":"85",
@@ -2495,7 +2495,7 @@
         }
       }
     },
-    "sleepStatePattern":56,
-    "userFactorPattern":53
+    "sleepStatePattern":"TOLESSREM",
+    "userFactorPattern":"SUPERHEAVY"
   }
 ]
