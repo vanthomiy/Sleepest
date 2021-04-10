@@ -12,9 +12,9 @@ namespace ExcelCalculationAddin.Model
 {
     public class SleepTimeParameter
     {
-        public TimeSpan awakeTime; // wie lange soll die awake zeit gezählt werden (Zukunft)
-        public TimeSpan sleepTime; // wie lange sollen vergangenheitswerte für einschlaf gezählt werden
-        public TimeSpan wakeUpTime; // wie lange sollen vergangenheitswerte für aufwachen gezählt werden
+        public int awakeTime; // wie lange soll die awake zeit gezählt werden (Zukunft)
+        public int sleepTime; // wie lange sollen vergangenheitswerte für einschlaf gezählt werden
+        public int wakeUpTime; // wie lange sollen vergangenheitswerte für aufwachen gezählt werden
 
         public float sleepSleepBorder; // grenze zum einschlafen
         public float awakeSleepBorder; // grenze zum aufwachen
@@ -114,9 +114,9 @@ namespace ExcelCalculationAddin.Model
         {
             return new SleepTimeParameter()
             {
-                awakeTime = new TimeSpan(00, 30, 00),
-                sleepTime = new TimeSpan(00, 50, 00),
-                wakeUpTime = new TimeSpan(01, 30, 00),
+                awakeTime = 30,// new TimeSpan(00, 30, 00),
+                sleepTime = 50,// new TimeSpan(00, 50, 00),
+                wakeUpTime = 60, //new TimeSpan(01, 30, 00),
 
                 sleepSleepBorder = 50,
                 awakeSleepBorder = 20,
@@ -135,9 +135,9 @@ namespace ExcelCalculationAddin.Model
         {
             return new SleepTimeParameter()
             {
-                awakeTime = new TimeSpan(0),
-                sleepTime = new TimeSpan(0),
-                wakeUpTime = new TimeSpan(0),
+                awakeTime = 0,// new TimeSpan(00, 30, 00),
+                sleepTime = 0,// new TimeSpan(00, 50, 00),
+                wakeUpTime = 0, //new TimeSpan(01, 30, 00),
 
                 sleepSleepBorder = 1,
                 awakeSleepBorder = 1,

@@ -45,9 +45,9 @@ namespace ExcelCalculationAddin.Model
             List<int> diffSleepF2 = new List<int>(); // Future Median sleep diff between sleep and wakeup
             List<int> diffAwakeF1 = new List<int>(); // Median sleep diff between awake and wakeup
 
-            TimeSpan awakeTime = parameters.awakeTime; 
-            TimeSpan sleepTime = parameters.sleepTime;
-            TimeSpan wakeUpTime = parameters.wakeUpTime;
+            TimeSpan awakeTime = TimeSpan.FromSeconds(parameters.awakeTime);
+            TimeSpan sleepTime = TimeSpan.FromSeconds(parameters.sleepTime);
+            TimeSpan wakeUpTime = TimeSpan.FromSeconds(parameters.wakeUpTime);
 
             int sleepSleep = (int)parameters.sleepSleepBorder, sleepAwake = (int)parameters.awakeSleepBorder;
             int motionSleep = (int)parameters.sleepMotionBorder, sleep = (int)parameters.sleepMedianOverTime, diffSleep = (int)parameters.diffSleep, diffSleepFuture = (int)parameters.diffSleepFuture;
