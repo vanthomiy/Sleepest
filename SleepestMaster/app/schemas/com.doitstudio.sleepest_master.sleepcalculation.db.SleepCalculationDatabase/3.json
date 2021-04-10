@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "981acc491521f9276ee7c7a2716eda9e",
+    "identityHash": "d139b8a4d3ee76053497a5221910f7b6",
     "entities": [
       {
         "tableName": "sleep_state_model_entity",
@@ -1242,7 +1242,7 @@
       },
       {
         "tableName": "sleep_time_parameter_entity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `userStartPattern` INTEGER NOT NULL, `sleepTimePattern` INTEGER NOT NULL, `awakeTime` REAL NOT NULL, `sleepTime` REAL NOT NULL, `wakeUpTime` REAL NOT NULL, `sleepSleepBorder` REAL NOT NULL, `awakeSleepBorder` REAL NOT NULL, `sleepMotionBorder` REAL NOT NULL, `awakeMotionBorder` REAL NOT NULL, `sleepMedianOverTime` REAL NOT NULL, `diffSleep` REAL NOT NULL, `diffSleepFuture` REAL NOT NULL, `awakeMedianOverTime` REAL NOT NULL, `diffAwake` REAL NOT NULL, `modelMatchPercentage` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `userFactorPattern` INTEGER NOT NULL, `sleepTimePattern` INTEGER NOT NULL, `awakeTime` INTEGER NOT NULL, `sleepTime` INTEGER NOT NULL, `wakeUpTime` INTEGER NOT NULL, `sleepSleepBorder` REAL NOT NULL, `awakeSleepBorder` REAL NOT NULL, `sleepMotionBorder` REAL NOT NULL, `awakeMotionBorder` REAL NOT NULL, `sleepMedianOverTime` REAL NOT NULL, `diffSleep` REAL NOT NULL, `diffSleepFuture` REAL NOT NULL, `awakeMedianOverTime` REAL NOT NULL, `diffAwake` REAL NOT NULL, `modelMatchPercentage` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -1251,8 +1251,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "userStartPattern",
-            "columnName": "userStartPattern",
+            "fieldPath": "userFactorPattern",
+            "columnName": "userFactorPattern",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -1265,19 +1265,19 @@
           {
             "fieldPath": "sleepTimeParameter.awakeTime",
             "columnName": "awakeTime",
-            "affinity": "REAL",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
             "fieldPath": "sleepTimeParameter.sleepTime",
             "columnName": "sleepTime",
-            "affinity": "REAL",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
             "fieldPath": "sleepTimeParameter.wakeUpTime",
             "columnName": "wakeUpTime",
-            "affinity": "REAL",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -1392,7 +1392,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '981acc491521f9276ee7c7a2716eda9e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd139b8a4d3ee76053497a5221910f7b6')"
     ]
   }
 }

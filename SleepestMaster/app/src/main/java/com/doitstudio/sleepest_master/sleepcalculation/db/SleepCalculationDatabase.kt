@@ -50,8 +50,8 @@ abstract class SleepCalculationDatabase : RoomDatabase() {
                         .addCallback(object : RoomDatabase.Callback() {
                             override fun onCreate(db: SupportSQLiteDatabase) {
                                 super.onCreate(db)
-                                //instance.sleepStateModelDao().setupDatabase(context)
-                                //instance.sleepTimeModelDao().setupDatabase(context)
+                                instance.sleepStateModelDao().setupDatabase(context)
+                                instance.sleepTimeModelDao().setupDatabase(context)
                                 instance.sleepStateParameterDao().setupDatabase(context)
                                 instance.sleepTimeParameterDao().setupDatabase(context)
                             }

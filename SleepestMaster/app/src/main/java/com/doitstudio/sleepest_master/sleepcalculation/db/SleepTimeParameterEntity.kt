@@ -14,7 +14,7 @@ data class SleepTimeParameterEntity(
         @PrimaryKey
         val id:String,
 
-        val userStartPattern: UserFactorPattern,//	Der name des aktuellen Patterns
+        val userFactorPattern: UserFactorPattern,//	Der name des aktuellen Patterns
 
         val sleepTimePattern: SleepTimePattern,//	Der name des aktuellen Patterns
 

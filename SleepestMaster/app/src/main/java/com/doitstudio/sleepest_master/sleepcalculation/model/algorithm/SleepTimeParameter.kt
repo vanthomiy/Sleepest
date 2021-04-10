@@ -6,9 +6,9 @@ import androidx.room.Entity
 data class SleepTimeParameter(
 
 
-        val awakeTime:Float,//	wie lange soll die awake zeit gezählt werden (Zukunft)
-        val sleepTime:	Float,//	wie lange sollen vergangenheitswerte für einschlaf gezählt werden
-        val wakeUpTime:	Float,//	 wie lange sollen vergangenheitswerte für aufwachen gezählt werden
+        val awakeTime:Int,//	wie lange soll die awake zeit gezählt werden (Zukunft)
+        val sleepTime:	Int,//	wie lange sollen vergangenheitswerte für einschlaf gezählt werden
+        val wakeUpTime:	Int,//	 wie lange sollen vergangenheitswerte für aufwachen gezählt werden
         val sleepSleepBorder:	Float,//	grenze zum einschlafen
         val awakeSleepBorder	:Float,	//grenze zum aufwachen
         val sleepMotionBorder:	Float,//	grenze zum einschlafen
