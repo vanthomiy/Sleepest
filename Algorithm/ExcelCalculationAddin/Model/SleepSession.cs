@@ -15,7 +15,7 @@ namespace ExcelCalculationAddin.Model
 {
     public class SleepSession
     {
-        public UserFactorPattern sleepUserType = UserFactorPattern.light;
+        public UserFactorPattern sleepUserType = UserFactorPattern.LIGHT;
 
         public static int actualRow = 3;
         public DateTime dateTime;
@@ -245,9 +245,9 @@ namespace ExcelCalculationAddin.Model
                         if (before > 0 || before1 > 0)
                         {
                             if (list.Key == 0)
-                                rw12 = "5";
+                                rw12 = "3";
                             else
-                                rw2 += "5";
+                                rw2 += "3";
                         }
 
                     }
@@ -259,9 +259,9 @@ namespace ExcelCalculationAddin.Model
                         if (same ==0)
                         {
                             if (list.Key == 0)
-                                rw11 = "3";
+                                rw11 = "1";
                             else
-                                rw2 += "3";
+                                rw2 += "1";
                         }
                         if ((after > 0 || after1 > 0) && sleepDataEntrieSleepTime.LastOrDefault().time > item.time)
                         {
@@ -343,56 +343,56 @@ namespace ExcelCalculationAddin.Model
 
                 if (realSleep[0] < caclSleep[0])
                 {
-                    rws1 = "3";
+                    rws1 = "5";
                 }
                 else if (realSleep[0] > caclSleep[0])
                 {
-                    rws1 = "2";
+                    rws1 = "1";
                 }
 
                 if (realSleep[2] < caclSleep[2] && !isjust4)
                 {
-                    rws2 = "5";
+                    rws2 = "3";
                 }
                 else if (realSleep[2] > caclSleep[2] && !isjust4)
                 {
-                    rws2 = "4";
+                    rws2 = "7";
                 }
 
                 if (realSleep[3] < caclSleep[3] && !isjust4)
                 {
-                    rws3 = "7";
+                    rws3 = "4";
                 }
                 else if (realSleep[3] > caclSleep[3] && !isjust4)
                 {
-                    rws3 = "6";
+                    rws3 = "8";
                 }
 
                 if (realSleep[0] < caclSleep1[0])
                 {
-                    rwas += "3";
+                    rwas += "5";
                 }
                 else if (realSleep[0] > caclSleep1[0])
                 {
-                    rwas += "2";
+                    rwas += "1";
                 }
 
                 if (realSleep[2] < caclSleep1[2] && !isjust4)
                 {
-                    rwas += "5";
+                    rwas += "3";
                 }
                 else if (realSleep[2] > caclSleep1[2] && !isjust4)
                 {
-                    rwas += "4";
+                    rwas += "7";
                 }
 
                 if (realSleep[3] < caclSleep1[3] && !isjust4)
                 {
-                    rwas += "7";
+                    rwas += "4";
                 }
                 else if (realSleep[3] > caclSleep1[3] && !isjust4)
                 {
-                    rwas += "6";
+                    rwas += "8";
                 }
 
 

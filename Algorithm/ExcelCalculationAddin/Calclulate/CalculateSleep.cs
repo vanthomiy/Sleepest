@@ -53,7 +53,7 @@ namespace ExcelCalculationAddin.Calclulate
                         if (!session.foundSleep)
                         {
                             session.nf1 = "nf";
-                            session.sleepUserType = SleepType.UserFactorPattern.light;
+                            session.sleepUserType = SleepType.UserFactorPattern.LIGHT;
                             param = SleepTimeParameter.AddFactorToParameter(param, SleepType.sleepTypeParamsAfter[session.sleepUserType], false);
 
                             await session.CalcSleepTimesRealTime(param, 0);
@@ -67,7 +67,7 @@ namespace ExcelCalculationAddin.Calclulate
                         else if (session.times > 1)
                         {
                             session.nf1 = "tm: "+ session.times;
-                            session.sleepUserType = SleepType.UserFactorPattern.heavy;
+                            session.sleepUserType = SleepType.UserFactorPattern.HEAVY;
                             session.times = 0;
                             param = SleepTimeParameter.AddFactorToParameter(param, SleepType.sleepTypeParamsAfter[session.sleepUserType], false);
 

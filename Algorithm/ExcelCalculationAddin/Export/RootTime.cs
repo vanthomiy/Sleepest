@@ -1,4 +1,6 @@
 ﻿using ExcelCalculationAddin.Model;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +41,8 @@ namespace ExcelCalculationAddin.Export
         public SleepTimeModelMaxMin sleepTimeModelMax { get; set; }
         public SleepTimeModelMaxMin sleepTimeModelMin { get; set; }
         //public SleepTimeParameter sleepTimeParameter { get; set; }
+
+        [JsonConverter(typeof(StringEnumConverter))]
         public SleepTimeCleanType sleepTimePattern { get; set; }
     }
 
@@ -46,8 +50,10 @@ namespace ExcelCalculationAddin.Export
     {
         public string id { get; set; } // SleepStateCleanType index + UserFactorPattern index
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public SleepTimeCleanType sleepTimePattern { get; set; }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public UserFactorPattern userFactorPattern { get; set; }
 
         public SleepTimeParameter sleepTimeParameter { get; set; }

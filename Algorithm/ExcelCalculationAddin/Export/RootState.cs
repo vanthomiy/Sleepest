@@ -1,9 +1,5 @@
-﻿using ExcelCalculationAddin.Model.SleepStateDetect;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using static ExcelCalculationAddin.Model.SleepStateDetect.SleepStateClean;
 using static ExcelCalculationAddin.Model.SleepStateDetect.SleepStateParameter;
 using static ExcelCalculationAddin.Model.SleepType;
@@ -28,8 +24,10 @@ namespace ExcelCalculationAddin.Export
     {
         public string id { get; set; } // SleepStateCleanType index + UserFactorPattern index
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public SleepStateCleanType sleepStatePattern { get; set; }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public UserFactorPattern userFactorPattern { get; set; }
 
         public Drittel sleepStateParameter { get; set; }

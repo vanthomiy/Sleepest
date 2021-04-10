@@ -1,5 +1,7 @@
 ﻿using ExcelCalculationAddin.Model.SleepStateDetect;
 using ExcelCalculationAddin.Read;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,13 +13,16 @@ namespace ExcelCalculationAddin.Model
     public class SleepType
     {
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public enum UserFactorPattern
         {
-            standard = 0,
-            superLight = 1,
-            light = 2,
-            heavy = 3,
-            superHeavy = 4,
+            NONE,
+            SUPERLIGHT,
+            LIGHT,
+            NORMAL,
+            HEAVY,
+            SUPERHEAVY
+
 
         }
 

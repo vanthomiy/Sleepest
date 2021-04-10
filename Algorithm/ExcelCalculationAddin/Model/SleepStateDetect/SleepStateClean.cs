@@ -11,14 +11,15 @@ namespace ExcelCalculationAddin.Model.SleepStateDetect
 
         public enum SleepStateCleanType
         {
-            zero = 0,
-            zero1 = 1,
-            TOLESSAWAKE = 2,
-            TOMUCHAWAKE = 3,
-            TOLESSDEEP = 4,
-            TOMUCHDEEP = 5,
-            TOLESSREM = 6,
-            TOMUCHREM = 7,
+            NONE,
+            TOMANYSLEEP,
+            TOMANYLIGHT,
+            TOMANYDEEP,
+            TOMANYREM,
+            TOLESSSLEEP,
+            TOLESSLIGHT,
+            TOLESSDEEP,
+            TOLESSREM
         }
 
 

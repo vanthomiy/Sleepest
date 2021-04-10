@@ -206,7 +206,7 @@ namespace ExcelCalculationAddin.Model
         {
             Dictionary<UserFactorPattern, SleepTimeParameter> asss = new Dictionary<UserFactorPattern, SleepTimeParameter>();
 
-            asss.Add(UserFactorPattern.standard, SleepTimeParameter.GetDefaultFactor());
+            asss.Add(UserFactorPattern.NORMAL, SleepTimeParameter.GetDefaultFactor());
 
             var workbook = (Workbook)Globals.ThisAddIn.Application.ActiveWorkbook;
             Worksheet worksheet1 = isWhile ? (Worksheet)workbook.Worksheets["SleeptypesWhile"] : (Worksheet)workbook.Worksheets["SleeptypesAfter"];
