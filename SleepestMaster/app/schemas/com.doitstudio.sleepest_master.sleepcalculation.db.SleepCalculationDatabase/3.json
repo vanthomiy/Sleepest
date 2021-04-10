@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "b81e2196ac21fff98838a960bfc7378c",
+    "identityHash": "981acc491521f9276ee7c7a2716eda9e",
     "entities": [
       {
         "tableName": "sleep_state_model_entity",
@@ -1138,7 +1138,7 @@
       },
       {
         "tableName": "sleep_state_parameter_entity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `userFactorPattern` INTEGER NOT NULL, `sleepStatePattern` INTEGER NOT NULL, `sleepSleepBorder` INTEGER NOT NULL, `deepSleepSleepBorder` INTEGER NOT NULL, `remSleepSleepBorder` INTEGER NOT NULL, `sleepMotionBorder` INTEGER NOT NULL, `deepSleepMotionBorder` INTEGER NOT NULL, `remSleepMotionBorder` INTEGER NOT NULL, `sleepLightBorder` INTEGER NOT NULL, `deepSleepLightBorder` INTEGER NOT NULL, `remSleepLightBorder` INTEGER NOT NULL, `soundClearSleepBorder` INTEGER NOT NULL, `soundClearMotionBorder` INTEGER NOT NULL, `modelMatchPercentage` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `userFactorPattern` INTEGER NOT NULL, `sleepStatePattern` INTEGER NOT NULL, `sleepSleepBorder` REAL NOT NULL, `deepSleepSleepBorder` REAL NOT NULL, `remSleepSleepBorder` REAL NOT NULL, `sleepMotionBorder` REAL NOT NULL, `deepSleepMotionBorder` REAL NOT NULL, `remSleepMotionBorder` REAL NOT NULL, `sleepLightBorder` REAL NOT NULL, `deepSleepLightBorder` REAL NOT NULL, `remSleepLightBorder` REAL NOT NULL, `soundClearSleepBorder` REAL NOT NULL, `soundClearMotionBorder` REAL NOT NULL, `modelMatchPercentage` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -1161,67 +1161,67 @@
           {
             "fieldPath": "sleepStateParameter.sleepSleepBorder",
             "columnName": "sleepSleepBorder",
-            "affinity": "INTEGER",
+            "affinity": "REAL",
             "notNull": true
           },
           {
             "fieldPath": "sleepStateParameter.deepSleepSleepBorder",
             "columnName": "deepSleepSleepBorder",
-            "affinity": "INTEGER",
+            "affinity": "REAL",
             "notNull": true
           },
           {
             "fieldPath": "sleepStateParameter.remSleepSleepBorder",
             "columnName": "remSleepSleepBorder",
-            "affinity": "INTEGER",
+            "affinity": "REAL",
             "notNull": true
           },
           {
             "fieldPath": "sleepStateParameter.sleepMotionBorder",
             "columnName": "sleepMotionBorder",
-            "affinity": "INTEGER",
+            "affinity": "REAL",
             "notNull": true
           },
           {
             "fieldPath": "sleepStateParameter.deepSleepMotionBorder",
             "columnName": "deepSleepMotionBorder",
-            "affinity": "INTEGER",
+            "affinity": "REAL",
             "notNull": true
           },
           {
             "fieldPath": "sleepStateParameter.remSleepMotionBorder",
             "columnName": "remSleepMotionBorder",
-            "affinity": "INTEGER",
+            "affinity": "REAL",
             "notNull": true
           },
           {
             "fieldPath": "sleepStateParameter.sleepLightBorder",
             "columnName": "sleepLightBorder",
-            "affinity": "INTEGER",
+            "affinity": "REAL",
             "notNull": true
           },
           {
             "fieldPath": "sleepStateParameter.deepSleepLightBorder",
             "columnName": "deepSleepLightBorder",
-            "affinity": "INTEGER",
+            "affinity": "REAL",
             "notNull": true
           },
           {
             "fieldPath": "sleepStateParameter.remSleepLightBorder",
             "columnName": "remSleepLightBorder",
-            "affinity": "INTEGER",
+            "affinity": "REAL",
             "notNull": true
           },
           {
             "fieldPath": "sleepStateParameter.soundClearSleepBorder",
             "columnName": "soundClearSleepBorder",
-            "affinity": "INTEGER",
+            "affinity": "REAL",
             "notNull": true
           },
           {
             "fieldPath": "sleepStateParameter.soundClearMotionBorder",
             "columnName": "soundClearMotionBorder",
-            "affinity": "INTEGER",
+            "affinity": "REAL",
             "notNull": true
           },
           {
@@ -1392,7 +1392,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b81e2196ac21fff98838a960bfc7378c')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '981acc491521f9276ee7c7a2716eda9e')"
     ]
   }
 }

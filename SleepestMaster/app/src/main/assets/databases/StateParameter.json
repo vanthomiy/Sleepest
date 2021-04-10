@@ -1,192 +1,192 @@
 [
-   {
-      "id": "10",
-      "sleepStatePattern": "NONE",
-      "userFactorPattern": "NONE",
-      "sleepStateParameter": {
-         "sleepSleepBorder": 20,
-         "deepSleepSleepBorder": 90,
-         "remSleepSleepBorder": 95,
-         "sleepMotionBorder": 5,
-         "deepSleepMotionBorder": 3,
-         "remSleepMotionBorder": 1,
-         "sleepLightBorder": 5,
-         "deepSleepLightBorder": 3,
-         "remSleepLightBorder": 1,
-         "soundClearSleepBorder": 7,
-         "soundClearMotionBorder": 1,
-         "modelMatchPercentage": 98
-      }
-   },
-   {
-      "id": "20",
-      "sleepStatePattern": "NONE",
-      "userFactorPattern": "NONE",
-      "sleepStateParameter": {
-         "sleepSleepBorder": 30,
-         "deepSleepSleepBorder": 90,
-         "remSleepSleepBorder": 95,
-         "sleepMotionBorder": 4,
-         "deepSleepMotionBorder": 3,
-         "remSleepMotionBorder": 1,
-         "sleepLightBorder": 4,
-         "deepSleepLightBorder": 3,
-         "remSleepLightBorder": 1,
-         "soundClearSleepBorder": 7,
-         "soundClearMotionBorder": 1,
-         "modelMatchPercentage": 98
-      }
-   },
-   {
-      "id": "30",
-      "sleepStatePattern": "NONE",
-      "userFactorPattern": "NONE",
-      "sleepStateParameter": {
-         "sleepSleepBorder": 20,
-         "deepSleepSleepBorder": 90,
-         "remSleepSleepBorder": 95,
-         "sleepMotionBorder": 6,
-         "deepSleepMotionBorder": 3,
-         "remSleepMotionBorder": 1,
-         "sleepLightBorder": 6,
-         "deepSleepLightBorder": 3,
-         "remSleepLightBorder": 1,
-         "soundClearSleepBorder": 7,
-         "soundClearMotionBorder": 1,
-         "modelMatchPercentage": 98
-      }
-   },
-   {
-      "id": "40",
-      "sleepStatePattern": "NONE",
-      "userFactorPattern": "NONE",
-      "sleepStateParameter": {
-         "sleepSleepBorder": 20,
-         "deepSleepSleepBorder": 85,
-         "remSleepSleepBorder": 95,
-         "sleepMotionBorder": 5,
-         "deepSleepMotionBorder": 3,
-         "remSleepMotionBorder": 1,
-         "sleepLightBorder": 5,
-         "deepSleepLightBorder": 3,
-         "remSleepLightBorder": 1,
-         "soundClearSleepBorder": 7,
-         "soundClearMotionBorder": 1,
-         "modelMatchPercentage": 98
-      }
-   },
-   {
-      "id": "50",
-      "sleepStatePattern": "NONE",
-      "userFactorPattern": "NONE",
-      "sleepStateParameter": {
-         "sleepSleepBorder": 20,
-         "deepSleepSleepBorder": 90,
-         "remSleepSleepBorder": 95,
-         "sleepMotionBorder": 5,
-         "deepSleepMotionBorder": 2,
-         "remSleepMotionBorder": 1,
-         "sleepLightBorder": 5,
-         "deepSleepLightBorder": 3,
-         "remSleepLightBorder": 1,
-         "soundClearSleepBorder": 7,
-         "soundClearMotionBorder": 1,
-         "modelMatchPercentage": 98
-      }
-   },
-   {
-      "id": "60",
-      "sleepStatePattern": "NONE",
-      "userFactorPattern": "NONE",
-      "sleepStateParameter": {
-         "sleepSleepBorder": 20,
-         "deepSleepSleepBorder": 90,
-         "remSleepSleepBorder": 95,
-         "sleepMotionBorder": 5,
-         "deepSleepMotionBorder": 3,
-         "remSleepMotionBorder": 3,
-         "sleepLightBorder": 5,
-         "deepSleepLightBorder": 3,
-         "remSleepLightBorder": 3,
-         "soundClearSleepBorder": 7,
-         "soundClearMotionBorder": 1,
-         "modelMatchPercentage": 98
-      }
-   },
-   {
-      "id": "70",
-      "sleepStatePattern": "NONE",
-      "userFactorPattern": "NONE",
-      "sleepStateParameter": {
-         "sleepSleepBorder": 20,
-         "deepSleepSleepBorder": 90,
-         "remSleepSleepBorder": 96,
-         "sleepMotionBorder": 5,
-         "deepSleepMotionBorder": 3,
-         "remSleepMotionBorder": 1,
-         "sleepLightBorder": 5,
-         "deepSleepLightBorder": 3,
-         "remSleepLightBorder": 1,
-         "soundClearSleepBorder": 7,
-         "soundClearMotionBorder": 1,
-         "modelMatchPercentage": 98
-      }
-   },
-   {
-      "id": "01",
-      "sleepStatePattern": "NONE",
-      "userFactorPattern": "NONE",
-      "sleepStateParameter": {
-         "sleepSleepBorder": 1,
-         "deepSleepSleepBorder": 1,
-         "remSleepSleepBorder": 1,
-         "sleepMotionBorder": 1,
-         "deepSleepMotionBorder": 1,
-         "remSleepMotionBorder": 1,
-         "sleepLightBorder": 1,
-         "deepSleepLightBorder": 1,
-         "remSleepLightBorder": 1,
-         "soundClearSleepBorder": 0,
-         "soundClearMotionBorder": 0,
-         "modelMatchPercentage": 0
-      }
-   },
-   {
-      "id": "02",
-      "sleepStatePattern": "NONE",
-      "userFactorPattern": "NONE",
-      "sleepStateParameter": {
-         "sleepSleepBorder": 1,
-         "deepSleepSleepBorder": 1,
-         "remSleepSleepBorder": 1,
-         "sleepMotionBorder": 1,
-         "deepSleepMotionBorder": 1,
-         "remSleepMotionBorder": 1,
-         "sleepLightBorder": 1,
-         "deepSleepLightBorder": 1,
-         "remSleepLightBorder": 1,
-         "soundClearSleepBorder": 0,
-         "soundClearMotionBorder": 0,
-         "modelMatchPercentage": 0
-      }
-   },
-   {
-      "id": "03",
-      "sleepStatePattern": "NONE",
-      "userFactorPattern": "NONE",
-      "sleepStateParameter": {
-         "sleepSleepBorder": 2,
-         "deepSleepSleepBorder": 1,
-         "remSleepSleepBorder": 1,
-         "sleepMotionBorder": 1,
-         "deepSleepMotionBorder": 1,
-         "remSleepMotionBorder": 1,
-         "sleepLightBorder": 1,
-         "deepSleepLightBorder": 1,
-         "remSleepLightBorder": 1,
-         "soundClearSleepBorder": 0,
-         "soundClearMotionBorder": 0,
-         "modelMatchPercentage": 0
-      }
-   }
+  {
+    "id":"00",
+    "sleepStatePattern":"NONE",
+    "userFactorPattern":"NONE",
+    "sleepStateParameter":{
+      "sleepSleepBorder":20.0,
+      "deepSleepSleepBorder":90.0,
+      "remSleepSleepBorder":95.0,
+      "sleepMotionBorder":5.0,
+      "deepSleepMotionBorder":3.0,
+      "remSleepMotionBorder":1.0,
+      "sleepLightBorder":5.0,
+      "deepSleepLightBorder":3.0,
+      "remSleepLightBorder":1.0,
+      "soundClearSleepBorder":7.0,
+      "soundClearMotionBorder":1.0,
+      "modelMatchPercentage":98.0
+    }
+  },
+  {
+    "id":"10",
+    "sleepStatePattern":"TOMANYSLEEP",
+    "userFactorPattern":"NONE",
+    "sleepStateParameter":{
+      "sleepSleepBorder":30.0,
+      "deepSleepSleepBorder":90.0,
+      "remSleepSleepBorder":95.0,
+      "sleepMotionBorder":4.0,
+      "deepSleepMotionBorder":3.0,
+      "remSleepMotionBorder":1.0,
+      "sleepLightBorder":4.0,
+      "deepSleepLightBorder":3.0,
+      "remSleepLightBorder":1.0,
+      "soundClearSleepBorder":7.0,
+      "soundClearMotionBorder":1.0,
+      "modelMatchPercentage":98.0
+    }
+  },
+  {
+    "id":"50",
+    "sleepStatePattern":"TOLESSSLEEP",
+    "userFactorPattern":"NONE",
+    "sleepStateParameter":{
+      "sleepSleepBorder":20.0,
+      "deepSleepSleepBorder":90.0,
+      "remSleepSleepBorder":95.0,
+      "sleepMotionBorder":6.0,
+      "deepSleepMotionBorder":3.0,
+      "remSleepMotionBorder":1.0,
+      "sleepLightBorder":6.0,
+      "deepSleepLightBorder":3.0,
+      "remSleepLightBorder":1.0,
+      "soundClearSleepBorder":7.0,
+      "soundClearMotionBorder":1.0,
+      "modelMatchPercentage":98.0
+    }
+  },
+  {
+    "id":"70",
+    "sleepStatePattern":"TOLESSDEEP",
+    "userFactorPattern":"NONE",
+    "sleepStateParameter":{
+      "sleepSleepBorder":20.0,
+      "deepSleepSleepBorder":85.0,
+      "remSleepSleepBorder":95.0,
+      "sleepMotionBorder":5.0,
+      "deepSleepMotionBorder":3.0,
+      "remSleepMotionBorder":1.0,
+      "sleepLightBorder":5.0,
+      "deepSleepLightBorder":3.0,
+      "remSleepLightBorder":1.0,
+      "soundClearSleepBorder":7.0,
+      "soundClearMotionBorder":1.0,
+      "modelMatchPercentage":98.0
+    }
+  },
+  {
+    "id":"30",
+    "sleepStatePattern":"TOMANYDEEP",
+    "userFactorPattern":"NONE",
+    "sleepStateParameter":{
+      "sleepSleepBorder":20.0,
+      "deepSleepSleepBorder":90.0,
+      "remSleepSleepBorder":95.0,
+      "sleepMotionBorder":5.0,
+      "deepSleepMotionBorder":2.0,
+      "remSleepMotionBorder":1.0,
+      "sleepLightBorder":5.0,
+      "deepSleepLightBorder":3.0,
+      "remSleepLightBorder":1.0,
+      "soundClearSleepBorder":7.0,
+      "soundClearMotionBorder":1.0,
+      "modelMatchPercentage":98.0
+    }
+  },
+  {
+    "id":"80",
+    "sleepStatePattern":"TOLESSREM",
+    "userFactorPattern":"NONE",
+    "sleepStateParameter":{
+      "sleepSleepBorder":20.0,
+      "deepSleepSleepBorder":90.0,
+      "remSleepSleepBorder":95.0,
+      "sleepMotionBorder":5.0,
+      "deepSleepMotionBorder":3.0,
+      "remSleepMotionBorder":3.0,
+      "sleepLightBorder":5.0,
+      "deepSleepLightBorder":3.0,
+      "remSleepLightBorder":3.0,
+      "soundClearSleepBorder":7.0,
+      "soundClearMotionBorder":1.0,
+      "modelMatchPercentage":98.0
+    }
+  },
+  {
+    "id":"40",
+    "sleepStatePattern":"TOMANYREM",
+    "userFactorPattern":"NONE",
+    "sleepStateParameter":{
+      "sleepSleepBorder":20.0,
+      "deepSleepSleepBorder":90.0,
+      "remSleepSleepBorder":96.0,
+      "sleepMotionBorder":5.0,
+      "deepSleepMotionBorder":3.0,
+      "remSleepMotionBorder":1.0,
+      "sleepLightBorder":5.0,
+      "deepSleepLightBorder":3.0,
+      "remSleepLightBorder":1.0,
+      "soundClearSleepBorder":7.0,
+      "soundClearMotionBorder":1.0,
+      "modelMatchPercentage":98.0
+    }
+  },
+  {
+    "id":"03",
+    "sleepStatePattern":"NONE",
+    "userFactorPattern":"NORMAL",
+    "sleepStateParameter":{
+      "sleepSleepBorder":1.0,
+      "deepSleepSleepBorder":1.0,
+      "remSleepSleepBorder":1.0,
+      "sleepMotionBorder":1.0,
+      "deepSleepMotionBorder":1.0,
+      "remSleepMotionBorder":1.0,
+      "sleepLightBorder":1.0,
+      "deepSleepLightBorder":1.0,
+      "remSleepLightBorder":1.0,
+      "soundClearSleepBorder":0.0,
+      "soundClearMotionBorder":0.0,
+      "modelMatchPercentage":0.0
+    }
+  },
+  {
+    "id":"04",
+    "sleepStatePattern":"NONE",
+    "userFactorPattern":"HEAVY",
+    "sleepStateParameter":{
+      "sleepSleepBorder":1.0,
+      "deepSleepSleepBorder":1.0,
+      "remSleepSleepBorder":1.0,
+      "sleepMotionBorder":1.0,
+      "deepSleepMotionBorder":1.0,
+      "remSleepMotionBorder":1.0,
+      "sleepLightBorder":1.0,
+      "deepSleepLightBorder":1.0,
+      "remSleepLightBorder":1.0,
+      "soundClearSleepBorder":0.0,
+      "soundClearMotionBorder":0.0,
+      "modelMatchPercentage":0.0
+    }
+  },
+  {
+    "id":"05",
+    "sleepStatePattern":"NONE",
+    "userFactorPattern":"SUPERHEAVY",
+    "sleepStateParameter":{
+      "sleepSleepBorder":2.0,
+      "deepSleepSleepBorder":1.0,
+      "remSleepSleepBorder":1.0,
+      "sleepMotionBorder":1.0,
+      "deepSleepMotionBorder":1.0,
+      "remSleepMotionBorder":1.0,
+      "sleepLightBorder":1.0,
+      "deepSleepLightBorder":1.0,
+      "remSleepLightBorder":1.0,
+      "soundClearSleepBorder":0.0,
+      "soundClearMotionBorder":0.0,
+      "modelMatchPercentage":0.0
+    }
+  }
 ]

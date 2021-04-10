@@ -20,7 +20,9 @@ import com.doitstudio.sleepest_master.model.data.UserFactorPattern
 import com.doitstudio.sleepest_master.sleepapi.SleepHandler
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.sleepcalculation.db.SleepStateParameterEntity
+import com.doitstudio.sleepest_master.sleepcalculation.db.SleepTimeParameterEntity
 import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepStateParameter
+import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepTimeParameter
 import com.doitstudio.sleepest_master.storage.db.SleepSegmentEntity
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
@@ -129,8 +131,7 @@ class MainActivity : AppCompatActivity() {
 
         // Testing
 
-        val stpe = SleepStateParameterEntity("12", UserFactorPattern.NORMAL, SleepStatePattern.TOLESSREM, SleepStateParameter(1,1,1,1,1,1,1,1,1,1,1,20))
-
+        val stpe = SleepStateParameterEntity("12", UserFactorPattern.NORMAL, SleepStatePattern.TOLESSREM, SleepStateParameter(1f,1f,1f,1f,1f,1f,1f,1f,1f,1f,1f,20))
         val jsonString = Gson().toJson(stpe)
 
     }
