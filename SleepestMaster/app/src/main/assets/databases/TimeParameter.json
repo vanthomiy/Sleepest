@@ -1,0 +1,182 @@
+[
+   {
+      "id": "20",
+      "sleepTimePattern": 2,
+      "userFactorPattern": 0,
+      "sleepTimeParameter": {
+         "awakeTime": "00:30:00",
+         "sleepTime": "00:50:00",
+         "wakeUpTime": "01:30:00",
+         "sleepSleepBorder": 50,
+         "awakeSleepBorder": 10,
+         "sleepMotionBorder": 4,
+         "awakeMotionBorder": 0,
+         "sleepMedianOverTime": 75,
+         "diffSleep": 50,
+         "diffSleepFuture": 0,
+         "awakeMedianOverTime": 20,
+         "diffAwake": -5,
+         "modelMatchPercentage": 95
+      }
+   },
+   {
+      "id": "30",
+      "sleepTimePattern": 3,
+      "userFactorPattern": 0,
+      "sleepTimeParameter": {
+         "awakeTime": "00:30:00",
+         "sleepTime": "00:50:00",
+         "wakeUpTime": "01:30:00",
+         "sleepSleepBorder": 50,
+         "awakeSleepBorder": 60,
+         "sleepMotionBorder": 4,
+         "awakeMotionBorder": 3,
+         "sleepMedianOverTime": 75,
+         "diffSleep": 50,
+         "diffSleepFuture": 0,
+         "awakeMedianOverTime": 45,
+         "diffAwake": -5,
+         "modelMatchPercentage": 95
+      }
+   },
+   {
+      "id": "40",
+      "sleepTimePattern": 4,
+      "userFactorPattern": 0,
+      "sleepTimeParameter": {
+         "awakeTime": "00:30:00",
+         "sleepTime": "00:50:00",
+         "wakeUpTime": "01:30:00",
+         "sleepSleepBorder": 77,
+         "awakeSleepBorder": 20,
+         "sleepMotionBorder": 5,
+         "awakeMotionBorder": 0,
+         "sleepMedianOverTime": 80,
+         "diffSleep": 50,
+         "diffSleepFuture": 0,
+         "awakeMedianOverTime": 30,
+         "diffAwake": -5,
+         "modelMatchPercentage": 95
+      }
+   },
+   {
+      "id": "50",
+      "sleepTimePattern": 5,
+      "userFactorPattern": 0,
+      "sleepTimeParameter": {
+         "awakeTime": "00:30:00",
+         "sleepTime": "00:50:00",
+         "wakeUpTime": "01:30:00",
+         "sleepSleepBorder": 50,
+         "awakeSleepBorder": 20,
+         "sleepMotionBorder": 6,
+         "awakeMotionBorder": 0,
+         "sleepMedianOverTime": 60,
+         "diffSleep": 45,
+         "diffSleepFuture": 0,
+         "awakeMedianOverTime": 30,
+         "diffAwake": -5,
+         "modelMatchPercentage": 95
+      }
+   },
+   {
+      "id": "00",
+      "sleepTimePattern": 0,
+      "userFactorPattern": 0,
+      "sleepTimeParameter": {
+         "awakeTime": "00:00:00",
+         "sleepTime": "00:00:00",
+         "wakeUpTime": "00:00:00",
+         "sleepSleepBorder": 1,
+         "awakeSleepBorder": 1,
+         "sleepMotionBorder": 1,
+         "awakeMotionBorder": 1,
+         "sleepMedianOverTime": 1,
+         "diffSleep": 1,
+         "diffSleepFuture": 1,
+         "awakeMedianOverTime": 1,
+         "diffAwake": 1,
+         "modelMatchPercentage": 1
+      }
+   },
+   {
+      "id": "02",
+      "sleepTimePattern": 0,
+      "userFactorPattern": 2,
+      "sleepTimeParameter": {
+         "awakeTime": "00:00:00",
+         "sleepTime": "00:00:00",
+         "wakeUpTime": "00:00:00",
+         "sleepSleepBorder": 0.7,
+         "awakeSleepBorder": 1,
+         "sleepMotionBorder": 1.75,
+         "awakeMotionBorder": 1,
+         "sleepMedianOverTime": 0.8,
+         "diffSleep": 0.7,
+         "diffSleepFuture": 1,
+         "awakeMedianOverTime": 1,
+         "diffAwake": 1,
+         "modelMatchPercentage": 1
+      }
+   },
+   {
+      "id": "03",
+      "sleepTimePattern": 0,
+      "userFactorPattern": 3,
+      "sleepTimeParameter": {
+         "awakeTime": "00:00:00",
+         "sleepTime": "00:00:00",
+         "wakeUpTime": "00:00:00",
+         "sleepSleepBorder": 1,
+         "awakeSleepBorder": 1,
+         "sleepMotionBorder": 1,
+         "awakeMotionBorder": 1,
+         "sleepMedianOverTime": 1,
+         "diffSleep": 1.6,
+         "diffSleepFuture": 1,
+         "awakeMedianOverTime": 1,
+         "diffAwake": 1,
+         "modelMatchPercentage": 1
+      }
+   },
+   {
+      "id": "01",
+      "sleepTimePattern": 0,
+      "userFactorPattern": 1,
+      "sleepTimeParameter": {
+         "awakeTime": "00:00:00",
+         "sleepTime": "00:00:00",
+         "wakeUpTime": "00:00:00",
+         "sleepSleepBorder": 35,
+         "awakeSleepBorder": 1,
+         "sleepMotionBorder": 1.75,
+         "awakeMotionBorder": 1,
+         "sleepMedianOverTime": 60,
+         "diffSleep": 21.875,
+         "diffSleepFuture": 1,
+         "awakeMedianOverTime": 1,
+         "diffAwake": 1,
+         "modelMatchPercentage": 1
+      }
+   },
+   {
+      "id": "04",
+      "sleepTimePattern": 0,
+      "userFactorPattern": 4,
+      "sleepTimeParameter": {
+         "awakeTime": "00:00:00",
+         "sleepTime": "00:00:00",
+         "wakeUpTime": "00:00:00",
+         "sleepSleepBorder": 50,
+         "awakeSleepBorder": 1,
+         "sleepMotionBorder": 1,
+         "awakeMotionBorder": 1,
+         "sleepMedianOverTime": 75,
+         "diffSleep": 50,
+         "diffSleepFuture": 1,
+         "awakeMedianOverTime": 1,
+         "diffAwake": 1,
+         "modelMatchPercentage": 1
+      }
+   }
+]

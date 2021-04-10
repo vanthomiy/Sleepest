@@ -1,6 +1,8 @@
 package com.doitstudio.sleepest_master.sleepcalculation.model.algorithm
 
+import androidx.room.Entity
 
+@Entity
 data class SleepTimeParameter(
 
 

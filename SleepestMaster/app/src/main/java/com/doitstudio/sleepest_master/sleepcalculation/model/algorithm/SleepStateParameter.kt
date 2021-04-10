@@ -7,17 +7,17 @@ import com.doitstudio.sleepest_master.model.data.SleepStatePattern
 @Entity
 data class SleepStateParameter(
 
-        val sleepSleepBorder	:Float,//	Schlaf-Schlafgrenze
-        val deepSleepSleepBorder:	Float,//	Schlaf-Tiefschlafphasengrenze
-        val remSleepSleepBorder	:Float,	//Schlaf-Remschlafphasengrenze
-        val sleepMotionBorder	:Float,	//Motion-Schlafgrenze
-        val deepSleepMotionBorder:	Float,	//Motion-Tiefschlafphasengrenze
-        val remSleepMotionBorder:	Float,//	Motion-Remschlafphasengrenze
-        val sleepLightBorder	:Float	,//Licht-Schlafgrenze
-        val deepSleepLightBorder:	Float,//	Licht-Tiefschlafphasengrenze
-        val remSleepLightBorder	:Float,//	Licht-Remschlafphasengrenze
-        val soundClearSleepBorder:	Float,	//Soundbereinigung Schlafgrenze
-        val soundClearMotionBorder:	Float,//	Soundbereinigung Motion grenze
+        val sleepSleepBorder	:Int,//	Schlaf-Schlafgrenze
+        val deepSleepSleepBorder:	Int,//	Schlaf-Tiefschlafphasengrenze
+        val remSleepSleepBorder	:Int,	//Schlaf-Remschlafphasengrenze
+        val sleepMotionBorder	:Int,	//Motion-Schlafgrenze
+        val deepSleepMotionBorder:	Int,	//Motion-Tiefschlafphasengrenze
+        val remSleepMotionBorder:	Int,//	Motion-Remschlafphasengrenze
+        val sleepLightBorder	:Int	,//Licht-Schlafgrenze
+        val deepSleepLightBorder:	Int,//	Licht-Tiefschlafphasengrenze
+        val remSleepLightBorder	:Int,//	Licht-Remschlafphasengrenze
+        val soundClearSleepBorder:	Int,	//Soundbereinigung Schlafgrenze
+        val soundClearMotionBorder:	Int,//	Soundbereinigung Motion grenze
         val modelMatchPercentage	:Int//	Zu wie viel Prozent sollten die Models übereinstimmen
 
 

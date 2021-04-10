@@ -35,8 +35,8 @@ class MainApplication : Application() {
         SleepCalculationDbRepository.getRepo(
             sleepCalcDatabase.sleepStateModelDao(),
             sleepCalcDatabase.sleepTimeModelDao(),
-            sleepCalcDatabase.sleepStateFactorModelDao(),
-            sleepCalcDatabase.sleepTimeFactorModelDao(),
+            sleepCalcDatabase.sleepStateParameterDao(),
+            sleepCalcDatabase.sleepTimeParameterDao(),
             sleepCalcDatabase.sleepApiRawDataDao()
         )
     }

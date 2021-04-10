@@ -55,6 +55,7 @@ enum class ActivityOnDay{
  * Defines the sleep time pattern of a user sleep session
  */
 enum class SleepTimePattern{
+    NONE,
     WAKEUPTOLATE,
     WAKEUPTOEARLY,
     ASLEEPTOLATE,
@@ -66,6 +67,7 @@ enum class SleepTimePattern{
  * Defines the sleep state pattern of a user sleep session
  */
 enum class SleepStatePattern{
+    NONE,
     TOMANYSLEEP,
     TOMANYLIGHT,
     TOMANYDEEP,
@@ -80,7 +82,8 @@ enum class SleepStatePattern{
 /**
  * Defines the possible sleep start pattern of the user
  */
-enum class UserStartPattern{
+enum class UserFactorPattern{
+    NONE,
     SUPERLIGHT,
     LIGHT,
     NORMAL,

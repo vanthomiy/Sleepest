@@ -1,5 +1,6 @@
 package com.doitstudio.sleepest_master.sleepcalculation.db
 
+import android.content.Context
 import androidx.room.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -26,11 +27,11 @@ interface SleepStateModelDao {
     @Query("DELETE FROM sleep_state_model_entity")
     suspend fun deleteAll()
 
-    fun setupDatabase(){
+    fun setupDatabase(context: Context){
         val scope: CoroutineScope = MainScope()
 
         scope.launch{
-            insertAll(SleepStateModelEntity.setupDefaultEntities())
+            insertAll(SleepStateModelEntity.setupDefaultEntities(context))
         }
     }
 }

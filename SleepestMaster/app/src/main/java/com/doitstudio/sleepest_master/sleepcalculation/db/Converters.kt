@@ -36,13 +36,13 @@ class Converters {
     }
 
     @TypeConverter
-    fun fromUserStartPattern(userStartPattern: UserStartPattern) : Int {
-        return userStartPattern.ordinal
+    fun fromUserStartPattern(userFactorPattern: UserFactorPattern) : Int {
+        return userFactorPattern.ordinal
     }
 
     @TypeConverter
-    fun toUserStartPattern(userStartPattern: Int) : UserStartPattern {
-        return UserStartPattern.values()[userStartPattern]
+    fun toUserStartPattern(userFactorPattern: Int) : UserFactorPattern {
+        return UserFactorPattern.values()[userFactorPattern]
     }
 
     @TypeConverter

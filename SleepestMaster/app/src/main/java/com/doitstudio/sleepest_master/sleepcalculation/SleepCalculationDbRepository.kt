@@ -10,11 +10,11 @@ import kotlinx.coroutines.flow.Flow
 *
  */
 class SleepCalculationDbRepository(
-    private val sleepStateModelDao: SleepStateModelDao,
-    private val sleepTimeModelDao: SleepTimeModelDao,
-    private val sleepStateFactorModelDao: SleepStateFactorModelDao,
-    private val sleepTimeFactorModelDao: SleepTimeFactorModelDao,
-    private val sleepApiRawDataDao: SleepApiRawDataDao
+        private val sleepStateModelDao: SleepStateModelDao,
+        private val sleepTimeModelDao: SleepTimeModelDao,
+        private val sleepStateParameterDao: SleepStateParameterDao,
+        private val sleepTimeParameterDao: SleepTimeParameterDao,
+        private val sleepApiRawDataDao: SleepApiRawDataDao
 ) {
 
     companion object {
@@ -22,9 +22,9 @@ class SleepCalculationDbRepository(
         @Volatile
         private var INSTANCE: SleepCalculationDbRepository? = null
 
-        fun getRepo(sleepStateModelDao: SleepStateModelDao, sleepTimeModelDao: SleepTimeModelDao, sleepStateFactorModelDao: SleepStateFactorModelDao, sleepTimeFactorModelDao: SleepTimeFactorModelDao, sleepApiRawDataDao: SleepApiRawDataDao): SleepCalculationDbRepository {
+        fun getRepo(sleepStateModelDao: SleepStateModelDao, sleepTimeModelDao: SleepTimeModelDao, sleepStateParameterDao: SleepStateParameterDao, sleepTimeParameterDao: SleepTimeParameterDao, sleepApiRawDataDao: SleepApiRawDataDao): SleepCalculationDbRepository {
             return INSTANCE ?: synchronized(this) {
-                val instance = SleepCalculationDbRepository(sleepStateModelDao, sleepTimeModelDao, sleepStateFactorModelDao, sleepTimeFactorModelDao, sleepApiRawDataDao)
+                val instance = SleepCalculationDbRepository(sleepStateModelDao, sleepTimeModelDao, sleepStateParameterDao, sleepTimeParameterDao, sleepApiRawDataDao)
                 INSTANCE = instance
                 // return instance
                 instance
@@ -65,24 +65,24 @@ class SleepCalculationDbRepository(
 
     //region Sleep Time Factor Models
 
-    val allSleepTimeFactorModels: Flow<List<SleepTimeFactorModelEntity>> =
-        sleepTimeFactorModelDao.getAll()
+    val allSleepTimeParameters: Flow<List<SleepTimeParameterEntity>> =
+        sleepTimeParameterDao.getAll()
 
 
-    suspend fun insertSleepTimeFactorSegments(sleepTimeFactorModels: List<SleepTimeFactorModelEntity>) {
-        sleepTimeFactorModelDao.insertAll(sleepTimeFactorModels)
+    suspend fun insertSleepTimeParameters(sleepTimeParameters: List<SleepTimeParameterEntity>) {
+        sleepTimeParameterDao.insertAll(sleepTimeParameters)
     }
 
     //endregion
 
     //region Sleep State Models
 
-    val allSleepStateFactorModels: Flow<List<SleepStateFactorModelEntity>> =
-        sleepStateFactorModelDao.getAll()
+    val allSleepStateParameters: Flow<List<SleepStateParameterEntity>> =
+        sleepStateParameterDao.getAll()
 
 
-    suspend fun insertSleepStateFactorSegments(sleepStateFactorModels: List<SleepStateFactorModelEntity>) {
-        sleepStateFactorModelDao.insertAll(sleepStateFactorModels)
+    suspend fun insertSleepStateParameters(sleepStateParameterEntity: List<SleepStateParameterEntity>) {
+        sleepStateParameterDao.insertAll(sleepStateParameterEntity)
     }
 
     //endregion

@@ -1,0 +1,2501 @@
+[
+   {
+      "id": "21",
+      "sleepStateModelMax": {
+         "valuesAwake": {
+            "light": {
+               "Average": 5.63636351,
+               "Factor": 2.862069,
+               "Max": 0,
+               "Median": 6,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 5.965517,
+               "Factor": 0.994252861,
+               "Max": 0,
+               "Median": 6,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 36.484848,
+               "Factor": 2.25287366,
+               "Max": 0,
+               "Median": 25,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 3.7859745,
+               "Factor": 1.67241371,
+               "Max": 0,
+               "Median": 5,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 4.139558,
+               "Factor": 0.195402324,
+               "Max": 0,
+               "Median": 5,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": -55.06688,
+               "Factor": 1.31321859,
+               "Max": 0,
+               "Median": -68,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 2,
+               "Factor": 1.49180329,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 2.804878,
+               "Factor": 2.175,
+               "Max": 0,
+               "Median": 3,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 91.82417,
+               "Factor": 0.9873567,
+               "Max": 0,
+               "Median": 95,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStateModelMin": {
+         "valuesAwake": {
+            "light": {
+               "Average": 1.5,
+               "Factor": 0.7785714,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 3.52083325,
+               "Factor": 0.7564103,
+               "Max": 0,
+               "Median": 4,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 6.40540552,
+               "Factor": 1.08673465,
+               "Max": 0,
+               "Median": 3,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 0.5,
+               "Factor": -0.6121737,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 0.9282408,
+               "Factor": -1.20833325,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": -80.242424,
+               "Factor": 0.09937793,
+               "Max": 0,
+               "Median": -90,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 1,
+               "Factor": 0.9741379,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 1.25757575,
+               "Factor": 0.798850536,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 77.40741,
+               "Factor": 0.915213,
+               "Max": 0,
+               "Median": 84,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStatePattern": 50,
+      "userFactorPattern": 49
+   },
+   {
+      "id": "31",
+      "sleepStateModelMax": {
+         "valuesAwake": {
+            "light": {
+               "Average": 2.9333334,
+               "Factor": 1.87804878,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 6,
+               "Factor": 1.75,
+               "Max": 0,
+               "Median": 6,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 30.4375,
+               "Factor": 2.949206,
+               "Max": 0,
+               "Median": 24,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 1.74492764,
+               "Factor": 0.747614,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 3.54901958,
+               "Factor": 0.183006525,
+               "Max": 0,
+               "Median": 5,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": -57.140274,
+               "Factor": 1.99794579,
+               "Max": 0,
+               "Median": -66,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 1.30612242,
+               "Factor": 1.30612242,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 2.97727275,
+               "Factor": 2.29729724,
+               "Max": 0,
+               "Median": 3,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 88.03297,
+               "Factor": 0.984189749,
+               "Max": 0,
+               "Median": 93,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStateModelMin": {
+         "valuesAwake": {
+            "light": {
+               "Average": 1,
+               "Factor": 0.815789461,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 3.5,
+               "Factor": 0.844444454,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 5,
+               "Factor": 1,
+               "Max": 0,
+               "Median": 5,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 0,
+               "Factor": -0.4436224,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 1.74691355,
+               "Factor": -1.40470457,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": -82.44444,
+               "Factor": 0.0597371459,
+               "Max": 0,
+               "Median": -88,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 1,
+               "Factor": 1,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 1.75308645,
+               "Factor": 0.8169935,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 77.7551041,
+               "Factor": 0.92891115,
+               "Max": 0,
+               "Median": 83,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStatePattern": 51,
+      "userFactorPattern": 49
+   },
+   {
+      "id": "41",
+      "sleepStateModelMax": {
+         "valuesAwake": {
+            "light": {
+               "Average": 2.862069,
+               "Factor": 2.862069,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 5.965517,
+               "Factor": 0.994252861,
+               "Max": 0,
+               "Median": 6,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 30.4375,
+               "Factor": 2.25287366,
+               "Max": 0,
+               "Median": 24,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 1.67241371,
+               "Factor": 1.67241371,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 3.56896544,
+               "Factor": 0.195402324,
+               "Max": 0,
+               "Median": 4,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": -57.140274,
+               "Factor": 1.31321859,
+               "Max": 0,
+               "Median": -66,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 1.21951222,
+               "Factor": 1.21951222,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 2.88636374,
+               "Factor": 1.26086962,
+               "Max": 0,
+               "Median": 3,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 87.577774,
+               "Factor": 0.984189749,
+               "Max": 0,
+               "Median": 90,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStateModelMin": {
+         "valuesAwake": {
+            "light": {
+               "Average": 1.15625,
+               "Factor": 0.815789461,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 5.34375,
+               "Factor": 0.890625,
+               "Max": 0,
+               "Median": 6,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 6.75862074,
+               "Factor": 1.23148143,
+               "Max": 0,
+               "Median": 3,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 0.0451388359,
+               "Factor": -0.216468573,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 2.52104354,
+               "Factor": -0.3055851,
+               "Max": 0,
+               "Median": 3,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": -77.81034,
+               "Factor": 0.267422259,
+               "Max": 0,
+               "Median": -87,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 1.032258,
+               "Factor": 1.032258,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 2.33333325,
+               "Factor": 0.798850536,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 81.68293,
+               "Factor": 0.938884258,
+               "Max": 0,
+               "Median": 86,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStatePattern": 52,
+      "userFactorPattern": 49
+   },
+   {
+      "id": "51",
+      "sleepStateModelMax": {
+         "valuesAwake": {
+            "light": {
+               "Average": 5.63636351,
+               "Factor": 1.36111116,
+               "Max": 0,
+               "Median": 6,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 5.875,
+               "Factor": 0.9791667,
+               "Max": 0,
+               "Median": 6,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 20.9,
+               "Factor": 2.05364,
+               "Max": 0,
+               "Median": 17,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 3.73379612,
+               "Factor": 0.2241379,
+               "Max": 0,
+               "Median": 5,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 2.89772725,
+               "Factor": -0.0132575631,
+               "Max": 0,
+               "Median": 4,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": -58.98636,
+               "Factor": 1.07025743,
+               "Max": 0,
+               "Median": -69,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 1.9482758,
+               "Factor": 1.37037039,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 2.97727275,
+               "Factor": 1.29629624,
+               "Max": 0,
+               "Median": 3,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 89.48781,
+               "Factor": 0.9833825,
+               "Max": 0,
+               "Median": 91,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStateModelMin": {
+         "valuesAwake": {
+            "light": {
+               "Average": 1.125,
+               "Factor": 0.8506944,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 3.52083325,
+               "Factor": 0.75757575,
+               "Max": 0,
+               "Median": 4,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 8.75,
+               "Factor": 1.22941172,
+               "Max": 0,
+               "Median": 5,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 0.0340908766,
+               "Factor": -0.51967597,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 0.9282408,
+               "Factor": -0.4212963,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": -71.00505,
+               "Factor": 0.300500572,
+               "Max": 0,
+               "Median": -82,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 1,
+               "Factor": 0.9741379,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 2.24137926,
+               "Factor": 0.99242425,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 77.40741,
+               "Factor": 0.915213,
+               "Max": 0,
+               "Median": 84,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStatePattern": 53,
+      "userFactorPattern": 49
+   },
+   {
+      "id": "61",
+      "sleepStateModelMax": {
+         "valuesAwake": {
+            "light": {
+               "Average": 5.27777767,
+               "Factor": 0.8796296,
+               "Max": 0,
+               "Median": 6,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 4.44444466,
+               "Factor": 0.888888955,
+               "Max": 0,
+               "Median": 5,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 8.194445,
+               "Factor": 2.04861116,
+               "Max": 0,
+               "Median": 4,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 3.7859745,
+               "Factor": -0.6121737,
+               "Max": 0,
+               "Median": 5,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 2.641166,
+               "Factor": -0.9143897,
+               "Max": 0,
+               "Median": 4,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": -75.85474,
+               "Factor": 1.11473131,
+               "Max": 0,
+               "Median": -86,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 1.49180329,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 1.80327868,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 84.04918,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 90,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStateModelMin": {
+         "valuesAwake": {
+            "light": {
+               "Average": 5.27777767,
+               "Factor": 0.8796296,
+               "Max": 0,
+               "Median": 6,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 4.44444466,
+               "Factor": 0.888888955,
+               "Max": 0,
+               "Median": 5,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 8.194445,
+               "Factor": 2.04861116,
+               "Max": 0,
+               "Median": 4,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 3.7859745,
+               "Factor": -0.6121737,
+               "Max": 0,
+               "Median": 5,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 2.641166,
+               "Factor": -0.9143897,
+               "Max": 0,
+               "Median": 4,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": -75.85474,
+               "Factor": 1.11473131,
+               "Max": 0,
+               "Median": -86,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 1.49180329,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 1.80327868,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 84.04918,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 90,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStatePattern": 54,
+      "userFactorPattern": 49
+   },
+   {
+      "id": "71",
+      "sleepStateModelMax": {
+         "valuesAwake": {
+            "light": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStateModelMin": {
+         "valuesAwake": {
+            "light": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStatePattern": 55,
+      "userFactorPattern": 49
+   },
+   {
+      "id": "22",
+      "sleepStateModelMax": {
+         "valuesAwake": {
+            "light": {
+               "Average": 2.96,
+               "Factor": 1.48,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 5.32,
+               "Factor": 0.9875,
+               "Max": 0,
+               "Median": 6,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 16.4375,
+               "Factor": 2.61,
+               "Max": 0,
+               "Median": 13,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 1.85552239,
+               "Factor": 0.375522375,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 3.917015,
+               "Factor": -0.5163184,
+               "Max": 0,
+               "Median": 5,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": -59.19345,
+               "Factor": 1.68321276,
+               "Max": 0,
+               "Median": -77,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 1.36904764,
+               "Factor": 1.36904764,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 2.21428561,
+               "Factor": 2.21428561,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 88.04478,
+               "Factor": 0.9347012,
+               "Max": 0,
+               "Median": 95,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStateModelMin": {
+         "valuesAwake": {
+            "light": {
+               "Average": 2.08,
+               "Factor": 1.04,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 4.9375,
+               "Factor": 0.8866667,
+               "Max": 0,
+               "Median": 5,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 10.44,
+               "Factor": 1.26442313,
+               "Max": 0,
+               "Median": 4,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 1.06550717,
+               "Factor": 0.0255072117,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 2.72321439,
+               "Factor": -1.22678566,
+               "Max": 0,
+               "Median": 4,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": -77.6047745,
+               "Factor": 0.424079239,
+               "Max": 0,
+               "Median": -91,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 1.01449275,
+               "Factor": 1.01449275,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 1.4029851,
+               "Factor": 1.4029851,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 75.63095,
+               "Factor": 0.8403439,
+               "Max": 0,
+               "Median": 89,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStatePattern": 50,
+      "userFactorPattern": 50
+   },
+   {
+      "id": "32",
+      "sleepStateModelMax": {
+         "valuesAwake": {
+            "light": {
+               "Average": 2.11111116,
+               "Factor": 1.05555558,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 5.8139534,
+               "Factor": 0.968992233,
+               "Max": 0,
+               "Median": 6,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 21.44186,
+               "Factor": 1.87301576,
+               "Max": 0,
+               "Median": 18,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 1.01960778,
+               "Factor": 0.023255825,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 3.297619,
+               "Factor": 0.112433851,
+               "Max": 0,
+               "Median": 5,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": -56.8174629,
+               "Factor": 0.952903,
+               "Max": 0,
+               "Median": -68,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 1.26190472,
+               "Factor": 1.26190472,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 3.30952382,
+               "Factor": 2.16071439,
+               "Max": 0,
+               "Median": 4,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 84.94203,
+               "Factor": 0.9763452,
+               "Max": 0,
+               "Median": 91,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStateModelMin": {
+         "valuesAwake": {
+            "light": {
+               "Average": 1.02325583,
+               "Factor": 0.9583333,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 4.89743567,
+               "Factor": 0.8162393,
+               "Max": 0,
+               "Median": 6,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 13.1111107,
+               "Factor": 1.19121444,
+               "Max": 0,
+               "Median": 7,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 0.023255825,
+               "Factor": -0.206349134,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 2.329365,
+               "Factor": -1.25099206,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": -69.13811,
+               "Factor": 0.238384247,
+               "Max": 0,
+               "Median": -76,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 1,
+               "Factor": 1,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 1.89610386,
+               "Factor": 0.827380955,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 69.92857,
+               "Factor": 0.9201128,
+               "Max": 0,
+               "Median": 76,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStatePattern": 51,
+      "userFactorPattern": 50
+   },
+   {
+      "id": "42",
+      "sleepStateModelMax": {
+         "valuesAwake": {
+            "light": {
+               "Average": 2.11111116,
+               "Factor": 2.09523821,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 5.825,
+               "Factor": 0.9708333,
+               "Max": 0,
+               "Median": 6,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 19.708334,
+               "Factor": 2.150641,
+               "Max": 0,
+               "Median": 12,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 1.00000012,
+               "Factor": 1.00000012,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 3.36102557,
+               "Factor": 0.112433851,
+               "Max": 0,
+               "Median": 5,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": -56.8174629,
+               "Factor": 1.18530774,
+               "Max": 0,
+               "Median": -69,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 1.30612242,
+               "Factor": 1.30612242,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 3.452381,
+               "Factor": 2.16071439,
+               "Max": 0,
+               "Median": 4,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 86.88,
+               "Factor": 0.9653333,
+               "Max": 0,
+               "Median": 90,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStateModelMin": {
+         "valuesAwake": {
+            "light": {
+               "Average": 1.7021277,
+               "Factor": 0.851063848,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 5.26190472,
+               "Factor": 0.8769841,
+               "Max": 0,
+               "Median": 6,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 13.1111107,
+               "Factor": 1.52304971,
+               "Max": 0,
+               "Median": 7,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 0.4188776,
+               "Factor": -0.4436224,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 1.80952382,
+               "Factor": -1.25099206,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": -69.6748657,
+               "Factor": 0.5832115,
+               "Max": 0,
+               "Median": -82,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 1.04,
+               "Factor": 1.04,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 2.16071439,
+               "Factor": 0.827380955,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 69.92857,
+               "Factor": 0.9001721,
+               "Max": 0,
+               "Median": 76,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStatePattern": 52,
+      "userFactorPattern": 50
+   },
+   {
+      "id": "52",
+      "sleepStateModelMax": {
+         "valuesAwake": {
+            "light": {
+               "Average": 2.72972965,
+               "Factor": 1.36486483,
+               "Max": 0,
+               "Median": 3,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 6,
+               "Factor": 1,
+               "Max": 0,
+               "Median": 6,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 20.333334,
+               "Factor": 3.60240984,
+               "Max": 0,
+               "Median": 18,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 1.22474515,
+               "Factor": 0.364864826,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 4.139558,
+               "Factor": 0.183006525,
+               "Max": 0,
+               "Median": 5,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": -65.86274,
+               "Factor": 2.67395663,
+               "Max": 0,
+               "Median": -73,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 2,
+               "Factor": 1.27272725,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 2.45098042,
+               "Factor": 1.83636367,
+               "Max": 0,
+               "Median": 3,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 86.34615,
+               "Factor": 0.9472096,
+               "Max": 0,
+               "Median": 93,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStateModelMin": {
+         "valuesAwake": {
+            "light": {
+               "Average": 1.16666663,
+               "Factor": 0.7962963,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 5.204819,
+               "Factor": 0.867469847,
+               "Max": 0,
+               "Median": 6,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 6.40540552,
+               "Factor": 1.12962961,
+               "Max": 0,
+               "Median": 4,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 0.0490195751,
+               "Factor": -0.476430953,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 3.47405,
+               "Factor": -0.910437763,
+               "Max": 0,
+               "Median": 3,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": -78.44914,
+               "Factor": 0.182420015,
+               "Max": 0,
+               "Median": -88,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 1.117647,
+               "Factor": 1,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 1.5090909,
+               "Factor": 0.8169935,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 83.8545456,
+               "Factor": 0.9114624,
+               "Max": 0,
+               "Median": 91,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStatePattern": 53,
+      "userFactorPattern": 50
+   },
+   {
+      "id": "62",
+      "sleepStateModelMax": {
+         "valuesAwake": {
+            "light": {
+               "Average": 5.10416651,
+               "Factor": 1.68181813,
+               "Max": 0,
+               "Median": 6,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 5.64864874,
+               "Factor": 0.9476191,
+               "Max": 0,
+               "Median": 6,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 14.0961542,
+               "Factor": 2.172619,
+               "Max": 0,
+               "Median": 8,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 3.73379612,
+               "Factor": 0.6818181,
+               "Max": 0,
+               "Median": 5,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 4.139558,
+               "Factor": -0.378787816,
+               "Max": 0,
+               "Median": 5,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": -65.94907,
+               "Factor": 1.23085928,
+               "Max": 0,
+               "Median": -76,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 2,
+               "Factor": 1.37037039,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 2.59259248,
+               "Factor": 1.72881353,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 90.969696,
+               "Factor": 0.957575738,
+               "Max": 0,
+               "Median": 95,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStateModelMin": {
+         "valuesAwake": {
+            "light": {
+               "Average": 2.72972965,
+               "Factor": 0.74545455,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 3.52083325,
+               "Factor": 0.8121212,
+               "Max": 0,
+               "Median": 4,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 6.40540552,
+               "Factor": 1.43229163,
+               "Max": 0,
+               "Median": 4,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 0.729729652,
+               "Factor": -0.51967597,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 0.9282408,
+               "Factor": -0.893076956,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": -80.242424,
+               "Factor": 0.510774851,
+               "Max": 0,
+               "Median": -90,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 1,
+               "Factor": 1,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 1.25757575,
+               "Factor": 1.25757575,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 77.40741,
+               "Factor": 0.9215168,
+               "Max": 0,
+               "Median": 84,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStatePattern": 54,
+      "userFactorPattern": 50
+   },
+   {
+      "id": "72",
+      "sleepStateModelMax": {
+         "valuesAwake": {
+            "light": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStateModelMin": {
+         "valuesAwake": {
+            "light": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStatePattern": 55,
+      "userFactorPattern": 50
+   },
+   {
+      "id": "23",
+      "sleepStateModelMax": {
+         "valuesAwake": {
+            "light": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStateModelMin": {
+         "valuesAwake": {
+            "light": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 0,
+               "Factor": 0,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStatePattern": 50,
+      "userFactorPattern": 51
+   },
+   {
+      "id": "33",
+      "sleepStateModelMax": {
+         "valuesAwake": {
+            "light": {
+               "Average": 2.31818175,
+               "Factor": 2.09523821,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 5.659091,
+               "Factor": 0.9431818,
+               "Max": 0,
+               "Median": 6,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 19.742857,
+               "Factor": 2.623077,
+               "Max": 0,
+               "Median": 11,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 1.29966319,
+               "Factor": 1.00000012,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 3.04797983,
+               "Factor": 0.0138888955,
+               "Max": 0,
+               "Median": 4,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": -57.3095245,
+               "Factor": 1.70150828,
+               "Max": 0,
+               "Median": -72,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 1.09523809,
+               "Factor": 1.09523809,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 3.452381,
+               "Factor": 1.37333333,
+               "Max": 0,
+               "Median": 4,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 82.51852,
+               "Factor": 0.9484887,
+               "Max": 0,
+               "Median": 87,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStateModelMin": {
+         "valuesAwake": {
+            "light": {
+               "Average": 1.88461542,
+               "Factor": 0.985714257,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 5.142857,
+               "Factor": 0.857142866,
+               "Max": 0,
+               "Median": 6,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 13.1153851,
+               "Factor": 1.58225107,
+               "Max": 0,
+               "Median": 5,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 0.8579488,
+               "Factor": -0.0142857432,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 1.80952382,
+               "Factor": -0.507948756,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": -65.72306,
+               "Factor": 0.682078958,
+               "Max": 0,
+               "Median": -80,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 1,
+               "Factor": 1,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 2.61111116,
+               "Factor": 0.8630952,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 74.71429,
+               "Factor": 0.9001721,
+               "Max": 0,
+               "Median": 83,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStatePattern": 51,
+      "userFactorPattern": 51
+   },
+   {
+      "id": "43",
+      "sleepStateModelMax": {
+         "valuesAwake": {
+            "light": {
+               "Average": 2.060606,
+               "Factor": 1.030303,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 5.5454545,
+               "Factor": 0.924242437,
+               "Max": 0,
+               "Median": 6,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 17.242424,
+               "Factor": 1.14949489,
+               "Max": 0,
+               "Median": 15,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 0.9272727,
+               "Factor": -0.103030324,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 2.90101,
+               "Factor": 0.04276097,
+               "Max": 0,
+               "Median": 3,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": -63.0242462,
+               "Factor": 0.216161489,
+               "Max": 0,
+               "Median": -71,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 1.13333333,
+               "Factor": 1.13333333,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 2.64444447,
+               "Factor": 0.881481469,
+               "Max": 0,
+               "Median": 3,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 80.26667,
+               "Factor": 0.9333334,
+               "Max": 0,
+               "Median": 86,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStateModelMin": {
+         "valuesAwake": {
+            "light": {
+               "Average": 2.060606,
+               "Factor": 1.030303,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 5.5454545,
+               "Factor": 0.924242437,
+               "Max": 0,
+               "Median": 6,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 17.242424,
+               "Factor": 1.14949489,
+               "Max": 0,
+               "Median": 15,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 0.9272727,
+               "Factor": -0.103030324,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 2.90101,
+               "Factor": 0.04276097,
+               "Max": 0,
+               "Median": 3,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": -63.0242462,
+               "Factor": 0.216161489,
+               "Max": 0,
+               "Median": -71,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 1.13333333,
+               "Factor": 1.13333333,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 2.64444447,
+               "Factor": 0.881481469,
+               "Max": 0,
+               "Median": 3,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 80.26667,
+               "Factor": 0.9333334,
+               "Max": 0,
+               "Median": 86,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStatePattern": 52,
+      "userFactorPattern": 51
+   },
+   {
+      "id": "53",
+      "sleepStateModelMax": {
+         "valuesAwake": {
+            "light": {
+               "Average": 5.27777767,
+               "Factor": 1.68181813,
+               "Max": 0,
+               "Median": 6,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 5.32,
+               "Factor": 0.9875,
+               "Max": 0,
+               "Median": 6,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 37.3125,
+               "Factor": 2.61,
+               "Max": 0,
+               "Median": 27,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 3.7859745,
+               "Factor": 0.6818181,
+               "Max": 0,
+               "Median": 5,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 4.015152,
+               "Factor": -0.368794382,
+               "Max": 0,
+               "Median": 5,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": -49.90027,
+               "Factor": 1.68321276,
+               "Max": 0,
+               "Median": -63,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 1.68181813,
+               "Factor": 1.49180329,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 2.40425539,
+               "Factor": 2.21428561,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 90.969696,
+               "Factor": 0.969030738,
+               "Max": 0,
+               "Median": 95,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStateModelMin": {
+         "valuesAwake": {
+            "light": {
+               "Average": 1.25,
+               "Factor": 0.74545455,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 3.909091,
+               "Factor": 0.7818182,
+               "Max": 0,
+               "Median": 5,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 8.194445,
+               "Factor": 1.26442313,
+               "Max": 0,
+               "Median": 4,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 0.101063848,
+               "Factor": -0.6121737,
+               "Max": 0,
+               "Median": 0,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 2.29370642,
+               "Factor": -1.22678566,
+               "Max": 0,
+               "Median": 4,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": -80.242424,
+               "Factor": 0.3976429,
+               "Max": 0,
+               "Median": -91,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 1,
+               "Factor": 0.840909064,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 1.25757575,
+               "Factor": 1.2021277,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 75.63095,
+               "Factor": 0.8403439,
+               "Max": 0,
+               "Median": 90,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStatePattern": 53,
+      "userFactorPattern": 51
+   },
+   {
+      "id": "63",
+      "sleepStateModelMax": {
+         "valuesAwake": {
+            "light": {
+               "Average": 5.63636351,
+               "Factor": 1.6704545,
+               "Max": 0,
+               "Median": 6,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 5.32,
+               "Factor": 0.9875,
+               "Max": 0,
+               "Median": 6,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 25.227272,
+               "Factor": 2.61,
+               "Max": 0,
+               "Median": 17,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 3.6880877,
+               "Factor": 0.5319929,
+               "Max": 0,
+               "Median": 4,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 3.917015,
+               "Factor": -0.36311388,
+               "Max": 0,
+               "Median": 5,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": -59.19345,
+               "Factor": 1.68321276,
+               "Max": 0,
+               "Median": -77,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 1.9482758,
+               "Factor": 1.36904764,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 2.24137926,
+               "Factor": 2.21428561,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 88.04478,
+               "Factor": 0.954390466,
+               "Max": 0,
+               "Median": 95,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStateModelMin": {
+         "valuesAwake": {
+            "light": {
+               "Average": 2.9333334,
+               "Factor": 0.7592592,
+               "Max": 0,
+               "Median": 2,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 3.909091,
+               "Factor": 0.75757575,
+               "Max": 0,
+               "Median": 5,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 8.75,
+               "Factor": 1.26442313,
+               "Max": 0,
+               "Median": 4,
+               "Min": 0
+            }
+         },
+         "valuesDiff": {
+            "light": {
+               "Average": 1.56845236,
+               "Factor": -0.08164984,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 2.29370642,
+               "Factor": -1.22678566,
+               "Max": 0,
+               "Median": 4,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": -77.6047745,
+               "Factor": 0.3976429,
+               "Max": 0,
+               "Median": -91,
+               "Min": 0
+            }
+         },
+         "valuesSleep": {
+            "light": {
+               "Average": 1.07843137,
+               "Factor": 0.840909064,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "motion": {
+               "Average": 1.4029851,
+               "Factor": 1.12068963,
+               "Max": 0,
+               "Median": 1,
+               "Min": 0
+            },
+            "sleep": {
+               "Average": 75.63095,
+               "Factor": 0.8403439,
+               "Max": 0,
+               "Median": 85,
+               "Min": 0
+            }
+         }
+      },
+      "sleepStatePattern": 54,
+      "userFactorPattern": 51
+   }
+]

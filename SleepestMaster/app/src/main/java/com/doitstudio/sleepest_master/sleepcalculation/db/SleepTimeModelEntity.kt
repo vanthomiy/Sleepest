@@ -11,14 +11,14 @@ import java.io.BufferedReader
 data class SleepTimeModelEntity(
 
         @PrimaryKey
-        val id:Int,
+        val id:String,
 
-        @ColumnInfo(name="sleepTimePattern")
         val sleepTimePattern: SleepTimePattern,//	Der name des aktuellen Patterns
 
         @Embedded(prefix = "max") val sleepTimeModelMax:SleepModel,//	Die Werte des Models max
         @Embedded(prefix = "min") val sleepTimeModelMin:SleepModel,//	Die Werte des Models min
-        @Embedded val sleepTimeParameter: SleepTimeParameter,//	Die Parameterwerte für den Algorithmus
+
+        //@Embedded val sleepTimeParameter: SleepTimeParameter,//	Die Parameterwerte für den Algorithmus
 
 )
 {
@@ -28,14 +28,11 @@ data class SleepTimeModelEntity(
                 fun setupDefaultEntities(context: Context) : List<SleepTimeModelEntity>{
 
                     var gson = Gson()
-
                     val jsonFile = context
                             .assets
-                            .open("databases/SleepTimeModelEntityDefaults.json")
+                            .open("databases/TimeModel.json")
                             .bufferedReader()
                             .use(BufferedReader::readText)
-
-                    //var jsonString:String = gson.toJson(a)
 
                     return gson.fromJson(jsonFile, Array<SleepTimeModelEntity>::class.java).asList()
                 }

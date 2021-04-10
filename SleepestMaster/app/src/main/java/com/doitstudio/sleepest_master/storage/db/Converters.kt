@@ -1,11 +1,7 @@
 package com.doitstudio.sleepest_master.storage.db
 
-import android.util.JsonReader
 import androidx.room.TypeConverter
 import com.doitstudio.sleepest_master.model.data.*
-import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepModelValues
-import java.io.StringReader
-import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -51,13 +47,13 @@ class Converters {
     }
 
     @TypeConverter
-    fun fromUserStartPattern(userStartPattern: UserStartPattern) : Int {
-        return userStartPattern.ordinal
+    fun fromUserStartPattern(userFactorPattern: UserFactorPattern) : Int {
+        return userFactorPattern.ordinal
     }
 
     @TypeConverter
-    fun toUserStartPattern(userStartPattern: Int) : UserStartPattern {
-        return UserStartPattern.values()[userStartPattern]
+    fun toUserStartPattern(userFactorPattern: Int) : UserFactorPattern {
+        return UserFactorPattern.values()[userFactorPattern]
     }
 
     @TypeConverter

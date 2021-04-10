@@ -2,16 +2,16 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "fda027ef6932114b27a8d49a717366b3",
+    "identityHash": "b81e2196ac21fff98838a960bfc7378c",
     "entities": [
       {
         "tableName": "sleep_state_model_entity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `sleepStatePattern` INTEGER NOT NULL, `maxawakesleepmax` REAL NOT NULL, `maxawakesleepmin` REAL NOT NULL, `maxawakesleepmedian` REAL NOT NULL, `maxawakesleepaverage` REAL NOT NULL, `maxawakesleepfactor` REAL NOT NULL, `maxawakelightmax` REAL NOT NULL, `maxawakelightmin` REAL NOT NULL, `maxawakelightmedian` REAL NOT NULL, `maxawakelightaverage` REAL NOT NULL, `maxawakelightfactor` REAL NOT NULL, `maxawakemotionmax` REAL NOT NULL, `maxawakemotionmin` REAL NOT NULL, `maxawakemotionmedian` REAL NOT NULL, `maxawakemotionaverage` REAL NOT NULL, `maxawakemotionfactor` REAL NOT NULL, `maxsleepsleepmax` REAL NOT NULL, `maxsleepsleepmin` REAL NOT NULL, `maxsleepsleepmedian` REAL NOT NULL, `maxsleepsleepaverage` REAL NOT NULL, `maxsleepsleepfactor` REAL NOT NULL, `maxsleeplightmax` REAL NOT NULL, `maxsleeplightmin` REAL NOT NULL, `maxsleeplightmedian` REAL NOT NULL, `maxsleeplightaverage` REAL NOT NULL, `maxsleeplightfactor` REAL NOT NULL, `maxsleepmotionmax` REAL NOT NULL, `maxsleepmotionmin` REAL NOT NULL, `maxsleepmotionmedian` REAL NOT NULL, `maxsleepmotionaverage` REAL NOT NULL, `maxsleepmotionfactor` REAL NOT NULL, `maxdiffsleepmax` REAL NOT NULL, `maxdiffsleepmin` REAL NOT NULL, `maxdiffsleepmedian` REAL NOT NULL, `maxdiffsleepaverage` REAL NOT NULL, `maxdiffsleepfactor` REAL NOT NULL, `maxdifflightmax` REAL NOT NULL, `maxdifflightmin` REAL NOT NULL, `maxdifflightmedian` REAL NOT NULL, `maxdifflightaverage` REAL NOT NULL, `maxdifflightfactor` REAL NOT NULL, `maxdiffmotionmax` REAL NOT NULL, `maxdiffmotionmin` REAL NOT NULL, `maxdiffmotionmedian` REAL NOT NULL, `maxdiffmotionaverage` REAL NOT NULL, `maxdiffmotionfactor` REAL NOT NULL, `minawakesleepmax` REAL NOT NULL, `minawakesleepmin` REAL NOT NULL, `minawakesleepmedian` REAL NOT NULL, `minawakesleepaverage` REAL NOT NULL, `minawakesleepfactor` REAL NOT NULL, `minawakelightmax` REAL NOT NULL, `minawakelightmin` REAL NOT NULL, `minawakelightmedian` REAL NOT NULL, `minawakelightaverage` REAL NOT NULL, `minawakelightfactor` REAL NOT NULL, `minawakemotionmax` REAL NOT NULL, `minawakemotionmin` REAL NOT NULL, `minawakemotionmedian` REAL NOT NULL, `minawakemotionaverage` REAL NOT NULL, `minawakemotionfactor` REAL NOT NULL, `minsleepsleepmax` REAL NOT NULL, `minsleepsleepmin` REAL NOT NULL, `minsleepsleepmedian` REAL NOT NULL, `minsleepsleepaverage` REAL NOT NULL, `minsleepsleepfactor` REAL NOT NULL, `minsleeplightmax` REAL NOT NULL, `minsleeplightmin` REAL NOT NULL, `minsleeplightmedian` REAL NOT NULL, `minsleeplightaverage` REAL NOT NULL, `minsleeplightfactor` REAL NOT NULL, `minsleepmotionmax` REAL NOT NULL, `minsleepmotionmin` REAL NOT NULL, `minsleepmotionmedian` REAL NOT NULL, `minsleepmotionaverage` REAL NOT NULL, `minsleepmotionfactor` REAL NOT NULL, `mindiffsleepmax` REAL NOT NULL, `mindiffsleepmin` REAL NOT NULL, `mindiffsleepmedian` REAL NOT NULL, `mindiffsleepaverage` REAL NOT NULL, `mindiffsleepfactor` REAL NOT NULL, `mindifflightmax` REAL NOT NULL, `mindifflightmin` REAL NOT NULL, `mindifflightmedian` REAL NOT NULL, `mindifflightaverage` REAL NOT NULL, `mindifflightfactor` REAL NOT NULL, `mindiffmotionmax` REAL NOT NULL, `mindiffmotionmin` REAL NOT NULL, `mindiffmotionmedian` REAL NOT NULL, `mindiffmotionaverage` REAL NOT NULL, `mindiffmotionfactor` REAL NOT NULL, `sleepSleepBorder` REAL NOT NULL, `deepSleepSleepBorder` REAL NOT NULL, `remSleepSleepBorder` REAL NOT NULL, `sleepMotionBorder` REAL NOT NULL, `deepSleepMotionBorder` REAL NOT NULL, `remSleepMotionBorder` REAL NOT NULL, `sleepLightBorder` REAL NOT NULL, `deepSleepLightBorder` REAL NOT NULL, `remSleepLightBorder` REAL NOT NULL, `soundClearSleepBorder` REAL NOT NULL, `soundClearMotionBorder` REAL NOT NULL, `modelMatchPercentage` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `sleepStatePattern` INTEGER NOT NULL, `maxawakesleepmax` REAL NOT NULL, `maxawakesleepmin` REAL NOT NULL, `maxawakesleepmedian` REAL NOT NULL, `maxawakesleepaverage` REAL NOT NULL, `maxawakesleepfactor` REAL NOT NULL, `maxawakelightmax` REAL NOT NULL, `maxawakelightmin` REAL NOT NULL, `maxawakelightmedian` REAL NOT NULL, `maxawakelightaverage` REAL NOT NULL, `maxawakelightfactor` REAL NOT NULL, `maxawakemotionmax` REAL NOT NULL, `maxawakemotionmin` REAL NOT NULL, `maxawakemotionmedian` REAL NOT NULL, `maxawakemotionaverage` REAL NOT NULL, `maxawakemotionfactor` REAL NOT NULL, `maxsleepsleepmax` REAL NOT NULL, `maxsleepsleepmin` REAL NOT NULL, `maxsleepsleepmedian` REAL NOT NULL, `maxsleepsleepaverage` REAL NOT NULL, `maxsleepsleepfactor` REAL NOT NULL, `maxsleeplightmax` REAL NOT NULL, `maxsleeplightmin` REAL NOT NULL, `maxsleeplightmedian` REAL NOT NULL, `maxsleeplightaverage` REAL NOT NULL, `maxsleeplightfactor` REAL NOT NULL, `maxsleepmotionmax` REAL NOT NULL, `maxsleepmotionmin` REAL NOT NULL, `maxsleepmotionmedian` REAL NOT NULL, `maxsleepmotionaverage` REAL NOT NULL, `maxsleepmotionfactor` REAL NOT NULL, `maxdiffsleepmax` REAL NOT NULL, `maxdiffsleepmin` REAL NOT NULL, `maxdiffsleepmedian` REAL NOT NULL, `maxdiffsleepaverage` REAL NOT NULL, `maxdiffsleepfactor` REAL NOT NULL, `maxdifflightmax` REAL NOT NULL, `maxdifflightmin` REAL NOT NULL, `maxdifflightmedian` REAL NOT NULL, `maxdifflightaverage` REAL NOT NULL, `maxdifflightfactor` REAL NOT NULL, `maxdiffmotionmax` REAL NOT NULL, `maxdiffmotionmin` REAL NOT NULL, `maxdiffmotionmedian` REAL NOT NULL, `maxdiffmotionaverage` REAL NOT NULL, `maxdiffmotionfactor` REAL NOT NULL, `minawakesleepmax` REAL NOT NULL, `minawakesleepmin` REAL NOT NULL, `minawakesleepmedian` REAL NOT NULL, `minawakesleepaverage` REAL NOT NULL, `minawakesleepfactor` REAL NOT NULL, `minawakelightmax` REAL NOT NULL, `minawakelightmin` REAL NOT NULL, `minawakelightmedian` REAL NOT NULL, `minawakelightaverage` REAL NOT NULL, `minawakelightfactor` REAL NOT NULL, `minawakemotionmax` REAL NOT NULL, `minawakemotionmin` REAL NOT NULL, `minawakemotionmedian` REAL NOT NULL, `minawakemotionaverage` REAL NOT NULL, `minawakemotionfactor` REAL NOT NULL, `minsleepsleepmax` REAL NOT NULL, `minsleepsleepmin` REAL NOT NULL, `minsleepsleepmedian` REAL NOT NULL, `minsleepsleepaverage` REAL NOT NULL, `minsleepsleepfactor` REAL NOT NULL, `minsleeplightmax` REAL NOT NULL, `minsleeplightmin` REAL NOT NULL, `minsleeplightmedian` REAL NOT NULL, `minsleeplightaverage` REAL NOT NULL, `minsleeplightfactor` REAL NOT NULL, `minsleepmotionmax` REAL NOT NULL, `minsleepmotionmin` REAL NOT NULL, `minsleepmotionmedian` REAL NOT NULL, `minsleepmotionaverage` REAL NOT NULL, `minsleepmotionfactor` REAL NOT NULL, `mindiffsleepmax` REAL NOT NULL, `mindiffsleepmin` REAL NOT NULL, `mindiffsleepmedian` REAL NOT NULL, `mindiffsleepaverage` REAL NOT NULL, `mindiffsleepfactor` REAL NOT NULL, `mindifflightmax` REAL NOT NULL, `mindifflightmin` REAL NOT NULL, `mindifflightmedian` REAL NOT NULL, `mindifflightaverage` REAL NOT NULL, `mindifflightfactor` REAL NOT NULL, `mindiffmotionmax` REAL NOT NULL, `mindiffmotionmin` REAL NOT NULL, `mindiffmotionmedian` REAL NOT NULL, `mindiffmotionaverage` REAL NOT NULL, `mindiffmotionfactor` REAL NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -559,78 +559,6 @@
             "columnName": "mindiffmotionfactor",
             "affinity": "REAL",
             "notNull": true
-          },
-          {
-            "fieldPath": "sleepStateParameter.sleepSleepBorder",
-            "columnName": "sleepSleepBorder",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "sleepStateParameter.deepSleepSleepBorder",
-            "columnName": "deepSleepSleepBorder",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "sleepStateParameter.remSleepSleepBorder",
-            "columnName": "remSleepSleepBorder",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "sleepStateParameter.sleepMotionBorder",
-            "columnName": "sleepMotionBorder",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "sleepStateParameter.deepSleepMotionBorder",
-            "columnName": "deepSleepMotionBorder",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "sleepStateParameter.remSleepMotionBorder",
-            "columnName": "remSleepMotionBorder",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "sleepStateParameter.sleepLightBorder",
-            "columnName": "sleepLightBorder",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "sleepStateParameter.deepSleepLightBorder",
-            "columnName": "deepSleepLightBorder",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "sleepStateParameter.remSleepLightBorder",
-            "columnName": "remSleepLightBorder",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "sleepStateParameter.soundClearSleepBorder",
-            "columnName": "soundClearSleepBorder",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "sleepStateParameter.soundClearMotionBorder",
-            "columnName": "soundClearMotionBorder",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "sleepStateParameter.modelMatchPercentage",
-            "columnName": "modelMatchPercentage",
-            "affinity": "INTEGER",
-            "notNull": true
           }
         ],
         "primaryKey": {
@@ -644,12 +572,12 @@
       },
       {
         "tableName": "sleep_time_model_entity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `sleepTimePattern` INTEGER NOT NULL, `maxawakesleepmax` REAL NOT NULL, `maxawakesleepmin` REAL NOT NULL, `maxawakesleepmedian` REAL NOT NULL, `maxawakesleepaverage` REAL NOT NULL, `maxawakesleepfactor` REAL NOT NULL, `maxawakelightmax` REAL NOT NULL, `maxawakelightmin` REAL NOT NULL, `maxawakelightmedian` REAL NOT NULL, `maxawakelightaverage` REAL NOT NULL, `maxawakelightfactor` REAL NOT NULL, `maxawakemotionmax` REAL NOT NULL, `maxawakemotionmin` REAL NOT NULL, `maxawakemotionmedian` REAL NOT NULL, `maxawakemotionaverage` REAL NOT NULL, `maxawakemotionfactor` REAL NOT NULL, `maxsleepsleepmax` REAL NOT NULL, `maxsleepsleepmin` REAL NOT NULL, `maxsleepsleepmedian` REAL NOT NULL, `maxsleepsleepaverage` REAL NOT NULL, `maxsleepsleepfactor` REAL NOT NULL, `maxsleeplightmax` REAL NOT NULL, `maxsleeplightmin` REAL NOT NULL, `maxsleeplightmedian` REAL NOT NULL, `maxsleeplightaverage` REAL NOT NULL, `maxsleeplightfactor` REAL NOT NULL, `maxsleepmotionmax` REAL NOT NULL, `maxsleepmotionmin` REAL NOT NULL, `maxsleepmotionmedian` REAL NOT NULL, `maxsleepmotionaverage` REAL NOT NULL, `maxsleepmotionfactor` REAL NOT NULL, `maxdiffsleepmax` REAL NOT NULL, `maxdiffsleepmin` REAL NOT NULL, `maxdiffsleepmedian` REAL NOT NULL, `maxdiffsleepaverage` REAL NOT NULL, `maxdiffsleepfactor` REAL NOT NULL, `maxdifflightmax` REAL NOT NULL, `maxdifflightmin` REAL NOT NULL, `maxdifflightmedian` REAL NOT NULL, `maxdifflightaverage` REAL NOT NULL, `maxdifflightfactor` REAL NOT NULL, `maxdiffmotionmax` REAL NOT NULL, `maxdiffmotionmin` REAL NOT NULL, `maxdiffmotionmedian` REAL NOT NULL, `maxdiffmotionaverage` REAL NOT NULL, `maxdiffmotionfactor` REAL NOT NULL, `minawakesleepmax` REAL NOT NULL, `minawakesleepmin` REAL NOT NULL, `minawakesleepmedian` REAL NOT NULL, `minawakesleepaverage` REAL NOT NULL, `minawakesleepfactor` REAL NOT NULL, `minawakelightmax` REAL NOT NULL, `minawakelightmin` REAL NOT NULL, `minawakelightmedian` REAL NOT NULL, `minawakelightaverage` REAL NOT NULL, `minawakelightfactor` REAL NOT NULL, `minawakemotionmax` REAL NOT NULL, `minawakemotionmin` REAL NOT NULL, `minawakemotionmedian` REAL NOT NULL, `minawakemotionaverage` REAL NOT NULL, `minawakemotionfactor` REAL NOT NULL, `minsleepsleepmax` REAL NOT NULL, `minsleepsleepmin` REAL NOT NULL, `minsleepsleepmedian` REAL NOT NULL, `minsleepsleepaverage` REAL NOT NULL, `minsleepsleepfactor` REAL NOT NULL, `minsleeplightmax` REAL NOT NULL, `minsleeplightmin` REAL NOT NULL, `minsleeplightmedian` REAL NOT NULL, `minsleeplightaverage` REAL NOT NULL, `minsleeplightfactor` REAL NOT NULL, `minsleepmotionmax` REAL NOT NULL, `minsleepmotionmin` REAL NOT NULL, `minsleepmotionmedian` REAL NOT NULL, `minsleepmotionaverage` REAL NOT NULL, `minsleepmotionfactor` REAL NOT NULL, `mindiffsleepmax` REAL NOT NULL, `mindiffsleepmin` REAL NOT NULL, `mindiffsleepmedian` REAL NOT NULL, `mindiffsleepaverage` REAL NOT NULL, `mindiffsleepfactor` REAL NOT NULL, `mindifflightmax` REAL NOT NULL, `mindifflightmin` REAL NOT NULL, `mindifflightmedian` REAL NOT NULL, `mindifflightaverage` REAL NOT NULL, `mindifflightfactor` REAL NOT NULL, `mindiffmotionmax` REAL NOT NULL, `mindiffmotionmin` REAL NOT NULL, `mindiffmotionmedian` REAL NOT NULL, `mindiffmotionaverage` REAL NOT NULL, `mindiffmotionfactor` REAL NOT NULL, `awakeTime` REAL NOT NULL, `sleepTime` REAL NOT NULL, `wakeUpTime` REAL NOT NULL, `sleepSleepBorder` REAL NOT NULL, `awakeSleepBorder` REAL NOT NULL, `sleepMotionBorder` REAL NOT NULL, `awakeMotionBorder` REAL NOT NULL, `sleepMedianOverTime` REAL NOT NULL, `diffSleep` REAL NOT NULL, `diffSleepFuture` REAL NOT NULL, `awakeMedianOverTime` REAL NOT NULL, `diffAwake` REAL NOT NULL, `modelMatchPercentage` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `sleepTimePattern` INTEGER NOT NULL, `maxawakesleepmax` REAL NOT NULL, `maxawakesleepmin` REAL NOT NULL, `maxawakesleepmedian` REAL NOT NULL, `maxawakesleepaverage` REAL NOT NULL, `maxawakesleepfactor` REAL NOT NULL, `maxawakelightmax` REAL NOT NULL, `maxawakelightmin` REAL NOT NULL, `maxawakelightmedian` REAL NOT NULL, `maxawakelightaverage` REAL NOT NULL, `maxawakelightfactor` REAL NOT NULL, `maxawakemotionmax` REAL NOT NULL, `maxawakemotionmin` REAL NOT NULL, `maxawakemotionmedian` REAL NOT NULL, `maxawakemotionaverage` REAL NOT NULL, `maxawakemotionfactor` REAL NOT NULL, `maxsleepsleepmax` REAL NOT NULL, `maxsleepsleepmin` REAL NOT NULL, `maxsleepsleepmedian` REAL NOT NULL, `maxsleepsleepaverage` REAL NOT NULL, `maxsleepsleepfactor` REAL NOT NULL, `maxsleeplightmax` REAL NOT NULL, `maxsleeplightmin` REAL NOT NULL, `maxsleeplightmedian` REAL NOT NULL, `maxsleeplightaverage` REAL NOT NULL, `maxsleeplightfactor` REAL NOT NULL, `maxsleepmotionmax` REAL NOT NULL, `maxsleepmotionmin` REAL NOT NULL, `maxsleepmotionmedian` REAL NOT NULL, `maxsleepmotionaverage` REAL NOT NULL, `maxsleepmotionfactor` REAL NOT NULL, `maxdiffsleepmax` REAL NOT NULL, `maxdiffsleepmin` REAL NOT NULL, `maxdiffsleepmedian` REAL NOT NULL, `maxdiffsleepaverage` REAL NOT NULL, `maxdiffsleepfactor` REAL NOT NULL, `maxdifflightmax` REAL NOT NULL, `maxdifflightmin` REAL NOT NULL, `maxdifflightmedian` REAL NOT NULL, `maxdifflightaverage` REAL NOT NULL, `maxdifflightfactor` REAL NOT NULL, `maxdiffmotionmax` REAL NOT NULL, `maxdiffmotionmin` REAL NOT NULL, `maxdiffmotionmedian` REAL NOT NULL, `maxdiffmotionaverage` REAL NOT NULL, `maxdiffmotionfactor` REAL NOT NULL, `minawakesleepmax` REAL NOT NULL, `minawakesleepmin` REAL NOT NULL, `minawakesleepmedian` REAL NOT NULL, `minawakesleepaverage` REAL NOT NULL, `minawakesleepfactor` REAL NOT NULL, `minawakelightmax` REAL NOT NULL, `minawakelightmin` REAL NOT NULL, `minawakelightmedian` REAL NOT NULL, `minawakelightaverage` REAL NOT NULL, `minawakelightfactor` REAL NOT NULL, `minawakemotionmax` REAL NOT NULL, `minawakemotionmin` REAL NOT NULL, `minawakemotionmedian` REAL NOT NULL, `minawakemotionaverage` REAL NOT NULL, `minawakemotionfactor` REAL NOT NULL, `minsleepsleepmax` REAL NOT NULL, `minsleepsleepmin` REAL NOT NULL, `minsleepsleepmedian` REAL NOT NULL, `minsleepsleepaverage` REAL NOT NULL, `minsleepsleepfactor` REAL NOT NULL, `minsleeplightmax` REAL NOT NULL, `minsleeplightmin` REAL NOT NULL, `minsleeplightmedian` REAL NOT NULL, `minsleeplightaverage` REAL NOT NULL, `minsleeplightfactor` REAL NOT NULL, `minsleepmotionmax` REAL NOT NULL, `minsleepmotionmin` REAL NOT NULL, `minsleepmotionmedian` REAL NOT NULL, `minsleepmotionaverage` REAL NOT NULL, `minsleepmotionfactor` REAL NOT NULL, `mindiffsleepmax` REAL NOT NULL, `mindiffsleepmin` REAL NOT NULL, `mindiffsleepmedian` REAL NOT NULL, `mindiffsleepaverage` REAL NOT NULL, `mindiffsleepfactor` REAL NOT NULL, `mindifflightmax` REAL NOT NULL, `mindifflightmin` REAL NOT NULL, `mindifflightmedian` REAL NOT NULL, `mindifflightaverage` REAL NOT NULL, `mindifflightfactor` REAL NOT NULL, `mindiffmotionmax` REAL NOT NULL, `mindiffmotionmin` REAL NOT NULL, `mindiffmotionmedian` REAL NOT NULL, `mindiffmotionaverage` REAL NOT NULL, `mindiffmotionfactor` REAL NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -1197,84 +1125,6 @@
             "columnName": "mindiffmotionfactor",
             "affinity": "REAL",
             "notNull": true
-          },
-          {
-            "fieldPath": "sleepTimeParameter.awakeTime",
-            "columnName": "awakeTime",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "sleepTimeParameter.sleepTime",
-            "columnName": "sleepTime",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "sleepTimeParameter.wakeUpTime",
-            "columnName": "wakeUpTime",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "sleepTimeParameter.sleepSleepBorder",
-            "columnName": "sleepSleepBorder",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "sleepTimeParameter.awakeSleepBorder",
-            "columnName": "awakeSleepBorder",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "sleepTimeParameter.sleepMotionBorder",
-            "columnName": "sleepMotionBorder",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "sleepTimeParameter.awakeMotionBorder",
-            "columnName": "awakeMotionBorder",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "sleepTimeParameter.sleepMedianOverTime",
-            "columnName": "sleepMedianOverTime",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "sleepTimeParameter.diffSleep",
-            "columnName": "diffSleep",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "sleepTimeParameter.diffSleepFuture",
-            "columnName": "diffSleepFuture",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "sleepTimeParameter.awakeMedianOverTime",
-            "columnName": "awakeMedianOverTime",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "sleepTimeParameter.diffAwake",
-            "columnName": "diffAwake",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "sleepTimeParameter.modelMatchPercentage",
-            "columnName": "modelMatchPercentage",
-            "affinity": "INTEGER",
-            "notNull": true
           }
         ],
         "primaryKey": {
@@ -1287,89 +1137,95 @@
         "foreignKeys": []
       },
       {
-        "tableName": "sleep_state_factor_model_entity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `userStartPattern` INTEGER NOT NULL, `sleepSleepBorder` REAL NOT NULL, `deepSleepSleepBorder` REAL NOT NULL, `remSleepSleepBorder` REAL NOT NULL, `sleepMotionBorder` REAL NOT NULL, `deepSleepMotionBorder` REAL NOT NULL, `remSleepMotionBorder` REAL NOT NULL, `sleepLightBorder` REAL NOT NULL, `deepSleepLightBorder` REAL NOT NULL, `remSleepLightBorder` REAL NOT NULL, `soundClearSleepBorder` REAL NOT NULL, `soundClearMotionBorder` REAL NOT NULL, `modelMatchPercentage` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "tableName": "sleep_state_parameter_entity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `userFactorPattern` INTEGER NOT NULL, `sleepStatePattern` INTEGER NOT NULL, `sleepSleepBorder` INTEGER NOT NULL, `deepSleepSleepBorder` INTEGER NOT NULL, `remSleepSleepBorder` INTEGER NOT NULL, `sleepMotionBorder` INTEGER NOT NULL, `deepSleepMotionBorder` INTEGER NOT NULL, `remSleepMotionBorder` INTEGER NOT NULL, `sleepLightBorder` INTEGER NOT NULL, `deepSleepLightBorder` INTEGER NOT NULL, `remSleepLightBorder` INTEGER NOT NULL, `soundClearSleepBorder` INTEGER NOT NULL, `soundClearMotionBorder` INTEGER NOT NULL, `modelMatchPercentage` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userFactorPattern",
+            "columnName": "userFactorPattern",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "userStartPattern",
-            "columnName": "userStartPattern",
+            "fieldPath": "sleepStatePattern",
+            "columnName": "sleepStatePattern",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "sleepTimeParameter.sleepSleepBorder",
+            "fieldPath": "sleepStateParameter.sleepSleepBorder",
             "columnName": "sleepSleepBorder",
-            "affinity": "REAL",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "sleepTimeParameter.deepSleepSleepBorder",
+            "fieldPath": "sleepStateParameter.deepSleepSleepBorder",
             "columnName": "deepSleepSleepBorder",
-            "affinity": "REAL",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "sleepTimeParameter.remSleepSleepBorder",
+            "fieldPath": "sleepStateParameter.remSleepSleepBorder",
             "columnName": "remSleepSleepBorder",
-            "affinity": "REAL",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "sleepTimeParameter.sleepMotionBorder",
+            "fieldPath": "sleepStateParameter.sleepMotionBorder",
             "columnName": "sleepMotionBorder",
-            "affinity": "REAL",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "sleepTimeParameter.deepSleepMotionBorder",
+            "fieldPath": "sleepStateParameter.deepSleepMotionBorder",
             "columnName": "deepSleepMotionBorder",
-            "affinity": "REAL",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "sleepTimeParameter.remSleepMotionBorder",
+            "fieldPath": "sleepStateParameter.remSleepMotionBorder",
             "columnName": "remSleepMotionBorder",
-            "affinity": "REAL",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "sleepTimeParameter.sleepLightBorder",
+            "fieldPath": "sleepStateParameter.sleepLightBorder",
             "columnName": "sleepLightBorder",
-            "affinity": "REAL",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "sleepTimeParameter.deepSleepLightBorder",
+            "fieldPath": "sleepStateParameter.deepSleepLightBorder",
             "columnName": "deepSleepLightBorder",
-            "affinity": "REAL",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "sleepTimeParameter.remSleepLightBorder",
+            "fieldPath": "sleepStateParameter.remSleepLightBorder",
             "columnName": "remSleepLightBorder",
-            "affinity": "REAL",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "sleepTimeParameter.soundClearSleepBorder",
+            "fieldPath": "sleepStateParameter.soundClearSleepBorder",
             "columnName": "soundClearSleepBorder",
-            "affinity": "REAL",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "sleepTimeParameter.soundClearMotionBorder",
+            "fieldPath": "sleepStateParameter.soundClearMotionBorder",
             "columnName": "soundClearMotionBorder",
-            "affinity": "REAL",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "sleepTimeParameter.modelMatchPercentage",
+            "fieldPath": "sleepStateParameter.modelMatchPercentage",
             "columnName": "modelMatchPercentage",
             "affinity": "INTEGER",
             "notNull": true
@@ -1385,18 +1241,24 @@
         "foreignKeys": []
       },
       {
-        "tableName": "sleep_time_factor_model_entity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `userStartPattern` INTEGER NOT NULL, `awakeTime` REAL NOT NULL, `sleepTime` REAL NOT NULL, `wakeUpTime` REAL NOT NULL, `sleepSleepBorder` REAL NOT NULL, `awakeSleepBorder` REAL NOT NULL, `sleepMotionBorder` REAL NOT NULL, `awakeMotionBorder` REAL NOT NULL, `sleepMedianOverTime` REAL NOT NULL, `diffSleep` REAL NOT NULL, `diffSleepFuture` REAL NOT NULL, `awakeMedianOverTime` REAL NOT NULL, `diffAwake` REAL NOT NULL, `modelMatchPercentage` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "tableName": "sleep_time_parameter_entity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `userStartPattern` INTEGER NOT NULL, `sleepTimePattern` INTEGER NOT NULL, `awakeTime` REAL NOT NULL, `sleepTime` REAL NOT NULL, `wakeUpTime` REAL NOT NULL, `sleepSleepBorder` REAL NOT NULL, `awakeSleepBorder` REAL NOT NULL, `sleepMotionBorder` REAL NOT NULL, `awakeMotionBorder` REAL NOT NULL, `sleepMedianOverTime` REAL NOT NULL, `diffSleep` REAL NOT NULL, `diffSleepFuture` REAL NOT NULL, `awakeMedianOverTime` REAL NOT NULL, `diffAwake` REAL NOT NULL, `modelMatchPercentage` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
             "fieldPath": "userStartPattern",
             "columnName": "userStartPattern",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepTimePattern",
+            "columnName": "sleepTimePattern",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -1530,7 +1392,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fda027ef6932114b27a8d49a717366b3')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b81e2196ac21fff98838a960bfc7378c')"
     ]
   }
 }

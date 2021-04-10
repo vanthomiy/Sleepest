@@ -15,12 +15,18 @@ import androidx.viewbinding.BuildConfig
 import com.doitstudio.sleepest_master.background.AlarmReceiver
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
 import com.doitstudio.sleepest_master.model.data.SleepState
+import com.doitstudio.sleepest_master.model.data.SleepStatePattern
+import com.doitstudio.sleepest_master.model.data.UserFactorPattern
 import com.doitstudio.sleepest_master.sleepapi.SleepHandler
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
+import com.doitstudio.sleepest_master.sleepcalculation.db.SleepStateParameterEntity
+import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepStateParameter
 import com.doitstudio.sleepest_master.storage.db.SleepSegmentEntity
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -40,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        mainViewModel.allSleepStateFactorModels.observe(this){
+        mainViewModel.allSleepStateParameters.observe(this){
             data->
             binding.status1.text = data.size.toString()
         }
@@ -107,13 +113,25 @@ class MainActivity : AppCompatActivity() {
 
     fun buttonClick2(view: View){
 
-        mainViewModel.insertSometing()
-
+        val aaaa = 1
+        //mainViewModel.insertSometing()
+        scope.launch {
+            val a = (application as MainApplication).sleepCalculationDbRepository.allSleepStateModels.first()
+            val b = (application as MainApplication).sleepCalculationDbRepository.allSleepStateParameters.first()
+            val c = (application as MainApplication).sleepCalculationDbRepository.allSleepTimeModels.first()
+            val d = (application as MainApplication).sleepCalculationDbRepository.allSleepTimeParameters.first()
+        }
     }
 
     var isTimerRunning = false
 
     fun buttonClick3(view: View) {
+
+        // Testing
+
+        val stpe = SleepStateParameterEntity("12", UserFactorPattern.NORMAL, SleepStatePattern.TOLESSREM, SleepStateParameter(1,1,1,1,1,1,1,1,1,1,1,20))
+
+        val jsonString = Gson().toJson(stpe)
 
     }
 

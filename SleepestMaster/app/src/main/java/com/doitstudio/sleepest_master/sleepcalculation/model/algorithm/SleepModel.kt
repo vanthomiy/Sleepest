@@ -9,22 +9,19 @@ import com.doitstudio.sleepest_master.model.data.SleepStatePattern
 
 data class SleepModel(
 
-    @Embedded(prefix = "awake") val valuesAwake:SleepModelTypes,
-    @Embedded(prefix = "sleep") val valuesSleep:SleepModelTypes,
-    @Embedded(prefix = "diff") val valuesDiff:SleepModelTypes,
+    @Embedded(prefix = "awake") val valuesAwake:ValuesTimeModel,
+    @Embedded(prefix = "sleep") val valuesSleep:ValuesTimeModel,
+    @Embedded(prefix = "diff") val valuesDiff:ValuesTimeModel,
 
     )
 
-data class SleepModelTypes(
-    @Embedded(prefix = "sleep") val sleep:SleepModelValues,
-    //@Embedded(prefix = "minSleep") val minSchlaf:SleepModelValues,
-    @Embedded(prefix = "light") val light:SleepModelValues,
-    //@Embedded(prefix = "minLight") val minLicht:SleepModelValues,
-    @Embedded(prefix = "motion") val motion:SleepModelValues,
-    //@Embedded(prefix = "minMotion") val minMotion:SleepModelValues
+data class ValuesTimeModel(
+    @Embedded(prefix = "sleep") val sleep:DataSetter,
+    @Embedded(prefix = "light") val light:DataSetter,
+    @Embedded(prefix = "motion") val motion:DataSetter,
 )
 
-data class SleepModelValues(
+data class DataSetter(
 
     @ColumnInfo(name = "max")
     val Max:Float,	//Der Max wert
