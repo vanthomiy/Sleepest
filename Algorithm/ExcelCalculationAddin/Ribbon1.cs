@@ -5,6 +5,7 @@ using ExcelCalculationAddin.Model;
 using ExcelCalculationAddin.Model.SleepStateDetect;
 using Microsoft.Office.Tools.Ribbon;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using static ExcelCalculationAddin.Model.SleepStateDetect.SleepStateClean;
 using static ExcelCalculationAddin.Model.SleepTimeClean;
@@ -101,8 +102,10 @@ namespace ExcelCalculationAddin
                 RootState rt = new RootState();
 
                 rt.id = item.Key;
-                rt.sleepStatePattern = (SleepStateClean.SleepStateCleanType)((int)item.Key[0]);
-                rt.userFactorPattern = (UserFactorPattern)((int)item.Key[1]);
+                var a = Char.GetNumericValue(item.Key[0]);
+                var b = Char.GetNumericValue(item.Key[1]);
+                rt.sleepStatePattern = (SleepStateCleanType)((int)(a));
+                rt.userFactorPattern = (UserFactorPattern)((int)(b));
 
                 //rt.sleepStateParameter = SleepStateClean.sleepStateParams[rt.sleepStatePattern];
 

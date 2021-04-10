@@ -15,9 +15,14 @@ namespace ExcelCalculationAddin.Export
         public string id { get; set; }
         public SleepTimeModelMaxMin sleepStateModelMax { get; set; }
         public SleepTimeModelMaxMin sleepStateModelMin { get; set; }
-       // public SleepStateParameter sleepStateParameter { get; set; }
+        // public SleepStateParameter sleepStateParameter { get; set; }
+
+        [JsonConverter(typeof(StringEnumConverter))]
         public SleepStateCleanType sleepStatePattern { get; set; }
+
+        [JsonConverter(typeof(StringEnumConverter))]
         public UserFactorPattern userFactorPattern { get; set; }
+
     }
 
     public class RootStateParameter
