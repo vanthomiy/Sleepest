@@ -234,7 +234,7 @@ namespace ExcelCalculationAddin.Model
 
 
 
-            int finde = CellHelper.ExcelColumnNameToNumber("AN");
+            int finde = CellHelper.ExcelColumnNameToNumber("AO");
             int offWach = 1, offSleep = 4, offDiff = 7;
 
             for (int i = 4; i < 200; i+=12)

@@ -77,57 +77,71 @@ namespace ExcelCalculationAddin.Model
             //motion = new MaxMinHelper();
             //light = new MaxMinHelper();
 
-            sleepApiDataTime = new MaxMinHelper();
-            data.Add(SleepCleanModelType.Schlaf, new MaxMinHelper());
-            data.Add(SleepCleanModelType.Motion, new MaxMinHelper());
-            data.Add(SleepCleanModelType.Licht, new MaxMinHelper());
-
-
-            DateTime lastDatetime = default;
-            List<int> sleepTime = new List<int>();
-
-            foreach (var sleepEntrie in sleepDataEntrie)
+            try
             {
-                if (lastDatetime == default)
+
+
+                sleepApiDataTime = new MaxMinHelper();
+                data.Add(SleepCleanModelType.Schlaf, new MaxMinHelper());
+                data.Add(SleepCleanModelType.Motion, new MaxMinHelper());
+                data.Add(SleepCleanModelType.Licht, new MaxMinHelper());
+
+
+                DateTime lastDatetime = default;
+                List<int> sleepTime = new List<int>();
+
+                foreach (var sleepEntrie in sleepDataEntrie)
                 {
+                    if (lastDatetime == default)
+                    {
+                        lastDatetime = sleepEntrie.time;
+                        continue;
+                    }
+
+                    int ts = (int)(sleepEntrie.time - lastDatetime).TotalSeconds;
+                    sleepTime.Add(ts);
+
                     lastDatetime = sleepEntrie.time;
-                    continue;
                 }
 
-                int ts = (int)(sleepEntrie.time - lastDatetime).TotalSeconds;
-                sleepTime.Add(ts);
+                if (sleepTime.Count == 0)
+                {
+                    return Task.FromResult(false);
+                }
 
-                lastDatetime = sleepEntrie.time;
+                sleepApiDataTime.maxmintype.Add(MaxMinHelperType.Average, (float)sleepTime.Average());
+                data[SleepCleanModelType.Schlaf].maxmintype.Add(MaxMinHelperType.Average, (float)sleepDataEntrie.Average(x => x.sleep));
+                data[SleepCleanModelType.Motion].maxmintype.Add(MaxMinHelperType.Average, (float)sleepDataEntrie.Average(x => x.motion));
+                data[SleepCleanModelType.Licht].maxmintype.Add(MaxMinHelperType.Average, (float)sleepDataEntrie.Average(x => x.light));
+
+                sleepApiDataTime.Max = sleepTime.Max();
+                data[SleepCleanModelType.Schlaf].Max = sleepDataEntrie.Max(x => x.sleep);
+                data[SleepCleanModelType.Motion].Max = sleepDataEntrie.Max(x => x.motion);
+                data[SleepCleanModelType.Licht].Max = sleepDataEntrie.Max(x => x.light);
+
+                sleepApiDataTime.Min = sleepTime.Min();
+                data[SleepCleanModelType.Schlaf].Min = sleepDataEntrie.Min(x => x.sleep);
+                data[SleepCleanModelType.Motion].Min = sleepDataEntrie.Min(x => x.motion);
+                data[SleepCleanModelType.Licht].Min = sleepDataEntrie.Min(x => x.light);
+
+                sleepApiDataTime.maxmintype.Add(MaxMinHelperType.Median, sleepTime.OrderByDescending(x => x).ToList()[sleepTime.Count / 2]);
+                data[SleepCleanModelType.Schlaf].maxmintype.Add(MaxMinHelperType.Median, sleepDataEntrie.OrderByDescending(x => x.sleep).ToList()[sleepDataEntrie.Count / 2].sleep);
+                data[SleepCleanModelType.Motion].maxmintype.Add(MaxMinHelperType.Median, sleepDataEntrie.OrderByDescending(x => x.motion).ToList()[sleepDataEntrie.Count / 2].motion);
+                data[SleepCleanModelType.Licht].maxmintype.Add(MaxMinHelperType.Median, sleepDataEntrie.OrderByDescending(x => x.light).ToList()[sleepDataEntrie.Count / 2].light);
+
+                sleepApiDataTime.maxmintype.Add(MaxMinHelperType.Factor, sleepApiDataTime.maxmintype[MaxMinHelperType.Average] / sleepApiDataTime.maxmintype[MaxMinHelperType.Median]);
+                data[SleepCleanModelType.Schlaf].maxmintype.Add(MaxMinHelperType.Factor, data[SleepCleanModelType.Schlaf].maxmintype[MaxMinHelperType.Average] / data[SleepCleanModelType.Schlaf].maxmintype[MaxMinHelperType.Median]);
+                data[SleepCleanModelType.Motion].maxmintype.Add(MaxMinHelperType.Factor, data[SleepCleanModelType.Motion].maxmintype[MaxMinHelperType.Average] / data[SleepCleanModelType.Motion].maxmintype[MaxMinHelperType.Median]);
+                data[SleepCleanModelType.Licht].maxmintype.Add(MaxMinHelperType.Factor, data[SleepCleanModelType.Licht].maxmintype[MaxMinHelperType.Average] / data[SleepCleanModelType.Licht].maxmintype[MaxMinHelperType.Median]);
+
+
+                return Task.FromResult(true);
             }
+            catch (Exception ex)
+            {
+                return Task.FromResult(false);
 
-
-            sleepApiDataTime.maxmintype.Add(MaxMinHelperType.Average, (float)sleepTime.Average());
-            data[SleepCleanModelType.Schlaf].maxmintype.Add(MaxMinHelperType.Average, (float)sleepDataEntrie.Average(x => x.sleep));
-            data[SleepCleanModelType.Motion].maxmintype.Add(MaxMinHelperType.Average, (float)sleepDataEntrie.Average(x => x.motion));
-            data[SleepCleanModelType.Licht].maxmintype.Add(MaxMinHelperType.Average, (float)sleepDataEntrie.Average(x => x.light));
-
-            sleepApiDataTime.Max = sleepTime.Max();
-            data[SleepCleanModelType.Schlaf].Max = sleepDataEntrie.Max(x => x.sleep);
-            data[SleepCleanModelType.Motion].Max = sleepDataEntrie.Max(x => x.motion);
-            data[SleepCleanModelType.Licht].Max = sleepDataEntrie.Max(x => x.light);
-
-            sleepApiDataTime.Min = sleepTime.Min();
-            data[SleepCleanModelType.Schlaf].Min = sleepDataEntrie.Min(x => x.sleep);
-            data[SleepCleanModelType.Motion].Min = sleepDataEntrie.Min(x => x.motion);
-            data[SleepCleanModelType.Licht].Min = sleepDataEntrie.Min(x => x.light);
-
-            sleepApiDataTime.maxmintype.Add(MaxMinHelperType.Median, sleepTime.OrderByDescending(x => x).ToList()[sleepTime.Count / 2]);
-            data[SleepCleanModelType.Schlaf].maxmintype.Add(MaxMinHelperType.Median, sleepDataEntrie.OrderByDescending(x => x.sleep).ToList()[sleepDataEntrie.Count / 2].sleep);
-            data[SleepCleanModelType.Motion].maxmintype.Add(MaxMinHelperType.Median, sleepDataEntrie.OrderByDescending(x => x.motion).ToList()[sleepDataEntrie.Count / 2].motion);
-            data[SleepCleanModelType.Licht].maxmintype.Add(MaxMinHelperType.Median, sleepDataEntrie.OrderByDescending(x => x.light).ToList()[sleepDataEntrie.Count / 2].light);
-
-            sleepApiDataTime.maxmintype.Add(MaxMinHelperType.Factor, sleepApiDataTime.maxmintype[MaxMinHelperType.Average] / sleepApiDataTime.maxmintype[MaxMinHelperType.Median]);
-            data[SleepCleanModelType.Schlaf].maxmintype.Add(MaxMinHelperType.Factor, data[SleepCleanModelType.Schlaf].maxmintype[MaxMinHelperType.Average] / data[SleepCleanModelType.Schlaf].maxmintype[MaxMinHelperType.Median]);
-            data[SleepCleanModelType.Motion].maxmintype.Add(MaxMinHelperType.Factor, data[SleepCleanModelType.Motion].maxmintype[MaxMinHelperType.Average] / data[SleepCleanModelType.Motion].maxmintype[MaxMinHelperType.Median]);
-            data[SleepCleanModelType.Licht].maxmintype.Add(MaxMinHelperType.Factor, data[SleepCleanModelType.Licht].maxmintype[MaxMinHelperType.Average] / data[SleepCleanModelType.Licht].maxmintype[MaxMinHelperType.Median]);
-
-
-            return Task.FromResult(true);
+            }
         }
 
 

@@ -162,7 +162,7 @@ namespace ExcelCalculationAddin.Model
 
 
 
-            int finde = CellHelper.ExcelColumnNameToNumber("AW");
+            int finde = CellHelper.ExcelColumnNameToNumber("AX");
 
             bool available = true;
             while (available)
@@ -213,7 +213,7 @@ namespace ExcelCalculationAddin.Model
 
 
 
-            int finde = CellHelper.ExcelColumnNameToNumber("AY");
+            int finde = CellHelper.ExcelColumnNameToNumber("AZ");
 
             bool available = true;
             while (available)

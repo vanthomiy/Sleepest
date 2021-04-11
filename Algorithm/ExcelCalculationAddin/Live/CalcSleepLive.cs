@@ -52,7 +52,7 @@ namespace ExcelCalculationAddin.Live
                         if (!session.foundSleep)
                         {
                             session.nf1 = "nf";
-                            session.sleepUserType = SleepType.UserFactorPattern.NORMAL;
+                            session.sleepUserType = SleepType.UserFactorPattern.LIGHT;
                             param = SleepTimeParameter.AddFactorToParameter(param, SleepType.sleepTimeParameter[session.sleepUserType], false);
 
                             await session.CalcSleepTimesRealTime(param, 0);
@@ -87,10 +87,9 @@ namespace ExcelCalculationAddin.Live
 
                         await session.CalcData();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
 
-                        throw;
                     }
 
                     // Check for sleep times adjustment types

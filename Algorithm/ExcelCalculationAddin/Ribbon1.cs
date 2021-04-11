@@ -38,9 +38,9 @@ namespace ExcelCalculationAddin
             // Kalkulieren und abspeichern der daten
             ReadParameter.GetAlarmSettings();
             ReadParameter.ReadSleepTypeParameter();
-            SleepTimeClean.sleepCleanParamsAfter = SleepTimeParameter.CreateAllModels(false);
-            SleepTimeClean.sleepCleanModelsAfter = SleepTimeModel.CreateAllModels(false);
-            SleepType.sleepTypeParamsAfter = SleepTimeParameter.CreateAllFactorModels(false);
+           // SleepTimeClean.sleepCleanParamsAfter = SleepTimeParameter.CreateAllModels(false);
+            //SleepTimeClean.sleepCleanModelsAfter = SleepTimeModel.CreateAllModels(false);
+            //SleepType.sleepTypeParamsAfter = SleepTimeParameter.CreateAllFactorModels(false);
 
             SleepTimeClean.sleepTimeParamsWhile= SleepTimeParameter.CreateAllModels(true);
             SleepTimeClean.sleepTimeModelsWhile = SleepTimeModel.CreateAllModels(true);

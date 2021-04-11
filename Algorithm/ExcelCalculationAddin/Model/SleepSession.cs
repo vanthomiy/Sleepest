@@ -158,23 +158,29 @@ namespace ExcelCalculationAddin.Model
 
         public async Task<bool> CalcData()
         {
-            if (sleepDataEntrieSleep[0].Count != 0)
-            {
-                dateTime = sleepDataEntrieSleep[0].Where(x => x.time != null).FirstOrDefault().time;
-
-                structureSleep = new Strukture();
-                await structureSleep.CalcData(sleepDataEntrieSleep[0]);
-            }
-
-            if (sleepDataEntrieAwake[0].Count != 0)
-            {
-                dateTime = sleepDataEntrieAwake[0].Where(x => x.time != null).FirstOrDefault().time;
-
-                structureAwake = new Strukture();
-                await structureAwake.CalcData(sleepDataEntrieAwake[0]);
-            }
+            
             try
             {
+                if (sleepDataEntrieSleep[0].Count == 0)
+                {
+
+                }
+
+                if (sleepDataEntrieSleep[0].Count != 0)
+                {
+                    dateTime = sleepDataEntrieSleep[0].Where(x => x.time != null).FirstOrDefault().time;
+
+                    structureSleep = new Strukture();
+                    await structureSleep.CalcData(sleepDataEntrieSleep[0]);
+                }
+
+                if (sleepDataEntrieAwake[0].Count != 0)
+                {
+                    dateTime = sleepDataEntrieAwake[0].Where(x => x.time != null).FirstOrDefault().time;
+
+                    structureAwake = new Strukture();
+                    await structureAwake.CalcData(sleepDataEntrieAwake[0]);
+                }
 
                 if (structureSleep != null && structureAwake != null)
                 {
@@ -184,10 +190,9 @@ namespace ExcelCalculationAddin.Model
                     await diffrence.CalcData(structureSleep, structureAwake);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
             }
 
 
@@ -328,12 +333,13 @@ namespace ExcelCalculationAddin.Model
 
             ListHelp.CellHelper.WriteCellValue(row.ToString(), actualRow, "A", worksheet1);
             ListHelp.CellHelper.WriteCellValue(user, actualRow, "B", worksheet1);
-            ListHelp.CellHelper.WriteCellValue(sleepDataEntrieSleep.Count().ToString(), actualRow, "AD", worksheet1);
-            ListHelp.CellHelper.WriteCellValue(rw11, actualRow, "AE", worksheet1);
-            ListHelp.CellHelper.WriteCellValue(rw12, actualRow, "AF", worksheet1);
-            ListHelp.CellHelper.WriteCellValue((rw11 != "" || rw12 != "") ? rw2:"", actualRow, "AG", worksheet1);
-            ListHelp.CellHelper.WriteCellValue(nf1, actualRow, "AH", worksheet1);
-            ListHelp.CellHelper.WriteCellValue(nf2, actualRow, "AI", worksheet1);
+            ListHelp.CellHelper.WriteCellValue(sleepDataEntrieAwake.GetHashCode(), actualRow, "AD", worksheet1);
+            ListHelp.CellHelper.WriteCellValue(sleepDataEntrieSleep.GetHashCode(), actualRow, "AE", worksheet1);
+            ListHelp.CellHelper.WriteCellValue(rw11, actualRow, "AF", worksheet1);
+            ListHelp.CellHelper.WriteCellValue(rw12, actualRow, "AG", worksheet1);
+            ListHelp.CellHelper.WriteCellValue((rw11 != "" || rw12 != "") ? rw2:"", actualRow, "AH", worksheet1);
+            ListHelp.CellHelper.WriteCellValue(nf1, actualRow, "AI", worksheet1);
+            ListHelp.CellHelper.WriteCellValue(nf2, actualRow, "AJ", worksheet1);
 
             if (isWhile)
             {
