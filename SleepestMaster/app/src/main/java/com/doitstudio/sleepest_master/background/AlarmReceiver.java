@@ -34,7 +34,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        this.context = context;
+        this.context = context.getApplicationContext();
 
         switch (intent.getIntExtra(context.getString(R.string.alarmmanager_key), 0)) {
             case 0:
@@ -46,7 +46,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                 ForegroundService.startOrStopForegroundService(Actions.STOP, context);
                 break;
         }
-
     }
 
     /**
@@ -73,7 +72,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         Intent intent = new Intent(alarmContext, AlarmReceiver.class);
         intent.putExtra(alarmContext.getString(R.string.alarmmanager_key), usage);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(alarmContext, 1, intent, 0); /** TODO: Request Code zentral anlegen */
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(alarmContext, usage, intent, 0); /** TODO: Request Code zentral anlegen */
         AlarmManager alarmManager = (AlarmManager) alarmContext.getSystemService(ALARM_SERVICE);
 
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calenderAlarm.getTimeInMillis(), pendingIntent);
@@ -83,10 +82,10 @@ public class AlarmReceiver extends BroadcastReceiver {
      * Cancel a specific alarm by pending Intent
      * @param context1 Application Context
      */
-    static void cancelAlarm(Context context1) {
+    static void cancelAlarm(Context context1, int usage) {
 
         Intent intent = new Intent(context1, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context1, 1, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context1, usage, intent, 0);
         AlarmManager alarmManager = (AlarmManager) context1.getSystemService(ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
     }

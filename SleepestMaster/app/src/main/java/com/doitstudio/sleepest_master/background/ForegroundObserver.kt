@@ -19,10 +19,10 @@ class ForegroundObserver(private val fs:ForegroundService) {
         sleepApiLifeData.observe(fs) { sleep->
             fs.OnSleepApiDataChanged(sleep)
         }
-        /*
+
         userSleepTime.observe(fs) { sleeptime->
             fs.OnSleepTimeChanged(sleeptime)
 
-        }*/
+        }
     }
 }

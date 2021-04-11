@@ -85,43 +85,20 @@ public class ForegroundService extends LifecycleService {
     }
 
     public void OnAlarmChanged(Alarm alarm){
-        isAlarmActive = alarm.getIsActive();
+        //isAlarmActive = alarm.getIsActive();
         updateNotification("test");
-        save();
     }
 
     public void OnSleepApiDataChanged(SleepApiData sleepApiData){
         sleepValueAmount = sleepApiData.getSleepApiValuesAmount();
         isSubscribed = sleepApiData.getIsSubscribed();
         updateNotification("test");
-        save();
     }
-    /*
+
     public void OnSleepTimeChanged(LiveUserSleepActivity liveUserSleepActivity){
         userSleepTime = liveUserSleepActivity.getUserSleepTime();
         isSleeping = liveUserSleepActivity.getIsUserSleeping();
         updateNotification("test");
-    }*/
-
-    private void save() {
-
-        Calendar calenderAlarm = Calendar.getInstance();
-        int hour = calenderAlarm.get(Calendar.HOUR_OF_DAY);
-        int minute = calenderAlarm.get(Calendar.MINUTE);
-
-        String log = hour + ":" + minute + ": "
-                + "Alarm active: " + isAlarmActive
-                + "\nSleepValueAmount: " + sleepValueAmount
-                + "\nIsSubscribed: " + isSubscribed
-                + "\nSleepTime: " + userSleepTime
-                + "\nIsSleeping: " + isSleeping;
-
-        SharedPreferences sharedPref = getSharedPreferences("Alarm", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("Log", log);
-        editor.apply();
-
-
     }
 
     @Override

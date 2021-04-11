@@ -17,6 +17,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.Calendar;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG_WORK = "Workmanager 1";
@@ -67,7 +69,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
         SharedPreferences timePref = getSharedPreferences("time", 0);
-        tvLastTime.setText(timePref.getString("hour", "XX") + ":" + timePref.getString("minute", "XX"));
+        SharedPreferences nextDatePref = getSharedPreferences("nextdate", 0);
+        SharedPreferences lastDatePref = getSharedPreferences("lastalarm", 0);
+        tvLastTime.setText("Actual Day Number: " + Calendar.getInstance().get(Calendar.DAY_OF_YEAR) + "\n" +
+                "Last Workmanager Call: " + timePref.getString("hour", "XX") + ":" + timePref.getString("minute", "XX") + "\n" +
+                "Next Alarm at: " + nextDatePref.getString("week", "XX") + ", " + nextDatePref.getString("day", "XX") + ", " + nextDatePref.getString("hour", "XX") + ":" + nextDatePref.getString("minute", "XX") + "\n" +
+                "Last Alarm at: " + lastDatePref.getString("day", "XX") + ", " + lastDatePref.getString("hour", "XX") + ":" + lastDatePref.getString("minute", "XX"));
+
 
     }
 
