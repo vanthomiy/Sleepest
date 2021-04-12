@@ -138,7 +138,7 @@ class SleepCalculationHandler(private val context: Context){
 
         
         var sleepTime = 0
-        for(i in 1..sleep.count()-1 step 2)
+        for(i in 1 until sleep.count()-1 step 2)
         {
             sleepTime +=  sleep[i+1] - sleep[i]
         }
@@ -170,7 +170,7 @@ class SleepCalculationHandler(private val context: Context){
             ufp = UserFactorPattern.values()[ufp.ordinal-1]
         }
 
-        return sleep
+        return sleep.reversed()
     }
 
     private fun calculateSleepTime(parameters: SleepTimeParameter, rawApiData: List<SleepApiRawDataEntity>) : List<Int> {
@@ -271,11 +271,11 @@ class SleepCalculationHandler(private val context: Context){
         {
             if  (!isSleep)
             {
-                awakeList.addAll(rawApiData.filter { x-> x.timestampSeconds >= sleep[i] && x.timestampSeconds < sleep[i] })
+                awakeList.addAll(rawApiData.filter { x-> x.timestampSeconds >= sleep[i] && x.timestampSeconds < sleep[i+1] })
             }
             else
             {
-                sleepList.addAll(rawApiData.filter { x-> x.timestampSeconds >= sleep[i] && x.timestampSeconds < sleep[i] })
+                sleepList.addAll(rawApiData.filter { x-> x.timestampSeconds >= sleep[i] && x.timestampSeconds < sleep[i+1] })
             }
 
             isSleep = !isSleep
@@ -297,9 +297,9 @@ class SleepCalculationHandler(private val context: Context){
             if (a.ordinal != 0)
             {
                 patterns.add(a)
+                parameter.add(dbRepository.getSleepTimeParameterById(a.toString()).first().sleepTimeParameter)
             }
 
-            parameter.add(dbRepository.getSleepTimeParameterById(a.toString()).first().sleepTimeParameter)
         }
 
         // create the id of the param id of the model

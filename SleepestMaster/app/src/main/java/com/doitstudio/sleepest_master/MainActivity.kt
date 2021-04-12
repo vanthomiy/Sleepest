@@ -119,13 +119,14 @@ class MainActivity : AppCompatActivity() {
         var gson = Gson()
         val jsonFile = this
                 .assets
-                .open("databases/testdata/sleep1.json")
+                .open("databases/testdata/sleep.json")
                 .bufferedReader()
                 .use(BufferedReader::readText)
 
-        val a = gson.fromJson(jsonFile, Array<SleepApiRawDataEntity>::class.java).asList()
+        val a = gson.fromJson(jsonFile, Array<Array<SleepApiRawDataEntity>>::class.java).asList()
 
-        mainViewModel.insertApi(a)
+
+        mainViewModel.insertApi(a[3].toList())
 
         val handler = SleepCalculationHandler.getHandler(this)
         scope.launch {
