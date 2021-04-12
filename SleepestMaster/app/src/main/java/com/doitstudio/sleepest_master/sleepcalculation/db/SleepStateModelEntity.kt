@@ -36,6 +36,10 @@ data class SleepStateModelEntity(
 
                         return gson.fromJson(jsonFile, Array<SleepStateModelEntity>::class.java).asList()
                 }
+
         }
+
+
+
 }
 

@@ -36,13 +36,13 @@ class SleepCalculationStoreRepository(context: Context) {
 
     val actualSleepUserParameterFlow: Flow<ActualSleepUserParameter> = actualSleepUserParameterStatus.actualSleepUserParameter
 
-    suspend fun updateSleepStatePattern(sleepStatePattern: Int) =
+    suspend fun updateSleepStatePattern(sleepStatePattern: String) =
             actualSleepUserParameterStatus.updateSleepStatePattern(sleepStatePattern)
 
-    suspend fun updateSleepTimePattern(sleepTimePattern: Int) =
+    suspend fun updateSleepTimePattern(sleepTimePattern: String) =
             actualSleepUserParameterStatus.updateSleepTimePattern(sleepTimePattern)
 
-    suspend fun updateUserStartPattern(userStartPattern: Int) =
+    suspend fun updateUserStartPattern(userStartPattern: String) =
             actualSleepUserParameterStatus.updateUserStartPattern(userStartPattern)
 
     // endregion
@@ -66,6 +66,9 @@ class SleepCalculationStoreRepository(context: Context) {
 
     suspend fun updateUserSleepTime(userSleepTime: Int) =
             liveUserSleepActivityStatus.updateUserSleepTime(userSleepTime)
+
+    suspend fun updateUserSleepFound(isUserSleepFound: Boolean) =
+            liveUserSleepActivityStatus.updateUserSleepFound(isUserSleepFound)
 
     suspend fun setUserSleepHistory(userSleepHistory: List<Int>) =
             liveUserSleepActivityStatus.setUserSleepHistory(userSleepHistory)

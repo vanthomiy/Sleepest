@@ -5,6 +5,9 @@ import androidx.datastore.core.Serializer
 import com.doitstudio.sleepest_master.ActualSleepUserParameter
 import com.doitstudio.sleepest_master.LiveUserSleepActivity
 import com.doitstudio.sleepest_master.SleepApiData
+import com.doitstudio.sleepest_master.model.data.SleepStatePattern
+import com.doitstudio.sleepest_master.model.data.SleepTimePattern
+import com.doitstudio.sleepest_master.model.data.UserFactorPattern
 import com.google.protobuf.InvalidProtocolBufferException
 import java.io.InputStream
 import java.io.OutputStream
@@ -58,7 +61,7 @@ class ActualSleepUserParameterSerializer() : Serializer<ActualSleepUserParameter
     }
 
     override val defaultValue: ActualSleepUserParameter = ActualSleepUserParameter.newBuilder().
-            setUserStartPattern(0).
-            setSleepTimePattern(0).
-            setSleepStatePattern(0).build()
+            setUserStartPattern(UserFactorPattern.NONE.toString()).
+            setSleepTimePattern(SleepTimePattern.NONE.toString()).
+            setSleepStatePattern(SleepStatePattern.NONE.toString()).build()
 }

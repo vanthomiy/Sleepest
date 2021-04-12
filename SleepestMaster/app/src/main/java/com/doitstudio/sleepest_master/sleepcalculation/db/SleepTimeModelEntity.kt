@@ -2,6 +2,7 @@ package com.doitstudio.sleepest_master.sleepcalculation.db
 
 import android.content.Context
 import androidx.room.*
+import com.doitstudio.sleepest_master.model.data.SleepStatePattern
 import com.doitstudio.sleepest_master.model.data.SleepTimePattern
 import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.*
 import com.google.gson.Gson
@@ -37,5 +38,24 @@ data class SleepTimeModelEntity(
                     return gson.fromJson(jsonFile, Array<SleepTimeModelEntity>::class.java).asList()
                 }
         }
+
+
+    /**
+     * Returns the sleeptime pattern else 0 if the model matches the pattern
+     */
+    fun checkIfIsModel(model: SleepModel): SleepTimePattern
+    {
+        var times = 0
+        val alltimes = 90
+        times += sleepTimeModelMax.checkIfInBounds(model, false)
+        times += sleepTimeModelMin.checkIfInBounds(model, true)
+
+        if ((times * 100) / alltimes > 95f)
+        {
+            return sleepTimePattern
+        }
+
+        return SleepTimePattern.NONE
+    }
 }
 

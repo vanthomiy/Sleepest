@@ -23,19 +23,19 @@ class ActualSleepUserParameterStatus(private val dataStore: DataStore<ActualSlee
                 }
             }
 
-    suspend fun updateSleepStatePattern(sleepStatePattern: Int) {
+    suspend fun updateSleepStatePattern(sleepStatePattern: String) {
         dataStore.updateData { preference ->
             preference.toBuilder().setSleepStatePattern(sleepStatePattern).build()
         }
     }
 
-    suspend fun updateSleepTimePattern(sleepTimePattern: Int) {
+    suspend fun updateSleepTimePattern(sleepTimePattern: String) {
         dataStore.updateData { preference ->
             preference.toBuilder().setSleepTimePattern(sleepTimePattern).build()
         }
     }
 
-    suspend fun updateUserStartPattern(userStartPattern: Int) {
+    suspend fun updateUserStartPattern(userStartPattern: String) {
         dataStore.updateData { preference ->
             preference.toBuilder().setUserStartPattern(userStartPattern).build()
         }

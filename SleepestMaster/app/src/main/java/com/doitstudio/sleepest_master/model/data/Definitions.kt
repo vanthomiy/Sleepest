@@ -59,7 +59,8 @@ enum class SleepTimePattern{
     WAKEUPTOLATE,
     WAKEUPTOEARLY,
     ASLEEPTOLATE,
-    ASLEEPTOEARLY
+    ASLEEPTOEARLY,
+    STANDARD
 
 }
 
@@ -75,7 +76,8 @@ enum class SleepStatePattern{
     TOLESSSLEEP,
     TOLESSLIGHT,
     TOLESSDEEP,
-    TOLESSREM
+    TOLESSREM,
+    STANDARD
 
 }
 
