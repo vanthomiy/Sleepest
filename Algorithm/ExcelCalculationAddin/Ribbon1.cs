@@ -199,23 +199,34 @@ namespace ExcelCalculationAddin
             var jsonTimeParamsFile = JsonConvert.SerializeObject(rootTimeParameter);
 
 
-            List<RootRawApi> rral = new List<RootRawApi>();
+            List<List<RootRawApi>> mrral = new List<List<RootRawApi>>();
 
-            foreach (var item in ReadParameter.values[1].sleepSessionWhile[1].sleepDataEntrieSleepTime)
+            for (int i = 1; i < ReadParameter.values.Count; i++)
             {
-                RootRawApi rra = new RootRawApi();
+                for (int j = 1; j < ReadParameter.values[i].sleepSessionWhile.Count; j++)
+                {
+                    List<RootRawApi> rral = new List<RootRawApi>();
 
-                rra.confidence = item.sleep;
-                rra.motion = item.motion;
-                rra.light = item.light;
+                    foreach (var item in ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTime)
+                    {
+                        RootRawApi rra = new RootRawApi();
 
-                TimeSpan span = item.time.Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc));
-                rra.timestampSeconds = (int)span.TotalSeconds;
+                        rra.confidence = item.sleep;
+                        rra.motion = item.motion;
+                        rra.light = item.light;
 
-                rral.Add(rra);
+                        TimeSpan span = item.time.Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+                        rra.timestampSeconds = (int)span.TotalSeconds;
+
+                        rral.Add(rra);
+                    }
+
+                    mrral.Add(rral);
+                }
             }
+          
            
-            var rawSleepApiDataFiles = JsonConvert.SerializeObject(rral);
+            var rawSleepApiDataFiles = JsonConvert.SerializeObject(mrral);
 
         }
     }
