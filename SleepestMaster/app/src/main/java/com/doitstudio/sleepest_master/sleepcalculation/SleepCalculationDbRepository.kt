@@ -66,7 +66,7 @@ class SleepCalculationDbRepository(
         sleepTimeParameterDao.getAll()
 
 
-    suspend fun getSleepTimeParameterById(parameterId: String) : SleepTimeParameterEntity {
+    suspend fun getSleepTimeParameterById(parameterId: String) : Flow<SleepTimeParameterEntity> {
         return sleepTimeParameterDao.getParameterById(parameterId)
     }
 

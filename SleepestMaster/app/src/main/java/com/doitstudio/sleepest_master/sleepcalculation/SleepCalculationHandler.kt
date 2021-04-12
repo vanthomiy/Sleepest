@@ -5,7 +5,6 @@ import com.doitstudio.sleepest_master.LiveUserSleepActivity
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.model.data.SleepTimePattern
 import com.doitstudio.sleepest_master.model.data.UserFactorPattern
-import com.doitstudio.sleepest_master.sleepcalculation.db.SleepTimeParameterEntity
 import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepModel
 import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepTimeParameter
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
@@ -112,7 +111,7 @@ class SleepCalculationHandler(private val context: Context){
             // check if that are diffrent parameters... else we dont have to calculate again
             if(newTimeParameterId != SleepTimePattern.NONE.toString()){
                 // Now retrieve the time parameter for the live user sleep activity
-                parameter = dbRepository.getSleepTimeParameterById(newTimeParameterId).sleepTimeParameter
+                parameter = dbRepository.getSleepTimeParameterById(newTimeParameterId).first().sleepTimeParameter
 
                 // Create sleep with parameters
                 sleep = getSleepAndAdjustFactor(parameter, rawApiData)
@@ -126,7 +125,7 @@ class SleepCalculationHandler(private val context: Context){
         // endregion
 
         // Now we should have a list of data else we return without more steps
-        if (sleep.count() <= 2) {
+        if (sleep.count()-1 <= 2) {
             storeRepository.updateUserSleepFound(false)
             return
         }
@@ -139,7 +138,7 @@ class SleepCalculationHandler(private val context: Context){
 
         
         var sleepTime = 0
-        for(i in 1..sleep.count() step 2)
+        for(i in 1..sleep.count()-1 step 2)
         {
             sleepTime +=  sleep[i+1] - sleep[i]
         }
@@ -161,7 +160,8 @@ class SleepCalculationHandler(private val context: Context){
         {
 
             // Now retrieve the time parameter for the live user sleep activity
-            val factorParameter = dbRepository.getSleepTimeParameterById(ufp.toString())?: return sleep
+            val name = ufp.toString()
+            val factorParameter = dbRepository.getSleepTimeParameterById(ufp.toString()).first()
             val actualParameter = SleepTimeParameter.multiplyParameterByParameter(parameter, factorParameter.sleepTimeParameter)
 
             //Call the sleep analyse function
@@ -191,7 +191,7 @@ class SleepCalculationHandler(private val context: Context){
         val wakeUpPoints = mutableListOf<Int>()  // Wakeup times
 
         // Setup the lists
-        for (i in 0..rawApiData.count()) {
+        for (i in 0 until rawApiData.count()) {
 
             val actualSeconds = rawApiData[i].timestampSeconds
 
@@ -220,9 +220,9 @@ class SleepCalculationHandler(private val context: Context){
         }
 
         // Setup future data (for future predictions)
-        for (i in 0..rawApiData.count()) {
+        for (i in 0 until rawApiData.count()) {
 
-            if (rawApiData.count() < i + 5) {
+            if (rawApiData.count() < i + 6) {
                 medianFutureSleepLastSleepNextDiff.add(0)
             } else {
                 medianFutureSleepLastSleepNextDiff.add(medianAwakeOverLastX[i + 5] - medianSleepOverNextX[i + 4])
@@ -230,7 +230,7 @@ class SleepCalculationHandler(private val context: Context){
         }
 
         // Set the sleeping points for each
-        for (i in 0..rawApiData.count()) {
+        for (i in 0 until rawApiData.count()) {
             // Check if fall asleep
             if (sleepPoints.count() <= wakeUpPoints.count() && rawApiData[i].confidence > parameters.sleepSleepBorder && rawApiData[i].motion < parameters.sleepMotionBorder && medianSleepOverLastX[i] > parameters.sleepMedianOverTime && medianSleepLastSleepNextDiff[i] > parameters.diffSleep && medianFutureSleepLastSleepNextDiff[i] > parameters.diffSleepFuture)
             {
@@ -244,7 +244,7 @@ class SleepCalculationHandler(private val context: Context){
 
         // set the timestamp list, where user is sleeping or not
         var sleeping = false
-        for (i in 0 .. rawApiData.count()) {
+        for (i in 0 until rawApiData.count()) {
             if (sleepPoints.contains(i) && !sleeping) {
                 sleepList.add(rawApiData[i].timestampSeconds)
                 sleeping = true
@@ -267,7 +267,7 @@ class SleepCalculationHandler(private val context: Context){
         var isSleep = false
 
         // Add the date to each list where it belongs
-        for(i in 0..sleep.count() step 2)
+        for(i in 0 until sleep.count() step 2)
         {
             if  (!isSleep)
             {
@@ -299,7 +299,7 @@ class SleepCalculationHandler(private val context: Context){
                 patterns.add(a)
             }
 
-            parameter.add(dbRepository.getSleepTimeParameterById(a.toString()).sleepTimeParameter)
+            parameter.add(dbRepository.getSleepTimeParameterById(a.toString()).first().sleepTimeParameter)
         }
 
         // create the id of the param id of the model

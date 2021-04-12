@@ -1,6 +1,6 @@
 [
   {
-    "id":"20",
+    "id":"WAKEUPTOEARLY",
     "sleepTimePattern":"WAKEUPTOEARLY",
     "userFactorPattern":"NONE",
     "sleepTimeParameter":{
@@ -20,7 +20,7 @@
     }
   },
   {
-    "id":"10",
+    "id":"WAKEUPTOLATE",
     "sleepTimePattern":"WAKEUPTOLATE",
     "userFactorPattern":"NONE",
     "sleepTimeParameter":{
@@ -40,7 +40,7 @@
     }
   },
   {
-    "id":"40",
+    "id":"ASLEEPTOEARLY",
     "sleepTimePattern":"ASLEEPTOEARLY",
     "userFactorPattern":"NONE",
     "sleepTimeParameter":{
@@ -60,7 +60,7 @@
     }
   },
   {
-    "id":"30",
+    "id":"ASLEEPTOLATE",
     "sleepTimePattern":"ASLEEPTOLATE",
     "userFactorPattern":"NONE",
     "sleepTimeParameter":{
@@ -80,13 +80,13 @@
     }
   },
   {
-    "id":"03",
+    "id":"NORMAL",
     "sleepTimePattern":"NONE",
     "userFactorPattern":"NORMAL",
     "sleepTimeParameter":{
-      "awakeTime":0,
-      "sleepTime":0,
-      "wakeUpTime":0,
+      "awakeTime":1,
+      "sleepTime":1,
+      "wakeUpTime":1,
       "sleepSleepBorder":1.0,
       "awakeSleepBorder":1.0,
       "sleepMotionBorder":1.0,
@@ -100,13 +100,13 @@
     }
   },
   {
-    "id":"02",
+    "id":"LIGHT",
     "sleepTimePattern":"NONE",
     "userFactorPattern":"LIGHT",
     "sleepTimeParameter":{
-      "awakeTime":0,
-      "sleepTime":0,
-      "wakeUpTime":0,
+      "awakeTime":1,
+      "sleepTime":1,
+      "wakeUpTime":1,
       "sleepSleepBorder":0.7,
       "awakeSleepBorder":1.0,
       "sleepMotionBorder":1.75,
@@ -120,13 +120,13 @@
     }
   },
   {
-    "id":"04",
+    "id":"HEAVY",
     "sleepTimePattern":"NONE",
     "userFactorPattern":"HEAVY",
     "sleepTimeParameter":{
-      "awakeTime":0,
-      "sleepTime":0,
-      "wakeUpTime":0,
+      "awakeTime":1,
+      "sleepTime":1,
+      "wakeUpTime":1,
       "sleepSleepBorder":1.0,
       "awakeSleepBorder":1.0,
       "sleepMotionBorder":1.0,
@@ -140,13 +140,13 @@
     }
   },
   {
-    "id":"01",
+    "id":"SUPERLIGHT",
     "sleepTimePattern":"NONE",
     "userFactorPattern":"SUPERLIGHT",
     "sleepTimeParameter":{
-      "awakeTime":0,
-      "sleepTime":0,
-      "wakeUpTime":0,
+      "awakeTime":1,
+      "sleepTime":1,
+      "wakeUpTime":1,
       "sleepSleepBorder":35.0,
       "awakeSleepBorder":1.0,
       "sleepMotionBorder":1.75,
@@ -160,13 +160,13 @@
     }
   },
   {
-    "id":"05",
+    "id":"SUPERHEAVY",
     "sleepTimePattern":"NONE",
     "userFactorPattern":"SUPERHEAVY",
     "sleepTimeParameter":{
-      "awakeTime":0,
-      "sleepTime":0,
-      "wakeUpTime":0,
+      "awakeTime":1,
+      "sleepTime":1,
+      "wakeUpTime":1,
       "sleepSleepBorder":50.0,
       "awakeSleepBorder":1.0,
       "sleepMotionBorder":1.0,

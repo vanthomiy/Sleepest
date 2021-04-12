@@ -20,13 +20,9 @@ class MainViewModel(private val dbRepository: DbRepository, private val storageS
         storageStoreRepository.updatePermissionActive(permissionActive)
     }
 
-    fun insertApi()= viewModelScope.launch {
-        sleepCalculationDbRepository.insertSleepApiRawData(SleepApiRawDataEntity(1,2,3,2))
-        sleepCalculationDbRepository.insertSleepApiRawData(SleepApiRawDataEntity(2,5,3,2))
-        sleepCalculationDbRepository.insertSleepApiRawData(SleepApiRawDataEntity(3,7,3,2))
-        sleepCalculationDbRepository.insertSleepApiRawData(SleepApiRawDataEntity(4,2,3,2))
-        sleepCalculationDbRepository.insertSleepApiRawData(SleepApiRawDataEntity(5,24,3,2))
-        //dbRepository.insertSleepSegment(SleepSegmentEntity(1,2,3,sleepState = SleepState.AWAKE))
+    fun insertApi(data:List<SleepApiRawDataEntity>)= viewModelScope.launch {
+
+        sleepCalculationDbRepository.insertSleepApiRawData(data)
     }
 
 

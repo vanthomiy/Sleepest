@@ -23,6 +23,7 @@ import com.doitstudio.sleepest_master.sleepcalculation.db.SleepStateParameterEnt
 import com.doitstudio.sleepest_master.sleepcalculation.db.SleepTimeParameterEntity
 import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepStateParameter
 import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepTimeParameter
+import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.SleepSegmentEntity
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
@@ -30,6 +31,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.io.BufferedReader
 import java.util.*
 
 
@@ -108,12 +110,27 @@ class MainActivity : AppCompatActivity() {
 
     fun buttonClick1(view: View){
 
-        mainViewModel.insertApi()
     }
 
     private val sleepHandler : SleepHandler by lazy {SleepHandler.getHandler(this)}
 
     fun buttonClick2(view: View){
+
+        var gson = Gson()
+        val jsonFile = this
+                .assets
+                .open("databases/testdata/sleep1.json")
+                .bufferedReader()
+                .use(BufferedReader::readText)
+
+        val a = gson.fromJson(jsonFile, Array<SleepApiRawDataEntity>::class.java).asList()
+
+        mainViewModel.insertApi(a)
+
+        val handler = SleepCalculationHandler.getHandler(this)
+        scope.launch {
+            handler.calculateLiveUserSleepActivity()
+        }
 
     }
 
