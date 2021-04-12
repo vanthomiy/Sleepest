@@ -8,7 +8,6 @@ package com.doitstudio.sleepest_master.Background;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -16,7 +15,7 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.widget.Toast;
 import androidx.lifecycle.LifecycleService;
-import com.doitstudio.sleepest_master.Alarm;
+
 import com.doitstudio.sleepest_master.AlarmClock.AlarmClockReceiver;
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.model.data.Actions;
@@ -74,9 +73,11 @@ public class ForegroundService extends LifecycleService {
 
     }
 
+    /*
     public void OnAlarmChanged(Alarm alarm){
             //updateNotification("Alarm Active: " + alarm.getIsActive());
     }
+     */
 
     @Override
     public void onDestroy() {

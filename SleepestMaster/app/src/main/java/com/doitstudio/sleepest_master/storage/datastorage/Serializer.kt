@@ -2,13 +2,13 @@ package com.doitstudio.sleepest_master.storage.datastorage
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
-import com.doitstudio.sleepest_master.Alarm
 import com.doitstudio.sleepest_master.LiveUserSleepActivity
 import com.doitstudio.sleepest_master.SleepApiData
 import com.google.protobuf.InvalidProtocolBufferException
 import java.io.InputStream
 import java.io.OutputStream
 
+/*
 class AlarmSerializer() : Serializer<Alarm> {
 
     override fun readFrom(input: InputStream): Alarm {
@@ -29,6 +29,7 @@ class AlarmSerializer() : Serializer<Alarm> {
             .setWakeupLate(32400)
             .build()
 }
+ */
 
 class SleepApiDataSerializer() : Serializer<SleepApiData> {
 
