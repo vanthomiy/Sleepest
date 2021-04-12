@@ -80,7 +80,8 @@ namespace ExcelCalculationAddin
 
                 RootTime rt = new RootTime();
 
-                rt.id = ((int)item.Key).ToString();
+                //rt.id = ((int)item.Key).ToString();
+                rt.id = item.Key.ToString();
                 //rt.sleepTimeParameter = SleepTimeClean.sleepTimeParamsWhile[item.Key];
                 rt.sleepTimePattern = item.Key;
 
@@ -101,11 +102,12 @@ namespace ExcelCalculationAddin
 
                 RootState rt = new RootState();
 
-                rt.id = item.Key;
                 var a = Char.GetNumericValue(item.Key[0]);
                 var b = Char.GetNumericValue(item.Key[1]);
+
                 rt.sleepStatePattern = (SleepStateCleanType)((int)(a));
                 rt.userFactorPattern = (UserFactorPattern)((int)(b));
+                rt.id = rt.sleepStatePattern.ToString() + rt.userFactorPattern.ToString();
 
                 //rt.sleepStateParameter = SleepStateClean.sleepStateParams[rt.sleepStatePattern];
 
@@ -125,7 +127,8 @@ namespace ExcelCalculationAddin
 
                 RootStateParameter rst = new RootStateParameter();
 
-                rst.id = ((int)item.Key).ToString() + "0";
+                //rst.id = ((int)item.Key).ToString() + "0";
+                rst.id = item.Key.ToString();
                 rst.sleepStatePattern = item.Key;
                 rst.userFactorPattern = (UserFactorPattern)0;
 
@@ -141,7 +144,8 @@ namespace ExcelCalculationAddin
 
                 RootStateParameter rst = new RootStateParameter();
 
-                rst.id = "0" + ((int)item.Key).ToString();
+                //rst.id = "0" + ((int)item.Key).ToString();
+                rst.id = item.Key.ToString();
                 rst.sleepStatePattern = (SleepStateCleanType)0;
                 rst.userFactorPattern = item.Key;
 
@@ -163,7 +167,8 @@ namespace ExcelCalculationAddin
 
                 RootTimeParameter rst = new RootTimeParameter();
 
-                rst.id = ((int)item.Key).ToString() + "0";
+                //rst.id = ((int)item.Key).ToString() + "0";
+                rst.id = item.Key.ToString();
                 rst.sleepTimePattern = item.Key;
                 rst.userFactorPattern = (UserFactorPattern)0;
 
@@ -179,7 +184,8 @@ namespace ExcelCalculationAddin
 
                 RootTimeParameter rst = new RootTimeParameter();
 
-                rst.id = "0" + ((int)item.Key).ToString();
+                rst.id = item.Key.ToString();
+                //rst.id = "0" + ((int)item.Key).ToString();
                 rst.sleepTimePattern = (SleepTimeCleanType)0;
                 rst.userFactorPattern = item.Key;
 
@@ -191,6 +197,25 @@ namespace ExcelCalculationAddin
             }
 
             var jsonTimeParamsFile = JsonConvert.SerializeObject(rootTimeParameter);
+
+
+            List<RootRawApi> rral = new List<RootRawApi>();
+
+            foreach (var item in ReadParameter.values[1].sleepSessionWhile[1].sleepDataEntrieSleepTime)
+            {
+                RootRawApi rra = new RootRawApi();
+
+                rra.confidence = item.sleep;
+                rra.motion = item.motion;
+                rra.light = item.light;
+
+                TimeSpan span = item.time.Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+                rra.timestampSeconds = (int)span.TotalSeconds;
+
+                rral.Add(rra);
+            }
+           
+            var rawSleepApiDataFiles = JsonConvert.SerializeObject(rral);
 
         }
     }

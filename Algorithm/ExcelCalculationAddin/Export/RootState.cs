@@ -37,4 +37,15 @@ namespace ExcelCalculationAddin.Export
 
         public Drittel sleepStateParameter { get; set; }
     }
+
+    public class RootRawApi
+    {
+        public int timestampSeconds { get; set; }
+
+        public int confidence { get; set; }
+
+        public int motion { get; set; }
+
+        public int light { get; set; }
+    }
 }
