@@ -114,9 +114,9 @@ namespace ExcelCalculationAddin.Model
         {
             return new SleepTimeParameter()
             {
-                awakeTime = 30,// new TimeSpan(00, 30, 00),
-                sleepTime = 50,// new TimeSpan(00, 50, 00),
-                wakeUpTime = 60, //new TimeSpan(01, 30, 00),
+                awakeTime = 1800,// new TimeSpan(00, 30, 00),
+                sleepTime = 3000,// new TimeSpan(00, 50, 00),
+                wakeUpTime = 5400, //new TimeSpan(01, 30, 00),
 
                 sleepSleepBorder = 50,
                 awakeSleepBorder = 20,
@@ -135,9 +135,9 @@ namespace ExcelCalculationAddin.Model
         {
             return new SleepTimeParameter()
             {
-                awakeTime = 0,// new TimeSpan(00, 30, 00),
-                sleepTime = 0,// new TimeSpan(00, 50, 00),
-                wakeUpTime = 0, //new TimeSpan(01, 30, 00),
+                awakeTime = 1,// new TimeSpan(00, 30, 00),
+                sleepTime = 1,// new TimeSpan(00, 50, 00),
+                wakeUpTime = 1, //new TimeSpan(01, 30, 00),
 
                 sleepSleepBorder = 1,
                 awakeSleepBorder = 1,
