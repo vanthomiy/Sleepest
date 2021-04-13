@@ -114,6 +114,7 @@ class MainActivity : AppCompatActivity() {
 
     private val sleepHandler : SleepHandler by lazy {SleepHandler.getHandler(this)}
 
+    var index = 3
     fun buttonClick2(view: View){
 
         var gson = Gson()
@@ -125,14 +126,14 @@ class MainActivity : AppCompatActivity() {
 
         val a = gson.fromJson(jsonFile, Array<Array<SleepApiRawDataEntity>>::class.java).asList()
 
+        mainViewModel.deleteApi()
 
-        mainViewModel.insertApi(a[3].toList())
+        mainViewModel.insertApi(a[index++].toList())
 
         val handler = SleepCalculationHandler.getHandler(this)
         scope.launch {
             handler.calculateLiveUserSleepActivity()
         }
-
     }
 
     var isTimerRunning = false

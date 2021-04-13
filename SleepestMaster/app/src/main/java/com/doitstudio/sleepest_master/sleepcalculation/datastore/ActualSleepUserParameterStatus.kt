@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.datastore.core.DataStore
 import com.doitstudio.sleepest_master.ActualSleepUserParameter
 import com.doitstudio.sleepest_master.LiveUserSleepActivity
+import com.doitstudio.sleepest_master.model.data.SleepStatePattern
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import java.io.IOException
@@ -25,19 +26,31 @@ class ActualSleepUserParameterStatus(private val dataStore: DataStore<ActualSlee
 
     suspend fun updateSleepStatePattern(sleepStatePattern: String) {
         dataStore.updateData { preference ->
-            preference.toBuilder().setSleepStatePattern(sleepStatePattern).build()
+            preference.toBuilder().addSleepStatePattern(sleepStatePattern).build()
+        }
+    }
+
+    suspend fun setSleepStatePatterns(sleepStatePatterns: List<String>) {
+        dataStore.updateData { preference ->
+            preference.toBuilder().addAllSleepStatePattern(sleepStatePatterns).build()
+        }
+    }
+
+    suspend fun setSleepTimePatterns(sleepTimePatterns: List<String>) {
+        dataStore.updateData { preference ->
+            preference.toBuilder().addAllSleepTimePattern(sleepTimePatterns).build()
         }
     }
 
     suspend fun updateSleepTimePattern(sleepTimePattern: String) {
         dataStore.updateData { preference ->
-            preference.toBuilder().setSleepTimePattern(sleepTimePattern).build()
+            preference.toBuilder().addSleepStatePattern(sleepTimePattern).build()
         }
     }
 
-    suspend fun updateUserStartPattern(userStartPattern: String) {
+    suspend fun updateUserStartPattern(userFactorPattern: String) {
         dataStore.updateData { preference ->
-            preference.toBuilder().setUserStartPattern(userStartPattern).build()
+            preference.toBuilder().setUserFactorPattern(userFactorPattern).build()
         }
     }
 

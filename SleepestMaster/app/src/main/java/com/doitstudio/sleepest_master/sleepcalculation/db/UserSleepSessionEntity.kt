@@ -15,10 +15,10 @@ data class UserSleepSessionEntity(
         @PrimaryKey
         val id:Int,
 
-        @Embedded(prefix = "sleepTimes") val sleepTimes: SleepTimes,
-        @Embedded(prefix = "userType") val sleepUserType: SleepUserType,
-        @Embedded(prefix = "sleepRating") val userSleepRating: UserSleepRating,
-        @Embedded(prefix = "calcRating") val userCalculationRating: UserCalculationRating
+        @Embedded(prefix = "sleepTimes") val sleepTimes: SleepTimes = SleepTimes(),
+        @Embedded(prefix = "userType") val sleepUserType: SleepUserType = SleepUserType(),
+        @Embedded(prefix = "sleepRating") val userSleepRating: UserSleepRating = UserSleepRating(),
+        @Embedded(prefix = "calcRating") val userCalculationRating: UserCalculationRating = UserCalculationRating()
 )
 
 

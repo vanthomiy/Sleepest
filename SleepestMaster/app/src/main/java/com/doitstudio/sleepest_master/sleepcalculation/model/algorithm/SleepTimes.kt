@@ -7,12 +7,11 @@ import androidx.room.PrimaryKey
 @Entity
 data class SleepTimes(
 
-        val sleepTimeStart: Int,
-        val sleepTimeEnd: Int,
-        val sleepDuration: Int,
-        val lightSleepDuration: Int,
-        val deepSleepDuration: Int,
-        val remSleepDuration: Int,
-        val awakeTime: Int,
-
+        var sleepTimeStart: Int = 0,
+        var sleepTimeEnd: Int = 0,
+        var sleepDuration: Int = 0,
+        var lightSleepDuration: Int = 0,
+        var deepSleepDuration: Int = 0,
+        var remSleepDuration: Int = 0,
+        var awakeTime: Int = 0,
 )

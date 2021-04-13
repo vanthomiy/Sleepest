@@ -6,10 +6,10 @@ import com.doitstudio.sleepest_master.model.data.SleepStatePattern
 
 data class UserSleepRating (
 
-    val sleepDuration	: SleepStatePattern,//	Zu wenig oder zu viel schlaf
-    val moodAfterSleep	: MoodType,//	Gefühl nach dem Schlaf
-    val moodOnNextDay	:MoodType,//	Gefühl am kompletten nächsten Tag
-    val wakeTimes	:Int,//	evtl. vorausgefüllt, und man kann es ändern
-    val activityOnDay	: ActivityOnDay,//	War man aktiv am vortag? (Vorausgefüllt)
+        var sleepDuration	: SleepStatePattern = SleepStatePattern.NONE,//	Zu wenig oder zu viel schlaf
+        var moodAfterSleep	: MoodType = MoodType.NONE,//	Gefühl nach dem Schlaf
+        var moodOnNextDay	:MoodType = MoodType.NONE,//	Gefühl am kompletten nächsten Tag
+        var wakeTimes	:Int = 0,//	evtl. vorausgefüllt, und man kann es ändern
+        var activityOnDay	: ActivityOnDay = ActivityOnDay.NONE,//	War man aktiv am vortag? (Vorausgefüllt)
 
 )

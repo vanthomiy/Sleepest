@@ -61,7 +61,7 @@ class ActualSleepUserParameterSerializer() : Serializer<ActualSleepUserParameter
     }
 
     override val defaultValue: ActualSleepUserParameter = ActualSleepUserParameter.newBuilder().
-            setUserStartPattern(UserFactorPattern.NONE.toString()).
-            setSleepTimePattern(SleepTimePattern.NONE.toString()).
-            setSleepStatePattern(SleepStatePattern.NONE.toString()).build()
+            setUserFactorPattern(UserFactorPattern.NONE.toString()).
+            addSleepTimePattern(SleepTimePattern.NONE.toString()).
+            addSleepStatePattern(SleepStatePattern.NONE.toString()).build()
 }

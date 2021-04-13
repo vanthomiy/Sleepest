@@ -11,14 +11,17 @@ import java.lang.Exception
 
 data class SleepModel(
 
-    @Embedded(prefix = "awake") val valuesAwake:ValuesTimeModel,
-    @Embedded(prefix = "sleep") val valuesSleep:ValuesTimeModel,
-    @Embedded(prefix = "diff") val valuesDiff:ValuesTimeModel,
+    @Embedded(prefix = "awake") var valuesAwake:ValuesTimeModel = ValuesTimeModel(),
+    @Embedded(prefix = "sleep") var valuesSleep:ValuesTimeModel= ValuesTimeModel(),
+    @Embedded(prefix = "diff") var valuesDiff:ValuesTimeModel= ValuesTimeModel(),
 
     ) {
 
     companion object{
 
+        /**
+         *  Creates a new model with a lost o f sleep api data
+         */
         fun calculateModel(awakeList:List<SleepApiRawDataEntity>, sleepList:List<SleepApiRawDataEntity>): SleepModel {
 
             val awake = ValuesTimeModel.calculateModel(awakeList)
@@ -32,6 +35,9 @@ data class SleepModel(
         }
     }
 
+    /**
+     *  Checks if the sleep matches a model
+     */
     fun checkIfInBounds(sleepModel:SleepModel, greater:Boolean) : Int{
         var times = 0
 
@@ -44,12 +50,16 @@ data class SleepModel(
 
 }
 data class ValuesTimeModel(
-    @Embedded(prefix = "sleep") val sleep:DataSetter,
-    @Embedded(prefix = "light") val light:DataSetter,
-    @Embedded(prefix = "motion") val motion:DataSetter,
+    @Embedded(prefix = "sleep") val sleep:DataSetter = DataSetter(),
+    @Embedded(prefix = "light") val light:DataSetter = DataSetter(),
+    @Embedded(prefix = "motion") val motion:DataSetter = DataSetter(),
 )
 {
     companion object {
+
+        /**
+         *  Creates a new model with a lost o f sleep api data
+         */
         fun calculateModel(list: List<SleepApiRawDataEntity>): ValuesTimeModel {
             return ValuesTimeModel(
                     DataSetter.calculateSleep(list),
@@ -58,15 +68,21 @@ data class ValuesTimeModel(
             )
         }
 
+        /**
+         *  Creates a new model with diff between awake and sleep
+         */
         fun calculateModelDiff(awake:ValuesTimeModel, sleep:ValuesTimeModel): ValuesTimeModel {
             return ValuesTimeModel(
-                    DataSetter.calculateDiffrence(awake.sleep, sleep.sleep),
-                    DataSetter.calculateDiffrence(awake.motion, sleep.motion),
-                    DataSetter.calculateDiffrence(awake.light, sleep.light)
+                    DataSetter.calculateDifference(awake.sleep, sleep.sleep),
+                    DataSetter.calculateDifference(awake.motion, sleep.motion),
+                    DataSetter.calculateDifference(awake.light, sleep.light)
             )
         }
     }
 
+    /**
+     *  Checks if the sleep matches a model
+     */
     fun checkIfInBounds(timeModel:ValuesTimeModel, greater:Boolean) : Int{
         var times = 0
 
@@ -84,19 +100,23 @@ data class ValuesTimeModel(
 data class DataSetter(
 
     @ColumnInfo(name = "max")
-    val Max:Float,	//Der Max wert
+    val Max:Float = 1000f,	//Der Max wert
     @ColumnInfo(name = "min")
-    val Min:Float,	//Der Min wert
+    val Min:Float = 0f,	//Der Min wert
     @ColumnInfo(name = "median")
-    val Median:Float,	//Der Median wert
+    val Median:Float = 0f,	//Der Median wert
     @ColumnInfo(name = "average")
-    val Average:Float,	//Der Average wert
+    val Average:Float = 0f,	//Der Average wert
     @ColumnInfo(name = "factor")
-    val Factor:Float,	//Der Factor wert
+    val Factor:Float = 0f,	//Der Factor wert
 
 )
 {
     companion object {
+
+        /**
+         *  Creates a new model of sleep
+         */
         fun calculateSleep(list: List<SleepApiRawDataEntity>): DataSetter {
 
             val max = list.maxOf { x-> x.confidence }
@@ -104,10 +124,10 @@ data class DataSetter(
             val average = (list.sumOf { x-> x.confidence }) / list.count()
             val median = list.sortedBy { x-> x.confidence }[list.count()/2].confidence
             var factor = 1
-            try {
+            if (median != 0)
+            {
                 factor = average / median
             }
-            catch (e: Exception){}
 
             return DataSetter(
                     max.toFloat(),
@@ -117,7 +137,9 @@ data class DataSetter(
                     factor.toFloat()
             )
         }
-
+        /**
+         *  Creates a new model of motion
+         */
         fun calculateMotion(list: List<SleepApiRawDataEntity>): DataSetter {
 
             val max = list.maxOf { x-> x.motion }
@@ -125,10 +147,10 @@ data class DataSetter(
             val average = (list.sumOf { x-> x.motion }) / list.count()
             val median = list.sortedBy { x-> x.motion }[list.count()/2].motion
             var factor = 1
-            try {
+            if (median != 0)
+            {
                 factor = average / median
             }
-            catch (e: Exception){}
 
             return DataSetter(
                     max.toFloat(),
@@ -138,7 +160,9 @@ data class DataSetter(
                     factor.toFloat()
             )
         }
-
+        /**
+         *  Creates a new model of light
+         */
         fun calculateLight(list: List<SleepApiRawDataEntity>): DataSetter {
 
             val max = list.maxOf { x-> x.light }
@@ -146,10 +170,10 @@ data class DataSetter(
             val average = (list.sumOf { x-> x.light }) / list.count()
             val median = list.sortedBy { x-> x.light }[list.count()/2].light
             var factor = 1
-            try {
+            if (median != 0)
+            {
                 factor = average / median
             }
-            catch (e: Exception){}
 
             return DataSetter(
                     max.toFloat(),
@@ -159,18 +183,20 @@ data class DataSetter(
                     factor.toFloat()
             )
         }
-
-        fun calculateDiffrence(awake:DataSetter, sleep:DataSetter): DataSetter {
+        /**
+         *  Creates a new model of diffrence
+         */
+        fun calculateDifference(awake:DataSetter, sleep:DataSetter): DataSetter {
 
             val max = sleep.Max-awake.Max
             val min = sleep.Min-awake.Min
             val average = sleep.Average-awake.Average
             val median = sleep.Median-awake.Median
             var factor = 1f
-            try {
-                factor = (average / median)
+            if (median.toInt() != 0)
+            {
+                factor = average / median
             }
-            catch (e: Exception){}
 
             return DataSetter(
                     max.toFloat(),
@@ -183,6 +209,9 @@ data class DataSetter(
 
     }
 
+    /**
+     *  Checks if the sleep matches a model
+     */
     fun checkIfInBounds(model:DataSetter, greater:Boolean) : Boolean{
         if(greater && model.Max >= Max && model.Min >= Min && model.Median >= Median && model.Average >= Average && model.Factor >= Factor)
         {

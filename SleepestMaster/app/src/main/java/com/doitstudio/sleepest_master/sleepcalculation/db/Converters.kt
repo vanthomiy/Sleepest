@@ -26,13 +26,15 @@ class Converters {
     }
 
     @TypeConverter
-    fun fromArrayListOfFloats(list: ArrayList<Int>?): String {
+    fun fromArrayListOfSleepTimePattern(list: ArrayList<SleepTimePattern>): String {
         return list?.joinToString(separator = ";") { it.toString() } ?: ""
     }
 
     @TypeConverter
-    fun toArrayListOfFloats(string: String?): ArrayList<Int> {
-        return ArrayList(string?.split(";")?.mapNotNull { it.toIntOrNull() } ?: emptyList())
+    fun toArrayListOfSleepTimePattern(string: String?): ArrayList<SleepTimePattern> {
+        return ArrayList(string?.split(";")?.mapNotNull {
+            SleepTimePattern.values()[SleepTimePattern.valueOf(it).ordinal]
+        } ?: emptyList())
     }
 
     @TypeConverter

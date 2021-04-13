@@ -20,8 +20,11 @@ class MainViewModel(private val dbRepository: DbRepository, private val storageS
         storageStoreRepository.updatePermissionActive(permissionActive)
     }
 
-    fun insertApi(data:List<SleepApiRawDataEntity>)= viewModelScope.launch {
+    fun deleteApi()= viewModelScope.launch {
+        sleepCalculationDbRepository.deleteSleepApiRawData()
+    }
 
+    fun insertApi(data:List<SleepApiRawDataEntity>)= viewModelScope.launch {
         sleepCalculationDbRepository.insertSleepApiRawData(data)
     }
 

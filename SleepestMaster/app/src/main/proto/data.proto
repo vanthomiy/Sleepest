@@ -98,14 +98,14 @@ message  ActualSleepUserParameter{
   /**
    * Defines the id of the actual pattern
    */
-  string sleepTimePattern = 1;
+  repeated string sleepTimePattern = 1;
   /**
    * Defines the id of the actual pattern
   */
-  string sleepStatePattern = 2;
+  repeated string sleepStatePattern = 2;
   /**
    * Defines the id of the actual pattern
   */
-  string userStartPattern = 3;
+  string userFactorPattern = 3;
 
 }

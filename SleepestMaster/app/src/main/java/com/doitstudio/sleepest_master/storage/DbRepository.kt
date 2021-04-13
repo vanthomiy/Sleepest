@@ -52,8 +52,8 @@ class DbRepository(
         userSleepSessionDao.getAll()
 
 
-    suspend fun insertUserSleepSessions(userSleepSessions: List<UserSleepSessionEntity>) {
-        userSleepSessionDao.insertAll(userSleepSessions)
+    suspend fun insertUserSleepSession(userSleepSession: UserSleepSessionEntity) {
+        userSleepSessionDao.insert(userSleepSession)
     }
 
     //endregion
