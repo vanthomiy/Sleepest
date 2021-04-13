@@ -49,7 +49,7 @@ namespace ExcelCalculationAddin
 
             SleepStateClean.sleepStateParams = SleepStateParameter.CreateAllModels(true);
             SleepStateClean.sleepStateModels = SleepStateModel.CreateAllModels(true);
-            SleepType.sleepStateParameter= SleepStateParameter.CreateAllFactorModels(true);
+           // SleepType.sleepStateParameter= SleepStateParameter.CreateAllFactorModels(true);
 
             await ReadParameter.GetAllUserData();
         }
@@ -129,8 +129,8 @@ namespace ExcelCalculationAddin
 
                 //rst.id = ((int)item.Key).ToString() + "0";
                 rst.id = item.Key.ToString();
-                rst.sleepStatePattern = item.Key;
-                rst.userFactorPattern = (UserFactorPattern)0;
+                rst.sleepStatePattern = item.Value.stc;
+                rst.userFactorPattern = item.Value.ufp;
 
                 //rt.sleepStateParameter = SleepStateClean.sleepStateParams[rt.sleepStatePattern];
 
@@ -138,6 +138,7 @@ namespace ExcelCalculationAddin
 
                 rootStateParameter.Add(rst);
             }
+            /*
             foreach (var item in SleepType.sleepStateParameter)
             {
                 //SleepTimeClean.sleepTimeParamsWhile
@@ -155,7 +156,7 @@ namespace ExcelCalculationAddin
 
                 rootStateParameter.Add(rst);
             }
-
+            */
             var jsonStateParamsFile = JsonConvert.SerializeObject(rootStateParameter);
 
 

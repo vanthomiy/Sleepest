@@ -47,6 +47,7 @@ namespace ExcelCalculationAddin.Live
                         session.rw11 = "";
                         session.rw12 = "";
                         session.rw2 = "";
+                        session.rw21 = "";
 
                         // if no session was found
                         if (!session.foundSleep)
@@ -129,6 +130,9 @@ namespace ExcelCalculationAddin.Live
                             session.rw2 = "nt";
                         }
 
+                        await session.CalcSleepTimesRealTime(param, 1);
+
+
                         /*
                         session.rw2 = "nf";
                         foreach (var item in SleepClean.sleepCleanModelsWhile)
@@ -195,7 +199,8 @@ namespace ExcelCalculationAddin.Live
 
                                 bool isNormal = (item.Key.StartsWith("3") || item.Key.StartsWith("5") || item.Key.StartsWith("7"));
 
-                                ssp.Add(SleepStateParameter.AddFactorToParameter(SleepStateClean.sleepStateParams[item.Value.sleepStateModel], SleepType.sleepStateParameter[item.Value.sleepStateType], isNormal));
+                                //ssp.Add(SleepStateParameter.AddFactorToParameter(SleepStateClean.sleepStateParams[item.Value.sleepStateModel.ToString()+ item.Value.sleepStateType.ToString()], SleepType.sleepStateParameter[], isNormal));
+                                ssp.Add(SleepStateClean.sleepStateParams[item.Value.sleepStateModel.ToString() + item.Value.sleepStateType.ToString()]);
                             }
                         }
 

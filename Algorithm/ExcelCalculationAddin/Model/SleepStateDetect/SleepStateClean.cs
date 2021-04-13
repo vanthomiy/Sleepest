@@ -25,7 +25,7 @@ namespace ExcelCalculationAddin.Model.SleepStateDetect
 
 
         public static Dictionary<string, SleepStateModel> sleepStateModels;
-        public static Dictionary<SleepStateCleanType, SleepStateParameter> sleepStateParams;
+        public static Dictionary<string, SleepStateParameter> sleepStateParams;
 
     }
 }

@@ -15,7 +15,7 @@ namespace ExcelCalculationAddin.Model
 {
     public class SleepSession
     {
-        public UserFactorPattern sleepUserType = UserFactorPattern.LIGHT;
+        public UserFactorPattern sleepUserType = UserFactorPattern.NORMAL;
 
         public static int actualRow = 3;
         public DateTime dateTime;
@@ -32,7 +32,7 @@ namespace ExcelCalculationAddin.Model
         public Strukture structureAwake;
         public Strukture diffrence;
 
-        public string rw11 = "", rw12 = "", rw2 = "", nf1 = "", nf2 = "";
+        public string rw11 = "",rw21="", rw12 = "", rw2 = "", nf1 = "", nf2 = "";
         public string rws1 = "", rws2 = "", rws3 = "", f1 = "";
         public string rwas = "";
         // Find the sleep points and the wakeup points
@@ -245,14 +245,14 @@ namespace ExcelCalculationAddin.Model
                             if (list.Key == 0)
                                 rw12 = "4";
                             else
-                                rw2 += "4";
+                                rw21 += "4";
                         }
                         if (before > 0 || before1 > 0)
                         {
                             if (list.Key == 0)
                                 rw12 = "3";
                             else
-                                rw2 += "3";
+                                rw21 += "3";
                         }
 
                     }
@@ -266,14 +266,14 @@ namespace ExcelCalculationAddin.Model
                             if (list.Key == 0)
                                 rw11 = "1";
                             else
-                                rw2 += "1";
+                                rw21 += "1";
                         }
                         if ((after > 0 || after1 > 0) && sleepDataEntrieSleepTime.LastOrDefault().time > item.time)
                         {
                             if (list.Key == 0)
                                 rw11 = "2";
                             else
-                                rw2 += "2";
+                                rw21 += "2";
                         }
                     }
 
@@ -338,6 +338,7 @@ namespace ExcelCalculationAddin.Model
             ListHelp.CellHelper.WriteCellValue(rw11, actualRow, "AF", worksheet1);
             ListHelp.CellHelper.WriteCellValue(rw12, actualRow, "AG", worksheet1);
             ListHelp.CellHelper.WriteCellValue((rw11 != "" || rw12 != "") ? rw2:"", actualRow, "AH", worksheet1);
+            ListHelp.CellHelper.WriteCellValue((rw11 != "" || rw12 != "") ? rw21:"", actualRow, "AK", worksheet1);
             ListHelp.CellHelper.WriteCellValue(nf1, actualRow, "AI", worksheet1);
             ListHelp.CellHelper.WriteCellValue(nf2, actualRow, "AJ", worksheet1);
 
@@ -460,6 +461,12 @@ namespace ExcelCalculationAddin.Model
             {
                 return Task.FromResult(false);
             }
+
+            if (sleepDataEntrieSleep[0][0].row > 3800)
+            {
+
+            }
+
 
             Drittel actualParam = parameters.first;
             int index = sleepDataEntrieSleep.Count > 1 ? 1 : 0;

@@ -13,6 +13,10 @@ namespace ExcelCalculationAddin.Model.SleepStateDetect
 {
     public class SleepStateParameter
     {
+
+        public UserFactorPattern ufp;
+        public SleepStateCleanType stc;
+
         public Drittel first;
         public Drittel second;
         public Drittel third;
@@ -189,9 +193,9 @@ namespace ExcelCalculationAddin.Model.SleepStateDetect
         }
 
 
-        public static Dictionary<SleepStateCleanType, SleepStateParameter> CreateAllModels(bool isWhile)
+        public static Dictionary<string, SleepStateParameter> CreateAllModels(bool isWhile)
         {
-            Dictionary<SleepStateCleanType, SleepStateParameter> asss = new Dictionary<SleepStateCleanType, SleepStateParameter>();
+            Dictionary<string, SleepStateParameter> asss = new Dictionary<string, SleepStateParameter>();
 
 
             var workbook = (Workbook)Globals.ThisAddIn.Application.ActiveWorkbook;
@@ -199,43 +203,64 @@ namespace ExcelCalculationAddin.Model.SleepStateDetect
 
 
 
-            int finde = CellHelper.ExcelColumnNameToNumber("AN");
+            int finde1 = CellHelper.ExcelColumnNameToNumber("Am");
+
+            int index = 4;
 
             bool available = true;
             while (available)
             {
-                string value = CellHelper.GetCellValue(4, finde, worksheet1);
-                if (value == null)
+
+                int finde = CellHelper.ExcelColumnNameToNumber("AO");
+
+
+                string value1 = CellHelper.GetCellValue(index, finde1, worksheet1);
+                if (value1 == null)
                 {
                     available = false;
                     break;
                 }
 
-                var sp = SleepStateParameter.GetDefault();
+                for (int i = 0; i < 6; i++)
+                {
 
-                var fValue = (int)CellHelper.GetCellValueFloat(5, finde, worksheet1);
-                sp.first.sleepSleepBorder = fValue != 0 ? fValue : sp.first.sleepSleepBorder;
-                fValue = (int)CellHelper.GetCellValueFloat(6, finde, worksheet1);
-                sp.first.deepSleepSleepBorder = fValue != 0 ? fValue : sp.first.deepSleepSleepBorder;
-                fValue = (int)CellHelper.GetCellValueFloat(7, finde, worksheet1);
-                sp.first.remSleepSleepBorder = fValue != 0 ? fValue : sp.first.remSleepSleepBorder;
-                fValue = (int)CellHelper.GetCellValueFloat(8, finde, worksheet1);
-                sp.first.sleepMotionBorder = fValue != 0 ? fValue : sp.first.sleepMotionBorder;
-                fValue = (int)CellHelper.GetCellValueFloat(9, finde, worksheet1);
-                sp.first.deepSleepMotionBorder = fValue != 0 ? fValue : sp.first.deepSleepMotionBorder;
-                fValue = (int)CellHelper.GetCellValueFloat(10, finde, worksheet1);
-                sp.first.remSleepMotionBorder = fValue != 0 ? fValue : sp.first.remSleepMotionBorder;
-                fValue = (int)CellHelper.GetCellValueFloat(11, finde, worksheet1);
-                sp.first.sleepLightBorder = fValue != 0 ? fValue : sp.first.sleepLightBorder;
-                fValue = (int)CellHelper.GetCellValueFloat(12, finde, worksheet1);
-                sp.first.deepSleepLightBorder = fValue != 0 ? fValue : sp.first.deepSleepLightBorder;
-                fValue = (int)CellHelper.GetCellValueFloat(13, finde, worksheet1);
-                sp.first.remSleepLightBorder = fValue != 0 ? fValue : sp.first.remSleepLightBorder;
+                    string value = CellHelper.GetCellValue(index, finde, worksheet1);
 
-                sp.third = sp.second = sp.first;
+                    var sp = SleepStateParameter.GetDefault();
 
-                asss.Add((SleepStateCleanType)Convert.ToInt32(value), sp);
-                finde++;
+                    var fValue = (int)CellHelper.GetCellValueFloat(index + 1, finde, worksheet1);
+                    sp.first.sleepSleepBorder = fValue != 0 ? fValue : sp.first.sleepSleepBorder;
+                    fValue = (int)CellHelper.GetCellValueFloat(index + 2, finde, worksheet1);
+                    sp.first.deepSleepSleepBorder = fValue != 0 ? fValue : sp.first.deepSleepSleepBorder;
+                    fValue = (int)CellHelper.GetCellValueFloat(index + 3, finde, worksheet1);
+                    sp.first.remSleepSleepBorder = fValue != 0 ? fValue : sp.first.remSleepSleepBorder;
+                    fValue = (int)CellHelper.GetCellValueFloat(index + 4, finde, worksheet1);
+                    sp.first.sleepMotionBorder = fValue != 0 ? fValue : sp.first.sleepMotionBorder;
+                    fValue = (int)CellHelper.GetCellValueFloat(index + 5, finde, worksheet1);
+                    sp.first.deepSleepMotionBorder = fValue != 0 ? fValue : sp.first.deepSleepMotionBorder;
+                    fValue = (int)CellHelper.GetCellValueFloat(index + 6, finde, worksheet1);
+                    sp.first.remSleepMotionBorder = fValue != 0 ? fValue : sp.first.remSleepMotionBorder;
+                    fValue = (int)CellHelper.GetCellValueFloat(index + 7, finde, worksheet1);
+                    sp.first.sleepLightBorder = fValue != 0 ? fValue : sp.first.sleepLightBorder;
+                    fValue = (int)CellHelper.GetCellValueFloat(index + 8, finde, worksheet1);
+                    sp.first.deepSleepLightBorder = fValue != 0 ? fValue : sp.first.deepSleepLightBorder;
+                    fValue = (int)CellHelper.GetCellValueFloat(index + 9, finde, worksheet1);
+                    sp.first.remSleepLightBorder = fValue != 0 ? fValue : sp.first.remSleepLightBorder;
+
+                    sp.third = sp.second = sp.first;
+
+                    sp.ufp = (UserFactorPattern)Convert.ToInt32(value1);
+                    sp.stc = (SleepStateCleanType)Convert.ToInt32(value);
+
+                    asss.Add(((SleepStateCleanType)Convert.ToInt32(value)).ToString() + ((UserFactorPattern)Convert.ToInt32(value1)).ToString(), sp);
+
+                    finde += 1;
+                }
+
+
+                index += 11;
+
+
             }
 
             return asss;
