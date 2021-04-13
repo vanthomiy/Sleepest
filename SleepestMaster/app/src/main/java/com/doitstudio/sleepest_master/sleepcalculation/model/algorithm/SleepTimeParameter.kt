@@ -8,9 +8,9 @@ import kotlin.math.absoluteValue
 data class SleepTimeParameter(
 
 
-        var awakeTime:Int = 30,//	wie lange soll die awake zeit gezählt werden (Zukunft)
-        var sleepTime:	Int = 50 ,//	wie lange sollen vergangenheitswerte für einschlaf gezählt werden
-        var wakeUpTime:	Int = 60,//	 wie lange sollen vergangenheitswerte für aufwachen gezählt werden
+        var awakeTime:Int = 1800,//	wie lange soll die awake zeit gezählt werden (Zukunft)
+        var sleepTime:	Int = 3000 ,//	wie lange sollen vergangenheitswerte für einschlaf gezählt werden
+        var wakeUpTime:	Int = 5400,//	 wie lange sollen vergangenheitswerte für aufwachen gezählt werden
         var sleepSleepBorder:	Float = 50f,//	grenze zum einschlafen
         var awakeSleepBorder	:Float = 20f,	//grenze zum aufwachen
         var sleepMotionBorder:	Float = 4f,//	grenze zum einschlafen
