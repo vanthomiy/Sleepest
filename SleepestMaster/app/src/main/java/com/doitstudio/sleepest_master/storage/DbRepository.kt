@@ -70,6 +70,10 @@ class DbRepository(
         sleepSegmentDao.insert(sleepClassifyEventEntity)
     }
 
+    suspend fun deleteSleepSegmentsWithin(start:Int, end:Int) {
+        sleepSegmentDao.deleteWithin(start, end)
+    }
+
     suspend fun deleteSleepSegments() {
         sleepSegmentDao.deleteAll()
     }

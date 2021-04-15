@@ -15,7 +15,8 @@ enum class SleepState {
     AWAKE,
     LIGHT,
     DEEP,
-    REM
+    REM,
+    NONE
 }
 
 /**

@@ -4,6 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.doitstudio.sleepest_master.model.data.MobilePosition
+import com.doitstudio.sleepest_master.model.data.SleepStatePattern
 import com.doitstudio.sleepest_master.model.data.SleepTimePattern
 import com.doitstudio.sleepest_master.model.data.UserFactorPattern
 
@@ -21,6 +22,6 @@ data class SleepUserType(
         var userFactorPattern: UserFactorPattern = UserFactorPattern.NONE, //	Faktor, je nach dem wie die allgemeinen werte kommt
 
         var sleepTimeLiveParams :	ArrayList<SleepTimePattern> = arrayListOf(), //	Erkanntes muster während des Schlafs
-        var sleepStateLiveParams : ArrayList<SleepTimePattern> = arrayListOf()//	Erkanntes muster während des Schlafs
+        var sleepStateLiveParams : ArrayList<SleepStatePattern> = arrayListOf()//	Erkanntes muster während des Schlafs
 
 )

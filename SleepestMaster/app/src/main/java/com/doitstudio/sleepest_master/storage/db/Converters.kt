@@ -49,6 +49,18 @@ class Converters {
     }
 
     @TypeConverter
+    fun fromArrayListOfSleepStatePattern(list: ArrayList<SleepStatePattern>): String {
+        return list?.joinToString(separator = ";") { it.toString() } ?: ""
+    }
+
+    @TypeConverter
+    fun toArrayListOfSleepStatePattern(string: String?): ArrayList<SleepStatePattern> {
+        return ArrayList(string?.split(";")?.mapNotNull {
+            SleepStatePattern.values()[SleepStatePattern.valueOf(it).ordinal]
+        } ?: emptyList())
+    }
+
+    @TypeConverter
     fun fromUserStartPattern(userFactorPattern: UserFactorPattern) : Int {
         return userFactorPattern.ordinal
     }

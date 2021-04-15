@@ -13,8 +13,6 @@ import com.doitstudio.sleepest_master.model.data.SleepState
 data class SleepSegmentEntity(
 
         @PrimaryKey
-        val id:Int,
-
         val timestampSecondsStart: Int,
         val timestampSecondsEnd: Int,
         val sleepState: SleepState

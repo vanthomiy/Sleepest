@@ -81,7 +81,7 @@ class SleepCalculationDbRepository(
     val allSleepStateParameters: Flow<List<SleepStateParameterEntity>> =
         sleepStateParameterDao.getAll()
 
-    suspend fun getSleepStateParameterById(parameterId: Int) : SleepStateParameterEntity {
+    suspend fun getSleepStateParameterById(parameterId: String) : Flow<SleepStateParameterEntity> {
         return sleepStateParameterDao.getParameterById(parameterId)
     }
 

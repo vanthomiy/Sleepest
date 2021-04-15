@@ -3,13 +3,18 @@ package com.doitstudio.sleepest_master.sleepcalculation
 import android.content.Context
 import com.doitstudio.sleepest_master.LiveUserSleepActivity
 import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.model.data.SleepState
+import com.doitstudio.sleepest_master.model.data.SleepStatePattern
 import com.doitstudio.sleepest_master.model.data.SleepTimePattern
 import com.doitstudio.sleepest_master.model.data.UserFactorPattern
+import com.doitstudio.sleepest_master.sleepcalculation.db.SleepStateModelEntity
 import com.doitstudio.sleepest_master.sleepcalculation.db.UserSleepSessionEntity
 import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepModel
+import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepStateParameter
 import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepTimeParameter
 import com.doitstudio.sleepest_master.storage.DbRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
+import com.doitstudio.sleepest_master.storage.db.SleepSegmentEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -107,6 +112,8 @@ class SleepCalculationHandler(private val context: Context){
         }
         storeRepository.updateUserSleepFound(true)
 
+        userSleepSessionEntity.sleepUserType.sleepTimeLiveParams.add(SleepTimePattern.STANDARD)
+
         //endregion
 
         // Now we want to create a model of the actual sleep
@@ -117,13 +124,16 @@ class SleepCalculationHandler(private val context: Context){
         userSleepSessionEntity.sleepUserType.sleepLiveModel = actualModel
 
         // check if model is already defined
-        val newParameter = getTimePatternIfAvailable(actualModel)
+        val modelAndParameter = getTimePatternIfAvailable(actualModel)
+
+
 
         // endregion
 
+
         //region calulate with new parameter (From model or from user)
 
-        if (newParameter.first.count() == 0)
+        if (modelAndParameter.first.count() == 0)
         {
             // We are using the default values for the user to check whether sleeping or not
             // Get them from the [ActualSleepUserParameterStatus]
@@ -151,23 +161,30 @@ class SleepCalculationHandler(private val context: Context){
         }
         else{
             // use the found model
-            userSleepSessionEntity.sleepUserType.sleepTimeLiveParams = newParameter.first
-            userFactorSleep = getSleepAndAdjustFactor(newParameter.second, rawApiData)
+            userSleepSessionEntity.sleepUserType.sleepTimeLiveParams.clear()
+            userSleepSessionEntity.sleepUserType.sleepTimeLiveParams = modelAndParameter.first
+            userFactorSleep = getSleepAndAdjustFactor(modelAndParameter.second, rawApiData)
             sleep = userFactorSleep.second
         }
 
         // endregion
 
         // Now we should have a list of data else we return without more steps
-        if (sleep.count()-1 <= 2) {
+        if (sleep.count() <= 2) {
             storeRepository.updateUserSleepFound(false)
             return
         }
 
 
+
         userSleepSessionEntity.sleepTimes.sleepTimeStart = sleep[1]
-        userSleepSessionEntity.sleepTimes.sleepTimeEnd = sleep[sleep.count()-2]
+        if (sleep.count() % 2 == 0)
+            userSleepSessionEntity.sleepTimes.sleepTimeEnd = sleep[sleep.count()-2]
+        else
+            userSleepSessionEntity.sleepTimes.sleepTimeEnd = sleep[sleep.count()-1]
+
         userSleepSessionEntity.sleepUserType.userFactorPattern = userFactorSleep.first
+
 
         storeRepository.updateUserSleepFound(true)
         storeRepository.clearUserSleepHistory()
@@ -177,20 +194,22 @@ class SleepCalculationHandler(private val context: Context){
         var sleepTime = 0
         for(i in 1 until sleep.count()-1 step 2)
         {
-            sleepTime +=  sleep[i+1] - sleep[i]
+            sleepTime +=  sleep[i + 1] - sleep[i]
         }
 
         storeRepository.updateUserSleepTime(sleepTime)
 
         // insert or update the user sleep session
         dbNormalRepository.insertUserSleepSession(userSleepSessionEntity)
+
+        calculateUserSleepStates(userSleepSessionEntity, rawApiData.asReversed(), sleep)
     }
 
 
     /**
      * Calls the sleep calculation and in a second step defines the factor for the user... ( if no sleep is found the factor is adjustet to light or superlight)
      */
-    private suspend fun getSleepAndAdjustFactor(parameter:SleepTimeParameter, rawApiData:List<SleepApiRawDataEntity>) : Pair<UserFactorPattern, List<Int>>{
+    private suspend fun getSleepAndAdjustFactor(parameter: SleepTimeParameter, rawApiData: List<SleepApiRawDataEntity>) : Pair<UserFactorPattern, List<Int>>{
 
         var sleep:List<Int> = listOf()
 
@@ -207,12 +226,12 @@ class SleepCalculationHandler(private val context: Context){
             val actualParameter = SleepTimeParameter.multiplyParameterByParameter(parameter, factorParameter.sleepTimeParameter)
 
             //Call the sleep analyse function
-            sleep = calculateSleepTime(actualParameter, rawApiData)
+            sleep = calculateSleepTime(actualParameter, rawApiData.asReversed())
 
-            ufp = UserFactorPattern.values()[ufp.ordinal-1]
+            ufp = UserFactorPattern.values()[ufp.ordinal - 1]
         }
 
-        return Pair(ufp,sleep.reversed())
+        return Pair(ufp, sleep)
     }
 
     /**
@@ -319,11 +338,11 @@ class SleepCalculationHandler(private val context: Context){
         {
             if  (!isSleep)
             {
-                awakeList.addAll(rawApiData.filter { x-> x.timestampSeconds >= sleep[i] && x.timestampSeconds < sleep[i+1] })
+                awakeList.addAll(rawApiData.filter { x -> x.timestampSeconds >= sleep[i] && x.timestampSeconds < sleep[i + 1] })
             }
             else
             {
-                sleepList.addAll(rawApiData.filter { x-> x.timestampSeconds >= sleep[i] && x.timestampSeconds < sleep[i+1] })
+                sleepList.addAll(rawApiData.filter { x -> x.timestampSeconds >= sleep[i] && x.timestampSeconds < sleep[i + 1] })
             }
 
             isSleep = !isSleep
@@ -335,7 +354,7 @@ class SleepCalculationHandler(private val context: Context){
     /**
      * Finds pre-defined patterns by a model and returns the needed parameter and found patterns for it
      */
-    private suspend fun getTimePatternIfAvailable(actualModel:SleepModel) : Pair<ArrayList<SleepTimePattern>, SleepTimeParameter> {
+    private suspend fun getTimePatternIfAvailable(actualModel: SleepModel) : Pair<ArrayList<SleepTimePattern>, SleepTimeParameter> {
 
         val patterns = arrayListOf<SleepTimePattern>()
         val parameter = mutableListOf<SleepTimeParameter>()
@@ -355,10 +374,180 @@ class SleepCalculationHandler(private val context: Context){
 
         // create the id of the param id of the model
 
+        val aaa = list.count()
         return Pair(patterns, SleepTimeParameter.mergeParameters(parameter))
     }
 
     // endregion
+
+
+    //region Sleep State Calculation
+
+    /**
+     * This is used to define the sleep states of the user in the before defined user sleep time...
+     */
+    private suspend fun calculateUserSleepStates(userSleepSessionEntity: UserSleepSessionEntity, rawApiData: List<SleepApiRawDataEntity>, sleep: List<Int>) {
+
+        // delete all segments within that particular range
+        dbNormalRepository.deleteSleepSegmentsWithin(rawApiData.first().timestampSeconds, rawApiData.last().timestampSeconds)
+
+        // Now retrieve the time with stadard parameter for the live user sleep activity
+        var parameter = SleepStateParameter()
+
+        // check if model is already defined
+        val modelAndParameter = getStatePatternIfAvailable(userSleepSessionEntity.sleepUserType.sleepLiveModel)
+        val userParameter = storeRepository.actualSleepUserParameterFlow.first().sleepStatePatternList
+
+        userSleepSessionEntity.sleepUserType.sleepStateLiveParams.clear()
+
+        if (modelAndParameter.first.count() != 0)
+        {
+            //model parameters
+            userSleepSessionEntity.sleepUserType.sleepStateLiveParams = modelAndParameter.first
+            parameter = modelAndParameter.second
+        }
+        else if (userParameter.count() != 0 && !userParameter.contains("NONE"))
+        {
+            // use user parameters
+            var paramList = mutableListOf<SleepStateParameter>()
+
+            val userStateParameterId = storeRepository.actualSleepUserParameterFlow.first().sleepStatePatternList
+            userStateParameterId.forEach(){
+                paramList.add(dbRepository.getSleepStateParameterById(it).first().sleepStateParameter)
+                userSleepSessionEntity.sleepUserType.sleepStateLiveParams.add(SleepStatePattern.valueOf(it))
+            }
+
+            parameter = SleepStateParameter.mergeParameters(paramList)
+        }
+        else
+        {
+            // use the default parameters
+            userSleepSessionEntity.sleepUserType.sleepStateLiveParams.add(SleepStatePattern.STANDARD)
+        }
+
+        val sleepSegments = calculateSleepStates(parameter, rawApiData,userSleepSessionEntity)
+
+        // Setup all data for the sleep session
+
+        // Save awake time
+        userSleepSessionEntity.sleepTimes.awakeTime = sleepSegments.filter { x-> x.sleepState == SleepState.AWAKE }?.sumBy { x ->x.timestampSecondsEnd - x.timestampSecondsStart }
+        userSleepSessionEntity.sleepTimes.lightSleepDuration = sleepSegments.filter { x-> x.sleepState == SleepState.LIGHT }?.sumBy { x ->x.timestampSecondsEnd - x.timestampSecondsStart }
+        userSleepSessionEntity.sleepTimes.deepSleepDuration = sleepSegments.filter { x-> x.sleepState == SleepState.DEEP }?.sumBy { x ->x.timestampSecondsEnd - x.timestampSecondsStart }
+        userSleepSessionEntity.sleepTimes.remSleepDuration = sleepSegments.filter { x-> x.sleepState == SleepState.REM }?.sumBy { x ->x.timestampSecondsEnd - x.timestampSecondsStart }
+        userSleepSessionEntity.sleepTimes.sleepDuration = userSleepSessionEntity.sleepTimes.lightSleepDuration + userSleepSessionEntity.sleepTimes.deepSleepDuration + userSleepSessionEntity.sleepTimes.remSleepDuration
+
+        // Save usersleepsession
+        dbNormalRepository.insertUserSleepSession(userSleepSessionEntity)
+        // save user sleep segments
+        dbNormalRepository.insertSleepSegments(sleepSegments)
+    }
+
+    /**
+     * Finds pre-defined patterns by a model and returns the needed parameter and found patterns for it
+     */
+    private suspend fun getStatePatternIfAvailable(actualModel: SleepModel) : Pair<ArrayList<SleepStatePattern>, SleepStateParameter> {
+
+        val patterns = arrayListOf<SleepStatePattern>()
+        val parameter = mutableListOf<SleepStateParameter>()
+
+        val list = dbRepository.allSleepStateModels.first()
+
+        // add every pattern that matches the model
+        list.forEach {
+            val a = it.checkIfIsModel(actualModel)
+            if (a.ordinal != 0)
+            {
+                patterns.add(a)
+                parameter.add(dbRepository.getSleepStateParameterById(a.toString()).first().sleepStateParameter)
+            }
+
+        }
+
+        // create the id of the param id of the model
+
+        return Pair(patterns, SleepStateParameter.mergeParameters(parameter))
+    }
+
+    /**
+     * Takes a parameter and the raw sleep api data and calculates the sleep times and retruns a list with timestamps when user is sleeping or awake
+     */
+    private fun calculateSleepStates(parameters: SleepStateParameter, rawApiData: List<SleepApiRawDataEntity>, userSleepSessionEntity: UserSleepSessionEntity) : List<SleepSegmentEntity> {
+
+        val sleepSegmentList = mutableListOf<SleepSegmentEntity>()
+
+        // Create list with only the sleep segments
+        var sleepList = rawApiData.filter{
+            it.timestampSeconds >= userSleepSessionEntity.sleepTimes.sleepTimeStart &&
+            it.timestampSeconds < userSleepSessionEntity.sleepTimes.sleepTimeEnd
+        }
+
+        var sleepStateList = mutableListOf<SleepState>()
+
+        // for each point in the sleep time, we have to calculate some lists and points
+        sleepList.forEach{
+
+            if (it.confidence <= parameters.sleepSleepBorder ||
+                    it.motion >= parameters.sleepMotionBorder ||
+                    it.light >= parameters.sleepLightBorder) {
+                if (it.confidence <= parameters.soundClearSleepBorder ||
+                        it.motion <= parameters.soundClearMotionBorder) {
+                    sleepStateList.add(SleepState.LIGHT)
+                }
+                else {
+                    sleepStateList.add(SleepState.AWAKE)
+                }
+            }
+            else if (it.confidence <= parameters.deepSleepSleepBorder ||
+                    it.motion >= parameters.deepSleepMotionBorder ||
+                    it.light >= parameters.deepSleepLightBorder) {
+                sleepStateList.add(SleepState.LIGHT)
+            }
+            else if
+                    (it.confidence <= parameters.remSleepSleepBorder ||
+                    it.motion >= parameters.remSleepMotionBorder ||
+                    it.light >= parameters.remSleepLightBorder) {
+                sleepStateList.add(SleepState.DEEP)
+            }
+            else {
+                sleepStateList.add(SleepState.REM)
+            }
+
+
+
+
+        }
+
+        sleepStateList = sleepStateList.asReversed()
+
+        var startTime:Int = 0
+        var endTime:Int
+        var actualState = SleepState.NONE
+
+        // Now we put long sleep states together to segments
+
+        for(i in 0 until sleepStateList.count()) {
+
+            if(sleepStateList[i] != actualState) {
+
+                if (actualState != SleepState.NONE){
+                    endTime = sleepList[i].timestampSeconds
+                    sleepSegmentList.add(SleepSegmentEntity(startTime, endTime, actualState))
+                }
+
+                actualState = sleepStateList[i]
+                startTime = sleepList[i].timestampSeconds
+            }
+        }
+
+        endTime = sleepList.last().timestampSeconds
+        sleepSegmentList.add(SleepSegmentEntity(startTime, endTime, actualState))
+
+        return sleepSegmentList
+    }
+
+
+    //endregion
+
 
     /**
      * Calculates the alarm time for the user. This should be called before the first wake up time

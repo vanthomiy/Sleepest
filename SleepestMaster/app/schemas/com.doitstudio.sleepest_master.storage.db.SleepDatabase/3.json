@@ -2,18 +2,12 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "58550bab61d799e01ef0d60120799077",
+    "identityHash": "fadf86be24b4275fe497d824ec48a819",
     "entities": [
       {
         "tableName": "sleep_segment_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `timestampSecondsStart` INTEGER NOT NULL, `timestampSecondsEnd` INTEGER NOT NULL, `sleepState` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`timestampSecondsStart` INTEGER NOT NULL, `timestampSecondsEnd` INTEGER NOT NULL, `sleepState` INTEGER NOT NULL, PRIMARY KEY(`timestampSecondsStart`))",
         "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
           {
             "fieldPath": "timestampSecondsStart",
             "columnName": "timestampSecondsStart",
@@ -35,7 +29,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "id"
+            "timestampSecondsStart"
           ],
           "autoGenerate": false
         },
@@ -726,7 +720,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '58550bab61d799e01ef0d60120799077')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fadf86be24b4275fe497d824ec48a819')"
     ]
   }
 }

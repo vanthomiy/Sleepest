@@ -20,7 +20,7 @@ interface SleepStateParameterDao {
     fun getAll(): Flow<List<SleepStateParameterEntity>>
 
     @Query("SELECT * FROM sleep_state_parameter_entity WHERE id LIKE :parameterId")
-    fun getParameterById(parameterId: Int): SleepStateParameterEntity
+    fun getParameterById(parameterId: String): Flow<SleepStateParameterEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(sleepSegmentEventEntityRaw: SleepStateParameterEntity)

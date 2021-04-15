@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
  */
 @Dao
 interface SleepSegmentDao {
-    @Query("SELECT * FROM sleep_segment_table ORDER BY id DESC")
+    @Query("SELECT * FROM sleep_segment_table ORDER BY timestampSecondsStart DESC")
     fun getAll(): Flow<List<SleepSegmentEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -20,6 +20,9 @@ interface SleepSegmentDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(sleepSegmentEventEntityRaws: List<SleepSegmentEntity>)
+
+    @Query("DELETE FROM sleep_segment_table WHERE timestampSecondsStart >= :start AND timestampSecondsEnd <= :end")
+    suspend fun deleteWithin(start:Int, end:Int)
 
     @Delete
     suspend fun delete(sleepSegmentEventEntityRaw: SleepSegmentEntity)

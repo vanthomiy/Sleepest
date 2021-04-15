@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity() {
 
     private val sleepHandler : SleepHandler by lazy {SleepHandler.getHandler(this)}
 
-    var index = 3
+    var index = 4
     fun buttonClick2(view: View){
 
         var gson = Gson()
