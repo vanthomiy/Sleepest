@@ -45,6 +45,9 @@ public class AlarmReceiver extends BroadcastReceiver {
             case 2:
                 ForegroundService.startOrStopForegroundService(Actions.STOP, context);
                 break;
+            case 3:
+                Toast.makeText(context.getApplicationContext(), "No Action yet", Toast.LENGTH_LONG).show();
+                break;
         }
     }
 
@@ -59,16 +62,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     public static void startAlarmManager(int day, int hour, int min, Context alarmContext, int usage) {
 
         //Get an instance of calendar and set time, when alarm should be fired
-        Calendar calenderAlarm = Calendar.getInstance();
-        calenderAlarm.set(Calendar.HOUR_OF_DAY, hour);
-        calenderAlarm.set(Calendar.MINUTE, min);
-        calenderAlarm.set(Calendar.SECOND, 0);
-        calenderAlarm.set(Calendar.MILLISECOND, 0);
-
-        //Move date passed to next date
-        if (calenderAlarm.before(Calendar.getInstance())) {
-            calenderAlarm.add(Calendar.DATE, day); //Set date day
-        }
+        Calendar calenderAlarm = getAlarmDate(day, hour, min);
 
         Intent intent = new Intent(alarmContext, AlarmReceiver.class);
         intent.putExtra(alarmContext.getString(R.string.alarmmanager_key), usage);
@@ -76,6 +70,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         AlarmManager alarmManager = (AlarmManager) alarmContext.getSystemService(ALARM_SERVICE);
 
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calenderAlarm.getTimeInMillis(), pendingIntent);
+
+        Toast.makeText(alarmContext, "Alarm set to " + calenderAlarm.get(Calendar.DAY_OF_WEEK) + ": "
+                + calenderAlarm.get(Calendar.HOUR_OF_DAY) + ":" + calenderAlarm.get(Calendar.MINUTE), Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -90,31 +87,32 @@ public class AlarmReceiver extends BroadcastReceiver {
         alarmManager.cancel(pendingIntent);
     }
 
-    private void showNotification(Context context) {
+    public static Calendar getAlarmDate(int day, int hour, int minute) {
 
-        Calendar cal = new GregorianCalendar();
-        cal.setTimeInMillis(System.currentTimeMillis());
-        int hour = cal.get(Calendar.HOUR_OF_DAY);
-        int minute = cal.get(Calendar.MINUTE);
+        int actualDay = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("My notification")
-                .setContentText(hour + ":" + minute)
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(hour + ":" + minute))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Channel_name";
-            String description = "description";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+
+        if (day > Calendar.getInstance().get(Calendar.DAY_OF_WEEK))
+        {
+            actualDay += day - Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        } else if (day < Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) {
+            actualDay += 7 - Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + day;
+        } else {
+            if (calendar.before(Calendar.getInstance())) {
+                actualDay += 7;
+            }
         }
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.notify(100, mBuilder.build());
-    }
 
+        if (actualDay > Calendar.getInstance().getMaximum(Calendar.DAY_OF_YEAR)) {
+            actualDay = Calendar.getInstance().getMinimum(Calendar.DAY_OF_YEAR) + Calendar.getInstance().getMaximum(Calendar.DAY_OF_YEAR) - actualDay;
+            calendar.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR) + 1);
+        }
+
+        calendar.set(Calendar.DAY_OF_YEAR, actualDay);
+
+        return calendar;
+    }
 }

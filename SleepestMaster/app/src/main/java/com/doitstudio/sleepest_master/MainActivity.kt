@@ -13,7 +13,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.viewbinding.BuildConfig
 import com.doitstudio.sleepest_master.background.AlarmReceiver
+import com.doitstudio.sleepest_master.background.ForegroundService
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
+import com.doitstudio.sleepest_master.model.data.Actions
 import com.doitstudio.sleepest_master.sleepapi.SleepHandler
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.google.android.material.snackbar.Snackbar
@@ -104,16 +106,10 @@ class MainActivity : AppCompatActivity() {
         /**
          * TEST
          */
-        val calenderAlarm = Calendar.getInstance()
-        var day = calenderAlarm[Calendar.DAY_OF_WEEK]
-        var hour = calenderAlarm[Calendar.HOUR_OF_DAY]
-        if (hour > 20) {
-            day += 1
-            if (day > 7) {
-                day = 1
-            }
-        }
-        AlarmReceiver.startAlarmManager(day, 10, 0, applicationContext, 1)
+
+        AlarmReceiver.startAlarmManager(5, 21, 27, applicationContext, 1)
+
+        //ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
 
         sch.calculateUserWakup()
 

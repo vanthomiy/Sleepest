@@ -135,18 +135,21 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     private static Calendar getAlarmDate(int day, int hour, int minute) {
 
-        int actualDay;
+        int actualDay = Calendar.getInstance().get(Calendar.DAY_OF_YEAR), newDay = 0;
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.MINUTE, minute);
         calendar.set(Calendar.HOUR_OF_DAY, hour);
 
-        if (calendar.before(Calendar.getInstance()) && day > 7) {
-            actualDay = Calendar.getInstance().get(Calendar.DAY_OF_YEAR) + day - Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-        } else if (calendar.before(Calendar.getInstance()) && day <= 7) {
-            actualDay = Calendar.getInstance().get(Calendar.DAY_OF_YEAR) + day + 7 - Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        if (day > Calendar.getInstance().get(Calendar.DAY_OF_WEEK))
+        {
+            actualDay += day - Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        } else if (day < Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) {
+            actualDay += 7 - Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + day;
         } else {
-            actualDay = Calendar.getInstance().get(Calendar.DAY_OF_YEAR) + Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - day;
+            if (calendar.before(Calendar.getInstance())) {
+                actualDay += 7;
+            }
         }
 
         if (actualDay > Calendar.getInstance().getMaximum(Calendar.DAY_OF_YEAR)) {
