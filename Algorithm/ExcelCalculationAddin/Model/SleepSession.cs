@@ -333,14 +333,14 @@ namespace ExcelCalculationAddin.Model
 
             ListHelp.CellHelper.WriteCellValue(row.ToString(), actualRow, "A", worksheet1);
             ListHelp.CellHelper.WriteCellValue(user, actualRow, "B", worksheet1);
-            ListHelp.CellHelper.WriteCellValue(sleepDataEntrieAwake.GetHashCode(), actualRow, "AD", worksheet1);
-            ListHelp.CellHelper.WriteCellValue(sleepDataEntrieSleep.GetHashCode(), actualRow, "AE", worksheet1);
-            ListHelp.CellHelper.WriteCellValue(rw11, actualRow, "AF", worksheet1);
-            ListHelp.CellHelper.WriteCellValue(rw12, actualRow, "AG", worksheet1);
-            ListHelp.CellHelper.WriteCellValue((rw11 != "" || rw12 != "") ? rw2:"", actualRow, "AH", worksheet1);
-            ListHelp.CellHelper.WriteCellValue((rw11 != "" || rw12 != "") ? rw21:"", actualRow, "AK", worksheet1);
-            ListHelp.CellHelper.WriteCellValue(nf1, actualRow, "AI", worksheet1);
-            ListHelp.CellHelper.WriteCellValue(nf2, actualRow, "AJ", worksheet1);
+            ListHelp.CellHelper.WriteCellValue(sleepDataEntrieAwake.GetHashCode(), actualRow, "AV", worksheet1);
+            ListHelp.CellHelper.WriteCellValue(sleepDataEntrieSleep.GetHashCode(), actualRow, "AW", worksheet1);
+            ListHelp.CellHelper.WriteCellValue(rw11, actualRow, "AX", worksheet1);
+            ListHelp.CellHelper.WriteCellValue(rw12, actualRow, "AY", worksheet1);
+            ListHelp.CellHelper.WriteCellValue((rw11 != "" || rw12 != "") ? rw2:"", actualRow, "AZ", worksheet1);
+            ListHelp.CellHelper.WriteCellValue((rw11 != "" || rw12 != "") ? rw21:"", actualRow, "BC", worksheet1);
+            ListHelp.CellHelper.WriteCellValue(nf1, actualRow, "BA", worksheet1);
+            ListHelp.CellHelper.WriteCellValue(nf2, actualRow, "BB", worksheet1);
 
             if (isWhile)
             {
@@ -427,8 +427,8 @@ namespace ExcelCalculationAddin.Model
 
 
 
-            diffrence?.WriteData(actualRow, worksheet1, 6);
-            structureSleep?.WriteData(actualRow, worksheet1, 3);
+            diffrence?.WriteData(actualRow, worksheet1, 10);
+            structureSleep?.WriteData(actualRow, worksheet1, 5);
             structureAwake?.WriteData(actualRow, worksheet1, 0);
             actualRow++;
             return Task.FromResult(true);
@@ -523,8 +523,6 @@ namespace ExcelCalculationAddin.Model
 
     public class MaxMinHelper
     {
-        public int Max;
-        public int Min;
 
         public Dictionary<MaxMinHelperType, float> maxmintype = new Dictionary<MaxMinHelperType, float>();
 
@@ -541,14 +539,24 @@ namespace ExcelCalculationAddin.Model
                 ListHelp.CellHelper.WriteCellValue((maxmintype[MaxMinHelperType.Median]), row, CellHelper.GetColumnName(column), worksheet);
 
             }
+            if (maxmintype.ContainsKey(MaxMinHelperType.Max))
+            {
+                ListHelp.CellHelper.WriteCellValue((maxmintype[MaxMinHelperType.Max]), row, CellHelper.GetColumnName(column+1), worksheet);
+
+            }
+            if (maxmintype.ContainsKey(MaxMinHelperType.Min))
+            {
+                ListHelp.CellHelper.WriteCellValue((maxmintype[MaxMinHelperType.Min]), row, CellHelper.GetColumnName(column+2), worksheet);
+
+            }
             if (maxmintype.ContainsKey(MaxMinHelperType.Average))
             {
-                ListHelp.CellHelper.WriteCellValue((maxmintype[MaxMinHelperType.Average]), row, CellHelper.GetColumnName(column + 1), worksheet);
+                ListHelp.CellHelper.WriteCellValue((maxmintype[MaxMinHelperType.Average]), row, CellHelper.GetColumnName(column + 3), worksheet);
 
             }
             if (maxmintype.ContainsKey(MaxMinHelperType.Factor))
             {
-                ListHelp.CellHelper.WriteCellValue((maxmintype[MaxMinHelperType.Factor]), row, CellHelper.GetColumnName(column + 2), worksheet);
+                ListHelp.CellHelper.WriteCellValue((maxmintype[MaxMinHelperType.Factor]), row, CellHelper.GetColumnName(column + 4), worksheet);
 
             }
 
@@ -562,8 +570,8 @@ namespace ExcelCalculationAddin.Model
 
             ds.Average = maxmintype[MaxMinHelperType.Average];
             ds.Factor = maxmintype[MaxMinHelperType.Factor];
-            ds.Max = Max;
-            ds.Min = Min;
+            ds.Max = maxmintype[MaxMinHelperType.Max]; 
+            ds.Min = maxmintype[MaxMinHelperType.Min]; 
             ds.Median = maxmintype[MaxMinHelperType.Median];
 
             return ds;
@@ -573,13 +581,13 @@ namespace ExcelCalculationAddin.Model
         {
             return new MaxMinHelper()
             {
-                Max = 1000,
-                Min = -1000,
                 maxmintype = new Dictionary<MaxMinHelperType, float>()
                 {
                     { MaxMinHelperType.Average, 1000 },
                     { MaxMinHelperType.Median, 1000 },
-                    { MaxMinHelperType.Factor, 1000 }
+                    { MaxMinHelperType.Factor, 1000 },
+                    { MaxMinHelperType.Max, 1000 },
+                    { MaxMinHelperType.Min, 1000 }
 
                 }
 
@@ -590,13 +598,13 @@ namespace ExcelCalculationAddin.Model
         {
             return new MaxMinHelper()
             {
-                Max = -1000,
-                Min = 1000,
                 maxmintype = new Dictionary<MaxMinHelperType, float>()
                 {
                     { MaxMinHelperType.Average, -1000 },
                     { MaxMinHelperType.Median, -1000 },
-                    { MaxMinHelperType.Factor, -1000 }
+                    { MaxMinHelperType.Factor, -1000 },
+                    { MaxMinHelperType.Max, -1000 },
+                    { MaxMinHelperType.Min, -1000 }
 
                 }
             };
@@ -607,7 +615,9 @@ namespace ExcelCalculationAddin.Model
     {
         Median,
         Average,
-        Factor
+        Factor,
+        Max,
+        Min
     }
 
     public enum MobilePhonePlace

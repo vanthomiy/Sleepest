@@ -240,10 +240,10 @@ namespace ExcelCalculationAddin.Model.SleepStateDetect
 
 
             int finde = CellHelper.ExcelColumnNameToNumber("AE");
-            int offWach = 1, offSleep = 4, offDiff = 7;
+            int offWach = 1, offSleep = 6, offDiff = 11;
 
             string key = "";
-            for (int i = 4; i < 200; i += 12)
+            for (int i = 4; i < 200; i += 18)
             {
 
                 string value = CellHelper.GetCellValue(i, finde, worksheet1);
@@ -271,19 +271,19 @@ namespace ExcelCalculationAddin.Model.SleepStateDetect
                 asss[key].sleepStateModel = (SleepStateCleanType)Convert.ToInt32(value);
                 foreach (var item in asss[key].valuesWach)
                 {
-                    for (int k = 0; k < 3; k++)
+                    for (int k = 0; k < 5; k++)
                     {
                         float vv = CellHelper.GetCellValueFloat(i + k + offWach, finde + 1 + (int)item.Key, worksheet1);
                         asss[key].valuesWach[item.Key].maxmintype[(MaxMinHelperType)k] = (float)vv;
                     }
 
-                    for (int k = 0; k < 3; k++)
+                    for (int k = 0; k < 5; k++)
                     {
                         float vv = CellHelper.GetCellValueFloat(i + k + offSleep, finde + 1 + (int)item.Key, worksheet1);
                         asss[key].valuesSleep[item.Key].maxmintype[(MaxMinHelperType)k] = (float)vv;
                     }
 
-                    for (int k = 0; k < 3; k++)
+                    for (int k = 0; k < 5; k++)
                     {
                         float vv = CellHelper.GetCellValueFloat(i + k + offDiff, finde + 1 + (int)item.Key, worksheet1);
                         asss[key].valuesDiff[item.Key].maxmintype[(MaxMinHelperType)k] = (float)vv;

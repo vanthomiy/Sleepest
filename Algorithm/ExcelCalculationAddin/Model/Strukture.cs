@@ -114,15 +114,25 @@ namespace ExcelCalculationAddin.Model
                 data[SleepCleanModelType.Motion].maxmintype.Add(MaxMinHelperType.Average, (float)sleepDataEntrie.Average(x => x.motion));
                 data[SleepCleanModelType.Licht].maxmintype.Add(MaxMinHelperType.Average, (float)sleepDataEntrie.Average(x => x.light));
 
-                sleepApiDataTime.Max = sleepTime.Max();
-                data[SleepCleanModelType.Schlaf].Max = sleepDataEntrie.Max(x => x.sleep);
-                data[SleepCleanModelType.Motion].Max = sleepDataEntrie.Max(x => x.motion);
-                data[SleepCleanModelType.Licht].Max = sleepDataEntrie.Max(x => x.light);
+                sleepApiDataTime.maxmintype.Add(MaxMinHelperType.Max, (float)sleepTime.Max());
+                data[SleepCleanModelType.Schlaf].maxmintype.Add(MaxMinHelperType.Max, sleepDataEntrie.Max(x => x.sleep));
+                data[SleepCleanModelType.Motion].maxmintype.Add(MaxMinHelperType.Max, sleepDataEntrie.Max(x => x.motion));
+                data[SleepCleanModelType.Licht].maxmintype.Add(MaxMinHelperType.Max, sleepDataEntrie.Max(x => x.light));
 
-                sleepApiDataTime.Min = sleepTime.Min();
-                data[SleepCleanModelType.Schlaf].Min = sleepDataEntrie.Min(x => x.sleep);
-                data[SleepCleanModelType.Motion].Min = sleepDataEntrie.Min(x => x.motion);
-                data[SleepCleanModelType.Licht].Min = sleepDataEntrie.Min(x => x.light);
+                sleepApiDataTime.maxmintype.Add(MaxMinHelperType.Min, (float)sleepTime.Min());
+                data[SleepCleanModelType.Schlaf].maxmintype.Add(MaxMinHelperType.Min, sleepDataEntrie.Min(x => x.sleep));
+                data[SleepCleanModelType.Motion].maxmintype.Add(MaxMinHelperType.Min, sleepDataEntrie.Min(x => x.motion));
+                data[SleepCleanModelType.Licht].maxmintype.Add(MaxMinHelperType.Min, sleepDataEntrie.Min(x => x.light));
+
+                //sleepApiDataTime.Max = sleepTime.Max();
+                //data[SleepCleanModelType.Schlaf].Max = sleepDataEntrie.Max(x => x.sleep);
+                //data[SleepCleanModelType.Motion].Max = sleepDataEntrie.Max(x => x.motion);
+                //data[SleepCleanModelType.Licht].Max = sleepDataEntrie.Max(x => x.light);
+
+                //sleepApiDataTime.Min = sleepTime.Min();
+                //data[SleepCleanModelType.Schlaf].Min = sleepDataEntrie.Min(x => x.sleep);
+                //data[SleepCleanModelType.Motion].Min = sleepDataEntrie.Min(x => x.motion);
+                //data[SleepCleanModelType.Licht].Min = sleepDataEntrie.Min(x => x.light);
 
                 sleepApiDataTime.maxmintype.Add(MaxMinHelperType.Median, sleepTime.OrderByDescending(x => x).ToList()[sleepTime.Count / 2]);
                 data[SleepCleanModelType.Schlaf].maxmintype.Add(MaxMinHelperType.Median, sleepDataEntrie.OrderByDescending(x => x.sleep).ToList()[sleepDataEntrie.Count / 2].sleep);
@@ -149,8 +159,9 @@ namespace ExcelCalculationAddin.Model
         {
             //sleepApiDataTime.WriteData(row, , worksheet);
             data[SleepCleanModelType.Schlaf].WriteData(row, 3 + offset, worksheet);
-            data[SleepCleanModelType.Motion].WriteData(row, 21 + offset, worksheet);
-            data[SleepCleanModelType.Licht].WriteData(row, 12 + offset, worksheet);
+            data[SleepCleanModelType.Licht].WriteData(row, 18 + offset, worksheet);
+            data[SleepCleanModelType.Motion].WriteData(row, 33 + offset, worksheet);
+
         }
 
 

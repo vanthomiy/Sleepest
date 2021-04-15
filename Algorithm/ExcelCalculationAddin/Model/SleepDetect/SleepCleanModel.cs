@@ -234,10 +234,10 @@ namespace ExcelCalculationAddin.Model
 
 
 
-            int finde = CellHelper.ExcelColumnNameToNumber("AO");
-            int offWach = 1, offSleep = 4, offDiff = 7;
+            int finde = CellHelper.ExcelColumnNameToNumber("BG");
+            int offWach = 1, offSleep = 6, offDiff = 11;
 
-            for (int i = 4; i < 200; i+=12)
+            for (int i = 4; i < 200; i+=18)
             {
                 string value = CellHelper.GetCellValue(i, finde, worksheet1);
                 if (value == null)
@@ -260,19 +260,19 @@ namespace ExcelCalculationAddin.Model
 
                 foreach (var item in asss[cleanModelType].valuesWach)
                 {
-                    for (int k = 0; k < 3; k++)
+                    for (int k = 0; k < 5; k++)
                     {
                         float vv = CellHelper.GetCellValueFloat(i+k+ offWach, finde+1+(int)item.Key, worksheet1);
                         asss[cleanModelType].valuesWach[item.Key].maxmintype[(MaxMinHelperType)k] = (float)vv;
                     }
 
-                    for (int k = 0; k < 3; k++)
+                    for (int k = 0; k < 5; k++)
                     {
                         float vv = CellHelper.GetCellValueFloat(i + k + offSleep, finde + 1 + (int)item.Key, worksheet1);
                         asss[cleanModelType].valuesSleep[item.Key].maxmintype[(MaxMinHelperType)k] = (float)vv;
                     }
 
-                    for (int k = 0; k < 3; k++)
+                    for (int k = 0; k < 5; k++)
                     {
                         float vv = CellHelper.GetCellValueFloat(i + k + offDiff, finde + 1 + (int)item.Key, worksheet1);
                         asss[cleanModelType].valuesDiff[item.Key].maxmintype[(MaxMinHelperType)k] = (float)vv;

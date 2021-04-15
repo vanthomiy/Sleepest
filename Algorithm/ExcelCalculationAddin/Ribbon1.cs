@@ -64,9 +64,17 @@ namespace ExcelCalculationAddin
             await CalcSleepLive.CalcAllSleepData();
         }
 
-        private void btnJsonExport_Click(object sender, RibbonControlEventArgs e)
+        private async void btnJsonExport_Click(object sender, RibbonControlEventArgs e)
         {
             if (SleepStateClean.sleepStateParams == null)
+            {
+                return;
+            }
+
+
+            string folder = await ExportFile.GetFolder();
+
+            if (folder == null)
             {
                 return;
             }
@@ -93,6 +101,7 @@ namespace ExcelCalculationAddin
 
             var jsonTimeFile = JsonConvert.SerializeObject(rootTime);
 
+            ExportFile.Export(jsonTimeFile, "TimeModel", folder);
 
             // first we have to create the classes
             List<RootState> rootState = new List<RootState>();
@@ -118,6 +127,7 @@ namespace ExcelCalculationAddin
             }
 
             var jsonStateFile = JsonConvert.SerializeObject(rootState);
+            ExportFile.Export(jsonStateFile, "StateModel", folder);
 
             // first we have to create the classes
             List<RootStateParameter> rootStateParameter = new List<RootStateParameter>();
@@ -159,6 +169,7 @@ namespace ExcelCalculationAddin
             */
             var jsonStateParamsFile = JsonConvert.SerializeObject(rootStateParameter);
 
+            ExportFile.Export(jsonStateParamsFile, "StateParameter", folder);
 
             // first we have to create the classes
             List<RootTimeParameter> rootTimeParameter = new List<RootTimeParameter>();
@@ -198,6 +209,7 @@ namespace ExcelCalculationAddin
             }
 
             var jsonTimeParamsFile = JsonConvert.SerializeObject(rootTimeParameter);
+            ExportFile.Export(jsonTimeParamsFile, "TimeParameter", folder);
 
 
             List<List<RootRawApi>> mrral = new List<List<RootRawApi>>();
@@ -228,6 +240,7 @@ namespace ExcelCalculationAddin
           
            
             var rawSleepApiDataFiles = JsonConvert.SerializeObject(mrral);
+            ExportFile.Export(rawSleepApiDataFiles, "SleepValues", folder);
 
         }
     }

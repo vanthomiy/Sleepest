@@ -127,7 +127,7 @@ namespace ExcelCalculationAddin.Model
                 diffSleepFuture = 0,
                 awakeMedianOverTime = 30,
                 diffAwake = -5,
-                modelMatchPercentage = 95
+                modelMatchPercentage = 97
             };
         }
 
@@ -162,7 +162,7 @@ namespace ExcelCalculationAddin.Model
 
 
 
-            int finde = CellHelper.ExcelColumnNameToNumber("AX");
+            int finde = CellHelper.ExcelColumnNameToNumber("BP");
 
             bool available = true;
             while (available)
@@ -213,7 +213,7 @@ namespace ExcelCalculationAddin.Model
 
 
 
-            int finde = CellHelper.ExcelColumnNameToNumber("AZ");
+            int finde = CellHelper.ExcelColumnNameToNumber("BR");
 
             bool available = true;
             while (available)
