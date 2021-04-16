@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity() {
          * TEST
          */
 
-        AlarmReceiver.startAlarmManager(5, 21, 27, applicationContext, 1)
+        AlarmReceiver.startAlarmManager(6, 12, 57, applicationContext, 1)
 
         //ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
 

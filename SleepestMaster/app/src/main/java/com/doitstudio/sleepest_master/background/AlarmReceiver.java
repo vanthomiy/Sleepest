@@ -27,9 +27,6 @@ import static android.content.Context.ALARM_SERVICE;
 public class AlarmReceiver extends BroadcastReceiver {
 
     private static Context context;
-    public static final int REQUEST_CODE = 12345;
-
-    public static final String CHANNEL_ID = "AlarmNotification" ;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -77,16 +74,24 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     /**
      * Cancel a specific alarm by pending Intent
-     * @param context1 Application Context
+     * @param cancelAlarmContext Application Context
      */
-    static void cancelAlarm(Context context1, int usage) {
+    static void cancelAlarm(Context cancelAlarmContext, int usage) {
 
-        Intent intent = new Intent(context1, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context1, usage, intent, 0);
-        AlarmManager alarmManager = (AlarmManager) context1.getSystemService(ALARM_SERVICE);
+        Intent intent = new Intent(cancelAlarmContext, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(cancelAlarmContext, usage, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) cancelAlarmContext.getSystemService(ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
     }
 
+
+    /**
+     * Calculates the possible next date of calendar
+     * @param day Number between 1 and 14, 1 = Sunday, 7 = Saturday, 8 = On Saturday + 1 = Sunday, ...
+     * @param hour Number between 0 and 23
+     * @param minute Number between 0 and 59
+     * @return instance of calculated calendar
+     */
     public static Calendar getAlarmDate(int day, int hour, int minute) {
 
         int actualDay = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);

@@ -86,6 +86,8 @@ public class ForegroundService extends LifecycleService {
 
         startForeground(1, createNotification("Test")); /** TODO: Id zentral anlegen */
 
+        sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(getApplicationContext());
+
         foregroundObserver = new ForegroundObserver (this);
     }
 
