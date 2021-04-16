@@ -27,7 +27,7 @@ namespace ExcelCalculationAddin
             foreach (Worksheet worksheet in workbook.Worksheets)
             {
 
-                if (worksheet.Name == "Berechnung" || worksheet.Name == "WeckerParameter" || worksheet.Name == "SleeptypesWhile" || worksheet.Name == "SleeptypesAfter")
+                if (worksheet.Name == "Berechnung" || worksheet.Name == "WeckerParameter" || worksheet.Name == "SleeptypesWhile" || worksheet.Name == "SleeptypesAfter" || worksheet.Name == "SleepAnalyse")
                 {
                     continue;
                 }

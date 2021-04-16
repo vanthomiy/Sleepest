@@ -30,13 +30,14 @@ namespace ExcelCalculationAddin.Live
                 {
                     session.times = 0;
                     var param = SleepTimeParameter.GetDefault();
-                    param = SleepTimeParameter.AddFactorToParameter(param, SleepType.sleepTimeParameter[session.sleepUserType], false);
 
                     try
                     {
                         await session.CalcSleepTimesRealTime(param);
+                        await session.CalcSleepTimesRealTimeForModel(param);
+
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
 
                         throw;

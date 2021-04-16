@@ -46,7 +46,6 @@ namespace ExcelCalculationAddin
             SleepTimeClean.sleepTimeModelsWhile = SleepTimeModel.CreateAllModels(true);
             SleepType.sleepTimeParameter = SleepTimeParameter.CreateAllFactorModels(true);
 
-
             SleepStateClean.sleepStateParams = SleepStateParameter.CreateAllModels(true);
             SleepStateClean.sleepStateModels = SleepStateModel.CreateAllModels(true);
            // SleepType.sleepStateParameter= SleepStateParameter.CreateAllFactorModels(true);

@@ -24,6 +24,7 @@ namespace ExcelCalculationAddin.Model
         public int times = 0;
 
         public List<SleepDataEntry> sleepDataEntrieSleepTime;
+        public List<SleepDataEntry> sleepDataEntrieSleepTimeAll;
 
         public Dictionary<int,List<SleepDataEntry>> sleepDataEntrieSleep;
         public Dictionary<int, List<SleepDataEntry>> sleepDataEntrieAwake;
@@ -31,6 +32,12 @@ namespace ExcelCalculationAddin.Model
         public Strukture structureSleep;
         public Strukture structureAwake;
         public Strukture diffrence;
+
+        public List<SleepDataEntry> modelSleepDataEntrieSleep;
+        public List<SleepDataEntry> modelSleepDataEntrieAwake;
+        public Strukture modelStructureSleep;
+        public Strukture modelStructureAwake;
+        public Strukture modelDiffrence;
 
         public string rw11 = "",rw21="", rw12 = "", rw2 = "", nf1 = "", nf2 = "";
         public string rws1 = "", rws2 = "", rws3 = "", f1 = "";
@@ -119,8 +126,6 @@ namespace ExcelCalculationAddin.Model
                 sleepDataEntrieAwake = new Dictionary<int, List<SleepDataEntry>>();
             }
 
-           
-
             sleepDataEntrieSleep.Add(count, new List<SleepDataEntry>());
             sleepDataEntrieAwake.Add(count, new List<SleepDataEntry>());
 
@@ -154,7 +159,124 @@ namespace ExcelCalculationAddin.Model
             }
 
             return Task.FromResult(true);
+
         }
+
+        public Task<bool> CalcSleepTimesRealTimeForModel(SleepTimeParameter parameters)
+        {
+            List<int> awakeF1 = new List<int>(); // median awake over last x time
+            List<int> sleepF1 = new List<int>(); // median sleep over last x time
+            List<int> wakeUpF1 = new List<int>(); // median sleep over nect x times 
+            List<int> diffSleepF1 = new List<int>(); // Median sleep diff between sleep and wakeup
+            List<int> diffSleepF2 = new List<int>(); // Future Median sleep diff between sleep and wakeup
+            List<int> diffAwakeF1 = new List<int>(); // Median sleep diff between awake and wakeup
+
+            TimeSpan awakeTime = TimeSpan.FromSeconds(parameters.awakeTime);
+            TimeSpan sleepTime = TimeSpan.FromSeconds(parameters.sleepTime);
+            TimeSpan wakeUpTime = TimeSpan.FromSeconds(parameters.wakeUpTime);
+
+            int sleepSleep = (int)parameters.sleepSleepBorder, sleepAwake = (int)parameters.awakeSleepBorder;
+            int motionSleep = (int)parameters.sleepMotionBorder, sleep = (int)parameters.sleepMedianOverTime, diffSleep = (int)parameters.diffSleep, diffSleepFuture = (int)parameters.diffSleepFuture;
+            int awake = (int)parameters.awakeMedianOverTime, diffAwake = (int)parameters.diffAwake;
+            int motionAwake = (int)parameters.awakeMotionBorder;
+
+            List<int> sleepPoint = new List<int>();
+            List<int> wakeupPoint = new List<int>();
+
+            for (int i = 0; i < sleepDataEntrieSleepTimeAll.Count; i++)
+            {
+                DateTime actualTime = sleepDataEntrieSleepTimeAll[i].time;
+
+                var list = sleepDataEntrieSleepTimeAll.Where(x => x.time >= actualTime && x.time < actualTime.Add(awakeTime)).ToList();
+                awakeF1.Add(list.Sum(x => x.sleep) / list.Count);
+
+                list = sleepDataEntrieSleepTimeAll.Where(x => x.time >= actualTime && x.time < actualTime.Add(sleepTime)).ToList();
+                sleepF1.Add(list.Sum(x => x.sleep) / list.Count);
+
+
+                list = sleepDataEntrieSleepTimeAll.Where(x => x.time <= actualTime && x.time > actualTime.Subtract(wakeUpTime)).ToList();
+                wakeUpF1.Add(list.Sum(x => x.sleep) / list.Count);
+
+
+                if (i != 0)
+                {
+                    diffAwakeF1.Add(awakeF1[i] - wakeUpF1[i - 1]);
+                    diffSleepF1.Add(sleepF1[i] - wakeUpF1[i - 1]);
+                }
+                else
+                {
+                    diffAwakeF1.Add(0);
+                    diffSleepF1.Add(0);
+
+                }
+
+
+            }
+
+            for (int i = 0; i < sleepDataEntrieSleepTimeAll.Count; i++)
+            {
+                if (sleepDataEntrieSleepTimeAll.Count < i + 8)
+                {
+                    diffSleepF2.Add(0);
+                }
+                else
+                {
+                    diffSleepF2.Add(awakeF1[i + 5] - wakeUpF1[i + 4]);
+                }
+            }
+
+            // set sleep points for each
+            for (int i = 0; i < diffSleepF1.Count; i++)
+            {
+                // Check if fall asleep
+                if (sleepPoint.Count <= wakeupPoint.Count && sleepDataEntrieSleepTimeAll[i].sleep > sleepSleep && sleepDataEntrieSleepTimeAll[i].motion < motionSleep && sleepF1[i] > sleep && diffSleepF1[i] > diffSleep && diffSleepF2[i] > diffSleepFuture)
+                {
+                    sleepPoint.Add(i);
+                }
+                else if (sleepPoint.Count > wakeupPoint.Count && sleepDataEntrieSleepTimeAll[i].sleep < sleepAwake && awakeF1[i] < awake && diffAwakeF1[i] < diffAwake && sleepDataEntrieSleepTimeAll[i].motion > motionAwake)
+                {
+                    wakeupPoint.Add(i);
+                }
+            }
+
+
+            modelSleepDataEntrieSleep = new List<SleepDataEntry>();
+            modelSleepDataEntrieAwake = new List<SleepDataEntry>();
+
+
+            bool sleeping = false;
+
+            for (int i = 0; i < sleepDataEntrieSleepTimeAll.Count; i++)
+            {
+                if (sleepPoint.Contains(i))
+                {
+                    if (!sleeping)
+                    {
+                        //times++;
+                    }
+
+                    sleeping = true;
+                }
+                else if (wakeupPoint.Contains(i))
+                {
+                    sleeping = false;
+                }
+
+                if (sleeping)
+                {
+                    foundSleep = true;
+                    modelSleepDataEntrieSleep.Add(sleepDataEntrieSleepTimeAll[i]);
+                }
+                else
+                {
+                    modelSleepDataEntrieAwake.Add(sleepDataEntrieSleepTimeAll[i]);
+                }
+            }
+
+            return Task.FromResult(true);
+
+        }
+
 
         public async Task<bool> CalcData()
         {
@@ -188,6 +310,35 @@ namespace ExcelCalculationAddin.Model
 
                     diffrence = new Strukture();
                     await diffrence.CalcData(structureSleep, structureAwake);
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            try
+            {
+
+
+
+                var sleepList = modelSleepDataEntrieSleep.Where(x => x.time < modelSleepDataEntrieSleep[modelSleepDataEntrieSleep.Count()-1].time.AddHours(-1)).ToList();
+                modelStructureSleep = new Strukture();
+                await modelStructureSleep.CalcData(sleepList);
+
+
+
+
+                var awakeList = modelSleepDataEntrieAwake.Where(x => x.time < modelSleepDataEntrieSleep[0].time && x.time > modelSleepDataEntrieSleep[0].time.AddHours(-2)).ToList();
+                modelStructureAwake = new Strukture();
+                await modelStructureAwake.CalcData(awakeList);
+
+
+                if (modelStructureSleep != null && modelStructureAwake != null)
+                {
+
+                    modelDiffrence = new Strukture();
+                    await modelDiffrence.CalcData(modelStructureSleep, modelStructureAwake);
                 }
             }
             catch (Exception ex)
@@ -333,8 +484,6 @@ namespace ExcelCalculationAddin.Model
 
             ListHelp.CellHelper.WriteCellValue(row.ToString(), actualRow, "A", worksheet1);
             ListHelp.CellHelper.WriteCellValue(user, actualRow, "B", worksheet1);
-            ListHelp.CellHelper.WriteCellValue(sleepDataEntrieAwake.GetHashCode(), actualRow, "AV", worksheet1);
-            ListHelp.CellHelper.WriteCellValue(sleepDataEntrieSleep.GetHashCode(), actualRow, "AW", worksheet1);
             ListHelp.CellHelper.WriteCellValue(rw11, actualRow, "AX", worksheet1);
             ListHelp.CellHelper.WriteCellValue(rw12, actualRow, "AY", worksheet1);
             ListHelp.CellHelper.WriteCellValue((rw11 != "" || rw12 != "") ? rw2:"", actualRow, "AZ", worksheet1);
@@ -427,31 +576,13 @@ namespace ExcelCalculationAddin.Model
 
 
 
-            diffrence?.WriteData(actualRow, worksheet1, 10);
-            structureSleep?.WriteData(actualRow, worksheet1, 5);
-            structureAwake?.WriteData(actualRow, worksheet1, 0);
+            modelDiffrence?.WriteData(actualRow, worksheet1, 10);
+            modelStructureSleep?.WriteData(actualRow, worksheet1, 5);
+            modelStructureAwake?.WriteData(actualRow, worksheet1, 0);
             actualRow++;
             return Task.FromResult(true);
         }
 
-        public Task<bool> WriteFailData(string user)
-        {
-            
-
-            var workbook = (Workbook)Globals.ThisAddIn.Application.ActiveWorkbook;
-            Worksheet worksheet1 = (Worksheet)workbook.Worksheets["Sleeptypes"];
-
-            var row = sleepDataEntrieSleepTime.FirstOrDefault().row;
-
-            ListHelp.CellHelper.WriteCellValue(row.ToString(), actualRow, "A", worksheet1);
-            ListHelp.CellHelper.WriteCellValue(user, actualRow, "B", worksheet1);
-            ListHelp.CellHelper.WriteCellValue(sleepDataEntrieSleep.Count().ToString(), actualRow, "AD", worksheet1);
-            ListHelp.CellHelper.WriteCellValue(nf1, actualRow, "AG", worksheet1);
-            ListHelp.CellHelper.WriteCellValue(nf2, actualRow, "AH", worksheet1);
-
-            actualRow++;
-            return Task.FromResult(true);
-        }
 
         public Task<bool> CalcSleepStatesWhileSleep(SleepStateParameter parameters, int index1)
         {
@@ -460,11 +591,6 @@ namespace ExcelCalculationAddin.Model
             if (sleepDataEntrieSleep == null || sleepDataEntrieSleep.Count == 0)
             {
                 return Task.FromResult(false);
-            }
-
-            if (sleepDataEntrieSleep[0][0].row > 3800)
-            {
-
             }
 
 
