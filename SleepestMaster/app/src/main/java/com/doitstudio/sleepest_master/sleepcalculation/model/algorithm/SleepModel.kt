@@ -26,7 +26,7 @@ data class SleepModel(
 
             val awake = ValuesTimeModel.calculateModel(awakeList)
             val sleep = ValuesTimeModel.calculateModel(sleepList)
-            val diff =  ValuesTimeModel.calculateModelDiff(awake, sleep)
+            val diff =  ValuesTimeModel.calculateModelDiff(sleep, awake)
             return SleepModel(
                     awake,
                     sleep,
@@ -38,12 +38,12 @@ data class SleepModel(
     /**
      *  Checks if the sleep matches a model
      */
-    fun checkIfInBounds(sleepModel:SleepModel, greater:Boolean) : Int{
+    fun checkIfInBounds(sleepModel:SleepModel, greater:Boolean, accuracy:Float) : Int{
         var times = 0
 
-        times += valuesAwake.checkIfInBounds(sleepModel.valuesAwake, greater)
-        times += valuesSleep.checkIfInBounds(sleepModel.valuesSleep, greater)
-        times += valuesDiff.checkIfInBounds(sleepModel.valuesDiff, greater)
+        times += valuesAwake.checkIfInBounds(sleepModel.valuesAwake, greater, accuracy)
+        times += valuesSleep.checkIfInBounds(sleepModel.valuesSleep, greater, accuracy)
+        times += valuesDiff.checkIfInBounds(sleepModel.valuesDiff, greater, accuracy)
 
         return times
     }
@@ -63,8 +63,8 @@ data class ValuesTimeModel(
         fun calculateModel(list: List<SleepApiRawDataEntity>): ValuesTimeModel {
             return ValuesTimeModel(
                     DataSetter.calculateSleep(list),
-                    DataSetter.calculateMotion(list),
-                    DataSetter.calculateLight(list)
+                    DataSetter.calculateLight(list),
+                    DataSetter.calculateMotion(list)
             )
         }
 
@@ -74,8 +74,9 @@ data class ValuesTimeModel(
         fun calculateModelDiff(awake:ValuesTimeModel, sleep:ValuesTimeModel): ValuesTimeModel {
             return ValuesTimeModel(
                     DataSetter.calculateDifference(awake.sleep, sleep.sleep),
-                    DataSetter.calculateDifference(awake.motion, sleep.motion),
-                    DataSetter.calculateDifference(awake.light, sleep.light)
+                    DataSetter.calculateDifference(awake.light, sleep.light),
+                    DataSetter.calculateDifference(awake.motion, sleep.motion)
+
             )
         }
     }
@@ -83,15 +84,12 @@ data class ValuesTimeModel(
     /**
      *  Checks if the sleep matches a model
      */
-    fun checkIfInBounds(timeModel:ValuesTimeModel, greater:Boolean) : Int{
+    fun checkIfInBounds(timeModel:ValuesTimeModel, greater:Boolean, accuracy:Float) : Int{
         var times = 0
 
-        if(!sleep.checkIfInBounds(timeModel.sleep, greater))
-            times++
-        if(!light.checkIfInBounds(timeModel.light, greater))
-            times++
-        if(!motion.checkIfInBounds(timeModel.motion, greater))
-            times++
+        times += sleep.checkIfInBounds(timeModel.sleep, greater, accuracy)
+        times += light.checkIfInBounds(timeModel.light, greater, accuracy)
+        times += motion.checkIfInBounds(timeModel.motion, greater, accuracy)
 
         return times
     }
@@ -119,21 +117,23 @@ data class DataSetter(
          */
         fun calculateSleep(list: List<SleepApiRawDataEntity>): DataSetter {
 
-            val max = list.maxOf { x-> x.confidence }
-            val min = list.minOf { x-> x.confidence }
-            val average = (list.sumOf { x-> x.confidence }) / list.count()
-            val median = list.sortedBy { x-> x.confidence }[list.count()/2].confidence
-            var factor = 1
-            if (median != 0)
+            val max:Float = list.maxOf { x-> x.confidence }.toFloat()
+            val min:Float = list.minOf { x-> x.confidence }.toFloat()
+            val average:Float = (list.sumOf { x-> x.confidence }).toFloat() / list.count()
+            val median:Float = list.sortedBy { x-> x.confidence }[list.count()/2].confidence.toFloat()
+            var factor:Float = 1.0f
+            if (median >= 1)
             {
                 factor = average / median
             }
 
+            DataSetter()
+
             return DataSetter(
                     max.toFloat(),
                     min.toFloat(),
-                    average.toFloat(),
                     median.toFloat(),
+                    average.toFloat(),
                     factor.toFloat()
             )
         }
@@ -142,22 +142,24 @@ data class DataSetter(
          */
         fun calculateMotion(list: List<SleepApiRawDataEntity>): DataSetter {
 
-            val max = list.maxOf { x-> x.motion }
-            val min = list.minOf { x-> x.motion }
-            val average = (list.sumOf { x-> x.motion }) / list.count()
-            val median = list.sortedBy { x-> x.motion }[list.count()/2].motion
-            var factor = 1
-            if (median != 0)
+            val max:Float = list.maxOf { x-> x.motion }.toFloat()
+            val min:Float = list.minOf { x-> x.motion }.toFloat()
+            val average:Float = (list.sumOf { x-> x.motion }).toFloat() / list.count()
+            val median:Float = list.sortedBy { x-> x.motion }[list.count()/2].motion.toFloat()
+            var factor:Float = 1.0f
+            if (median >= 1)
             {
                 factor = average / median
             }
 
+            DataSetter()
+
             return DataSetter(
-                    max.toFloat(),
-                    min.toFloat(),
-                    average.toFloat(),
-                    median.toFloat(),
-                    factor.toFloat()
+                max.toFloat(),
+                min.toFloat(),
+                median.toFloat(),
+                average.toFloat(),
+                factor.toFloat()
             )
         }
         /**
@@ -165,22 +167,24 @@ data class DataSetter(
          */
         fun calculateLight(list: List<SleepApiRawDataEntity>): DataSetter {
 
-            val max = list.maxOf { x-> x.light }
-            val min = list.minOf { x-> x.light }
-            val average = (list.sumOf { x-> x.light }) / list.count()
-            val median = list.sortedBy { x-> x.light }[list.count()/2].light
-            var factor = 1
-            if (median != 0)
+            val max:Float = list.maxOf { x-> x.light }.toFloat()
+            val min:Float = list.minOf { x-> x.light }.toFloat()
+            val average:Float = (list.sumOf { x-> x.light }).toFloat() / list.count()
+            val median:Float = list.sortedBy { x-> x.light }[list.count()/2].light.toFloat()
+            var factor:Float = 1.0f
+            if (median >= 1)
             {
                 factor = average / median
             }
 
+            DataSetter()
+
             return DataSetter(
-                    max.toFloat(),
-                    min.toFloat(),
-                    average.toFloat(),
-                    median.toFloat(),
-                    factor.toFloat()
+                max.toFloat(),
+                min.toFloat(),
+                median.toFloat(),
+                average.toFloat(),
+                factor.toFloat()
             )
         }
         /**
@@ -192,17 +196,13 @@ data class DataSetter(
             val min = sleep.Min-awake.Min
             val average = sleep.Average-awake.Average
             val median = sleep.Median-awake.Median
-            var factor = 1f
-            if (median.toInt() != 0)
-            {
-                factor = average / median
-            }
+            val factor = sleep.Factor-awake.Factor
 
             return DataSetter(
                     max.toFloat(),
                     min.toFloat(),
-                    average.toFloat(),
                     median.toFloat(),
+                    average.toFloat(),
                     factor.toFloat()
             )
         }
@@ -212,16 +212,80 @@ data class DataSetter(
     /**
      *  Checks if the sleep matches a model
      */
-    fun checkIfInBounds(model:DataSetter, greater:Boolean) : Boolean{
-        if(greater && model.Max >= Max && model.Min >= Min && model.Median >= Median && model.Average >= Average && model.Factor >= Factor)
+    fun checkIfInBounds(model:DataSetter, greater:Boolean, accuracy:Float) : Int{
+
+        var times = 0
+
+        if(greater && model.Max < Max - getFactor(Max, accuracy)) {
+            times++
+        }
+        if(greater && model.Min < Min - getFactor(Min, accuracy)) {
+            times++
+        }
+        if(greater && model.Median < Median - getFactor(Median, accuracy)) {
+            times++
+        }
+        if(greater && model.Average < Average - getFactor(Average, accuracy)) {
+            times++
+        }
+        if(greater && model.Factor < Factor - getFactor(Factor, accuracy)) {
+            times++
+        }
+
+
+        if(!greater && model.Max > Max + getFactor(Max, accuracy)) {
+            times++
+        }
+        if(!greater && model.Min > Min + getFactor(Min, accuracy)) {
+            times++
+        }
+        if(!greater && model.Median > Median + getFactor(Median, accuracy)) {
+            times++
+        }
+        if(!greater && model.Average > Average + getFactor(Average, accuracy)) {
+            times++
+        }
+        if(!greater && model.Factor > Factor + getFactor(Factor, accuracy)) {
+            times++
+        }
+
+
+        return times
+        /*
+
+        if(greater &&
+            model.Max >= Max - (Max * accuracy) &&
+            model.Min >= Min - (Min  * accuracy) &&
+            model.Median >= Median - (Median  * accuracy) &&
+            model.Average >= Average - (Average  * accuracy) &&
+            model.Factor >= Factor - (Factor  * accuracy) )
         {
             return true
         }
-        else if (!greater && model.Max <= Max && model.Min <= Min && model.Median <= Median && model.Average <= Average && model.Factor <= Factor)
+        else if (!greater &&
+            model.Max <= Max+ (Max * accuracy)  &&
+            model.Min <= Min+ (Min * accuracy)  &&
+            model.Median <= Median+ (Median * accuracy)  &&
+            model.Average <= Average + (Average * accuracy) &&
+            model.Factor <= Factor+ (Factor * accuracy) )
         {
             return true
         }
 
         return false
+        */
+
+    }
+
+    private fun getFactor(value:Float, accuracy:Float) : Float
+    {
+        if(value < 100) {
+            return accuracy
+        } else if(value<1)
+            return accuracy/10
+        else if(value<0.1)
+            return accuracy/100
+
+        return 2.0f
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.*
 import com.doitstudio.sleepest_master.model.data.SleepStatePattern
 import com.doitstudio.sleepest_master.model.data.SleepTimePattern
+import com.doitstudio.sleepest_master.model.data.UserFactorPattern
 import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.*
 import com.google.gson.Gson
 import java.io.BufferedReader
@@ -15,6 +16,7 @@ data class SleepStateModelEntity(
         val id:String,
 
         val sleepStatePattern:SleepStatePattern,//	Der name des aktuellen Patterns
+        val userFactorPattern: UserFactorPattern,//	Der name des aktuellen Patterns
 
         @Embedded(prefix = "max") val sleepStateModelMax:SleepModel,//	Die Werte des Models max
         @Embedded(prefix = "min") val sleepStateModelMin:SleepModel,//	Die Werte des Models min
@@ -43,19 +45,19 @@ data class SleepStateModelEntity(
         /**
          * Returns the sleepstate pattern else 0 if the model matches the pattern
          */
-        fun checkIfIsModel(model: SleepModel): SleepStatePattern
+        fun checkIfIsModel(model: SleepModel, accuracy:Float): String
         {
                 var times = 0
-                val alltimes = 90
-                times += sleepStateModelMax.checkIfInBounds(model, false)
-                times += sleepStateModelMin.checkIfInBounds(model, true)
+                val alltimes = 12
+                times += sleepStateModelMax.checkIfInBounds(model, false, accuracy)
+                times += sleepStateModelMin.checkIfInBounds(model, true, accuracy)
 
-                if ((times * 100) / alltimes > 95f)
+                if (times == 0) // (times * 100) / alltimes > 95f)
                 {
-                        return sleepStatePattern
+                        return id
                 }
 
-                return SleepStatePattern.NONE
+                return ""
         }
 
 

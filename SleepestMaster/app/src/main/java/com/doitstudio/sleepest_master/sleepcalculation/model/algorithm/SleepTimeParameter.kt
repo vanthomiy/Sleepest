@@ -20,7 +20,7 @@ data class SleepTimeParameter(
         var diffSleepFuture:	Float = 0f,//	grenze welche die diff im median für einschlafen in zukunft haben sollte
         var awakeMedianOverTime:	Float = 30f,//	grenze welche der median für aufwachen haben sollte
         var diffAwake	:Float = -5f,	//grenze welche die diff im median für aufwachen haben sollte
-        var modelMatchPercentage:	Int = 95//	Zu wie viel Prozent sollten die Models übereinstimmen
+        var modelMatchPercentage:	Int = 97//	Zu wie viel Prozent sollten die Models übereinstimmen
 )
 {
     companion object{

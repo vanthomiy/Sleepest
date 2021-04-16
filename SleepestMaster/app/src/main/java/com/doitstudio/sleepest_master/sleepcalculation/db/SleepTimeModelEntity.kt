@@ -43,14 +43,14 @@ data class SleepTimeModelEntity(
     /**
      * Returns the sleeptime pattern else 0 if the model matches the pattern
      */
-    fun checkIfIsModel(model: SleepModel): SleepTimePattern
+    fun checkIfIsModel(model: SleepModel, accuracy:Float ): SleepTimePattern
     {
         var times = 0
-        val alltimes = 90
-        times += sleepTimeModelMax.checkIfInBounds(model, false)
-        times += sleepTimeModelMin.checkIfInBounds(model, true)
+        val alltimes = 12
+        times += sleepTimeModelMax.checkIfInBounds(model, false,  accuracy )
+        times += sleepTimeModelMin.checkIfInBounds(model, true, accuracy)
 
-        if ((times * 100) / alltimes > 95f)
+        if(times <= 2)//if (((alltimes-times) * 100) / alltimes > 95f)
         {
             return sleepTimePattern
         }

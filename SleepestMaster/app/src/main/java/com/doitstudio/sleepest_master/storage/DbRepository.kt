@@ -51,6 +51,8 @@ class DbRepository(
     val allUserSleepSessions: Flow<List<UserSleepSessionEntity>> =
         userSleepSessionDao.getAll()
 
+    fun getSleepSessionById(id:Int): Flow<UserSleepSessionEntity?> =
+            userSleepSessionDao.getById(id)
 
     suspend fun insertUserSleepSession(userSleepSession: UserSleepSessionEntity) {
         userSleepSessionDao.insert(userSleepSession)

@@ -20,8 +20,7 @@ data class SleepUserType(
         @Embedded(prefix = "full") var sleepFullModel : SleepModel = SleepModel(),	 //Das Berechnete Model aus den Daten
 
         var userFactorPattern: UserFactorPattern = UserFactorPattern.NONE, //	Faktor, je nach dem wie die allgemeinen werte kommt
-
         var sleepTimeLiveParams :	ArrayList<SleepTimePattern> = arrayListOf(), //	Erkanntes muster während des Schlafs
-        var sleepStateLiveParams : ArrayList<SleepStatePattern> = arrayListOf()//	Erkanntes muster während des Schlafs
 
+        var sleepStateLiveParams : ArrayList<String> = arrayListOf()//	Erkanntes muster während des Schlafs
 )

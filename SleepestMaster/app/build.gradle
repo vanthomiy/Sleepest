@@ -3,7 +3,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
-    id 'kotlin-android-extensions'
+   // id 'kotlin-android-extensions'
     id "com.google.protobuf" version "0.8.12"
     id 'dagger.hilt.android.plugin'
     id 'kotlinx-serialization'
@@ -30,6 +30,10 @@ android {
                                       "$projectDir/schemas".toString()]
             }
         }
+    }
+
+    buildFeatures {
+        viewBinding true
     }
 
     buildTypes {

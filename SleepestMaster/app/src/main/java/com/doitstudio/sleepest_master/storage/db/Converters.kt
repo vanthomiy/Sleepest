@@ -49,6 +49,18 @@ class Converters {
     }
 
     @TypeConverter
+    fun fromArrayListOfString(list: ArrayList<String>): String {
+        return list?.joinToString(separator = ";") { it } ?: ""
+    }
+
+    @TypeConverter
+    fun toArrayListOfString(string: String?): ArrayList<String> {
+        return ArrayList(string?.split(";")?.mapNotNull {
+            it
+        } ?: emptyList())
+    }
+
+    @TypeConverter
     fun fromArrayListOfSleepStatePattern(list: ArrayList<SleepStatePattern>): String {
         return list?.joinToString(separator = ";") { it.toString() } ?: ""
     }

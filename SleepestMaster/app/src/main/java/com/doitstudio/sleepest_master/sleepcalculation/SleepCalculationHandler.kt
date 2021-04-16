@@ -60,7 +60,7 @@ class SleepCalculationHandler(private val context: Context){
         }
     }
 
-    // region Sleep Time Calculation
+    // region live Sleep Detection
 
     /**
      * Calculates wheter a user is sleeping or not (around 30 mins delay)
@@ -69,7 +69,92 @@ class SleepCalculationHandler(private val context: Context){
      * - If no model is found it will use the user-parameter for recalculating everything
      * It writes in the [LiveUserSleepActivity]
      */
+    
     suspend fun calculateLiveUserSleepActivity()
+    {
+        // Get all available raw sleep api data
+        val rawApiData = dbRepository.allSleepApiRawData.first()
+
+        // Check if enough data is available
+        if (rawApiData.count() < 5) {
+            // No/To less data available
+            storeRepository.updateIsDataAvailable(false)
+            return
+        }
+
+        var userSleepSessionEntity = UserSleepSessionEntity(id = rawApiData.last().timestampSeconds)
+
+        // create a new user sleep session with a id = first sleep time seconds
+        storeRepository.updateIsDataAvailable(true)
+
+        // Now we have everything we need to calculate the first sleep/no sleep segments
+
+        //region calculate with default or user default
+
+        var sleep:List<Int> = listOf()
+
+        // Now retrieve the time with stadard parameter for the live user sleep activity
+        var parameter = SleepTimeParameter() //dbRepository.getSleepTimeParameterById(SleepTimePattern.STANDARD.toString())
+
+
+        // Use user parameter or just use the default parameters
+
+        // Get user time params
+        val userTimeParameterId = storeRepository.actualSleepUserParameterFlow.first().sleepTimePatternList
+        if(userTimeParameterId.count() != 0 && !userTimeParameterId.contains("NONE")) {
+            // User specific
+
+            // Now retrieve the time parameter for the live user sleep activity
+            var paramList = mutableListOf<SleepTimeParameter>()
+            userTimeParameterId.forEach(){
+                paramList.add(dbRepository.getSleepTimeParameterById(it).first().sleepTimeParameter)
+            }
+
+            parameter = SleepTimeParameter.mergeParameters(paramList)
+
+        }
+
+        // Create sleep with parameters
+        var userFactorSleep = getSleepAndAdjustFactor(parameter, rawApiData)
+
+        sleep = userFactorSleep.second
+
+        //endregion
+
+        // Now we should have a list of data else we return without more steps
+        if (sleep.count() <= 2) {
+            storeRepository.updateUserSleepFound(false)
+            return
+        }
+
+
+        var sleepTime = 0
+        for(i in 1 until sleep.count()-1 step 2)
+        {
+            sleepTime +=  sleep[i + 1] - sleep[i]
+        }
+
+
+        // Assignments
+        storeRepository.updateUserSleepTime(sleepTime)
+        storeRepository.updateUserSleepFound(true)
+        storeRepository.updateIsUserSleeping(sleep.count() % 2 != 0)
+        userSleepSessionEntity.sleepTimes.sleepTimeStart = sleep[1]
+
+        // insert or update the user sleep session
+        dbNormalRepository.insertUserSleepSession(userSleepSessionEntity)
+    }
+
+    // endregion
+
+
+    // region Sleep Time Calculation
+
+    /**
+     * Calculates the alarm time for the user. This should be called before the first wake up time
+     * At the first call it also defines a model that should be used
+     */
+    suspend fun calculateUserWakup()
     {
         // Get all available raw sleep api data
 
@@ -83,91 +168,101 @@ class SleepCalculationHandler(private val context: Context){
             return
         }
 
-        var userSleepSessionEntity = UserSleepSessionEntity(id = rawApiData.last().timestampSeconds)
-
-        // create a new user sleep session with a id = first sleep time seconds
-        // dbNormalRepository.insertUserSleepSession(userSleepSessionEntity)
+        // Get the user sleep session, else create a new one
+        var userSleepSessionEntity = dbNormalRepository.getSleepSessionById(rawApiData.last().timestampSeconds).first() ?: UserSleepSessionEntity(id = rawApiData.last().timestampSeconds)
 
         storeRepository.updateIsDataAvailable(true)
 
         //endregion
 
-        // Now we have everything we need to calculate the first sleep/no sleep segments
-
-        //region calculate with default
-
-        var sleep:List<Int> = listOf()
+        //region define the params
 
         // Now retrieve the time with stadard parameter for the live user sleep activity
-        var parameter = SleepTimeParameter() //dbRepository.getSleepTimeParameterById(SleepTimePattern.STANDARD.toString())
+        var parameter = SleepTimeParameter()
+        var sleep: List<Int> = listOf()
 
-        // Create sleep with parameters
-        var userFactorSleep = getSleepAndAdjustFactor(parameter, rawApiData)
+        if(userSleepSessionEntity.sleepUserType.sleepTimeLiveParams.count() == 0) {
+            // Now we have everything we need to calculate the first sleep/no sleep segments
+            //region calculate with default
 
-        sleep = userFactorSleep.second
-        // Now we should have a list of data else we return without more steps
-        if (sleep.count() <= 2) {
-            storeRepository.updateUserSleepFound(false)
-            return
+            // Create sleep with parameters
+            var userFactorSleep = getSleepAndAdjustFactor(parameter, rawApiData)
+
+            sleep = userFactorSleep.second
+            // Now we should have a list of data else we return without more steps
+            if (sleep.count() <= 2) {
+                storeRepository.updateUserSleepFound(false)
+                return
+            }
+
+            storeRepository.updateUserSleepFound(true)
+
+            userSleepSessionEntity.sleepUserType.sleepTimeLiveParams.add(SleepTimePattern.STANDARD)
+
+            //endregion
+
+            // Now we want to create a model of the actual sleep
+            // region create the actual model
+            val actualModel = defineActualModel(sleep, rawApiData)
+            userSleepSessionEntity.sleepUserType.sleepLiveModel = actualModel
+
+            // check if model is already defined
+            val modelAndParameter = getTimePatternIfAvailable(actualModel)
+
+
+            // endregion
+
+            // Now we get the actual params of the model
+            //region gets new parameter (From model or from user)
+
+            if (modelAndParameter.first.count() == 0) {
+                // We are using the default values for the user to check whether sleeping or not
+                // Get them from the [ActualSleepUserParameterStatus]
+                val newTimeParameterId = storeRepository.actualSleepUserParameterFlow.first().sleepTimePatternList
+                // check if that are diffrent parameters... else we dont have to calculate again
+                if (newTimeParameterId.count() != 0 && !newTimeParameterId.contains("NONE")) {
+                    // Now retrieve the time parameter for the live user sleep activity
+                    var paramList = mutableListOf<SleepTimeParameter>()
+                    userSleepSessionEntity.sleepUserType.sleepTimeLiveParams.clear()
+                    newTimeParameterId.forEach() {
+                        paramList.add(dbRepository.getSleepTimeParameterById(it).first().sleepTimeParameter)
+                        userSleepSessionEntity.sleepUserType.sleepTimeLiveParams.add(SleepTimePattern.valueOf(it))
+                    }
+
+                    // merge the params together
+                    parameter = SleepTimeParameter.mergeParameters(paramList)
+                }
+            } else {
+                // use the found model
+                userSleepSessionEntity.sleepUserType.sleepTimeLiveParams.clear()
+                userSleepSessionEntity.sleepUserType.sleepTimeLiveParams = modelAndParameter.first
+                parameter = modelAndParameter.second
+            }
+
+            // endregion
+
         }
-        storeRepository.updateUserSleepFound(true)
+        else{
+            // get the parameter of the of the usersleepsesssion
+            var paramList = mutableListOf<SleepTimeParameter>()
+            userSleepSessionEntity.sleepUserType.sleepTimeLiveParams.forEach() {
+                paramList.add(dbRepository.getSleepTimeParameterById(it.toString()).first().sleepTimeParameter)
+            }
 
-        userSleepSessionEntity.sleepUserType.sleepTimeLiveParams.add(SleepTimePattern.STANDARD)
+            // merge the params together
+            parameter = SleepTimeParameter.mergeParameters(paramList)
+
+
+        }
 
         //endregion
 
-        // Now we want to create a model of the actual sleep
+        // region Calc the sleep values
 
-        // region model
-        // create the actual model
-        val actualModel = defineActualModel(sleep, rawApiData)
-        userSleepSessionEntity.sleepUserType.sleepLiveModel = actualModel
+        // Calc sleep with parameters
+        val userFactorSleep = getSleepAndAdjustFactor(parameter, rawApiData)
+        sleep = userFactorSleep.second
 
-        // check if model is already defined
-        val modelAndParameter = getTimePatternIfAvailable(actualModel)
-
-
-
-        // endregion
-
-
-        //region calulate with new parameter (From model or from user)
-
-        if (modelAndParameter.first.count() == 0)
-        {
-            // We are using the default values for the user to check whether sleeping or not
-            // Get them from the [ActualSleepUserParameterStatus]
-            val newTimeParameterId = storeRepository.actualSleepUserParameterFlow.first().sleepTimePatternList
-            // check if that are diffrent parameters... else we dont have to calculate again
-            if(newTimeParameterId.count() != 0 && !newTimeParameterId.contains("NONE")){
-                // Now retrieve the time parameter for the live user sleep activity
-                var paramList = mutableListOf<SleepTimeParameter>()
-                userSleepSessionEntity.sleepUserType.sleepTimeLiveParams.clear()
-                newTimeParameterId.forEach(){
-                    paramList.add(dbRepository.getSleepTimeParameterById(it).first().sleepTimeParameter)
-                    userSleepSessionEntity.sleepUserType.sleepTimeLiveParams.add(SleepTimePattern.valueOf(it))
-                }
-
-                // merge the params together
-                parameter = SleepTimeParameter.mergeParameters(paramList)
-
-                // later define for more than one pattern...
-
-                // Create sleep with parameters
-                userFactorSleep = getSleepAndAdjustFactor(parameter, rawApiData)
-                sleep = userFactorSleep.second
-
-            }
-        }
-        else{
-            // use the found model
-            userSleepSessionEntity.sleepUserType.sleepTimeLiveParams.clear()
-            userSleepSessionEntity.sleepUserType.sleepTimeLiveParams = modelAndParameter.first
-            userFactorSleep = getSleepAndAdjustFactor(modelAndParameter.second, rawApiData)
-            sleep = userFactorSleep.second
-        }
-
-        // endregion
 
         // Now we should have a list of data else we return without more steps
         if (sleep.count() <= 2) {
@@ -175,7 +270,9 @@ class SleepCalculationHandler(private val context: Context){
             return
         }
 
+        // endregion
 
+        //region setup values
 
         userSleepSessionEntity.sleepTimes.sleepTimeStart = sleep[1]
         if (sleep.count() % 2 == 0)
@@ -201,6 +298,8 @@ class SleepCalculationHandler(private val context: Context){
 
         // insert or update the user sleep session
         dbNormalRepository.insertUserSleepSession(userSleepSessionEntity)
+
+        //endregion
 
         calculateUserSleepStates(userSleepSessionEntity, rawApiData.asReversed(), sleep)
     }
@@ -361,15 +460,15 @@ class SleepCalculationHandler(private val context: Context){
 
         val list = dbRepository.allSleepTimeModels.first()
 
+
         // add every pattern that matches the model
         list.forEach {
-            val a = it.checkIfIsModel(actualModel)
+            val a = it.checkIfIsModel(actualModel, 0.005f)
             if (a.ordinal != 0)
             {
                 patterns.add(a)
                 parameter.add(dbRepository.getSleepTimeParameterById(a.toString()).first().sleepTimeParameter)
             }
-
         }
 
         // create the id of the param id of the model
@@ -394,36 +493,41 @@ class SleepCalculationHandler(private val context: Context){
         // Now retrieve the time with stadard parameter for the live user sleep activity
         var parameter = SleepStateParameter()
 
-        // check if model is already defined
-        val modelAndParameter = getStatePatternIfAvailable(userSleepSessionEntity.sleepUserType.sleepLiveModel)
-        val userParameter = storeRepository.actualSleepUserParameterFlow.first().sleepStatePatternList
+        if(userSleepSessionEntity.sleepUserType.sleepStateLiveParams.count() == 0) {
+            // check if model is already defined
+            val modelAndParameter = getStatePatternIfAvailable(userSleepSessionEntity.sleepUserType.sleepLiveModel)
+            val userParameter = storeRepository.actualSleepUserParameterFlow.first().sleepStatePatternList
 
-        userSleepSessionEntity.sleepUserType.sleepStateLiveParams.clear()
+            if (modelAndParameter.first.count() != 0) {
+                //model parameters
+                userSleepSessionEntity.sleepUserType.sleepStateLiveParams = modelAndParameter.first
+                parameter = modelAndParameter.second
+            } else if (userParameter.count() != 0 && !userParameter.contains("NONE")) {
+                // use user parameters
+                var paramList = mutableListOf<SleepStateParameter>()
 
-        if (modelAndParameter.first.count() != 0)
-        {
-            //model parameters
-            userSleepSessionEntity.sleepUserType.sleepStateLiveParams = modelAndParameter.first
-            parameter = modelAndParameter.second
-        }
-        else if (userParameter.count() != 0 && !userParameter.contains("NONE"))
-        {
-            // use user parameters
-            var paramList = mutableListOf<SleepStateParameter>()
+                val userStateParameterId = storeRepository.actualSleepUserParameterFlow.first().sleepStatePatternList
+                userStateParameterId.forEach() {
+                    paramList.add(dbRepository.getSleepStateParameterById(it).first().sleepStateParameter)
+                    userSleepSessionEntity.sleepUserType.sleepStateLiveParams.add(it)
+                }
 
-            val userStateParameterId = storeRepository.actualSleepUserParameterFlow.first().sleepStatePatternList
-            userStateParameterId.forEach(){
-                paramList.add(dbRepository.getSleepStateParameterById(it).first().sleepStateParameter)
-                userSleepSessionEntity.sleepUserType.sleepStateLiveParams.add(SleepStatePattern.valueOf(it))
+                parameter = SleepStateParameter.mergeParameters(paramList)
+            } else {
+                // use the default parameters
+                userSleepSessionEntity.sleepUserType.sleepStateLiveParams.add(SleepStatePattern.STANDARD.toString() + UserFactorPattern.NORMAL.toString())
             }
 
+        }
+        else{
+            // get used params
+            var paramList = mutableListOf<SleepStateParameter>()
+            userSleepSessionEntity.sleepUserType.sleepStateLiveParams.forEach() {
+                paramList.add(dbRepository.getSleepStateParameterById(it).first().sleepStateParameter)
+            }
             parameter = SleepStateParameter.mergeParameters(paramList)
         }
-        else
-        {
-            // use the default parameters
-            userSleepSessionEntity.sleepUserType.sleepStateLiveParams.add(SleepStatePattern.STANDARD)
-        }
+
 
         val sleepSegments = calculateSleepStates(parameter, rawApiData,userSleepSessionEntity)
 
@@ -445,17 +549,19 @@ class SleepCalculationHandler(private val context: Context){
     /**
      * Finds pre-defined patterns by a model and returns the needed parameter and found patterns for it
      */
-    private suspend fun getStatePatternIfAvailable(actualModel: SleepModel) : Pair<ArrayList<SleepStatePattern>, SleepStateParameter> {
+    private suspend fun getStatePatternIfAvailable(actualModel: SleepModel) : Pair<ArrayList<String>, SleepStateParameter> {
 
-        val patterns = arrayListOf<SleepStatePattern>()
+        val patterns = arrayListOf<String>()
         val parameter = mutableListOf<SleepStateParameter>()
 
         val list = dbRepository.allSleepStateModels.first()
 
+        val a = 1
+
         // add every pattern that matches the model
         list.forEach {
-            val a = it.checkIfIsModel(actualModel)
-            if (a.ordinal != 0)
+            val a = it.checkIfIsModel(actualModel, 0.025f)
+            if (a != "")
             {
                 patterns.add(a)
                 parameter.add(dbRepository.getSleepStateParameterById(a.toString()).first().sleepStateParameter)
@@ -547,26 +653,6 @@ class SleepCalculationHandler(private val context: Context){
 
 
     //endregion
-
-
-    /**
-     * Calculates the alarm time for the user. This should be called before the first wake up time
-     * TESTING: Call this before the user alarm time
-     */
-    fun calculateUserWakup()
-    {
-
-    }
-
-    /**
-     * Re-Calculates the sleep of the user after the sleep time ( to save the complete sleep). This should be called after user sleep time
-     * TESTING: // Call this after the sleep time and it will delete all raw sleep api data and reset the raw sleep api status counter
-     */
-    fun recalculateUserSleep()
-    {
-
-    }
-
 
 
 }

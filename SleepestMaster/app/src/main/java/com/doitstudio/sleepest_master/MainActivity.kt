@@ -12,24 +12,18 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.viewbinding.BuildConfig
-import com.doitstudio.sleepest_master.background.AlarmReceiver
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
-import com.doitstudio.sleepest_master.model.data.SleepState
 import com.doitstudio.sleepest_master.model.data.SleepStatePattern
 import com.doitstudio.sleepest_master.model.data.UserFactorPattern
 import com.doitstudio.sleepest_master.sleepapi.SleepHandler
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.sleepcalculation.db.SleepStateParameterEntity
-import com.doitstudio.sleepest_master.sleepcalculation.db.SleepTimeParameterEntity
 import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepStateParameter
-import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepTimeParameter
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
-import com.doitstudio.sleepest_master.storage.db.SleepSegmentEntity
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.BufferedReader
 import java.util.*
@@ -114,25 +108,28 @@ class MainActivity : AppCompatActivity() {
 
     private val sleepHandler : SleepHandler by lazy {SleepHandler.getHandler(this)}
 
-    var index = 4
+    var index = 9
     fun buttonClick2(view: View){
 
         var gson = Gson()
         val jsonFile = this
                 .assets
-                .open("databases/testdata/sleep.json")
+                .open("databases/testdata/SleepValues.json")
                 .bufferedReader()
                 .use(BufferedReader::readText)
 
         val a = gson.fromJson(jsonFile, Array<Array<SleepApiRawDataEntity>>::class.java).asList()
-
-        mainViewModel.deleteApi()
-
-        mainViewModel.insertApi(a[index++].toList())
-
         val handler = SleepCalculationHandler.getHandler(this)
+
         scope.launch {
-            handler.calculateLiveUserSleepActivity()
+
+            //for (i in 0..10) {
+                mainViewModel.deleteApi()
+
+                mainViewModel.insertApi(a[index].toList())
+
+                handler.calculateUserWakup()
+            //}
         }
     }
 
