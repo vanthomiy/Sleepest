@@ -107,9 +107,9 @@ class MainActivity : AppCompatActivity() {
          * TEST
          */
 
-        AlarmReceiver.startAlarmManager(6, 12, 57, applicationContext, 1)
+        //AlarmReceiver.startAlarmManager(6, 12, 57, applicationContext, 1)
 
-        //ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
+        ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
 
         sch.calculateUserWakup()
 
