@@ -219,7 +219,7 @@ namespace ExcelCalculationAddin
                 {
                     List<RootRawApi> rral = new List<RootRawApi>();
 
-                    foreach (var item in ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTime)
+                    foreach (var item in ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll)
                     {
                         RootRawApi rra = new RootRawApi();
 
@@ -237,7 +237,6 @@ namespace ExcelCalculationAddin
                 }
             }
           
-           
             var rawSleepApiDataFiles = JsonConvert.SerializeObject(mrral);
             ExportFile.Export(rawSleepApiDataFiles, "SleepValues", folder);
 
