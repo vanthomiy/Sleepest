@@ -62,43 +62,55 @@ data class SleepTimeParameter(
 
             list.forEach {
 
-                if ((parameter.sleepSleepBorder - it.sleepSleepBorder).absoluteValue > (parameter.sleepSleepBorder - reference.sleepSleepBorder).absoluteValue) {
+                if ((reference.awakeTime - it.awakeTime).absoluteValue > (parameter.awakeTime - reference.awakeTime).absoluteValue) {
+                    parameter.awakeTime = it.awakeTime;
+                }
+
+                if ((reference.sleepTime - it.sleepTime).absoluteValue > (parameter.sleepTime - reference.sleepTime).absoluteValue) {
+                    parameter.sleepTime = it.sleepTime;
+                }
+
+                if ((reference.wakeUpTime - it.wakeUpTime).absoluteValue > (parameter.wakeUpTime - reference.wakeUpTime).absoluteValue) {
+                    parameter.wakeUpTime = it.wakeUpTime;
+                }
+
+                if ((reference.sleepSleepBorder - it.sleepSleepBorder).absoluteValue > (parameter.sleepSleepBorder - reference.sleepSleepBorder).absoluteValue) {
                     parameter.sleepSleepBorder = it.sleepSleepBorder;
                 }
 
-                if ((parameter.awakeSleepBorder - it.awakeSleepBorder).absoluteValue > (parameter.awakeSleepBorder - reference.awakeSleepBorder).absoluteValue) {
+                if ((reference.awakeSleepBorder - it.awakeSleepBorder).absoluteValue > (parameter.awakeSleepBorder - reference.awakeSleepBorder).absoluteValue) {
                     parameter.awakeSleepBorder = it.awakeSleepBorder;
                 }
 
-                if ((parameter.sleepMotionBorder - it.sleepMotionBorder).absoluteValue > (parameter.sleepMotionBorder - reference.sleepMotionBorder).absoluteValue) {
+                if ((reference.sleepMotionBorder - it.sleepMotionBorder).absoluteValue > (parameter.sleepMotionBorder - reference.sleepMotionBorder).absoluteValue) {
                     parameter.sleepMotionBorder = it.sleepMotionBorder;
                 }
 
-                if ((parameter.sleepMotionBorder - it.sleepMotionBorder).absoluteValue > (parameter.sleepMotionBorder - reference.sleepMotionBorder).absoluteValue) {
+                if ((reference.sleepMotionBorder - it.sleepMotionBorder).absoluteValue > (parameter.sleepMotionBorder - reference.sleepMotionBorder).absoluteValue) {
                     parameter.sleepMotionBorder = it.sleepMotionBorder;
                 }
 
-                if ((parameter.awakeMotionBorder - it.awakeMotionBorder).absoluteValue > (parameter.awakeMotionBorder - reference.awakeMotionBorder).absoluteValue) {
+                if ((reference.awakeMotionBorder - it.awakeMotionBorder).absoluteValue > (parameter.awakeMotionBorder - reference.awakeMotionBorder).absoluteValue) {
                     parameter.awakeMotionBorder = it.awakeMotionBorder;
                 }
 
-                if ((parameter.sleepMedianOverTime - it.sleepMedianOverTime).absoluteValue > (parameter.sleepMedianOverTime - reference.sleepMedianOverTime).absoluteValue) {
+                if ((reference.sleepMedianOverTime - it.sleepMedianOverTime).absoluteValue > (parameter.sleepMedianOverTime - reference.sleepMedianOverTime).absoluteValue) {
                     parameter.sleepMedianOverTime = it.sleepMedianOverTime;
                 }
 
-                if ((parameter.diffSleep - it.diffSleep).absoluteValue > (parameter.diffSleep - reference.diffSleep).absoluteValue) {
+                if ((reference.diffSleep - it.diffSleep).absoluteValue > (parameter.diffSleep - reference.diffSleep).absoluteValue) {
                     parameter.diffSleep = it.diffSleep;
                 }
 
-                if ((parameter.diffSleepFuture - it.diffSleepFuture).absoluteValue > (parameter.diffSleepFuture - reference.diffSleepFuture).absoluteValue) {
+                if ((reference.diffSleepFuture - it.diffSleepFuture).absoluteValue > (parameter.diffSleepFuture - reference.diffSleepFuture).absoluteValue) {
                     parameter.diffSleepFuture = it.diffSleepFuture;
                 }
 
-                if ((parameter.awakeMedianOverTime - it.awakeMedianOverTime).absoluteValue > (parameter.awakeMedianOverTime - reference.awakeMedianOverTime).absoluteValue) {
+                if ((reference.awakeMedianOverTime - it.awakeMedianOverTime).absoluteValue > (parameter.awakeMedianOverTime - reference.awakeMedianOverTime).absoluteValue) {
                     parameter.awakeMedianOverTime = it.awakeMedianOverTime;
                 }
 
-                if ((parameter.diffAwake - it.diffAwake).absoluteValue > (parameter.diffAwake - reference.diffAwake).absoluteValue) {
+                if ((reference.diffAwake - it.diffAwake).absoluteValue > (parameter.diffAwake - reference.diffAwake).absoluteValue) {
                     parameter.diffAwake = it.diffAwake;
 
                 }

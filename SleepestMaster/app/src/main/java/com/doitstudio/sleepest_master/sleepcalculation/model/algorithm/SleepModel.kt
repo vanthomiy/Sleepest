@@ -48,6 +48,27 @@ data class SleepModel(
         return times
     }
 
+    /**
+     * Extends the max bounds by the model
+     */
+    fun extendMaxByModel(model:SleepModel){
+        valuesAwake.extendMaxByModel(model.valuesAwake)
+        valuesSleep.extendMaxByModel(model.valuesSleep)
+        valuesDiff.extendMaxByModel(model.valuesDiff)
+    }
+
+    /**
+     * Extends the min bounds by the model
+     */
+    fun extendMinByModel(model:SleepModel){
+        valuesAwake.extendMinByModel(model.valuesAwake)
+        valuesSleep.extendMinByModel(model.valuesSleep)
+        valuesDiff.extendMinByModel(model.valuesDiff)
+    }
+
+
+
+
 }
 data class ValuesTimeModel(
     @Embedded(prefix = "sleep") val sleep:DataSetter = DataSetter(),
@@ -93,20 +114,38 @@ data class ValuesTimeModel(
 
         return times
     }
+
+    /**
+     * Extends the max bounds by the model
+     */
+    fun extendMaxByModel(model:ValuesTimeModel){
+        sleep.extendMaxByModel(model.sleep)
+        light.extendMaxByModel(model.light)
+        motion.extendMaxByModel(model.motion)
+    }
+
+    /**
+     * Extends the min bounds by the model
+     */
+    fun extendMinByModel(model:ValuesTimeModel){
+        sleep.extendMinByModel(model.sleep)
+        light.extendMinByModel(model.light)
+        motion.extendMinByModel(model.motion)
+    }
 }
 
 data class DataSetter(
 
     @ColumnInfo(name = "max")
-    val Max:Float = 1000f,	//Der Max wert
+    var Max:Float = 1000f,	//Der Max wert
     @ColumnInfo(name = "min")
-    val Min:Float = 0f,	//Der Min wert
+    var Min:Float = 0f,	//Der Min wert
     @ColumnInfo(name = "median")
-    val Median:Float = 0f,	//Der Median wert
+    var Median:Float = 0f,	//Der Median wert
     @ColumnInfo(name = "average")
-    val Average:Float = 0f,	//Der Average wert
+    var Average:Float = 0f,	//Der Average wert
     @ColumnInfo(name = "factor")
-    val Factor:Float = 0f,	//Der Factor wert
+    var Factor:Float = 0f,	//Der Factor wert
 
 )
 {
@@ -287,5 +326,39 @@ data class DataSetter(
             return accuracy/100
 
         return 2.0f
+    }
+
+    /**
+     * Extends the min bounds by the model
+     */
+    fun extendMinByModel(model:DataSetter){
+
+        if(Max > model.Max)
+            Max = model.Max
+        if(Min > model.Min)
+            Min = model.Min
+        if(Median > model.Median)
+            Median = model.Median
+        if(Average > model.Average)
+            Average = model.Average
+        if(Factor > model.Factor)
+            Factor = model.Factor
+    }
+
+    /**
+     * Extends the max bounds by the model
+     */
+    fun extendMaxByModel(model:DataSetter){
+
+        if(Max < model.Max)
+            Max = model.Max
+        if(Min < model.Min)
+            Min = model.Min
+        if(Median < model.Median)
+            Median = model.Median
+        if(Average < model.Average)
+            Average = model.Average
+        if(Factor < model.Factor)
+            Factor = model.Factor
     }
 }

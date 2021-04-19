@@ -60,6 +60,16 @@ data class SleepStateModelEntity(
                 return ""
         }
 
+        /**
+         * Adds a model to a model
+         * Changes min or max values if needed
+         */
+        fun extendModelByModel(sleepModel:SleepModel){
+
+                sleepStateModelMax.extendMaxByModel(sleepModel)
+                sleepStateModelMin.extendMinByModel(sleepModel)
+        }
+
 
 }
 

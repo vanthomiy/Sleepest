@@ -1,6 +1,7 @@
 package com.doitstudio.sleepest_master.sleepcalculation
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import com.doitstudio.sleepest_master.LiveUserSleepActivity
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.model.data.SleepState
@@ -58,6 +59,8 @@ class SleepCalculationHandler(private val context: Context){
                 instance
             }
         }
+
+
     }
 
     // region live Sleep Detection
@@ -423,6 +426,33 @@ class SleepCalculationHandler(private val context: Context){
     }
 
     /**
+     * Finds pre-defined patterns by a model and returns the needed parameter and found patterns for it
+     */
+    private suspend fun getTimePatternIfAvailable(actualModel: SleepModel) : Pair<ArrayList<SleepTimePattern>, SleepTimeParameter> {
+
+        val patterns = arrayListOf<SleepTimePattern>()
+        val parameter = mutableListOf<SleepTimeParameter>()
+
+        val list = dbRepository.allSleepTimeModels.first()
+
+
+        // add every pattern that matches the model
+        list.forEach {
+            val a = it.checkIfIsModel(actualModel, 0.005f)
+            if (a.ordinal != 0)
+            {
+                patterns.add(a)
+                parameter.add(dbRepository.getSleepTimeParameterById(a.toString()).first().sleepTimeParameter)
+            }
+        }
+
+        // create the id of the param id of the model
+
+        val aaa = list.count()
+        return Pair(patterns, SleepTimeParameter.mergeParameters(parameter))
+    }
+
+    /**
      * Uses the with default parameter defined sleep and awake lists and creates a model of the sleep
      */
     private fun defineActualModel(sleep: List<Int>, rawApiData: List<SleepApiRawDataEntity>) : SleepModel {
@@ -450,32 +480,6 @@ class SleepCalculationHandler(private val context: Context){
         return SleepModel.calculateModel(awakeList, sleepList)
     }
 
-    /**
-     * Finds pre-defined patterns by a model and returns the needed parameter and found patterns for it
-     */
-    private suspend fun getTimePatternIfAvailable(actualModel: SleepModel) : Pair<ArrayList<SleepTimePattern>, SleepTimeParameter> {
-
-        val patterns = arrayListOf<SleepTimePattern>()
-        val parameter = mutableListOf<SleepTimeParameter>()
-
-        val list = dbRepository.allSleepTimeModels.first()
-
-
-        // add every pattern that matches the model
-        list.forEach {
-            val a = it.checkIfIsModel(actualModel, 0.005f)
-            if (a.ordinal != 0)
-            {
-                patterns.add(a)
-                parameter.add(dbRepository.getSleepTimeParameterById(a.toString()).first().sleepTimeParameter)
-            }
-        }
-
-        // create the id of the param id of the model
-
-        val aaa = list.count()
-        return Pair(patterns, SleepTimeParameter.mergeParameters(parameter))
-    }
 
     // endregion
 

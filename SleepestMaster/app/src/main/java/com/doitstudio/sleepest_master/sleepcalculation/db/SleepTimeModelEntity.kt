@@ -57,5 +57,17 @@ data class SleepTimeModelEntity(
 
         return SleepTimePattern.NONE
     }
+
+    /**
+     * Adds a model to a model
+     * Changes min or max values if needed
+     */
+    fun extendModelByModel(sleepModel:SleepModel){
+
+        sleepTimeModelMax.extendMaxByModel(sleepModel)
+        sleepTimeModelMin.extendMinByModel(sleepModel)
+    }
+
+
 }
 

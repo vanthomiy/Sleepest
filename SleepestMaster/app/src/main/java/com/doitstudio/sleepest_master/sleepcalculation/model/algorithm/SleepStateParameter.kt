@@ -42,51 +42,51 @@ data class SleepStateParameter(
 
             list.forEach {
 
-                if ((parameter.sleepSleepBorder - it.sleepSleepBorder).absoluteValue > (parameter.sleepSleepBorder - reference.sleepSleepBorder).absoluteValue) {
+                if ((reference.sleepSleepBorder - it.sleepSleepBorder).absoluteValue > (parameter.sleepSleepBorder - reference.sleepSleepBorder).absoluteValue) {
                     parameter.sleepSleepBorder = it.sleepSleepBorder;
                 }
 
-                if ((parameter.deepSleepSleepBorder - it.deepSleepSleepBorder).absoluteValue > (parameter.deepSleepSleepBorder - reference.deepSleepSleepBorder).absoluteValue) {
+                if ((reference.deepSleepSleepBorder - it.deepSleepSleepBorder).absoluteValue > (parameter.deepSleepSleepBorder - reference.deepSleepSleepBorder).absoluteValue) {
                     parameter.deepSleepSleepBorder = it.deepSleepSleepBorder;
                 }
 
-                if ((parameter.remSleepSleepBorder- it.remSleepSleepBorder).absoluteValue > (parameter. remSleepSleepBorder - reference. remSleepSleepBorder).absoluteValue) {
+                if ((reference.remSleepSleepBorder- it.remSleepSleepBorder).absoluteValue > (parameter. remSleepSleepBorder - reference. remSleepSleepBorder).absoluteValue) {
                     parameter. remSleepSleepBorder = it. remSleepSleepBorder;
                 }
 
-                if ((parameter.sleepMotionBorder - it.sleepMotionBorder).absoluteValue > (parameter.sleepMotionBorder - reference.sleepMotionBorder).absoluteValue) {
+                if ((reference.sleepMotionBorder - it.sleepMotionBorder).absoluteValue > (parameter.sleepMotionBorder - reference.sleepMotionBorder).absoluteValue) {
                     parameter.sleepMotionBorder = it.sleepMotionBorder;
                 }
 
-                if ((parameter.deepSleepMotionBorder - it.deepSleepMotionBorder).absoluteValue > (parameter.deepSleepMotionBorder - reference.deepSleepMotionBorder).absoluteValue) {
+                if ((reference.deepSleepMotionBorder - it.deepSleepMotionBorder).absoluteValue > (parameter.deepSleepMotionBorder - reference.deepSleepMotionBorder).absoluteValue) {
                     parameter.deepSleepMotionBorder = it.deepSleepMotionBorder;
                 }
 
-                if ((parameter.remSleepMotionBorder - it.remSleepMotionBorder).absoluteValue > (parameter.remSleepMotionBorder - reference.remSleepMotionBorder).absoluteValue) {
+                if ((reference.remSleepMotionBorder - it.remSleepMotionBorder).absoluteValue > (parameter.remSleepMotionBorder - reference.remSleepMotionBorder).absoluteValue) {
                     parameter.remSleepMotionBorder = it.remSleepMotionBorder;
                 }
 
-                if ((parameter.sleepLightBorder - it.sleepLightBorder).absoluteValue > (parameter.sleepLightBorder - reference.sleepLightBorder).absoluteValue) {
+                if ((reference.sleepLightBorder - it.sleepLightBorder).absoluteValue > (parameter.sleepLightBorder - reference.sleepLightBorder).absoluteValue) {
                     parameter.sleepLightBorder = it.sleepLightBorder;
                 }
 
-                if ((parameter.deepSleepLightBorder - it.deepSleepLightBorder).absoluteValue > (parameter.deepSleepLightBorder - reference.deepSleepLightBorder).absoluteValue) {
+                if ((reference.deepSleepLightBorder - it.deepSleepLightBorder).absoluteValue > (parameter.deepSleepLightBorder - reference.deepSleepLightBorder).absoluteValue) {
                     parameter.deepSleepLightBorder = it.deepSleepLightBorder;
                 }
 
-                if ((parameter.remSleepLightBorder - it.remSleepLightBorder).absoluteValue > (parameter.remSleepLightBorder - reference.remSleepLightBorder).absoluteValue) {
+                if ((reference.remSleepLightBorder - it.remSleepLightBorder).absoluteValue > (parameter.remSleepLightBorder - reference.remSleepLightBorder).absoluteValue) {
                     parameter.remSleepLightBorder = it.remSleepLightBorder;
                 }
 
-                if ((parameter.soundClearSleepBorder - it.soundClearSleepBorder).absoluteValue > (parameter.soundClearSleepBorder - reference.soundClearSleepBorder).absoluteValue) {
+                if ((reference.soundClearSleepBorder - it.soundClearSleepBorder).absoluteValue > (parameter.soundClearSleepBorder - reference.soundClearSleepBorder).absoluteValue) {
                     parameter.soundClearSleepBorder = it.soundClearSleepBorder;
                 }
 
-                if ((parameter.soundClearMotionBorder - it.soundClearMotionBorder).absoluteValue > (parameter.soundClearMotionBorder - reference.soundClearMotionBorder).absoluteValue) {
+                if ((reference.soundClearMotionBorder - it.soundClearMotionBorder).absoluteValue > (parameter.soundClearMotionBorder - reference.soundClearMotionBorder).absoluteValue) {
                     parameter.soundClearMotionBorder = it.soundClearMotionBorder;
                 }
 
-                if ((parameter.modelMatchPercentage - it.modelMatchPercentage).absoluteValue > (parameter.modelMatchPercentage - reference.modelMatchPercentage).absoluteValue) {
+                if ((reference.modelMatchPercentage - it.modelMatchPercentage).absoluteValue > (parameter.modelMatchPercentage - reference.modelMatchPercentage).absoluteValue) {
                     parameter.modelMatchPercentage = it.modelMatchPercentage;
                 }
 
