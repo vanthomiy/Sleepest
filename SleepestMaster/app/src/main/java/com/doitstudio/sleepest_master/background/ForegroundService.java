@@ -8,8 +8,10 @@ package com.doitstudio.sleepest_master.background;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 import androidx.lifecycle.LifecycleService;
 import com.doitstudio.sleepest_master.Alarm;
 import com.doitstudio.sleepest_master.LiveUserSleepActivity;
+import com.doitstudio.sleepest_master.MainActivity;
 import com.doitstudio.sleepest_master.SleepApiData;
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver;
 import com.doitstudio.sleepest_master.R;
@@ -82,7 +85,7 @@ public class ForegroundService extends LifecycleService {
     }
 
     public void OnAlarmChanged(Alarm alarm){
-        isAlarmActive = alarm.getIsActive();
+        //isAlarmActive = alarm.getIsActive();
         updateNotification("test");
     }
 
@@ -192,6 +195,10 @@ public class ForegroundService extends LifecycleService {
     private Notification createNotification(String text) {
         String notificationChannelId = getString(R.string.foregroundservice_channel);
 
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
         // Since Oreo there is a Notification Service needed
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationChannel channel = new NotificationChannel(
@@ -222,6 +229,7 @@ public class ForegroundService extends LifecycleService {
                 + "\nIsSleeping: " + isSleeping))
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setTicker("Ticker text")
+                .setContentIntent(pendingIntent)
                 .build();
     }
 

@@ -24,8 +24,6 @@ import java.util.concurrent.TimeUnit;
 
 public class Workmanager extends Worker {
 
-    private static final String TAG = Workmanager.class.getSimpleName();
-    public static final String CHANNEL_ID = "VERBOSE_NOTIFICATION";
     private static Context context;
     private SleepCalculationHandler sleepCalculationHandler;
 
@@ -54,13 +52,14 @@ public class Workmanager extends Worker {
          */
 
 
-        //sleepCalculationHandler.calculateSleepData();
-        //showNotification(context);
-
-        //sleepCalculationHandler.calculateLiveuserSleepActivity();
-
-
         return Result.success();
+    }
+
+    @Override
+    public void onStopped() {
+        super.onStopped();
+        stopPeriodicWorkmanager();
+        startPeriodicWorkmanager(30, context);
     }
 
     /**

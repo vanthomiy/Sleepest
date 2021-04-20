@@ -57,7 +57,7 @@
             android:id="@+id/etDuration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Add workmanager duration in minutes"
+            android:hint="XX"
             android:layout_below="@+id/btnAddAlarm"
             android:inputType="number"/>
 
@@ -66,7 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="New Alarm"
+            android:text="XX"
             android:layout_marginTop="50dp"
             android:layout_below="@+id/etDuration"/>
 
@@ -77,6 +77,15 @@
             android:text="00:00"
             android:layout_marginTop="50dp"
             android:layout_below="@+id/btnStartWorkmanager"/>
+
+        <Button
+            android:id="@+id/btnStopForegroundservice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="XX"
+            android:layout_marginTop="50dp"
+            android:layout_below="@+id/tvLastTime"/>
 
     </RelativeLayout>
 

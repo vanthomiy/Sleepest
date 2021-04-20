@@ -26,6 +26,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.io.BufferedReader
+import kotlinx.android.synthetic.main.activity_main.*
+
 import java.util.*
 
 
@@ -53,33 +55,6 @@ class MainActivity : AppCompatActivity() {
             data->
             binding.status2.text = data.size.toString()
         }
-
-
-
-        /*
-        //val fs = ForegroundObserver(this, this)
-        mainViewModel.rawSleepApiData.observe(this){
-            data->
-            binding.status2.text = data.size.toString()
-        }
-
-        mainViewModel.liveUserSleepActivityLiveData.observe(this) { data ->
-
-            var text = "User Sleeping: " + data.isUserSleeping + "\n"
-            text += "Is Data Available: " + data.isDataAvailable + "\n"
-
-
-            binding.status2.text = text
-        }
-
-        mainViewModel.sleepApiLiveData.observe(this) { data ->
-
-            var text = "Permission Active: " + data.isPermissionActive + "\n"
-            text += "Subscribed: " + data.isSubscribed + "\n"
-            text += "Sleep Values: " + data.sleepApiValuesAmount + "\n"
-
-            binding.status0.text = text
-        }*/
 
         // check permission
         if (!activityRecognitionPermissionApproved()) {
@@ -111,26 +86,6 @@ class MainActivity : AppCompatActivity() {
     var index = 9
     fun buttonClick2(view: View){
 
-        var gson = Gson()
-        val jsonFile = this
-                .assets
-                .open("databases/testdata/SleepValues.json")
-                .bufferedReader()
-                .use(BufferedReader::readText)
-
-        val a = gson.fromJson(jsonFile, Array<Array<SleepApiRawDataEntity>>::class.java).asList()
-        val handler = SleepCalculationHandler.getHandler(this)
-
-        scope.launch {
-
-            //for (i in 0..10) {
-                mainViewModel.deleteApi()
-
-                mainViewModel.insertApi(a[index].toList())
-
-                handler.calculateUserWakup()
-            //}
-        }
     }
 
     var isTimerRunning = false
@@ -163,8 +118,8 @@ class MainActivity : AppCompatActivity() {
         // don't need to check if this is on a device before runtime permissions, that is, a device
         // prior to 29 / Q.
         return PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACTIVITY_RECOGNITION
+                this,
+                Manifest.permission.ACTIVITY_RECOGNITION
         )
     }
 
@@ -182,19 +137,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun displayPermissionSettingsSnackBar() {
         Snackbar.make(
-            binding.mainActivity,
-            "hiHo",
-            Snackbar.LENGTH_LONG
+                binding.mainActivity,
+                "hiHo",
+                Snackbar.LENGTH_LONG
         )
                 .setAction("Settings") {
                     // Build intent that displays the App settings screen.
                     val intent = Intent()
                     intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
                     val uri = Uri.fromParts(
-                        "package",
-                        //BuildConfig.APPLICATION_ID,
-                        BuildConfig.VERSION_NAME,
-                        null
+                            "package",
+                            //BuildConfig.APPLICATION_ID,
+                            BuildConfig.VERSION_NAME,
+                            null
                     )
                     intent.data = uri
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
