@@ -18,9 +18,13 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.model.data.Actions;
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+
+import kotlin.Unit;
+import kotlin.coroutines.Continuation;
 
 import static android.content.Context.ALARM_SERVICE;
 
@@ -33,6 +37,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         this.context = context.getApplicationContext();
 
+        SleepCalculationHandler sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
+
         switch (intent.getIntExtra(context.getString(R.string.alarmmanager_key), 0)) {
             case 0:
                 break;
@@ -41,6 +47,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case 2:
                 ForegroundService.startOrStopForegroundService(Actions.STOP, context);
+                sleepCalculationHandler.calculateUserWakeupJob();
                 break;
             case 3:
 

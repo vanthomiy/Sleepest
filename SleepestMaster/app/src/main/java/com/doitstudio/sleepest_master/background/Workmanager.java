@@ -16,7 +16,6 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
-
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 
@@ -51,6 +50,7 @@ public class Workmanager extends Worker {
          * problemlos möglich.
          */
 
+        sleepCalculationHandler.calculateLiveUserSleepActivityJob();
 
         return Result.success();
     }

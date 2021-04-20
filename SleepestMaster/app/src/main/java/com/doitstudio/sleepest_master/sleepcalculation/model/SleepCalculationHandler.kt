@@ -13,12 +13,15 @@ import com.doitstudio.sleepest_master.sleepcalculation.db.UserSleepSessionEntity
 import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepModel
 import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepStateParameter
 import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepTimeParameter
+import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DbRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.SleepSegmentEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import java.time.LocalTime
 import java.util.*
 
 
@@ -44,6 +47,10 @@ class SleepCalculationHandler(private val context: Context){
 
     private val storeRepository: SleepCalculationStoreRepository by lazy {
         (context.applicationContext as MainApplication).sleepCalculationRepository
+    }
+
+    private val dataStoreRepository: DataStoreRepository by lazy {
+        (context.applicationContext as MainApplication).dataStoreRepository
     }
 
     companion object {
@@ -72,8 +79,14 @@ class SleepCalculationHandler(private val context: Context){
      * - If no model is found it will use the user-parameter for recalculating everything
      * It writes in the [LiveUserSleepActivity]
      */
-    
-    suspend fun calculateLiveUserSleepActivity()
+
+    fun calculateLiveUserSleepActivityJob(){
+        scope.launch {
+            calculateLiveUserSleepActivity()
+        }
+    }
+
+    private suspend fun calculateLiveUserSleepActivity()
     {
         // Get all available raw sleep api data
         val rawApiData = dbRepository.allSleepApiRawData.first()
@@ -157,7 +170,14 @@ class SleepCalculationHandler(private val context: Context){
      * Calculates the alarm time for the user. This should be called before the first wake up time
      * At the first call it also defines a model that should be used
      */
-    suspend fun calculateUserWakup()
+
+    fun calculateUserWakeupJob(){
+        scope.launch {
+            calculateUserWakeup()
+        }
+    }
+
+    private suspend fun calculateUserWakeup()
     {
         // Get all available raw sleep api data
 
@@ -303,6 +323,18 @@ class SleepCalculationHandler(private val context: Context){
         dbNormalRepository.insertUserSleepSession(userSleepSessionEntity)
 
         //endregion
+
+        var restSeconds = sleepTime - 28800
+
+        if (restSeconds <= 120)
+        {
+            restSeconds = 240
+        }
+
+        val seconds:LocalTime = LocalTime.now()
+        val secondsOnDay = seconds.toSecondOfDay()+ restSeconds
+
+        dataStoreRepository.updateAlarmTime(secondsOnDay.toLong())
 
         calculateUserSleepStates(userSleepSessionEntity, rawApiData.asReversed(), sleep)
     }
@@ -588,7 +620,7 @@ class SleepCalculationHandler(private val context: Context){
         // Create list with only the sleep segments
         var sleepList = rawApiData.filter{
             it.timestampSeconds >= userSleepSessionEntity.sleepTimes.sleepTimeStart &&
-            it.timestampSeconds < userSleepSessionEntity.sleepTimes.sleepTimeEnd
+                    it.timestampSeconds < userSleepSessionEntity.sleepTimes.sleepTimeEnd
         }
 
         var sleepStateList = mutableListOf<SleepState>()
@@ -597,10 +629,10 @@ class SleepCalculationHandler(private val context: Context){
         sleepList.forEach{
 
             if (it.confidence <= parameters.sleepSleepBorder ||
-                    it.motion >= parameters.sleepMotionBorder ||
-                    it.light >= parameters.sleepLightBorder) {
+                it.motion >= parameters.sleepMotionBorder ||
+                it.light >= parameters.sleepLightBorder) {
                 if (it.confidence <= parameters.soundClearSleepBorder ||
-                        it.motion <= parameters.soundClearMotionBorder) {
+                    it.motion <= parameters.soundClearMotionBorder) {
                     sleepStateList.add(SleepState.LIGHT)
                 }
                 else {
@@ -608,14 +640,14 @@ class SleepCalculationHandler(private val context: Context){
                 }
             }
             else if (it.confidence <= parameters.deepSleepSleepBorder ||
-                    it.motion >= parameters.deepSleepMotionBorder ||
-                    it.light >= parameters.deepSleepLightBorder) {
+                it.motion >= parameters.deepSleepMotionBorder ||
+                it.light >= parameters.deepSleepLightBorder) {
                 sleepStateList.add(SleepState.LIGHT)
             }
             else if
-                    (it.confidence <= parameters.remSleepSleepBorder ||
-                    it.motion >= parameters.remSleepMotionBorder ||
-                    it.light >= parameters.remSleepLightBorder) {
+                         (it.confidence <= parameters.remSleepSleepBorder ||
+                it.motion >= parameters.remSleepMotionBorder ||
+                it.light >= parameters.remSleepLightBorder) {
                 sleepStateList.add(SleepState.DEEP)
             }
             else {
@@ -659,4 +691,13 @@ class SleepCalculationHandler(private val context: Context){
     //endregion
 
 
+    //region After Sleep
+
+    fun recalculateUserSleep(){
+        scope.launch {
+            dbRepository.deleteSleepApiRawData()
+        }
+    }
+
+    //endregion
 }

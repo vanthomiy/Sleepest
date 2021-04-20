@@ -46,6 +46,7 @@ public class ForegroundService extends LifecycleService {
     private boolean isSubscribed = false;
     private int userSleepTime = 0;
     private boolean isSleeping = false;
+    private boolean isDataAvailable = false;
 
     DataStoreRepository dataStoreRepository;
 
@@ -105,6 +106,7 @@ public class ForegroundService extends LifecycleService {
     }
 
     public void OnSleepTimeChanged(LiveUserSleepActivity liveUserSleepActivity){
+        isDataAvailable = liveUserSleepActivity.getIsDataAvailable();
         userSleepTime = liveUserSleepActivity.getUserSleepTime();
         isSleeping = liveUserSleepActivity.getIsUserSleeping();
         updateNotification("test");
