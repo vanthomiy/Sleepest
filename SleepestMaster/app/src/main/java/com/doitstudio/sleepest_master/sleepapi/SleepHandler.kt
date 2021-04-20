@@ -10,12 +10,16 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.asLiveData
 import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.SleepApiData
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
+import com.doitstudio.sleepest_master.sleepcalculation.datastore.SLEEP_API_DATA_NAME
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.google.android.gms.location.ActivityRecognition
 import com.google.android.gms.location.SleepSegmentRequest
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /**
@@ -28,7 +32,7 @@ class SleepHandler(private val context: Context) {
 
     private var sleepPendingIntent: PendingIntent = SleepReceiver.createSleepReceiverPendingIntent(context = context)
 
-    private val repository by lazy { (context.applicationContext as MainApplication).dataStoreRepository }
+    private val repository by lazy { (context.applicationContext as MainApplication).sleepCalculationRepository }
 
     companion object {
         // For Singleton instantiation
@@ -120,3 +124,4 @@ class SleepHandler(private val context: Context) {
     }
 
 }
+

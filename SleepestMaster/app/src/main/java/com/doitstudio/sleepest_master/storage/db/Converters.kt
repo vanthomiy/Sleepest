@@ -1,15 +1,11 @@
 package com.doitstudio.sleepest_master.storage.db
 
 import androidx.room.TypeConverter
-import com.doitstudio.sleepest_master.model.data.MobilePosition
-import com.doitstudio.sleepest_master.model.data.SleepState
+import com.doitstudio.sleepest_master.model.data.*
+import kotlin.collections.ArrayList
 
-/**
- * Converters are beeing used to convert complex datatypes to single types
- * E.g you have to implicit convert a enum to a int and back, to store the value in the DB
- */
+
 class Converters {
-
     @TypeConverter
     fun fromSleepState(sleepState: SleepState) : Int {
         return sleepState.ordinal
@@ -21,6 +17,72 @@ class Converters {
     }
 
     @TypeConverter
+    fun fromSleepStatePattern(sleepStatePattern: SleepStatePattern) : Int {
+        return sleepStatePattern.ordinal
+    }
+
+    @TypeConverter
+    fun toSleepStatePattern(sleepStatePattern: Int) : SleepStatePattern {
+        return SleepStatePattern.values()[sleepStatePattern]
+    }
+
+    @TypeConverter
+    fun fromSleepTimePattern(sleepTimePattern: SleepTimePattern) : Int {
+        return sleepTimePattern.ordinal
+    }
+
+    @TypeConverter
+    fun toSleepTimePattern(sleepTimePattern: Int) : SleepTimePattern {
+        return SleepTimePattern.values()[sleepTimePattern]
+    }
+
+    @TypeConverter
+    fun fromArrayListOfSleepTimePattern(list: ArrayList<SleepTimePattern>): String {
+        return list?.joinToString(separator = ";") { it.toString() } ?: ""
+    }
+
+    @TypeConverter
+    fun toArrayListOfSleepTimePattern(string: String?): ArrayList<SleepTimePattern> {
+        return ArrayList(string?.split(";")?.mapNotNull {
+            SleepTimePattern.values()[SleepTimePattern.valueOf(it).ordinal]
+        } ?: emptyList())
+    }
+
+    @TypeConverter
+    fun fromArrayListOfString(list: ArrayList<String>): String {
+        return list?.joinToString(separator = ";") { it } ?: ""
+    }
+
+    @TypeConverter
+    fun toArrayListOfString(string: String?): ArrayList<String> {
+        return ArrayList(string?.split(";")?.mapNotNull {
+            it
+        } ?: emptyList())
+    }
+
+    @TypeConverter
+    fun fromArrayListOfSleepStatePattern(list: ArrayList<SleepStatePattern>): String {
+        return list?.joinToString(separator = ";") { it.toString() } ?: ""
+    }
+
+    @TypeConverter
+    fun toArrayListOfSleepStatePattern(string: String?): ArrayList<SleepStatePattern> {
+        return ArrayList(string?.split(";")?.mapNotNull {
+            SleepStatePattern.values()[SleepStatePattern.valueOf(it).ordinal]
+        } ?: emptyList())
+    }
+
+    @TypeConverter
+    fun fromUserStartPattern(userFactorPattern: UserFactorPattern) : Int {
+        return userFactorPattern.ordinal
+    }
+
+    @TypeConverter
+    fun toUserStartPattern(userFactorPattern: Int) : UserFactorPattern {
+        return UserFactorPattern.values()[userFactorPattern]
+    }
+
+    @TypeConverter
     fun fromMobilePosition(mobilePosition: MobilePosition) : Int {
         return mobilePosition.ordinal
     }
@@ -28,6 +90,26 @@ class Converters {
     @TypeConverter
     fun toMobilePosition(mobilePosition: Int) : MobilePosition {
         return MobilePosition.values()[mobilePosition]
+    }
+
+    @TypeConverter
+    fun fromMoodType(moodType: MoodType) : Int {
+        return moodType.ordinal
+    }
+
+    @TypeConverter
+    fun toMoodType(moodType: Int) : MoodType {
+        return MoodType.values()[moodType]
+    }
+
+    @TypeConverter
+    fun fromActivityOnDay(activityOnDay: ActivityOnDay) : Int {
+        return activityOnDay.ordinal
+    }
+
+    @TypeConverter
+    fun toActivityOnDay(activityOnDay: Int) : ActivityOnDay {
+        return ActivityOnDay.values()[activityOnDay]
     }
 
 }
