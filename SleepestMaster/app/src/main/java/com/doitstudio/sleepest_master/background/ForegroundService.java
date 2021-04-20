@@ -79,15 +79,13 @@ public class ForegroundService extends LifecycleService {
     public void onCreate() {
         super.onCreate();
 
-        sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(getApplicationContext());
-
         startForeground(1, createNotification("Test")); /** TODO: Id zentral anlegen */
 
         foregroundObserver = new ForegroundObserver (this);
     }
 
     public void OnAlarmChanged(Alarm alarm){
-        //isAlarmActive = alarm.isAlarmActive();
+        //isAlarmActive = alarm.getIsActive();
         updateNotification("test");
     }
 
@@ -142,8 +140,12 @@ public class ForegroundService extends LifecycleService {
         /**
          * TEST
          * */
-        Calendar calendar = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1, 9, 0);
-        AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(), 2);
+        Calendar calenderAlarm = Calendar.getInstance();
+        int day = calenderAlarm.get(Calendar.DAY_OF_WEEK) + 1;
+        if (day > 7) {
+            day = 1;
+        }
+        AlarmReceiver.startAlarmManager(day,9,0, getApplicationContext(), 2);
         Workmanager.startPeriodicWorkmanager(30, getApplicationContext());
     }
 
@@ -167,10 +169,9 @@ public class ForegroundService extends LifecycleService {
          * TEST
          */
         Workmanager.stopPeriodicWorkmanager();
-        Calendar calendar = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK), 20, 0);
-        AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY) , calendar.get(Calendar.MINUTE), getApplicationContext(), 1);
-
-        sleepCalculationHandler.recalculateUserSleep();
+        Calendar calenderAlarm = Calendar.getInstance();
+        int day = calenderAlarm.get(Calendar.DAY_OF_WEEK);
+        AlarmReceiver.startAlarmManager(day,20,0, getApplicationContext(), 1);
     }
 
     /**
@@ -250,8 +251,6 @@ public class ForegroundService extends LifecycleService {
             }
         context.startService(intent);
     }
-
-
 
     /*
     @NonNull
