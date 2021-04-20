@@ -77,7 +77,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
         }
 
         Intent intent = new Intent(context1, AlarmClockReceiver.class);
-        intent.putExtra(context.getString(R.string.alarm_clock_intent_key), 1);
+        intent.putExtra(context1.getString(R.string.alarm_clock_intent_key), 1);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context1, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) context1.getSystemService(ALARM_SERVICE);
 

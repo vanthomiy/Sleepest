@@ -47,7 +47,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case 2:
                 ForegroundService.startOrStopForegroundService(Actions.STOP, context);
-                sleepCalculationHandler.calculateUserWakeupJob();
                 break;
             case 3:
 

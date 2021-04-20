@@ -23,7 +23,8 @@
     <string name="foregroundservice_channel_name">Foregroundservice Channel</string>
     <string name="foregroundservice_channel_description">This channel is for the notification banner of the foregroundservice</string>
     <string name="foregroundservice_notification_title">Sleepest - The best sleep you ever had</string>
-    <string name="workmanager_tag">Workmanager 1</string>
+    <string name="workmanager1_tag">Workmanager 1</string>
+    <string name="workmanager2_tag">Workmanager 2</string>
     <string name="alarmmanager_key">com.doitstudio.sleepest_master.background.AlarmIntentKey</string>
     <!--endregion-->
 

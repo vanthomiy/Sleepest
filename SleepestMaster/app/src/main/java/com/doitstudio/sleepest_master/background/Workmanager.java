@@ -17,8 +17,10 @@ import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 import com.doitstudio.sleepest_master.R;
+import com.doitstudio.sleepest_master.model.data.Actions;
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 
+import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 public class Workmanager extends Worker {
@@ -52,6 +54,15 @@ public class Workmanager extends Worker {
 
         sleepCalculationHandler.calculateLiveUserSleepActivityJob();
 
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 6);
+        calendar.set(Calendar.MINUTE, 30);
+        calendar.set(Calendar.DAY_OF_YEAR, Calendar.getInstance().get(Calendar.DAY_OF_YEAR));
+
+        if (calendar.before(Calendar.getInstance().getTime())) {
+            sleepCalculationHandler.calculateUserWakeupJob();
+        }
+
         return Result.success();
     }
 
@@ -62,26 +73,27 @@ public class Workmanager extends Worker {
     public static void startPeriodicWorkmanager(int duration, Context context1) {
 
         //Constraints not necessary, but useful
-        Constraints constraints = new Constraints.Builder()
+        /*Constraints constraints = new Constraints.Builder()
                 .setRequiresBatteryNotLow(true) //Trigger fires only, when battery is not low
                 .setRequiresStorageNotLow(true) //Trigger fires only, when enough storage is left
-                .build();
+                .build();*/
 
         PeriodicWorkRequest periodicDataWork =
                 new PeriodicWorkRequest.Builder(Workmanager.class, duration, TimeUnit.MINUTES)
-                        .addTag(context1.getString(R.string.workmanager_tag)) //Tag is needed for canceling the periodic work
-                        .setConstraints(constraints)
+                        .addTag(context1.getString(R.string.workmanager1_tag)) //Tag is needed for canceling the periodic work
+                        //.setConstraints(constraints)
                         .build();
 
         WorkManager workManager = WorkManager.getInstance(context);
-        workManager.enqueueUniquePeriodicWork(context1.getString(R.string.workmanager_tag), ExistingPeriodicWorkPolicy.KEEP, periodicDataWork);
+        workManager.enqueueUniquePeriodicWork(context1.getString(R.string.workmanager1_tag), ExistingPeriodicWorkPolicy.KEEP, periodicDataWork);
 
         Toast.makeText(context1, "Workmanager started", Toast.LENGTH_LONG).show();
 
     }
 
     public static void stopPeriodicWorkmanager() {
+
         //Cancel periodic work by tag
-        WorkManager.getInstance(context).cancelAllWorkByTag(context.getString(R.string.workmanager_tag));
+        WorkManager.getInstance(context).cancelAllWorkByTag(context.getString(R.string.workmanager1_tag));
     }
 }

@@ -16,6 +16,7 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.provider.AlarmClock;
 import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.Toast;
@@ -47,7 +48,9 @@ public class ForegroundService extends LifecycleService {
     private int userSleepTime = 0;
     private boolean isSleeping = false;
     private boolean isDataAvailable = false;
+    private int userSleepTimeRest = 0;
 
+    ForegroundObserver foregroundObserver;
     DataStoreRepository dataStoreRepository;
 
 
@@ -79,7 +82,7 @@ public class ForegroundService extends LifecycleService {
         return START_STICKY; // by returning this we make sure the service is restarted if the system kills the service
     }
 
-    ForegroundObserver foregroundObserver;
+
 
     @Override
     public void onCreate() {
@@ -95,6 +98,16 @@ public class ForegroundService extends LifecycleService {
     }
 
     public void OnAlarmChanged(Alarm alarm){
+        userSleepTimeRest = (int) alarm.getAlarmTime();
+
+        if ((userSleepTimeRest <= 1800) && (userSleepTime > 0)) {
+            AlarmReceiver.cancelAlarm(getApplicationContext(), 2);
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.SECOND, userSleepTimeRest);
+            AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(), 2);
+            AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext());
+        }
+
         isAlarmActive = alarm.getIsActive();
         updateNotification("test");
     }
@@ -151,7 +164,7 @@ public class ForegroundService extends LifecycleService {
         /**
          * TEST
          * */
-        Calendar calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1, 9, 0);
+        Calendar calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1, 7, 0);
         AlarmReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 2);
         Workmanager.startPeriodicWorkmanager(30, getApplicationContext());
     }
