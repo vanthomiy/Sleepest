@@ -195,4 +195,12 @@
         app:layout_constraintStart_toEndOf="@+id/chart"
         app:layout_constraintTop_toTopOf="@+id/chart" />
 
+    <Switch
+        android:id="@+id/switch1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Switch"
+        app:layout_constraintStart_toStartOf="@+id/chart"
+        app:layout_constraintTop_toBottomOf="@+id/chart" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

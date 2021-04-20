@@ -27,6 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="Montag"
+        android:checked="true"
         android:textColor="@color/teal_200"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -120,4 +121,12 @@
         app:layout_constraintStart_toStartOf="@+id/sw_AlarmDayMonday"
         app:layout_constraintTop_toBottomOf="@+id/sw_AlarmDaySaturday"
         tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        app:layout_constraintStart_toStartOf="@+id/sw_AlarmDaySunday"
+        app:layout_constraintTop_toBottomOf="@+id/sw_AlarmDaySunday" />
 </androidx.constraintlayout.widget.ConstraintLayout>

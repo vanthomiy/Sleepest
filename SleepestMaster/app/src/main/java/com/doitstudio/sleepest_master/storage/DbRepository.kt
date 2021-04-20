@@ -1,8 +1,6 @@
 package com.doitstudio.sleepest_master.storage
 
 
-import androidx.lifecycle.asLiveData
-import androidx.room.Query
 import com.doitstudio.sleepest_master.model.data.sleepcalculation.SleepSegmentEntity
 import com.doitstudio.sleepest_master.model.data.sleepcalculation.UserSleepSessionEntity
 import com.doitstudio.sleepest_master.storage.db.*
