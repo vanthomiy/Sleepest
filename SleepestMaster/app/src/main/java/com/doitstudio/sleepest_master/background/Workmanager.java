@@ -56,13 +56,6 @@ public class Workmanager extends Worker {
         return Result.success();
     }
 
-    @Override
-    public void onStopped() {
-        super.onStopped();
-        stopPeriodicWorkmanager();
-        startPeriodicWorkmanager(30, context);
-    }
-
     /**
      * Start the workmanager with a specific duration
      * @param duration Number <=15 stands for duration in minutes

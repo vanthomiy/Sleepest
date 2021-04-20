@@ -43,7 +43,14 @@ public class AlarmReceiver extends BroadcastReceiver {
                 ForegroundService.startOrStopForegroundService(Actions.STOP, context);
                 break;
             case 3:
-                Toast.makeText(context.getApplicationContext(), "No Action yet", Toast.LENGTH_LONG).show();
+
+
+
+                /**TODO: Turn Alarm off, set Alarm for the day after or check for the next day
+                 * TODO: Stop Foregroundservice and send Toast
+                 */
+
+
                 break;
         }
     }

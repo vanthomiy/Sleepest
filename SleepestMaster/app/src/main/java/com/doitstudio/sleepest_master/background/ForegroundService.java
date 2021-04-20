@@ -84,6 +84,8 @@ public class ForegroundService extends LifecycleService {
     public void onCreate() {
         super.onCreate();
 
+        /**TODO: Variablen initialisieren!!*/
+
         startForeground(1, createNotification("Test")); /** TODO: Id zentral anlegen */
 
         sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(getApplicationContext());
@@ -192,37 +194,35 @@ public class ForegroundService extends LifecycleService {
     /**TODO Notification noch selbst machen mit eigenem Layout*/
     /**
      * Creats a notification banner, that is permament to show that the app is still running. Only since Oreo
-     * @param text The text at the notification banner
+     * @param text The text in the collapsed notification view
      * @return Notification.Builder
      */
     private Notification createNotification(String text) {
         String notificationChannelId = getString(R.string.foregroundservice_channel);
 
+        //Init remoteView for expanded notification
         RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.foreground_service_notification);
-        /**TODO Ellapsed/Collapsed View*/
 
-        remoteViews.setProgressBar(R.id.pbSleepProgressNotification, 100, getSleepProgress(20, 9,
-                Calendar.getInstance().get(Calendar.HOUR_OF_DAY)), false);
-
+        //Set button with its intents
         Intent btnClickIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
         btnClickIntent.putExtra(getApplicationContext().getString(R.string.alarmmanager_key), 3);
 
-        if (isAlarmActive) {
-            remoteViews.setTextViewText(R.id.btnEnableAlarmNotification, "Disable Alarm");
-            btnClickIntent.putExtra(getApplicationContext().getString(R.string.alarmmanager_key), "on");
-        } else {
-            remoteViews.setTextViewText(R.id.btnEnableAlarmNotification, "Enable Alarm");
-            btnClickIntent.putExtra(getApplicationContext().getString(R.string.alarmmanager_key), "off");
-        }
+        remoteViews.setTextViewText(R.id.btnEnableAlarmNotification, "Disable Alarm");
 
         PendingIntent btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 3, btnClickIntent, 0);
         remoteViews.setOnClickPendingIntent(R.id.btnEnableAlarmNotification, btnClickPendingIntent);
 
+        //Set the text in textview of the expanded notification view
         String notificationText = "AlarmActive: " + isAlarmActive + " Value: " + sleepValueAmount
                 + "\nIsSubscribed: " + isSubscribed + " SleepTime: " + userSleepTime
                 + "\nIsSleeping: " + isSleeping;
         remoteViews.setTextViewText(R.id.tvTextAlarm, notificationText);
 
+        //Set the progress bar for the sleep progress
+        remoteViews.setProgressBar(R.id.pbSleepProgressNotification, 100,
+                getSleepProgress(20, 9, Calendar.getInstance().get(Calendar.HOUR_OF_DAY)), false);
+
+        //Set the Intent for tap on the notification, will start app in MainActivity
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
