@@ -1,4 +1,4 @@
-package com.doitstudio.sleepest_master.storage.datastorage
+package com.doitstudio.sleepest_master.sleepcalculation.datastore
 
 import android.util.Log
 import androidx.datastore.core.DataStore
@@ -32,6 +32,12 @@ class LiveUserSleepActivityStatus(private val dataStore: DataStore<LiveUserSleep
     suspend fun updateIsDataAvailable(isDataAvailable: Boolean) {
         dataStore.updateData { preference ->
             preference.toBuilder().setIsDataAvailable(isDataAvailable).build()
+        }
+    }
+
+    suspend fun updateUserSleepFound(userSleepFound: Boolean) {
+        dataStore.updateData { preference ->
+            preference.toBuilder().setUserSleepFound(userSleepFound).build()
         }
     }
 

@@ -25,37 +25,3 @@ class AlarmSerializer() : Serializer<Alarm> {
 
     override val defaultValue: Alarm = Alarm.getDefaultInstance()
 }
-
-class SleepApiDataSerializer() : Serializer<SleepApiData> {
-
-    override fun readFrom(input: InputStream): SleepApiData {
-        try {
-            return SleepApiData.parseFrom(input)
-        } catch (exception: InvalidProtocolBufferException) {
-            throw CorruptionException("Cannot read proto.", exception)
-        }
-    }
-
-    override fun writeTo(t: SleepApiData, output: OutputStream) {
-        t.writeTo(output)
-    }
-
-    override val defaultValue: SleepApiData = SleepApiData.getDefaultInstance()
-}
-
-class LiveUserSleepActivitySerializer() : Serializer<LiveUserSleepActivity> {
-
-    override fun readFrom(input: InputStream): LiveUserSleepActivity {
-        try {
-            return LiveUserSleepActivity.parseFrom(input)
-        } catch (exception: InvalidProtocolBufferException) {
-            throw CorruptionException("Cannot read proto.", exception)
-        }
-    }
-
-    override fun writeTo(t: LiveUserSleepActivity, output: OutputStream) {
-        t.writeTo(output)
-    }
-
-    override val defaultValue: LiveUserSleepActivity = LiveUserSleepActivity.getDefaultInstance()
-}

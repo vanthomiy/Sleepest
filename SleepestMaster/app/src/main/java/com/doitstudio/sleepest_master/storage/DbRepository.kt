@@ -1,12 +1,12 @@
 package com.doitstudio.sleepest_master.storage
 
 
-import com.doitstudio.sleepest_master.model.data.sleepcalculation.SleepSegmentEntity
-import com.doitstudio.sleepest_master.model.data.sleepcalculation.UserSleepSessionEntity
+import com.doitstudio.sleepest_master.sleepcalculation.db.UserSleepSessionDao
+import com.doitstudio.sleepest_master.sleepcalculation.db.UserSleepSessionEntity
+import com.doitstudio.sleepest_master.storage.db.SleepSegmentEntity
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataDao
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.SleepSegmentDao
-import com.doitstudio.sleepest_master.storage.db.UserSleepSessionDao
 import kotlinx.coroutines.flow.Flow
 
 
@@ -18,10 +18,8 @@ import kotlinx.coroutines.flow.Flow
  *
  */
 class DbRepository(
-    private val sleepSegmentDao: SleepSegmentDao,
-    private val sleepApiRawDataDao: SleepApiRawDataDao,
-    private val userSleepSessionDataDao: UserSleepSessionDao
-
+        private val sleepSegmentDao: SleepSegmentDao,
+        private val userSleepSessionDao: UserSleepSessionDao
 ) {
 
     companion object {
@@ -29,11 +27,9 @@ class DbRepository(
         @Volatile
         private var INSTANCE: DbRepository? = null
 
-        var a:Int = 0
-
-        fun getRepo(sleepSegmentDao: SleepSegmentDao, sleepApiRawDataDao: SleepApiRawDataDao, userSleepSessionDataDao: UserSleepSessionDao): DbRepository {
+        fun getRepo(sleepSegmentDao: SleepSegmentDao, userSleepSessionDao: UserSleepSessionDao): DbRepository {
             return INSTANCE ?: synchronized(this) {
-                val instance = DbRepository(sleepSegmentDao, sleepApiRawDataDao, userSleepSessionDataDao)
+                val instance = DbRepository(sleepSegmentDao, userSleepSessionDao)
                 INSTANCE = instance
                 // return instance
                 instance
@@ -48,26 +44,22 @@ class DbRepository(
     // implement anything else to ensure we're not doing long-running database work off the
     // main thread.
 
-    //region Sleep API Data
 
-    // Methods for SleepApiRawDataDao
-    // Observed Flow will notify the observer when the data has changed.
-    val allSleepApiRawData: Flow<List<SleepApiRawDataEntity>> =
-            sleepApiRawDataDao.getAll()
 
-    suspend fun insertSleepApiRawData(sleepClassifyEventEntity: SleepApiRawDataEntity) {
-        sleepApiRawDataDao.insert(sleepClassifyEventEntity)
-    }
+    //region User Sleep Sessions
 
-    suspend fun deleteSleepApiRawData() {
-        sleepApiRawDataDao.deleteAll()
-    }
+    val allUserSleepSessions: Flow<List<UserSleepSessionEntity>> =
+        userSleepSessionDao.getAll()
 
-    suspend fun insertSleepApiRawData(sleepClassifyEventEntities: List<SleepApiRawDataEntity>) {
-        sleepApiRawDataDao.insertAll(sleepClassifyEventEntities)
+    fun getSleepSessionById(id:Int): Flow<UserSleepSessionEntity?> =
+            userSleepSessionDao.getById(id)
+
+    suspend fun insertUserSleepSession(userSleepSession: UserSleepSessionEntity) {
+        userSleepSessionDao.insert(userSleepSession)
     }
 
     //endregion
+
 
     //region Sleep Segments
 
@@ -80,6 +72,10 @@ class DbRepository(
         sleepSegmentDao.insert(sleepClassifyEventEntity)
     }
 
+    suspend fun deleteSleepSegmentsWithin(start:Int, end:Int) {
+        sleepSegmentDao.deleteWithin(start, end)
+    }
+
     suspend fun deleteSleepSegments() {
         sleepSegmentDao.deleteAll()
     }
@@ -89,39 +85,5 @@ class DbRepository(
     }
 
     //endregion
-
-    //region User Sleep Segment
-
-    // Methods for UserSleepSegmentDao
-    // Observed Flow will notify the observer when the data has changed.
-    val userSleepSessionFlow: Flow<List<UserSleepSessionEntity>> =
-        userSleepSessionDataDao.getAll()
-
-
-
-    suspend fun insertUserSleepSession(userSleepSessionEntity: UserSleepSessionEntity) {
-        userSleepSessionDataDao.insert(userSleepSessionEntity)
-    }
-/*
-    suspend fun updateUserSleepSession(userSleepRating: UserSleepRating, userCalculationRating: UserCalculationRating, sleepTimeStart: Int) {
-        userSleepSessionDataDao.update(userSleepRating, userCalculationRating, sleepTimeStart)
-    }
-*/
-
-    suspend fun insertSleepSession(userSleepSessionEntity: List<UserSleepSessionEntity>) {
-        userSleepSessionDataDao.insertAll(userSleepSessionEntity)
-    }
-
-    suspend fun deleteUserSleepSessions() {
-        userSleepSessionDataDao.deleteAll()
-    }
-
-    suspend fun deleteUserSleepSession(userSleepSessionEntity: UserSleepSessionEntity) {
-        userSleepSessionDataDao.delete(userSleepSessionEntity)
-    }
-
-
-    //endregion
-
 
 }

@@ -12,22 +12,32 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.viewbinding.BuildConfig
-import com.doitstudio.sleepest_master.background.AlarmReceiver
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
+import com.doitstudio.sleepest_master.model.data.SleepStatePattern
+import com.doitstudio.sleepest_master.model.data.UserFactorPattern
 import com.doitstudio.sleepest_master.sleepapi.SleepHandler
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
+import com.doitstudio.sleepest_master.sleepcalculation.db.SleepStateParameterEntity
+import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepStateParameter
+import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import java.io.BufferedReader
 import kotlinx.android.synthetic.main.activity_main.*
+
 import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private val scope: CoroutineScope = MainScope()
 
     // Status of subscription to sleep data. This is stored in [SleepSubscriptionStatus] which saves
     // the data in a [DataStore] in case the user navigates away from the app.
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,39 +46,14 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-        //val fs = ForegroundObserver(this, this)
-
-
-        mainViewModel.liveUserSleepActivityLiveData.observe(this) { data ->
-
-            var text = "User Sleeping: " + data.isUserSleeping + "\n"
-            text += "Is Data Available: " + data.isDataAvailable + "\n"
-
-
-            binding.status2.text = text
+        mainViewModel.allSleepStateParameters.observe(this){
+            data->
+            binding.status1.text = data.size.toString()
         }
 
-        /*mainViewModel.userSleepSessionLiveData.observe(this) { data ->
-            val lastdata = data.firstOrNull() ?: return@observe
-
-            var text = "Sleep Time: " + lastdata?.sleepTimes.sleepDuration + "\n"
-            text += "Sleep Type Phone: " + lastdata?.sleepUserType?.mobilePosition + "\n"
-
-            binding.status1.text = text
-        }*/
-
-        val pref = getSharedPreferences("Alarm", MODE_PRIVATE)
-        val logText = pref.getString("Log", "No Data")
-        status1.text = logText
-
-        mainViewModel.sleepApiLiveData.observe(this) { data ->
-
-            var text = "Permission Active: " + data.isPermissionActive + "\n"
-            text += "Subscribed: " + data.isSubscribed + "\n"
-            text += "Sleep Values: " + data.sleepApiValuesAmount + "\n"
-
-            binding.status0.text = text
+        mainViewModel.allSleepTimeModels.observe(this){
+            data->
+            binding.status2.text = data.size.toString()
         }
 
         // check permission
@@ -80,12 +65,11 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    
-
     private val mainViewModel: MainViewModel by lazy {
         MainViewModel(
-                (application as MainApplication).dbRepository,
-                (application as MainApplication).dataStoreRepository
+            (application as MainApplication).dbRepository,
+            (application as MainApplication).sleepCalculationRepository,
+            (application as MainApplication).sleepCalculationDbRepository
         )
     }
 
@@ -94,35 +78,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun buttonClick1(view: View){
-        sch.calculateLiveuserSleepActivity()
+
     }
 
     private val sleepHandler : SleepHandler by lazy {SleepHandler.getHandler(this)}
 
+    var index = 9
     fun buttonClick2(view: View){
-
-        /**
-         * TEST
-         */
-        val calenderAlarm = Calendar.getInstance()
-        var day = calenderAlarm[Calendar.DAY_OF_WEEK]
-        var hour = calenderAlarm[Calendar.HOUR_OF_DAY]
-        if (hour > 20) {
-            day += 1
-            if (day > 7) {
-                day = 1
-            }
-        }
-        AlarmReceiver.startAlarmManager(day, 10, 0, applicationContext, 1)
-
-        sch.calculateUserWakup()
 
     }
 
     var isTimerRunning = false
 
     fun buttonClick3(view: View) {
-        sch.recalculateUserSleep()
+
+        // Testing
+
+        val stpe = SleepStateParameterEntity("12", UserFactorPattern.NORMAL, SleepStatePattern.TOLESSREM, SleepStateParameter(1f,1f,1f,1f,1f,1f,1f,1f,1f,1f,1f,20))
+        val jsonString = Gson().toJson(stpe)
+
     }
 
     private fun requestData(){
