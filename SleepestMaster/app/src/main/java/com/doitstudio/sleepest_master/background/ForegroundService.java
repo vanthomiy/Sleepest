@@ -12,10 +12,15 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.view.View;
+import android.widget.RemoteViews;
 import android.widget.Toast;
+
+import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.LifecycleService;
 import com.doitstudio.sleepest_master.Alarm;
 import com.doitstudio.sleepest_master.LiveUserSleepActivity;
@@ -79,13 +84,17 @@ public class ForegroundService extends LifecycleService {
     public void onCreate() {
         super.onCreate();
 
+        /**TODO: Variablen initialisieren!!*/
+
         startForeground(1, createNotification("Test")); /** TODO: Id zentral anlegen */
+
+        sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(getApplicationContext());
 
         foregroundObserver = new ForegroundObserver (this);
     }
 
     public void OnAlarmChanged(Alarm alarm){
-        //isAlarmActive = alarm.getIsActive();
+        isAlarmActive = alarm.getIsActive();
         updateNotification("test");
     }
 
@@ -140,12 +149,8 @@ public class ForegroundService extends LifecycleService {
         /**
          * TEST
          * */
-        Calendar calenderAlarm = Calendar.getInstance();
-        int day = calenderAlarm.get(Calendar.DAY_OF_WEEK) + 1;
-        if (day > 7) {
-            day = 1;
-        }
-        AlarmReceiver.startAlarmManager(day,9,0, getApplicationContext(), 2);
+        Calendar calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1, 9, 0);
+        AlarmReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 2);
         Workmanager.startPeriodicWorkmanager(30, getApplicationContext());
     }
 
@@ -169,9 +174,9 @@ public class ForegroundService extends LifecycleService {
          * TEST
          */
         Workmanager.stopPeriodicWorkmanager();
-        Calendar calenderAlarm = Calendar.getInstance();
-        int day = calenderAlarm.get(Calendar.DAY_OF_WEEK);
-        AlarmReceiver.startAlarmManager(day,20,0, getApplicationContext(), 1);
+        Calendar calendarAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK), 20, 0);
+        AlarmReceiver.startAlarmManager(calendarAlarm.get(Calendar.DAY_OF_WEEK), calendarAlarm.get(Calendar.HOUR_OF_DAY) , calendarAlarm.get(Calendar.MINUTE), getApplicationContext(), 1);
+        sleepCalculationHandler.recalculateUserSleep();
     }
 
     /**
@@ -189,12 +194,35 @@ public class ForegroundService extends LifecycleService {
     /**TODO Notification noch selbst machen mit eigenem Layout*/
     /**
      * Creats a notification banner, that is permament to show that the app is still running. Only since Oreo
-     * @param text The text at the notification banner
+     * @param text The text in the collapsed notification view
      * @return Notification.Builder
      */
     private Notification createNotification(String text) {
         String notificationChannelId = getString(R.string.foregroundservice_channel);
 
+        //Init remoteView for expanded notification
+        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.foreground_service_notification);
+
+        //Set button with its intents
+        Intent btnClickIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
+        btnClickIntent.putExtra(getApplicationContext().getString(R.string.alarmmanager_key), 3);
+
+        remoteViews.setTextViewText(R.id.btnEnableAlarmNotification, "Disable Alarm");
+
+        PendingIntent btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 3, btnClickIntent, 0);
+        remoteViews.setOnClickPendingIntent(R.id.btnEnableAlarmNotification, btnClickPendingIntent);
+
+        //Set the text in textview of the expanded notification view
+        String notificationText = "AlarmActive: " + isAlarmActive + " Value: " + sleepValueAmount
+                + "\nIsSubscribed: " + isSubscribed + " SleepTime: " + userSleepTime
+                + "\nIsSleeping: " + isSleeping;
+        remoteViews.setTextViewText(R.id.tvTextAlarm, notificationText);
+
+        //Set the progress bar for the sleep progress
+        remoteViews.setProgressBar(R.id.pbSleepProgressNotification, 100,
+                getSleepProgress(20, 9, Calendar.getInstance().get(Calendar.HOUR_OF_DAY)), false);
+
+        //Set the Intent for tap on the notification, will start app in MainActivity
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -206,15 +234,12 @@ public class ForegroundService extends LifecycleService {
                 getString(R.string.foregroundservice_channel_name),
                 NotificationManager.IMPORTANCE_HIGH
         );
+
         channel.setDescription(getString(R.string.foregroundservice_channel_description));
-        //channel.enableLights(true);
-        //channel.setLightColor(Color.RED);
-        //channel.enableVibration(true);
-        //channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+
         if (notificationManager != null) {
             notificationManager.createNotificationChannel(channel);
         }
-
 
         Notification.Builder builder;
         builder = new Notification.Builder(this, notificationChannelId);
@@ -222,11 +247,12 @@ public class ForegroundService extends LifecycleService {
         return builder
                 .setContentTitle(getString(R.string.foregroundservice_notification_title))
                 .setContentText(text)
-                .setStyle(new Notification.BigTextStyle().bigText("Alarm active: " + isAlarmActive
-                + "\nSleepValueAmount: " + sleepValueAmount
+                .setCustomBigContentView(remoteViews)
+                .setStyle(new Notification.DecoratedCustomViewStyle())
+                /*+ "\nSleepValueAmount: " + sleepValueAmount
                 + "\nIsSubscribed: " + isSubscribed
                 + "\nSleepTime: " + userSleepTime
-                + "\nIsSleeping: " + isSleeping))
+                + "\nIsSleeping: " + isSleeping))*/
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setTicker("Ticker text")
                 .setContentIntent(pendingIntent)
@@ -250,6 +276,22 @@ public class ForegroundService extends LifecycleService {
                 return;
             }
         context.startService(intent);
+    }
+
+    private int getSleepProgress(int beginTime, int endTime, int actualTime) {
+        int progress;
+
+        if (beginTime < endTime) {
+            progress = (actualTime - beginTime) / (endTime - beginTime) * 100;
+        } else {
+            if (actualTime <= 23 && actualTime > beginTime) {
+                progress = (actualTime - beginTime) / (endTime + 24 - beginTime) * 100;
+            } else {
+                progress = (actualTime + 24 - beginTime) / (endTime + 24 - beginTime) * 100;
+            }
+        }
+
+        return progress;
     }
 
     /*

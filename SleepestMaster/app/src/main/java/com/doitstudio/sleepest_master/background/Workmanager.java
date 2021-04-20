@@ -55,13 +55,6 @@ public class Workmanager extends Worker {
         return Result.success();
     }
 
-    @Override
-    public void onStopped() {
-        super.onStopped();
-        stopPeriodicWorkmanager();
-        startPeriodicWorkmanager(30, context);
-    }
-
     /**
      * Start the workmanager with a specific duration
      * @param duration Number <=15 stands for duration in minutes
@@ -86,34 +79,6 @@ public class Workmanager extends Worker {
         Toast.makeText(context1, "Workmanager started", Toast.LENGTH_LONG).show();
 
     }
-
-    /*private void showNotification(Context context) {
-
-        Calendar cal = new GregorianCalendar();
-        cal.setTimeInMillis(System.currentTimeMillis());
-        int hour = cal.get(Calendar.HOUR_OF_DAY);
-        int minute = cal.get(Calendar.MINUTE);
-
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("My notification")
-                .setContentText(hour + ":" + minute)
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(hour + ":" + minute))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Channel_name";
-            String description = "description";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.notify(100, mBuilder.build());
-    }*/
-
 
     public static void stopPeriodicWorkmanager() {
         //Cancel periodic work by tag
