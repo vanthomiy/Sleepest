@@ -57,9 +57,8 @@ public class Workmanager extends Worker {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 6);
         calendar.set(Calendar.MINUTE, 30);
-        calendar.set(Calendar.DAY_OF_YEAR, Calendar.getInstance().get(Calendar.DAY_OF_YEAR));
 
-        if (calendar.before(Calendar.getInstance().getTime())) {
+        if (calendar.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()) {
             sleepCalculationHandler.calculateUserWakeupJob();
         }
 
