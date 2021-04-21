@@ -177,7 +177,7 @@ public class ForegroundService extends LifecycleService {
         Calendar calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1, 7, 0);
         AlarmReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 2);
         Workmanager.startPeriodicWorkmanager(30, getApplicationContext());
-        AlarmClockReceiver.startAlarmManager((calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext());
+        AlarmClockReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext());
 
         sleepCalculationHandler.calculateLiveUserSleepActivityJob();
         sleepHandler.startSleepHandler();
