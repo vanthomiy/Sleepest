@@ -150,31 +150,18 @@
                 android:id="@+id/btn_alarmDaysWeek"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
                 android:text="Wochentage"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rBar_wakeupRange"
                 tools:layout_constraintStart_toEndOf="@+id" />
-
-            <TextView
-                android:id="@+id/tv_activeAlarmDays"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:textColor="@color/teal_200"
-                android:textSize="5sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/btn_alarmDaysWeek"
-                app:layout_constraintTop_toTopOf="@+id/btn_alarmDaysWeek" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/tV_expandAlarmSettings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="4dp"
             android:text="Klicke für mehr Einstellungen"
             android:textColor="@color/teal_200"
             android:textSize="14sp"
