@@ -179,6 +179,7 @@ class SleepCalculationHandler(private val context: Context){
 
     private suspend fun calculateUserWakeup()
     {
+
         // Get all available raw sleep api data
 
         //region inital
@@ -332,9 +333,10 @@ class SleepCalculationHandler(private val context: Context){
         }
 
         val seconds:LocalTime = LocalTime.now()
-        val secondsOnDay = seconds.toSecondOfDay()+ restSeconds
+        val secondsOnDay = 2700//seconds.toSecondOfDay()+ restSeconds
 
         dataStoreRepository.updateAlarmTime(secondsOnDay.toLong())
+
 
         calculateUserSleepStates(userSleepSessionEntity, rawApiData.asReversed(), sleep)
     }

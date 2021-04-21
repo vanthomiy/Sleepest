@@ -13,12 +13,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.viewbinding.BuildConfig
+import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
+import com.doitstudio.sleepest_master.background.AlarmReceiver
 import com.doitstudio.sleepest_master.background.ForegroundService
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
 import com.doitstudio.sleepest_master.model.data.Actions
 import com.doitstudio.sleepest_master.model.data.SleepStatePattern
 import com.doitstudio.sleepest_master.model.data.UserFactorPattern
-import com.doitstudio.sleepest_master.sleepapi.SleepHandler
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.sleepcalculation.db.SleepStateParameterEntity
 import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepStateParameter
@@ -26,6 +27,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -62,9 +64,9 @@ class MainActivity : AppCompatActivity() {
 
     private val mainViewModel: MainViewModel by lazy {
         MainViewModel(
-            (application as MainApplication).dbRepository,
-            (application as MainApplication).sleepCalculationRepository,
-            (application as MainApplication).sleepCalculationDbRepository
+                (application as MainApplication).dbRepository,
+                (application as MainApplication).sleepCalculationRepository,
+                (application as MainApplication).sleepCalculationDbRepository
         )
     }
 
@@ -78,6 +80,11 @@ class MainActivity : AppCompatActivity() {
 
     var index = 9
     fun buttonClick2(view: View){
+        AlarmReceiver.cancelAlarm(applicationContext, 2)
+        AlarmClockReceiver.cancelAlarm(applicationContext)
+        val calendar = AlarmReceiver.getAlarmDate(Calendar.getInstance()[Calendar.DAY_OF_WEEK], 10, 39)
+        AlarmReceiver.startAlarmManager(calendar[Calendar.DAY_OF_WEEK], calendar[Calendar.HOUR_OF_DAY], calendar[Calendar.MINUTE], applicationContext, 2)
+        AlarmClockReceiver.startAlarmManager(calendar[Calendar.DAY_OF_WEEK], calendar[Calendar.HOUR_OF_DAY], calendar[Calendar.MINUTE], applicationContext)
 
     }
 
@@ -88,7 +95,7 @@ class MainActivity : AppCompatActivity() {
         // Testing
 
         val stpe = SleepStateParameterEntity(
-            "12", UserFactorPattern.NORMAL, SleepStatePattern.TOLESSREM, SleepStateParameter(
+                "12", UserFactorPattern.NORMAL, SleepStatePattern.TOLESSREM, SleepStateParameter(
                 1f,
                 1f,
                 1f,
@@ -101,7 +108,7 @@ class MainActivity : AppCompatActivity() {
                 1f,
                 1f,
                 20
-            )
+        )
         )
         val jsonString = Gson().toJson(stpe)
 
@@ -122,8 +129,8 @@ class MainActivity : AppCompatActivity() {
         // don't need to check if this is on a device before runtime permissions, that is, a device
         // prior to 29 / Q.
         return PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACTIVITY_RECOGNITION
+                this,
+                Manifest.permission.ACTIVITY_RECOGNITION
         )
     }
 
@@ -141,19 +148,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun displayPermissionSettingsSnackBar() {
         Snackbar.make(
-            binding.mainActivity,
-            "hiHo",
-            Snackbar.LENGTH_LONG
+                binding.mainActivity,
+                "hiHo",
+                Snackbar.LENGTH_LONG
         )
                 .setAction("Settings") {
                     // Build intent that displays the App settings screen.
                     val intent = Intent()
                     intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
                     val uri = Uri.fromParts(
-                        "package",
-                        //BuildConfig.APPLICATION_ID,
-                        BuildConfig.VERSION_NAME,
-                        null
+                            "package",
+                            //BuildConfig.APPLICATION_ID,
+                            BuildConfig.VERSION_NAME,
+                            null
                     )
                     intent.data = uri
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK

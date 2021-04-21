@@ -17,6 +17,7 @@ import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 import com.doitstudio.sleepest_master.R;
+import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver;
 import com.doitstudio.sleepest_master.model.data.Actions;
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 
@@ -55,11 +56,14 @@ public class Workmanager extends Worker {
         sleepCalculationHandler.calculateLiveUserSleepActivityJob();
 
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 6);
-        calendar.set(Calendar.MINUTE, 30);
-        calendar.set(Calendar.DAY_OF_YEAR, Calendar.getInstance().get(Calendar.DAY_OF_YEAR));
+        calendar.set(Calendar.HOUR_OF_DAY, 14);
+        calendar.set(Calendar.MINUTE, 29);
 
-        if (calendar.before(Calendar.getInstance().getTime())) {
+        /*if (calendar.before(Calendar.getInstance().getTime())) {
+            sleepCalculationHandler.calculateUserWakeupJob();
+        }*/
+
+        if (calendar.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()) {
             sleepCalculationHandler.calculateUserWakeupJob();
         }
 

@@ -89,7 +89,7 @@ public class AlarmReceiver extends BroadcastReceiver {
      * Cancel a specific alarm by pending Intent
      * @param cancelAlarmContext Application Context
      */
-    static void cancelAlarm(Context cancelAlarmContext, int usage) {
+    public static void cancelAlarm(Context cancelAlarmContext, int usage) {
 
         Intent intent = new Intent(cancelAlarmContext, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(cancelAlarmContext, usage, intent, 0);

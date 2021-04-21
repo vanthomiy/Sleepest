@@ -92,6 +92,7 @@ public class ForegroundService extends LifecycleService {
 
         /**TODO: Variablen initialisieren!!*/
 
+        foregroundObserver = new ForegroundObserver (this);
         foregroundObserver.setAlarmTime(25200);
         userSleepTimeRest = 25200;
 
@@ -100,7 +101,7 @@ public class ForegroundService extends LifecycleService {
         sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(getApplicationContext());
         sleepHandler = SleepHandler.Companion.getHandler(getApplicationContext());
 
-        foregroundObserver = new ForegroundObserver (this);
+
     }
 
     public void OnAlarmChanged(Alarm alarm){
@@ -174,9 +175,9 @@ public class ForegroundService extends LifecycleService {
         /**
          * TEST
          * */
-        Calendar calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1, 7, 0);
+        Calendar calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK), 15, 10);
         AlarmReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 2);
-        Workmanager.startPeriodicWorkmanager(30, getApplicationContext());
+        Workmanager.startPeriodicWorkmanager(16, getApplicationContext());
         AlarmClockReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext());
 
         sleepCalculationHandler.calculateLiveUserSleepActivityJob();
@@ -262,7 +263,7 @@ public class ForegroundService extends LifecycleService {
         NotificationChannel channel = new NotificationChannel(
                 notificationChannelId,
                 getString(R.string.foregroundservice_channel_name),
-                NotificationManager.IMPORTANCE_LOW
+                NotificationManager.IMPORTANCE_HIGH
         );
 
         channel.setDescription(getString(R.string.foregroundservice_channel_description));
