@@ -7,13 +7,16 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.core.view.isVisible
+import androidx.lifecycle.asLiveData
 import com.appyvet.rangebar.RangeBar
+import com.doitstudio.sleepest_master.storage.db.AlarmEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalTime
+import kotlin.collections.List as List1
 
 class AlarmSettings : AppCompatActivity() {
 
@@ -28,15 +31,20 @@ class AlarmSettings : AppCompatActivity() {
     lateinit var tViewExpandAlarmSettings: TextView
     lateinit var viewExtendedAlarmSettings : View //Display extended alarm settings
     lateinit var btnWeekdaySelect : Button //Popup window for selecting the weekdays for alarm
-    lateinit var btnAlarmActive : Button //Select whether alarm is on or off
+    lateinit var swAlarmActive : Switch //Select whether alarm is on or off
+    lateinit var alarmSettings : AlarmEntity
+    val alarmEntityLiveData by lazy { repository.alarmFlow.asLiveData()}
+    //endregion
 
     val negativeButtonClick = {dialog: DialogInterface, which: Int ->
         Toast.makeText(applicationContext,
                 android.R.string.no, Toast.LENGTH_SHORT).show()
     }
-
-    //lateinit var alarmEntity: AlarmEntity
-    //endregion
+    
+    fun saveAlarmIsActive(isActive: Boolean) {
+        scope.launch {
+            repository.updateIsActive(isActive, 1) }
+    }
 
     fun saveSleepAmount(time: LocalTime) {
         tViewSleepAmount.text = " " + time.toString() + " Stunden"
@@ -58,12 +66,25 @@ class AlarmSettings : AppCompatActivity() {
         }
     }
 
+    fun getActiveAlarmDays(): BooleanArray {
+        val activeDays = mutableListOf<Boolean>()
+        activeDays.add(alarmSettings.activeDayOfWeek.contains(DayOfWeek.MONDAY))
+        activeDays.add(alarmSettings.activeDayOfWeek.contains(DayOfWeek.TUESDAY))
+        activeDays.add(alarmSettings.activeDayOfWeek.contains(DayOfWeek.WEDNESDAY))
+        activeDays.add(alarmSettings.activeDayOfWeek.contains(DayOfWeek.THURSDAY))
+        activeDays.add(alarmSettings.activeDayOfWeek.contains(DayOfWeek.FRIDAY))
+        activeDays.add(alarmSettings.activeDayOfWeek.contains(DayOfWeek.SATURDAY))
+        activeDays.add(alarmSettings.activeDayOfWeek.contains(DayOfWeek.SUNDAY))
+        return activeDays.toBooleanArray()
+    }
+
     suspend fun SetupAlarmSettings() {
-        val alarmSettings = repository.getAlarmById(1).first()
+        alarmSettings = repository.getAlarmById(1).first()
 
         val wakeupTime = LocalTime.ofSecondOfDay(alarmSettings.sleepDuration.toLong())
         val wakeupEarly = LocalTime.ofSecondOfDay(alarmSettings.wakeupEarly.toLong())
         val wakeupLate = LocalTime.ofSecondOfDay(alarmSettings.wakeupLate.toLong())
+        val isActive = alarmSettings.isActive
 
         // Setup the sleepAmount bar
         if (wakeupTime.minute == 30) { sBar.progress = (wakeupTime.hour - 5) * 2 + 1 }
@@ -80,6 +101,7 @@ class AlarmSettings : AppCompatActivity() {
         else { rBarRight = wakeupLate.hour.toDouble() }
 
         rBar.setRangePinsByValue(rBarLeft.toFloat(), rBarRight.toFloat())
+        swAlarmActive.isChecked = isActive
 
         //UpdateViews
         tViewSleepAmount.text = " " + wakeupTime.toString() + " Stunden"
@@ -126,21 +148,34 @@ class AlarmSettings : AppCompatActivity() {
 
     fun selectActiveDaysOfWeek() {
         //WeekdayDialog().show(supportFragmentManager, "Wochentage")
+
         val items = arrayOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
         val daysOfWeek = arrayOf(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)
         val selectedList = ArrayList<Int>()
         val builder = AlertDialog.Builder(this)
+        val activeDays = getActiveAlarmDays()
+
+        if (activeDays[0]) { selectedList.add(0) }
+        if (activeDays[1]) { selectedList.add(1) }
+        if (activeDays[2]) { selectedList.add(2) }
+        if (activeDays[3]) { selectedList.add(3) }
+        if (activeDays[4]) { selectedList.add(4) }
+        if (activeDays[5]) { selectedList.add(5) }
+        if (activeDays[6]) { selectedList.add(6) }
+
         builder.setTitle("Alarmdays")
-                .setMultiChoiceItems(items, null) {
+                .setMultiChoiceItems(items, activeDays) {
                     _, which, isChecked ->
-                    if (isChecked) { selectedList.add(which) }
-                    else if (selectedList.contains(which)) { selectedList.remove(Integer.valueOf(which)) }
+                    if (isChecked) {
+                        selectedList.add(which) }
+                    else if (selectedList.contains(which)) {
+                        selectedList.remove(Integer.valueOf(which)) }
                 }
                 .setPositiveButton("Ok") {
                     _, _ ->
                     val selectedDays = ArrayList<DayOfWeek>()
                     for (j in selectedList.indices) { selectedDays.add(daysOfWeek[selectedList[j]]) }
-                    Toast.makeText(applicationContext, android.R.string.yes, Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(applicationContext, android.R.string.yes, Toast.LENGTH_SHORT).show()
                     saveAlarmDaysWeek(selectedDays)
                 }
                 .setNegativeButton("Cancel", DialogInterface.OnClickListener(negativeButtonClick))
@@ -159,9 +194,17 @@ class AlarmSettings : AppCompatActivity() {
         tViewExpandAlarmSettings = findViewById(R.id.tV_expandAlarmSettings)
         viewExtendedAlarmSettings = findViewById(R.id.cL_extendedAlarmSettings)
         btnWeekdaySelect = findViewById(R.id.btn_alarmDaysWeek)
-        btnAlarmActive = findViewById(R.id.btn_alarmDaysWeek)
-        //alarmEntity = AlarmEntity()
+        swAlarmActive = findViewById(R.id.sw_alarmOnOff)
         //endregion
+
+        alarmEntityLiveData.observe(this) {
+            alarmList ->
+            alarmSettings = alarmList[0]
+        }
+
+        swAlarmActive.setOnClickListener {
+            saveAlarmIsActive(swAlarmActive.isChecked)
+        }
 
         btnWeekdaySelect.setOnClickListener {
             //onClickWeek()

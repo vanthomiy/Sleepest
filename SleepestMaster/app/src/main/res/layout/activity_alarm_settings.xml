@@ -157,6 +157,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rBar_wakeupRange"
                 tools:layout_constraintStart_toEndOf="@+id" />
+
+            <TextView
+                android:id="@+id/tv_activeAlarmDays"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:textColor="@color/teal_200"
+                android:textSize="5sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/btn_alarmDaysWeek"
+                app:layout_constraintTop_toTopOf="@+id/btn_alarmDaysWeek" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
@@ -182,6 +193,7 @@
         android:layout_height="160dp"
         android:layout_marginTop="50dp"
         android:background="#00FFFFFF"
+        android:visibility="invisible"
         app:centerColor="@color/teal_200"
         app:layout_constraintStart_toStartOf="@+id/cL_alarmSettings"
         app:layout_constraintTop_toBottomOf="@+id/cL_alarmSettings"
@@ -194,13 +206,5 @@
         android:visibility="invisible"
         app:layout_constraintStart_toEndOf="@+id/chart"
         app:layout_constraintTop_toTopOf="@+id/chart" />
-
-    <Switch
-        android:id="@+id/switch1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Switch"
-        app:layout_constraintStart_toStartOf="@+id/chart"
-        app:layout_constraintTop_toBottomOf="@+id/chart" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
