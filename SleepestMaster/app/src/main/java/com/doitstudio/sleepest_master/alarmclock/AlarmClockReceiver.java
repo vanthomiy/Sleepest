@@ -103,7 +103,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
      * Cancel a running alarm
      * @param context1 Context
      */
-    static void cancelAlarm(Context context1) {
+    public static void cancelAlarm(Context context1) {
         Intent intent = new Intent(context1, AlarmClockReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context1, 1, intent, 0);
         AlarmManager alarmManager = (AlarmManager) context1.getSystemService(ALARM_SERVICE);

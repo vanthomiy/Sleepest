@@ -3,6 +3,9 @@ package com.doitstudio.sleepest_master.background
 import androidx.lifecycle.asLiveData
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationStoreRepository
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 class ForegroundObserver(private val fs:ForegroundService) {
 
@@ -14,6 +17,13 @@ class ForegroundObserver(private val fs:ForegroundService) {
     private val liveUserSleepActivityData by lazy{sleepCalculationStoreRepository.liveUserSleepActivityFlow.asLiveData()}
     private val userSleepTime by lazy{sleepCalculationStoreRepository.sleepApiDataFlow.asLiveData()}
 
+    private val scope: CoroutineScope = MainScope()
+
+    fun setAlarmTime(time:Int) {
+        scope.launch {
+            dataStoreRepository.updateAlarmTime(time.toLong())
+        }
+    }
 
     init {
         alarmActiveLifeData.observe(fs){ alarm->

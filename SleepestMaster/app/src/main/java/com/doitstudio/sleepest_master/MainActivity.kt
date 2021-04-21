@@ -76,8 +76,6 @@ class MainActivity : AppCompatActivity() {
         ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
     }
 
-    private val sleepHandler : SleepHandler by lazy {SleepHandler.getHandler(this)}
-
     var index = 9
     fun buttonClick2(view: View){
 
@@ -111,11 +109,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun requestData(){
         if (activityRecognitionPermissionApproved()) {
-            if (isTimerRunning) {
-                sleepHandler.stopSleepHandler()
-            } else {
-                sleepHandler.startSleepHandler()
-            }
+
         } else {
             requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
         }

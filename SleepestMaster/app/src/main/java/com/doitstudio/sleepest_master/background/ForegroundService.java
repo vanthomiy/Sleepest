@@ -30,6 +30,7 @@ import com.doitstudio.sleepest_master.SleepApiData;
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver;
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.model.data.Actions;
+import com.doitstudio.sleepest_master.sleepapi.SleepHandler;
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 
@@ -40,7 +41,8 @@ public class ForegroundService extends LifecycleService {
     //private final ServiceLifecycleDispatcher mDispatcher = new ServiceLifecycleDispatcher( this);
     private PowerManager.WakeLock wakeLock = null;
     private boolean isServiceStarted = false;
-    public SleepCalculationHandler sleepCalculationHandler;
+    private SleepCalculationHandler sleepCalculationHandler;
+    private SleepHandler sleepHandler;
 
     private boolean isAlarmActive = false;
     private int sleepValueAmount = 0;
@@ -90,18 +92,26 @@ public class ForegroundService extends LifecycleService {
 
         /**TODO: Variablen initialisieren!!*/
 
+        foregroundObserver.setAlarmTime(25200);
+        userSleepTimeRest = 25200;
+
         startForeground(1, createNotification("Test")); /** TODO: Id zentral anlegen */
 
         sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(getApplicationContext());
+        sleepHandler = SleepHandler.Companion.getHandler(getApplicationContext());
 
         foregroundObserver = new ForegroundObserver (this);
     }
 
     public void OnAlarmChanged(Alarm alarm){
-        userSleepTimeRest = (int) alarm.getAlarmTime();
 
-        if ((userSleepTimeRest <= 1800) && (userSleepTime > 0)) {
+        //ALarm time is seconds of day
+        if (userSleepTimeRest != alarm.getAlarmTime()) {
+
+            userSleepTimeRest = (int) alarm.getAlarmTime();
+
             AlarmReceiver.cancelAlarm(getApplicationContext(), 2);
+            AlarmClockReceiver.cancelAlarm(getApplicationContext());
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.SECOND, userSleepTimeRest);
             AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(), 2);
@@ -167,6 +177,10 @@ public class ForegroundService extends LifecycleService {
         Calendar calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1, 7, 0);
         AlarmReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 2);
         Workmanager.startPeriodicWorkmanager(30, getApplicationContext());
+        AlarmClockReceiver.startAlarmManager((calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext());
+
+        sleepCalculationHandler.calculateLiveUserSleepActivityJob();
+        sleepHandler.startSleepHandler();
     }
 
     // Stop the foreground service
@@ -192,6 +206,7 @@ public class ForegroundService extends LifecycleService {
         Calendar calendarAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK), 20, 0);
         AlarmReceiver.startAlarmManager(calendarAlarm.get(Calendar.DAY_OF_WEEK), calendarAlarm.get(Calendar.HOUR_OF_DAY) , calendarAlarm.get(Calendar.MINUTE), getApplicationContext(), 1);
         sleepCalculationHandler.recalculateUserSleep();
+        sleepHandler.stopSleepHandler();
     }
 
     /**
@@ -230,7 +245,7 @@ public class ForegroundService extends LifecycleService {
         //Set the text in textview of the expanded notification view
         String notificationText = "AlarmActive: " + isAlarmActive + " Value: " + sleepValueAmount
                 + "\nIsSubscribed: " + isSubscribed + " SleepTime: " + userSleepTime
-                + "\nIsSleeping: " + isSleeping;
+                + "\nIsSleeping: " + isSleeping + " Wakeup: " + userSleepTimeRest;
         remoteViews.setTextViewText(R.id.tvTextAlarm, notificationText);
 
         //Set the progress bar for the sleep progress
@@ -247,7 +262,7 @@ public class ForegroundService extends LifecycleService {
         NotificationChannel channel = new NotificationChannel(
                 notificationChannelId,
                 getString(R.string.foregroundservice_channel_name),
-                NotificationManager.IMPORTANCE_HIGH
+                NotificationManager.IMPORTANCE_LOW
         );
 
         channel.setDescription(getString(R.string.foregroundservice_channel_description));
