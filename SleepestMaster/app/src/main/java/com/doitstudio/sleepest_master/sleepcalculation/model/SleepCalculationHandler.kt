@@ -180,6 +180,9 @@ class SleepCalculationHandler(private val context: Context){
     private suspend fun calculateUserWakeup()
     {
 
+        val secondsOnDay1 = 2700//seconds.toSecondOfDay()+ restSeconds
+
+        dataStoreRepository.updateAlarmTime(secondsOnDay1.toLong())
         // Get all available raw sleep api data
 
         //region inital
