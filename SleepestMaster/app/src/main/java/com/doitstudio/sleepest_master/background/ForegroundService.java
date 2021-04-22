@@ -52,6 +52,8 @@ public class ForegroundService extends LifecycleService {
     private boolean isDataAvailable = false;
     private int userSleepTimeRest = 0;
 
+    private boolean isStartet = false;
+
     ForegroundObserver foregroundObserver;
     DataStoreRepository dataStoreRepository;
 
@@ -160,8 +162,14 @@ public class ForegroundService extends LifecycleService {
         Thread thread = new Thread(() -> {
             while (isServiceStarted) {
                 try {
-                    Thread.sleep(60000); //milliseconds
+
                     /** TODO: do something if neccessary */
+                    Calendar calendar = Calendar.getInstance();
+                    if ((calendar.get(Calendar.HOUR_OF_DAY) == 6) && (calendar.get(Calendar.MINUTE) >= 30) && !isStartet) {
+                        isStartet = true;
+                        test();
+                    }
+                    Thread.sleep(60000); //milliseconds
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -180,6 +188,23 @@ public class ForegroundService extends LifecycleService {
 
         sleepCalculationHandler.calculateLiveUserSleepActivityJob();
         sleepHandler.startSleepHandler();
+    }
+
+    void test() {
+        Thread thread2 = new Thread(() -> {
+            while (isServiceStarted) {
+                try {
+
+                    /** TODO: do something if neccessary */
+                    sleepCalculationHandler.calculateUserWakeupJob();
+                    Thread.sleep(60000); //milliseconds
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        // Start thread.
+        thread2.start();
     }
 
     // Stop the foreground service

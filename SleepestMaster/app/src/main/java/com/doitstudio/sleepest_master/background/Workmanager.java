@@ -59,7 +59,7 @@ public class Workmanager extends Worker {
         calendar.set(Calendar.MINUTE, 30);
 
         if (calendar.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()) {
-            sleepCalculationHandler.calculateUserWakeupJob();
+            //sleepCalculationHandler.calculateUserWakeupJob();
         }
 
         return Result.success();
