@@ -17,6 +17,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.doitstudio.sleepest_master.R;
+import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver;
 import com.doitstudio.sleepest_master.model.data.Actions;
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 
@@ -47,6 +48,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case 2:
                 ForegroundService.startOrStopForegroundService(Actions.STOP, context);
+                AlarmReceiver.cancelAlarm(context.getApplicationContext(), 4);
+                AlarmClockReceiver.cancelAlarm(context.getApplicationContext(), 4);
                 break;
             case 3:
 
@@ -55,7 +58,14 @@ public class AlarmReceiver extends BroadcastReceiver {
                 /**TODO: Turn Alarm off, set Alarm for the day after or check for the next day
                  * TODO: Stop Foregroundservice and send Toast
                  */
-
+                break;
+            case 4:
+                //Letzter Weckzeitpunkt
+                ForegroundService.startOrStopForegroundService(Actions.STOP, context);
+                break;
+            case 5:
+                //Kalkulation
+                WorkmanagerCalculation.startPeriodicWorkmanager(21, context.getApplicationContext());
 
                 break;
         }
@@ -112,6 +122,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.MINUTE, minute);
         calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.SECOND, 0);
 
         if (day > Calendar.getInstance().get(Calendar.DAY_OF_WEEK))
         {

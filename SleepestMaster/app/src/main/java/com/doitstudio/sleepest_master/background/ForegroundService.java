@@ -113,11 +113,11 @@ public class ForegroundService extends LifecycleService {
             userSleepTimeRest = (int) alarm.getAlarmTime();
 
             AlarmReceiver.cancelAlarm(getApplicationContext(), 2);
-            AlarmClockReceiver.cancelAlarm(getApplicationContext());
+            AlarmClockReceiver.cancelAlarm(getApplicationContext(), 1);
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.SECOND, userSleepTimeRest);
             AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(), 2);
-            AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext());
+            AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(), 1);
         }
 
         isAlarmActive = alarm.getIsActive();
@@ -160,12 +160,12 @@ public class ForegroundService extends LifecycleService {
         }
 
         // Create a thread and loop while the service is running.
-        Thread thread = new Thread(() -> {
+        /*Thread thread = new Thread(() -> {
             while (isServiceStarted) {
-                try {
+                try {*/
 
                     /** TODO: do something if neccessary */
-                    Calendar calendar = Calendar.getInstance();
+                    /*Calendar calendar = Calendar.getInstance();
                     if ((calendar.get(Calendar.HOUR_OF_DAY) == 6) && (calendar.get(Calendar.MINUTE) >= 30) && !isStartet) {
                         isStartet = true;
                         test();
@@ -177,35 +177,29 @@ public class ForegroundService extends LifecycleService {
             }
         });
         // Start thread.
-        thread.start();
+        thread.start();*/
+
 
         /**
          * TEST
          * */
-        Calendar calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK), 15, 10);
+        Calendar calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1, 7, 0);
         AlarmReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 2);
-        Workmanager.startPeriodicWorkmanager(16, getApplicationContext());
-        AlarmClockReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext());
+        Workmanager.startPeriodicWorkmanager(30, getApplicationContext());
+        AlarmClockReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 1);
+
+        //Last Alarm
+        calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1, 9, 0);
+        AlarmReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 4);
+        AlarmClockReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 4);
+
+        //Start Calculation
+        calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1, 6, 30);
+        AlarmReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 5);
 
         sleepCalculationHandler.calculateLiveUserSleepActivityJob();
         sleepHandler.startSleepHandler();
-    }
 
-    void test() {
-        Thread thread2 = new Thread(() -> {
-            while (isServiceStarted) {
-                try {
-
-                    /** TODO: do something if neccessary */
-                    sleepCalculationHandler.calculateUserWakeupJob();
-                    Thread.sleep(60000); //milliseconds
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        // Start thread.
-        thread2.start();
     }
 
     // Stop the foreground service
@@ -228,6 +222,12 @@ public class ForegroundService extends LifecycleService {
          * TEST
          */
         Workmanager.stopPeriodicWorkmanager();
+        WorkmanagerCalculation.stopPeriodicWorkmanager();
+        AlarmClockReceiver.cancelAlarm(getApplicationContext(), 1);
+        AlarmClockReceiver.cancelAlarm(getApplicationContext(), 4);
+        AlarmReceiver.cancelAlarm(getApplicationContext(), 1);
+        AlarmReceiver.cancelAlarm(getApplicationContext(), 4);
+
         Calendar calendarAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK), 20, 0);
         AlarmReceiver.startAlarmManager(calendarAlarm.get(Calendar.DAY_OF_WEEK), calendarAlarm.get(Calendar.HOUR_OF_DAY) , calendarAlarm.get(Calendar.MINUTE), getApplicationContext(), 1);
         sleepCalculationHandler.recalculateUserSleep();

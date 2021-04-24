@@ -11,12 +11,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.PowerManager;
+import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.doitstudio.sleepest_master.MainActivity;
 import com.doitstudio.sleepest_master.R;
+import com.doitstudio.sleepest_master.background.AlarmReceiver;
 
 import java.util.Calendar;
 import static android.content.Context.ALARM_SERVICE;
@@ -54,6 +56,14 @@ public class AlarmClockReceiver extends BroadcastReceiver {
             case 3: //Snooze button of ScreenOn notification
                 AlarmClockAudio.getInstance().stopAlarm(true);
                 break;
+            case 4:
+                PowerManager powerManager1 = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+                if (powerManager1.isInteractive()) {
+                    showFullscreenNotification();
+                } else {
+                    showNotificationOnLockScreen();
+                }
+                break;
         }
     }
 
@@ -62,26 +72,21 @@ public class AlarmClockReceiver extends BroadcastReceiver {
      * @param day Day from 1-7, sunday = 1, saturday = 7
      * @param hour Hour from 0-23
      * @param min Minute from 0-59
-     * @param context1 Context
+     * @param alarmClockContext Context
      */
-    public static void startAlarmManager(int day, int hour, int min, Context context1) {
+    public static void startAlarmManager(int day, int hour, int min, Context alarmClockContext, int usage) {
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, min);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
+        Calendar calendar = AlarmReceiver.getAlarmDate(day, hour, min);
 
-        if (calendar.before(Calendar.getInstance())) {
-            calendar.add(Calendar.DATE, day);
-        }
-
-        Intent intent = new Intent(context1, AlarmClockReceiver.class);
-        intent.putExtra(context1.getString(R.string.alarm_clock_intent_key), 1);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context1, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmManager = (AlarmManager) context1.getSystemService(ALARM_SERVICE);
+        Intent intent = new Intent(alarmClockContext, AlarmClockReceiver.class);
+        intent.putExtra(alarmClockContext.getString(R.string.alarm_clock_intent_key), usage);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(alarmClockContext, usage, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) alarmClockContext.getSystemService(ALARM_SERVICE);
 
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+
+        Toast.makeText(alarmClockContext, "AlarmClock set to " + calendar.get(Calendar.DAY_OF_WEEK) + ": "
+                + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE), Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -103,9 +108,9 @@ public class AlarmClockReceiver extends BroadcastReceiver {
      * Cancel a running alarm
      * @param context1 Context
      */
-    public static void cancelAlarm(Context context1) {
+    public static void cancelAlarm(Context context1, int usage) {
         Intent intent = new Intent(context1, AlarmClockReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context1, 1, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context1, usage, intent, 0);
         AlarmManager alarmManager = (AlarmManager) context1.getSystemService(ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
     }
