@@ -8,6 +8,7 @@ using Microsoft.Office.Tools.Ribbon;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using static ExcelCalculationAddin.Model.SleepStateDetect.SleepStateClean;
 using static ExcelCalculationAddin.Model.SleepTimeClean;
 using static ExcelCalculationAddin.Model.SleepType;
@@ -230,10 +231,36 @@ namespace ExcelCalculationAddin
                 for (int j = 1; j < ReadParameter.values[i].sleepSessionWhile.Count; j++)
                 {
                     string data = "time,light,motion,sleep,real\n";
+                    string data1 = "time,real,light,motion,sleep,light1,motion1,sleep1,light2,motion2,sleep2,light3,motion3,sleep3,light4,motion4,sleep4,light5,motion5,sleep5,light6,motion6,sleep6,light7,motion7,sleep7,light8,motion8,sleep8,light9,motion9,sleep9,light10,motion10,sleep10\n";
                     List<RootRawApiFull> rraltrue = new List<RootRawApiFull>();
                     string time = "";
 
-                    
+                    for (int k = 0; k < ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll.Count; k++)
+                    {
+                        var actualTime = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].time;
+                        var listOfDataBevore = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll.Where(x => x.time <= actualTime && x.time > actualTime.AddMinutes(-60)).OrderByDescending(y=> y.time).ToList();
+                        string timea = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].time.Year.ToString() + "-" + ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].time.Month.ToString() + "-" + ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].time.Day.ToString() + " " + ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].time.TimeOfDay;
+                        TimeSpan span = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].time.Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+                        time = span.TotalSeconds.ToString();
+                        string val1 = timea + "," + ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].realSleepState + ",";
+
+                        for (int l = 0; l < 10; l++)
+                        {
+                            if (listOfDataBevore.Count() > l)
+                            {
+                                val1 += listOfDataBevore[l].light + ","+ listOfDataBevore[l].motion + ","+ listOfDataBevore[l].sleep;
+                            }
+                            else
+                            {
+                                val1 += ",0,0,0";
+                            }
+                        }
+
+                        data1 += val1+"\n";
+                    }
+
+                    ExportFile.ExportCSV(data1, ReadParameter.values[i].sheetname + time, folder);
+
 
                     foreach (var item in ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll)
                     {
@@ -258,7 +285,7 @@ namespace ExcelCalculationAddin
 
                     }
 
-                    ExportFile.ExportCSV(data, ReadParameter.values[i].sheetname + time, folder);
+                    //ExportFile.ExportCSV(data, ReadParameter.values[i].sheetname + time, folder);
 
                     var jsondaza = JsonConvert.SerializeObject(rraltrue);
 
