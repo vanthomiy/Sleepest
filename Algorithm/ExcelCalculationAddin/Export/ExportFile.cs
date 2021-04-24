@@ -40,5 +40,31 @@ namespace ExcelCalculationAddin.Export
                
         }
 
+        public static void ExportCSV(string file, string name, string path)
+        {
+
+            string exportname = path + @"\CsvFiles\" + name + ".csv";
+
+            FileStream fs = new FileStream(exportname, FileMode.Create, FileAccess.Write);
+
+            StreamWriter write = new StreamWriter(fs, Encoding.UTF8);
+            write.Write(file);
+            write.Close();
+        }
+
+
+        public static void ExportJSON(string file, string name, string path)
+        {
+
+            string exportname = path + @"\JsonFiles\" + name + ".json";
+
+            FileStream fs = new FileStream(exportname, FileMode.Create, FileAccess.Write);
+
+            StreamWriter write = new StreamWriter(fs, Encoding.UTF8);
+            write.Write(file);
+            write.Close();
+        }
+
+
     }
 }

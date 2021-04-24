@@ -47,5 +47,22 @@ namespace ExcelCalculationAddin.Export
         public int motion { get; set; }
 
         public int light { get; set; }
+
+
+    }
+
+    public class RootRawApiFull
+    {
+        public string time { get; set; }
+
+        public int sleep { get; set; }
+
+        public int motion { get; set; }
+
+        public int light { get; set; }
+
+        public int real { get; set; }
+        public string user { get; set; }
+
     }
 }

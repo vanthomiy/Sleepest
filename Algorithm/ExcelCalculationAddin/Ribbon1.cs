@@ -1,4 +1,5 @@
-﻿using ExcelCalculationAddin.Calclulate;
+﻿using CsvHelper;
+using ExcelCalculationAddin.Calclulate;
 using ExcelCalculationAddin.Export;
 using ExcelCalculationAddin.Live;
 using ExcelCalculationAddin.Model;
@@ -147,25 +148,7 @@ namespace ExcelCalculationAddin
 
                 rootStateParameter.Add(rst);
             }
-            /*
-            foreach (var item in SleepType.sleepStateParameter)
-            {
-                //SleepTimeClean.sleepTimeParamsWhile
 
-                RootStateParameter rst = new RootStateParameter();
-
-                //rst.id = "0" + ((int)item.Key).ToString();
-                rst.id = item.Key.ToString();
-                rst.sleepStatePattern = (SleepStateCleanType)0;
-                rst.userFactorPattern = item.Key;
-
-                //rt.sleepStateParameter = SleepStateClean.sleepStateParams[rt.sleepStatePattern];
-
-                rst.sleepStateParameter = item.Value.first;
-
-                rootStateParameter.Add(rst);
-            }
-            */
             var jsonStateParamsFile = JsonConvert.SerializeObject(rootStateParameter);
 
             ExportFile.Export(jsonStateParamsFile, "StateParameter", folder);
@@ -239,6 +222,52 @@ namespace ExcelCalculationAddin
           
             var rawSleepApiDataFiles = JsonConvert.SerializeObject(mrral);
             ExportFile.Export(rawSleepApiDataFiles, "SleepValues", folder);
+
+            List<string> csvData = new List<string>();
+         
+            for (int i = 0; i < ReadParameter.values.Count; i++)
+            {
+                for (int j = 1; j < ReadParameter.values[i].sleepSessionWhile.Count; j++)
+                {
+                    string data = "time,light,motion,sleep,real\n";
+                    List<RootRawApiFull> rraltrue = new List<RootRawApiFull>();
+                    string time = "";
+
+                    
+
+                    foreach (var item in ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll)
+                    {
+                        string val1 = "";
+
+                        TimeSpan span = item.time.Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+                        string timea = item.time.Year.ToString() + "-" + item.time.Month.ToString() + "-" + item.time.Day.ToString() + " " + item.time.TimeOfDay;
+                        val1 = timea + "," + item.light + "," + item.motion + "," + item.sleep + "," + (int)item.realSleepState + "\n";// + ReadParameter.values[i].sheetname + "\n";
+                        time = span.TotalSeconds.ToString();
+                        data += val1;
+
+                        RootRawApiFull rrf = new RootRawApiFull();
+
+                        rrf.light = item.light;
+                        rrf.motion = item.motion;
+                        rrf.sleep = item.sleep;
+                        rrf.real = (int)item.realSleepState;
+                        rrf.user = ReadParameter.values[i].sheetname;
+                        rrf.time = timea;
+
+                        rraltrue.Add(rrf);
+
+                    }
+
+                    ExportFile.ExportCSV(data, ReadParameter.values[i].sheetname + time, folder);
+
+                    var jsondaza = JsonConvert.SerializeObject(rraltrue);
+
+
+                    ExportFile.ExportJSON(jsondaza, ReadParameter.values[i].sheetname + time, folder);
+
+                }
+            }
+
 
         }
     }
