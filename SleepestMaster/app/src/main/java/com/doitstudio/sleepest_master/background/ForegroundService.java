@@ -93,23 +93,22 @@ public class ForegroundService extends LifecycleService {
         super.onCreate();
 
         /**TODO: Variablen initialisieren!!*/
+        userSleepTimeRest = 25200;
+        foregroundObserver = new ForegroundObserver (this);
 
         foregroundObserver = new ForegroundObserver (this);
         foregroundObserver.setAlarmTime(25200);
-        userSleepTimeRest = 25200;
 
         startForeground(1, createNotification("Test")); /** TODO: Id zentral anlegen */
 
         sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(getApplicationContext());
         sleepHandler = SleepHandler.Companion.getHandler(getApplicationContext());
 
-
     }
 
     public void OnAlarmChanged(Alarm alarm){
 
-        //ALarm time is seconds of day
-        if (userSleepTimeRest != alarm.getAlarmTime()) {
+        if ((userSleepTimeRest != alarm.getAlarmTime()) && (alarm.getAlarmTime() > 0)) {
 
             userSleepTimeRest = (int) alarm.getAlarmTime();
 
@@ -233,6 +232,7 @@ public class ForegroundService extends LifecycleService {
         AlarmReceiver.startAlarmManager(calendarAlarm.get(Calendar.DAY_OF_WEEK), calendarAlarm.get(Calendar.HOUR_OF_DAY) , calendarAlarm.get(Calendar.MINUTE), getApplicationContext(), 1);
         sleepCalculationHandler.recalculateUserSleep();
         sleepHandler.stopSleepHandler();
+        foregroundObserver.setAlarmTime(0);
     }
 
     /**

@@ -56,12 +56,18 @@ public class Workmanager extends Worker {
         sleepCalculationHandler.calculateLiveUserSleepActivityJob();
 
         Calendar calendar = Calendar.getInstance();
+
         calendar.set(Calendar.HOUR_OF_DAY, 14);
         calendar.set(Calendar.MINUTE, 29);
 
         /*if (calendar.before(Calendar.getInstance().getTime())) {
             sleepCalculationHandler.calculateUserWakeupJob();
         }*/
+
+
+        calendar.set(Calendar.HOUR_OF_DAY, 6);
+        calendar.set(Calendar.MINUTE, 30);
+
 
         if (calendar.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()) {
             //sleepCalculationHandler.calculateUserWakeupJob();
