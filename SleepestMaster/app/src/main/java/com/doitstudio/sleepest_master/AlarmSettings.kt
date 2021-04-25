@@ -1,24 +1,27 @@
 package com.doitstudio.sleepest_master
 
 import android.app.AlertDialog
-import android.content.DialogInterface
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.asLiveData
 import com.appyvet.rangebar.RangeBar
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity
+import kotlinx.android.synthetic.main.activity_alarm_settings.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalTime
-import kotlin.collections.List as List1
 
-class AlarmSettings : AppCompatActivity() {
+class AlarmSettings : FragmentActivity() {
 
     private val repository by lazy { (this.applicationContext as MainApplication).dbRepository }
     private val scope: CoroutineScope = MainScope()
@@ -34,6 +37,9 @@ class AlarmSettings : AppCompatActivity() {
     lateinit var btnWeekdaySelect : Button //Popup window for selecting the weekdays for alarm
     lateinit var swAlarmActive : Switch //Select whether alarm is on or off
     lateinit var alarmSettings : AlarmEntity
+    lateinit var btnAddAlarmEntity: Button
+    //var parentLinearLayout: LinearLayout? = null
+    var parentLinearLayout: ConstraintLayout? = null
     val alarmEntityLiveData by lazy { repository.alarmFlow.asLiveData()}
     //endregion
     
@@ -101,44 +107,6 @@ class AlarmSettings : AppCompatActivity() {
         tViewWakeupTime.text = " " + wakeupEarly.toString() + " - " + wakeupLate.toString() + " Uhr"
     }
 
-    /*
-    private fun provideSlices(): ArrayList<Slice> {
-        return arrayListOf(
-                Slice(
-                        Random.nextInt(1000, 3000).toFloat(),
-                        R.color.purple,
-                        "Non-REM 1"
-                ),
-                Slice(
-                        Random.nextInt(1000, 2000).toFloat(),
-                        R.color.purple_200,
-                        "Non-REM 2"
-                ),
-                Slice(
-                        Random.nextInt(1000, 5000).toFloat(),
-                        R.color.purple_500,
-                        "REM"
-                ),
-                Slice(
-                        Random.nextInt(1000, 10000).toFloat(),
-                        R.color.purple_700,
-                        "Non-Sleep"
-                ),
-        )
-    }
-
-    fun func(index: Float) {
-        when (index) {
-            0.0.toFloat() -> text = "Non-REM 1"
-            1.0.toFloat() -> text = "Non-REM 2"
-            2.0.toFloat() -> text = "REM"
-            else -> {
-                text = "Wach"
-            }
-        }
-    }
-     */
-
     fun selectActiveDaysOfWeek() {
         //WeekdayDialog().show(supportFragmentManager, "Wochentage")
 
@@ -172,11 +140,35 @@ class AlarmSettings : AppCompatActivity() {
                 .show()
     }
 
+    fun onAddAlarm(view: View) {
+        /*
+        val inflater =
+                getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val rowView: View = inflater.inflate(R.layout.alarm_entity, null)
+        parentLinearLayout!!.addView(rowView, parentLinearLayout!!.childCount -1)
+
+         */
+        val firstFragment = AlarmInstance()
+        firstFragment.arguments = intent.extras
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.add(R.id.fragment_one, firstFragment)
+        transaction.commit()
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alarm_settings)
 
+        val firstFragment = AlarmInstance()
+        firstFragment.arguments = intent.extras
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.add(R.id.lL_parent, firstFragment)
+        //transaction.commit()
+        //transaction.remove(firstFragment)
+
         //region declarations
+        /*
         sBar = findViewById(R.id.sBar_sleepAmount)
         rBar = findViewById(R.id.rBar_wakeupRange)
         tViewSleepAmount = findViewById(R.id.tV_sleepAmountSelection)
@@ -186,8 +178,13 @@ class AlarmSettings : AppCompatActivity() {
         viewExtendedAlarmSettings = findViewById(R.id.cL_extendedAlarmSettings)
         btnWeekdaySelect = findViewById(R.id.btn_alarmDaysWeek)
         swAlarmActive = findViewById(R.id.sw_alarmOnOff)
+        */
+
+        parentLinearLayout = findViewById(R.id.lL_parent)
+        btnAddAlarmEntity = findViewById(R.id.btn_addAlarmEntity)
         //endregion
 
+        /*
         alarmEntityLiveData.observe(this) {
             alarmList ->
             alarmSettings = alarmList[0]
@@ -216,20 +213,6 @@ class AlarmSettings : AppCompatActivity() {
             //repository.insertAlarm(alarmEntity)
             SetupAlarmSettings()
         }
-
-        /*
-        // Piechart https://github.com/furkanaskin/ClickablePieChart
-        val pieChartDSL = buildChart {
-            slices { provideSlices() }
-            sliceWidth { 80f }
-            sliceStartPoint { 0f }
-            clickListener { angle, index ->
-                //func(index)
-            }
-        }
-        chart.setPieChart(pieChartDSL)
-        chart.showLegend(legendLayout)
-         */
 
         sBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(sBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -274,5 +257,59 @@ class AlarmSettings : AppCompatActivity() {
                 saveWakeupRange(LocalTime.of(rBar.leftPinValue.toFloat().toInt(), minutesLeft), LocalTime.of(rBar.rightPinValue.toFloat().toInt(), minutesRight))
             }
         })
+
+         */
     }
 }
+
+/*
+private fun provideSlices(): ArrayList<Slice> {
+    return arrayListOf(
+            Slice(
+                    Random.nextInt(1000, 3000).toFloat(),
+                    R.color.purple,
+                    "Non-REM 1"
+            ),
+            Slice(
+                    Random.nextInt(1000, 2000).toFloat(),
+                    R.color.purple_200,
+                    "Non-REM 2"
+            ),
+            Slice(
+                    Random.nextInt(1000, 5000).toFloat(),
+                    R.color.purple_500,
+                    "REM"
+            ),
+            Slice(
+                    Random.nextInt(1000, 10000).toFloat(),
+                    R.color.purple_700,
+                    "Non-Sleep"
+            ),
+    )
+}
+
+fun func(index: Float) {
+    when (index) {
+        0.0.toFloat() -> text = "Non-REM 1"
+        1.0.toFloat() -> text = "Non-REM 2"
+        2.0.toFloat() -> text = "REM"
+        else -> {
+            text = "Wach"
+        }
+    }
+}
+
+        /*
+        // Piechart https://github.com/furkanaskin/ClickablePieChart
+        val pieChartDSL = buildChart {
+            slices { provideSlices() }
+            sliceWidth { 80f }
+            sliceStartPoint { 0f }
+            clickListener { angle, index ->
+                //func(index)
+            }
+        }
+        chart.setPieChart(pieChartDSL)
+        chart.showLegend(legendLayout)
+         */
+ */
