@@ -12,10 +12,9 @@ def allowSelfSignedHttps(allowed):
 
 allowSelfSignedHttps(True) # this line is needed if you use self-signed certificate in your scoring service.
 
-times = csv.LoadCsv()
+times = csv.LoadCsv(False)
+timesValidation = csv.LoadCsv(True)
 data = {}
-
-data['data'] = []
 data['data'] = times
 
 body = str.encode(json.dumps(data))
@@ -30,7 +29,16 @@ try:
     response = urllib.request.urlopen(req)
 
     result = response.read()
-    print(result)
+    responseString = result.decode('UTF-8').replace('\\"','\'').replace('\"', '')
+    response = responseString.split('[', )[1].split(']',)[0]
+
+    resultList = response.split(',')
+    index = 0
+    for i in resultList:
+        print("Berechnet: " + i + "Wirklich: " + timesValidation[index]['real'])
+        index += 1
+
+
 except urllib.error.HTTPError as error:
     print("The request failed with status code: " + str(error.code))
 
