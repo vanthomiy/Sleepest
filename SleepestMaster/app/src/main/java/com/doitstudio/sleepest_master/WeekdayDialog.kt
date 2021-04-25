@@ -84,7 +84,7 @@ class WeekdayDialog: DialogFragment() {
         if (swAlarmDaySunday.isChecked) listOfActiveDayOfWeek.add(DayOfWeek.SUNDAY)
         else listOfActiveDayOfWeek.remove(DayOfWeek.SUNDAY)
 
-        AlarmSettings().saveAlarmDaysWeek(listOfActiveDayOfWeek)
+        //AlarmSettings().saveAlarmDaysWeek(listOfActiveDayOfWeek)
     }
 
     override fun onDestroy() {
@@ -112,7 +112,7 @@ class WeekdayDialog: DialogFragment() {
         if (swAlarmDaySunday.isChecked) listOfActiveDayOfWeek.add(DayOfWeek.SUNDAY)
         else listOfActiveDayOfWeek.remove(DayOfWeek.SUNDAY)
 
-        AlarmSettings().saveAlarmDaysWeek(listOfActiveDayOfWeek)
+        //AlarmSettings().saveAlarmDaysWeek(listOfActiveDayOfWeek)
     }
 
     /*

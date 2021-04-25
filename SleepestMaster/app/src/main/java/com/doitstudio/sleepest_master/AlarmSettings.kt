@@ -1,32 +1,19 @@
 package com.doitstudio.sleepest_master
 
-import android.app.AlertDialog
-import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.asLiveData
-import com.appyvet.rangebar.RangeBar
-import com.doitstudio.sleepest_master.storage.db.AlarmEntity
-import kotlinx.android.synthetic.main.activity_alarm_settings.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-import java.time.DayOfWeek
-import java.time.LocalTime
 
 class AlarmSettings : FragmentActivity() {
 
     private val repository by lazy { (this.applicationContext as MainApplication).dbRepository }
     private val scope: CoroutineScope = MainScope()
 
-    //region
+    /*
     lateinit var sBar : SeekBar //Selecting the sleep amount
     lateinit var rBar : RangeBar //Selecting the wake up range https://github.com/Fedorkz/material-range-bar
     lateinit var tViewSleepAmount : TextView //Display the selected sleep amount
@@ -36,13 +23,17 @@ class AlarmSettings : FragmentActivity() {
     lateinit var viewExtendedAlarmSettings : View //Display extended alarm settings
     lateinit var btnWeekdaySelect : Button //Popup window for selecting the weekdays for alarm
     lateinit var swAlarmActive : Switch //Select whether alarm is on or off
-    lateinit var alarmSettings : AlarmEntity
+     */
+
+    //region
+    //lateinit var alarmSettings : AlarmEntity
     lateinit var btnAddAlarmEntity: Button
-    //var parentLinearLayout: LinearLayout? = null
     var parentLinearLayout: ConstraintLayout? = null
-    val alarmEntityLiveData by lazy { repository.alarmFlow.asLiveData()}
+    var linearLayoutTemp: LinearLayout? = null
+    //val alarmEntityLiveData by lazy { repository.alarmFlow.asLiveData()}
     //endregion
-    
+
+    /*
     fun saveAlarmIsActive(isActive: Boolean) {
         scope.launch {
             repository.updateIsActive(isActive, 1) }
@@ -77,6 +68,7 @@ class AlarmSettings : FragmentActivity() {
         return activeDays.toBooleanArray()
     }
 
+
     suspend fun SetupAlarmSettings() {
         alarmSettings = repository.getAlarmById(1).first()
 
@@ -106,6 +98,7 @@ class AlarmSettings : FragmentActivity() {
         tViewSleepAmount.text = " " + wakeupTime.toString() + " Stunden"
         tViewWakeupTime.text = " " + wakeupEarly.toString() + " - " + wakeupLate.toString() + " Uhr"
     }
+
 
     fun selectActiveDaysOfWeek() {
         //WeekdayDialog().show(supportFragmentManager, "Wochentage")
@@ -139,33 +132,19 @@ class AlarmSettings : FragmentActivity() {
                     Toast.makeText(applicationContext, "Verworfen", Toast.LENGTH_SHORT).show() }
                 .show()
     }
+    */
 
     fun onAddAlarm(view: View) {
-        /*
-        val inflater =
-                getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val rowView: View = inflater.inflate(R.layout.alarm_entity, null)
-        parentLinearLayout!!.addView(rowView, parentLinearLayout!!.childCount -1)
-
-         */
-        val firstFragment = AlarmInstance()
+        val firstFragment = AlarmInstance(this.applicationContext)
         firstFragment.arguments = intent.extras
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.fragment_one, firstFragment)
+        transaction.add(R.id.lL_temp, firstFragment)
         transaction.commit()
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alarm_settings)
-
-        val firstFragment = AlarmInstance()
-        firstFragment.arguments = intent.extras
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.lL_parent, firstFragment)
-        //transaction.commit()
-        //transaction.remove(firstFragment)
 
         //region declarations
         /*
@@ -182,6 +161,7 @@ class AlarmSettings : FragmentActivity() {
 
         parentLinearLayout = findViewById(R.id.lL_parent)
         btnAddAlarmEntity = findViewById(R.id.btn_addAlarmEntity)
+        linearLayoutTemp = findViewById(R.id.lL_temp)
         //endregion
 
         /*
@@ -198,7 +178,10 @@ class AlarmSettings : FragmentActivity() {
             //onClickWeek()
             selectActiveDaysOfWeek()
         }
+        */
 
+
+        /*
         tViewExpandAlarmSettings.setOnClickListener {
             viewExtendedAlarmSettings.isVisible = !viewExtendedAlarmSettings.isVisible
             tViewExpandAlarmSettings.isVisible = !viewExtendedAlarmSettings.isVisible
@@ -208,12 +191,16 @@ class AlarmSettings : FragmentActivity() {
             viewExtendedAlarmSettings.isVisible = !viewExtendedAlarmSettings.isVisible
             tViewExpandAlarmSettings.isVisible = !viewExtendedAlarmSettings.isVisible
         }
+        */
 
+        /*
         scope.launch {
             //repository.insertAlarm(alarmEntity)
             SetupAlarmSettings()
         }
+         */
 
+        /*
         sBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(sBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 val progressTemp = progress*0.5 + 5
