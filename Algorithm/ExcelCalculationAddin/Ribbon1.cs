@@ -242,13 +242,13 @@ namespace ExcelCalculationAddin
                         string timea = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].time.Year.ToString() + "-" + ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].time.Month.ToString() + "-" + ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].time.Day.ToString() + " " + ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].time.TimeOfDay;
                         TimeSpan span = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].time.Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc));
                         time = span.TotalSeconds.ToString();
-                        string val1 = timea + "," + ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].realSleepState + ",";
+                        string val1 = timea + "," + ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].realSleepState;
 
                         for (int l = 0; l < 10; l++)
                         {
                             if (listOfDataBevore.Count() > l)
                             {
-                                val1 += listOfDataBevore[l].light + ","+ listOfDataBevore[l].motion + ","+ listOfDataBevore[l].sleep;
+                                val1 += "," + listOfDataBevore[l].light + ","+ listOfDataBevore[l].motion + ","+ listOfDataBevore[l].sleep;
                             }
                             else
                             {
