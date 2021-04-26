@@ -40,10 +40,9 @@ namespace ExcelCalculationAddin.Export
                
         }
 
-        public static void ExportCSV(string file, string name, string path)
+        public static void ExportCSV(string file, string name, string path, string folder)
         {
-
-            string exportname = path + @"\CsvFiles\" + name + ".csv";
+            string exportname = path + $@"\{folder}\" + name + ".csv";
 
             FileStream fs = new FileStream(exportname, FileMode.Create, FileAccess.Write);
 

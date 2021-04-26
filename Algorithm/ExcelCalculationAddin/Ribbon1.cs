@@ -230,8 +230,13 @@ namespace ExcelCalculationAddin
             {
                 for (int j = 1; j < ReadParameter.values[i].sleepSessionWhile.Count; j++)
                 {
-                    string data = "time,light,motion,sleep,real\n";
-                    string data1 = "time,real,light,motion,sleep,light1,motion1,sleep1,light2,motion2,sleep2,light3,motion3,sleep3,light4,motion4,sleep4,light5,motion5,sleep5,light6,motion6,sleep6,light7,motion7,sleep7,light8,motion8,sleep8,light9,motion9,sleep9,light10,motion10,sleep10\n";
+                    string data = "time, timeraw,light,motion,sleep,real\n";
+                    string data1 = "time, timeraw,light,motion,sleep,real\n";
+                    string data2 = "time, timeraw,light,motion,sleep,real\n";
+                    
+                    string data11 = "time,real,light,motion,sleep,light1,motion1,sleep1,light2,motion2,sleep2,light3,motion3,sleep3,light4,motion4,sleep4,light5,motion5,sleep5,light6,motion6,sleep6,light7,motion7,sleep7,light8,motion8,sleep8,light9,motion9,sleep9,light10,motion10,sleep10\n";
+                    string data12 = "time,real,light,motion,sleep,light1,motion1,sleep1,light2,motion2,sleep2,light3,motion3,sleep3,light4,motion4,sleep4,light5,motion5,sleep5,light6,motion6,sleep6,light7,motion7,sleep7,light8,motion8,sleep8,light9,motion9,sleep9,light10,motion10,sleep10\n";
+                    string data13 = "time,real,light,motion,sleep,light1,motion1,sleep1,light2,motion2,sleep2,light3,motion3,sleep3,light4,motion4,sleep4,light5,motion5,sleep5,light6,motion6,sleep6,light7,motion7,sleep7,light8,motion8,sleep8,light9,motion9,sleep9,light10,motion10,sleep10\n";
                     List<RootRawApiFull> rraltrue = new List<RootRawApiFull>();
                     string time = "";
 
@@ -256,10 +261,21 @@ namespace ExcelCalculationAddin
                             }
                         }
 
-                        data1 += val1+"\n";
+                        data11 += val1+"\n";
+                        data12 = data11.Replace("rem", "sleeping").Replace("deep", "sleeping").Replace("light", "sleeping");
+                        if (!ReadParameter.values[i].sheetname.ToLower().Contains("fabi"))
+                        {
+                            data13 += val1.Replace("rem", "light") + "\n";
+                        }
+
                     }
 
-                    ExportFile.ExportCSV(data1, ReadParameter.values[i].sheetname + time, folder);
+                    ExportFile.ExportCSV(data11, ReadParameter.values[i].sheetname + time, folder, "CombinedCsvFiles");
+                    ExportFile.ExportCSV(data12, ReadParameter.values[i].sheetname + time, folder, @"CombinedCsvFiles\Combined04");
+                    if (!ReadParameter.values[i].sheetname.ToLower().Contains("fabi"))
+                    {
+                        ExportFile.ExportCSV(data13, ReadParameter.values[i].sheetname + time, folder, @"CombinedCsvFiles\Combined012");
+                    }
 
 
                     foreach (var item in ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll)
@@ -268,9 +284,14 @@ namespace ExcelCalculationAddin
 
                         TimeSpan span = item.time.Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc));
                         string timea = item.time.Year.ToString() + "-" + item.time.Month.ToString() + "-" + item.time.Day.ToString() + " " + item.time.TimeOfDay;
-                        val1 = timea + "," + item.light + "," + item.motion + "," + item.sleep + "," + (int)item.realSleepState + "\n";// + ReadParameter.values[i].sheetname + "\n";
+                        val1 = timea + ","+ span.TotalSeconds.ToString() + "," + item.light + "," + item.motion + "," + item.sleep + "," + (int)item.realSleepState + "\n";// + ReadParameter.values[i].sheetname + "\n";
                         time = span.TotalSeconds.ToString();
+                        
                         data += val1;
+                        if (!ReadParameter.values[i].sheetname.ToLower().Contains("fabi"))
+                        {
+                            data2 += val1.Replace("rem", "light");
+                        }
 
                         RootRawApiFull rrf = new RootRawApiFull();
 
@@ -285,10 +306,16 @@ namespace ExcelCalculationAddin
 
                     }
 
-                    //ExportFile.ExportCSV(data, ReadParameter.values[i].sheetname + time, folder);
+                    data1 = data.Replace("rem", "sleeping").Replace("deep", "sleeping").Replace("light", "sleeping");
+
+                    ExportFile.ExportCSV(data, ReadParameter.values[i].sheetname + time, folder, "SingleCsvFiles");
+                    ExportFile.ExportCSV(data1, ReadParameter.values[i].sheetname + time, folder, @"SingleCsvFiles\Combined04");
+                    if (!ReadParameter.values[i].sheetname.ToLower().Contains("fabi"))
+                    {
+                        ExportFile.ExportCSV(data2, ReadParameter.values[i].sheetname + time, folder, @"SingleCsvFiles\Combined012");
+                    }
 
                     var jsondaza = JsonConvert.SerializeObject(rraltrue);
-
 
                     ExportFile.ExportJSON(jsondaza, ReadParameter.values[i].sheetname + time, folder);
 
