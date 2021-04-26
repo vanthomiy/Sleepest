@@ -249,7 +249,7 @@ namespace ExcelCalculationAddin
                         time = span.TotalSeconds.ToString();
                         string val1 = timea + "," + ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].realSleepState;
 
-                        for (int l = 0; l < 10; l++)
+                        for (int l = 0; l < 11; l++)
                         {
                             if (listOfDataBevore.Count() > l)
                             {
@@ -262,7 +262,7 @@ namespace ExcelCalculationAddin
                         }
 
                         data11 += val1+"\n";
-                        data12 = data11.Replace("rem", "sleeping").Replace("deep", "sleeping").Replace("light", "sleeping");
+                        data12 = data11.Replace("rem", "sleeping").Replace("deep", "sleeping").Replace("light\"", "sleeping\"");
                         if (!ReadParameter.values[i].sheetname.ToLower().Contains("fabi"))
                         {
                             data13 += val1.Replace("rem", "light") + "\n";
@@ -306,7 +306,7 @@ namespace ExcelCalculationAddin
 
                     }
 
-                    data1 = data.Replace("rem", "sleeping").Replace("deep", "sleeping").Replace("light", "sleeping");
+                    data1 = data.Replace("rem", "sleeping").Replace("deep", "sleeping").Replace("light\"", "sleeping\"");
 
                     ExportFile.ExportCSV(data, ReadParameter.values[i].sheetname + time, folder, "SingleCsvFiles");
                     ExportFile.ExportCSV(data1, ReadParameter.values[i].sheetname + time, folder, @"SingleCsvFiles\Combined04");
