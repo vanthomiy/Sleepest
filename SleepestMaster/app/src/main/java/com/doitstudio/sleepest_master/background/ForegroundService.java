@@ -310,7 +310,6 @@ public class ForegroundService extends LifecycleService {
                 + "\nSleepTime: " + userSleepTime
                 + "\nIsSleeping: " + isSleeping))*/
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setTicker("Ticker text")
                 .setContentIntent(pendingIntent)
                 .build();
     }
