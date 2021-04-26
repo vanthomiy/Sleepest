@@ -37,6 +37,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         this.context = context.getApplicationContext();
+        Times times = new Times();
 
         SleepCalculationHandler sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
 
@@ -65,8 +66,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case 5:
                 //Kalkulation
-                WorkmanagerCalculation.startPeriodicWorkmanager(21, context.getApplicationContext());
-
+                Workmanager.startPeriodicWorkmanager(times.getWorkmanagerCalculationDuration(), context.getApplicationContext());
+                WorkmanagerCalculation.startPeriodicWorkmanager(times.getWorkmanagerCalculationDuration(), context.getApplicationContext());
                 break;
         }
     }

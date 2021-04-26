@@ -36,7 +36,7 @@ public class Workmanager extends Worker {
         //sleepCalculationHandler = SleepCalculationHandler.Companion.getDatabase(context);
         //showNotification(context);
 
-        sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
+        //sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
 
     }
 
@@ -52,7 +52,7 @@ public class Workmanager extends Worker {
          * angeschaut wird. Prozesse, die den Nutzer nicht benötigen, sind hier aber im Normalfall
          * problemlos möglich.
          */
-
+        sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
         sleepCalculationHandler.calculateLiveUserSleepActivityJob();
 
         Calendar calendar = Calendar.getInstance();

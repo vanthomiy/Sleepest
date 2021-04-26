@@ -26,7 +26,7 @@ public class WorkmanagerCalculation extends Worker {
         this.context = context;
 
 
-        sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
+        //sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
 
 
     }
@@ -42,9 +42,8 @@ public class WorkmanagerCalculation extends Worker {
          * angeschaut wird. Prozesse, die den Nutzer nicht benötigen, sind hier aber im Normalfall
          * problemlos möglich.
          */
-
+        sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
         sleepCalculationHandler.calculateUserWakeupJob();
-
 
         return Result.success();
     }
@@ -58,7 +57,7 @@ public class WorkmanagerCalculation extends Worker {
                 .build();*/
 
         PeriodicWorkRequest periodicDataWork =
-                new PeriodicWorkRequest.Builder(Workmanager.class, duration, TimeUnit.MINUTES)
+                new PeriodicWorkRequest.Builder(WorkmanagerCalculation.class, duration, TimeUnit.MINUTES)
                         .addTag(context1.getString(R.string.workmanager2_tag)) //Tag is needed for canceling the periodic work
                         //.setConstraints(constraints)
                         .build();
