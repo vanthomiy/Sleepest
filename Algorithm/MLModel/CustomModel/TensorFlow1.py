@@ -157,7 +157,6 @@ print("Accuracy", accuracy)
 model.save('my_pet_classifier')
 reloaded_model = tf.keras.models.load_model('my_pet_classifier')
 
-
 sample = {
     'Type': 'Dog',
     'Age': 3,
