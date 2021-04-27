@@ -104,6 +104,6 @@ public class Workmanager extends Worker {
     public static void stopPeriodicWorkmanager() {
 
         //Cancel periodic work by tag
-        WorkManager.getInstance(context).cancelAllWorkByTag(context.getString(R.string.workmanager1_tag));
+        WorkManager.getInstance(context).cancelAllWorkByTag("Workmanager 1");
     }
 }
