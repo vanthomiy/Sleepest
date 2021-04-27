@@ -336,7 +336,7 @@ class SleepCalculationHandler(private val context: Context){
         }
 
         val seconds:LocalTime = LocalTime.now()
-        val secondsOnDay = 2700//seconds.toSecondOfDay()+ restSeconds
+        val secondsOnDay = seconds.toSecondOfDay()+ restSeconds
 
         dataStoreRepository.updateAlarmTime(secondsOnDay.toLong())
 

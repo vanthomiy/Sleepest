@@ -50,7 +50,7 @@ public class ForegroundService extends LifecycleService {
     private int userSleepTime = 0;
     private boolean isSleeping = false;
     private boolean isDataAvailable = false;
-    private int userSleepTimeRest = 0;
+    private int alarmTimeInSeconds = 0;
 
     private boolean isStartet = false;
 
@@ -96,7 +96,7 @@ public class ForegroundService extends LifecycleService {
         times = new Times();
 
         /**TODO: Variablen initialisieren!!*/
-        userSleepTimeRest = times.getFirstWakeupInSeconds();
+        alarmTimeInSeconds = times.getFirstWakeupInSeconds();
         foregroundObserver = new ForegroundObserver (this);
 
         foregroundObserver = new ForegroundObserver (this);
@@ -114,14 +114,17 @@ public class ForegroundService extends LifecycleService {
 
     public void OnAlarmChanged(Alarm alarm){
 
-        if ((userSleepTimeRest != alarm.getAlarmTime()) && (alarm.getAlarmTime() > 0)) {
+        if ((alarmTimeInSeconds != alarm.getAlarmTime()) && (alarm.getAlarmTime() > 0)) {
 
-            userSleepTimeRest = (int) alarm.getAlarmTime();
+            alarmTimeInSeconds = (int) alarm.getAlarmTime();
 
             AlarmReceiver.cancelAlarm(getApplicationContext(), 2);
             AlarmClockReceiver.cancelAlarm(getApplicationContext(), 1);
             Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.SECOND, userSleepTimeRest);
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.add(Calendar.SECOND, alarmTimeInSeconds);
             AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(), 2);
             AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(), 1);
         }
@@ -277,7 +280,7 @@ public class ForegroundService extends LifecycleService {
         //Set the text in textview of the expanded notification view
         String notificationText = "AlarmActive: " + isAlarmActive + " Value: " + sleepValueAmount
                 + "\nIsSubscribed: " + isSubscribed + " SleepTime: " + userSleepTime
-                + "\nIsSleeping: " + isSleeping + " Wakeup: " + userSleepTimeRest;
+                + "\nIsSleeping: " + isSleeping + " Wakeup: " + alarmTimeInSeconds;
         remoteViews.setTextViewText(R.id.tvTextAlarm, notificationText);
 
         //Set the progress bar for the sleep progress
@@ -317,6 +320,7 @@ public class ForegroundService extends LifecycleService {
                 + "\nIsSleeping: " + isSleeping))*/
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)
+                .setTicker(null)
                 .build();
     }
 
