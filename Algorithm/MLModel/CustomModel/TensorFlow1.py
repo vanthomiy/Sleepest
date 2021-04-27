@@ -8,6 +8,11 @@ from tensorflow.keras.layers.experimental import preprocessing
 
 import pathlib
 
+def tfLiteModel(newmodel):
+  # Converting a tf.Keras model to a TensorFlow Lite model.
+  converter = tf.lite.TFLiteConverter.from_keras_model(newmodel)
+  tflite_model = converter.convert()
+
 dataset_url = 'http://storage.googleapis.com/download.tensorflow.org/data/petfinder-mini.zip'
 csv_file = 'datasets/petfinder-mini/petfinder-mini.csv'
 
@@ -134,6 +139,7 @@ all_features = tf.keras.layers.concatenate(encoded_features)
 x = tf.keras.layers.Dense(32, activation="relu")(all_features)
 x = tf.keras.layers.Dropout(0.5)(x)
 output = tf.keras.layers.Dense(1)(x)
+
 model = tf.keras.Model(all_inputs, output)
 model.compile(optimizer='adam',
               loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
@@ -171,6 +177,8 @@ sample = {
 input_dict = {name: tf.convert_to_tensor([value]) for name, value in sample.items()}
 predictions = reloaded_model.predict(input_dict)
 prob = tf.nn.sigmoid(predictions[0])
+
+tfLiteModel(reloaded_model)
 
 print(
     "This particular pet had a %.1f percent probability "

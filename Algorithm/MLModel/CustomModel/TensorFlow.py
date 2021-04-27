@@ -3,6 +3,8 @@ import pandas as pd
 
 import tensorflow as tf
 
+#import ConvertModel as cv
+from ConvertModel import convertFromKeras
 from tensorflow import feature_column
 from tensorflow.keras import layers
 from sklearn.model_selection import train_test_split
@@ -12,6 +14,11 @@ from sklearn.model_selection import train_test_split
 #---
 
 import pathlib
+
+def tfLiteModel(newmodel):
+  # Converting a tf.Keras model to a TensorFlow Lite model.
+  converter = tf.lite.TFLiteConverter.from_keras_model(newmodel)
+  tflite_model1 = converter.convert()
 
 dataset_url = 'http://storage.googleapis.com/download.tensorflow.org/data/petfinder-mini.zip'
 csv_file = 'datasets/petfinder-mini/petfinder-mini.csv'
@@ -161,5 +168,10 @@ model.fit(train_ds,
           validation_data=val_ds,
           epochs=10)
 
+model.save('my_classifier')
 
-model.
+convertFromKeras(model)
+
+#reloaded_model = tf.keras.models.load_model('my_pet_classifier')
+
+#tfLiteModel(model)
