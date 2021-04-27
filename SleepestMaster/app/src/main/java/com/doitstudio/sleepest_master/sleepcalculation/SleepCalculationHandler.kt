@@ -701,6 +701,7 @@ class SleepCalculationHandler(private val context: Context){
     fun recalculateUserSleep(){
         scope.launch {
             dbRepository.deleteSleepApiRawData()
+            storeRepository.resetSleepApiValuesAmount()
         }
     }
 
