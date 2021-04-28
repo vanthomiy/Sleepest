@@ -1,14 +1,16 @@
 import tensorflow as tf
+from SleepCalculation04DefineLite import *
 
-
-def convertSaveModel(saved_model_dir):
+def convertSaveModel(saved_model_dir, modelname):
     # Convert the model
     converter = tf.lite.TFLiteConverter.from_saved_model(saved_model_dir) # path to the SavedModel directory
     converter.allow_custom_ops = True
     tflite_model = converter.convert()
 
+    #tflite_model = addMetaData(tflite_model)
+
     # Save the model.
-    with open('model.tflite', 'wb') as f:
+    with open(modelname, 'wb') as f:
         f.write(tflite_model)
 
 def convertFromConcreteFunction(model):
