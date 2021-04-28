@@ -12,7 +12,7 @@ import java.time.DayOfWeek
 data class AlarmEntity(
         @PrimaryKey
         @ColumnInfo(name = "id")
-        val id: Int = 1,
+        val id: Int = 0,
 
         @ColumnInfo(name = "isActive")
         val isActive: Boolean = false,

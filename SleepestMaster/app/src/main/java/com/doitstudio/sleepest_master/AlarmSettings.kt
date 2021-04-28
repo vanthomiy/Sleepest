@@ -1,15 +1,13 @@
 package com.doitstudio.sleepest_master
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.*
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.asLiveData
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -17,69 +15,61 @@ class AlarmSettings : FragmentActivity() {
 
     private val repository by lazy { (this.applicationContext as MainApplication).dbRepository }
     private val scope: CoroutineScope = MainScope()
-    private val alarmEntityLiveData by lazy { repository.alarmFlow.asLiveData()}
+    //private val alarmEntityLiveData by lazy { repository.alarmFlow.asLiveData()}
 
     lateinit var btnAddAlarmEntity: Button
-    var parentLinearLayout: ConstraintLayout? = null
-    var linearLayoutTemp: LinearLayout? = null
+    var lLAlarmEntities: LinearLayout? = null
     lateinit var allAlarms : MutableList<AlarmEntity>
-    lateinit var alarmEntity : AlarmEntity
+    lateinit var usedIds: MutableList<Int>
 
-    fun setupAlarms() {
+    private fun setupAlarms() {
         allAlarms = mutableListOf()
         val context = this.applicationContext
         scope.launch {
             val alarmList = repository.alarmFlow.first()
             for (i in alarmList.indices) {
+                usedIds.add(alarmList[i].id)
                 allAlarms.add(alarmList[i])
-
-                val alarmFragment = AlarmInstance(context, i + 1)
-                alarmFragment.arguments = intent.extras
-                val transaction = supportFragmentManager.beginTransaction()
-                transaction.add(R.id.lL_temp, alarmFragment)
-                transaction.commit()
+                addAlarmEntity(context, i)
             }
         }
-        /*
-        alarmEntityLiveData.observe(this)
-        {
-                alarmList ->
-            for (i in alarmList.indices) {
-                allAlarms.add(alarmList[i])
-
-                val alarmFragment = AlarmInstance(this.applicationContext, i + 1)
-                alarmFragment.arguments = intent.extras
-                val transaction = supportFragmentManager.beginTransaction()
-                transaction.add(R.id.lL_temp, alarmFragment)
-                transaction.commit()
-            }
-        }
-         */
     }
 
     fun onAddAlarm(view: View) {
-        scope.launch {
-            alarmEntity = AlarmEntity(1)
-            repository.insertAlarm(alarmEntity)
+        var id = 0
+        for (i in usedIds.indices) {
+            if (!usedIds.contains(i)){
+                id = i
+                usedIds.add(id)
+            }
+            else {
+                id = i + 1
+                usedIds.add(id)
+            }
         }
+        scope.launch {
+            repository.insertAlarm(AlarmEntity(id))
+        }
+        addAlarmEntity(this.applicationContext, id)
+    }
 
-        val alarmFragment = AlarmInstance(this.applicationContext, 1)
+    private fun addAlarmEntity(context: Context, alarmId: Int) {
+        val alarmFragment = AlarmInstance(context, alarmId)
         alarmFragment.arguments = intent.extras
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.lL_temp, alarmFragment)
+        transaction.add(R.id.lL_alarmEntities, alarmFragment)
         transaction.commit()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alarm_settings)
-        allAlarms = mutableListOf()
-        setupAlarms()
 
-
-        parentLinearLayout = findViewById(R.id.lL_parent)
         btnAddAlarmEntity = findViewById(R.id.btn_addAlarmEntity)
-        linearLayoutTemp = findViewById(R.id.lL_temp)
+        lLAlarmEntities = findViewById(R.id.lL_alarmEntities)
+        usedIds = mutableListOf()
+
+        setupAlarms()
     }
 }
 

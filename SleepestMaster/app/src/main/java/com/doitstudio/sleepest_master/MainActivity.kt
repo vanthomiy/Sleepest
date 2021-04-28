@@ -16,6 +16,8 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.viewbinding.BuildConfig
+import com.doitstudio.sleepest_master.BuildConfig.APPLICATION_ID
+import com.doitstudio.sleepest_master.BuildConfig.VERSION_NAME
 import com.doitstudio.sleepest_master.sleepapi.SleepHandler
 
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
@@ -147,7 +149,7 @@ class MainActivity : AppCompatActivity() {
                 if (!isGranted) {
                     mainViewModel.updatePermissionActive(false)
                     // Permission denied on Android platform that supports runtime permissions.
-                    displayPermissionSettingsSnackBar()
+                    //displayPermissionSettingsSnackBar()
                 } else {
                     mainViewModel.updatePermissionActive(true)
                     // Permission was granted (either by approval or Android version below Q).
@@ -164,6 +166,7 @@ class MainActivity : AppCompatActivity() {
                     // Build intent that displays the App settings screen.
                     val intent = Intent()
                     intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                    /*
                     val uri = Uri.fromParts(
                             "package",
                             //BuildConfig.APPLICATION_ID,
@@ -171,6 +174,7 @@ class MainActivity : AppCompatActivity() {
                             null
                     )
                     intent.data = uri
+                     */
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     startActivity(intent)
                 }

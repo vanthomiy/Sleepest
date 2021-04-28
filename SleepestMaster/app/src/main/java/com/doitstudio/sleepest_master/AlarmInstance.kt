@@ -19,7 +19,8 @@ import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalTime
 
-class AlarmInstance(applicationContext: Context, val alarmId: Int = 1) : Fragment() {
+class AlarmInstance(applicationContext: Context, private val alarmId: Int = 0) : Fragment() {
+
     private val repository by lazy { (applicationContext as MainApplication).dbRepository }
     private val scope: CoroutineScope = MainScope()
 
@@ -33,9 +34,9 @@ class AlarmInstance(applicationContext: Context, val alarmId: Int = 1) : Fragmen
     lateinit var btnWeekdaySelect : Button //Popup window for selecting the weekdays for alarm
     lateinit var swAlarmActive : Switch //Select whether alarm is on or off
     lateinit var alarmSettings : AlarmEntity
-    val alarmEntityLiveData by lazy { repository.alarmFlow.asLiveData()}
+    private val alarmEntityLiveData by lazy { repository.alarmFlow.asLiveData()}
 
-    fun saveAlarmIsActive(isActive: Boolean) {
+    private fun saveAlarmIsActive(isActive: Boolean) {
         scope.launch {
             repository.updateIsActive(isActive, alarmId) }
     }
@@ -53,13 +54,13 @@ class AlarmInstance(applicationContext: Context, val alarmId: Int = 1) : Fragmen
             repository.updateWakeupLate(wakeupLate.toSecondOfDay(), alarmId) }
     }
 
-    fun saveAlarmDaysWeek(daysOfWeek: ArrayList<DayOfWeek>) {
+    private fun saveAlarmDaysWeek(daysOfWeek: ArrayList<DayOfWeek>) {
         scope.launch {
             repository.updateActiveDayOfWeek(daysOfWeek, alarmId)
         }
     }
 
-    fun getActiveAlarmDays(): BooleanArray {
+    private fun getActiveAlarmDays(): BooleanArray {
         val activeDays = mutableListOf<Boolean>()
         for (i in 0..6) {
             if (alarmSettings.activeDayOfWeek.contains(DayOfWeek.values()[i])) {
@@ -71,7 +72,7 @@ class AlarmInstance(applicationContext: Context, val alarmId: Int = 1) : Fragmen
         return activeDays.toBooleanArray()
     }
 
-    suspend fun SetupAlarmSettings() {
+    private suspend fun SetupAlarmSettings() {
         alarmSettings = repository.getAlarmById(alarmId).first()
 
         val wakeupTime = LocalTime.ofSecondOfDay(alarmSettings.sleepDuration.toLong())
@@ -101,7 +102,7 @@ class AlarmInstance(applicationContext: Context, val alarmId: Int = 1) : Fragmen
         tViewWakeupTime.text = " " + wakeupEarly.toString() + " - " + wakeupLate.toString() + " Uhr"
     }
 
-    fun selectActiveDaysOfWeek() {
+    private fun selectActiveDaysOfWeek() {
         val items = arrayOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
         val daysOfWeek = DayOfWeek.values()
         val selectedList = ArrayList<Int>()
@@ -164,7 +165,7 @@ class AlarmInstance(applicationContext: Context, val alarmId: Int = 1) : Fragmen
 
         alarmEntityLiveData.observe(viewLifecycleOwner) {
             alarmList ->
-            alarmSettings = alarmList[0]
+            alarmSettings = alarmList[0] //Bug with alarmIds and listener for the weekdays. Find a workaround
         }
 
         swAlarmActive.setOnClickListener {
