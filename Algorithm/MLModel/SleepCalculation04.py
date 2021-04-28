@@ -1,8 +1,15 @@
 import numpy as np
 import pandas as pd
+import matplotlib as plt
+import seaborn as sns
+
+from sklearn import metrics
+import io
 
 import tensorflow as tf
+from tensorflow.python.keras.callbacks import TensorBoard
 import ImportCsv as csv
+import datetime
 
 from ConvertModel import *
 from tensorflow import feature_column
@@ -11,12 +18,6 @@ from sklearn.model_selection import train_test_split
 
 import pathlib
 
-'''#dataset_url = 'http://storage.googleapis.com/download.tensorflow.org/data/petfinder-mini.zip'
-csv_file = 'datasets/petfinder-mini/petfinder-mini.csv'
-csv_file = csv.LoadCsv()
-
-tf.keras.utils.get_file('petfinder_mini.zip', dataset_url,
-                        extract=True, cache_dir='.')'''
 
 csv_file = 'datasets/combined04data.csv' 
 dataframe = pd.read_csv(csv_file)
@@ -32,8 +33,8 @@ dataframe.head()
 # Drop un-used columns.
 dataframe = dataframe.drop(columns=['time'])
 
-train, test = train_test_split(dataframe, test_size=0.2)
-train, val = train_test_split(train, test_size=0.2)
+trainTest, test = train_test_split(dataframe, test_size=0.2)
+train, val = train_test_split(trainTest, test_size=0.2)
 print(len(train), 'train examples')
 print(len(val), 'validation examples')
 print(len(test), 'test examples')
@@ -92,19 +93,6 @@ for index in range(0,10):
   feature_columns.append(feature_column.indicator_column(ligthSleepFeature))
 
 
-'''
-# indicator_columns
-indicator_column_names = ['real']
-
-
-for col_name in indicator_column_names:
-  categorical_column = feature_column.categorical_column_with_vocabulary_list(
-      col_name, dataframe[col_name].unique())
-  indicator_column = feature_column.indicator_column(categorical_column)
-  feature_columns.append(indicator_column)
-'''
-
-
 # Sleep Sleep cross buckets
 for index in range(0, len(sleepBuckets)-2):
   sleepSleep = feature_column.crossed_column([sleepBuckets[index], sleepBuckets[index+1]], hash_bucket_size=100)
@@ -121,6 +109,9 @@ batch_size = 32
 train_ds = df_to_dataset(train, batch_size=batch_size)
 val_ds = df_to_dataset(val, shuffle=False, batch_size=batch_size)
 test_ds = df_to_dataset(test, shuffle=False, batch_size=batch_size)
+test_val_ds = df_to_dataset(trainTest, shuffle=False, batch_size=batch_size)
+
+
 
 model = tf.keras.Sequential([
   feature_layer,
@@ -130,14 +121,58 @@ model = tf.keras.Sequential([
   layers.Dense(1)
 ])
 
+#----
+
+def plot_to_image(figure):
+  """Converts the matplotlib plot specified by 'figure' to a PNG image and
+  returns it. The supplied figure is closed and inaccessible after this call."""
+  # Save the plot to a PNG in memory.
+  buf = io.BytesIO()
+  plt.savefig(buf, format='png')
+  # Closing the figure prevents it from being displayed directly inside
+  # the notebook.
+  plt.close(figure)
+  buf.seek(0)
+  # Convert PNG buffer to TF image
+  image = tf.image.decode_png(buf.getvalue(), channels=4)
+  # Add the batch dimension
+  image = tf.expand_dims(image, 0)
+  return image
+
+def log_confusion_matrix(epoch, logs):
+  # Use the model to predict the values from the validation dataset.
+  test_pred_raw = model.predict(test_ds)
+  test_pred = np.argmax(test_pred_raw, axis=1)
+
+  # Calculate the confusion matrix.
+  cm = metrics.confusion_matrix(test_val_ds, test_pred)
+  # Log the confusion matrix as an image summary.
+  figure = plot_confusion_matrix(cm, class_names=class_names)
+  cm_image = plot_to_image(figure)
+
+  # Log the confusion matrix as an image summary.
+  with file_writer_cm.as_default():
+    tf.summary.image("Confusion Matrix", cm_image, step=epoch)
+
+
+pathbefore = '.\\logs\\sleep04\\'
+path = pathbefore + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=path, histogram_freq=1)
+file_writer_cm = tf.summary.create_file_writer(path + '/cm')
+
+# Define the per-epoch callback.
+cm_callback = tf.keras.callbacks.LambdaCallback(on_epoch_end=log_confusion_matrix)
+
+#--
+
 model.compile(optimizer='adam',
               loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
               metrics=['accuracy'])
 
 model.fit(train_ds,
           validation_data=val_ds,
-          epochs=10)
-
+          epochs=10,
+          callbacks=[tensorboard_callback, cm_callback])
 
 loss, accuracy = model.evaluate(test_ds)
 

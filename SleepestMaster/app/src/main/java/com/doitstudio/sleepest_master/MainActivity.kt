@@ -4,6 +4,7 @@ package com.doitstudio.sleepest_master
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.AssetManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -21,6 +22,7 @@ import com.doitstudio.sleepest_master.model.data.UserFactorPattern
 import com.doitstudio.sleepest_master.sleepapi.SleepHandler
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.sleepcalculation.db.SleepStateParameterEntity
+import com.doitstudio.sleepest_master.sleepcalculation.ml.SleepClassifier
 import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepStateParameter
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
@@ -87,24 +89,23 @@ class MainActivity : AppCompatActivity() {
 
         // Testing
 
-        val stpe = SleepStateParameterEntity(
-            "12", UserFactorPattern.NORMAL, SleepStatePattern.TOLESSREM, SleepStateParameter(
-                1f,
-                1f,
-                1f,
-                1f,
-                1f,
-                1f,
-                1f,
-                1f,
-                1f,
-                1f,
-                1f,
-                20
-            )
-        )
-        val jsonString = Gson().toJson(stpe)
+        val sleepClassifier = SleepClassifier(this)
 
+        val data = arrayOf(1,
+            1,1,1,
+            1,1,1,
+            1,1,1,
+            1,1,1,
+            1,1,1,
+            1,1,1,
+            1,1,1,
+            1,1,1,
+            1,1,1,
+            1,1,1)
+
+        val result = sleepClassifier.callModel()
+
+        val a = result.toString()
     }
 
     private fun requestData(){
@@ -132,35 +133,12 @@ class MainActivity : AppCompatActivity() {
                 if (!isGranted) {
                     mainViewModel.updatePermissionActive(false)
                     // Permission denied on Android platform that supports runtime permissions.
-                    displayPermissionSettingsSnackBar()
                 } else {
                     mainViewModel.updatePermissionActive(true)
                     // Permission was granted (either by approval or Android version below Q).
                 }
             }
 
-    private fun displayPermissionSettingsSnackBar() {
-        Snackbar.make(
-            binding.mainActivity,
-            "hiHo",
-            Snackbar.LENGTH_LONG
-        )
-                .setAction("Settings") {
-                    // Build intent that displays the App settings screen.
-                    val intent = Intent()
-                    intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                    val uri = Uri.fromParts(
-                        "package",
-                        //BuildConfig.APPLICATION_ID,
-                        BuildConfig.VERSION_NAME,
-                        null
-                    )
-                    intent.data = uri
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    startActivity(intent)
-                }
-                .show()
-    }
     // endregion
 
 }
