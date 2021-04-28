@@ -25,7 +25,7 @@
 
     <LinearLayout
         android:id="@+id/lL_temp"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
@@ -36,6 +36,7 @@
             android:id="@+id/fragment_one"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             tools:layout="@layout/alarm_entity"
             tools:layout_editor_absoluteX="0dp" />
     </LinearLayout>
@@ -44,9 +45,9 @@
         android:id="@+id/btn_addAlarmEntity"
         android:layout_width="55dp"
         android:layout_height="55dp"
+        android:layout_marginBottom="25dp"
         android:background="@drawable/roundedbutton"
         android:onClick="onAddAlarm"
-        app:icon="@drawable/ic_baseline_add_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

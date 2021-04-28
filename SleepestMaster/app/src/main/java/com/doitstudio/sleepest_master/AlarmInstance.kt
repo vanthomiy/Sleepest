@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalTime
 
-class AlarmInstance(applicationContext: Context) : Fragment() {
+class AlarmInstance(applicationContext: Context, val alarmId: Int = 1) : Fragment() {
     private val repository by lazy { (applicationContext as MainApplication).dbRepository }
     private val scope: CoroutineScope = MainScope()
 
@@ -37,25 +37,25 @@ class AlarmInstance(applicationContext: Context) : Fragment() {
 
     fun saveAlarmIsActive(isActive: Boolean) {
         scope.launch {
-            repository.updateIsActive(isActive, 1) }
+            repository.updateIsActive(isActive, alarmId) }
     }
 
     fun saveSleepAmount(time: LocalTime) {
         tViewSleepAmount.text = " " + time.toString() + " Stunden"
         scope.launch {
-            repository.updateSleepDuration(time.toSecondOfDay(), 1) }
+            repository.updateSleepDuration(time.toSecondOfDay(), alarmId) }
     }
 
     fun saveWakeupRange(wakeupEarly: LocalTime, wakeupLate: LocalTime) {
         tViewWakeupTime.text = " " + wakeupEarly.toString() + " - " + wakeupLate.toString() + " Uhr"
         scope.launch {
-            repository.updateWakeupEarly(wakeupEarly.toSecondOfDay(), 1)
-            repository.updateWakeupLate(wakeupLate.toSecondOfDay(), 1) }
+            repository.updateWakeupEarly(wakeupEarly.toSecondOfDay(), alarmId)
+            repository.updateWakeupLate(wakeupLate.toSecondOfDay(), alarmId) }
     }
 
     fun saveAlarmDaysWeek(daysOfWeek: ArrayList<DayOfWeek>) {
         scope.launch {
-            repository.updateActiveDayOfWeek(daysOfWeek, 1)
+            repository.updateActiveDayOfWeek(daysOfWeek, alarmId)
         }
     }
 
@@ -72,7 +72,7 @@ class AlarmInstance(applicationContext: Context) : Fragment() {
     }
 
     suspend fun SetupAlarmSettings() {
-        alarmSettings = repository.getAlarmById(1).first()
+        alarmSettings = repository.getAlarmById(alarmId).first()
 
         val wakeupTime = LocalTime.ofSecondOfDay(alarmSettings.sleepDuration.toLong())
         val wakeupEarly = LocalTime.ofSecondOfDay(alarmSettings.wakeupEarly.toLong())
@@ -150,14 +150,16 @@ class AlarmInstance(applicationContext: Context) : Fragment() {
         btnWeekdaySelect = view.findViewById(R.id.btn_alarmDaysWeek)
         swAlarmActive = view.findViewById(R.id.sw_alarmOnOff)
 
+        /*
         tViewExpandAlarmSettings.setOnClickListener {
             viewExtendedAlarmSettings.isVisible = !viewExtendedAlarmSettings.isVisible
             tViewExpandAlarmSettings.isVisible = !viewExtendedAlarmSettings.isVisible
         }
+         */
 
         tViewAlarmViewTopic.setOnClickListener {
             viewExtendedAlarmSettings.isVisible = !viewExtendedAlarmSettings.isVisible
-            tViewExpandAlarmSettings.isVisible = !viewExtendedAlarmSettings.isVisible
+            //tViewExpandAlarmSettings.isVisible = !viewExtendedAlarmSettings.isVisible
         }
 
         alarmEntityLiveData.observe(viewLifecycleOwner) {
