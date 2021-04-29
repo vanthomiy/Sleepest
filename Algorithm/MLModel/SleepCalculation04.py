@@ -15,6 +15,8 @@ from ConvertModel import *
 from tensorflow import feature_column
 from tensorflow.keras import layers
 from sklearn.model_selection import train_test_split
+import Metrics.ConfusionMatrix as cfm
+import sklearn
 
 import pathlib
 
@@ -25,11 +27,6 @@ dataframe = pd.read_csv(csv_file)
 dataframe.head()
 
 
-
-# In the original dataset "4" indicates the pet was not adopted.
-#dataframe['target'] = np.where(dataframe['AdoptionSpeed']==4, 0, 1)
-
-#dataframe['target'] = 'real'
 # Drop un-used columns.
 dataframe = dataframe.drop(columns=['time'])
 
@@ -123,13 +120,33 @@ model = tf.keras.Sequential([
 
 #----
 
+
+def log_confusion_matrix(epoch, logs):
+    
+    # Use the model to predict the values from the test_images.
+    test_pred_raw = model.predict(val_ds)
+    
+    test_pred = np.argmax(test_pred_raw, axis=1)
+    
+    # Calculate the confusion matrix using sklearn.metrics
+    cm = sklearn.metrics.confusion_matrix([0,1], test_pred)
+    
+    figure = cfm.plot_confusion_matrix(cm, class_names=['sleep', 'awake'])
+    cm_image = cfm.plot_to_image(figure)
+    
+    # Log the confusion matrix as an image summary.
+    with file_writer_cm.as_default():
+        tf.summary.image("Confusion Matrix", cm_image, step=epoch)
+
+
+
 pathbefore = '.\\logs\\sleep04\\'
 path = pathbefore + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=path, histogram_freq=1)
-#file_writer_cm = tf.summary.create_file_writer(path + '/cm')
 
-# Define the per-epoch callback.
-#cm_callback = tf.keras.callbacks.LambdaCallback(on_epoch_end=log_confusion_matrix)
+file_writer_cm = tf.summary.create_file_writer(path + '/cm')
+
+cm_callback = tf.keras.callbacks.LambdaCallback(on_epoch_end=log_confusion_matrix)
 
 #--
 
@@ -139,13 +156,13 @@ model.compile(optimizer='adam',
 
 model.fit(train_ds,
           validation_data=val_ds,
-          epochs=10,
-          callbacks=[tensorboard_callback])
+          epochs=3,
+          callbacks=[tensorboard_callback, cm_callback])
 
 loss, accuracy = model.evaluate(test_ds)
 
 model.save('sleep04_classifier')
 
-convertSaveModel('sleep04_classifier', 'sleep04model.tflite')
+convertSaveModel('sleep04_classifier', 'sleep04model.tflite', False)
 
 print("Accuracy", accuracy)

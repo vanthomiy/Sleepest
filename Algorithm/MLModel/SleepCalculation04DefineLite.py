@@ -15,6 +15,7 @@ def addMetaData(model_file):
     model_meta.license = ("Apache License. Version 2.0 "
                         "http://www.apache.org/licenses/LICENSE-2.0.")
 
+    '''
     # Creates input info.
     input_meta = _metadata_fb.TensorMetadataT()
     input_meta.name = "sleepRawApiDataSet"
@@ -26,13 +27,14 @@ def addMetaData(model_file):
     output_meta = _metadata_fb.TensorMetadataT()
     output_meta.name = "sleepState"
     output_meta.description = "Sleep State of the raw api data with 0 = awake or 1 = sleeping"
-
+    
 
     # Creates subgraph info
     subgraph = _metadata_fb.SubGraphMetadataT()
     subgraph.inputTensorMetadata = [input_meta]
     subgraph.outputTensorMetadata = [output_meta]
     model_meta.subgraphMetadata = [subgraph]
+    '''
 
     b = flatbuffers.Builder(0)
     b.Finish(
@@ -42,6 +44,7 @@ def addMetaData(model_file):
 
     populator = _metadata.MetadataPopulator.with_model_file(model_file)
     populator.load_metadata_buffer(metadata_buf)
+    populator.load_associated_files(["datasets/combined04data.csv"])
     populator.populate()
 
     return model_file
