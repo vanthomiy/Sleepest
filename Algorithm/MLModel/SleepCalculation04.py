@@ -123,45 +123,13 @@ model = tf.keras.Sequential([
 
 #----
 
-def plot_to_image(figure):
-  """Converts the matplotlib plot specified by 'figure' to a PNG image and
-  returns it. The supplied figure is closed and inaccessible after this call."""
-  # Save the plot to a PNG in memory.
-  buf = io.BytesIO()
-  plt.savefig(buf, format='png')
-  # Closing the figure prevents it from being displayed directly inside
-  # the notebook.
-  plt.close(figure)
-  buf.seek(0)
-  # Convert PNG buffer to TF image
-  image = tf.image.decode_png(buf.getvalue(), channels=4)
-  # Add the batch dimension
-  image = tf.expand_dims(image, 0)
-  return image
-
-def log_confusion_matrix(epoch, logs):
-  # Use the model to predict the values from the validation dataset.
-  test_pred_raw = model.predict(test_ds)
-  test_pred = np.argmax(test_pred_raw, axis=1)
-
-  # Calculate the confusion matrix.
-  cm = metrics.confusion_matrix(test_val_ds, test_pred)
-  # Log the confusion matrix as an image summary.
-  figure = plot_confusion_matrix(cm, class_names=class_names)
-  cm_image = plot_to_image(figure)
-
-  # Log the confusion matrix as an image summary.
-  with file_writer_cm.as_default():
-    tf.summary.image("Confusion Matrix", cm_image, step=epoch)
-
-
 pathbefore = '.\\logs\\sleep04\\'
 path = pathbefore + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=path, histogram_freq=1)
-file_writer_cm = tf.summary.create_file_writer(path + '/cm')
+#file_writer_cm = tf.summary.create_file_writer(path + '/cm')
 
 # Define the per-epoch callback.
-cm_callback = tf.keras.callbacks.LambdaCallback(on_epoch_end=log_confusion_matrix)
+#cm_callback = tf.keras.callbacks.LambdaCallback(on_epoch_end=log_confusion_matrix)
 
 #--
 
@@ -172,7 +140,7 @@ model.compile(optimizer='adam',
 model.fit(train_ds,
           validation_data=val_ds,
           epochs=10,
-          callbacks=[tensorboard_callback, cm_callback])
+          callbacks=[tensorboard_callback])
 
 loss, accuracy = model.evaluate(test_ds)
 
