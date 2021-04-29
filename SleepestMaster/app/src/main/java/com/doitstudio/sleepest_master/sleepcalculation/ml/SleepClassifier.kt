@@ -1,9 +1,11 @@
 package com.doitstudio.sleepest_master.sleepcalculation.ml
 
 import android.content.Context
+import com.doitstudio.sleepest_master.ml.Mnasnet132241Metadata1
 import com.doitstudio.sleepest_master.ml.Sleep04model
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import org.tensorflow.lite.DataType
+import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 
 
@@ -31,7 +33,25 @@ class SleepClassifier constructor(private val context: Context) {
         return preparedInput
     }
 
+
+
     fun callModel(data:IntArray): Int{
+
+        val model = Mnasnet132241Metadata1.newInstance(context)
+
+// Creates inputs for reference.
+        //val image = TensorImage.fromBitmap(bitmap)
+
+// Runs model inference and gets result.
+        //val outputs = model.process(image)
+        //val probability = outputs.probabilityAsCategoryList
+
+// Releases model resources if no longer used.
+        model.close()
+
+
+        return 1
+        /*
         val model = Sleep04model.newInstance(context)
 
 // Creates inputs for reference.
@@ -111,7 +131,7 @@ class SleepClassifier constructor(private val context: Context) {
 
         val calcValue = outputFeature0.intArray[0]
 
-        return calcValue
+        return calcValue*/
     }
 
 
