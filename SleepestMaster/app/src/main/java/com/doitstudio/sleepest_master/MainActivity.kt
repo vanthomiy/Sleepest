@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
 
         val sleepClassifier = SleepClassifier(this)
 
-        val data = arrayOf(1,
+        val data = intArrayOf(1,
             1,1,1,
             1,1,1,
             1,1,1,
@@ -103,7 +103,7 @@ class MainActivity : AppCompatActivity() {
             1,1,1,
             1,1,1)
 
-        val result = sleepClassifier.callModel()
+        val result = sleepClassifier.callModel(data)
 
         val a = result.toString()
     }

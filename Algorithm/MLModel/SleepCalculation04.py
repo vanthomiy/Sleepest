@@ -157,7 +157,15 @@ model.compile(optimizer='adam',
 model.fit(train_ds,
           validation_data=val_ds,
           epochs=3,
-          callbacks=[tensorboard_callback, cm_callback])
+          callbacks=[tensorboard_callback])
+
+
+y_pred = model.predict(val_ds)
+predicted_categories = tf.argmax(y_pred, axis=1)
+true_categories = tf.concat([y for x, y in val_ds], axis=0)
+actmatrix = metrics.confusion_matrix(predicted_categories, true_categories)
+
+print(actmatrix)
 
 loss, accuracy = model.evaluate(test_ds)
 
