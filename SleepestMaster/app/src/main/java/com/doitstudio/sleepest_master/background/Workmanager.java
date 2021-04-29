@@ -7,6 +7,7 @@ package com.doitstudio.sleepest_master.background;
  */
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -57,12 +58,20 @@ public class Workmanager extends Worker {
 
         Calendar calendar = Calendar.getInstance();
 
+        SharedPreferences pref = context.getSharedPreferences("Workmanager", 0);
+        SharedPreferences.Editor ed = pref.edit();
+        ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
+        ed.putInt("minute", calendar.get(Calendar.MINUTE));
+        ed.apply();
+
+        /*Calendar calendar = Calendar.getInstance();
+
         calendar.set(Calendar.HOUR_OF_DAY, 14);
         calendar.set(Calendar.MINUTE, 29);
 
-        /*if (calendar.before(Calendar.getInstance().getTime())) {
+        if (calendar.before(Calendar.getInstance().getTime())) {
             sleepCalculationHandler.calculateUserWakeupJob();
-        }*/
+        }
 
 
         calendar.set(Calendar.HOUR_OF_DAY, 6);
@@ -71,7 +80,7 @@ public class Workmanager extends Worker {
 
         if (calendar.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()) {
             //sleepCalculationHandler.calculateUserWakeupJob();
-        }
+        }*/
 
         return Result.success();
     }

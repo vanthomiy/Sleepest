@@ -127,6 +127,16 @@ public class ForegroundService extends LifecycleService {
             calendar.add(Calendar.SECOND, alarmTimeInSeconds);
             AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(), 2);
             AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(), 1);
+
+
+            //AlarmClockReceiver.startAlarmManager(5, 14, 12, getApplicationContext(), 1);
+
+            Calendar calendar1 = Calendar.getInstance();
+            SharedPreferences pref = getSharedPreferences("AlarmChanged", 0);
+            SharedPreferences.Editor ed = pref.edit();
+            ed.putInt("hour", calendar1.get(Calendar.HOUR_OF_DAY));
+            ed.putInt("minute", calendar1.get(Calendar.MINUTE));
+            ed.apply();
         }
 
         isAlarmActive = alarm.getIsActive();
@@ -137,6 +147,21 @@ public class ForegroundService extends LifecycleService {
         sleepValueAmount = sleepApiData.getSleepApiValuesAmount();
         isSubscribed = sleepApiData.getIsSubscribed();
         updateNotification("test");
+
+        /*SharedPreferences pref = getSharedPreferences("AlarmChanged", 0);
+        String textAlarm = "Last Alarm changed: " + pref.getInt("hour", 0) + ":" + pref.getInt("minute", 0) + "\n";
+        pref = getSharedPreferences("StartService", 0);
+        String textStartService = "Last service start: " + pref.getInt("hour", 0) + ":" + pref.getInt("minute", 0) + "\n";
+        pref = getSharedPreferences("StopService", 0);
+        String textStopService = "Last service start: " + pref.getInt("hour", 0) + ":" + pref.getInt("minute", 0) + "\n";
+        pref = getSharedPreferences("Workmanager", 0);
+        String textLastWorkmanager = "Last workmanager start: " + pref.getInt("hour", 0) + ":" + pref.getInt("minute", 0) + "\n";
+        pref = getSharedPreferences("WorkmanagerCalculation", 0);
+        String textLastWorkmanagerCalculation = "Last workmanager calculation start: " + pref.getInt("hour", 0) + ":" + pref.getInt("minute", 0) + "\n";
+        String textGesamt = textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation;*/
+
+
+
     }
 
     public void OnSleepTimeChanged(LiveUserSleepActivity liveUserSleepActivity){
@@ -197,22 +222,31 @@ public class ForegroundService extends LifecycleService {
 
         Toast.makeText(getApplicationContext(), "Foregroundservice started", Toast.LENGTH_LONG).show();
 
+
+        //+1
         Calendar calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1, times.getFirstWakeupHour(), times.getFirstWakeupMinute());
         AlarmReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 2);
         Workmanager.startPeriodicWorkmanager(times.getWorkmanagerDuration(), getApplicationContext());
         AlarmClockReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 1);
 
-        //Last Alarm
+        //Last Alarm    +1
         calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1, times.getLastWakeupHour(), times.getLastWakeupMinute());
         AlarmReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 4);
         AlarmClockReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 4);
 
-        //Start Calculation
+        //Start Calculation    +1
         calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1, times.getFirstCalculationHour(), times.getFirstCalculationMinute());
-        AlarmReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 5)
+        AlarmReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 5);
 
         sleepCalculationHandler.calculateLiveUserSleepActivityJob();
         sleepHandler.startSleepHandler();
+
+        Calendar calendar = Calendar.getInstance();
+        SharedPreferences pref = getSharedPreferences("StartService", 0);
+        SharedPreferences.Editor ed = pref.edit();
+        ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
+        ed.putInt("minute", calendar.get(Calendar.MINUTE));
+        ed.apply();
 
     }
 
@@ -248,6 +282,13 @@ public class ForegroundService extends LifecycleService {
         sleepHandler.stopSleepHandler();
         foregroundObserver.setAlarmTime(0);
         Toast.makeText(getApplicationContext(), "Foregroundservice stopped", Toast.LENGTH_LONG).show();
+
+        Calendar calendar = Calendar.getInstance();
+        SharedPreferences pref = getSharedPreferences("StopService", 0);
+        SharedPreferences.Editor ed = pref.edit();
+        ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
+        ed.putInt("minute", calendar.get(Calendar.MINUTE));
+        ed.apply();
     }
 
     /**

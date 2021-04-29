@@ -66,7 +66,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case 5:
                 //Kalkulation
-                Workmanager.startPeriodicWorkmanager(times.getWorkmanagerCalculationDuration(), context.getApplicationContext());
+                //Workmanager.startPeriodicWorkmanager(times.getWorkmanagerCalculationDuration(), context.getApplicationContext());
                 WorkmanagerCalculation.startPeriodicWorkmanager(times.getWorkmanagerCalculationDuration(), context.getApplicationContext());
                 break;
         }

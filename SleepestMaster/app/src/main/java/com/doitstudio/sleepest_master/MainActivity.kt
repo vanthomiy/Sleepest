@@ -13,10 +13,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.viewbinding.BuildConfig
-import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
 import com.doitstudio.sleepest_master.background.AlarmReceiver
 import com.doitstudio.sleepest_master.background.ForegroundService
-import com.doitstudio.sleepest_master.background.Workmanager
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
 import com.doitstudio.sleepest_master.model.data.Actions
 import com.doitstudio.sleepest_master.model.data.SleepStatePattern
@@ -45,6 +43,39 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        /**Start Test*/
+
+        var pref = getSharedPreferences("AlarmChanged", 0)
+        val textAlarm = """
+            Last Alarm changed: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
+            
+            """.trimIndent()
+        pref = getSharedPreferences("StartService", 0)
+        val textStartService = """
+            Last service start: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
+            
+            """.trimIndent()
+        pref = getSharedPreferences("StopService", 0)
+        val textStopService = """
+            Last service stop: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
+            
+            """.trimIndent()
+        pref = getSharedPreferences("Workmanager", 0)
+        val textLastWorkmanager = """
+            Last workmanager call: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
+            
+            """.trimIndent()
+        pref = getSharedPreferences("WorkmanagerCalculation", 0)
+        val textLastWorkmanagerCalculation = """
+            Last workmanagerCalc call: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
+            
+            """.trimIndent()
+        val textGesamt = textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation
+
+        binding.status0.text = textGesamt
+
+        /**EndTest*/
 
         mainViewModel.allSleepStateParameters.observe(this){ data->
             binding.status1.text = data.size.toString()

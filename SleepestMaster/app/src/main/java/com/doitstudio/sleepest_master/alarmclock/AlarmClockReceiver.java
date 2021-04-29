@@ -80,7 +80,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
 
         Intent intent = new Intent(alarmClockContext, AlarmClockReceiver.class);
         intent.putExtra(alarmClockContext.getString(R.string.alarm_clock_intent_key), usage);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(alarmClockContext, usage, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(alarmClockContext, usage, intent, 0);
         AlarmManager alarmManager = (AlarmManager) alarmClockContext.getSystemService(ALARM_SERVICE);
 
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);

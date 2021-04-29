@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.annotation.VisibleForTesting
 import com.doitstudio.sleepest_master.LiveUserSleepActivity
 import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.background.Times
 import com.doitstudio.sleepest_master.model.data.SleepState
 import com.doitstudio.sleepest_master.model.data.SleepStatePattern
 import com.doitstudio.sleepest_master.model.data.SleepTimePattern
@@ -177,12 +178,29 @@ class SleepCalculationHandler(private val context: Context){
         }
     }
 
+    var time = 0
+
     private suspend fun calculateUserWakeup()
     {
 
-        val secondsOnDay1 = 2700//seconds.toSecondOfDay()+ restSeconds
+       /* val seconds:LocalTime = LocalTime.now()
+        var secondsOnDay = 0
 
-        dataStoreRepository.updateAlarmTime(secondsOnDay1.toLong())
+
+        if (time == 0) {
+            secondsOnDay = seconds.toSecondOfDay() + 1200 //20Min
+            time++
+        } else if (time == 1) {
+            secondsOnDay = seconds.toSecondOfDay() + 200 //30Min
+            time++
+        } /*else if (time == 2) {
+            secondsOnDay = seconds.toSecondOfDay() + 600 //10min
+            time++
+        }*/
+
+        //val secondsOnDay1 = 52320//seconds.toSecondOfDay()+ restSeconds
+
+        dataStoreRepository.updateAlarmTime(secondsOnDay.toLong())*/
         // Get all available raw sleep api data
 
         //region inital
@@ -328,7 +346,9 @@ class SleepCalculationHandler(private val context: Context){
 
         //endregion
 
-        var restSeconds = sleepTime - 28800
+        val times = Times()
+
+        var restSeconds = times.getSleepTime() - sleepTime
 
         if (restSeconds <= 120)
         {
@@ -339,6 +359,8 @@ class SleepCalculationHandler(private val context: Context){
         val secondsOnDay = seconds.toSecondOfDay()+ restSeconds
 
         dataStoreRepository.updateAlarmTime(secondsOnDay.toLong())
+
+        //dataStoreRepository.updateAlarmTime(49500)
 
 
         calculateUserSleepStates(userSleepSessionEntity, rawApiData.asReversed(), sleep)
