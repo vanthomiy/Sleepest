@@ -1,13 +1,12 @@
 package com.doitstudio.sleepest_master.sleepcalculation.ml
 
 import android.content.Context
-import com.doitstudio.sleepest_master.ml.Mnasnet132241Metadata1
-import com.doitstudio.sleepest_master.ml.Sleep04model
+import com.doitstudio.sleepest_master.ml.Normalsmall
+import com.doitstudio.sleepest_master.ml.Sleep04classifier
+
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import org.tensorflow.lite.DataType
-import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
-
 
 
 class SleepClassifier constructor(private val context: Context) {
@@ -33,11 +32,42 @@ class SleepClassifier constructor(private val context: Context) {
         return preparedInput
     }
 
+    fun loadModel(){
+
+
+
+
+    }
 
 
     fun callModel(data:IntArray): Int{
 
-        val model = Mnasnet132241Metadata1.newInstance(context)
+        try {
+
+            val model = Normalsmall.newInstance(context)
+
+// Creates inputs for reference.
+            val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
+            inputFeature0.loadArray(intArrayOf(1))
+
+// Runs model inference and gets result.
+            val outputs = model.process(inputFeature0)
+            val outputFeature0 = outputs.outputFeature0AsTensorBuffer
+
+// Releases model resources if no longer used.
+            model.close()
+
+        } catch (e: Exception)
+        {
+            print(e)
+
+        }
+
+        //val model1 = Mnasnet132241Default1.newInstance(context)
+
+        //val model = Mnasnet132241Metadata1.newInstance(context)
+
+        //val model = Sleep04classifier.newInstance(context)
 
 // Creates inputs for reference.
         //val image = TensorImage.fromBitmap(bitmap)
@@ -47,7 +77,6 @@ class SleepClassifier constructor(private val context: Context) {
         //val probability = outputs.probabilityAsCategoryList
 
 // Releases model resources if no longer used.
-        model.close()
 
 
         return 1

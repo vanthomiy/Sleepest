@@ -1,10 +1,13 @@
+import tensorflow
 import tensorflow as tf
 from SleepCalculation04DefineLite import *
 
 def convertSaveModel(saved_model_dir, modelname, addData):
     # Convert the model
     converter = tf.lite.TFLiteConverter.from_saved_model(saved_model_dir) # path to the SavedModel directory
-    converter.allow_custom_ops = True
+    converter.target_ops = [tf.lite.OpsSet.TFLITE_BUILTINS, tf.lite.OpsSet.SELECT_TF_OPS]
+    #converter.allow_custom_ops=True
+    converter.experimental_new_converter =True    
     tflite_model = converter.convert()
 
     if(addData):
@@ -28,7 +31,7 @@ def convertFromConcreteFunction(model):
         with open('model.tflite', 'wb') as f:
             f.write(tflite_model)
 
-def convertFromKeras(model):
+def convertFromKeras(model, name):
     
     # Create a model using high-level tf.keras.* APIs
     '''model = tf.keras.models.Sequential([
@@ -45,7 +48,7 @@ def convertFromKeras(model):
     tflite_model = converter.convert()
 
     # Save the model.
-    with open('model.tflite', 'wb') as f:
+    with open(name, 'wb') as f:
         f.write(tflite_model)
 
 
