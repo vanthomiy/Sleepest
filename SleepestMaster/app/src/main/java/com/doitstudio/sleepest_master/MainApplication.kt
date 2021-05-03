@@ -33,10 +33,6 @@ class MainApplication : Application() {
 
     val sleepCalculationDbRepository by lazy {
         SleepCalculationDbRepository.getRepo(
-            sleepCalcDatabase.sleepStateModelDao(),
-            sleepCalcDatabase.sleepTimeModelDao(),
-            sleepCalcDatabase.sleepStateParameterDao(),
-            sleepCalcDatabase.sleepTimeParameterDao(),
             sleepCalcDatabase.sleepApiRawDataDao()
         )
     }

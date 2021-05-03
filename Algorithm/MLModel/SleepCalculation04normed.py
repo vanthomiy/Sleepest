@@ -2,9 +2,11 @@ import numpy as np
 import pandas as pd
 import matplotlib as plt
 import seaborn as sns
-
 from sklearn import metrics
 import io
+
+from tensorflow.python.framework import dtypes
+from tensorflow.python.framework import ops
 
 import tensorflow as tf
 from tensorflow.python.keras.callbacks import TensorBoard
@@ -91,13 +93,13 @@ feature_columns = []
 
 
 # numeric cols
-motion = feature_column.numeric_column('motion0')
+motion = feature_column.numeric_column('motion0', dtype=dtypes.float32)
 feature_columns.append(motion)
 
-sleep = feature_column.numeric_column('sleep0')
+sleep = feature_column.numeric_column('sleep0', dtype=dtypes.float32)
 feature_columns.append(sleep)
 
-light = feature_column.numeric_column('light0')
+light = feature_column.numeric_column('light0', dtype=dtypes.float32)
 feature_columns.append(light)
 
 
@@ -143,3 +145,4 @@ model.save('sleep04_classifier')
 convertSaveModel('sleep04_classifier', 'sleep04classifier.tflite', False)
 
 print("Accuracy", accuracy)
+

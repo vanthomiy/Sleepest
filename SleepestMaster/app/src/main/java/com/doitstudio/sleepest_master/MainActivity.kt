@@ -2,32 +2,22 @@ package com.doitstudio.sleepest_master
 
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.AssetManager
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.viewbinding.BuildConfig
 import com.doitstudio.sleepest_master.background.ForegroundService
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
 import com.doitstudio.sleepest_master.model.data.Actions
-import com.doitstudio.sleepest_master.model.data.SleepStatePattern
-import com.doitstudio.sleepest_master.model.data.UserFactorPattern
-import com.doitstudio.sleepest_master.sleepapi.SleepHandler
-import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
-import com.doitstudio.sleepest_master.sleepcalculation.db.SleepStateParameterEntity
 import com.doitstudio.sleepest_master.sleepcalculation.ml.SleepClassifier
-import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepStateParameter
-import com.google.android.material.snackbar.Snackbar
+import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
+import java.io.BufferedReader
 
 
 class MainActivity : AppCompatActivity() {
@@ -44,14 +34,6 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        mainViewModel.allSleepStateParameters.observe(this){ data->
-            binding.status1.text = data.size.toString()
-        }
-
-        mainViewModel.allSleepTimeModels.observe(this){ data->
-            binding.status2.text = data.size.toString()
-        }
 
         // check permission
         if (!activityRecognitionPermissionApproved()) {
@@ -70,9 +52,9 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private val sch: SleepCalculationHandler by lazy {
+   /* private val sch: SleepCalculationHandler by lazy {
         SleepCalculationHandler.getHandler(this)
-    }
+    }*/
 
     fun buttonClick1(view: View){
         ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
@@ -81,6 +63,24 @@ class MainActivity : AppCompatActivity() {
     var index = 9
     fun buttonClick2(view: View){
 
+        val sleepClassifier = SleepClassifier.getHandler(this)
+
+
+        var gson = Gson()
+        val jsonFile = this
+                .assets
+                .open("databases/testdata/SleepValues.json")
+                .bufferedReader()
+                .use(BufferedReader::readText)
+
+
+        val sleepTimes = gson.fromJson(jsonFile, Array<Array<SleepApiRawDataEntity>>::class.java).asList()
+
+        var sleepData = (sleepTimes[3].filter{it.timestampSeconds < sleepTimes[3][(sleepTimes[3].size / 2).toInt()].timestampSeconds}.toList().reversed())
+        var processedSleepData = sleepClassifier.createFeatures(sleepData)
+        var sleepState = sleepClassifier.isUserSleeping(processedSleepData)
+
+        var b = sleepState
     }
 
     var isTimerRunning = false
@@ -91,21 +91,35 @@ class MainActivity : AppCompatActivity() {
 
         val sleepClassifier = SleepClassifier(this)
 
-        val data = intArrayOf(1,
-            1,1,1,
-            1,1,1,
-            1,1,1,
-            1,1,1,
-            1,1,1,
-            1,1,1,
-            1,1,1,
-            1,1,1,
-            1,1,1,
-            1,1,1)
+        var data4 = intArrayOf(
+                1,1,1,
+                3,1,1,
+                4,1,1,
+                5,1,1,
+                1,2,1,
+                1,1,1,
+                1,1,2,
+                1,2,1,
+                1,1,2,
+                1,1,1)
 
-        val result = sleepClassifier.callModel(data)
+        var result4 = sleepClassifier.isUserSleeping(data4)
 
-        val a = result.toString()
+        data4 = intArrayOf(
+                91,1,1,
+                93,1,1,
+                91,1,1,
+                92,1,1,
+                1,2,1,
+                1,1,1,
+                1,1,2,
+                1,2,1,
+                1,1,2,
+                1,1,1)
+
+        result4 = sleepClassifier.isUserSleeping(data4)
+
+        val a = result4.toString()
     }
 
     private fun requestData(){

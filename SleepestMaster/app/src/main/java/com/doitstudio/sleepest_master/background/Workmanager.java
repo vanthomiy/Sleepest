@@ -18,7 +18,6 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.model.data.Actions;
-import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
@@ -26,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 public class Workmanager extends Worker {
 
     private static Context context;
-    private SleepCalculationHandler sleepCalculationHandler;
+    //private SleepCalculationHandler sleepCalculationHandler;
 
     public Workmanager(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
@@ -35,7 +34,7 @@ public class Workmanager extends Worker {
         //sleepCalculationHandler = SleepCalculationHandler.Companion.getDatabase(context);
         //showNotification(context);
 
-        sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
+        //sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
 
     }
 
@@ -52,7 +51,7 @@ public class Workmanager extends Worker {
          * problemlos möglich.
          */
 
-        sleepCalculationHandler.calculateLiveUserSleepActivityJob();
+        //sleepCalculationHandler.calculateLiveUserSleepActivityJob();
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 6);

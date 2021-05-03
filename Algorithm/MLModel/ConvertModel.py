@@ -51,4 +51,18 @@ def convertFromKeras(model, name):
     with open(name, 'wb') as f:
         f.write(tflite_model)
 
+def convertSaveModelWithCustomOps(saved_model_dir, modelname, addData):
+    # Convert the model
+    converter = tf.lite.TFLiteConverter.from_saved_model(saved_model_dir) # path to the SavedModel directory
+    converter.target_ops = [tf.lite.OpsSet.TFLITE_BUILTINS, tf.lite.OpsSet.SELECT_TF_OPS]
+    converter.allow_custom_ops=True
+    converter.experimental_new_converter =True    
+    tflite_model = converter.convert()
+
+    if(addData):
+        tflite_model = addMetaData(tflite_model)
+
+    # Save the model.
+    with open(modelname, 'wb') as f:
+        f.write(tflite_model)
 

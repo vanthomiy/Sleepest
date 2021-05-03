@@ -68,17 +68,17 @@ sleepBuckets = []
 
 # bucketized cols
 for index in range(0,10):
-  motion = feature_column.numeric_column('motion'+str(index))
+  motion = feature_column.numeric_column('motion'+str(index), dtype=dtypes.uint8))
   motion_buckets = feature_column.bucketized_column(motion, boundaries=[1, 2, 3, 4, 5, 6])
   feature_columns.append(motion_buckets)
 
-  sleep = feature_column.numeric_column('sleep'+str(index))
+  sleep = feature_column.numeric_column('sleep'+str(index), dtype=dtypes.uint8))
   sleep_buckets = feature_column.bucketized_column(sleep, boundaries=[4,100])
   feature_columns.append(sleep_buckets)
 
   sleepBuckets.append(sleep_buckets)
 
-  light = feature_column.numeric_column('light'+str(index))
+  light = feature_column.numeric_column('light'+str(index), dtype=dtypes.uint8))
   light_buckets = feature_column.bucketized_column(light, boundaries=[1, 2, 3, 4, 5, 6])
   feature_columns.append(light_buckets)
   
@@ -171,6 +171,6 @@ loss, accuracy = model.evaluate(test_ds)
 
 model.save('sleep04_classifier')
 
-convertSaveModel('sleep04_classifier', 'sleep04model.tflite', False)
+convertSaveModelWithCustomOps('sleep04_classifier', 'sleep04model.tflite', False)
 
 print("Accuracy", accuracy)

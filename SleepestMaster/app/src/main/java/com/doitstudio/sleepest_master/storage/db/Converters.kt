@@ -17,70 +17,25 @@ class Converters {
     }
 
     @TypeConverter
-    fun fromSleepStatePattern(sleepStatePattern: SleepStatePattern) : Int {
+    fun fromSleepStatePattern(sleepStatePattern: SleepDurationAdjustment) : Int {
         return sleepStatePattern.ordinal
     }
 
     @TypeConverter
-    fun toSleepStatePattern(sleepStatePattern: Int) : SleepStatePattern {
-        return SleepStatePattern.values()[sleepStatePattern]
+    fun toSleepStatePattern(sleepStatePattern: Int) : SleepDurationAdjustment {
+        return SleepDurationAdjustment.values()[sleepStatePattern]
     }
 
     @TypeConverter
-    fun fromSleepTimePattern(sleepTimePattern: SleepTimePattern) : Int {
+    fun fromSleepTimePattern(sleepTimePattern: SleepTimeAdjustment) : Int {
         return sleepTimePattern.ordinal
     }
 
     @TypeConverter
-    fun toSleepTimePattern(sleepTimePattern: Int) : SleepTimePattern {
-        return SleepTimePattern.values()[sleepTimePattern]
+    fun toSleepTimePattern(sleepTimePattern: Int) : SleepTimeAdjustment {
+        return SleepTimeAdjustment.values()[sleepTimePattern]
     }
 
-    @TypeConverter
-    fun fromArrayListOfSleepTimePattern(list: ArrayList<SleepTimePattern>): String {
-        return list?.joinToString(separator = ";") { it.toString() } ?: ""
-    }
-
-    @TypeConverter
-    fun toArrayListOfSleepTimePattern(string: String?): ArrayList<SleepTimePattern> {
-        return ArrayList(string?.split(";")?.mapNotNull {
-            SleepTimePattern.values()[SleepTimePattern.valueOf(it).ordinal]
-        } ?: emptyList())
-    }
-
-    @TypeConverter
-    fun fromArrayListOfString(list: ArrayList<String>): String {
-        return list?.joinToString(separator = ";") { it } ?: ""
-    }
-
-    @TypeConverter
-    fun toArrayListOfString(string: String?): ArrayList<String> {
-        return ArrayList(string?.split(";")?.mapNotNull {
-            it
-        } ?: emptyList())
-    }
-
-    @TypeConverter
-    fun fromArrayListOfSleepStatePattern(list: ArrayList<SleepStatePattern>): String {
-        return list?.joinToString(separator = ";") { it.toString() } ?: ""
-    }
-
-    @TypeConverter
-    fun toArrayListOfSleepStatePattern(string: String?): ArrayList<SleepStatePattern> {
-        return ArrayList(string?.split(";")?.mapNotNull {
-            SleepStatePattern.values()[SleepStatePattern.valueOf(it).ordinal]
-        } ?: emptyList())
-    }
-
-    @TypeConverter
-    fun fromUserStartPattern(userFactorPattern: UserFactorPattern) : Int {
-        return userFactorPattern.ordinal
-    }
-
-    @TypeConverter
-    fun toUserStartPattern(userFactorPattern: Int) : UserFactorPattern {
-        return UserFactorPattern.values()[userFactorPattern]
-    }
 
     @TypeConverter
     fun fromMobilePosition(mobilePosition: MobilePosition) : Int {

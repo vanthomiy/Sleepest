@@ -1,6 +1,8 @@
 from tflite_support import flatbuffers
 from tflite_support import metadata as _metadata
 from tflite_support import metadata_schema_py_generated as _metadata_fb
+import pandas as pd
+import os
 
 
 def addMetaData(model_file):
@@ -36,15 +38,19 @@ def addMetaData(model_file):
     model_meta.subgraphMetadata = [subgraph]
     '''
 
+    '''
     b = flatbuffers.Builder(0)
     b.Finish(
         model_meta.Pack(b),
         _metadata.MetadataPopulator.METADATA_FILE_IDENTIFIER)
     metadata_buf = b.Output()
+    '''
+
+    txt_file = 'datasets/label04.txt' 
 
     populator = _metadata.MetadataPopulator.with_model_file(model_file)
-    populator.load_metadata_buffer(metadata_buf)
-    populator.load_associated_files(["datasets/combined04data.csv"])
+    #populator.load_metadata_buffer(metadata_buf)
+    populator.load_associated_files([txt_file])
     populator.populate()
 
     return model_file

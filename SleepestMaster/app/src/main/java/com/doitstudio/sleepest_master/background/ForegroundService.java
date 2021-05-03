@@ -31,7 +31,6 @@ import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver;
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.model.data.Actions;
 import com.doitstudio.sleepest_master.sleepapi.SleepHandler;
-import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 
 import java.util.Calendar;
@@ -41,7 +40,6 @@ public class ForegroundService extends LifecycleService {
     //private final ServiceLifecycleDispatcher mDispatcher = new ServiceLifecycleDispatcher( this);
     private PowerManager.WakeLock wakeLock = null;
     private boolean isServiceStarted = false;
-    private SleepCalculationHandler sleepCalculationHandler;
     private SleepHandler sleepHandler;
 
     private boolean isAlarmActive = false;
@@ -100,7 +98,7 @@ public class ForegroundService extends LifecycleService {
 
         startForeground(1, createNotification("Test")); /** TODO: Id zentral anlegen */
 
-        sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(getApplicationContext());
+        //sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(getApplicationContext());
         sleepHandler = SleepHandler.Companion.getHandler(getApplicationContext());
 
     }
@@ -186,7 +184,7 @@ public class ForegroundService extends LifecycleService {
         Workmanager.startPeriodicWorkmanager(30, getApplicationContext());
         AlarmClockReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext());
 
-        sleepCalculationHandler.calculateLiveUserSleepActivityJob();
+        //sleepCalculationHandler.calculateLiveUserSleepActivityJob();
         sleepHandler.startSleepHandler();
     }
 
@@ -196,7 +194,7 @@ public class ForegroundService extends LifecycleService {
                 try {
 
                     /** TODO: do something if neccessary */
-                    sleepCalculationHandler.calculateUserWakeupJob();
+                    //sleepCalculationHandler.calculateUserWakeupJob();
                     Thread.sleep(60000); //milliseconds
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -229,7 +227,7 @@ public class ForegroundService extends LifecycleService {
         Workmanager.stopPeriodicWorkmanager();
         Calendar calendarAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK), 20, 0);
         AlarmReceiver.startAlarmManager(calendarAlarm.get(Calendar.DAY_OF_WEEK), calendarAlarm.get(Calendar.HOUR_OF_DAY) , calendarAlarm.get(Calendar.MINUTE), getApplicationContext(), 1);
-        sleepCalculationHandler.recalculateUserSleep();
+        //sleepCalculationHandler.recalculateUserSleep();
         sleepHandler.stopSleepHandler();
         foregroundObserver.setAlarmTime(0);
     }

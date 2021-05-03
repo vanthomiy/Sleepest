@@ -25,28 +25,6 @@ class SleepCalculationStoreRepository(context: Context) {
         }
     }
 
-    // region actual sleep user params
-
-    private val actualSleepUserParameterStatus by lazy{ ActualSleepUserParameterStatus(context.createDataStore(
-            ACTUAL_SLEEP_USER_PARAMETER,
-            serializer = ActualSleepUserParameterSerializer())
-    )
-    }
-
-
-    val actualSleepUserParameterFlow: Flow<ActualSleepUserParameter> = actualSleepUserParameterStatus.actualSleepUserParameter
-
-    suspend fun updateSleepStatePattern(sleepStatePattern: String) =
-            actualSleepUserParameterStatus.updateSleepStatePattern(sleepStatePattern)
-
-    suspend fun updateSleepTimePattern(sleepTimePattern: String) =
-            actualSleepUserParameterStatus.updateSleepTimePattern(sleepTimePattern)
-
-    suspend fun updateUserStartPattern(userStartPattern: String) =
-            actualSleepUserParameterStatus.updateUserStartPattern(userStartPattern)
-
-    // endregion
-
     // region live user sleep activity
 
     private val liveUserSleepActivityStatus by lazy{ LiveUserSleepActivityStatus(context.createDataStore(
