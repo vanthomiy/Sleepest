@@ -64,9 +64,10 @@ dataframe = dataframe.drop(columns=['light9'])
 dataframe = dataframe.drop(columns=['light10'])
 '''
 
+length = 2
 headers = []
 
-for i in range(0,10):
+for i in range(0,length):
     headers.append('sleep'+ str(i))
     headers.append('motion'+ str(i))
     headers.append('brigthness'+ str(i))
@@ -75,17 +76,17 @@ for i in range(0,10):
 headers.reverse()
 headersSleep = []
 
-for i in range(0,10):
+for i in range(0,length):
     headersSleep.append('sleep'+ str(i))
 
 headersMotion = []
 
-for i in range(0,10):
+for i in range(0,length):
     headersMotion.append('motion'+ str(i))
 
 headersLight = []
 
-for i in range(0,10):
+for i in range(0,length):
     headersLight.append('brigthness'+ str(i))
 
 
@@ -246,8 +247,13 @@ file_writer_cm = tf.summary.create_file_writer(path + '/cm')
 
 cm_callback = tf.keras.callbacks.LambdaCallback(on_epoch_end=log_confusion_matrix)
 
+# Weight the sleep 2 times more then the awake !
+class_weights = {
+    0: 1,
+    1: 2.5,
+}
 
-model.fit(train_ds, epochs=10, validation_data=val_ds, callbacks=[tensorboard_callback])
+model.fit(train_ds, epochs=10, validation_data=val_ds, class_weight= class_weights, callbacks=[tensorboard_callback])
 
 
 loss, accuracy = model.evaluate(test_ds)
