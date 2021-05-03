@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using ExcelCalculationAddin.Model;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using static ExcelCalculationAddin.Model.SleepStateDetect.SleepStateClean;
 using static ExcelCalculationAddin.Model.SleepStateDetect.SleepStateParameter;
@@ -48,6 +49,21 @@ namespace ExcelCalculationAddin.Export
 
         public int light { get; set; }
 
+
+    }
+
+    public class RootRawApiTrue
+    {
+        public int timestampSeconds { get; set; }
+
+        public int confidence { get; set; }
+
+        public int motion { get; set; }
+
+        public int light { get; set; }
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        public SleepState real { get; set; }
 
     }
 

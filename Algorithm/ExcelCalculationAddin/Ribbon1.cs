@@ -79,7 +79,7 @@ namespace ExcelCalculationAddin
             {
                 return;
             }
-
+            /*
 
             // first we have to create the classes
             List<RootTime> rootTime = new List<RootTime>();
@@ -194,35 +194,44 @@ namespace ExcelCalculationAddin
             var jsonTimeParamsFile = JsonConvert.SerializeObject(rootTimeParameter);
             ExportFile.Export(jsonTimeParamsFile, "TimeParameter", folder);
 
-
+            */
             List<List<RootRawApi>> mrral = new List<List<RootRawApi>>();
+            List<List<RootRawApiTrue>> mrraltrue = new List<List<RootRawApiTrue>>();
 
             for (int i = 1; i < ReadParameter.values.Count; i++)
             {
                 for (int j = 1; j < ReadParameter.values[i].sleepSessionWhile.Count; j++)
                 {
                     List<RootRawApi> rral = new List<RootRawApi>();
+                    List<RootRawApiTrue> rraltrue = new List<RootRawApiTrue>();
 
                     foreach (var item in ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll)
                     {
                         RootRawApi rra = new RootRawApi();
+                        RootRawApiTrue rratrue = new RootRawApiTrue();
 
-                        rra.confidence = item.sleep;
-                        rra.motion = item.motion;
-                        rra.light = item.light;
+                        rratrue.confidence = rra.confidence = item.sleep;
+                        rratrue.motion = rra.motion = item.motion;
+                        rratrue.light = rra.light = item.light;
+                        rratrue.real = item.realSleepState;
 
                         TimeSpan span = item.time.Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc));
                         rra.timestampSeconds = (int)span.TotalSeconds;
+                        rratrue.timestampSeconds = (int)span.TotalSeconds;
 
                         rral.Add(rra);
+                        rraltrue.Add(rratrue);
                     }
 
                     mrral.Add(rral);
+                    mrraltrue.Add(rraltrue);
                 }
             }
           
             var rawSleepApiDataFiles = JsonConvert.SerializeObject(mrral);
+            var rawSleepApiDataFilesTrue = JsonConvert.SerializeObject(mrraltrue);
             ExportFile.Export(rawSleepApiDataFiles, "SleepValues", folder);
+            ExportFile.Export(rawSleepApiDataFilesTrue, "SleepValuesTrue", folder);
 
             List<string> csvData = new List<string>();
          
