@@ -10,22 +10,31 @@ from ConvertModel import *
 
 import pathlib
 
-csv_file = 'datasets/combined04data.csv' 
-dataframe = pd.read_csv(csv_file)
+reloaded_model = tf.keras.models.load_model('sleep_classifier_model')
 
-dataframe.head()
+headers = []
 
-class_names = ['awake', 'sleeping']
+for i in range(0,10):
+    headers.append('sleep'+ str(i))
+    headers.append('motion'+ str(i))
+    headers.append('brigthness'+ str(i))
 
-a = dataframe['real']
-count1 = 0
-count2 = 0
-for i in a.values:
-  if(i == 0):
-    count1 = count1+1
-  else:
-    count2 = count2+1
+sample = {}
+
+for header in headers:
+    sample[header] = 1
 
 
-print(count1)
-print(count2)
+sample['sleep0'] = 95
+sample['sleep1'] = 95
+sample['sleep2'] = 95
+sample['sleep3'] = 95
+
+input_dict = {name: tf.convert_to_tensor([value]) for name, value in sample.items()}
+predictions = reloaded_model.predict(input_dict)
+prob = tf.nn.sigmoid(predictions[0])
+
+print(
+    "This particular sleep has a %.1f percent probability of sleep "
+    % (100 * prob)
+)

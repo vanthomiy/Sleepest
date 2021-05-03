@@ -5,12 +5,14 @@ from sklearn.model_selection import train_test_split
 from tensorflow.keras import layers
 from tensorflow.keras.layers.experimental import preprocessing
 from tensorflow import feature_column
-
+import datetime
+import tensorboard
 from ConvertModel import *
-
+import Metrics.ConfusionMatrix as cfm
+import sklearn
 import pathlib
 
-csv_file = 'datasets/combined04data.csv' 
+csv_file = 'datasets/sleepdata04v1.csv' 
 dataframe = pd.read_csv(csv_file)
 
 dataframe.head()
@@ -25,7 +27,7 @@ dataframe['target'] = dataframe['real']
 
 # Drop un-used columns.
 #dataframe = dataframe.drop(columns=['time'])
-dataframe = dataframe.drop(columns=['real', 'time'])
+dataframe = dataframe.drop(columns=['real'])
 
 '''
 dataframe = dataframe.drop(columns=['sleep1'])
@@ -64,27 +66,27 @@ dataframe = dataframe.drop(columns=['light10'])
 
 headers = []
 
-for i in range(0,11):
+for i in range(0,10):
     headers.append('sleep'+ str(i))
     headers.append('motion'+ str(i))
-    headers.append('light'+ str(i))
+    headers.append('brigthness'+ str(i))
 
 # Attention we need to reverse the headers... otherwise we will have to write them backwards
 headers.reverse()
 headersSleep = []
 
-for i in range(0,11):
+for i in range(0,10):
     headersSleep.append('sleep'+ str(i))
 
 headersMotion = []
 
-for i in range(0,11):
+for i in range(0,10):
     headersMotion.append('motion'+ str(i))
 
 headersLight = []
 
-for i in range(0,11):
-    headersLight.append('light'+ str(i))
+for i in range(0,10):
+    headersLight.append('brigthness'+ str(i))
 
 
 
@@ -193,8 +195,8 @@ num_classes = 2
 all_features = tf.keras.layers.concatenate(encoded_features)
 x = tf.keras.layers.Dense(32, activation="relu")(all_features)
 x = tf.keras.layers.Dropout(0.5)(x)#overfitting avoiding
-#output = tf.keras.layers.Dense(1)(x)
-output = layers.Dense(num_classes)(x)
+#output = tf.keras.layers.Dense(num_classes)(x)
+output = layers.Dense(num_classes, activation=tf.nn.softmax)(x)
 model = tf.keras.Model(all_inputs, output)
 
 #model.add(layers.Dense(3, activation='softmax'))
@@ -207,24 +209,49 @@ model.compile(optimizer='adam',
               #loss=tf.keras.losses.categorical_crossentropy(),
               loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
               metrics=["accuracy"])
-
 '''
+
 #model.compile(optimizer='sgd', loss='categorical_crossentropy', metrics=['acc']) 
 
 model.compile(optimizer='adam',
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-              metrics=['accuracy'])
+              metrics=['sparse_categorical_accuracy'])
 
 model.summary()
 
+def log_confusion_matrix(epoch, logs):
+    
+    # Use the model to predict the values from the test_images.
+    test_pred_raw = model.predict(val_ds)
+    
+    test_pred = np.argmax(test_pred_raw, axis=1)
+    
+    # Calculate the confusion matrix using sklearn.metrics
+    cm = sklearn.metrics.confusion_matrix([0,1], test_pred)
+    
+    figure = cfm.plot_confusion_matrix(cm, class_names=['awake', 'sleeping'])
+    cm_image = cfm.plot_to_image(figure)
+    
+    # Log the confusion matrix as an image summary.
+    with file_writer_cm.as_default():
+        tf.summary.image("Confusion Matrix", cm_image, step=epoch)
 
 
-model.fit(train_ds, epochs=10, validation_data=val_ds)
+
+pathbefore = '.\\logs\\sleep04pp\\'
+path = pathbefore + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=path, histogram_freq=1)
+
+file_writer_cm = tf.summary.create_file_writer(path + '/cm')
+
+cm_callback = tf.keras.callbacks.LambdaCallback(on_epoch_end=log_confusion_matrix)
+
+
+model.fit(train_ds, epochs=10, validation_data=val_ds, callbacks=[tensorboard_callback])
 
 
 loss, accuracy = model.evaluate(test_ds)
 print("Accuracy", accuracy)
-
 
 model.save('sleep_classifier_model')
 reloaded_model = tf.keras.models.load_model('sleep_classifier_model')
@@ -243,9 +270,9 @@ for header in headers:
 
 
 sample['sleep0'] = 95
-sample['sleep1'] = 95
-sample['sleep2'] = 95
-sample['sleep3'] = 95
+#sample['sleep1'] = 95
+#sample['sleep2'] = 95
+#sample['sleep3'] = 95
 
-input_dict = {name: tf.convert_to_tensor([value]) for name, value in sample.items()}
-predictions = reloaded_model.predict(input_dict)
+#input_dict = {name: tf.convert_to_tensor([value]) for name, value in sample.items()}
+#predictions = reloaded_model.predict(input_dict)
