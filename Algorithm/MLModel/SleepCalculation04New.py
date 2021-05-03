@@ -10,15 +10,15 @@ from ConvertModel import *
 
 import pathlib
 
+tf.keras.backend.floatx()
+
+
 csv_file = 'datasets/combined04data.csv' 
 dataframe = pd.read_csv(csv_file)
 
 dataframe.head()
 
 class_names = ['awake', 'sleeping']
-
-
-
 
 # In the original dataset "4" indicates the pet was not adopted.
 dataframe['target'] = dataframe['real']
@@ -64,7 +64,7 @@ dataframe = dataframe.drop(columns=['light10'])
 
 headers = []
 
-for i in range(0,11):
+for i in range(0,10):
     headers.append('sleep'+ str(i))
     headers.append('motion'+ str(i))
     headers.append('light'+ str(i))
@@ -73,17 +73,17 @@ for i in range(0,11):
 headers.reverse()
 headersSleep = []
 
-for i in range(0,11):
+for i in range(0,10):
     headersSleep.append('sleep'+ str(i))
 
 headersMotion = []
 
-for i in range(0,11):
+for i in range(0,10):
     headersMotion.append('motion'+ str(i))
 
 headersLight = []
 
-for i in range(0,11):
+for i in range(0,10):
     headersLight.append('light'+ str(i))
 
 
@@ -125,6 +125,7 @@ def get_normalization_layer(name, dataset):
   return normalizer
 
 
+
 batch_size = 256
 train_ds = df_to_dataset(train, batch_size=batch_size)
 val_ds = df_to_dataset(val, shuffle=False, batch_size=batch_size)
@@ -140,112 +141,47 @@ featuresLight = []
 # Numeric features. 
 #sleep, motion, light ...!
 for header in headers:
-  numeric_col = tf.keras.Input(shape=(1,), name=header)
-  normalization_layer = get_normalization_layer(header, train_ds)
-  encoded_numeric_col = normalization_layer(numeric_col)
-  all_inputs.append(numeric_col)
-  encoded_features.append(encoded_numeric_col)
-  featuresSleep.append(numeric_col)
 
-'''
-for header in headersSleep.reverse():
-  numeric_col = tf.keras.Input(shape=(1,), name=header)
-  normalization_layer = get_normalization_layer(header, train_ds)
-  encoded_numeric_col = normalization_layer(numeric_col)
-  all_inputs.append(numeric_col)
-  encoded_features.append(encoded_numeric_col)
-  featuresSleep.append(numeric_col)
+    feature = tf.feature_column.numeric_column(
+        header, shape=(1,), default_value=None, dtype=tf.dtypes.float32, normalizer_fn=None
+    )
 
-for header in headersMotion.reverse():
-  numeric_col = tf.keras.Input(shape=(1,), name=header)
-  normalization_layer = get_normalization_layer(header, train_ds)
-  encoded_numeric_col = normalization_layer(numeric_col)
-  all_inputs.append(numeric_col)
-  encoded_features.append(encoded_numeric_col)
-  featuresMotion.append(numeric_col)
+    encoded_features.append(feature)
 
-for header in headersLight.reverse():
-  numeric_col = tf.keras.Input(shape=(1,), name=header)
-  normalization_layer = get_normalization_layer(header, train_ds)
-  encoded_numeric_col = normalization_layer(numeric_col)
-  all_inputs.append(numeric_col)
-  encoded_features.append(encoded_numeric_col)
-  featuresLight.append(numeric_col)
-'''
-
-
-
-'''
-# Sleep Sleep cross buckets
-for index in range(0, len(featuresSleep)-2):
-  sleepSleep = feature_column.crossed_column([featuresSleep[index], featuresSleep[index+1]], hash_bucket_size=100)
-  encoded_features.append(feature_column.indicator_column(sleepSleep))
-
-
-# Motion Sleep Light cross buckets
-for index in range(0, len(featuresSleep)-2):
-  sleepSleep = feature_column.crossed_column([featuresSleep[index], featuresMotion[index+1], featuresLight[index+1]], hash_bucket_size=100)
-  encoded_features.append(feature_column.indicator_column(sleepSleep))
-'''
 
 num_classes = 2
 
-all_features = tf.keras.layers.concatenate(encoded_features)
-x = tf.keras.layers.Dense(32, activation="relu")(all_features)
-x = tf.keras.layers.Dropout(0.5)(x)#overfitting avoiding
-#output = tf.keras.layers.Dense(1)(x)
-output = layers.Dense(num_classes)(x)
-model = tf.keras.Model(all_inputs, output)
+feature_layer = tf.keras.layers.DenseFeatures(encoded_features)
 
-#model.add(layers.Dense(3, activation='softmax'))
-#model.compile(optimizer='sgd', loss=tf.keras.losses.CategoricalCrossentropy())
+model = tf.keras.Sequential([
+  feature_layer,
+  layers.Dense(128, activation='relu'),
+  layers.Dense(128, activation='relu'),
+  layers.Dropout(.1),
+  layers.Dense(1)
+])
 
-
-
-'''
-model.compile(optimizer='adam',
-              #loss=tf.keras.losses.categorical_crossentropy(),
-              loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
-              metrics=["accuracy"])
-
-'''
-#model.compile(optimizer='sgd', loss='categorical_crossentropy', metrics=['acc']) 
+model.input()
 
 model.compile(optimizer='adam',
-              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+              loss= tf.keras.losses.BinaryCrossentropy(from_logits=True),
               metrics=['accuracy'])
 
+model.fit(train_ds,
+          validation_data=val_ds,
+          epochs=10)
+
 model.summary()
-
-
-
-model.fit(train_ds, epochs=10, validation_data=val_ds)
-
 
 loss, accuracy = model.evaluate(test_ds)
 print("Accuracy", accuracy)
 
 
-model.save('sleep_classifier_model')
-reloaded_model = tf.keras.models.load_model('sleep_classifier_model')
+model.save('sleep_classifier_features')
+reloaded_model = tf.keras.models.load_model('sleep_classifier_features')
 
-convertSaveModelWithCustomOps('sleep_classifier_model', 'sleep_classifier_model.tflite', False)
+convertSaveModelWithCustomOps('sleep_classifier_features', 'sleep_classifier_features.tflite', False)
 
-dot_img_file = 'sleep_classifier_model/classification04model.png'
+dot_img_file = 'sleep_classifier_features/classification04model.png'
 # rankdir='LR' is used to make the graph horizontal.
 tf.keras.utils.plot_model(model, to_file=dot_img_file, show_shapes=True, rankdir="LR")
-
-
-sample = {}
-
-for header in headers:
-    sample[header] = 1
-
-
-sample['sleep0'] = 95
-sample['sleep1'] = 95
-sample['sleep2'] = 95
-sample['sleep3'] = 95
-
-input_dict = {name: tf.convert_to_tensor([value]) for name, value in sample.items()}
-predictions = reloaded_model.predict(input_dict)

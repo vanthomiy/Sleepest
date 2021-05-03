@@ -15,20 +15,20 @@ class SleepClassifier constructor(private val context: Context) {
      * Pass the actual raw sleep api data entity
      * It returns the last 10 sleep api data and fills the rest with 0 is neccessary
      */
-    fun createFeatures(data: List<SleepApiRawDataEntity>, count: Int = 10) : IntArray {
+    fun createFeatures(data: List<SleepApiRawDataEntity>, count: Int = 10) : FloatArray {
 
         // sort the list so we use it the right way.
         val sortedList = data.sortedByDescending { it.timestampSeconds }
 
-        var preparedInput = IntArray(count*3)
+        var preparedInput = FloatArray(count*3)
 
         for (i in 0 until count)
         {
             if (sortedList.count() > i)
             {
-                preparedInput[i * 3] = sortedList[i].confidence
-                preparedInput[(i * 3) + 1] = sortedList[i].motion
-                preparedInput[(i * 3) + 2] = sortedList[i].light
+                preparedInput[i * 3] = sortedList[i].confidence.toFloat()
+                preparedInput[(i * 3) + 1] = sortedList[i].motion.toFloat()
+                preparedInput[(i * 3) + 2] = sortedList[i].light.toFloat()
             }
         }
 
@@ -40,7 +40,7 @@ class SleepClassifier constructor(private val context: Context) {
      * Pass the with [createFeatures] created array of int to predict if the user is sleeping or not
      * Returns [SleepState] [SleepState.AWAKE] or [SleepState.SLEEPING] and [SleepState.NONE] if no data or an error occures
      */
-    fun isUserSleeping(data: IntArray) : SleepState {
+    fun isUserSleeping(data: FloatArray) : SleepState {
 
         try{
 
@@ -48,65 +48,66 @@ class SleepClassifier constructor(private val context: Context) {
 
             // Creates inputs for reference.
             val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature0.loadArray(intArrayOf(data[0]))
+            inputFeature0.loadArray(floatArrayOf(data[0]))
             val inputFeature1 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature1.loadArray(intArrayOf(data[1]))
+            inputFeature1.loadArray(floatArrayOf(data[1]))
             val inputFeature2 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature2.loadArray(intArrayOf(data[2]))
+            inputFeature2.loadArray(floatArrayOf(data[2]))
             val inputFeature3 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature3.loadArray(intArrayOf(data[3]))
+            inputFeature3.loadArray(floatArrayOf(data[3]))
             val inputFeature4 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature4.loadArray(intArrayOf(data[4]))
+            inputFeature4.loadArray(floatArrayOf(data[4]))
             val inputFeature5 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature5.loadArray(intArrayOf(data[5]))
+            inputFeature5.loadArray(floatArrayOf(data[5]))
             val inputFeature6 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature6.loadArray(intArrayOf(data[6]))
+            inputFeature6.loadArray(floatArrayOf(data[6]))
             val inputFeature7 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature7.loadArray(intArrayOf(data[7]))
+            inputFeature7.loadArray(floatArrayOf(data[7]))
             val inputFeature8 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature8.loadArray(intArrayOf(data[8]))
+            inputFeature8.loadArray(floatArrayOf(data[8]))
             val inputFeature9 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature9.loadArray(intArrayOf(data[9]))
+            inputFeature9.loadArray(floatArrayOf(data[9]))
             val inputFeature10 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature10.loadArray(intArrayOf(data[10]))
+            inputFeature10.loadArray(floatArrayOf(data[10]))
             val inputFeature11 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature11.loadArray(intArrayOf(data[11]))
+            inputFeature11.loadArray(floatArrayOf(data[11]))
             val inputFeature12 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature12.loadArray(intArrayOf(data[12]))
+            inputFeature12.loadArray(floatArrayOf(data[12]))
             val inputFeature13 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature13.loadArray(intArrayOf(data[13]))
+            inputFeature13.loadArray(floatArrayOf(data[13]))
             val inputFeature14 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature14.loadArray(intArrayOf(data[14]))
+            inputFeature14.loadArray(floatArrayOf(data[14]))
             val inputFeature15 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature15.loadArray(intArrayOf(data[15]))
+            inputFeature15.loadArray(floatArrayOf(data[15]))
             val inputFeature16 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature16.loadArray(intArrayOf(data[16]))
+            inputFeature16.loadArray(floatArrayOf(data[16]))
             val inputFeature17 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature17.loadArray(intArrayOf(data[17]))
+            inputFeature17.loadArray(floatArrayOf(data[17]))
             val inputFeature18 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature18.loadArray(intArrayOf(data[18]))
+            inputFeature18.loadArray(floatArrayOf(data[18]))
             val inputFeature19 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature19.loadArray(intArrayOf(data[19]))
+            inputFeature19.loadArray(floatArrayOf(data[19]))
             val inputFeature20 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature20.loadArray(intArrayOf(data[20]))
+            inputFeature20.loadArray(floatArrayOf(data[20]))
             val inputFeature21 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature21.loadArray(intArrayOf(data[21]))
+            inputFeature21.loadArray(floatArrayOf(data[21]))
             val inputFeature22 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature22.loadArray(intArrayOf(data[22]))
+            inputFeature22.loadArray(floatArrayOf(data[22]))
             val inputFeature23 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature23.loadArray(intArrayOf(data[23]))
+            inputFeature23.loadArray(floatArrayOf(data[23]))
             val inputFeature24 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature24.loadArray(intArrayOf(data[24]))
+            inputFeature24.loadArray(floatArrayOf(data[24]))
             val inputFeature25 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature25.loadArray(intArrayOf(data[25]))
+            inputFeature25.loadArray(floatArrayOf(data[25]))
             val inputFeature26 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature26.loadArray(intArrayOf(data[26]))
+            inputFeature26.loadArray(floatArrayOf(data[26]))
             val inputFeature27 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature27.loadArray(intArrayOf(data[27]))
+            inputFeature27.loadArray(floatArrayOf(data[27]))
             val inputFeature28 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature28.loadArray(intArrayOf(data[28]))
+            inputFeature28.loadArray(floatArrayOf(data[28]))
             val inputFeature29 = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)
-            inputFeature29.loadArray(intArrayOf(data[29]))
+            inputFeature29.loadArray(floatArrayOf(data[29]))
+
 
             // Runs model inference and gets result.
             val outputs = model.process(inputFeature0, inputFeature1, inputFeature2, inputFeature3, inputFeature4, inputFeature5, inputFeature6, inputFeature7, inputFeature8, inputFeature9, inputFeature10, inputFeature11, inputFeature12, inputFeature13, inputFeature14, inputFeature15, inputFeature16, inputFeature17, inputFeature18, inputFeature19, inputFeature20, inputFeature21, inputFeature22, inputFeature23, inputFeature24, inputFeature25, inputFeature26, inputFeature27, inputFeature28, inputFeature29)

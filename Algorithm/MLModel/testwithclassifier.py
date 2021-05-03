@@ -153,6 +153,7 @@ model.fit(train_ds, epochs=10, validation_data=val_ds)
 loss, accuracy = model.evaluate(test_ds)
 print("Accuracy", accuracy)
 
+model.summary()
 
 model.save('my_pet_classifier')
 reloaded_model = tf.keras.models.load_model('my_pet_classifier')

@@ -12,8 +12,10 @@ import androidx.core.content.ContextCompat
 import com.doitstudio.sleepest_master.background.ForegroundService
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
 import com.doitstudio.sleepest_master.model.data.Actions
+import com.doitstudio.sleepest_master.model.data.SleepState
 import com.doitstudio.sleepest_master.sleepcalculation.ml.SleepClassifier
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
+import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataRealEntity
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -73,14 +75,63 @@ class MainActivity : AppCompatActivity() {
                 .bufferedReader()
                 .use(BufferedReader::readText)
 
+        val jsonFileReal = this
+                .assets
+                .open("databases/testdata/SleepValuesTrue.json")
+                .bufferedReader()
+                .use(BufferedReader::readText)
 
         val sleepTimes = gson.fromJson(jsonFile, Array<Array<SleepApiRawDataEntity>>::class.java).asList()
+        val sleepTimesReal = gson.fromJson(jsonFileReal, Array<Array<SleepApiRawDataRealEntity>>::class.java).asList()
 
-        var sleepData = (sleepTimes[3].filter{it.timestampSeconds < sleepTimes[3][(sleepTimes[3].size / 2).toInt()].timestampSeconds}.toList().reversed())
-        var processedSleepData = sleepClassifier.createFeatures(sleepData)
-        var sleepState = sleepClassifier.isUserSleeping(processedSleepData)
 
-        var b = sleepState
+
+        for (j in 0 until sleepTimes[5].count()) {
+            var done = 0
+            var sleeppred = 0
+            var awakepred = 0
+            var sleepr = 0
+            var awaker = 0
+            var none = 0
+
+            for (i in 0 until sleepTimes[j].count()) {
+                var sleepData = (sleepTimes[j].filter { it.timestampSeconds < sleepTimes[j][i].timestampSeconds }.toList())
+                var sleepDataReal = (sleepTimesReal[j].filter { it.timestampSeconds < sleepTimesReal[j][i].timestampSeconds }.toList()).sortedByDescending { it.timestampSeconds }
+
+                var processedSleepData = sleepClassifier.createFeatures(sleepData)
+                var sleepState = sleepClassifier.isUserSleeping(processedSleepData)
+
+
+                var realSleepState = "NONE"
+                if (sleepDataReal != null && sleepDataReal.count() > 1) {
+                    realSleepState = sleepDataReal.first().real
+                }
+
+                if (sleepState == SleepState.NONE) {
+                    none += 1
+                } else if (sleepState == SleepState.AWAKE) {
+                    awakepred += 1
+                } else if (sleepState == SleepState.SLEEPING) {
+                    sleeppred += 1
+                }
+
+                if (realSleepState == "awake" || realSleepState == "NONE") {
+                    awaker += 1
+                } else {
+                    sleepr += 1
+                }
+
+
+            }
+
+            var a = sleepr
+
+        }
+
+
+
+
+
     }
 
     var isTimerRunning = false
@@ -91,31 +142,32 @@ class MainActivity : AppCompatActivity() {
 
         val sleepClassifier = SleepClassifier(this)
 
-        var data4 = intArrayOf(
-                1,1,1,
-                3,1,1,
-                4,1,1,
-                5,1,1,
-                1,2,1,
-                1,1,1,
-                1,1,2,
-                1,2,1,
-                1,1,2,
-                1,1,1)
+        var data4 = floatArrayOf(
+                95f,1f,1f,
+                95f,1f,1f,
+                95f,1f,1f,
+                95f,1f,1f,
+                1f,1f,1f,
+                1f,1f,1f,
+                1f,1f,1f,
+                1f,1f,1f,
+                1f,1f,1f,
+                1f,1f,1f)
 
         var result4 = sleepClassifier.isUserSleeping(data4)
 
-        data4 = intArrayOf(
-                91,1,1,
-                93,1,1,
-                91,1,1,
-                92,1,1,
-                1,2,1,
-                1,1,1,
-                1,1,2,
-                1,2,1,
-                1,1,2,
-                1,1,1)
+        data4 = floatArrayOf(
+                91f,1f,1f,
+                60f,1f,1f,
+                70f,1f,1f,
+                80f,1f,1f,
+                20f,1f,1f,
+                30f,1f,1f,
+                20f,1f,1f,
+                30f,1f,1f,
+                20f,1f,1f,
+                60f,1f,1f)
+
 
         result4 = sleepClassifier.isUserSleeping(data4)
 

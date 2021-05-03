@@ -40,3 +40,15 @@ data class SleepApiRawDataEntity(
                 }
         }
 }
+
+data class SleepApiRawDataRealEntity(
+        val timestampSeconds: Int,
+
+        val confidence: Int,
+
+        val motion: Int,
+
+        val light: Int,
+
+        val real: String
+)
