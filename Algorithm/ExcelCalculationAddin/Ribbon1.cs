@@ -242,23 +242,25 @@ namespace ExcelCalculationAddin
                     string data = "time, timeraw,light,motion,sleep,real\n";
                     string data1 = "time, timeraw,light,motion,sleep,real\n";
                     string data2 = "time, timeraw,light,motion,sleep,real\n";
+
+                    string data11 = "real,brigthness,motion,sleep,brigthness1,motion1,sleep1,brigthness2,motion2,sleep2,brigthness3,motion3,sleep3,brigthness4,motion4,sleep4,brigthness5,motion5,sleep5,brigthness6,motion6,sleep6,brigthness7,motion7,sleep7,brigthness8,motion8,sleep8,brigthness9,motion9,sleep9\n";
+                    string data12 = "real,brigthness,motion,sleep,brigthness1,motion1,sleep1,brigthness2,motion2,sleep2,brigthness3,motion3,sleep3,brigthness4,motion4,sleep4,brigthness5,motion5,sleep5,brigthness6,motion6,sleep6,brigthness7,motion7,sleep7,brigthness8,motion8,sleep8,brigthness9,motion9,sleep9\n";
+                    string data13 = "real,brigthness,motion,sleep,brigthness1,motion1,sleep1,brigthness2,motion2,sleep2,brigthness3,motion3,sleep3,brigthness4,motion4,sleep4,brigthness5,motion5,sleep5,brigthness6,motion6,sleep6,brigthness7,motion7,sleep7,brigthness8,motion8,sleep8,brigthness9,motion9,sleep9\n";
                     
-                    string data11 = "time,real,light,motion,sleep,light1,motion1,sleep1,light2,motion2,sleep2,light3,motion3,sleep3,light4,motion4,sleep4,light5,motion5,sleep5,light6,motion6,sleep6,light7,motion7,sleep7,light8,motion8,sleep8,light9,motion9,sleep9,light10,motion10,sleep10\n";
-                    string data12 = "time,real,light,motion,sleep,light1,motion1,sleep1,light2,motion2,sleep2,light3,motion3,sleep3,light4,motion4,sleep4,light5,motion5,sleep5,light6,motion6,sleep6,light7,motion7,sleep7,light8,motion8,sleep8,light9,motion9,sleep9,light10,motion10,sleep10\n";
-                    string data13 = "time,real,light,motion,sleep,light1,motion1,sleep1,light2,motion2,sleep2,light3,motion3,sleep3,light4,motion4,sleep4,light5,motion5,sleep5,light6,motion6,sleep6,light7,motion7,sleep7,light8,motion8,sleep8,light9,motion9,sleep9,light10,motion10,sleep10\n";
                     List<RootRawApiFull> rraltrue = new List<RootRawApiFull>();
                     string time = "";
 
                     for (int k = 0; k < ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll.Count; k++)
                     {
                         var actualTime = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].time;
-                        var listOfDataBevore = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll.Where(x => x.time <= actualTime && x.time > actualTime.AddMinutes(-60)).OrderByDescending(y=> y.time).ToList();
+                        //var listOfDataBevore = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll.Where(x => x.time <= actualTime && x.time > actualTime.AddMinutes(-60)).OrderByDescending(y=> y.time).ToList();
+                        var listOfDataBevore = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll.Where(x => x.time <= actualTime).OrderByDescending(y => y.time).ToList();
                         string timea = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].time.Year.ToString() + "-" + ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].time.Month.ToString() + "-" + ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].time.Day.ToString() + " " + ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].time.TimeOfDay;
                         TimeSpan span = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].time.Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc));
                         time = span.TotalSeconds.ToString();
-                        string val1 = timea + "," + ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].realSleepState;
+                        string val1 = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].realSleepState.ToString();
 
-                        for (int l = 0; l < 11; l++)
+                        for (int l = 0; l < 10; l++)
                         {
                             if (listOfDataBevore.Count() > l)
                             {
@@ -271,7 +273,7 @@ namespace ExcelCalculationAddin
                         }
 
                         data11 += val1+"\n";
-                        data12 = data11.Replace("rem", "sleeping").Replace("deep", "sleeping").Replace("light\"", "sleeping\"");
+                        data12 = data11.Replace("rem", "sleeping").Replace("deep", "sleeping").Replace("light", "sleeping");
                         if (!ReadParameter.values[i].sheetname.ToLower().Contains("fabi"))
                         {
                             data13 += val1.Replace("rem", "light") + "\n";
@@ -293,7 +295,7 @@ namespace ExcelCalculationAddin
 
                         TimeSpan span = item.time.Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc));
                         string timea = item.time.Year.ToString() + "-" + item.time.Month.ToString() + "-" + item.time.Day.ToString() + " " + item.time.TimeOfDay;
-                        val1 = timea + ","+ span.TotalSeconds.ToString() + "," + item.light + "," + item.motion + "," + item.sleep + "," + (int)item.realSleepState + "\n";// + ReadParameter.values[i].sheetname + "\n";
+                        val1 = item.light + "," + item.motion + "," + item.sleep + "," + (int)item.realSleepState + "\n";// + ReadParameter.values[i].sheetname + "\n";
                         time = span.TotalSeconds.ToString();
                         
                         data += val1;
@@ -315,7 +317,7 @@ namespace ExcelCalculationAddin
 
                     }
 
-                    data1 = data.Replace("rem", "sleeping").Replace("deep", "sleeping").Replace("light\"", "sleeping\"");
+                    data1 = data.Replace("rem", "sleeping").Replace("deep", "sleeping").Replace("light", "sleeping");
 
                     ExportFile.ExportCSV(data, ReadParameter.values[i].sheetname + time, folder, "SingleCsvFiles");
                     ExportFile.ExportCSV(data1, ReadParameter.values[i].sheetname + time, folder, @"SingleCsvFiles\Combined04");
