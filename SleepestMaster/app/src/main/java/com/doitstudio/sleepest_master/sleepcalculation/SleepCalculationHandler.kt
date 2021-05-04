@@ -55,6 +55,43 @@ class SleepCalculationHandler {
         return timeNormedData
     }
 
-    
+
+
+    fun checkPhonePosition(){
+
+        // get the actual sleepApiDataList
+
+        //
+    }
+
+
+    fun checkIsUserSleeping(){
+
+        // get the actual sleepApiDataList
+
+        // get frequency
+
+        // get normed list
+
+        // create features for ml model
+
+        // call the ml model
+
+        // we retrieved our data here
+
+    }
+
+    fun defineUserWakeup(){
+
+        // for each sleeping time, we have to define the sleep state
+
+    }
+
+    fun defineSleepStates(){
+
+        // get the actual sleepApiDataList
+    }
+
+
 
 }
