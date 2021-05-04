@@ -64,7 +64,7 @@ dataframe = dataframe.drop(columns=['light9'])
 dataframe = dataframe.drop(columns=['light10'])
 '''
 
-length = 2
+length = 10
 headers = []
 
 for i in range(0,length):
@@ -177,27 +177,13 @@ for header in headersLight.reverse():
 '''
 
 
-
-'''
-# Sleep Sleep cross buckets
-for index in range(0, len(featuresSleep)-2):
-  sleepSleep = feature_column.crossed_column([featuresSleep[index], featuresSleep[index+1]], hash_bucket_size=100)
-  encoded_features.append(feature_column.indicator_column(sleepSleep))
-
-
-# Motion Sleep Light cross buckets
-for index in range(0, len(featuresSleep)-2):
-  sleepSleep = feature_column.crossed_column([featuresSleep[index], featuresMotion[index+1], featuresLight[index+1]], hash_bucket_size=100)
-  encoded_features.append(feature_column.indicator_column(sleepSleep))
-'''
-
 num_classes = 2
 
 all_features = tf.keras.layers.concatenate(encoded_features)
 x = tf.keras.layers.Dense(32, activation="relu")(all_features)
 x = tf.keras.layers.Dropout(0.5)(x)#overfitting avoiding
-#output = tf.keras.layers.Dense(num_classes)(x)
-output = layers.Dense(num_classes, activation=tf.nn.softmax)(x)
+output = tf.keras.layers.Dense(num_classes)(x)
+#output = layers.Dense(num_classes, activation=tf.nn.softmax)(x)
 model = tf.keras.Model(all_inputs, output)
 
 #model.add(layers.Dense(3, activation='softmax'))
@@ -218,6 +204,11 @@ model.compile(optimizer='adam',
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
               metrics=['sparse_categorical_accuracy'])
 
+'''
+model.compile(optimizer=tf.keras.optimizers.Adam(),
+              loss=tf.keras.losses.BinaryCrossentropy(from_logits=True), # default from_logits=False
+              metrics=[tf.keras.metrics.BinaryAccuracy()])
+'''
 model.summary()
 
 def log_confusion_matrix(epoch, logs):
@@ -250,7 +241,7 @@ cm_callback = tf.keras.callbacks.LambdaCallback(on_epoch_end=log_confusion_matri
 # Weight the sleep 2 times more then the awake !
 class_weights = {
     0: 1,
-    1: 2.5,
+    1: 2,
 }
 
 model.fit(train_ds, epochs=10, validation_data=val_ds, class_weight= class_weights, callbacks=[tensorboard_callback])
@@ -274,11 +265,12 @@ sample = {}
 for header in headers:
     sample[header] = 1
 
-
+print(len(headers))
 sample['sleep0'] = 95
-#sample['sleep1'] = 95
-#sample['sleep2'] = 95
-#sample['sleep3'] = 95
+sample['sleep1'] = 95
+sample['sleep2'] = 95
+sample['sleep3'] = 95
 
-#input_dict = {name: tf.convert_to_tensor([value]) for name, value in sample.items()}
-#predictions = reloaded_model.predict(input_dict)
+input_dict = {name: tf.convert_to_tensor([value]) for name, value in sample.items()}
+predictions = reloaded_model.predict(input_dict)
+print(predictions)
