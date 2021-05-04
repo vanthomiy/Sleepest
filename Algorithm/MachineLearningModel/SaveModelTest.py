@@ -1,19 +1,15 @@
 import numpy as np
 import tensorflow as tf
-from ConvertModel import *
+from tfliteconverter import *
 
 
-def outputdataclassifi(index, predictions1, predictions2):
+def outputdataclassify(index, predictions1, class_names):
     print('Prediction ' + str(index) +':')
-    class_names = ['awake', 'sleep']
     prediction_class1 = np.argmax(predictions1)
     prediction_class_name1 = class_names[prediction_class1]
-    prediction_class2 = np.argmax(predictions2)
-    prediction_class_name2 = class_names[prediction_class2]
+    print('Pre: ' + str(prediction_class_name1))
 
-    print('Pre: ' + str(prediction_class_name1) + "/ Fea: " + str(prediction_class_name2))
-
-def loadData():
+def loadData045():
 
     lines = []
 
@@ -77,26 +73,21 @@ def loadData():
 
     return data
 
+def predictData(class_names, model, alldata):
+    reloaded_model_pre = tf.keras.models.load_model(model)
 
-length = 10
-headers = []
+    i = 0
+    for sample in alldata:
 
-for i in range(0,length):
-    headers.append('sleep'+ str(i))
-    headers.append('motion'+ str(i))
-    headers.append('brigthness'+ str(i))
-
-reloaded_model_pre = tf.keras.models.load_model('sleep_classifier_model')
-reloaded_model_fea = tf.keras.models.load_model('sleep04_features')
+        i = i+1
+        input_dict = {name: tf.convert_to_tensor([value]) for name, value in sample.items()}
+        predictions1 = reloaded_model_pre.predict(input_dict)
+        outputdataclassify(i, predictions1,class_names)
 
 
-alldata = loadData()
+class_names = ['awake', 'sleep']
 
-i = 0
-for sample in alldata:
+alldata = loadData045()
+predictData(class_names, 'sleep045' ,alldata)
 
-    i = i+1
-    input_dict = {name: tf.convert_to_tensor([value]) for name, value in sample.items()}
-    predictions1 = reloaded_model_pre.predict(input_dict)
-    predictions2 = reloaded_model_fea.predict(input_dict)
-    outputdataclassifi(i, predictions1, predictions2)
+
