@@ -65,7 +65,7 @@ namespace ExcelCalculationAddin
             await CalcSleepLive.CalcAllSleepData();
         }
 
-        private async void btnJsonExport_Click(object sender, RibbonControlEventArgs e)
+        private async void btnJsonExport_Click1(object sender, RibbonControlEventArgs e)
         {
             if (SleepStateClean.sleepStateParams == null)
             {
@@ -334,6 +334,153 @@ namespace ExcelCalculationAddin
             }
 
 
+        }
+
+        private async void btnJsonExport_Click(object sender, RibbonControlEventArgs e)
+        {
+            if (SleepStateClean.sleepStateParams == null)
+            {
+                return;
+            }
+
+            string folder = await ExportFile.GetFolder();
+
+            if (folder == null)
+            {
+                return;
+            }
+
+
+
+            List<List<RootRawApi>> mrral = new List<List<RootRawApi>>();
+            List<List<RootRawApiTrue>> mrraltrue = new List<List<RootRawApiTrue>>();
+
+            for (int i = 1; i < ReadParameter.values.Count; i++)
+            {
+                for (int j = 1; j < ReadParameter.values[i].sleepSessionWhile.Count; j++)
+                {
+                    List<RootRawApi> rral = new List<RootRawApi>();
+                    List<RootRawApiTrue> rraltrue = new List<RootRawApiTrue>();
+
+                    foreach (var item in ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll)
+                    {
+                        RootRawApi rra = new RootRawApi();
+                        RootRawApiTrue rratrue = new RootRawApiTrue();
+
+                        rratrue.confidence = rra.confidence = item.sleep;
+                        rratrue.motion = rra.motion = item.motion;
+                        rratrue.light = rra.light = item.light;
+                        rratrue.real = item.realSleepState;
+
+                        TimeSpan span = item.time.Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+                        rra.timestampSeconds = (int)span.TotalSeconds;
+                        rratrue.timestampSeconds = (int)span.TotalSeconds;
+
+                        rral.Add(rra);
+                        rraltrue.Add(rratrue);
+                    }
+
+                    mrral.Add(rral);
+                    mrraltrue.Add(rraltrue);
+                }
+            }
+
+            var rawSleepApiDataFiles = JsonConvert.SerializeObject(mrral);
+            var rawSleepApiDataFilesTrue = JsonConvert.SerializeObject(mrraltrue);
+            ExportFile.Export(rawSleepApiDataFiles, "SleepValues", folder);
+            ExportFile.Export(rawSleepApiDataFilesTrue, "SleepValuesTrue", folder);
+
+
+            List<int> times = new List<int>{5, 10, 30};
+            int minutes = 2*60;
+
+            List<string> csvData = new List<string>();
+            foreach (var time in times)
+            {
+                string sleep04file = "real";
+                string sleep12file = "real";
+                //string tablebedfile = "real";
+                //string wakeuplightfile = "real";
+
+                for (int r = 0; r < minutes / time; r++)
+                {
+                    sleep04file += $",brigthness{r},motion{r},sleep{r}";
+                    sleep12file += $",brigthness{r},motion{r},sleep{r}";
+                }
+
+                for (int i = 0; i < ReadParameter.values.Count; i++)
+                {
+                    var userdatabucket04 = "";
+                    var userdatabucket12 = "";
+
+                    for (int j = 1; j < ReadParameter.values[i].sleepSessionWhile.Count; j++)
+                    {
+                        List<RootRawApiFull> rraltrue = new List<RootRawApiFull>();
+
+                        var databucket04 = "";
+                        var databucket12 = "";
+
+              
+
+                        for (int k = 0; k < ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll.Count; k++)
+                        {
+                            try
+                            {
+
+                                var startTime = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].time;
+                                //var listOfDataBevore = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll.Where(x => x.time <= startTime && x.time > startTime.AddMinutes(-minutes)).OrderByDescending(y => y.time).ToList();
+                                var listOfDataBevore = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll.OrderByDescending(y => y.time).ToList();
+
+                                string dataset = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].realSleepState.ToString();
+
+                                for (int l = 0; l < minutes; l += time)
+                                {
+                                    var actualTime = startTime.AddMinutes(-l);
+
+                                    var actualItem = listOfDataBevore.First(x => x.time <= actualTime);
+
+                                    if (listOfDataBevore.Count() > l)
+                                    {
+                                        dataset += "," + actualItem.light + "," + actualItem.motion + "," + actualItem.sleep;
+                                    }
+                                    else
+                                    {
+                                        var item = listOfDataBevore.Last();
+                                        dataset += "," + item.light + "," + item.motion + "," + item.sleep;
+                                    }
+                                }
+
+                                databucket04 += "\n" + dataset.Replace("rem", "sleeping").Replace("deep", "sleeping").Replace("light", "sleeping");
+
+                                if (!ReadParameter.values[i].sheetname.ToLower().Contains("fabi") && ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].realSleepState != SleepState.awake)
+                                {
+                                    databucket12 += "\n"+dataset.Replace("rem", "light");
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+
+                            }
+                        }
+
+                        userdatabucket04 += "\n" + databucket04;
+                        userdatabucket12 += "\n" + databucket12;
+
+                        
+
+                    }
+
+
+                    sleep04file += "\n" + userdatabucket04;
+                    sleep12file += "\n" + userdatabucket12;
+
+                }
+
+
+
+                ExportFile.ExportCSV(sleep04file, "sleep04"+time, folder, @"Datasets\sleep04");
+                ExportFile.ExportCSV(sleep12file, "sleep12" + time, folder, @"Datasets\sleep12");
+            }
         }
     }
 }
