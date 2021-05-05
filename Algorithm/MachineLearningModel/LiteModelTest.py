@@ -1,5 +1,7 @@
 import tensorflow as tf
 import numpy as np
+import pickle as pkl
+import json
 
 def outputdataclassifiSmall(predictions1, class_names):
     prediction_class1 = np.argmax(predictions1)
@@ -70,8 +72,6 @@ def loadDataFor045():
 
 
 
-
-
 def testLiteModel(tflite_file, allinputs):
     interpreter = tf.lite.Interpreter(model_path=tflite_file)
     interpreter.allocate_tensors()
@@ -97,8 +97,54 @@ def testLiteModel(tflite_file, allinputs):
 
     return result
 
+def saveModelInputDetails(tflite_file):
+    interpreter = tf.lite.Interpreter(model_path=tflite_file+'.tflite')
+    interpreter.allocate_tensors()
+
+    # Get input and output tensors.
+    input_details = interpreter.get_input_details()
+
+    list1 = {}
+    count = 1
+    for input in input_details:
+        data = {}
+        
+        data['index'] = str(input['index'])
+        data['name'] = str(input['name'])
+        data['shape'] = str(input['shape'])
+        data['dtype'] = str(input['shape'].dtype)
+
+        list1[count] = data
+        count = count+1
 
 
+    file = tflite_file+'Inputs.json'
+
+
+    with open(file, 'w') as fp:
+        json.dump(list1,fp)
+            
+
+tflite_file = 'litemodels/sleep045' 
+saveModelInputDetails(tflite_file)
+
+tflite_file = 'litemodels/sleep0410' 
+saveModelInputDetails(tflite_file)
+
+tflite_file = 'litemodels/sleep0430' 
+saveModelInputDetails(tflite_file)
+
+
+tflite_file = 'litemodels/sleep125' 
+saveModelInputDetails(tflite_file)
+
+tflite_file = 'litemodels/sleep1210' 
+saveModelInputDetails(tflite_file)
+
+tflite_file = 'litemodels/sleep1230' 
+saveModelInputDetails(tflite_file)
+
+'''
 results = [] 
 
 tflite_file = 'litemodels/sleep045.tflite' 
@@ -114,4 +160,4 @@ for result in results:
     j = j+1
     print(str(j) + result)
 
-
+'''

@@ -6,6 +6,7 @@ from tensorflow._api.v2 import data
 from tensorflow.keras import layers
 from tensorflow.keras.layers.experimental import preprocessing
 from tensorflow import feature_column
+import ConfusionMatrix as cfm
 import datetime
 import tensorboard
 from tfliteconverter import *
@@ -102,13 +103,15 @@ def createModel(num_classes, encoded_features, all_inputs):
 
   return model
 
-def trainAndSaveModel(model, val_ds, train_ds, test_ds, modelname, class_weights):
+def trainAndSaveModel(model, val_ds, train_ds, test_ds, modelname, class_weights, class_names):
   
   pathbefore = '.\\logs\\' + modelname + '\\'
   path = pathbefore + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
   tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=path, histogram_freq=1)
 
-  model.fit(train_ds, epochs=10, validation_data=val_ds, class_weight= class_weights, callbacks=[tensorboard_callback])
+  cm_callback = tf.keras.callbacks.LambdaCallback(on_epoch_end=log_confusion_matrix(model,val_ds,path,10, class_names))
+ 
+  model.fit(train_ds, epochs=10, validation_data=val_ds, class_weight= class_weights, callbacks=[tensorboard_callback, cm_callback])
 
   loss, accuracy = model.evaluate(test_ds)
 
@@ -121,6 +124,31 @@ def trainAndSaveModel(model, val_ds, train_ds, test_ds, modelname, class_weights
 
   return loss, accuracy
 
+def log_confusion_matrix(model,val_ds, path,epoch, class_names):
+    
+
+    #test_labels = val_ds.labels
+
+    # Use the model to predict the values from the test_images.
+    test_pred_raw = model.predict(val_ds)
+    
+    test_pred = np.argmax(test_pred_raw, axis=1)
+    
+    val_labels = np.concatenate([y for _for, y in val_ds], axis=0)
+
+    # Calculate the confusion matrix using sklearn.metrics
+    cm = sklearn.metrics.confusion_matrix(val_labels, test_pred)
+    
+    figure = cfm.plot_confusion_matrix(cm, class_names)
+    cm_image = cfm.plot_to_image(figure)
+    
+    file_writer_cm = tf.summary.create_file_writer(path + '/cm')
+
+    # Log the confusion matrix as an image summary.
+    with file_writer_cm.as_default():
+        tf.summary.image("Confusion Matrix", cm_image, step=epoch)
+
+
 def start04(time, length):
 
   csv_file = 'Datasets/sleep04'+ str(time) +'.csv' 
@@ -130,12 +158,13 @@ def start04(time, length):
       0: 1,
       1: 2,
   }
+  class_names =['awake', 'sleeping']
 
   dataframe = loadDataFrame(csv_file)
   headers = createHeaders(length)
   all_inputs, encoded_features, val_ds,train_ds, test_ds = createFeatures(dataframe, headers)
   model = createModel(2,encoded_features, all_inputs)
-  loss, accuracy = trainAndSaveModel(model, val_ds,train_ds, test_ds, 'sleep04'+ str(time), class_weights)
+  loss, accuracy = trainAndSaveModel(model, val_ds,train_ds, test_ds, 'sleep04'+ str(time), class_weights,class_names)
   return loss, accuracy
 
 def start12(time, length):
@@ -147,12 +176,13 @@ def start12(time, length):
       0: 1,
       1: 3,
   }
+  class_names =['light', 'deep']
 
   dataframe = loadDataFrame(csv_file)
   headers = createHeaders(length)
   all_inputs, encoded_features, val_ds,train_ds, test_ds = createFeatures(dataframe, headers)
   model = createModel(2,encoded_features, all_inputs)
-  loss, accuracy = trainAndSaveModel(model, val_ds,train_ds, test_ds, 'sleep12'+ str(time), class_weights)
+  loss, accuracy = trainAndSaveModel(model, val_ds,train_ds, test_ds, 'sleep12'+ str(time), class_weights, class_names)
   return loss, accuracy
 
 

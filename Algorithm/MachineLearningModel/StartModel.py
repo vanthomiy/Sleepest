@@ -1,8 +1,6 @@
 import createSleepModel as csm
 
 
-
-
 loss, accuracy = csm.start04(5,24)
 loss1, accuracy1 = csm.start04(10,11)
 loss2, accuracy2 = csm.start04(30,3)
