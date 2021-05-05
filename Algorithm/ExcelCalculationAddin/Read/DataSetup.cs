@@ -24,10 +24,10 @@ namespace ExcelCalculationAddin.Read
             {DataPoints.Light, "D"},
             {DataPoints.Motion, "E"},
             {DataPoints.Real, "F"},
-            {DataPoints.Caculated, "G"},
-            {DataPoints.GeneralParam, "H"},
-            {DataPoints.SleepType, "I"},
-            {DataPoints.SleepTypePercentage, "J"}
+            //{DataPoints.Caculated, "G"},
+            //{DataPoints.GeneralParam, "H"},
+            //{DataPoints.SleepType, "I"},
+            //{DataPoints.SleepTypePercentage, "J"}
         };
 
             alarmSetPoints = new Dictionary<AlarmPoints, int>()

@@ -44,12 +44,12 @@ namespace ExcelCalculationAddin
             //SleepTimeClean.sleepCleanModelsAfter = SleepTimeModel.CreateAllModels(false);
             //SleepType.sleepTypeParamsAfter = SleepTimeParameter.CreateAllFactorModels(false);
 
-            SleepTimeClean.sleepTimeParamsWhile= SleepTimeParameter.CreateAllModels(true);
-            SleepTimeClean.sleepTimeModelsWhile = SleepTimeModel.CreateAllModels(true);
-            SleepType.sleepTimeParameter = SleepTimeParameter.CreateAllFactorModels(true);
+           // SleepTimeClean.sleepTimeParamsWhile= SleepTimeParameter.CreateAllModels(true);
+           // SleepTimeClean.sleepTimeModelsWhile = SleepTimeModel.CreateAllModels(true);
+           // SleepType.sleepTimeParameter = SleepTimeParameter.CreateAllFactorModels(true);
 
-            SleepStateClean.sleepStateParams = SleepStateParameter.CreateAllModels(true);
-            SleepStateClean.sleepStateModels = SleepStateModel.CreateAllModels(true);
+           // SleepStateClean.sleepStateParams = SleepStateParameter.CreateAllModels(true);
+           // SleepStateClean.sleepStateModels = SleepStateModel.CreateAllModels(true);
            // SleepType.sleepStateParameter= SleepStateParameter.CreateAllFactorModels(true);
 
             await ReadParameter.GetAllUserData();
@@ -336,12 +336,33 @@ namespace ExcelCalculationAddin
 
         }
 
+
+        public void Split<T>(T[] array, int index, out T[] first, out T[] second)
+        {
+            first = array.Take(index).ToArray();
+            second = array.Skip(index).ToArray();
+        }
+
+        public void Split<T>(T[] array, int index, out T[] first, out T[] second, out T[] third)
+        {
+            first = array.Take(index).ToArray();
+            var puffer = array.Skip(index).ToArray();
+            second = puffer.Take(index).ToArray();
+            third = puffer.Skip(index).ToArray();
+        }
+
+        public void SplitMidPoint<T>(T[] array, out T[] first, out T[] second)
+        {
+            Split(array, array.Length / 2, out first, out second);
+        }
+
+        public void SplitThirdPoint<T>(T[] array, out T[] first, out T[] second, out T[] third)
+        {
+            Split(array, array.Length / 3, out first, out second, out third);
+        }
+
         private async void btnJsonExport_Click(object sender, RibbonControlEventArgs e)
         {
-            if (SleepStateClean.sleepStateParams == null)
-            {
-                return;
-            }
 
             string folder = await ExportFile.GetFolder();
 
@@ -399,8 +420,8 @@ namespace ExcelCalculationAddin
             {
                 string sleep04file = "real";
                 string sleep12file = "real";
-                //string tablebedfile = "real";
-                //string wakeuplightfile = "real";
+                string tablebedfile = "real,brigthnessMax,motionMax,sleepMax,brigthnessMin,motionMin,sleepMin,brigthnessMedian,motionMedian,sleepMedian,brigthnessAverage,motionAverage,sleepAverage";
+                string wakeuplightfile = "real";
 
                 for (int r = 0; r < minutes / time; r++)
                 {
@@ -408,78 +429,188 @@ namespace ExcelCalculationAddin
                     sleep12file += $",brigthness{r},motion{r},sleep{r}";
                 }
 
+                for (int r = 1; r < minutes / time; r++)
+                {
+                    wakeuplightfile += $",brigthness{r},motion{r},sleep{r}";
+                }
+
                 for (int i = 0; i < ReadParameter.values.Count; i++)
                 {
                     var userdatabucket04 = "";
                     var userdatabucket12 = "";
+                    var userdatabucketWakeup = "";
+                    var userdatatablebedbucket = "";
 
-                    for (int j = 1; j < ReadParameter.values[i].sleepSessionWhile.Count; j++)
+                    for (int j = 0; j < ReadParameter.values[i].sleepSessionWhile.Count; j++)
                     {
                         List<RootRawApiFull> rraltrue = new List<RootRawApiFull>();
 
                         var databucket04 = "";
                         var databucket12 = "";
+                        var databucketWakeup = "";
+                        var tablebedbucket = "";
 
-              
 
-                        for (int k = 0; k < ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll.Count; k++)
+                        if (ReadParameter.values[i].sheetname != "Table")
                         {
-                            try
+                            for (int k = 0; k < ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll.Count; k++)
                             {
-
-                                var startTime = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].time;
-                                //var listOfDataBevore = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll.Where(x => x.time <= startTime && x.time > startTime.AddMinutes(-minutes)).OrderByDescending(y => y.time).ToList();
-                                var listOfDataBevore = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll.OrderByDescending(y => y.time).ToList();
-
-                                string dataset = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].realSleepState.ToString();
-
-                                for (int l = 0; l < minutes; l += time)
+                                try
                                 {
-                                    var actualTime = startTime.AddMinutes(-l);
 
-                                    var actualItem = listOfDataBevore.First(x => x.time <= actualTime);
+                                    var startTime = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].time;
+                                    var listOfDataBevore = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll.OrderByDescending(y => y.time).ToList();
+                                    var listOfDataAfter = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll.OrderBy(y => y.time).ToList();
 
-                                    if (listOfDataBevore.Count() > l)
+                                    string dataset04 = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].realSleepState.ToString();
+                                    string datasetWakeup = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].realSleepState.ToString();
+                                    string dataset12 = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].realSleepState.ToString();
+
+                                    for (int l = 0; l < minutes; l += time)
                                     {
-                                        dataset += "," + actualItem.light + "," + actualItem.motion + "," + actualItem.sleep;
+                                        var actualTime = startTime.AddMinutes(-l);
+
+                                        var actualItem = listOfDataBevore.First(x => x.time <= actualTime);
+
+                                        if (listOfDataBevore.Count() > l)
+                                        {
+                                            dataset04 += "," + actualItem.light + "," + actualItem.motion + "," + actualItem.sleep;
+                                        }
+                                        else
+                                        {
+                                            var item = listOfDataBevore.Last();
+                                            dataset04 += "," + item.light + "," + item.motion + "," + item.sleep;
+                                        }
                                     }
-                                    else
+
+                                    for (int l = 1; l < minutes; l += time)
                                     {
-                                        var item = listOfDataBevore.Last();
-                                        dataset += "," + item.light + "," + item.motion + "," + item.sleep;
+                                        var actualTime = startTime.AddMinutes(-l);
+
+                                        var actualItem = listOfDataBevore.First(x => x.time <= actualTime);
+
+                                        if (listOfDataBevore.Count() > l)
+                                        {
+                                            datasetWakeup += "," + actualItem.light + "," + actualItem.motion + "," + actualItem.sleep;
+                                        }
+                                        else
+                                        {
+                                            var item = listOfDataBevore.Last();
+                                            datasetWakeup += "," + item.light + "," + item.motion + "," + item.sleep;
+                                        }
+                                    }
+
+                                    for (int l = 0; l < minutes / 2; l += time)
+                                    {
+                                        var actualTimeMin = startTime.AddMinutes(-l);
+                                        var actualTimeMax = startTime.AddMinutes(l);
+
+                                        var actualItemBefore = listOfDataBevore.First(x => x.time <= actualTimeMin);
+                                        var actualItemAfter = listOfDataAfter.First(x => x.time >= actualTimeMax);
+
+                                        if (listOfDataBevore.Count() > l)
+                                        {
+                                            dataset12 += "," + actualItemBefore.light + "," + actualItemBefore.motion + "," + actualItemBefore.sleep;
+                                        }
+                                        else
+                                        {
+                                            var item = listOfDataBevore.Last();
+                                            dataset12 += "," + item.light + "," + item.motion + "," + item.sleep;
+                                        }
+
+                                        if (listOfDataAfter.Count() > l)
+                                        {
+                                            dataset12 += "," + actualItemAfter.light + "," + actualItemAfter.motion + "," + actualItemAfter.sleep;
+                                        }
+                                        else
+                                        {
+                                            var item = listOfDataAfter.Last();
+                                            dataset12 += "," + item.light + "," + item.motion + "," + item.sleep;
+                                        }
+                                    }
+
+
+
+                                    databucket04 += "\n" + dataset04.Replace("rem", "sleeping").Replace("deep", "sleeping").Replace("light", "sleeping");
+
+                                    if (!ReadParameter.values[i].sheetname.ToLower().Contains("fabi") && ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].realSleepState != SleepState.awake)
+                                    {
+                                        databucketWakeup += "\n" + datasetWakeup.Replace("rem", "light");
+                                        databucket12 += "\n" + dataset12.Replace("rem", "light");
                                     }
                                 }
-
-                                databucket04 += "\n" + dataset.Replace("rem", "sleeping").Replace("deep", "sleeping").Replace("light", "sleeping");
-
-                                if (!ReadParameter.values[i].sheetname.ToLower().Contains("fabi") && ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].realSleepState != SleepState.awake)
+                                catch (Exception ex)
                                 {
-                                    databucket12 += "\n"+dataset.Replace("rem", "light");
+
                                 }
                             }
-                            catch (Exception ex)
+
+                            userdatabucket04 += "\n" + databucket04;
+                            userdatabucket12 += "\n" + databucket12;
+                            userdatabucketWakeup += "\n" + databucketWakeup;
+                        }
+
+                        var sleepingListFull = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll.Where(x=>x.realSleepState != SleepState.awake).ToArray();
+                        if (sleepingListFull != null && sleepingListFull.Count() > 6)
+                        {
+                            List<SleepDataEntry[]> data = new List<SleepDataEntry[]>();
+                            SleepDataEntry[] sleepingListFirstHalf, sleepingListSecondHalf, sleepingList1of3, sleepingList2of3, sleepingList3of3;
+                            SplitMidPoint(sleepingListFull, out sleepingListFirstHalf, out sleepingListSecondHalf);
+                            SplitThirdPoint(sleepingListFull, out sleepingList1of3, out sleepingList2of3, out sleepingList3of3);
+                            data.Add(sleepingListFirstHalf);
+                            data.Add(sleepingListSecondHalf);
+                            data.Add(sleepingList1of3);
+                            data.Add(sleepingList2of3);
+                            data.Add(sleepingList3of3);
+
+                            foreach (var item in data)
                             {
+
+
+                                var maxLight = item.Max(x => x.light);
+                                var minLight = item.Min(x => x.light);
+                                var averageLight = item.Average(x => x.light);
+                                var medianLight = item.Sum(x => x.light) / item.Count();
+
+                                var maxMotion = item.Max(x => x.motion);
+                                var minMotion = item.Min(x => x.motion);
+                                var averageMotion = item.Average(x => x.motion);
+                                var medianMotion = item.Sum(x => x.motion) / item.Count();
+
+                                var maxSleep = item.Max(x => x.sleep);
+                                var minSleep = item.Min(x => x.sleep);
+                                var averageSleep = item.Average(x => x.sleep);
+                                var medianSleep = item.Sum(x => x.sleep) / item.Count();
+
+                                tablebedbucket += $"\n{(ReadParameter.values[i].sheetname == "Table" ? 0:1)}," +
+                                    $"{(int)maxLight},{(int)maxMotion},{(int)maxSleep}," +
+                                    $"{(int)minLight},{(int)minMotion},{(int)minSleep}," +
+                                    $"{(int)averageLight},{(int)averageMotion},{(int)averageSleep}," +
+                                    $"{(int)medianLight},{(int)medianMotion},{(int)medianSleep}";
 
                             }
                         }
 
-                        userdatabucket04 += "\n" + databucket04;
-                        userdatabucket12 += "\n" + databucket12;
-
                         
+                        userdatatablebedbucket += "\n" + tablebedbucket;               
 
                     }
 
-
                     sleep04file += "\n" + userdatabucket04;
                     sleep12file += "\n" + userdatabucket12;
+                    wakeuplightfile += "\n" + userdatabucketWakeup;
+                    tablebedfile += "\n" + userdatatablebedbucket;
 
                 }
 
-
+                sleep04file = sleep04file.Replace("awake", "0").Replace("sleeping", "1");
+                wakeuplightfile = wakeuplightfile.Replace("light", "0").Replace("deep", "1");
+                sleep12file = sleep12file.Replace("light", "0").Replace("deep", "1");
 
                 ExportFile.ExportCSV(sleep04file, "sleep04"+time, folder, @"Datasets\sleep04");
                 ExportFile.ExportCSV(sleep12file, "sleep12" + time, folder, @"Datasets\sleep12");
+                ExportFile.ExportCSV(wakeuplightfile, "wakeuplightfile" + time, folder, @"Datasets\wakeuplight");
+                ExportFile.ExportCSV(tablebedfile, "tablebedfile" + time, folder, @"Datasets\tablebed");
             }
         }
     }
