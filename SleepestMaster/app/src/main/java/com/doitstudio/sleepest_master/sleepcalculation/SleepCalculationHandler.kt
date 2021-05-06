@@ -86,7 +86,7 @@ class SleepCalculationHandler(val context: Context) {
             }
         }
 
-        return Pair(timeNormedData, frequencyType)
+        return Pair(timeNormedData.sortedByDescending { x -> x.timestampSeconds }, frequencyType)
     }
 
 
