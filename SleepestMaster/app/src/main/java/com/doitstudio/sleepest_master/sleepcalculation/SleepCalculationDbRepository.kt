@@ -1,8 +1,13 @@
 package com.doitstudio.sleepest_master.sleepcalculation
 
+import androidx.room.Query
+import com.doitstudio.sleepest_master.model.data.SleepState
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataDao
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 
 /**
@@ -34,6 +39,23 @@ class SleepCalculationDbRepository(
     val allSleepApiRawData: Flow<List<SleepApiRawDataEntity>> =
         sleepApiRawDataDao.getAll()
 
+    /**
+     * [time] the duration in seconds eg. 86200 would be from 24hours ago to now the data
+     */
+    suspend fun getSleepApiRawDataSince(time:Int): Flow<List<SleepApiRawDataEntity>>
+    {
+        val now = LocalDateTime.now(ZoneOffset.UTC)
+        val seconds = now.atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+        return sleepApiRawDataDao.getSince(seconds-time)
+    }
+
+    suspend fun getSleepApiRawDataFromDate(dateTime:LocalDate): Flow<List<SleepApiRawDataEntity>>
+    {
+        val startTime = dateTime.minusDays(1).atTime(12,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+        val endTime = dateTime.minusDays(1).atTime(12,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+        return sleepApiRawDataDao.getBetween(startTime,endTime)
+    }
+
     suspend fun insertSleepApiRawData(sleepClassifyEventEntity: SleepApiRawDataEntity) {
         sleepApiRawDataDao.insert(sleepClassifyEventEntity)
     }
@@ -45,6 +67,11 @@ class SleepCalculationDbRepository(
     suspend fun insertSleepApiRawData(sleepClassifyEventEntities: List<SleepApiRawDataEntity>) {
         sleepApiRawDataDao.insertAll(sleepClassifyEventEntities)
     }
+
+    suspend fun updateSleepApiRawDataSleepState(id: Int, sleepState: SleepState){
+        sleepApiRawDataDao.updateSleepState(id,sleepState )
+    }
+
 
 
 

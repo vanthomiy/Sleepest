@@ -104,8 +104,7 @@ def saveModelInputDetails(tflite_file):
     # Get input and output tensors.
     input_details = interpreter.get_input_details()
 
-    list1 = {}
-    count = 1
+    list1 = []
     for input in input_details:
         data = {}
         
@@ -114,8 +113,7 @@ def saveModelInputDetails(tflite_file):
         data['shape'] = str(input['shape'])
         data['dtype'] = str(input['shape'].dtype)
 
-        list1[count] = data
-        count = count+1
+        list1.append(data)
 
 
     file = tflite_file+'Inputs.json'
@@ -134,6 +132,15 @@ saveModelInputDetails(tflite_file)
 tflite_file = 'litemodels/sleep0430' 
 saveModelInputDetails(tflite_file)
 
+
+tflite_file = 'litemodels/sleep125' 
+saveModelInputDetails(tflite_file)
+
+tflite_file = 'litemodels/sleep1210' 
+saveModelInputDetails(tflite_file)
+
+tflite_file = 'litemodels/sleep1230' 
+saveModelInputDetails(tflite_file)
 
 tflite_file = 'litemodels/sleep125' 
 saveModelInputDetails(tflite_file)

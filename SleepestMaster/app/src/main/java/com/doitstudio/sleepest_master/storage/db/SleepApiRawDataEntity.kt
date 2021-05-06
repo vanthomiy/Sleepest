@@ -3,6 +3,7 @@ package com.doitstudio.sleepest_master.storage.db
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.doitstudio.sleepest_master.model.data.SleepState
 import com.google.android.gms.location.SleepClassifyEvent
 
 /**
@@ -27,7 +28,11 @@ data class SleepApiRawDataEntity(
         val motion: Int,
 
         @ColumnInfo(name = "light")
-        val light: Int
+        val light: Int,
+
+        @ColumnInfo(name = "sleepState")
+        var sleepState: SleepState
+
 ) {
         companion object {
                 fun from(sleepClassifyEvent: SleepClassifyEvent): SleepApiRawDataEntity {
@@ -35,7 +40,8 @@ data class SleepApiRawDataEntity(
                                 timestampSeconds = (sleepClassifyEvent.timestampMillis / 1000).toInt(),
                                 confidence = sleepClassifyEvent.confidence,
                                 motion = sleepClassifyEvent.motion,
-                                light = sleepClassifyEvent.light
+                                light = sleepClassifyEvent.light,
+                                sleepState = SleepState.NONE
                         )
                 }
         }

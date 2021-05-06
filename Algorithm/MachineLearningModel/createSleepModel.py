@@ -27,26 +27,41 @@ def loadDataFrame(csv_file):
 
   return dataframe
 
-def createHeaders(length):
+def createHeaders(length, start = 0):
   headers = []
 
-  for i in range(0,length):
+  for i in range(start,length):
     headers.append('sleep'+ str(i))
     headers.append('motion'+ str(i))
     headers.append('brigthness'+ str(i))
 
   return headers
 
+def createHeadersBed():
+  headers = ["brigthnessMax","motionMax","sleepMax","brigthnessMin","motionMin","sleepMin","brigthnessMedian","motionMedian","sleepMedian","brigthnessAverage","motionAverage","sleepAverage"]
+  return headers
+
 # A utility method to create a tf.data dataset from a Pandas Dataframe
 def df_to_dataset(dataframe, shuffle=True, batch_size=32):
   dataframe = dataframe.copy()
   labels = dataframe.pop('target')
-  ds = tf.data.Dataset.from_tensor_slices((dict(dataframe), labels))
+  ds_normal = ds = tf.data.Dataset.from_tensor_slices((dict(dataframe), labels))
   if shuffle:
     ds = ds.shuffle(buffer_size=len(dataframe))
   ds = ds.batch(batch_size)
   ds = ds.prefetch(batch_size)
   return ds
+
+# A utility method to create a tf.data dataset from a Pandas Dataframe
+def df_to_dataset_labels(dataframe, shuffle=True, batch_size=32):
+  dataframe = dataframe.copy()
+  labels = dataframe.pop('target')
+  ds_normal = ds = tf.data.Dataset.from_tensor_slices((dict(dataframe), labels))
+  if shuffle:
+    ds = ds.shuffle(buffer_size=len(dataframe))
+  ds = ds.batch(batch_size)
+  ds = ds.prefetch(batch_size)
+  return ds, labels
 
 def get_normalization_layer(name, dataset):
   # Create a Normalization layer for our feature.
@@ -65,15 +80,16 @@ def createFeatures(dataframe, headers):
   train, test = train_test_split(dataframe, test_size=0.2)
   train, val = train_test_split(train, test_size=0.2)
 
-  batch_size = 256
+  #batch_size = 256
+  batch_size = 512
+  #batch_size = 1024
   train_ds = df_to_dataset(train, batch_size=batch_size)
   val_ds = df_to_dataset(val, shuffle=False, batch_size=batch_size)
   test_ds = df_to_dataset(test, shuffle=False, batch_size=batch_size)
 
+  
   all_inputs = []
   encoded_features = []
-
-  featuresSleep = []
 
   # Numeric features. 
   #sleep, motion, light ...!
@@ -83,9 +99,8 @@ def createFeatures(dataframe, headers):
     encoded_numeric_col = normalization_layer(numeric_col)
     all_inputs.append(numeric_col)
     encoded_features.append(encoded_numeric_col)
-    featuresSleep.append(numeric_col)
 
-  return all_inputs, encoded_features, val_ds,train_ds, test_ds
+  return all_inputs, encoded_features, val_ds,train_ds, test_ds, test
 
 def createModel(num_classes, encoded_features, all_inputs):
 
@@ -103,15 +118,15 @@ def createModel(num_classes, encoded_features, all_inputs):
 
   return model
 
-def trainAndSaveModel(model, val_ds, train_ds, test_ds, modelname, class_weights, class_names):
+def trainAndSaveModel(model, val_ds, train_ds, test_ds, modelname, class_weights, class_names, test):
   
   pathbefore = '.\\logs\\' + modelname + '\\'
   path = pathbefore + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
   tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=path, histogram_freq=1)
 
-  cm_callback = tf.keras.callbacks.LambdaCallback(on_epoch_end=log_confusion_matrix(model,val_ds,path,10, class_names))
+  #cm_callback = tf.keras.callbacks.LambdaCallback(on_epoch_end=log_confusion_matrix(model,val_ds,path,10, class_names))
  
-  model.fit(train_ds, epochs=10, validation_data=val_ds, class_weight= class_weights, callbacks=[tensorboard_callback, cm_callback])
+  model.fit(train_ds, epochs=100, validation_data=val_ds, class_weight= class_weights, callbacks=[tensorboard_callback])
 
   loss, accuracy = model.evaluate(test_ds)
 
@@ -120,24 +135,27 @@ def trainAndSaveModel(model, val_ds, train_ds, test_ds, modelname, class_weights
   dot_img_file = modelname + '/model.png'
   tf.keras.utils.plot_model(model, to_file=dot_img_file, show_shapes=True, rankdir="LR")
 
+  log_confusion_matrix(model,test,path,10, class_names)
+
   convertSaveModelWithCustomOps(modelname, 'litemodels/'+ modelname + '.tflite', False)
 
   return loss, accuracy
 
-def log_confusion_matrix(model,val_ds, path,epoch, class_names):
+def log_confusion_matrix(model,test, path,epoch, class_names):
     
 
     #test_labels = val_ds.labels
+    cm_data, cm_labels = df_to_dataset_labels(test, shuffle=False, batch_size=256)
 
     # Use the model to predict the values from the test_images.
-    test_pred_raw = model.predict(val_ds)
+    test_pred_raw = model.predict(cm_data)
     
     test_pred = np.argmax(test_pred_raw, axis=1)
     
-    val_labels = np.concatenate([y for _for, y in val_ds], axis=0)
+    #val_labels = np.concatenate([y for _for, y in val_ds], axis=0)
 
     # Calculate the confusion matrix using sklearn.metrics
-    cm = sklearn.metrics.confusion_matrix(val_labels, test_pred)
+    cm = sklearn.metrics.confusion_matrix(cm_labels, test_pred)
     
     figure = cfm.plot_confusion_matrix(cm, class_names)
     cm_image = cfm.plot_to_image(figure)
@@ -147,7 +165,6 @@ def log_confusion_matrix(model,val_ds, path,epoch, class_names):
     # Log the confusion matrix as an image summary.
     with file_writer_cm.as_default():
         tf.summary.image("Confusion Matrix", cm_image, step=epoch)
-
 
 def start04(time, length):
 
@@ -162,9 +179,9 @@ def start04(time, length):
 
   dataframe = loadDataFrame(csv_file)
   headers = createHeaders(length)
-  all_inputs, encoded_features, val_ds,train_ds, test_ds = createFeatures(dataframe, headers)
+  all_inputs, encoded_features, val_ds,train_ds, test_ds, test = createFeatures(dataframe, headers)
   model = createModel(2,encoded_features, all_inputs)
-  loss, accuracy = trainAndSaveModel(model, val_ds,train_ds, test_ds, 'sleep04'+ str(time), class_weights,class_names)
+  loss, accuracy = trainAndSaveModel(model, val_ds,train_ds, test_ds, 'sleep04'+ str(time), class_weights,class_names, test)
   return loss, accuracy
 
 def start12(time, length):
@@ -180,12 +197,46 @@ def start12(time, length):
 
   dataframe = loadDataFrame(csv_file)
   headers = createHeaders(length)
-  all_inputs, encoded_features, val_ds,train_ds, test_ds = createFeatures(dataframe, headers)
+  all_inputs, encoded_features, val_ds,train_ds, test_ds, test = createFeatures(dataframe, headers)
   model = createModel(2,encoded_features, all_inputs)
-  loss, accuracy = trainAndSaveModel(model, val_ds,train_ds, test_ds, 'sleep12'+ str(time), class_weights, class_names)
+  loss, accuracy = trainAndSaveModel(model, val_ds,train_ds, test_ds, 'sleep12'+ str(time), class_weights, class_names, test)
   return loss, accuracy
 
+def startWakeUpLite(time, length):
 
- 
+  csv_file = 'Datasets/wakeuplightfile'+ str(time) +'.csv' 
+
+  # Weight the sleep 2 times more then the awake !
+  class_weights = {
+      0: 1,
+      1: 3,
+  }
+  class_names =['light', 'deep']
+
+  dataframe = loadDataFrame(csv_file)
+  headers = createHeaders(length, 1)
+  all_inputs, encoded_features, val_ds,train_ds, test_ds, test = createFeatures(dataframe, headers)
+  model = createModel(2,encoded_features, all_inputs)
+  loss, accuracy = trainAndSaveModel(model, val_ds,train_ds, test_ds, 'wakeuplight'+ str(time), class_weights, class_names, test)
+  return loss, accuracy
+
+def startTableBed(time):
+
+  csv_file = 'Datasets/tablebedfile'+ str(time) +'.csv' 
+
+  # Weight the sleep 2 times more then the awake !
+  class_weights = {
+      0: 100,
+      1: 1,
+  }
+  class_names =['table', 'bed']
+
+  dataframe = loadDataFrame(csv_file)
+  headers = createHeadersBed()
+  all_inputs, encoded_features, val_ds,train_ds, test_ds, test = createFeatures(dataframe, headers)
+  model = createModel(2,encoded_features, all_inputs)
+  loss, accuracy = trainAndSaveModel(model, val_ds,train_ds, test_ds, 'tablefile'+ str(time), class_weights, class_names, test)
+  return loss, accuracy
+
 
 

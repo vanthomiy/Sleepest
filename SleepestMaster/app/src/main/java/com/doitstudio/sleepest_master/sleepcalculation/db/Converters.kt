@@ -6,6 +6,15 @@ import com.doitstudio.sleepest_master.model.data.*
 class Converters {
 
 
+    @TypeConverter
+    fun fromSleepState(sleepState: SleepState) : Int {
+        return sleepState.ordinal
+    }
+
+    @TypeConverter
+    fun toSleepState(sleepState: Int) : SleepState {
+        return SleepState.values()[sleepState]
+    }
 
     @TypeConverter
     fun fromMobilePosition(mobilePosition: MobilePosition) : Int {

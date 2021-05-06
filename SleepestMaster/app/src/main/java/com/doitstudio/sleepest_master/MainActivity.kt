@@ -12,7 +12,9 @@ import androidx.core.content.ContextCompat
 import com.doitstudio.sleepest_master.background.ForegroundService
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
 import com.doitstudio.sleepest_master.model.data.Actions
+import com.doitstudio.sleepest_master.model.data.ModelProcess
 import com.doitstudio.sleepest_master.model.data.SleepState
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.sleepcalculation.ml.SleepClassifier
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataRealEntity
@@ -65,8 +67,7 @@ class MainActivity : AppCompatActivity() {
     var index = 9
     fun buttonClick2(view: View){
 
-        val sleepClassifier = SleepClassifier.getHandler(this)
-
+        //val sleepClassifier = SleepClassifier.getHandler(this)
 
         var gson = Gson()
         val jsonFile = this
@@ -85,22 +86,37 @@ class MainActivity : AppCompatActivity() {
         val sleepTimesReal = gson.fromJson(jsonFileReal, Array<Array<SleepApiRawDataRealEntity>>::class.java).asList()
 
 
+        val sleepCalculationHandler = SleepCalculationHandler.getHandler(this)
 
-        for (j in 0 until sleepTimes[5].count()) {
-            var done = 0
-            var sleeppred = 0
-            var awakepred = 0
-            var sleepr = 0
-            var awaker = 0
+        var oawakepred  = 0
+        var osleeppred = 0// += sleeppred
+        var oawaker  = 0//+= awaker
+        var osleepr  = 0//+= sleepr
+
+        var olight = 0
+        var odepp = 0
+        var onone = 0
+
+        for (j in 0 until sleepTimes.count()) {
+
+            var light = 0
+            var depp = 0
             var none = 0
 
+            var awakepred  = 0
+            var sleeppred = 0// += sleeppred
+            var awaker  = 0//+= awaker
+            var sleepr  = 0//+= sleepr
+
+
+
             for (i in 0 until sleepTimes[j].count()) {
-                var sleepData = (sleepTimes[j].filter { it.timestampSeconds < sleepTimes[j][i].timestampSeconds }.toList())
-                var sleepDataReal = (sleepTimesReal[j].filter { it.timestampSeconds < sleepTimesReal[j][i].timestampSeconds }.toList()).sortedByDescending { it.timestampSeconds }
+                var sleepData = (sleepTimes[j].filter { it.timestampSeconds <= sleepTimes[j][i].timestampSeconds }.toList())
+                var sleepDataReal = (sleepTimesReal[j].filter { it.timestampSeconds <= sleepTimesReal[j][i].timestampSeconds }.toList()).sortedByDescending { it.timestampSeconds }
 
-                var processedSleepData = sleepClassifier.createFeatures(sleepData)
-                var sleepState = sleepClassifier.isUserSleeping(processedSleepData)
+                val sleepState = sleepCalculationHandler.checkIsUserSleepingTest(sleepData)
 
+                sleepTimes[j][i].sleepState = sleepState
 
                 var realSleepState = "NONE"
                 if (sleepDataReal != null && sleepDataReal.count() > 1) {
@@ -124,13 +140,38 @@ class MainActivity : AppCompatActivity() {
 
             }
 
-            var a = sleepr
+            oawakepred += awakepred
+            osleeppred += sleeppred
+            oawaker+= awaker
+            osleepr+= sleepr
+
+
+            for (i in 0 until sleepTimes[j].count()) {
+
+                if(sleepTimes[j][i].sleepState != SleepState.SLEEPING)
+                {continue}
+
+                val sleepState = sleepCalculationHandler.defineSleepStates(sleepTimes[j][i].timestampSeconds, sleepTimes[j].sortedByDescending { x->x.timestampSeconds }.toList())
+
+                if (sleepState == SleepState.LIGHT) {
+                    light += 1
+                } else if (sleepState == SleepState.DEEP) {
+                    depp += 1
+                } else
+                {
+                    none += 1
+                }
+
+            }
+
+            olight +=light
+            odepp += depp
+            onone += none
+
 
         }
 
-
-
-
+        var a = onone
 
     }
 
@@ -139,39 +180,8 @@ class MainActivity : AppCompatActivity() {
     fun buttonClick3(view: View) {
 
         // Testing
+        val sleepClassifier = SleepClassifier.getHandler(this)
 
-        val sleepClassifier = SleepClassifier(this)
-
-        var data4 = floatArrayOf(
-                95f,1f,1f,
-                95f,1f,1f,
-                95f,1f,1f,
-                95f,1f,1f,
-                1f,1f,1f,
-                1f,1f,1f,
-                1f,1f,1f,
-                1f,1f,1f,
-                1f,1f,1f,
-                1f,1f,1f)
-
-        var result4 = sleepClassifier.isUserSleeping(data4)
-
-        data4 = floatArrayOf(
-                91f,1f,1f,
-                60f,1f,1f,
-                70f,1f,1f,
-                80f,1f,1f,
-                20f,1f,1f,
-                30f,1f,1f,
-                20f,1f,1f,
-                30f,1f,1f,
-                20f,1f,1f,
-                60f,1f,1f)
-
-
-        result4 = sleepClassifier.isUserSleeping(data4)
-
-        val a = result4.toString()
     }
 
     private fun requestData(){

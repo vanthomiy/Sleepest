@@ -56,7 +56,6 @@ def convertSaveModelWithCustomOps(saved_model_dir, modelname, addData):
     converter.experimental_new_converter =True    
     tflite_model = converter.convert()
 
-
     # Save the model.
     with open(modelname, 'wb') as f:
         f.write(tflite_model)
