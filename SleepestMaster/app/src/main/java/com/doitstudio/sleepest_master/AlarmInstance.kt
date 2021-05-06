@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.asLiveData
 import com.appyvet.rangebar.RangeBar
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity
@@ -32,6 +33,7 @@ class AlarmInstance(applicationContext: Context, private val alarmId: Int = 0) :
     lateinit var tViewAlarmViewTopic : TextView //Topic of the alarm
     lateinit var viewExtendedAlarmSettings : View //Display extended alarm settings
     lateinit var btnWeekdaySelect : Button //Popup window for selecting the weekdays for alarm
+    lateinit var btnDeleteAlarm: Button //Delete current alarm entity
     lateinit var swAlarmActive : Switch //Select whether alarm is on or off
     lateinit var alarmSettings : AlarmEntity
     private val alarmEntityLiveData by lazy { repository.alarmFlow.asLiveData()}
@@ -135,6 +137,14 @@ class AlarmInstance(applicationContext: Context, private val alarmId: Int = 0) :
                 .show()
     }
 
+    private fun deleteAlarmEntity() {
+        AlarmSettings.getAlarmSettings().removeAlarmEntity(alarmId)
+
+        scope.launch {
+            repository.deleteAlarm(alarmSettings)
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.alarm_entity, container, false)
     }
@@ -150,6 +160,7 @@ class AlarmInstance(applicationContext: Context, private val alarmId: Int = 0) :
         viewExtendedAlarmSettings = view.findViewById(R.id.cL_extendedAlarmSettings)
         btnWeekdaySelect = view.findViewById(R.id.btn_alarmDaysWeek)
         swAlarmActive = view.findViewById(R.id.sw_alarmOnOff)
+        btnDeleteAlarm = view.findViewById(R.id.btn_deleteAlarm)
 
         /*
         tViewExpandAlarmSettings.setOnClickListener {
@@ -165,7 +176,7 @@ class AlarmInstance(applicationContext: Context, private val alarmId: Int = 0) :
 
         alarmEntityLiveData.observe(viewLifecycleOwner) {
             alarmList ->
-            alarmSettings = alarmList[0] //Bug with alarmIds and listener for the weekdays. Find a workaround
+            alarmSettings = alarmList.first { x -> x.id == alarmId }
         }
 
         swAlarmActive.setOnClickListener {
@@ -174,6 +185,10 @@ class AlarmInstance(applicationContext: Context, private val alarmId: Int = 0) :
 
         btnWeekdaySelect.setOnClickListener {
             selectActiveDaysOfWeek()
+        }
+
+        btnDeleteAlarm.setOnClickListener {
+            deleteAlarmEntity()
         }
 
         scope.launch {
