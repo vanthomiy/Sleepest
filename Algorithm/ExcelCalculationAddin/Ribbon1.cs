@@ -361,7 +361,7 @@ namespace ExcelCalculationAddin
             Split(array, array.Length / 3, out first, out second, out third);
         }
 
-        private async void btnJsonExport_Click(object sender, RibbonControlEventArgs e)
+        private async void btnJsonExport_ClickOld(object sender, RibbonControlEventArgs e)
         {
 
             string folder = await ExportFile.GetFolder();
@@ -613,5 +613,297 @@ namespace ExcelCalculationAddin
                 ExportFile.ExportCSV(tablebedfile, "tablebedfile" + time, folder, @"Datasets\tablebed");
             }
         }
+
+        private async void btnJsonExport_Click(object sender, RibbonControlEventArgs e)
+        {
+
+            string folder = await ExportFile.GetFolder();
+
+            if (folder == null)
+            {
+                return;
+            }
+
+
+
+            List<List<RootRawApi>> mrral = new List<List<RootRawApi>>();
+            List<List<RootRawApiTrue>> mrraltrue = new List<List<RootRawApiTrue>>();
+
+            for (int i = 1; i < ReadParameter.values.Count; i++)
+            {
+                for (int j = 1; j < ReadParameter.values[i].sleepSessionWhile.Count; j++)
+                {
+                    List<RootRawApi> rral = new List<RootRawApi>();
+                    List<RootRawApiTrue> rraltrue = new List<RootRawApiTrue>();
+
+                    foreach (var item in ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll)
+                    {
+                        RootRawApi rra = new RootRawApi();
+                        RootRawApiTrue rratrue = new RootRawApiTrue();
+
+                        rratrue.confidence = rra.confidence = item.sleep;
+                        rratrue.motion = rra.motion = item.motion;
+                        rratrue.light = rra.light = item.light;
+                        rratrue.real = item.realSleepState;
+
+                        TimeSpan span = item.time.Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+                        rra.timestampSeconds = (int)span.TotalSeconds;
+                        rratrue.timestampSeconds = (int)span.TotalSeconds;
+
+                        rral.Add(rra);
+                        rraltrue.Add(rratrue);
+                    }
+
+                    mrral.Add(rral);
+                    mrraltrue.Add(rraltrue);
+                }
+            }
+
+            var rawSleepApiDataFiles = JsonConvert.SerializeObject(mrral);
+            var rawSleepApiDataFilesTrue = JsonConvert.SerializeObject(mrraltrue);
+            ExportFile.Export(rawSleepApiDataFiles, "SleepValues", folder);
+            ExportFile.Export(rawSleepApiDataFilesTrue, "SleepValuesTrue", folder);
+
+
+
+            List<int> times = new List<int> { 5, 10, 30 };
+            int minutes = 2 * 60;
+
+            List<string> csvData = new List<string>();
+            foreach (var time in times)
+            {
+                List<string> sleep04list = new List<string>();
+                List<string> sleep12list = new List<string>();
+                List<string> tablebedlist = new List<string>();
+                List<string> wakeuplightlist = new List<string>();
+
+
+                for (int i = 0; i < ReadParameter.values.Count; i++)
+                {
+
+                    for (int j = 0; j < ReadParameter.values[i].sleepSessionWhile.Count; j++)
+                    {
+
+                        if (ReadParameter.values[i].sheetname != "Table")
+                        {
+                            for (int k = 0; k < ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll.Count; k++)
+                            {
+                                List<Tuple<DateTime, string>> sleep04listdict = new List<Tuple<DateTime, string>>();
+                                List<Tuple<DateTime, string> > sleep12listdict = new List<Tuple<DateTime, string>>();// Dictionary<DateTime, string>();
+                                List<Tuple<DateTime, string> > tablebedlistdict = new List<Tuple<DateTime, string>>();// Dictionary<DateTime, string>();
+                                List<Tuple<DateTime, string> > wakeuplightlistdict = new List<Tuple<DateTime, string>>();// Dictionary<DateTime, string>();
+
+                                try
+                                {
+
+                                    var startTime = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].time;
+                                    var listOfDataBevore = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll.OrderByDescending(y => y.time).ToList();
+                                    var listOfDataAfter = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll.OrderBy(y => y.time).ToList();
+
+                                    sleep04listdict.Add(new Tuple<DateTime, string>(DateTime.Now.AddDays(1000), ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].realSleepState.ToString()));
+                                    sleep12listdict.Add(new Tuple<DateTime, string>(DateTime.Now.AddDays(1000), ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].realSleepState.ToString()));
+                                    wakeuplightlistdict.Add(new Tuple<DateTime, string>(DateTime.Now.AddDays(1000), ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].realSleepState.ToString()));
+
+                                    var theItem = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k];
+                                    sleep12listdict.Add(new Tuple<DateTime, string>(theItem.time, "," + theItem.light + "," + theItem.motion + "," + theItem.sleep));
+
+
+                                    for (int l = 0; l < minutes; l += time)
+                                    {
+                                        var actualTime = startTime.AddMinutes(-l);
+
+                                        var actualItem = listOfDataBevore.First(x => x.time <= actualTime);
+
+                                        if (listOfDataBevore.Count() > l)
+                                        {
+                                            sleep04listdict.Add(new Tuple<DateTime, string>(actualItem.time, "," +actualItem.light + "," + actualItem.motion + "," + actualItem.sleep));
+                                        }
+                                        else
+                                        {
+                                            var item = listOfDataBevore.Last();
+                                            sleep04listdict.Add(new Tuple<DateTime, string>(item.time, "," + item.light + "," + item.motion + "," + item.sleep));
+                                        }
+                                    }
+
+                                    for (int l = time; l < (minutes + time); l += time)
+                                    {
+                                        var actualTime = startTime.AddMinutes(-l);
+
+                                        var actualItem = listOfDataBevore.First(x => x.time <= actualTime);
+
+                                        if (listOfDataBevore.Count() > l)
+                                        {
+                                            wakeuplightlistdict.Add(new Tuple<DateTime, string>(actualItem.time, "," + actualItem.light + "," + actualItem.motion + "," + actualItem.sleep));
+                                        }
+                                        else
+                                        {
+                                            var item = listOfDataBevore.Last();
+                                            wakeuplightlistdict.Add(new Tuple<DateTime, string>(item.time, "," + item.light + "," + item.motion + "," + item.sleep));
+                                        }
+                                    }
+
+                                    for (int l = time; l < minutes / 2; l += time)
+                                    {
+                                        var actualTimeMin = startTime.AddMinutes(-l);
+                                        var actualTimeMax = startTime.AddMinutes(l);
+
+                                        var actualItemBefore = listOfDataBevore.First(x => x.time < actualTimeMin);
+                                        var actualItemAfter = listOfDataAfter.First(x => x.time > actualTimeMax);
+
+                                     
+                                        if (listOfDataBevore.Count() > l)
+                                        {
+                                            sleep12listdict.Add(new Tuple<DateTime, string>(actualItemBefore.time, "," + actualItemBefore.light + "," + actualItemBefore.motion + "," + actualItemBefore.sleep));
+                                        }
+                                        else
+                                        {
+                                            var item = listOfDataBevore.Last();
+                                            sleep12listdict.Add(new Tuple<DateTime, string>(item.time, "," + item.light + "," + item.motion + "," + item.sleep));
+                                        }
+
+                                        if (listOfDataAfter.Count() > l)
+                                        {
+                                            sleep12listdict.Add(new Tuple<DateTime, string>(actualItemAfter.time, "," + actualItemAfter.light + "," + actualItemAfter.motion + "," + actualItemAfter.sleep));
+            }
+                                        else
+                                        {
+                                            var item = listOfDataAfter.Last();
+                                            sleep12listdict.Add(new Tuple<DateTime, string>(item.time, "," + item.light + "," + item.motion + "," + item.sleep));
+                                        }
+                                    }
+
+
+                                    var sleep04listdictsorted = sleep04listdict.OrderByDescending(x => x.Item1);
+                                    var sleep12listdictsorted = sleep12listdict.OrderByDescending(x => x.Item1);
+                                    var wakeuplightlistdictsorted = wakeuplightlistdict.OrderByDescending(x => x.Item1);
+                                    string sl04 = "";
+                                    string sl12 = "";
+                                    string sllight = "";
+                                    foreach (var item in sleep04listdictsorted)
+                                    {
+                                        sl04 += item.Item2;
+                                    }
+                                    foreach (var item in sleep12listdictsorted)
+                                    {
+                                        sl12 += item.Item2;
+                                    }
+                                    foreach (var item in wakeuplightlistdictsorted)
+                                    {
+                                        sllight += item.Item2;
+                                    }
+
+                                    sleep04list.Add(sl04);
+
+
+                                    if (!ReadParameter.values[i].sheetname.ToLower().Contains("fabi") && ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll[k].realSleepState != SleepState.awake)
+                                    {
+                                        sleep12list.Add(sl12);
+                                        wakeuplightlist.Add(sllight);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+
+                                }
+                            }
+                        }
+
+                        var sleepingListFull = ReadParameter.values[i].sleepSessionWhile[j].sleepDataEntrieSleepTimeAll.Where(x => x.realSleepState != SleepState.awake).ToArray();
+                        if (sleepingListFull != null && sleepingListFull.Count() > 6)
+                        {
+                            List<SleepDataEntry[]> data = new List<SleepDataEntry[]>();
+                            SleepDataEntry[] sleepingListFirstHalf, sleepingListSecondHalf, sleepingList1of3, sleepingList2of3, sleepingList3of3;
+                            SplitMidPoint(sleepingListFull, out sleepingListFirstHalf, out sleepingListSecondHalf);
+                            SplitThirdPoint(sleepingListFull, out sleepingList1of3, out sleepingList2of3, out sleepingList3of3);
+                            data.Add(sleepingListFirstHalf);
+                            data.Add(sleepingListSecondHalf);
+                            data.Add(sleepingList1of3);
+                            data.Add(sleepingList2of3);
+                            data.Add(sleepingList3of3);
+
+                            foreach (var item in data)
+                            {
+
+
+                                var maxLight = item.Max(x => x.light);
+                                var minLight = item.Min(x => x.light);
+                                var averageLight = item.Average(x => x.light);
+                                var medianLight = item.Sum(x => x.light) / item.Count();
+
+                                var maxMotion = item.Max(x => x.motion);
+                                var minMotion = item.Min(x => x.motion);
+                                var averageMotion = item.Average(x => x.motion);
+                                var medianMotion = item.Sum(x => x.motion) / item.Count();
+
+                                var maxSleep = item.Max(x => x.sleep);
+                                var minSleep = item.Min(x => x.sleep);
+                                var averageSleep = item.Average(x => x.sleep);
+                                var medianSleep = item.Sum(x => x.sleep) / item.Count();
+
+                                tablebedlist.Add($"{(ReadParameter.values[i].sheetname == "Table" ? 0 : 1)}," +
+                                    $"{(int)maxLight},{(int)maxMotion},{(int)maxSleep}," +
+                                    $"{(int)minLight},{(int)minMotion},{(int)minSleep}," +
+                                    $"{(int)averageLight},{(int)averageMotion},{(int)averageSleep}," +
+                                    $"{(int)medianLight},{(int)medianMotion},{(int)medianSleep}");
+
+                            }
+                        }
+
+
+
+                    }
+                }
+
+
+
+                string sleep04file = "real";
+                string sleep12file = "real";
+                string tablebedfile = "real,brigthnessMax,motionMax,sleepMax,brigthnessMin,motionMin,sleepMin,brigthnessMedian,motionMedian,sleepMedian,brigthnessAverage,motionAverage,sleepAverage";
+                string wakeuplightfile = "real";
+
+                for (int r = 0; r < minutes / time; r++)
+                {
+                    sleep04file += $",brigthness{r},motion{r},sleep{r}";
+                }
+
+                for (int r = 0; r < (minutes + time) / time; r++)
+                {
+                    sleep12file += $",brigthness{r},motion{r},sleep{r}";
+                }
+
+                for (int r = 0; r < minutes / time; r++)
+                {
+                    wakeuplightfile += $",brigthness{r},motion{r},sleep{r}";
+                }
+
+                foreach (var item in sleep04list)
+                {
+                    sleep04file += "\n" + item;
+                }
+                foreach (var item in sleep12list)
+                {
+                    sleep12file += "\n" + item;
+                }
+                foreach (var item in tablebedlist)
+                {
+                    tablebedfile += "\n" + item;
+                }
+                foreach (var item in wakeuplightlist)
+                {
+                    wakeuplightfile += "\n" + item;
+                }
+
+
+                sleep04file = sleep04file.Replace("light", "1").Replace("deep", "1").Replace("rem", "1").Replace("awake", "0").Replace("sleeping", "1");
+                wakeuplightfile = wakeuplightfile.Replace("light", "0").Replace("deep", "1").Replace("rem", "0");
+                sleep12file = sleep12file.Replace("light", "0").Replace("deep", "1").Replace("rem", "0");
+
+                ExportFile.ExportCSV(sleep04file, "sleep04" + time, folder, @"Datasets\sleep04");
+                ExportFile.ExportCSV(sleep12file, "sleep12" + time, folder, @"Datasets\sleep12");
+                ExportFile.ExportCSV(wakeuplightfile, "wakeuplightfile" + time, folder, @"Datasets\wakeuplight");
+                ExportFile.ExportCSV(tablebedfile, "tablebedfile" + time, folder, @"Datasets\tablebed");
+            }
+        }
+
     }
 }
