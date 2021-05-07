@@ -181,8 +181,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun buttonClick1(view: View){
-        //ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
-        xyz()
+        ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
+        //xyz()
     }
 
     fun xyz() {
