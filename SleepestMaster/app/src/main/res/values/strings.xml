@@ -28,5 +28,13 @@
     <string name="alarmmanager_key">com.doitstudio.sleepest_master.background.AlarmIntentKey</string>
     <!--endregion-->
 
+    <!--region AlarmSettings-->
+    <string name="einstellungen">Sleepest</string>
+    <string name="schlafdauer">Schlafdauer:</string>
+    <string name="aufwachzeitpunkt">Aufweckzeitpunkt:</string>
+    <string name="alarm_TextView">Wecker</string>
+    <string name="testText">Hahhah</string>
+    <!--endregion-->
+
 
 </resources>

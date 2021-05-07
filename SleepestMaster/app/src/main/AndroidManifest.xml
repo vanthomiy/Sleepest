@@ -2,14 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.doitstudio.sleepest_master">
 
-
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
-
 
     <application
         android:name=".MainApplication"
@@ -19,12 +17,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SleepestMaster">
-        <activity android:name=".alarmclock.LockScreenAlarmActivity"
+
+        <activity android:name=".AlarmSettings"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".AlarmClock.LockScreenAlarmActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <service
-            android:name=".background.ForegroundService"
+            android:name=".Background.ForegroundService"
             android:enabled="true"
             android:exported="false" />
 
@@ -34,35 +37,29 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-
         <receiver
-            android:name=".background.AlarmReceiver"
-            android:exported="true"/>
+            android:name=".Background.AlarmReceiver"
+            android:exported="true" />
         <receiver
-            android:name=".background.BootReceiver"
+            android:name=".Background.BootReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".alarmclock.AlarmClockReceiver"
+            android:name=".AlarmClock.AlarmClockReceiver"
             android:enabled="true"
             android:exported="true" />
-
-
         <receiver
             android:name=".sleepapi.SleepReceiver"
             android:enabled="true"
             android:exported="true" />
-
-
     </application>
 
 </manifest>
-
-
