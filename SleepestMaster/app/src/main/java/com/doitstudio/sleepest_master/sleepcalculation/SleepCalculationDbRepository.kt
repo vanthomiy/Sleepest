@@ -49,6 +49,16 @@ class SleepCalculationDbRepository(
         return sleepApiRawDataDao.getSince(seconds-time)
     }
 
+    /**
+     * [time] the duration in seconds eg. 86200 would be from 24hours ago to now the data
+     */
+    suspend fun getSleepApiRawDataSinceSeconds(time:Int): Flow<List<SleepApiRawDataEntity>>
+    {
+        val now = LocalDateTime.now(ZoneOffset.UTC)
+        val seconds = now.atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+        return sleepApiRawDataDao.getSince(time)
+    }
+
     suspend fun getSleepApiRawDataFromDate(dateTime:LocalDate): Flow<List<SleepApiRawDataEntity>>
     {
         val startTime = dateTime.minusDays(1).atTime(12,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()

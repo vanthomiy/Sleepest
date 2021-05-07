@@ -253,7 +253,7 @@ class MainActivity : AppCompatActivity() {
             sleepDbRepository.insertSleepApiRawData(sleepApiRawDataEntityList)
 
             // call handler
-            sleepCalculationHandler.checkIsUserSleeping()
+            sleepCalculationHandler.checkIsUserSleeping(data.timestampSeconds-86400)
 
 
 
@@ -265,7 +265,7 @@ class MainActivity : AppCompatActivity() {
 
                 val ab = livesess
 
-                sleepCalculationHandler.defineUserWakeup()
+                sleepCalculationHandler.defineUserWakeup(data.timestampSeconds-86400)
 
                 var session = normalDbRepository.allUserSleepSessions.first().first()
                 val b = session

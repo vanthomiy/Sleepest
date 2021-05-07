@@ -229,10 +229,10 @@ class SleepCalculationHandler(val context: Context) {
      * Checks if the user is Sleeping or not at the moment.
      * Saves the state in the [SleepApiRawDataEntity] and in the [LiveUserSleepActivityStatus]
      */
-    suspend fun checkIsUserSleeping(){
+    suspend fun checkIsUserSleeping(time:Int = 86400){
 
         // get the actual sleepApiDataList
-        val sleepApiRawDataEntity = sleepDbRepository.getSleepApiRawDataSince(86400).first().sortedByDescending { x -> x.timestampSeconds }
+        val sleepApiRawDataEntity = sleepDbRepository.getSleepApiRawDataSinceSeconds(time).first().sortedByDescending { x -> x.timestampSeconds }
 
         if(sleepApiRawDataEntity == null || sleepApiRawDataEntity.count() == 0){
             // do something!
@@ -261,10 +261,10 @@ class SleepCalculationHandler(val context: Context) {
 
     }
 
-    suspend fun defineUserWakeup(){
+    suspend fun defineUserWakeup(time:Int = 43200){
 
         // for each sleeping time, we have to define the sleep state
-        val sleepApiRawDataEntity = sleepDbRepository.getSleepApiRawDataSince(43200).first().sortedBy { x -> x.timestampSeconds }
+        val sleepApiRawDataEntity = sleepDbRepository.getSleepApiRawDataSinceSeconds(time).first().sortedBy { x -> x.timestampSeconds }
 
         // calculate all sleep states when the user is sleeping
         val id = sleepApiRawDataEntity.minOf { x->x.timestampSeconds }
