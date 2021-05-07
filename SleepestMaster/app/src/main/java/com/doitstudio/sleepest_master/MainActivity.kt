@@ -8,11 +8,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.viewbinding.BuildConfig
+import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
 import com.doitstudio.sleepest_master.background.AlarmReceiver
 import com.doitstudio.sleepest_master.background.ForegroundService
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
@@ -48,7 +50,10 @@ class MainActivity : AppCompatActivity() {
 
         var pref = getSharedPreferences("AlarmChanged", 0)
         val textAlarm = """
-            Last Alarm changed: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
+            Last Sleeptime changed: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt(
+            "sleeptime",
+            0
+        )}
             
             """.trimIndent()
         pref = getSharedPreferences("StartService", 0)
@@ -71,7 +76,36 @@ class MainActivity : AppCompatActivity() {
             Last workmanagerCalc call: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
             
             """.trimIndent()
-        val textGesamt = textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation
+        pref = getSharedPreferences("SleepCalc1", 0)
+        val textCalc1 = """
+            Calc1: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
+            
+            """.trimIndent()
+        pref = getSharedPreferences("SleepCalc2", 0)
+        val textCalc2 = """
+            Calc2: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt("value1", 0)},${pref.getInt(
+            "value2",
+            0
+        )}
+            
+            """.trimIndent()
+        pref = getSharedPreferences("AlarmReceiver", 0)
+        val textAlarmReceiver = """
+            AlarmReceiver: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt(
+            "intent",
+            0
+        )}
+            
+            """.trimIndent()
+        pref = getSharedPreferences("StopException", 0)
+        val textStopException = """
+            Exc.: ${pref.getString("exception", "XX")}
+            
+            """.trimIndent()
+
+
+
+        val textGesamt = textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation + textCalc1 + textCalc2 + textAlarmReceiver + textStopException
 
         binding.status0.text = textGesamt
 
@@ -91,14 +125,54 @@ class MainActivity : AppCompatActivity() {
         }
 
         requestData()
+
+        checkDrawOverlayPermission()
+    }
+
+    private fun checkDrawOverlayPermission() {
+
+        // Checks if app already has permission to draw overlays
+        if (!Settings.canDrawOverlays(this)) {
+
+            // If not, form up an Intent to launch the permission request
+            val intent = Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse(
+                    "package:$packageName"
+                )
+            )
+
+            // Launch Intent, with the supplied request code
+            startActivityForResult(intent, 1234)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        // Check if a request code is received that matches that which we provided for the overlay draw request
+        if (requestCode == 1234) {
+
+            // Double-check that the user granted it, and didn't just dismiss the request
+            if (Settings.canDrawOverlays(this)) {
+
+                // Launch the service
+
+            } else {
+                Toast.makeText(
+                    this,
+                    "Sorry. Can't draw overlays without permission...",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 
 
     private val mainViewModel: MainViewModel by lazy {
         MainViewModel(
-                (application as MainApplication).dbRepository,
-                (application as MainApplication).sleepCalculationRepository,
-                (application as MainApplication).sleepCalculationDbRepository
+            (application as MainApplication).dbRepository,
+            (application as MainApplication).sleepCalculationRepository,
+            (application as MainApplication).sleepCalculationDbRepository
         )
     }
 
@@ -107,13 +181,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun buttonClick1(view: View){
-        ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
-        //xyz()
+        //ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
+        xyz()
     }
 
     fun xyz() {
-        var calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance()[Calendar.DAY_OF_WEEK], 20, 26)
-        AlarmReceiver.startAlarmManager(calenderAlarm[Calendar.DAY_OF_WEEK], calenderAlarm[Calendar.HOUR_OF_DAY], calenderAlarm[Calendar.MINUTE], applicationContext, 2)
+        var calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance()[Calendar.DAY_OF_WEEK],15,27)
+        AlarmClockReceiver.startAlarmManager(calenderAlarm[Calendar.DAY_OF_WEEK], calenderAlarm[Calendar.HOUR_OF_DAY], calenderAlarm[Calendar.MINUTE], applicationContext,1)
 
         /*calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance()[Calendar.DAY_OF_WEEK], 9, 52)
         AlarmReceiver.startAlarmManager(calenderAlarm[Calendar.DAY_OF_WEEK], calenderAlarm[Calendar.HOUR_OF_DAY], calenderAlarm[Calendar.MINUTE], applicationContext, 4)
@@ -151,7 +225,7 @@ class MainActivity : AppCompatActivity() {
         // Testing
 
         val stpe = SleepStateParameterEntity(
-                "12", UserFactorPattern.NORMAL, SleepStatePattern.TOLESSREM, SleepStateParameter(
+            "12", UserFactorPattern.NORMAL, SleepStatePattern.TOLESSREM, SleepStateParameter(
                 1f,
                 1f,
                 1f,
@@ -164,7 +238,7 @@ class MainActivity : AppCompatActivity() {
                 1f,
                 1f,
                 20
-        )
+            )
         )
         val jsonString = Gson().toJson(stpe)
 
@@ -185,8 +259,8 @@ class MainActivity : AppCompatActivity() {
         // don't need to check if this is on a device before runtime permissions, that is, a device
         // prior to 29 / Q.
         return PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACTIVITY_RECOGNITION
+            this,
+            Manifest.permission.ACTIVITY_RECOGNITION
         )
     }
 
@@ -204,19 +278,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun displayPermissionSettingsSnackBar() {
         Snackbar.make(
-                binding.mainActivity,
-                "hiHo",
-                Snackbar.LENGTH_LONG
+            binding.mainActivity,
+            "hiHo",
+            Snackbar.LENGTH_LONG
         )
                 .setAction("Settings") {
                     // Build intent that displays the App settings screen.
                     val intent = Intent()
                     intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
                     val uri = Uri.fromParts(
-                            "package",
-                            //BuildConfig.APPLICATION_ID,
-                            BuildConfig.VERSION_NAME,
-                            null
+                        "package",
+                        //BuildConfig.APPLICATION_ID,
+                        BuildConfig.VERSION_NAME,
+                        null
                     )
                     intent.data = uri
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK

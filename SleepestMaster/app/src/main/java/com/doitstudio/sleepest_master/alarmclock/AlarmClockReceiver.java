@@ -19,6 +19,8 @@ import androidx.core.app.NotificationManagerCompat;
 import com.doitstudio.sleepest_master.MainActivity;
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.background.AlarmReceiver;
+import com.doitstudio.sleepest_master.background.TestActivity;
+import com.doitstudio.sleepest_master.background.Times;
 
 import java.util.Calendar;
 import static android.content.Context.ALARM_SERVICE;
@@ -37,6 +39,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         this.context = context;
+        Times times = new Times();
 
         int intentKey = intent.getIntExtra(context.getString(R.string.alarm_clock_intent_key), 0);
 
@@ -46,6 +49,14 @@ public class AlarmClockReceiver extends BroadcastReceiver {
                 PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
                 if (powerManager.isInteractive()) {
                     showFullscreenNotification();
+
+                    Calendar calendarAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK), times.getStartForegroundHour(), times.getStartForegroundMinute());
+                    AlarmReceiver.startAlarmManager(calendarAlarm.get(Calendar.DAY_OF_WEEK), calendarAlarm.get(Calendar.HOUR_OF_DAY), calendarAlarm.get(Calendar.MINUTE), context, 1);
+
+                    Intent i2 = new Intent(context, TestActivity.class);
+                    i2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i2.putExtra("intent", 2);
+                    context.startActivity(i2);
                 } else {
                     showNotificationOnLockScreen();
                 }
@@ -60,6 +71,13 @@ public class AlarmClockReceiver extends BroadcastReceiver {
                 PowerManager powerManager1 = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
                 if (powerManager1.isInteractive()) {
                     showFullscreenNotification();
+                    Calendar calendarAlarm1 = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK), times.getStartForegroundHour(), times.getStartForegroundMinute());
+                    AlarmReceiver.startAlarmManager(calendarAlarm1.get(Calendar.DAY_OF_WEEK), calendarAlarm1.get(Calendar.HOUR_OF_DAY), calendarAlarm1.get(Calendar.MINUTE), context, 1);
+
+                    Intent i2_2 = new Intent(context, TestActivity.class);
+                    i2_2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i2_2.putExtra("intent", 2);
+                    context.startActivity(i2_2);
                 } else {
                     showNotificationOnLockScreen();
                 }

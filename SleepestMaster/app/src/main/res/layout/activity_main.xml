@@ -10,7 +10,7 @@
     <TextView
         android:id="@+id/status0"
         android:layout_width="217dp"
-        android:layout_height="100dp"
+        android:layout_height="180dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -19,7 +19,7 @@
     <TextView
         android:id="@+id/status1"
         android:layout_width="224dp"
-        android:layout_height="93dp"
+        android:layout_height="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintLeft_toLeftOf="parent"

@@ -4,7 +4,7 @@ import androidx.room.Entity
 
 
 // Enum actions for service start/stop
-internal enum class Actions {
+enum class Actions {
     START, STOP
 }
 

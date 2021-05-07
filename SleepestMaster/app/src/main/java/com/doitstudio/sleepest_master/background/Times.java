@@ -5,7 +5,7 @@ public class Times {
     private final int startForegroundHour = 20;
     private final int startForegroundMinute = 0;
 
-    private final int sleepTime = 25200;
+    private final int sleepTime = 27000; //User Sleep time in seconds
 
     private final int firstWakeupHour = 7;
     private final int firstWakeupMinute = 0;
@@ -18,7 +18,7 @@ public class Times {
     private final int firstCalculationHour = 6;
     private final int firstCalculationMinute = 30;
 
-    private final int workmanagerDuration = 20; //LiveSleepData in minutes
+    private final int workmanagerDuration = 16; //LiveSleepData in minutes
 
     private final int workmanagerCalculationDuration = 16; //Zeitabstände der Kalkulation morgens
 

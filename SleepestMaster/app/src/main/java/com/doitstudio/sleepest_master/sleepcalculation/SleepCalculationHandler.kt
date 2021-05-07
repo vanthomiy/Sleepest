@@ -1,7 +1,6 @@
 package com.doitstudio.sleepest_master.sleepcalculation
 
 import android.content.Context
-import androidx.annotation.VisibleForTesting
 import com.doitstudio.sleepest_master.LiveUserSleepActivity
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.background.Times
@@ -9,7 +8,6 @@ import com.doitstudio.sleepest_master.model.data.SleepState
 import com.doitstudio.sleepest_master.model.data.SleepStatePattern
 import com.doitstudio.sleepest_master.model.data.SleepTimePattern
 import com.doitstudio.sleepest_master.model.data.UserFactorPattern
-import com.doitstudio.sleepest_master.sleepcalculation.db.SleepStateModelEntity
 import com.doitstudio.sleepest_master.sleepcalculation.db.UserSleepSessionEntity
 import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepModel
 import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepStateParameter
@@ -26,6 +24,7 @@ import java.time.LocalTime
 import java.util.*
 
 
+
 /**
  * This is the actual sleep calculation class.
  * This is singleton and should be created once after we are in sleep time from the backgroundhandler by calling [SleepCalculationHandler.getDatabase] and passing the actual context from the [onrecive]?
@@ -34,7 +33,7 @@ import java.util.*
  *
  */
 class SleepCalculationHandler(private val context: Context){
-
+    var context1 = context
     // Used to launch coroutines (non-blocking way to insert data).
     private val scope: CoroutineScope = MainScope()
 
@@ -204,6 +203,13 @@ class SleepCalculationHandler(private val context: Context){
         // Get all available raw sleep api data
 
         //region inital
+        val calendar = Calendar.getInstance()
+        val pref = context1.getSharedPreferences("SleepCalc1", 0)
+        val ed = pref.edit()
+        ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY))
+        ed.putInt("minute", calendar.get(Calendar.MINUTE))
+        ed.apply()
+
         val rawApiData = dbRepository.allSleepApiRawData.first()
 
         // Check if enough data is available
@@ -321,9 +327,9 @@ class SleepCalculationHandler(private val context: Context){
 
         userSleepSessionEntity.sleepTimes.sleepTimeStart = sleep[1]
         if (sleep.count() % 2 == 0)
-            userSleepSessionEntity.sleepTimes.sleepTimeEnd = sleep[sleep.count()-2]
+            userSleepSessionEntity.sleepTimes.sleepTimeEnd = sleep[sleep.count() - 2]
         else
-            userSleepSessionEntity.sleepTimes.sleepTimeEnd = sleep[sleep.count()-1]
+            userSleepSessionEntity.sleepTimes.sleepTimeEnd = sleep[sleep.count() - 1]
 
         userSleepSessionEntity.sleepUserType.userFactorPattern = userFactorSleep.first
 
@@ -359,6 +365,14 @@ class SleepCalculationHandler(private val context: Context){
         val secondsOnDay = seconds.toSecondOfDay()+ restSeconds
 
         dataStoreRepository.updateAlarmTime(secondsOnDay.toLong())
+
+        val pref1 = context1.getSharedPreferences("SleepCalc2", 0)
+        val ed1 = pref1.edit()
+        ed1.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY))
+        ed1.putInt("minute", calendar.get(Calendar.MINUTE))
+        ed1.putInt("value1", restSeconds)
+        ed1.putInt("value2", secondsOnDay)
+        ed1.apply()
 
         //dataStoreRepository.updateAlarmTime(49500)
 
@@ -592,7 +606,7 @@ class SleepCalculationHandler(private val context: Context){
         }
 
 
-        val sleepSegments = calculateSleepStates(parameter, rawApiData,userSleepSessionEntity)
+        val sleepSegments = calculateSleepStates(parameter, rawApiData, userSleepSessionEntity)
 
         // Setup all data for the sleep session
 

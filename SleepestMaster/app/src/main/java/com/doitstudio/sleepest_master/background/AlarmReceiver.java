@@ -9,6 +9,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.doitstudio.sleepest_master.MainActivity;
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver;
 import com.doitstudio.sleepest_master.model.data.Actions;
@@ -39,16 +41,39 @@ public class AlarmReceiver extends BroadcastReceiver {
         this.context = context.getApplicationContext();
         Times times = new Times();
 
+        Calendar calendar = Calendar.getInstance();
+        SharedPreferences pref = context.getSharedPreferences("AlarmReceiver", 0);
+        SharedPreferences.Editor ed = pref.edit();
+        ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
+        ed.putInt("minute", calendar.get(Calendar.MINUTE));
+        ed.putInt("intent", intent.getIntExtra(context.getString(R.string.alarmmanager_key), 0));
+        ed.apply();
+
         SleepCalculationHandler sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
 
         switch (intent.getIntExtra(context.getString(R.string.alarmmanager_key), 0)) {
             case 0:
                 break;
             case 1:
-                ForegroundService.startOrStopForegroundService(Actions.START, context);
+                //ForegroundService.startOrStopForegroundService(Actions.START, context.getApplicationContext());
+                //Intent testIntent = new Intent(context, TestActivity.class);
+                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                //PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, testIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                Intent i = new Intent(context,TestActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                i.putExtra("intent", 1);
+                context.startActivity(i);
+
                 break;
             case 2:
-                ForegroundService.startOrStopForegroundService(Actions.STOP, context);
+                //ForegroundService.startOrStopForegroundService(Actions.STOP, context.getApplicationContext());
+
+                Intent i2 = new Intent(context,TestActivity.class);
+                i2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                i2.putExtra("intent", 2);
+                context.startActivity(i2);
+
                 AlarmReceiver.cancelAlarm(context.getApplicationContext(), 4);
                 AlarmClockReceiver.cancelAlarm(context.getApplicationContext(), 4);
                 break;
