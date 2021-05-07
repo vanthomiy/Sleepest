@@ -3,14 +3,17 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
-    id 'kotlin-android-extensions'
+   // id 'kotlin-android-extensions'
     id "com.google.protobuf" version "0.8.12"
     id 'dagger.hilt.android.plugin'
+    id 'kotlinx-serialization'
+
 }
 
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
+
 
     defaultConfig {
         applicationId "com.doitstudio.sleepest_master"
@@ -20,6 +23,21 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // Its for creating logs of the actual database
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation":
+                                      "$projectDir/schemas".toString()]
+            }
+        }
+    }
+
+    testOptions {
+        unitTests.includeAndroidResources = true
+    }
+    buildFeatures {
+        viewBinding true
     }
 
     buildTypes {
@@ -36,13 +54,25 @@ android {
         jvmTarget = '1.8'
     }
 
-    buildFeatures{
+    buildFeatures {
         viewBinding true
     }
 
 }
 
 dependencies {
+
+    testImplementation "com.google.truth:truth:1.1.2"
+    // Required -- JUnit 4 framework
+    testImplementation 'junit:junit:4.12'
+    // Optional -- Robolectric environment
+    testImplementation 'androidx.test:core:1.0.0'
+    // Optional -- Mockito framework
+    testImplementation 'org.mockito:mockito-core:1.10.19'
+
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.3.2'
@@ -70,8 +100,8 @@ dependencies {
 
     // DataStore components
     implementation "androidx.datastore:datastore-preferences:1.0.0-alpha06"
-    implementation  "androidx.datastore:datastore-core:1.0.0-alpha04"
-    implementation  "com.google.protobuf:protobuf-javalite:3.10.0"
+    implementation "androidx.datastore:datastore-core:1.0.0-alpha04"
+    implementation "com.google.protobuf:protobuf-javalite:3.10.0"
 
     // Lifecycle components
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"

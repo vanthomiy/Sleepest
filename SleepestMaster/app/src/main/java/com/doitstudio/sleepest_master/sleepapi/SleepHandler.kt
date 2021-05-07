@@ -5,13 +5,8 @@ import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
 import android.content.pm.PackageManager
-import android.util.Log
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.asLiveData
 import com.doitstudio.sleepest_master.MainApplication
-import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
-import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.google.android.gms.location.ActivityRecognition
 import com.google.android.gms.location.SleepSegmentRequest
 import kotlinx.coroutines.CoroutineScope
@@ -28,7 +23,7 @@ class SleepHandler(private val context: Context) {
 
     private var sleepPendingIntent: PendingIntent = SleepReceiver.createSleepReceiverPendingIntent(context = context)
 
-    private val repository by lazy { (context.applicationContext as MainApplication).dataStoreRepository }
+    private val repository by lazy { (context.applicationContext as MainApplication).sleepCalculationRepository }
 
     companion object {
         // For Singleton instantiation
@@ -120,3 +115,4 @@ class SleepHandler(private val context: Context) {
     }
 
 }
+

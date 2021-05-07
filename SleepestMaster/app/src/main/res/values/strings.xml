@@ -9,7 +9,7 @@
     <string name="alarm_clock_channel">Alarmclock Notification Channel</string>
     <string name="alarm_clock_channel_name">Alarmclock Channel</string>
     <string name="alarm_clock_channel_description">This channel is for all notifications in alarm clock actions</string>
-    <string name="alarm_clock_intent_key">AlarmKey</string>
+    <string name="alarm_clock_intent_key">com.doitstudio.sleepest_master.alarmclock.AlarmClockIntentKey</string>
     <string name="alarm_notification_title">"It's time to wake up"</string>
     <string name="alarm_notification_text">"Tap Snooze to sleep for further 10 minutes"</string>
     <string name="alarm_notification_button_1">"Cancel"</string>
@@ -23,7 +23,9 @@
     <string name="foregroundservice_channel_name">Foregroundservice Channel</string>
     <string name="foregroundservice_channel_description">This channel is for the notification banner of the foregroundservice</string>
     <string name="foregroundservice_notification_title">Sleepest - The best sleep you ever had</string>
-    <string name="workmanager_tag">Workmanager 1</string>
+    <string name="workmanager1_tag">Workmanager 1</string>
+    <string name="workmanager2_tag">Workmanager 2</string>
+    <string name="alarmmanager_key">com.doitstudio.sleepest_master.background.AlarmIntentKey</string>
     <!--endregion-->
 
     <!--region AlarmSettings-->

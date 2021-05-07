@@ -1,0 +1,726 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 3,
+    "identityHash": "fadf86be24b4275fe497d824ec48a819",
+    "entities": [
+      {
+        "tableName": "sleep_segment_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`timestampSecondsStart` INTEGER NOT NULL, `timestampSecondsEnd` INTEGER NOT NULL, `sleepState` INTEGER NOT NULL, PRIMARY KEY(`timestampSecondsStart`))",
+        "fields": [
+          {
+            "fieldPath": "timestampSecondsStart",
+            "columnName": "timestampSecondsStart",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestampSecondsEnd",
+            "columnName": "timestampSecondsEnd",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepState",
+            "columnName": "sleepState",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "timestampSecondsStart"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "user_sleep_session_entity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `sleepTimessleepTimeStart` INTEGER NOT NULL, `sleepTimessleepTimeEnd` INTEGER NOT NULL, `sleepTimessleepDuration` INTEGER NOT NULL, `sleepTimeslightSleepDuration` INTEGER NOT NULL, `sleepTimesdeepSleepDuration` INTEGER NOT NULL, `sleepTimesremSleepDuration` INTEGER NOT NULL, `sleepTimesawakeTime` INTEGER NOT NULL, `userTypemobilePosition` INTEGER NOT NULL, `userTypeuserFactorPattern` INTEGER NOT NULL, `userTypesleepTimeLiveParams` TEXT NOT NULL, `userTypesleepStateLiveParams` TEXT NOT NULL, `userTypeliveawakesleepmax` REAL NOT NULL, `userTypeliveawakesleepmin` REAL NOT NULL, `userTypeliveawakesleepmedian` REAL NOT NULL, `userTypeliveawakesleepaverage` REAL NOT NULL, `userTypeliveawakesleepfactor` REAL NOT NULL, `userTypeliveawakelightmax` REAL NOT NULL, `userTypeliveawakelightmin` REAL NOT NULL, `userTypeliveawakelightmedian` REAL NOT NULL, `userTypeliveawakelightaverage` REAL NOT NULL, `userTypeliveawakelightfactor` REAL NOT NULL, `userTypeliveawakemotionmax` REAL NOT NULL, `userTypeliveawakemotionmin` REAL NOT NULL, `userTypeliveawakemotionmedian` REAL NOT NULL, `userTypeliveawakemotionaverage` REAL NOT NULL, `userTypeliveawakemotionfactor` REAL NOT NULL, `userTypelivesleepsleepmax` REAL NOT NULL, `userTypelivesleepsleepmin` REAL NOT NULL, `userTypelivesleepsleepmedian` REAL NOT NULL, `userTypelivesleepsleepaverage` REAL NOT NULL, `userTypelivesleepsleepfactor` REAL NOT NULL, `userTypelivesleeplightmax` REAL NOT NULL, `userTypelivesleeplightmin` REAL NOT NULL, `userTypelivesleeplightmedian` REAL NOT NULL, `userTypelivesleeplightaverage` REAL NOT NULL, `userTypelivesleeplightfactor` REAL NOT NULL, `userTypelivesleepmotionmax` REAL NOT NULL, `userTypelivesleepmotionmin` REAL NOT NULL, `userTypelivesleepmotionmedian` REAL NOT NULL, `userTypelivesleepmotionaverage` REAL NOT NULL, `userTypelivesleepmotionfactor` REAL NOT NULL, `userTypelivediffsleepmax` REAL NOT NULL, `userTypelivediffsleepmin` REAL NOT NULL, `userTypelivediffsleepmedian` REAL NOT NULL, `userTypelivediffsleepaverage` REAL NOT NULL, `userTypelivediffsleepfactor` REAL NOT NULL, `userTypelivedifflightmax` REAL NOT NULL, `userTypelivedifflightmin` REAL NOT NULL, `userTypelivedifflightmedian` REAL NOT NULL, `userTypelivedifflightaverage` REAL NOT NULL, `userTypelivedifflightfactor` REAL NOT NULL, `userTypelivediffmotionmax` REAL NOT NULL, `userTypelivediffmotionmin` REAL NOT NULL, `userTypelivediffmotionmedian` REAL NOT NULL, `userTypelivediffmotionaverage` REAL NOT NULL, `userTypelivediffmotionfactor` REAL NOT NULL, `userTypefullawakesleepmax` REAL NOT NULL, `userTypefullawakesleepmin` REAL NOT NULL, `userTypefullawakesleepmedian` REAL NOT NULL, `userTypefullawakesleepaverage` REAL NOT NULL, `userTypefullawakesleepfactor` REAL NOT NULL, `userTypefullawakelightmax` REAL NOT NULL, `userTypefullawakelightmin` REAL NOT NULL, `userTypefullawakelightmedian` REAL NOT NULL, `userTypefullawakelightaverage` REAL NOT NULL, `userTypefullawakelightfactor` REAL NOT NULL, `userTypefullawakemotionmax` REAL NOT NULL, `userTypefullawakemotionmin` REAL NOT NULL, `userTypefullawakemotionmedian` REAL NOT NULL, `userTypefullawakemotionaverage` REAL NOT NULL, `userTypefullawakemotionfactor` REAL NOT NULL, `userTypefullsleepsleepmax` REAL NOT NULL, `userTypefullsleepsleepmin` REAL NOT NULL, `userTypefullsleepsleepmedian` REAL NOT NULL, `userTypefullsleepsleepaverage` REAL NOT NULL, `userTypefullsleepsleepfactor` REAL NOT NULL, `userTypefullsleeplightmax` REAL NOT NULL, `userTypefullsleeplightmin` REAL NOT NULL, `userTypefullsleeplightmedian` REAL NOT NULL, `userTypefullsleeplightaverage` REAL NOT NULL, `userTypefullsleeplightfactor` REAL NOT NULL, `userTypefullsleepmotionmax` REAL NOT NULL, `userTypefullsleepmotionmin` REAL NOT NULL, `userTypefullsleepmotionmedian` REAL NOT NULL, `userTypefullsleepmotionaverage` REAL NOT NULL, `userTypefullsleepmotionfactor` REAL NOT NULL, `userTypefulldiffsleepmax` REAL NOT NULL, `userTypefulldiffsleepmin` REAL NOT NULL, `userTypefulldiffsleepmedian` REAL NOT NULL, `userTypefulldiffsleepaverage` REAL NOT NULL, `userTypefulldiffsleepfactor` REAL NOT NULL, `userTypefulldifflightmax` REAL NOT NULL, `userTypefulldifflightmin` REAL NOT NULL, `userTypefulldifflightmedian` REAL NOT NULL, `userTypefulldifflightaverage` REAL NOT NULL, `userTypefulldifflightfactor` REAL NOT NULL, `userTypefulldiffmotionmax` REAL NOT NULL, `userTypefulldiffmotionmin` REAL NOT NULL, `userTypefulldiffmotionmedian` REAL NOT NULL, `userTypefulldiffmotionaverage` REAL NOT NULL, `userTypefulldiffmotionfactor` REAL NOT NULL, `sleepRatingsleepDuration` INTEGER NOT NULL, `sleepRatingmoodAfterSleep` INTEGER NOT NULL, `sleepRatingmoodOnNextDay` INTEGER NOT NULL, `sleepRatingwakeTimes` INTEGER NOT NULL, `sleepRatingactivityOnDay` INTEGER NOT NULL, `calcRatingsleepStartDetection` INTEGER NOT NULL, `calcRatingsleepEndDetection` INTEGER NOT NULL, `calcRatingawakeDetection` INTEGER NOT NULL, `calcRatingsleepCalcRating` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepTimes.sleepTimeStart",
+            "columnName": "sleepTimessleepTimeStart",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepTimes.sleepTimeEnd",
+            "columnName": "sleepTimessleepTimeEnd",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepTimes.sleepDuration",
+            "columnName": "sleepTimessleepDuration",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepTimes.lightSleepDuration",
+            "columnName": "sleepTimeslightSleepDuration",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepTimes.deepSleepDuration",
+            "columnName": "sleepTimesdeepSleepDuration",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepTimes.remSleepDuration",
+            "columnName": "sleepTimesremSleepDuration",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepTimes.awakeTime",
+            "columnName": "sleepTimesawakeTime",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.mobilePosition",
+            "columnName": "userTypemobilePosition",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.userFactorPattern",
+            "columnName": "userTypeuserFactorPattern",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepTimeLiveParams",
+            "columnName": "userTypesleepTimeLiveParams",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepStateLiveParams",
+            "columnName": "userTypesleepStateLiveParams",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesAwake.sleep.Max",
+            "columnName": "userTypeliveawakesleepmax",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesAwake.sleep.Min",
+            "columnName": "userTypeliveawakesleepmin",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesAwake.sleep.Median",
+            "columnName": "userTypeliveawakesleepmedian",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesAwake.sleep.Average",
+            "columnName": "userTypeliveawakesleepaverage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesAwake.sleep.Factor",
+            "columnName": "userTypeliveawakesleepfactor",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesAwake.light.Max",
+            "columnName": "userTypeliveawakelightmax",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesAwake.light.Min",
+            "columnName": "userTypeliveawakelightmin",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesAwake.light.Median",
+            "columnName": "userTypeliveawakelightmedian",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesAwake.light.Average",
+            "columnName": "userTypeliveawakelightaverage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesAwake.light.Factor",
+            "columnName": "userTypeliveawakelightfactor",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesAwake.motion.Max",
+            "columnName": "userTypeliveawakemotionmax",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesAwake.motion.Min",
+            "columnName": "userTypeliveawakemotionmin",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesAwake.motion.Median",
+            "columnName": "userTypeliveawakemotionmedian",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesAwake.motion.Average",
+            "columnName": "userTypeliveawakemotionaverage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesAwake.motion.Factor",
+            "columnName": "userTypeliveawakemotionfactor",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesSleep.sleep.Max",
+            "columnName": "userTypelivesleepsleepmax",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesSleep.sleep.Min",
+            "columnName": "userTypelivesleepsleepmin",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesSleep.sleep.Median",
+            "columnName": "userTypelivesleepsleepmedian",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesSleep.sleep.Average",
+            "columnName": "userTypelivesleepsleepaverage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesSleep.sleep.Factor",
+            "columnName": "userTypelivesleepsleepfactor",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesSleep.light.Max",
+            "columnName": "userTypelivesleeplightmax",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesSleep.light.Min",
+            "columnName": "userTypelivesleeplightmin",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesSleep.light.Median",
+            "columnName": "userTypelivesleeplightmedian",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesSleep.light.Average",
+            "columnName": "userTypelivesleeplightaverage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesSleep.light.Factor",
+            "columnName": "userTypelivesleeplightfactor",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesSleep.motion.Max",
+            "columnName": "userTypelivesleepmotionmax",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesSleep.motion.Min",
+            "columnName": "userTypelivesleepmotionmin",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesSleep.motion.Median",
+            "columnName": "userTypelivesleepmotionmedian",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesSleep.motion.Average",
+            "columnName": "userTypelivesleepmotionaverage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesSleep.motion.Factor",
+            "columnName": "userTypelivesleepmotionfactor",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesDiff.sleep.Max",
+            "columnName": "userTypelivediffsleepmax",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesDiff.sleep.Min",
+            "columnName": "userTypelivediffsleepmin",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesDiff.sleep.Median",
+            "columnName": "userTypelivediffsleepmedian",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesDiff.sleep.Average",
+            "columnName": "userTypelivediffsleepaverage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesDiff.sleep.Factor",
+            "columnName": "userTypelivediffsleepfactor",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesDiff.light.Max",
+            "columnName": "userTypelivedifflightmax",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesDiff.light.Min",
+            "columnName": "userTypelivedifflightmin",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesDiff.light.Median",
+            "columnName": "userTypelivedifflightmedian",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesDiff.light.Average",
+            "columnName": "userTypelivedifflightaverage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesDiff.light.Factor",
+            "columnName": "userTypelivedifflightfactor",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesDiff.motion.Max",
+            "columnName": "userTypelivediffmotionmax",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesDiff.motion.Min",
+            "columnName": "userTypelivediffmotionmin",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesDiff.motion.Median",
+            "columnName": "userTypelivediffmotionmedian",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesDiff.motion.Average",
+            "columnName": "userTypelivediffmotionaverage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepLiveModel.valuesDiff.motion.Factor",
+            "columnName": "userTypelivediffmotionfactor",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesAwake.sleep.Max",
+            "columnName": "userTypefullawakesleepmax",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesAwake.sleep.Min",
+            "columnName": "userTypefullawakesleepmin",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesAwake.sleep.Median",
+            "columnName": "userTypefullawakesleepmedian",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesAwake.sleep.Average",
+            "columnName": "userTypefullawakesleepaverage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesAwake.sleep.Factor",
+            "columnName": "userTypefullawakesleepfactor",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesAwake.light.Max",
+            "columnName": "userTypefullawakelightmax",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesAwake.light.Min",
+            "columnName": "userTypefullawakelightmin",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesAwake.light.Median",
+            "columnName": "userTypefullawakelightmedian",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesAwake.light.Average",
+            "columnName": "userTypefullawakelightaverage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesAwake.light.Factor",
+            "columnName": "userTypefullawakelightfactor",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesAwake.motion.Max",
+            "columnName": "userTypefullawakemotionmax",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesAwake.motion.Min",
+            "columnName": "userTypefullawakemotionmin",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesAwake.motion.Median",
+            "columnName": "userTypefullawakemotionmedian",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesAwake.motion.Average",
+            "columnName": "userTypefullawakemotionaverage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesAwake.motion.Factor",
+            "columnName": "userTypefullawakemotionfactor",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesSleep.sleep.Max",
+            "columnName": "userTypefullsleepsleepmax",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesSleep.sleep.Min",
+            "columnName": "userTypefullsleepsleepmin",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesSleep.sleep.Median",
+            "columnName": "userTypefullsleepsleepmedian",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesSleep.sleep.Average",
+            "columnName": "userTypefullsleepsleepaverage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesSleep.sleep.Factor",
+            "columnName": "userTypefullsleepsleepfactor",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesSleep.light.Max",
+            "columnName": "userTypefullsleeplightmax",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesSleep.light.Min",
+            "columnName": "userTypefullsleeplightmin",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesSleep.light.Median",
+            "columnName": "userTypefullsleeplightmedian",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesSleep.light.Average",
+            "columnName": "userTypefullsleeplightaverage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesSleep.light.Factor",
+            "columnName": "userTypefullsleeplightfactor",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesSleep.motion.Max",
+            "columnName": "userTypefullsleepmotionmax",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesSleep.motion.Min",
+            "columnName": "userTypefullsleepmotionmin",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesSleep.motion.Median",
+            "columnName": "userTypefullsleepmotionmedian",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesSleep.motion.Average",
+            "columnName": "userTypefullsleepmotionaverage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesSleep.motion.Factor",
+            "columnName": "userTypefullsleepmotionfactor",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesDiff.sleep.Max",
+            "columnName": "userTypefulldiffsleepmax",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesDiff.sleep.Min",
+            "columnName": "userTypefulldiffsleepmin",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesDiff.sleep.Median",
+            "columnName": "userTypefulldiffsleepmedian",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesDiff.sleep.Average",
+            "columnName": "userTypefulldiffsleepaverage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesDiff.sleep.Factor",
+            "columnName": "userTypefulldiffsleepfactor",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesDiff.light.Max",
+            "columnName": "userTypefulldifflightmax",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesDiff.light.Min",
+            "columnName": "userTypefulldifflightmin",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesDiff.light.Median",
+            "columnName": "userTypefulldifflightmedian",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesDiff.light.Average",
+            "columnName": "userTypefulldifflightaverage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesDiff.light.Factor",
+            "columnName": "userTypefulldifflightfactor",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesDiff.motion.Max",
+            "columnName": "userTypefulldiffmotionmax",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesDiff.motion.Min",
+            "columnName": "userTypefulldiffmotionmin",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesDiff.motion.Median",
+            "columnName": "userTypefulldiffmotionmedian",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesDiff.motion.Average",
+            "columnName": "userTypefulldiffmotionaverage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepUserType.sleepFullModel.valuesDiff.motion.Factor",
+            "columnName": "userTypefulldiffmotionfactor",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userSleepRating.sleepDuration",
+            "columnName": "sleepRatingsleepDuration",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userSleepRating.moodAfterSleep",
+            "columnName": "sleepRatingmoodAfterSleep",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userSleepRating.moodOnNextDay",
+            "columnName": "sleepRatingmoodOnNextDay",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userSleepRating.wakeTimes",
+            "columnName": "sleepRatingwakeTimes",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userSleepRating.activityOnDay",
+            "columnName": "sleepRatingactivityOnDay",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userCalculationRating.sleepStartDetection",
+            "columnName": "calcRatingsleepStartDetection",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userCalculationRating.sleepEndDetection",
+            "columnName": "calcRatingsleepEndDetection",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userCalculationRating.awakeDetection",
+            "columnName": "calcRatingawakeDetection",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userCalculationRating.sleepCalcRating",
+            "columnName": "calcRatingsleepCalcRating",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fadf86be24b4275fe497d824ec48a819')"
+    ]
+  }
+}

@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.lifecycle.LifecycleService;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -24,7 +25,7 @@ enum Actions {
     STOP
 }
 
-public class EndlessService extends Service {
+public class EndlessService extends LifecycleService {
 
     private PowerManager.WakeLock wakeLock = null;
     private boolean isServiceStarted = false;
@@ -34,12 +35,15 @@ public class EndlessService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
+        super.onBind(intent);
         return null;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        super.onStartCommand(intent, flags,startId);
 
         if (intent != null) {
             String action = intent.getAction();
@@ -75,6 +79,7 @@ public class EndlessService extends Service {
 
 
 
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void startService() {
         // If the service already running, do nothing.
@@ -96,7 +101,7 @@ public class EndlessService extends Service {
             while (isServiceStarted) {
                 try {
                     Thread.sleep(10000);
-                    showNotification(getApplicationContext());
+                    /*showNotification(getApplicationContext());
 
                     int oldTest1 = test.getTest1();
                     int oldTest2 = test.getTest2();
@@ -105,7 +110,7 @@ public class EndlessService extends Service {
                     test.setTest2(++oldTest2);
 
                     updateNotification(Integer.toString(oldTest1) + "," + Integer.toString(oldTest2));
-                    //pingFakeServer();
+                    //pingFakeServer();*/
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -113,6 +118,14 @@ public class EndlessService extends Service {
         });
         // Start thread.
         thread.start();
+
+        /*Calendar calenderAlarm = Calendar.getInstance();
+        int day = calenderAlarm.get(Calendar.DAY_OF_WEEK);
+        if (day > 7) {
+            day = 1;
+        }
+        AlarmReceiver.startAlarmManager(day,10,55, EndlessService.this, 2);
+        Workmanager.startPeriodicWorkmanager(30);*/
     }
 
     private void stopService() {
@@ -127,6 +140,11 @@ public class EndlessService extends Service {
         }
         isServiceStarted = false;
         new ServiceTracker().setServiceState(this, ServiceState.STOPPED);
+
+        /*Workmanager.stopPeriodicWorkmanager();
+        Calendar calenderAlarm = Calendar.getInstance();
+        int day = calenderAlarm.get(Calendar.DAY_OF_WEEK);
+        AlarmReceiver.startAlarmManager(day,20,0, getApplicationContext(), 1);*/
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
