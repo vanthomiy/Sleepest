@@ -84,7 +84,7 @@ class AlarmSettings : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alarm_settings)
-        
+
         INSTANCE = this
         btnAddAlarmEntity = findViewById(R.id.btn_addAlarmEntity)
         lLAlarmEntities = findViewById(R.id.lL_alarmEntities)
