@@ -25,6 +25,14 @@ class ForegroundObserver(private val fs:ForegroundService) {
         }
     }
 
+    fun resetSleepTime(){
+        scope.launch {
+            sleepCalculationStoreRepository.updateUserSleepTime(0)
+            sleepCalculationStoreRepository.updateIsUserSleeping(false)
+            sleepCalculationStoreRepository.updateIsUserSleeping(false)
+        }
+    }
+
     init {
         alarmActiveLifeData.observe(fs){ alarm->
             fs.OnAlarmChanged(alarm)

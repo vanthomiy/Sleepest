@@ -122,7 +122,7 @@ def saveModelInputDetails(tflite_file):
     with open(file, 'w') as fp:
         json.dump(list1,fp)
             
-
+'''
 tflite_file = 'litemodels/sleep045' 
 saveModelInputDetails(tflite_file)
 
@@ -150,7 +150,7 @@ saveModelInputDetails(tflite_file)
 
 tflite_file = 'litemodels/sleep1230' 
 saveModelInputDetails(tflite_file)
-
+'''
 '''
 results = [] 
 

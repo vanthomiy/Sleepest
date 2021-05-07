@@ -45,6 +45,7 @@ class SleepCalculationStoreRepository(context: Context) {
     suspend fun updateUserSleepTime(userSleepTime: Int) =
             liveUserSleepActivityStatus.updateUserSleepTime(userSleepTime)
 
+    /*
     suspend fun updateUserSleepFound(isUserSleepFound: Boolean) =
             liveUserSleepActivityStatus.updateUserSleepFound(isUserSleepFound)
 
@@ -57,7 +58,7 @@ class SleepCalculationStoreRepository(context: Context) {
     suspend fun clearUserSleepHistory()  =
             liveUserSleepActivityStatus.clearUserSleepHistory()
 
-
+*/
     // endregion
 
     // region sleep api data status

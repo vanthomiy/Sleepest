@@ -8,6 +8,7 @@ import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataDao
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.SleepSegmentDao
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 
 
 /**
@@ -53,6 +54,17 @@ class DbRepository(
 
     fun getSleepSessionById(id:Int): Flow<UserSleepSessionEntity?> =
             userSleepSessionDao.getById(id)
+
+    suspend fun getOrCreateSleepSessionById(id:Int): UserSleepSessionEntity {
+        var userSession = userSleepSessionDao.getById(id).first()
+
+        if(userSession == null){
+            userSession = UserSleepSessionEntity(id)
+            insertUserSleepSession(userSession)
+        }
+
+        return userSession
+    }
 
     suspend fun insertUserSleepSession(userSleepSession: UserSleepSessionEntity) {
         userSleepSessionDao.insert(userSleepSession)

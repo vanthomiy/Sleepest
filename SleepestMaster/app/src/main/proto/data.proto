@@ -80,14 +80,6 @@ message  LiveUserSleepActivity{
   * Sleep time in minutes since the sleep time began
   */
   int32 userSleepTime = 3;
-  /**
-  * List of sleep events in the night 1st displays sleep, next the wakeup time, a third would define a new sleep ...
-  */
-  repeated int32 userSleepHistory = 4;
-  /**
-  * Found a user sleep segment
-  */
-  bool userSleepFound = 5;
 }
 
 

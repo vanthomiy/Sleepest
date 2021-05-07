@@ -44,6 +44,72 @@ data class SleepApiRawDataEntity(
                                 sleepState = SleepState.NONE
                         )
                 }
+
+                /**
+                 * Returns the count of sleep in minutes from a list without factors!
+                 */
+                fun getSleepTime(sleepApiRawDataEntity:List<SleepApiRawDataEntity>) : Int {
+                        val sortedList = sleepApiRawDataEntity.sortedBy { x-> x.timestampSeconds }
+                        var sleepCount = 0
+                        for (i  in 1 until sortedList.count()){
+                                sleepCount +=
+                                        if(sortedList[i].sleepState == SleepState.SLEEPING ||
+                                                sortedList[i].sleepState == SleepState.DEEP ||
+                                                sortedList[i].sleepState == SleepState.LIGHT ||
+                                                sortedList[i].sleepState == SleepState.REM) sortedList[i].timestampSeconds - sortedList[i-1].timestampSeconds else 0
+                        }
+
+                        return sleepCount / 60
+                }
+
+                /**
+                 * Returns the awake time between sleep times
+                 */
+                fun getAwakeTime(sleepApiRawDataEntity:List<SleepApiRawDataEntity>) : Int {
+                        val sortedList = sleepApiRawDataEntity.sortedBy { x-> x.timestampSeconds }
+                        var isSleeping = false
+                        var awakeTime = 0
+
+                        for (i  in 1 until sortedList.count()){
+
+                                isSleeping =   (isSleeping ||
+                                                sortedList[i].sleepState == SleepState.SLEEPING ||
+                                                sortedList[i].sleepState == SleepState.DEEP ||
+                                                sortedList[i].sleepState == SleepState.LIGHT ||
+                                                sortedList[i].sleepState == SleepState.REM)
+
+                                awakeTime += if(isSleeping) sortedList[i].timestampSeconds - sortedList[i-1].timestampSeconds else 0
+                        }
+
+                        return awakeTime / 60
+                }
+
+                /**
+                 * Returns the sleep time by a sleep state by minutes
+                 */
+                fun getSleepTimeByState(sleepApiRawDataEntity:List<SleepApiRawDataEntity>, sleepState: SleepState) : Int {
+                        val sortedList = sleepApiRawDataEntity.sortedBy { x-> x.timestampSeconds }
+                        var sleepCount = 0
+                        for (i  in 1 until sortedList.count()){
+                                sleepCount +=
+                                        if(sortedList[i].sleepState == sleepState) sortedList[i].timestampSeconds - sortedList[i-1].timestampSeconds else 0
+                        }
+
+                        return sleepCount / 60
+                }
+
+                /**
+                 * Gets the first time as UTC Total seconds when a user sleep was detected
+                 */
+                fun getSleepStartTime(sleepApiRawDataEntity:List<SleepApiRawDataEntity>) : Int{
+                        val sleepList = sleepApiRawDataEntity.filter { x-> x.sleepState != SleepState.NONE && x.sleepState != SleepState.AWAKE }
+
+                        if(sleepList == null || sleepList.count() == 0){
+                                return 0
+                        }
+
+                        return sleepList.minByOrNull { x->x.timestampSeconds }!!.timestampSeconds
+                }
         }
 }
 

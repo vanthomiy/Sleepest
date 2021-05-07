@@ -20,6 +20,10 @@ class MainViewModel(private val dbRepository: DbRepository, private val storageS
         sleepCalculationDbRepository.deleteSleepApiRawData()
     }
 
+    fun insertSingleApi(data:SleepApiRawDataEntity)= viewModelScope.launch {
+        sleepCalculationDbRepository.insertSleepApiRawData(data)
+    }
+
     fun insertApi(data:List<SleepApiRawDataEntity>)= viewModelScope.launch {
         sleepCalculationDbRepository.insertSleepApiRawData(data)
     }

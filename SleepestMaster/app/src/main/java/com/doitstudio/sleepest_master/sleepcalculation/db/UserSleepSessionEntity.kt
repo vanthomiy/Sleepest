@@ -15,7 +15,7 @@ data class UserSleepSessionEntity(
         @PrimaryKey
         val id:Int,
 
-        val mobilePosition: MobilePosition = MobilePosition.UNIDENTIFIED,
+        var mobilePosition: MobilePosition = MobilePosition.UNIDENTIFIED,
 
         @Embedded(prefix = "sleepTimes") val sleepTimes: SleepTimes = SleepTimes(),
         @Embedded(prefix = "sleepRating") val userSleepRating: UserSleepRating = UserSleepRating(),

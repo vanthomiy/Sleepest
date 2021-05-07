@@ -126,7 +126,7 @@ def trainAndSaveModel(model, val_ds, train_ds, test_ds, modelname, class_weights
 
   #cm_callback = tf.keras.callbacks.LambdaCallback(on_epoch_end=log_confusion_matrix(model,val_ds,path,10, class_names))
  
-  model.fit(train_ds, epochs=100, validation_data=val_ds, class_weight= class_weights, callbacks=[tensorboard_callback])
+  model.fit(train_ds, epochs=500, validation_data=val_ds, class_weight= class_weights, callbacks=[tensorboard_callback])
 
   loss, accuracy = model.evaluate(test_ds)
 
@@ -214,7 +214,7 @@ def startWakeUpLite(time, length):
   class_names =['light', 'deep']
 
   dataframe = loadDataFrame(csv_file)
-  headers = createHeaders(length, 1)
+  headers = createHeaders(length, 0)
   all_inputs, encoded_features, val_ds,train_ds, test_ds, test = createFeatures(dataframe, headers)
   model = createModel(2,encoded_features, all_inputs)
   loss, accuracy = trainAndSaveModel(model, val_ds,train_ds, test_ds, 'wakeuplight'+ str(time), class_weights, class_names, test)

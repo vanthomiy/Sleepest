@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class SleepTimes(
 
+        // all in minutes!!
         var sleepTimeStart: Int = 0,
         var sleepTimeEnd: Int = 0,
         var sleepDuration: Int = 0,

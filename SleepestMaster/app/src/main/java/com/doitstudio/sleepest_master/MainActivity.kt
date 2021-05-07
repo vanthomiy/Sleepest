@@ -14,13 +14,18 @@ import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
 import com.doitstudio.sleepest_master.model.data.Actions
 import com.doitstudio.sleepest_master.model.data.ModelProcess
 import com.doitstudio.sleepest_master.model.data.SleepState
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationDbRepository
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationStoreRepository
 import com.doitstudio.sleepest_master.sleepcalculation.ml.SleepClassifier
+import com.doitstudio.sleepest_master.storage.DbRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataRealEntity
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import java.io.BufferedReader
 
 
@@ -66,8 +71,6 @@ class MainActivity : AppCompatActivity() {
 
     var index = 9
     fun buttonClick2(view: View){
-
-        //val sleepClassifier = SleepClassifier.getHandler(this)
 
         var gson = Gson()
         val jsonFile = this
@@ -145,7 +148,7 @@ class MainActivity : AppCompatActivity() {
             oawaker+= awaker
             osleepr+= sleepr
 
-
+            /*
             for (i in 0 until sleepTimes[j].count()) {
 
                 if(sleepTimes[j][i].sleepState != SleepState.SLEEPING)
@@ -167,7 +170,11 @@ class MainActivity : AppCompatActivity() {
             olight +=light
             odepp += depp
             onone += none
+            */
 
+
+            val sleepTime = sleepCalculationHandler.defineUserWakeupTest(sleepTimes[j].toList())
+            print(sleepTime)
 
         }
 
@@ -177,11 +184,96 @@ class MainActivity : AppCompatActivity() {
 
     var isTimerRunning = false
 
-    fun buttonClick3(view: View) {
+    var context = this
 
-        // Testing
-        val sleepClassifier = SleepClassifier.getHandler(this)
+    private val sleepDbRepository: SleepCalculationDbRepository by lazy {
+        (context.applicationContext as MainApplication).sleepCalculationDbRepository
+    }
 
+    private val normalDbRepository: DbRepository by lazy {
+        (context.applicationContext as MainApplication).dbRepository
+    }
+
+    private val sleepCalculationRepository: SleepCalculationStoreRepository by lazy {
+        (context.applicationContext as MainApplication).sleepCalculationRepository
+    }
+
+
+    fun buttonClick3(view: View) = runBlocking {
+
+        // test des kompletten ablaufs !
+
+        // sleep api data löschen
+
+        // als erstes muss ein schlaf geholt werden.
+        // dieser wird nacheinander in sleep api data ein gespeichert.
+        // inzwischen wird checkIsUserSleeping aufgerufen und berechnet
+
+        // komplett durchlaufen // bzw bis 3/4 durch sind!!
+
+        // nach 3/4 wird es erweitert
+
+        // durchlaufen, einspeicher, checkIsUserSleeping, und dann defineUserWakeup
+
+
+        // region load data
+        var gson = Gson()
+        val jsonFile = context
+                .assets
+                .open("databases/testdata/SleepValues.json")
+                .bufferedReader()
+                .use(BufferedReader::readText)
+
+        val jsonFileReal = context
+                .assets
+                .open("databases/testdata/SleepValuesTrue.json")
+                .bufferedReader()
+                .use(BufferedReader::readText)
+
+        val sleepTimes = gson.fromJson(jsonFile, Array<Array<SleepApiRawDataEntity>>::class.java).asList()
+        val sleepTimesReal = gson.fromJson(jsonFileReal, Array<Array<SleepApiRawDataRealEntity>>::class.java).asList()
+
+
+        val sleepCalculationHandler = SleepCalculationHandler.getHandler(context)
+
+        // endregion
+
+        // delete sleep api data
+        mainViewModel.deleteApi()
+
+
+        val index = 10
+        // die ersten 2/3
+        for (i in 0 until sleepTimes[index].count()) {
+
+            // insert data
+            val data = sleepTimes[index][i]
+            data.sleepState = SleepState.NONE
+            val sleepApiRawDataEntityList = listOf<SleepApiRawDataEntity>(data)
+            sleepDbRepository.insertSleepApiRawData(sleepApiRawDataEntityList)
+
+            // call handler
+            sleepCalculationHandler.checkIsUserSleeping()
+
+
+
+            val livesess = sleepCalculationRepository.liveUserSleepActivityFlow.first()
+            val a = livesess
+
+            // wenn 2/3 erreicht
+            if (i > sleepTimes[index].count() * (2f / 3f)) {
+
+                val ab = livesess
+
+                sleepCalculationHandler.defineUserWakeup()
+
+                var session = normalDbRepository.allUserSleepSessions.first().first()
+                val b = session
+
+            }
+
+
+        }
     }
 
     private fun requestData(){

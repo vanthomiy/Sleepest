@@ -1,5 +1,6 @@
 import tensorflow
 import tensorflow as tf
+import json
 
 def convertSaveModel(saved_model_dir, modelname, addData):
     # Convert the model
@@ -48,6 +49,31 @@ def convertFromKeras(model, name):
     with open(name, 'wb') as f:
         f.write(tflite_model)
 
+def saveModelInputDetails(tflite_file):
+    interpreter = tf.lite.Interpreter(model_path=tflite_file)
+    interpreter.allocate_tensors()
+
+    # Get input and output tensors.
+    input_details = interpreter.get_input_details()
+
+    list1 = []
+    for input in input_details:
+        data = {}
+        
+        data['index'] = str(input['index'])
+        data['name'] = str(input['name'])
+        data['shape'] = str(input['shape'])
+        data['dtype'] = str(input['shape'].dtype)
+
+        list1.append(data)
+
+
+    file = tflite_file+'Inputs.json'
+
+
+    with open(file, 'w') as fp:
+        json.dump(list1,fp)
+ 
 def convertSaveModelWithCustomOps(saved_model_dir, modelname, addData):
     # Convert the model
     converter = tf.lite.TFLiteConverter.from_saved_model(saved_model_dir) # path to the SavedModel directory
@@ -59,4 +85,7 @@ def convertSaveModelWithCustomOps(saved_model_dir, modelname, addData):
     # Save the model.
     with open(modelname, 'wb') as f:
         f.write(tflite_model)
+
+    
+    saveModelInputDetails(modelname)
 
