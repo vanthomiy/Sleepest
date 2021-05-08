@@ -3,8 +3,8 @@ package com.doitstudio.sleepest_master.storage.db
 import android.content.Context
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.doitstudio.sleepest_master.model.data.sleepcalculation.SleepSegmentEntity
-import com.doitstudio.sleepest_master.model.data.sleepcalculation.UserSleepSessionEntity
+import com.doitstudio.sleepest_master.sleepcalculation.db.UserSleepSessionDao
+import com.doitstudio.sleepest_master.sleepcalculation.db.UserSleepSessionEntity
 
 private const val DATABASE_NAME = "sleepest_database"
 
@@ -21,10 +21,9 @@ private const val DATABASE_NAME = "sleepest_database"
 @TypeConverters(Converters::class)
 abstract class SleepDatabase : RoomDatabase() {
 
-    abstract fun sleepApiRawDataDao(): SleepApiRawDataDao
     abstract fun sleepDataDao(): SleepSegmentDao
-    abstract fun userSleepSegmentDataDao(): UserSleepSessionDao
-    abstract fun alarmDao():AlarmDao
+    abstract fun userSleepSessionDao(): UserSleepSessionDao
+    abstract fun alarmDao(): AlarmDao
 
     companion object {
         // For Singleton instantiation

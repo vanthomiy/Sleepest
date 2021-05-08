@@ -1,7 +1,5 @@
 package com.doitstudio.sleepest_master.sleepcalculation.model.algorithm
 
-import com.doitstudio.sleepest_master.sleepcalculation.db.SleepStateModelEntity
-import com.doitstudio.sleepest_master.sleepcalculation.db.SleepTimeParameterEntity
 import org.junit.Assert.*
 
 

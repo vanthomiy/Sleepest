@@ -1,4 +1,4 @@
-package com.doitstudio.sleepest_master.Background;
+package com.doitstudio.sleepest_master.background;
 
 /**
  * This class inherits from LifecycleService. It implements all functions of the foreground service
@@ -15,11 +15,8 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.widget.Toast;
 import androidx.lifecycle.LifecycleService;
-
-import com.doitstudio.sleepest_master.AlarmClock.AlarmClockReceiver;
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.model.data.Actions;
-import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 
 public class ForegroundService extends LifecycleService {
@@ -27,7 +24,6 @@ public class ForegroundService extends LifecycleService {
     //private final ServiceLifecycleDispatcher mDispatcher = new ServiceLifecycleDispatcher( this);
     private PowerManager.WakeLock wakeLock = null;
     private boolean isServiceStarted = false;
-    public SleepCalculationHandler sleepCalculationHandler;
 
     DataStoreRepository dataStoreRepository;
 
@@ -92,7 +88,7 @@ public class ForegroundService extends LifecycleService {
 
         //Set start boolean and save it in preferences
         isServiceStarted = true;
-        new ServiceTracker().setServiceState(this, ServiceState.STARTED);
+        //new ServiceTracker().setServiceState(this, ServiceState.STARTED);
 
         // lock that service is not affected by Doze Mode
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -118,7 +114,7 @@ public class ForegroundService extends LifecycleService {
         /**
          * TEST
          * */
-        AlarmClockReceiver.startAlarmManager(3,20,26, getApplicationContext());
+        //AlarmClockReceiver.startAlarmManager(3,20,26, getApplicationContext());
     }
 
     // Stop the foreground service
@@ -135,7 +131,7 @@ public class ForegroundService extends LifecycleService {
         }
         //Save state in preferences
         isServiceStarted = false;
-        new ServiceTracker().setServiceState(this, ServiceState.STOPPED);
+        //new ServiceTracker().setServiceState(this, ServiceState.STOPPED);
     }
 
     /**
@@ -197,7 +193,7 @@ public class ForegroundService extends LifecycleService {
         Intent intent = new Intent(context, ForegroundService.class);
         intent.setAction(action.name());
 
-        if (new ServiceTracker().getServiceState(context) == ServiceState.STOPPED && action == Actions.STOP)
+        if (false)//new ServiceTracker().getServiceState(context) == ServiceState.STOPPED && action == Actions.STOP)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 context.startForegroundService(intent);
 

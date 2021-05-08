@@ -11,11 +11,6 @@ class MainViewModel(private val dbRepository: DbRepository, private val storageS
 
     val rawSleepApiData = sleepCalculationDbRepository.allSleepApiRawData.asLiveData()
 
-    val allSleepTimeModels = sleepCalculationDbRepository.allSleepTimeModels.asLiveData()
-    val allSleepStateModels = sleepCalculationDbRepository.allSleepStateModels.asLiveData()
-    val allSleepStateParameters = sleepCalculationDbRepository.allSleepStateParameters.asLiveData()
-    val allSleepTimeParameters = sleepCalculationDbRepository.allSleepTimeParameters.asLiveData()
-
     fun updatePermissionActive(permissionActive: Boolean) = viewModelScope.launch {
         storageStoreRepository.updatePermissionActive(permissionActive)
     }

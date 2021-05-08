@@ -3,26 +3,20 @@ package com.doitstudio.sleepest_master
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
 import android.view.View
-import com.doitstudio.sleepest_master.AlarmClock.AlarmClockReceiver
-import com.doitstudio.sleepest_master.Background.ForegroundService
+import com.doitstudio.sleepest_master.background.ForegroundService
 
 import android.provider.Settings
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.viewbinding.BuildConfig
-import com.doitstudio.sleepest_master.BuildConfig.APPLICATION_ID
-import com.doitstudio.sleepest_master.BuildConfig.VERSION_NAME
 import com.doitstudio.sleepest_master.sleepapi.SleepHandler
 
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
 import com.doitstudio.sleepest_master.model.data.Actions
-import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -45,33 +39,6 @@ class MainActivity : AppCompatActivity() {
         //val fs = ForegroundObserver(this, this)
 
 
-        mainViewModel.liveUserSleepActivityLiveData.observe(this) { data ->
-
-            var text = "User Sleeping: " + data.isUserSleeping + "\n"
-            text += "Is Data Available: " + data.isDataAvailable + "\n"
-
-
-            binding.status2.text = text
-        }
-
-        mainViewModel.userSleepSessionLiveData.observe(this) { data ->
-            val lastdata = data.firstOrNull() ?: return@observe
-
-            var text = "Sleep Time: " + lastdata?.sleepTimes.sleepDuration + "\n"
-            text += "Sleep Type Phone: " + lastdata?.sleepUserType?.mobilePosition + "\n"
-
-            binding.status1.text = text
-        }
-
-        mainViewModel.sleepApiLiveData.observe(this) { data ->
-
-            var text = "Permission Active: " + data.isPermissionActive + "\n"
-            text += "Subscribed: " + data.isSubscribed + "\n"
-            text += "Sleep Values: " + data.sleepApiValuesAmount + "\n"
-
-            binding.status0.text = text
-        }
-
         // check permission
         if (!activityRecognitionPermissionApproved()) {
             requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
@@ -80,22 +47,8 @@ class MainActivity : AppCompatActivity() {
         requestData()
     }
 
-
-    
-
-    private val mainViewModel: MainViewModel by lazy {
-        MainViewModel(
-                (application as MainApplication).dbRepository,
-                (application as MainApplication).dataStoreRepository
-        )
-    }
-
-    private val sch:SleepCalculationHandler by lazy {
-        SleepCalculationHandler.getHandler(this)
-    }
-
     fun buttonClick1(view: View){
-        sch.calculateLiveuserSleepActivity()
+        //sch.calculateLiveuserSleepActivity()
     }
 
     private val sleepHandler : SleepHandler by lazy {SleepHandler.getHandler(this)}
@@ -110,14 +63,14 @@ class MainActivity : AppCompatActivity() {
 
         //ForegroundService.startOrStopForegroundService(Actions.START, this)
         //Workmanager.startPeriodicWorkmanager(15);
-        sch.calculateUserWakup()
+        //sch.calculateUserWakup()
 
     }
 
     var isTimerRunning = false
 
     fun buttonClick3(view: View) {
-        sch.recalculateUserSleep()
+        //sch.recalculateUserSleep()
     }
 
     private fun requestData(){
@@ -147,11 +100,11 @@ class MainActivity : AppCompatActivity() {
     private val requestPermissionLauncher: ActivityResultLauncher<String> =
             registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
                 if (!isGranted) {
-                    mainViewModel.updatePermissionActive(false)
+                    //mainViewModel.updatePermissionActive(false)
                     // Permission denied on Android platform that supports runtime permissions.
                     //displayPermissionSettingsSnackBar()
                 } else {
-                    mainViewModel.updatePermissionActive(true)
+                    //mainViewModel.updatePermissionActive(true)
                     // Permission was granted (either by approval or Android version below Q).
                 }
             }

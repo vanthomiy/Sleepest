@@ -6,6 +6,10 @@ import androidx.datastore.preferences.createDataStore
 
 import com.doitstudio.sleepest_master.LiveUserSleepActivity
 import com.doitstudio.sleepest_master.SleepApiData
+import com.doitstudio.sleepest_master.sleepcalculation.datastore.LIVE_USER_ACTIVITY_DATA_NAME
+import com.doitstudio.sleepest_master.sleepcalculation.datastore.LiveUserSleepActivityStatus
+import com.doitstudio.sleepest_master.sleepcalculation.datastore.SLEEP_API_DATA_NAME
+import com.doitstudio.sleepest_master.sleepcalculation.datastore.SleepApiDataStatus
 
 import com.doitstudio.sleepest_master.storage.datastorage.*
 import kotlinx.coroutines.flow.Flow
@@ -56,7 +60,8 @@ class DataStoreRepository(context: Context) {
     private val sleepApiDataStatus by lazy{ SleepApiDataStatus(context.createDataStore(
             SLEEP_API_DATA_NAME,
             serializer = SleepApiDataSerializer())
-    )}
+    )
+    }
 
 
     val sleepApiDataFlow: Flow<SleepApiData> = sleepApiDataStatus.sleepApiData
@@ -91,7 +96,8 @@ class DataStoreRepository(context: Context) {
     private val liveUserSleepActivityStatus by lazy{ LiveUserSleepActivityStatus(context.createDataStore(
         LIVE_USER_ACTIVITY_DATA_NAME,
         serializer = LiveUserSleepActivitySerializer())
-    )}
+    )
+    }
 
 
     val liveUserSleepActivityFlow: Flow<LiveUserSleepActivity> = liveUserSleepActivityStatus.liveUserSleepActivity

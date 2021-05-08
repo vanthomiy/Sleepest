@@ -4,10 +4,8 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.*
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
-import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope

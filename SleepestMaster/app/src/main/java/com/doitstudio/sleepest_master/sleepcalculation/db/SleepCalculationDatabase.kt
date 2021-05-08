@@ -16,7 +16,7 @@ private const val DATABASE_NAME = "sleep_calculation_database"
  */
 
 @Database(
-    entities = [SleepStateModelEntity::class, SleepTimeModelEntity::class, SleepStateParameterEntity::class, SleepTimeParameterEntity::class, SleepApiRawDataEntity::class],
+    entities = [SleepApiRawDataEntity::class],
     version = 3,
     exportSchema = true
 )
@@ -24,10 +24,6 @@ private const val DATABASE_NAME = "sleep_calculation_database"
 @TypeConverters(Converters::class)
 abstract class SleepCalculationDatabase : RoomDatabase() {
 
-    abstract fun sleepStateModelDao(): SleepStateModelDao
-    abstract fun sleepTimeModelDao(): SleepTimeModelDao
-    abstract fun sleepStateParameterDao(): SleepStateParameterDao
-    abstract fun sleepTimeParameterDao(): SleepTimeParameterDao
     abstract fun sleepApiRawDataDao(): SleepApiRawDataDao
 
     companion object {
@@ -50,10 +46,6 @@ abstract class SleepCalculationDatabase : RoomDatabase() {
                         .addCallback(object : RoomDatabase.Callback() {
                             override fun onCreate(db: SupportSQLiteDatabase) {
                                 super.onCreate(db)
-                                instance.sleepStateModelDao().setupDatabase(context)
-                                instance.sleepTimeModelDao().setupDatabase(context)
-                                instance.sleepStateParameterDao().setupDatabase(context)
-                                instance.sleepTimeParameterDao().setupDatabase(context)
                             }
                         })
                     .build()

@@ -1,10 +1,4 @@
-package com.doitstudio.sleepest_master.Background
-
-import android.content.Context
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.asLiveData
-import com.doitstudio.sleepest_master.storage.DataStoreRepository
-import com.doitstudio.sleepest_master.storage.DataStoreRepository.Companion.getRepo
+package com.doitstudio.sleepest_master.background
 
 class ForegroundObserver(private val fs:ForegroundService) {
 

@@ -1,10 +1,8 @@
 package com.doitstudio.sleepest_master.storage
 
-
-import com.doitstudio.sleepest_master.model.data.sleepcalculation.SleepSegmentEntity
-import com.doitstudio.sleepest_master.model.data.sleepcalculation.UserSleepSessionEntity
+import com.doitstudio.sleepest_master.sleepcalculation.db.UserSleepSessionDao
+import com.doitstudio.sleepest_master.sleepcalculation.db.UserSleepSessionEntity
 import com.doitstudio.sleepest_master.storage.db.*
-
 import kotlinx.coroutines.flow.Flow
 import java.time.DayOfWeek
 
@@ -17,10 +15,9 @@ import java.time.DayOfWeek
  *
  */
 class DbRepository(
-    private val sleepSegmentDao: SleepSegmentDao,
-    private val sleepApiRawDataDao: SleepApiRawDataDao,
-    private val userSleepSessionDataDao: UserSleepSessionDao,
-    private val alarmDao: AlarmDao
+        private val sleepSegmentDao: SleepSegmentDao,
+        private val userSleepSessionDataDao: UserSleepSessionDao,
+        private val alarmDao: AlarmDao
 
 ) {
 
@@ -31,9 +28,9 @@ class DbRepository(
 
         var a:Int = 0
 
-        fun getRepo(sleepSegmentDao: SleepSegmentDao, sleepApiRawDataDao: SleepApiRawDataDao, userSleepSessionDataDao: UserSleepSessionDao, alarmDao: AlarmDao): DbRepository {
+        fun getRepo(sleepSegmentDao: SleepSegmentDao, userSleepSessionDataDao: UserSleepSessionDao, alarmDao: AlarmDao): DbRepository {
             return INSTANCE ?: synchronized(this) {
-                val instance = DbRepository(sleepSegmentDao, sleepApiRawDataDao, userSleepSessionDataDao, alarmDao)
+                val instance = DbRepository(sleepSegmentDao, userSleepSessionDataDao, alarmDao)
                 INSTANCE = instance
                 // return instance
                 instance
@@ -47,27 +44,6 @@ class DbRepository(
     // By default Room runs suspend queries off the main thread. Therefore, we don't need to
     // implement anything else to ensure we're not doing long-running database work off the
     // main thread.
-
-    //region Sleep API Data
-
-    // Methods for SleepApiRawDataDao
-    // Observed Flow will notify the observer when the data has changed.
-    val allSleepApiRawData: Flow<List<SleepApiRawDataEntity>> =
-            sleepApiRawDataDao.getAll()
-
-    suspend fun insertSleepApiRawData(sleepClassifyEventEntity: SleepApiRawDataEntity) {
-        sleepApiRawDataDao.insert(sleepClassifyEventEntity)
-    }
-
-    suspend fun deleteSleepApiRawData() {
-        sleepApiRawDataDao.deleteAll()
-    }
-
-    suspend fun insertSleepApiRawData(sleepClassifyEventEntities: List<SleepApiRawDataEntity>) {
-        sleepApiRawDataDao.insertAll(sleepClassifyEventEntities)
-    }
-
-    //endregion
 
     //region Sleep Segments
 

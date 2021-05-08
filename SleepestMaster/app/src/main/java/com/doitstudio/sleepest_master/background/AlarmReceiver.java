@@ -18,7 +18,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.model.data.Actions;
-import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
+//import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -37,7 +37,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         this.context = context.getApplicationContext();
 
-        SleepCalculationHandler sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
+        //SleepCalculationHandler sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
 
         switch (intent.getIntExtra(context.getString(R.string.alarmmanager_key), 0)) {
             case 0:

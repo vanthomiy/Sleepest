@@ -16,11 +16,4 @@ data class SleepUserType(
        // val userId:Int,
 
         var mobilePosition: MobilePosition = MobilePosition.UNIDENTIFIED,
-        @Embedded(prefix = "live") var sleepLiveModel : SleepModel = SleepModel(),	// Das Berechnete Live Model aus den Daten
-        @Embedded(prefix = "full") var sleepFullModel : SleepModel = SleepModel(),	 //Das Berechnete Model aus den Daten
-
-        var userFactorPattern: UserFactorPattern = UserFactorPattern.NONE, //	Faktor, je nach dem wie die allgemeinen werte kommt
-        var sleepTimeLiveParams :	ArrayList<SleepTimePattern> = arrayListOf(), //	Erkanntes muster während des Schlafs
-
-        var sleepStateLiveParams : ArrayList<String> = arrayListOf()//	Erkanntes muster während des Schlafs
 )
