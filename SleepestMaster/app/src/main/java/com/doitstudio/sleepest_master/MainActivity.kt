@@ -22,12 +22,15 @@ import com.doitstudio.sleepest_master.model.data.Actions
 import com.doitstudio.sleepest_master.model.data.SleepStatePattern
 import com.doitstudio.sleepest_master.model.data.UserFactorPattern
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationStoreRepository
 import com.doitstudio.sleepest_master.sleepcalculation.db.SleepStateParameterEntity
 import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepStateParameter
+import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 
@@ -35,6 +38,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val scope: CoroutineScope = MainScope()
+    private val sleepCalculationStoreRepository by lazy {  SleepCalculationStoreRepository.getRepo(applicationContext)}
 
     // Status of subscription to sleep data. This is stored in [SleepSubscriptionStatus] which saves
     // the data in a [DataStore] in case the user navigates away from the app.
@@ -42,6 +46,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -216,6 +222,15 @@ class MainActivity : AppCompatActivity() {
         AlarmReceiver.startAlarmManager(calendar[Calendar.DAY_OF_WEEK], calendar[Calendar.HOUR_OF_DAY], calendar[Calendar.MINUTE], applicationContext, 2)
         AlarmClockReceiver.startAlarmManager(calendar[Calendar.DAY_OF_WEEK], calendar[Calendar.HOUR_OF_DAY], calendar[Calendar.MINUTE], applicationContext, 1)
         */
+        //setSleepTime()
+    }
+
+    private fun setSleepTime(){
+        scope.launch {
+            sleepCalculationStoreRepository.updateIsUserSleeping(true)
+            sleepCalculationStoreRepository.updateUserSleepTime(27001)
+
+        }
     }
 
     var isTimerRunning = false

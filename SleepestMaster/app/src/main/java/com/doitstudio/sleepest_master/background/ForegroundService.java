@@ -163,11 +163,15 @@ public class ForegroundService extends LifecycleService {
     }
 
     public void OnSleepTimeChanged(LiveUserSleepActivity liveUserSleepActivity){
+
+        SharedPreferences pref = getSharedPreferences("StopService", 0);
+        int test = pref.getInt("sleeptime", 0);
+
         isDataAvailable = liveUserSleepActivity.getIsDataAvailable();
         userSleepTime = liveUserSleepActivity.getUserSleepTime();
         isSleeping = liveUserSleepActivity.getIsUserSleeping();
 
-        if (isSleeping && (userSleepTime > times.getSleepTime())) {
+        if (isSleeping && (userSleepTime > times.getSleepTime()) && (userSleepTime != test)) {
             //AlarmReceiver.cancelAlarm(getApplicationContext(), 2);
             Calendar calendar = Calendar.getInstance();
             //int difference = times.getSleepTime() - userSleepTime;
@@ -176,7 +180,7 @@ public class ForegroundService extends LifecycleService {
         }
 
         Calendar calendar1 = Calendar.getInstance();
-        SharedPreferences pref = getSharedPreferences("AlarmChanged", 0);
+        pref = getSharedPreferences("AlarmChanged", 0);
         SharedPreferences.Editor ed = pref.edit();
         ed.putInt("hour", calendar1.get(Calendar.HOUR_OF_DAY));
         ed.putInt("minute", calendar1.get(Calendar.MINUTE));
@@ -313,6 +317,7 @@ public class ForegroundService extends LifecycleService {
         SharedPreferences.Editor ed = pref.edit();
         ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
         ed.putInt("minute", calendar.get(Calendar.MINUTE));
+        ed.putInt("sleeptime", userSleepTime);
         ed.apply();
 
 
