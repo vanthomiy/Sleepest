@@ -56,11 +56,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case 1:
                 //ForegroundService.startOrStopForegroundService(Actions.START, context.getApplicationContext());
-                //Intent testIntent = new Intent(context, TestActivity.class);
-                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                //PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, testIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                Intent i = new Intent(context,TestActivity.class);
+                Intent i = new Intent(context, ForegroundActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 i.putExtra("intent", 1);
                 context.startActivity(i);
@@ -69,7 +66,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             case 2:
                 //ForegroundService.startOrStopForegroundService(Actions.STOP, context.getApplicationContext());
 
-                Intent i2 = new Intent(context,TestActivity.class);
+                Intent i2 = new Intent(context, ForegroundActivity.class);
                 i2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 i2.putExtra("intent", 2);
                 context.startActivity(i2);
@@ -91,7 +88,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case 5:
                 //Kalkulation
-                //Workmanager.startPeriodicWorkmanager(times.getWorkmanagerCalculationDuration(), context.getApplicationContext());
                 WorkmanagerCalculation.startPeriodicWorkmanager(times.getWorkmanagerCalculationDuration(), context.getApplicationContext());
                 break;
         }

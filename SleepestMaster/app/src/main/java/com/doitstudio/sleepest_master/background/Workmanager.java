@@ -33,12 +33,6 @@ public class Workmanager extends Worker {
     public Workmanager(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
         this.context = context;
-
-        //sleepCalculationHandler = SleepCalculationHandler.Companion.getDatabase(context);
-        //showNotification(context);
-
-        //sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
-
     }
 
     //Workmanager do his work here at the desired time intervals
@@ -64,24 +58,6 @@ public class Workmanager extends Worker {
         ed.putInt("minute", calendar.get(Calendar.MINUTE));
         ed.apply();
 
-        /*Calendar calendar = Calendar.getInstance();
-
-        calendar.set(Calendar.HOUR_OF_DAY, 14);
-        calendar.set(Calendar.MINUTE, 29);
-
-        if (calendar.before(Calendar.getInstance().getTime())) {
-            sleepCalculationHandler.calculateUserWakeupJob();
-        }
-
-
-        calendar.set(Calendar.HOUR_OF_DAY, 6);
-        calendar.set(Calendar.MINUTE, 30);
-
-
-        if (calendar.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()) {
-            //sleepCalculationHandler.calculateUserWakeupJob();
-        }*/
-
         return Result.success();
     }
 
@@ -91,16 +67,9 @@ public class Workmanager extends Worker {
      */
     public static void startPeriodicWorkmanager(int duration, Context context1) {
 
-        //Constraints not necessary, but useful
-        /*Constraints constraints = new Constraints.Builder()
-                .setRequiresBatteryNotLow(true) //Trigger fires only, when battery is not low
-                .setRequiresStorageNotLow(true) //Trigger fires only, when enough storage is left
-                .build();*/
-
         PeriodicWorkRequest periodicDataWork =
                 new PeriodicWorkRequest.Builder(Workmanager.class, duration, TimeUnit.MINUTES)
                         .addTag(context1.getString(R.string.workmanager1_tag)) //Tag is needed for canceling the periodic work
-                        //.setConstraints(constraints)
                         .build();
 
         WorkManager workManager = WorkManager.getInstance(context);
