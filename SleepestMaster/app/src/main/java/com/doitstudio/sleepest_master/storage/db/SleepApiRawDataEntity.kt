@@ -78,7 +78,10 @@ data class SleepApiRawDataEntity(
                                                 sortedList[i].sleepState == SleepState.LIGHT ||
                                                 sortedList[i].sleepState == SleepState.REM)
 
-                                awakeTime += if(isSleeping) sortedList[i].timestampSeconds - sortedList[i-1].timestampSeconds else 0
+                                awakeTime +=
+                                        if(isSleeping && (sortedList[i].sleepState == SleepState.NONE || sortedList[i].sleepState == SleepState.AWAKE))
+                                                sortedList[i].timestampSeconds - sortedList[i-1].timestampSeconds
+                                        else 0
                         }
 
                         return awakeTime / 60

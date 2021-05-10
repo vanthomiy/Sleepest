@@ -114,13 +114,13 @@ class SleepClassifier constructor(private val context: Context) {
         var preparedInput = FloatArray(12)
 
         for(i in 0 until light.count())
-            preparedInput[inputAssignment.value.first{x -> x.name.contains("light") && x.name.contains(mapping[i]?:"") }.index] = light[i].toFloat()
+            preparedInput[inputAssignment.value.first{x -> x.name.toLowerCase().contains("brigthness") && x.name.toLowerCase().contains(mapping[i]?:"") }?.index] = light[i].toFloat()
 
         for(i in 0 until motion.count())
-            preparedInput[inputAssignment.value.first{x -> x.name.contains("sleep") && x.name.contains(mapping[i]?:"") }.index] = motion[i].toFloat()
+            preparedInput[inputAssignment.value.first{x -> x.name.toLowerCase().contains("motion") && x.name.toLowerCase().contains(mapping[i]?:"") }.index] = motion[i].toFloat()
 
         for(i in 0 until sleep.count())
-            preparedInput[inputAssignment.value.first{x -> x.name.contains("brigthness") && x.name.contains(mapping[i]?:"") }.index] = sleep[i].toFloat()
+            preparedInput[inputAssignment.value.first{x -> x.name.toLowerCase().contains("sleep") && x.name.toLowerCase().contains(mapping[i]?:"") }.index] = sleep[i].toFloat()
 
 
         return preparedInput
@@ -342,7 +342,7 @@ class SleepClassifier constructor(private val context: Context) {
             val outputFeature = outputs.outputFeature0AsTensorBuffer
 
             // Map of labels and their corresponding probability
-            val associatedAxisLabels: List<String> = listOf("TABLE", "BED")
+            val associatedAxisLabels: List<String> = listOf("ONTABLE", "INBED")
 
             // Map of labels and their corresponding probability
             val labels = TensorLabel(associatedAxisLabels, outputFeature)

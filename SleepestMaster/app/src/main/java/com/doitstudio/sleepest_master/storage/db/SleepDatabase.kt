@@ -57,7 +57,5 @@ abstract class SleepDatabase : RoomDatabase() {
                 instance
             }
         }
-
-
     }
 }

@@ -5,6 +5,7 @@ import com.doitstudio.sleepest_master.model.data.SleepState
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataDao
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import kotlinx.coroutines.flow.Flow
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -59,10 +60,39 @@ class SleepCalculationDbRepository(
         return sleepApiRawDataDao.getSince(time)
     }
 
-    suspend fun getSleepApiRawDataFromDate(dateTime:LocalDate): Flow<List<SleepApiRawDataEntity>>
+    /**
+     * Gets the sleep api data from a specific state from a date in life time.
+     * so we always getting the data from 15:00 the day or day before until the specific time
+     * later we have to combine it with the actual sleeptimes
+     */
+    suspend fun getSleepApiRawDataFromDateLive(actualTimeInt:Int): Flow<List<SleepApiRawDataEntity>>
     {
-        val startTime = dateTime.minusDays(1).atTime(12,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
-        val endTime = dateTime.minusDays(1).atTime(12,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+        val actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(actualTimeInt.toLong()*1000), ZoneOffset.UTC)
+
+        val startTime = if (actualTime.hour < 15)
+            actualTime.toLocalDate().minusDays(1).atTime(15,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+        else actualTime.toLocalDate().atTime(15,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+
+        val endTime = actualTime.atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+
+        return sleepApiRawDataDao.getBetween(startTime,endTime)
+    }
+
+    /**
+     * Gets the sleep api data from a specific state from a date
+     * e.g. the dateTime 20.05.2021 at 20:00 returns all data in between 20.05.2021 15:00 to 21.05.2021 at 15:00
+     * later we have to combine it with the actual sleeptimes
+     */
+    suspend fun getSleepApiRawDataFromDate(actualTime:LocalDateTime): Flow<List<SleepApiRawDataEntity>>
+    {
+        val startTime = if (actualTime.hour < 15)
+            actualTime.toLocalDate().minusDays(1).atTime(15,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+        else actualTime.toLocalDate().atTime(15,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+
+        val endTime = if (actualTime.hour >= 15)
+                 actualTime.toLocalDate().plusDays(1).atTime(15,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+            else actualTime.toLocalDate().atTime(15,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+
         return sleepApiRawDataDao.getBetween(startTime,endTime)
     }
 
