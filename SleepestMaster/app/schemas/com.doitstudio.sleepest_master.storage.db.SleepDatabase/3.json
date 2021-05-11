@@ -1,0 +1,168 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 3,
+    "identityHash": "6e7abbc5a1c9be07a8474e9f3ad825de",
+    "entities": [
+      {
+        "tableName": "sleep_segment_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`timestampSecondsStart` INTEGER NOT NULL, `timestampSecondsEnd` INTEGER NOT NULL, `sleepState` INTEGER NOT NULL, PRIMARY KEY(`timestampSecondsStart`))",
+        "fields": [
+          {
+            "fieldPath": "timestampSecondsStart",
+            "columnName": "timestampSecondsStart",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestampSecondsEnd",
+            "columnName": "timestampSecondsEnd",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepState",
+            "columnName": "sleepState",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "timestampSecondsStart"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "user_sleep_session_entity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `mobilePosition` INTEGER NOT NULL, `sleepTimessleepTimeStart` INTEGER NOT NULL, `sleepTimessleepTimeEnd` INTEGER NOT NULL, `sleepTimessleepDuration` INTEGER NOT NULL, `sleepTimeslightSleepDuration` INTEGER NOT NULL, `sleepTimesdeepSleepDuration` INTEGER NOT NULL, `sleepTimesremSleepDuration` INTEGER NOT NULL, `sleepTimesawakeTime` INTEGER NOT NULL, `sleepRatingsleepDurationAdjustment` INTEGER NOT NULL, `sleepRatingmoodAfterSleep` INTEGER NOT NULL, `sleepRatingmoodOnNextDay` INTEGER NOT NULL, `sleepRatingwakeTimes` INTEGER NOT NULL, `sleepRatingactivityOnDay` INTEGER NOT NULL, `calcRatingsleepStartDetection` INTEGER NOT NULL, `calcRatingsleepEndDetection` INTEGER NOT NULL, `calcRatingawakeDetection` INTEGER NOT NULL, `calcRatingsleepCalcRating` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mobilePosition",
+            "columnName": "mobilePosition",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepTimes.sleepTimeStart",
+            "columnName": "sleepTimessleepTimeStart",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepTimes.sleepTimeEnd",
+            "columnName": "sleepTimessleepTimeEnd",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepTimes.sleepDuration",
+            "columnName": "sleepTimessleepDuration",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepTimes.lightSleepDuration",
+            "columnName": "sleepTimeslightSleepDuration",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepTimes.deepSleepDuration",
+            "columnName": "sleepTimesdeepSleepDuration",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepTimes.remSleepDuration",
+            "columnName": "sleepTimesremSleepDuration",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepTimes.awakeTime",
+            "columnName": "sleepTimesawakeTime",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userSleepRating.sleepDurationAdjustment",
+            "columnName": "sleepRatingsleepDurationAdjustment",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userSleepRating.moodAfterSleep",
+            "columnName": "sleepRatingmoodAfterSleep",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userSleepRating.moodOnNextDay",
+            "columnName": "sleepRatingmoodOnNextDay",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userSleepRating.wakeTimes",
+            "columnName": "sleepRatingwakeTimes",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userSleepRating.activityOnDay",
+            "columnName": "sleepRatingactivityOnDay",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userCalculationRating.sleepStartDetection",
+            "columnName": "calcRatingsleepStartDetection",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userCalculationRating.sleepEndDetection",
+            "columnName": "calcRatingsleepEndDetection",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userCalculationRating.awakeDetection",
+            "columnName": "calcRatingawakeDetection",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userCalculationRating.sleepCalcRating",
+            "columnName": "calcRatingsleepCalcRating",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6e7abbc5a1c9be07a8474e9f3ad825de')"
+    ]
+  }
+}

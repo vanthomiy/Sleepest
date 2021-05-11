@@ -1,43 +1,37 @@
 package com.doitstudio.sleepest_master
 
 import androidx.lifecycle.*
-import com.doitstudio.sleepest_master.model.data.SleepSegmentEntity
-import com.doitstudio.sleepest_master.storage.DataStoreRepository
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationDbRepository
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationStoreRepository
 import com.doitstudio.sleepest_master.storage.DbRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import kotlinx.coroutines.launch
 
-class MainViewModel(private val dbRepository: DbRepository, private val storageRepository: DataStoreRepository) : ViewModel() {
+class MainViewModel(private val dbRepository: DbRepository, private val storageStoreRepository: SleepCalculationStoreRepository, private val sleepCalculationDbRepository: SleepCalculationDbRepository) : ViewModel() {
 
+    val rawSleepApiData = sleepCalculationDbRepository.allSleepApiRawData.asLiveData()
 
-    val alarmLiveData = storageRepository.alarmFlow.asLiveData()
-
-    fun updateAlarmActive(alarmActive: Boolean) = viewModelScope.launch {
-        storageRepository.updateAlarmActive(alarmActive)
+    fun updatePermissionActive(permissionActive: Boolean) = viewModelScope.launch {
+        storageStoreRepository.updatePermissionActive(permissionActive)
     }
 
-    fun updateAlarmTime(alarmTime: Int) = viewModelScope.launch {
-        storageRepository.updateAlarmTime(alarmTime)
+    fun deleteApi()= viewModelScope.launch {
+        sleepCalculationDbRepository.deleteSleepApiRawData()
     }
 
-    fun deleteAllSleepData() = viewModelScope.launch {
-        dbRepository.deleteSleepApiRawData()
-        dbRepository.deleteSleepSegments()
+    fun insertApi(data:List<SleepApiRawDataEntity>)= viewModelScope.launch {
+        sleepCalculationDbRepository.insertSleepApiRawData(data)
     }
 
-    val allSleepSegmentsEntities: LiveData<List<SleepSegmentEntity>> =
-        dbRepository.allSleepSegments.asLiveData()
 
-    val allSleepApiRawDataEntities: LiveData<List<SleepApiRawDataEntity>> =
-        dbRepository.allSleepApiRawData.asLiveData()
 
 }
 
-class MainViewModelFactory(private val dbRepository: DbRepository, private val storageRepository: DataStoreRepository) : ViewModelProvider.Factory {
+class MainViewModelFactory(private val dbRepository: DbRepository, private val storageStoreRepository: SleepCalculationStoreRepository,  private val sleepCalculationDbRepository: SleepCalculationDbRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return MainViewModel(dbRepository,storageRepository) as T
+            return MainViewModel(dbRepository,storageStoreRepository, sleepCalculationDbRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

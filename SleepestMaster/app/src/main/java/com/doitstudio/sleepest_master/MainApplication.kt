@@ -4,6 +4,9 @@ import android.app.Application
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.createDataStore
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationDbRepository
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationStoreRepository
+import com.doitstudio.sleepest_master.sleepcalculation.db.SleepCalculationDatabase
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DbRepository
 import com.doitstudio.sleepest_master.storage.datastorage.*
@@ -17,18 +20,27 @@ class MainApplication : Application() {
     // when repository is first needed.
 
     private val database by lazy {
-       SleepDatabase.getDatabase(applicationContext)
+        SleepDatabase.getDatabase(applicationContext)
     }
-
+    private val sleepCalcDatabase by lazy {
+        SleepCalculationDatabase.getDatabase(applicationContext)
+    }
     val dbRepository by lazy {
-        DbRepository(
-                        database.sleepDataDao(),
-                        database.sleepApiRawDataDao()
+        DbRepository.getRepo(
+                database.sleepDataDao(),
+                database.userSleepSessionDao(),
+                database.alarmDao()
         )
     }
-
-    val dataStoreRepository by lazy {
-        DataStoreRepository(applicationContext)
+    val sleepCalculationDbRepository by lazy {
+        SleepCalculationDbRepository.getRepo(
+                sleepCalcDatabase.sleepApiRawDataDao()
+        )
     }
-
+    val dataStoreRepository by lazy {
+        DataStoreRepository.getRepo(applicationContext)
+    }
+    val sleepCalculationRepository by lazy {
+        SleepCalculationStoreRepository.getRepo(applicationContext)
+    }
 }

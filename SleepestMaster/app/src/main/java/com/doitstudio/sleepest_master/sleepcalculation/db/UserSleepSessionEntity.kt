@@ -1,0 +1,26 @@
+package com.doitstudio.sleepest_master.sleepcalculation.db
+
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.doitstudio.sleepest_master.model.data.MobilePosition
+import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepTimes
+import com.doitstudio.sleepest_master.sleepcalculation.model.userimprovement.UserCalculationRating
+import com.doitstudio.sleepest_master.sleepcalculation.model.userimprovement.UserSleepRating
+
+
+@Entity(tableName = "user_sleep_session_entity")
+data class UserSleepSessionEntity(
+
+        @PrimaryKey
+        val id:Int,
+
+        var mobilePosition: MobilePosition = MobilePosition.UNIDENTIFIED,
+
+        @Embedded(prefix = "sleepTimes") val sleepTimes: SleepTimes = SleepTimes(),
+        @Embedded(prefix = "sleepRating") val userSleepRating: UserSleepRating = UserSleepRating(),
+        @Embedded(prefix = "calcRating") val userCalculationRating: UserCalculationRating = UserCalculationRating()
+)
+
+
+

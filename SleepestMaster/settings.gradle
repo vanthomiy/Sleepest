@@ -1,2 +1,3 @@
+include ':sleep_classify_wrapper'
 include ':app'
 rootProject.name = "Sleepest-Master"

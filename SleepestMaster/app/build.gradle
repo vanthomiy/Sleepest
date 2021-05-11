@@ -1,23 +1,47 @@
+
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
-    id 'kotlin-android-extensions'
+   // id 'kotlin-android-extensions'
     id "com.google.protobuf" version "0.8.12"
+    id 'dagger.hilt.android.plugin'
+    id 'kotlinx-serialization'
+
 }
 
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
+    aaptOptions {
+        noCompress "tflite"
+        noCompress "lite"
+    }
+
     defaultConfig {
         applicationId "com.doitstudio.sleepest_master"
-        minSdkVersion 21
+        minSdkVersion 27
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // Its for creating logs of the actual database
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation":
+                                      "$projectDir/schemas".toString()]
+            }
+        }
+    }
+
+    testOptions {
+        unitTests.includeAndroidResources = true
+    }
+    buildFeatures {
+        viewBinding true
     }
 
     buildTypes {
@@ -34,13 +58,33 @@ android {
         jvmTarget = '1.8'
     }
 
-    buildFeatures{
+    buildFeatures {
         viewBinding true
+        mlModelBinding true
     }
 
 }
 
 dependencies {
+    //implementation 'com.google.firebase:firebase-ml-model-interpreter:22.0.4'
+    implementation 'org.tensorflow:tensorflow-lite:2.4.0@aar'
+    implementation 'org.tensorflow:tensorflow-lite-select-tf-ops:0.0.0-nightly'
+    implementation 'org.tensorflow:tensorflow-lite:2.4.0'
+    implementation 'org.tensorflow:tensorflow-lite-support:0.1.0-rc1'
+    implementation 'org.tensorflow:tensorflow-lite-metadata:0.1.0-rc1'
+    implementation 'org.tensorflow:tensorflow-lite-gpu:2.2.0'
+
+    testImplementation "com.google.truth:truth:1.1.2"
+    // Required -- JUnit 4 framework
+    testImplementation 'junit:junit:4.12'
+    // Optional -- Robolectric environment
+    testImplementation 'androidx.test:core:1.0.0'
+    // Optional -- Mockito framework
+    testImplementation 'org.mockito:mockito-core:1.10.19'
+
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.3.2'
@@ -63,15 +107,14 @@ dependencies {
     // Room components
     implementation "androidx.room:room-ktx:2.2.6"
     implementation 'androidx.room:room-runtime:2.2.6'
+    compileOnly 'com.google.android.wearable:wearable:2.8.1'
     kapt "androidx.room:room-compiler:2.2.6"
     androidTestImplementation "androidx.room:room-testing:2.2.6"
 
     // DataStore components
     implementation "androidx.datastore:datastore-preferences:1.0.0-alpha06"
-    //implementation "androidx.datastore:datastore:1.0.0-alpha08"
-    implementation  "androidx.datastore:datastore-core:1.0.0-alpha04"
-    implementation  "com.google.protobuf:protobuf-javalite:3.10.0"
-
+    implementation "androidx.datastore:datastore-core:1.0.0-alpha04"
+    implementation "com.google.protobuf:protobuf-javalite:3.10.0"
 
     // Lifecycle components
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
@@ -79,7 +122,74 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-common-java8:2.2.0"
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
 
+    // Play services library required for activity recognition.
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
 
+    // Material Design
+    implementation 'com.google.android.material:material:1.3.0-alpha01'
+
+    // Architectural Components
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
+
+    // Room
+    implementation "androidx.room:room-runtime:2.2.5"
+    kapt "androidx.room:room-compiler:2.2.5"
+
+    // Kotlin Extensions and Coroutines support for Room
+    implementation "androidx.room:room-ktx:2.2.5"
+
+    // Coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.5'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.5'
+
+    // Coroutine Lifecycle Scopes
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
+
+    // Navigation Components
+    implementation "androidx.navigation:navigation-fragment-ktx:2.3.0"
+    implementation "androidx.navigation:navigation-ui-ktx:2.3.0"
+
+    // Glide
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    kapt 'com.github.bumptech.glide:compiler:4.11.0'
+
+    // Dagger Core
+    implementation "com.google.dagger:dagger:2.28"
+    kapt "com.google.dagger:dagger-compiler:2.28"
+
+    // Dagger Androidapi 'com.google.dagger:dagger-android:2.35.1'
+    api 'com.google.dagger:dagger-android-support:2.23.2'
+    kapt 'com.google.dagger:dagger-android-processor:2.23.2'
+
+    // Activity KTX for viewModels()
+    implementation "androidx.activity:activity-ktx:1.1.0"
+
+    //Dagger - Hilt
+    implementation "com.google.dagger:hilt-android:2.28-alpha"
+    kapt "com.google.dagger:hilt-android-compiler:2.28-alpha"
+
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha01"
+    kapt "androidx.hilt:hilt-compiler:1.0.0-alpha01"
+
+    // Easy Permissions
+    implementation 'pub.devrel:easypermissions:3.0.0'
+
+    // Timber
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
+
+    // Rangebar - AlarmSettings
+    implementation 'com.appyvet:materialrangebar:1.3'
+
+    // Rangebar - AlarmSettings
+    implementation 'com.github.furkanaskin:ClickablePieChart:1.0.8'
+}
+
+repositories {
+    // Rangebar - AlarmSettings
+    maven { url 'https://jitpack.io' }
 }
 
 protobuf {

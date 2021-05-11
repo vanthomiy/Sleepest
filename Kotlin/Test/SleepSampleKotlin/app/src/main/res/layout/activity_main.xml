@@ -42,6 +42,9 @@
             android:layout_height="match_parent"
             android:text="@string/default_greeting_message" />
     </ScrollView>
+
+
+
     <Button
         android:id="@+id/deletData"
         android:layout_width="0dp"
