@@ -25,5 +25,8 @@ data class AlarmEntity(
         val wakeupLate: Int = 32400,
 
         @ColumnInfo(name = "activeDayOfWeek")
-        val activeDayOfWeek: ArrayList<DayOfWeek> = arrayListOf(DayOfWeek.MONDAY)
+        val activeDayOfWeek: ArrayList<DayOfWeek> = arrayListOf(DayOfWeek.MONDAY),
+
+        @ColumnInfo(name = "actualWakeup")
+        val actualWakeup: Int = 21600
 )

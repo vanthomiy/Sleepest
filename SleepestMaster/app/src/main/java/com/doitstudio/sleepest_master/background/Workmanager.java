@@ -50,7 +50,7 @@ public class Workmanager extends Worker {
          */
 
         sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
-        //sleepCalculationHandler.calculateLiveUserSleepActivityJob();
+        sleepCalculationHandler.checkIsUserSleeping();
 
         Calendar calendar = Calendar.getInstance();
 

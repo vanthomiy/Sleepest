@@ -1,9 +1,6 @@
 package com.doitstudio.sleepest_master
 
 import android.app.Application
-import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.createDataStore
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationDbRepository
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationStoreRepository
 import com.doitstudio.sleepest_master.sleepcalculation.db.SleepCalculationDatabase
