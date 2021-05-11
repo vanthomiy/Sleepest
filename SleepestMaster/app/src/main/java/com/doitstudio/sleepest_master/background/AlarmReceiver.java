@@ -9,6 +9,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.widget.Toast;
 
@@ -16,8 +17,11 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.doitstudio.sleepest_master.MainActivity;
 import com.doitstudio.sleepest_master.R;
+import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver;
 import com.doitstudio.sleepest_master.model.data.Actions;
+//import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -35,17 +39,40 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         this.context = context.getApplicationContext();
+        Times times = new Times();
 
-       // SleepCalculationHandler sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
+        Calendar calendar = Calendar.getInstance();
+        SharedPreferences pref = context.getSharedPreferences("AlarmReceiver", 0);
+        SharedPreferences.Editor ed = pref.edit();
+        ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
+        ed.putInt("minute", calendar.get(Calendar.MINUTE));
+        ed.putInt("intent", intent.getIntExtra(context.getString(R.string.alarmmanager_key), 0));
+        ed.apply();
+
+        //SleepCalculationHandler sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
 
         switch (intent.getIntExtra(context.getString(R.string.alarmmanager_key), 0)) {
             case 0:
                 break;
             case 1:
-                ForegroundService.startOrStopForegroundService(Actions.START, context);
+                //ForegroundService.startOrStopForegroundService(Actions.START, context.getApplicationContext());
+
+                Intent i = new Intent(context, ForegroundActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                i.putExtra("intent", 1);
+                context.startActivity(i);
+
                 break;
             case 2:
-                ForegroundService.startOrStopForegroundService(Actions.STOP, context);
+                //ForegroundService.startOrStopForegroundService(Actions.STOP, context.getApplicationContext());
+
+                Intent i2 = new Intent(context, ForegroundActivity.class);
+                i2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                i2.putExtra("intent", 2);
+                context.startActivity(i2);
+
+                AlarmReceiver.cancelAlarm(context.getApplicationContext(), 4);
+                AlarmClockReceiver.cancelAlarm(context.getApplicationContext(), 4);
                 break;
             case 3:
 
@@ -54,8 +81,14 @@ public class AlarmReceiver extends BroadcastReceiver {
                 /**TODO: Turn Alarm off, set Alarm for the day after or check for the next day
                  * TODO: Stop Foregroundservice and send Toast
                  */
-
-
+                break;
+            case 4:
+                //Letzter Weckzeitpunkt
+                ForegroundService.startOrStopForegroundService(Actions.STOP, context);
+                break;
+            case 5:
+                //Kalkulation
+                WorkmanagerCalculation.startPeriodicWorkmanager(times.getWorkmanagerCalculationDuration(), context.getApplicationContext());
                 break;
         }
     }
@@ -88,7 +121,7 @@ public class AlarmReceiver extends BroadcastReceiver {
      * Cancel a specific alarm by pending Intent
      * @param cancelAlarmContext Application Context
      */
-    static void cancelAlarm(Context cancelAlarmContext, int usage) {
+    public static void cancelAlarm(Context cancelAlarmContext, int usage) {
 
         Intent intent = new Intent(cancelAlarmContext, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(cancelAlarmContext, usage, intent, 0);
@@ -111,6 +144,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.MINUTE, minute);
         calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.SECOND, 0);
 
         if (day > Calendar.getInstance().get(Calendar.DAY_OF_WEEK))
         {

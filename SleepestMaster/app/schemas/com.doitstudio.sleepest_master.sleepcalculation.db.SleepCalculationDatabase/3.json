@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "2d1af9d72fc84655e8c2a3c779579f6a",
+    "identityHash": "762a7ad1f41b12dc5ff2343a9572a388",
     "entities": [
       {
         "tableName": "sleep_api_raw_data_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`time_stamp_seconds` INTEGER NOT NULL, `confidence` INTEGER NOT NULL, `motion` INTEGER NOT NULL, `light` INTEGER NOT NULL, `sleepState` INTEGER NOT NULL, `oldSleepState` INTEGER NOT NULL, PRIMARY KEY(`time_stamp_seconds`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`time_stamp_seconds` INTEGER NOT NULL, `confidence` INTEGER NOT NULL, `motion` INTEGER NOT NULL, `light` INTEGER NOT NULL, PRIMARY KEY(`time_stamp_seconds`))",
         "fields": [
           {
             "fieldPath": "timestampSeconds",
@@ -31,18 +31,6 @@
             "columnName": "light",
             "affinity": "INTEGER",
             "notNull": true
-          },
-          {
-            "fieldPath": "sleepState",
-            "columnName": "sleepState",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "oldSleepState",
-            "columnName": "oldSleepState",
-            "affinity": "INTEGER",
-            "notNull": true
           }
         ],
         "primaryKey": {
@@ -58,7 +46,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2d1af9d72fc84655e8c2a3c779579f6a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '762a7ad1f41b12dc5ff2343a9572a388')"
     ]
   }
 }

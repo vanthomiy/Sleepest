@@ -26,6 +26,20 @@
     <string name="workmanager1_tag">Workmanager 1</string>
     <string name="workmanager2_tag">Workmanager 2</string>
     <string name="alarmmanager_key">com.doitstudio.sleepest_master.background.AlarmIntentKey</string>
+    <string name="title_activity_test">TestActivity</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
+    <!--endregion-->
+
+    <!--region AlarmSettings-->
+    <string name="einstellungen">Sleepest</string>
+    <string name="schlafdauer">Schlafdauer:</string>
+    <string name="aufwachzeitpunkt">Aufweckzeitpunkt:</string>
+    <string name="alarm_TextView">Wecker</string>
+    <string name="testText">Hahhah</string>
     <!--endregion-->
 
 

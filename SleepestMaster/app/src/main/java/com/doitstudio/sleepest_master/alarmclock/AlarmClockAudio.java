@@ -13,7 +13,7 @@ public class AlarmClockAudio {
 
     static MediaPlayer mediaPlayer;
     private AudioManager audioManager;
-    private int audioVolume;
+    private static int audioVolume = 0;
     private CountDownTimer countDownTimer;
 
     private Context appContext;

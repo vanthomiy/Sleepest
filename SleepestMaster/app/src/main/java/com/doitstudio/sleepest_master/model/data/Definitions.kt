@@ -4,8 +4,16 @@ import androidx.room.Entity
 
 
 // Enum actions for service start/stop
-internal enum class Actions {
+enum class Actions {
     START, STOP
+}
+
+internal enum class AlarmReceiverUse {
+    DEFAULT, START_FOREGROUND, STOP_FOREGROUND, DISABLE_ALARM, LAST_WAKEUP, START_CALCULATION
+}
+
+internal enum class AlarmClockUse {
+    DEFAULT, START_ALARM, STOP_ALARM, SNOOZE_ALARM, LAST_WAKEUP_ALARM
 }
 
 /**

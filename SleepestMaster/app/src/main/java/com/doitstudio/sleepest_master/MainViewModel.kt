@@ -11,17 +11,12 @@ class MainViewModel(private val dbRepository: DbRepository, private val storageS
 
     val rawSleepApiData = sleepCalculationDbRepository.allSleepApiRawData.asLiveData()
 
-
     fun updatePermissionActive(permissionActive: Boolean) = viewModelScope.launch {
         storageStoreRepository.updatePermissionActive(permissionActive)
     }
 
     fun deleteApi()= viewModelScope.launch {
         sleepCalculationDbRepository.deleteSleepApiRawData()
-    }
-
-    fun insertSingleApi(data:SleepApiRawDataEntity)= viewModelScope.launch {
-        sleepCalculationDbRepository.insertSleepApiRawData(data)
     }
 
     fun insertApi(data:List<SleepApiRawDataEntity>)= viewModelScope.launch {
