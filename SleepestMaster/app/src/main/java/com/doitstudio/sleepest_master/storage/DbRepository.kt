@@ -1,11 +1,14 @@
 package com.doitstudio.sleepest_master.storage
 
+
 import com.doitstudio.sleepest_master.sleepcalculation.db.UserSleepSessionDao
 import com.doitstudio.sleepest_master.sleepcalculation.db.UserSleepSessionEntity
-import com.doitstudio.sleepest_master.storage.db.*
+import com.doitstudio.sleepest_master.storage.db.SleepSegmentEntity
+import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataDao
+import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
+import com.doitstudio.sleepest_master.storage.db.SleepSegmentDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import java.time.DayOfWeek
 
 
 /**
@@ -17,9 +20,7 @@ import java.time.DayOfWeek
  */
 class DbRepository(
         private val sleepSegmentDao: SleepSegmentDao,
-        private val userSleepSessionDataDao: UserSleepSessionDao,
-        private val alarmDao: AlarmDao
-
+        private val userSleepSessionDao: UserSleepSessionDao
 ) {
 
     companion object {
@@ -27,11 +28,9 @@ class DbRepository(
         @Volatile
         private var INSTANCE: DbRepository? = null
 
-        var a:Int = 0
-
-        fun getRepo(sleepSegmentDao: SleepSegmentDao, userSleepSessionDataDao: UserSleepSessionDao, alarmDao: AlarmDao): DbRepository {
+        fun getRepo(sleepSegmentDao: SleepSegmentDao, userSleepSessionDao: UserSleepSessionDao): DbRepository {
             return INSTANCE ?: synchronized(this) {
-                val instance = DbRepository(sleepSegmentDao, userSleepSessionDataDao, alarmDao)
+                val instance = DbRepository(sleepSegmentDao, userSleepSessionDao)
                 INSTANCE = instance
                 // return instance
                 instance
@@ -46,6 +45,34 @@ class DbRepository(
     // implement anything else to ensure we're not doing long-running database work off the
     // main thread.
 
+
+
+    //region User Sleep Sessions
+
+    val allUserSleepSessions: Flow<List<UserSleepSessionEntity>> =
+            userSleepSessionDao.getAll()
+
+    fun getSleepSessionById(id:Int): Flow<UserSleepSessionEntity?> =
+            userSleepSessionDao.getById(id)
+
+    suspend fun getOrCreateSleepSessionById(id:Int): UserSleepSessionEntity {
+        var userSession = userSleepSessionDao.getById(id).first()
+
+        if(userSession == null){
+            userSession = UserSleepSessionEntity(id)
+            insertUserSleepSession(userSession)
+        }
+
+        return userSession
+    }
+
+    suspend fun insertUserSleepSession(userSleepSession: UserSleepSessionEntity) {
+        userSleepSessionDao.insert(userSleepSession)
+    }
+
+    //endregion
+
+
     //region Sleep Segments
 
     // Methods for SleepSegmentDao
@@ -55,6 +82,10 @@ class DbRepository(
 
     suspend fun insertSleepSegment(sleepClassifyEventEntity: SleepSegmentEntity) {
         sleepSegmentDao.insert(sleepClassifyEventEntity)
+    }
+
+    suspend fun deleteSleepSegmentsWithin(start:Int, end:Int) {
+        sleepSegmentDao.deleteWithin(start, end)
     }
 
     suspend fun deleteSleepSegments() {
@@ -67,94 +98,4 @@ class DbRepository(
 
     //endregion
 
-    //region User Sleep Segment
-
-    // Methods for UserSleepSegmentDao
-    // Observed Flow will notify the observer when the data has changed.
-    val userSleepSessionFlow: Flow<List<UserSleepSessionEntity>> =
-        userSleepSessionDataDao.getAll()
-
-
-
-    suspend fun insertUserSleepSession(userSleepSessionEntity: UserSleepSessionEntity) {
-        userSleepSessionDataDao.insert(userSleepSessionEntity)
-    }
-/*
-    suspend fun updateUserSleepSession(userSleepRating: UserSleepRating, userCalculationRating: UserCalculationRating, sleepTimeStart: Int) {
-        userSleepSessionDataDao.update(userSleepRating, userCalculationRating, sleepTimeStart)
-    }
-*/
-
-    suspend fun insertSleepSession(userSleepSessionEntity: List<UserSleepSessionEntity>) {
-        userSleepSessionDataDao.insertAll(userSleepSessionEntity)
-    }
-
-    suspend fun deleteUserSleepSessions() {
-        userSleepSessionDataDao.deleteAll()
-    }
-
-    suspend fun deleteUserSleepSession(userSleepSessionEntity: UserSleepSessionEntity) {
-        userSleepSessionDataDao.delete(userSleepSessionEntity)
-
-        suspend fun getOrCreateSleepSessionById(id: Int): UserSleepSessionEntity {
-            var userSession = userSleepSessionDataDao.getById(id).first()
-
-            if (userSession == null) {
-                userSession = UserSleepSessionEntity(id)
-                insertUserSleepSession(userSession)
-            }
-
-            return userSession
-        }
-
-        suspend fun insertUserSleepSession(userSleepSession: UserSleepSessionEntity) {
-            userSleepSessionDataDao.insert(userSleepSession)
-        }
-
-
-        //endregion
-
-
-        //region Alarm
-
-        // Methods for Alarm
-        // Observed Flow will notify the observer when the data has changed.
-        val alarmFlow: Flow<List<AlarmEntity>> =
-                alarmDao.getAll()
-
-        fun getAlarmById(alarmId: Int): Flow<AlarmEntity> = alarmDao.getAlarmById(alarmId)
-
-        suspend fun insertAlarm(alarm: AlarmEntity) {
-            alarmDao.insert(alarm)
-        }
-
-        suspend fun updateSleepDuration(sleepDuration: Int, alarmId: Int) {
-            alarmDao.updateSleepDuration(sleepDuration, alarmId)
-        }
-
-        suspend fun updateWakeupEarly(wakeupEarly: Int, alarmId: Int) {
-            alarmDao.updateWakeupEarly(wakeupEarly, alarmId)
-        }
-
-        suspend fun updateWakeupLate(wakeupLate: Int, alarmId: Int) {
-            alarmDao.updateWakeupLate(wakeupLate, alarmId)
-        }
-
-        suspend fun updateIsActive(isActive: Boolean, alarmId: Int) {
-            alarmDao.updateIsActive(isActive, alarmId)
-        }
-
-        suspend fun updateActiveDayOfWeek(activeDayOfWeek: ArrayList<DayOfWeek>, alarmId: Int) {
-            alarmDao.updateActiveDayOfWeek(activeDayOfWeek, alarmId)
-        }
-
-        suspend fun deleteAlarm(alarm: AlarmEntity) {
-            alarmDao.delete(alarm)
-        }
-
-        suspend fun deleteAllAlarms() {
-            alarmDao.deleteAll()
-        }
-
-        //endregion
-    }}
+}
