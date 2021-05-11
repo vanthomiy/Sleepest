@@ -3,12 +3,10 @@ package com.doitstudio.sleepest_master.storage
 
 import com.doitstudio.sleepest_master.sleepcalculation.db.UserSleepSessionDao
 import com.doitstudio.sleepest_master.sleepcalculation.db.UserSleepSessionEntity
-import com.doitstudio.sleepest_master.storage.db.SleepSegmentEntity
-import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataDao
-import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
-import com.doitstudio.sleepest_master.storage.db.SleepSegmentDao
+import com.doitstudio.sleepest_master.storage.db.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import java.time.DayOfWeek
 
 
 /**
@@ -20,7 +18,8 @@ import kotlinx.coroutines.flow.first
  */
 class DbRepository(
         private val sleepSegmentDao: SleepSegmentDao,
-        private val userSleepSessionDao: UserSleepSessionDao
+        private val userSleepSessionDao: UserSleepSessionDao,
+        private val alarmDao: AlarmDao
 ) {
 
     companion object {
@@ -28,9 +27,9 @@ class DbRepository(
         @Volatile
         private var INSTANCE: DbRepository? = null
 
-        fun getRepo(sleepSegmentDao: SleepSegmentDao, userSleepSessionDao: UserSleepSessionDao): DbRepository {
+        fun getRepo(sleepSegmentDao: SleepSegmentDao, userSleepSessionDao: UserSleepSessionDao, alarmDao: AlarmDao): DbRepository {
             return INSTANCE ?: synchronized(this) {
-                val instance = DbRepository(sleepSegmentDao, userSleepSessionDao)
+                val instance = DbRepository(sleepSegmentDao, userSleepSessionDao, alarmDao)
                 INSTANCE = instance
                 // return instance
                 instance
@@ -98,4 +97,46 @@ class DbRepository(
 
     //endregion
 
+    //region Alarm
+
+    // Methods for Alarm
+    // Observed Flow will notify the observer when the data has changed.
+    val alarmFlow: Flow<List<AlarmEntity>> =
+            alarmDao.getAll()
+
+    fun getAlarmById(alarmId: Int): Flow<AlarmEntity> = alarmDao.getAlarmById(alarmId)
+
+    suspend fun insertAlarm(alarm: AlarmEntity) {
+        alarmDao.insert(alarm)
+    }
+
+    suspend fun updateSleepDuration(sleepDuration: Int, alarmId: Int) {
+        alarmDao.updateSleepDuration(sleepDuration, alarmId)
+    }
+
+    suspend fun updateWakeupEarly(wakeupEarly: Int, alarmId: Int) {
+        alarmDao.updateWakeupEarly(wakeupEarly, alarmId)
+    }
+
+    suspend fun updateWakeupLate(wakeupLate: Int, alarmId: Int) {
+        alarmDao.updateWakeupLate(wakeupLate, alarmId)
+    }
+
+    suspend fun updateIsActive(isActive: Boolean, alarmId: Int) {
+        alarmDao.updateIsActive(isActive, alarmId)
+    }
+
+    suspend fun updateActiveDayOfWeek(activeDayOfWeek: ArrayList<DayOfWeek>, alarmId: Int) {
+        alarmDao.updateActiveDayOfWeek(activeDayOfWeek, alarmId)
+    }
+
+    suspend fun deleteAlarm(alarm: AlarmEntity) {
+        alarmDao.delete(alarm)
+    }
+
+    suspend fun deleteAllAlarms() {
+        alarmDao.deleteAll()
+    }
+
+    //endregion
 }

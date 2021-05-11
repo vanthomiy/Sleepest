@@ -106,7 +106,7 @@ public class ForegroundService extends LifecycleService {
         sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(getApplicationContext());
         sleepHandler = SleepHandler.Companion.getHandler(getApplicationContext());
 
-        sleepCalculationHandler.recalculateUserSleep();
+        //sleepCalculationHandler.recalculateUserSleep();
         sleepHandler.stopSleepHandler();
 
     }
@@ -184,7 +184,7 @@ public class ForegroundService extends LifecycleService {
         //calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1, times.getFirstCalculationHour(), times.getFirstCalculationMinute());
         //AlarmReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 5);
 
-        sleepCalculationHandler.calculateLiveUserSleepActivityJob();
+        //sleepCalculationHandler.calculateLiveUserSleepActivityJob();
         sleepHandler.startSleepHandler();
 
         Calendar calendar = Calendar.getInstance();
@@ -229,7 +229,7 @@ public class ForegroundService extends LifecycleService {
         AlarmClockReceiver.cancelAlarm(getApplicationContext(), 4);
         AlarmReceiver.cancelAlarm(getApplicationContext(), 4);
 
-        sleepCalculationHandler.recalculateUserSleep();
+        //sleepCalculationHandler.recalculateUserSleep();
         sleepHandler.stopSleepHandler();
         Toast.makeText(getApplicationContext(), "Foregroundservice stopped", Toast.LENGTH_LONG).show();
 
