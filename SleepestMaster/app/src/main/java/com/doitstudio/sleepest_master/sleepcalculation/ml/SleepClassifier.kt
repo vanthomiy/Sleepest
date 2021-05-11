@@ -190,7 +190,6 @@ class SleepClassifier constructor(private val context: Context) {
         return SleepState.NONE
     }
 
-
     /**
      * Pass the with [createFeatures] created array of int to predict if the user sleep state
      * Returns [SleepState] [SleepState.LIGHT] or [SleepState.DEEP] and [SleepState.NONE] if no data or an error occures
@@ -365,8 +364,6 @@ class SleepClassifier constructor(private val context: Context) {
 
         return MobilePosition.UNIDENTIFIED
     }
-
-
 
     companion object {
         // For Singleton instantiation

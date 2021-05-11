@@ -13,7 +13,6 @@ import android.provider.Settings
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
 import com.doitstudio.sleepest_master.background.AlarmReceiver
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
 import com.doitstudio.sleepest_master.model.data.Actions
@@ -178,8 +177,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun xyz() {
-        var calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance()[Calendar.DAY_OF_WEEK],15,27)
-        AlarmClockReceiver.startAlarmManager(calenderAlarm[Calendar.DAY_OF_WEEK], calenderAlarm[Calendar.HOUR_OF_DAY], calenderAlarm[Calendar.MINUTE], applicationContext,1)
+        //var calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance()[Calendar.DAY_OF_WEEK],15,27)
+        //AlarmClockReceiver.startAlarmManager(calenderAlarm[Calendar.DAY_OF_WEEK], calenderAlarm[Calendar.HOUR_OF_DAY], calenderAlarm[Calendar.MINUTE], applicationContext,1)
 
         /*calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance()[Calendar.DAY_OF_WEEK], 9, 52)
         AlarmReceiver.startAlarmManager(calenderAlarm[Calendar.DAY_OF_WEEK], calenderAlarm[Calendar.HOUR_OF_DAY], calenderAlarm[Calendar.MINUTE], applicationContext, 4)
