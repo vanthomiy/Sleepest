@@ -11,25 +11,26 @@ import java.time.DayOfWeek
 class Converters {
 
     @TypeConverter
-    fun fromSleepStatePattern(sleepStatePattern: SleepStatePattern) : Int {
+    fun fromSleepStatePattern(sleepStatePattern: SleepDurationAdjustment) : Int {
         return sleepStatePattern.ordinal
     }
 
     @TypeConverter
-    fun toSleepStatePattern(sleepStatePattern: Int) : SleepStatePattern {
-        return SleepStatePattern.values()[sleepStatePattern]
+    fun toSleepStatePattern(sleepStatePattern: Int) : SleepDurationAdjustment {
+        return SleepDurationAdjustment.values()[sleepStatePattern]
     }
 
     @TypeConverter
-    fun fromSleepTimePattern(sleepTimePattern: SleepTimePattern) : Int {
+    fun fromSleepTimePattern(sleepTimePattern: SleepTimeAdjustment) : Int {
         return sleepTimePattern.ordinal
     }
 
     @TypeConverter
-    fun toSleepTimePattern(sleepTimePattern: Int) : SleepTimePattern {
-        return SleepTimePattern.values()[sleepTimePattern]
+    fun toSleepTimePattern(sleepTimePattern: Int) : SleepTimeAdjustment {
+        return SleepTimeAdjustment.values()[sleepTimePattern]
     }
 
+<<<<<<< HEAD
     @TypeConverter
     fun fromArrayListOfSleepTimePattern(list: ArrayList<SleepTimePattern>): String {
         return list?.joinToString(separator = ";") { it.toString() } ?: ""
@@ -51,6 +52,8 @@ class Converters {
     fun toUserStartPattern(userFactorPattern: Int) : UserFactorPattern {
         return UserFactorPattern.values()[userFactorPattern]
     }
+=======
+>>>>>>> SleepCalculationMachineLearning
 
     @TypeConverter
     fun fromMobilePosition(mobilePosition: MobilePosition) : Int {

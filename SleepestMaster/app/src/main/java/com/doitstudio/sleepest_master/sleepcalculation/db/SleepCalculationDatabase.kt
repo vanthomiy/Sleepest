@@ -21,6 +21,7 @@ private const val DATABASE_NAME = "sleep_calculation_database"
     exportSchema = true
 )
 
+
 @TypeConverters(Converters::class)
 abstract class SleepCalculationDatabase : RoomDatabase() {
 

@@ -24,8 +24,10 @@ enum class SleepState {
     LIGHT,
     DEEP,
     REM,
+    SLEEPING,
     NONE
 }
+
 
 /**
  * Defines where the mobile phone is places at sleep time
@@ -65,42 +67,70 @@ enum class ActivityOnDay{
 /**
  * Defines the sleep time pattern of a user sleep session
  */
-enum class SleepTimePattern{
+enum class SleepTimeAdjustment{
     NONE,
     WAKEUPTOLATE,
     WAKEUPTOEARLY,
     ASLEEPTOLATE,
-    ASLEEPTOEARLY,
-    STANDARD
-
+    ASLEEPTOEARLY
 }
 
 /**
- * Defines the sleep state pattern of a user sleep session
+ * Defines the sleep time pattern of a user sleep session
  */
-enum class SleepStatePattern{
+enum class SleepDurationAdjustment{
     NONE,
-    TOMANYSLEEP,
-    TOMANYLIGHT,
-    TOMANYDEEP,
-    TOMANYREM,
-    TOLESSSLEEP,
-    TOLESSLIGHT,
-    TOLESSDEEP,
-    TOLESSREM,
-    STANDARD
-
+    PERFECT,
+    TOLESS,
+    TOMUCH,
+    WAYTOLESS,
+    WAYTOMUCH
 }
 
 /**
- * Defines the possible sleep start pattern of the user
+ * Defines how often the sleep api data is available
  */
-enum class UserFactorPattern{
-    NONE,
-    SUPERLIGHT,
-    LIGHT,
-    NORMAL,
-    HEAVY,
-    SUPERHEAVY
+enum class SleepDataFrequency{
+    FIVE,
+    TEN,
+    THIRTY,
+    NONE;
 
+    companion object {
+        fun getValue(type:SleepDataFrequency) : Int {
+            return when (type) {
+                SleepDataFrequency.FIVE -> 5
+                SleepDataFrequency.TEN -> 10
+                SleepDataFrequency.THIRTY -> 30
+                else -> 1000 // Avoiding dividing by zero
+            }
+        }
+
+        fun getCount(type:SleepDataFrequency) : Int {
+            return when (type) {
+                SleepDataFrequency.FIVE -> 24
+                SleepDataFrequency.TEN -> 11
+                SleepDataFrequency.THIRTY -> 3
+                else -> 1000 // Avoiding dividing by zero
+            }
+        }
+    }
 }
+
+/**
+ * Defines the actual process that is to be done
+ */
+enum class ModelProcess{
+    SLEEP04,
+    SLEEP12,
+    LIGHTAWAKE,
+    TABLEBED;
+
+    companion object {
+        fun getString(type: ModelProcess): String {
+            return type.toString().toLowerCase().capitalize()
+        }
+    }
+}
+
+

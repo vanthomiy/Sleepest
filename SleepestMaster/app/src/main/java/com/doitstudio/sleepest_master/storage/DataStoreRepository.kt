@@ -137,11 +137,16 @@ class DataStoreRepository(context: Context) {
      */
     val subscribedToSleepDataFlow: Flow<Boolean> = preferencesStatus.subscribedToSleepDataFlow
 
+<<<<<<< HEAD
     /**
      * Update is subscribed to sleep data ?
      */
     suspend fun updateSubscribeToSleepData(subscribe: Boolean) =
         preferencesStatus.updateSubscribeToSleepData(subscribe)
+=======
+    suspend fun updateAlarmTime(alarmActive: Long) =
+        alarmStatus.updateAlarmTime(alarmActive)
+>>>>>>> SleepCalculationMachineLearning
 
     //endregion
 

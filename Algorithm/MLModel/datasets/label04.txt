@@ -1,0 +1,2 @@
+awake, "The user is awake at the moment"
+sleeping, "The user is sleeping at the moment"

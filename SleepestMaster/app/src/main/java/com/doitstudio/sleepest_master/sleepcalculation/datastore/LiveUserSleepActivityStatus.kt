@@ -35,11 +35,12 @@ class LiveUserSleepActivityStatus(private val dataStore: DataStore<LiveUserSleep
         }
     }
 
+    /*
     suspend fun updateUserSleepFound(userSleepFound: Boolean) {
         dataStore.updateData { preference ->
             preference.toBuilder().setUserSleepFound(userSleepFound).build()
         }
-    }
+    }*/
 
     suspend fun updateUserSleepTime(userSleepTime: Int) {
         dataStore.updateData { preference ->
@@ -47,6 +48,7 @@ class LiveUserSleepActivityStatus(private val dataStore: DataStore<LiveUserSleep
         }
     }
 
+    /*
     suspend fun setUserSleepHistory(userSleepHistory: List<Int>) {
         dataStore.updateData { preference ->
             preference.toBuilder().addAllUserSleepHistory(userSleepHistory).build()
@@ -63,6 +65,6 @@ class LiveUserSleepActivityStatus(private val dataStore: DataStore<LiveUserSleep
         dataStore.updateData { preference ->
             preference.toBuilder().clearUserSleepHistory().build()
         }
-    }
+    }*/
 
 }

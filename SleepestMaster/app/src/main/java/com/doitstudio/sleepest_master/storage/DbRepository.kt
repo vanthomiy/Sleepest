@@ -4,7 +4,11 @@ import com.doitstudio.sleepest_master.sleepcalculation.db.UserSleepSessionDao
 import com.doitstudio.sleepest_master.sleepcalculation.db.UserSleepSessionEntity
 import com.doitstudio.sleepest_master.storage.db.*
 import kotlinx.coroutines.flow.Flow
+<<<<<<< HEAD
 import java.time.DayOfWeek
+=======
+import kotlinx.coroutines.flow.first
+>>>>>>> SleepCalculationMachineLearning
 
 
 /**
@@ -92,8 +96,24 @@ class DbRepository(
         userSleepSessionDataDao.deleteAll()
     }
 
+<<<<<<< HEAD
     suspend fun deleteUserSleepSession(userSleepSessionEntity: UserSleepSessionEntity) {
         userSleepSessionDataDao.delete(userSleepSessionEntity)
+=======
+    suspend fun getOrCreateSleepSessionById(id:Int): UserSleepSessionEntity {
+        var userSession = userSleepSessionDao.getById(id).first()
+
+        if(userSession == null){
+            userSession = UserSleepSessionEntity(id)
+            insertUserSleepSession(userSession)
+        }
+
+        return userSession
+    }
+
+    suspend fun insertUserSleepSession(userSleepSession: UserSleepSessionEntity) {
+        userSleepSessionDao.insert(userSleepSession)
+>>>>>>> SleepCalculationMachineLearning
     }
 
 

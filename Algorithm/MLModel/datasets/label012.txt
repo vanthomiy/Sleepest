@@ -1,0 +1,3 @@
+awake, "The user is awake at the moment"
+sleeping, "The user is sleeping i light state at the moment"
+deep, "The user is sleeping in deep state at the moment"
