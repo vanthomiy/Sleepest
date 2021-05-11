@@ -14,6 +14,12 @@ import android.view.View;
 import android.widget.Button;
 
 import com.doitstudio.sleepest_master.R;
+import com.doitstudio.sleepest_master.background.AlarmReceiver;
+import com.doitstudio.sleepest_master.background.ForegroundService;
+import com.doitstudio.sleepest_master.background.Times;
+import com.doitstudio.sleepest_master.model.data.Actions;
+
+import java.util.Calendar;
 
 public class LockScreenAlarmActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -44,8 +50,15 @@ public class LockScreenAlarmActivity extends AppCompatActivity implements View.O
     protected void onResume() {
         super.onResume();
 
+        Times times = new Times();
+
         AlarmClockAudio.getInstance().init(getApplicationContext());
         AlarmClockAudio.getInstance().startAlarm();
+
+        ForegroundService.startOrStopForegroundService(Actions.STOP, getApplicationContext());
+
+        Calendar calendarAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK), times.getStartForegroundHour(), times.getStartForegroundMinute());
+        AlarmReceiver.startAlarmManager(calendarAlarm.get(Calendar.DAY_OF_WEEK), calendarAlarm.get(Calendar.HOUR_OF_DAY), calendarAlarm.get(Calendar.MINUTE), getApplicationContext(), 1);
 
         new CountDownTimer(60000, 1000) {
 

@@ -7,12 +7,37 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
 import android.view.View
+
+import android.widget.Toast
+
 import com.doitstudio.sleepest_master.background.ForegroundService
 
 import android.provider.Settings
+
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+
+import androidx.viewbinding.BuildConfig
+import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
+import com.doitstudio.sleepest_master.background.AlarmReceiver
+import com.doitstudio.sleepest_master.background.ForegroundService
+import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
+import com.doitstudio.sleepest_master.model.data.Actions
+import com.doitstudio.sleepest_master.model.data.SleepStatePattern
+import com.doitstudio.sleepest_master.model.data.UserFactorPattern
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationStoreRepository
+import com.doitstudio.sleepest_master.sleepcalculation.db.SleepStateParameterEntity
+import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepStateParameter
+import com.doitstudio.sleepest_master.storage.DataStoreRepository
+import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import java.util.*
+
 import com.doitstudio.sleepest_master.sleepapi.SleepHandler
 
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
@@ -20,9 +45,14 @@ import com.doitstudio.sleepest_master.model.data.Actions
 import com.google.android.material.snackbar.Snackbar
 
 
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    private val scope: CoroutineScope = MainScope()
+    private val sleepCalculationStoreRepository by lazy {  SleepCalculationStoreRepository.getRepo(applicationContext)}
+
 
     // Status of subscription to sleep data. This is stored in [SleepSubscriptionStatus] which saves
     // the data in a [DataStore] in case the user navigates away from the app.
@@ -32,8 +62,80 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+        /**Start Test*/
+
+        var pref = getSharedPreferences("AlarmChanged", 0)
+        val textAlarm = """
+            Last Sleeptime changed: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt(
+            "sleeptime",
+            0
+        )}
+            
+            """.trimIndent()
+        pref = getSharedPreferences("StartService", 0)
+        val textStartService = """
+            Last service start: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
+            
+            """.trimIndent()
+        pref = getSharedPreferences("StopService", 0)
+        val textStopService = """
+            Last service stop: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
+            
+            """.trimIndent()
+        pref = getSharedPreferences("Workmanager", 0)
+        val textLastWorkmanager = """
+            Last workmanager call: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
+            
+            """.trimIndent()
+        pref = getSharedPreferences("WorkmanagerCalculation", 0)
+        val textLastWorkmanagerCalculation = """
+            Last workmanagerCalc call: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
+            
+            """.trimIndent()
+        pref = getSharedPreferences("SleepCalc1", 0)
+        val textCalc1 = """
+            Calc1: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
+            
+            """.trimIndent()
+        pref = getSharedPreferences("SleepCalc2", 0)
+        val textCalc2 = """
+            Calc2: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt("value1", 0)},${pref.getInt(
+            "value2",
+            0
+        )}
+            
+            """.trimIndent()
+        pref = getSharedPreferences("AlarmReceiver", 0)
+        val textAlarmReceiver = """
+            AlarmReceiver: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt(
+            "intent",
+            0
+        )}
+            
+            """.trimIndent()
+        pref = getSharedPreferences("StopException", 0)
+        val textStopException = """
+            Exc.: ${pref.getString("exception", "XX")}
+            
+            """.trimIndent()
+
+
+
+        val textGesamt = textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation + textCalc1 + textCalc2 + textAlarmReceiver + textStopException
+
+        binding.status0.text = textGesamt
+
+        /**EndTest*/
+
+        mainViewModel.allSleepStateParameters.observe(this){ data->
+            binding.status1.text = data.size.toString()
+        }
 
 
         //val fs = ForegroundObserver(this, this)
@@ -45,25 +147,95 @@ class MainActivity : AppCompatActivity() {
         }
 
         requestData()
+
+        checkDrawOverlayPermission()
+    }
+
+    private fun checkDrawOverlayPermission() {
+
+        // Checks if app already has permission to draw overlays
+        if (!Settings.canDrawOverlays(this)) {
+
+            // If not, form up an Intent to launch the permission request
+            val intent = Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse(
+                    "package:$packageName"
+                )
+            )
+
+            // Launch Intent, with the supplied request code
+            startActivityForResult(intent, 1234)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        // Check if a request code is received that matches that which we provided for the overlay draw request
+        if (requestCode == 1234) {
+
+            // Double-check that the user granted it, and didn't just dismiss the request
+            if (Settings.canDrawOverlays(this)) {
+
+                // Launch the service
+
+            } else {
+                Toast.makeText(
+                    this,
+                    "Sorry. Can't draw overlays without permission...",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 
     fun buttonClick1(view: View){
-        //sch.calculateLiveuserSleepActivity()
+
+        ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
+        //xyz()
+    }
+
+    fun xyz() {
+        var calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance()[Calendar.DAY_OF_WEEK],15,27)
+        AlarmClockReceiver.startAlarmManager(calenderAlarm[Calendar.DAY_OF_WEEK], calenderAlarm[Calendar.HOUR_OF_DAY], calenderAlarm[Calendar.MINUTE], applicationContext,1)
+
+        /*calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance()[Calendar.DAY_OF_WEEK], 9, 52)
+        AlarmReceiver.startAlarmManager(calenderAlarm[Calendar.DAY_OF_WEEK], calenderAlarm[Calendar.HOUR_OF_DAY], calenderAlarm[Calendar.MINUTE], applicationContext, 4)
+
+
+        calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance()[Calendar.DAY_OF_WEEK], 9, 54)
+        AlarmReceiver.startAlarmManager(calenderAlarm[Calendar.DAY_OF_WEEK], calenderAlarm[Calendar.HOUR_OF_DAY], calenderAlarm[Calendar.MINUTE], applicationContext, 2)
+        AlarmClockReceiver.startAlarmManager(calenderAlarm[Calendar.DAY_OF_WEEK], calenderAlarm[Calendar.HOUR_OF_DAY], calenderAlarm[Calendar.MINUTE], applicationContext, 1)
+
+        AlarmReceiver.cancelAlarm(applicationContext, 1)*/
+
+        /*calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance()[Calendar.DAY_OF_WEEK], 8, 28)
+        AlarmReceiver.startAlarmManager(calenderAlarm[Calendar.DAY_OF_WEEK], calenderAlarm[Calendar.HOUR_OF_DAY], calenderAlarm[Calendar.MINUTE], applicationContext, 1)
+
+        AlarmClockReceiver.startAlarmManager(calenderAlarm[Calendar.DAY_OF_WEEK], calenderAlarm[Calendar.HOUR_OF_DAY], calenderAlarm[Calendar.MINUTE], applicationContext)
+        calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance()[Calendar.DAY_OF_WEEK], 8, 32)
+        AlarmReceiver.startAlarmManager(calenderAlarm[Calendar.DAY_OF_WEEK], calenderAlarm[Calendar.HOUR_OF_DAY], calenderAlarm[Calendar.MINUTE], applicationContext, 2)*/
     }
 
     private val sleepHandler : SleepHandler by lazy {SleepHandler.getHandler(this)}
 
     fun buttonClick2(view: View){
+        /*AlarmReceiver.cancelAlarm(applicationContext, 2)
+        AlarmClockReceiver.cancelAlarm(applicationContext, 1)
+        val calendar = AlarmReceiver.getAlarmDate(Calendar.getInstance()[Calendar.DAY_OF_WEEK], 10, 39)
+        AlarmReceiver.startAlarmManager(calendar[Calendar.DAY_OF_WEEK], calendar[Calendar.HOUR_OF_DAY], calendar[Calendar.MINUTE], applicationContext, 2)
+        AlarmClockReceiver.startAlarmManager(calendar[Calendar.DAY_OF_WEEK], calendar[Calendar.HOUR_OF_DAY], calendar[Calendar.MINUTE], applicationContext, 1)
+        */
+        //setSleepTime()
+    }
 
-        ForegroundService.startOrStopForegroundService(Actions.START, this)
 
+    private fun setSleepTime(){
+        scope.launch {
+            sleepCalculationStoreRepository.updateIsUserSleeping(true)
+            sleepCalculationStoreRepository.updateUserSleepTime(27001)
 
-        //Workmanager.startPeriodicWorkmanager(15, applicationContext)
-        //AlarmReceiver.startAlarmManager(6,17,5, applicationContext)
-
-        //ForegroundService.startOrStopForegroundService(Actions.START, this)
-        //Workmanager.startPeriodicWorkmanager(15);
-        //sch.calculateUserWakup()
+        }
 
     }
 
