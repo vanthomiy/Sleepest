@@ -110,44 +110,5 @@ class DataStoreRepository(context: Context) {
 
     suspend fun updateUserSleepTime(sleepTime:Int) =
         liveUserSleepActivityStatus.updateUserSleepTime(sleepTime)
-
-    suspend fun addUserSleepHistory(sleepHistory:Int) =
-        liveUserSleepActivityStatus.addUserSleepHistory(sleepHistory)
-
-    suspend fun setUserSleepHistory(sleepHistory:List<Int>) =
-        liveUserSleepActivityStatus.setUserSleepHistory(sleepHistory)
-
-    suspend fun clearUserSleepHistory() =
-        liveUserSleepActivityStatus.clearUserSleepHistory()
-
-
     //endregion
-
-
-    //region Single Preferences
-
-    private val preferencesStatus by lazy {
-        PreferencesStatus(
-            context.createDataStore(name = PREFERENCES_STATUS_NAME)
-        )
-    }
-
-    /**
-     * Is subscribed to sleep data ?
-     */
-    val subscribedToSleepDataFlow: Flow<Boolean> = preferencesStatus.subscribedToSleepDataFlow
-
-<<<<<<< HEAD
-    /**
-     * Update is subscribed to sleep data ?
-     */
-    suspend fun updateSubscribeToSleepData(subscribe: Boolean) =
-        preferencesStatus.updateSubscribeToSleepData(subscribe)
-=======
-    suspend fun updateAlarmTime(alarmActive: Long) =
-        alarmStatus.updateAlarmTime(alarmActive)
->>>>>>> SleepCalculationMachineLearning
-
-    //endregion
-
 }

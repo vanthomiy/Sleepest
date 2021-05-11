@@ -5,13 +5,7 @@ import com.doitstudio.sleepest_master.LiveUserSleepActivity
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.background.Times
 import com.doitstudio.sleepest_master.model.data.SleepState
-import com.doitstudio.sleepest_master.model.data.SleepStatePattern
-import com.doitstudio.sleepest_master.model.data.SleepTimePattern
-import com.doitstudio.sleepest_master.model.data.UserFactorPattern
 import com.doitstudio.sleepest_master.sleepcalculation.db.UserSleepSessionEntity
-import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepModel
-import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepStateParameter
-import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepTimeParameter
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DbRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
@@ -33,6 +27,7 @@ import java.util.*
  *
  */
 class SleepCalculationHandler(private val context: Context){
+    /*
     var context1 = context
     // Used to launch coroutines (non-blocking way to insert data).
     private val scope: CoroutineScope = MainScope()
@@ -742,4 +737,6 @@ class SleepCalculationHandler(private val context: Context){
     }
 
     //endregion
+
+     */
 }

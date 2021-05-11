@@ -8,15 +8,25 @@ package com.doitstudio.sleepest_master.background;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 import androidx.lifecycle.LifecycleService;
+
+import com.doitstudio.sleepest_master.LiveUserSleepActivity;
+import com.doitstudio.sleepest_master.MainActivity;
 import com.doitstudio.sleepest_master.R;
+import com.doitstudio.sleepest_master.SleepApiData;
+import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver;
 import com.doitstudio.sleepest_master.model.data.Actions;
+import com.doitstudio.sleepest_master.sleepapi.SleepHandler;
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 
 
@@ -89,7 +99,6 @@ public class ForegroundService extends LifecycleService {
         foregroundObserver = new ForegroundObserver (this);
 
         foregroundObserver = new ForegroundObserver (this);
-        foregroundObserver.setAlarmTime(times.getFirstWakeupInSeconds());
         foregroundObserver.resetSleepTime();
 
         startForeground(1, createNotification("Test")); /** TODO: Id zentral anlegen */
@@ -101,20 +110,6 @@ public class ForegroundService extends LifecycleService {
         sleepHandler.stopSleepHandler();
 
     }
-
-    public void OnAlarmChanged(Alarm alarm){
-
-       /* if ((alarmTimeInSeconds != alarm.getAlarmTime()) && (alarm.getAlarmTime() > 0)) {
-
-            alarmTimeInSeconds = (int) alarm.getAlarmTime();
-        }*/
-
-       // startForeground(1, createNotification("Test")); /** TODO: Id zentral anlegen */
-
-        //foregroundObserver = new ForegroundObserver (this);
-
-
-
 
     public void OnSleepApiDataChanged(SleepApiData sleepApiData){
         sleepValueAmount = sleepApiData.getSleepApiValuesAmount();
@@ -236,7 +231,6 @@ public class ForegroundService extends LifecycleService {
 
         sleepCalculationHandler.recalculateUserSleep();
         sleepHandler.stopSleepHandler();
-        foregroundObserver.setAlarmTime(0);
         Toast.makeText(getApplicationContext(), "Foregroundservice stopped", Toast.LENGTH_LONG).show();
 
         Calendar calendar = Calendar.getInstance();

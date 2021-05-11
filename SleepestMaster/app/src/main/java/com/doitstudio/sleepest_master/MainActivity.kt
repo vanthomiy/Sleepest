@@ -3,47 +3,27 @@ package com.doitstudio.sleepest_master
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-
 import android.view.View
-
 import android.widget.Toast
-
 import com.doitstudio.sleepest_master.background.ForegroundService
-
 import android.provider.Settings
-
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-
-import androidx.viewbinding.BuildConfig
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
 import com.doitstudio.sleepest_master.background.AlarmReceiver
-import com.doitstudio.sleepest_master.background.ForegroundService
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
 import com.doitstudio.sleepest_master.model.data.Actions
-import com.doitstudio.sleepest_master.model.data.SleepStatePattern
-import com.doitstudio.sleepest_master.model.data.UserFactorPattern
-import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationStoreRepository
-import com.doitstudio.sleepest_master.sleepcalculation.db.SleepStateParameterEntity
-import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepStateParameter
-import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.google.android.material.snackbar.Snackbar
-import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.util.*
-
 import com.doitstudio.sleepest_master.sleepapi.SleepHandler
-
-import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
-import com.doitstudio.sleepest_master.model.data.Actions
-import com.google.android.material.snackbar.Snackbar
-
 
 
 class MainActivity : AppCompatActivity() {
@@ -133,9 +113,11 @@ class MainActivity : AppCompatActivity() {
 
         /**EndTest*/
 
+        /*
         mainViewModel.allSleepStateParameters.observe(this){ data->
             binding.status1.text = data.size.toString()
         }
+         */
 
 
         //val fs = ForegroundObserver(this, this)

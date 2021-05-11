@@ -6,7 +6,6 @@ import java.time.DayOfWeek
 
 class Converters {
 
-
     @TypeConverter
     fun fromSleepState(sleepState: SleepState) : Int {
         return sleepState.ordinal
@@ -45,16 +44,6 @@ class Converters {
     @TypeConverter
     fun toActivityOnDay(activityOnDay: Int) : ActivityOnDay {
         return ActivityOnDay.values()[activityOnDay]
-    }
-
-    @TypeConverter
-    fun fromSleepState(sleepState: SleepState) : Int {
-        return sleepState.ordinal
-    }
-
-    @TypeConverter
-    fun toSleepState(sleepState: Int) : SleepState {
-        return SleepState.values()[sleepState]
     }
 
     @TypeConverter

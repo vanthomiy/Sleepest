@@ -30,31 +30,6 @@ class Converters {
         return SleepTimeAdjustment.values()[sleepTimePattern]
     }
 
-<<<<<<< HEAD
-    @TypeConverter
-    fun fromArrayListOfSleepTimePattern(list: ArrayList<SleepTimePattern>): String {
-        return list?.joinToString(separator = ";") { it.toString() } ?: ""
-    }
-
-    @TypeConverter
-    fun toArrayListOfSleepTimePattern(string: String?): ArrayList<SleepTimePattern> {
-        return ArrayList(string?.split(";")?.mapNotNull {
-            SleepTimePattern.values()[SleepTimePattern.valueOf(it).ordinal]
-        } ?: emptyList())
-    }
-
-    @TypeConverter
-    fun fromUserStartPattern(userFactorPattern: UserFactorPattern) : Int {
-        return userFactorPattern.ordinal
-    }
-
-    @TypeConverter
-    fun toUserStartPattern(userFactorPattern: Int) : UserFactorPattern {
-        return UserFactorPattern.values()[userFactorPattern]
-    }
-=======
->>>>>>> SleepCalculationMachineLearning
-
     @TypeConverter
     fun fromMobilePosition(mobilePosition: MobilePosition) : Int {
         return mobilePosition.ordinal
