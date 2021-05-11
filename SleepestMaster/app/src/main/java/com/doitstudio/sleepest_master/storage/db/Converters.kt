@@ -2,19 +2,13 @@ package com.doitstudio.sleepest_master.storage.db
 
 import androidx.room.TypeConverter
 import com.doitstudio.sleepest_master.model.data.*
-import kotlin.collections.ArrayList
+import java.time.DayOfWeek
 
-
+/**
+ * Converters are beeing used to convert complex datatypes to single types
+ * E.g you have to implicit convert a enum to a int and back, to store the value in the DB
+ */
 class Converters {
-    @TypeConverter
-    fun fromSleepState(sleepState: SleepState) : Int {
-        return sleepState.ordinal
-    }
-
-    @TypeConverter
-    fun toSleepState(sleepState: Int) : SleepState {
-        return SleepState.values()[sleepState]
-    }
 
     @TypeConverter
     fun fromSleepStatePattern(sleepStatePattern: SleepStatePattern) : Int {
@@ -45,30 +39,6 @@ class Converters {
     fun toArrayListOfSleepTimePattern(string: String?): ArrayList<SleepTimePattern> {
         return ArrayList(string?.split(";")?.mapNotNull {
             SleepTimePattern.values()[SleepTimePattern.valueOf(it).ordinal]
-        } ?: emptyList())
-    }
-
-    @TypeConverter
-    fun fromArrayListOfString(list: ArrayList<String>): String {
-        return list?.joinToString(separator = ";") { it } ?: ""
-    }
-
-    @TypeConverter
-    fun toArrayListOfString(string: String?): ArrayList<String> {
-        return ArrayList(string?.split(";")?.mapNotNull {
-            it
-        } ?: emptyList())
-    }
-
-    @TypeConverter
-    fun fromArrayListOfSleepStatePattern(list: ArrayList<SleepStatePattern>): String {
-        return list?.joinToString(separator = ";") { it.toString() } ?: ""
-    }
-
-    @TypeConverter
-    fun toArrayListOfSleepStatePattern(string: String?): ArrayList<SleepStatePattern> {
-        return ArrayList(string?.split(";")?.mapNotNull {
-            SleepStatePattern.values()[SleepStatePattern.valueOf(it).ordinal]
         } ?: emptyList())
     }
 
@@ -112,4 +82,23 @@ class Converters {
         return ActivityOnDay.values()[activityOnDay]
     }
 
+    @TypeConverter
+    fun fromSleepState(sleepState: SleepState) : Int {
+        return sleepState.ordinal
+    }
+
+    @TypeConverter
+    fun toSleepState(sleepState: Int) : SleepState {
+        return SleepState.values()[sleepState]
+    }
+
+    @TypeConverter
+    fun fromDayOfWeekList(dayOfWeek: ArrayList<DayOfWeek>?) : String {
+        return dayOfWeek?.joinToString(";"){it.toString()}?:""
+    }
+
+    @TypeConverter
+    fun toDayOfWeekList(string: String?) : ArrayList<DayOfWeek> {
+        return ArrayList(string?.split(";")?.mapNotNull { DayOfWeek.valueOf(it) } ?: emptyList())
+    }
 }

@@ -34,5 +34,13 @@
     <string name="hello_world">Hello Square World!</string>
     <!--endregion-->
 
+    <!--region AlarmSettings-->
+    <string name="einstellungen">Sleepest</string>
+    <string name="schlafdauer">Schlafdauer:</string>
+    <string name="aufwachzeitpunkt">Aufweckzeitpunkt:</string>
+    <string name="alarm_TextView">Wecker</string>
+    <string name="testText">Hahhah</string>
+    <!--endregion-->
+
 
 </resources>

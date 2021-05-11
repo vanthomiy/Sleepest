@@ -20,7 +20,7 @@ import androidx.work.WorkerParameters;
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver;
 import com.doitstudio.sleepest_master.model.data.Actions;
-import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
+//import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 public class Workmanager extends Worker {
 
     private static Context context;
-    private SleepCalculationHandler sleepCalculationHandler;
+    //private SleepCalculationHandler sleepCalculationHandler;
 
     public Workmanager(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
@@ -47,6 +47,7 @@ public class Workmanager extends Worker {
          * angeschaut wird. Prozesse, die den Nutzer nicht benötigen, sind hier aber im Normalfall
          * problemlos möglich.
          */
+
         sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
         sleepCalculationHandler.calculateLiveUserSleepActivityJob();
 

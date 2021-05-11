@@ -21,7 +21,7 @@ import com.doitstudio.sleepest_master.MainActivity;
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver;
 import com.doitstudio.sleepest_master.model.data.Actions;
-import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
+//import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -49,7 +49,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         ed.putInt("intent", intent.getIntExtra(context.getString(R.string.alarmmanager_key), 0));
         ed.apply();
 
-        SleepCalculationHandler sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
+        //SleepCalculationHandler sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
 
         switch (intent.getIntExtra(context.getString(R.string.alarmmanager_key), 0)) {
             case 0:
