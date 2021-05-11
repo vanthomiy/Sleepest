@@ -112,6 +112,10 @@ class SleepCalculationDbRepository(
         sleepApiRawDataDao.updateSleepState(id,sleepState )
     }
 
+    suspend fun updateOldSleepApiRawDataSleepState(id: Int, sleepState: SleepState){
+        sleepApiRawDataDao.updateOldSleepState(id,sleepState )
+    }
+
 
 
 

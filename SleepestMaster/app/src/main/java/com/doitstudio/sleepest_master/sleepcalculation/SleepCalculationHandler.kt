@@ -342,6 +342,69 @@ class SleepCalculationHandler(val context: Context) {
         normalDbRepository.insertUserSleepSession(sleepSessionEntity)
     }
 
+
+    /**
+     * Defines that the user not fall asleep alredy and we should change the states of the passed data to [SleepState.AWAKE]
+     * Only call this at the first 1 to 2 hours of the sleep... because we overwriting all sleep data before
+     * Later use the [userCurrentlyNotSleeping]
+     */
+    suspend fun userNotSleeping(time:Int){
+        // for each sleeping time, we have to define the sleep state
+        val sleepApiRawDataEntity = sleepDbRepository.getSleepApiRawDataFromDateLive(time).first().sortedBy { x -> x.timestampSeconds }
+
+        if(sleepApiRawDataEntity.count() == 0){
+            return
+        }
+
+        // calculate all sleep states when the user is sleeping
+        val id = sleepApiRawDataEntity.minOf { x->x.timestampSeconds }
+
+        sleepApiRawDataEntity.forEach()
+        {
+            // we take all sleep values that are not already defined as light or deep but sleeping
+            if(it.sleepState != SleepState.AWAKE || it.sleepState != SleepState.NONE){
+                // we need to calculate the sleep state
+                // and then we update it in the sleep api raw data entity
+                sleepDbRepository.updateOldSleepApiRawDataSleepState(it.timestampSeconds, it.sleepState)
+                sleepDbRepository.updateSleepApiRawDataSleepState(it.timestampSeconds, SleepState.AWAKE)
+                it.sleepState = SleepState.AWAKE
+            }
+        }
+
+
+        // update live user sleep activity to zero and no sleep
+        sleepCalculationRepository.updateIsUserSleeping(false)
+        sleepCalculationRepository.updateUserSleepTime(0)
+
+    }
+
+
+    /**
+     * Defines that the user is currently awake and we should set the actual state to awake
+     * Call this in the night. We only change the state until the next Sleep API Data retrieves...
+     */
+    suspend fun userCurrentlyNotSleeping(time:Int){
+
+        // for each sleeping time, we have to define the sleep state
+        val sleepApiRawDataEntity = sleepDbRepository.getSleepApiRawDataFromDateLive(time).first().sortedBy { x -> x.timestampSeconds }
+
+        if(sleepApiRawDataEntity.count() == 0){
+            return
+        }
+
+        // calculate all sleep states when the user is sleeping
+        // update this or update the next sleep state ??
+
+        val id = sleepApiRawDataEntity.maxOf { x-> x.timestampSeconds }
+        val data = sleepApiRawDataEntity.find{x-> x.timestampSeconds == id}!!
+
+        sleepDbRepository.updateOldSleepApiRawDataSleepState(id, data.sleepState)
+        sleepDbRepository.updateSleepApiRawDataSleepState(id, SleepState.AWAKE)
+
+        // update live user sleep activity to zero and no sleep
+        sleepCalculationRepository.updateIsUserSleeping(false)
+    }
+
     companion object {
         // For Singleton instantiation
         @Volatile
@@ -356,5 +419,4 @@ class SleepCalculationHandler(val context: Context) {
             }
         }
     }
-
 }

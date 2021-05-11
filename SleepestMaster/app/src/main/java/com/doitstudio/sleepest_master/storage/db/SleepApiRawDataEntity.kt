@@ -31,7 +31,10 @@ data class SleepApiRawDataEntity(
         val light: Int,
 
         @ColumnInfo(name = "sleepState")
-        var sleepState: SleepState
+        var sleepState: SleepState = SleepState.NONE,
+
+        @ColumnInfo(name = "oldSleepState")
+        var oldSleepState: SleepState = SleepState.NONE
 
 ) {
         companion object {
@@ -41,7 +44,8 @@ data class SleepApiRawDataEntity(
                                 confidence = sleepClassifyEvent.confidence,
                                 motion = sleepClassifyEvent.motion,
                                 light = sleepClassifyEvent.light,
-                                sleepState = SleepState.NONE
+                                sleepState = SleepState.NONE,
+                                oldSleepState = SleepState.NONE
                         )
                 }
 
