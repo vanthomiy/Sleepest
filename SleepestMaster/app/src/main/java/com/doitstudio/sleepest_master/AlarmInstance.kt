@@ -138,7 +138,7 @@ class AlarmInstance(applicationContext: Context, private val alarmId: Int = 0) :
     }
 
     private fun deleteAlarmEntity() {
-        AlarmSettings.getAlarmSettings().removeAlarmEntity(alarmId)
+        AlarmsFragment.getAlarmFragment().removeAlarmEntity(alarmId)
 
         scope.launch {
             repository.deleteAlarm(alarmSettings)
