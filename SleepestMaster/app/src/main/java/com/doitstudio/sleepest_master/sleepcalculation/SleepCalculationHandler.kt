@@ -349,7 +349,7 @@ class SleepCalculationHandler(val context: Context) {
             // now define the new wakeUpPoint for the user...
             // sleep time
 
-            val sleepTargetTime = 420 // as minutes
+            val sleepTargetTime = 420 // as minutes = 7h
             var restSleepTime = 420 - sleepSessionEntity.sleepTimes.sleepDuration
 
             if (restSleepTime < 5) {

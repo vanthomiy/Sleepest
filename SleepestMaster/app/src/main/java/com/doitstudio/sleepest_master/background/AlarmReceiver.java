@@ -21,6 +21,7 @@ import com.doitstudio.sleepest_master.MainActivity;
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver;
 import com.doitstudio.sleepest_master.model.data.Actions;
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 //import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 
 import java.util.Calendar;
@@ -34,6 +35,7 @@ import static android.content.Context.ALARM_SERVICE;
 public class AlarmReceiver extends BroadcastReceiver {
 
     private static Context context;
+    private SleepCalculationHandler sleepCalculationHandler;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -49,34 +51,34 @@ public class AlarmReceiver extends BroadcastReceiver {
         ed.putInt("intent", intent.getIntExtra(context.getString(R.string.alarmmanager_key), 0));
         ed.apply();
 
-        //SleepCalculationHandler sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
-
         switch (intent.getIntExtra(context.getString(R.string.alarmmanager_key), 0)) {
             case 0:
                 break;
             case 1:
                 //ForegroundService.startOrStopForegroundService(Actions.START, context.getApplicationContext());
 
-                Intent i = new Intent(context, ForegroundActivity.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                i.putExtra("intent", 1);
-                context.startActivity(i);
+                Intent startForegroundIntent = new Intent(context, ForegroundActivity.class);
+                startForegroundIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startForegroundIntent.putExtra("intent", 1);
+                context.startActivity(startForegroundIntent);
 
                 break;
             case 2:
                 //ForegroundService.startOrStopForegroundService(Actions.STOP, context.getApplicationContext());
 
-                Intent i2 = new Intent(context, ForegroundActivity.class);
-                i2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                i2.putExtra("intent", 2);
-                context.startActivity(i2);
+                Intent stopForegroundIntent = new Intent(context, ForegroundActivity.class);
+                stopForegroundIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                stopForegroundIntent.putExtra("intent", 2);
+                context.startActivity(stopForegroundIntent);
 
                 AlarmReceiver.cancelAlarm(context.getApplicationContext(), 4);
                 AlarmClockReceiver.cancelAlarm(context.getApplicationContext(), 4);
                 break;
             case 3:
 
-
+                /** Eventuell über ForegroundActivity aufrufen, wenn es nicht geht*/
+                sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
+                sleepCalculationHandler.userNotSleepingJob();
 
                 /**TODO: Turn Alarm off, set Alarm for the day after or check for the next day
                  * TODO: Stop Foregroundservice and send Toast

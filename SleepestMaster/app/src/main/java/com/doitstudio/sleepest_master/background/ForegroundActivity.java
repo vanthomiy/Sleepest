@@ -2,12 +2,13 @@ package com.doitstudio.sleepest_master.background;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.model.data.Actions;
 
-public class ForegroundActivity extends AppCompatActivity {
+public class ForegroundActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

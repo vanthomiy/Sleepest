@@ -30,10 +30,6 @@ import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity;
 
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.Calendar;
 
 public class ForegroundService extends LifecycleService {
@@ -49,11 +45,9 @@ public class ForegroundService extends LifecycleService {
     private boolean isSubscribed = false;
     private int userSleepTime = 0;
     private boolean isSleeping = false;
-    private boolean isDataAvailable = false;
     private int alarmTimeInSeconds = 0;
-    boolean test = false;
 
-    private boolean isStartet = false;
+    private boolean alarmClockSet = false;
 
 
     DataStoreRepository dataStoreRepository;
@@ -84,7 +78,7 @@ public class ForegroundService extends LifecycleService {
             }
         }
 
-        return START_STICKY; // by returning this we make sure the service is restarted if the system kills the service
+        return START_REDELIVER_INTENT; // by returning this we make sure the service is restarted if the system kills the service
     }
 
     ForegroundObserver foregroundObserver;
@@ -110,7 +104,43 @@ public class ForegroundService extends LifecycleService {
 
     }
 
-    public void OnAlarmChanged(int time) {
+    public void OnAlarmChanged(AlarmEntity time) {
+
+        Calendar calendar = Calendar.getInstance();
+
+
+        SharedPreferences pref = getSharedPreferences("AlarmChanged", 0);
+        SharedPreferences.Editor ed = pref.edit();
+        ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
+        ed.putInt("minute", calendar.get(Calendar.MINUTE));
+        ed.apply();
+
+        int secondsOfDay = calendar.get(Calendar.HOUR_OF_DAY) * 3600 + calendar.get(Calendar.MINUTE) * 60 + calendar.get(Calendar.SECOND);
+        int timeDifference = time.getActualWakeup() - secondsOfDay;
+
+        if (timeDifference < (times.getWorkmanagerCalculationDuration() * 60) && !alarmClockSet) {
+
+            if (time.getActualWakeup() < time.getWakeupEarly()) {
+                AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), 6, 0, getApplicationContext(), 1);
+                alarmClockSet = true;
+                return;
+            }
+
+            if (time .getActualWakeup()> time.getWakeupLate()) {
+                AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), 9, 0, getApplicationContext(), 1);
+                alarmClockSet = true;
+                return;
+            }
+
+            if (secondsOfDay > time.getActualWakeup() && (secondsOfDay < 54000)) {
+                AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 1, getApplicationContext(), 1);
+                alarmClockSet = true;
+            } else if (secondsOfDay <= time.getActualWakeup() && (secondsOfDay < 54000) ){
+                calendar.add(Calendar.SECOND, timeDifference);
+                AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 1, getApplicationContext(), 1);
+                alarmClockSet = true;
+            }
+        }
 
     }
 
@@ -126,22 +156,15 @@ public class ForegroundService extends LifecycleService {
         SharedPreferences pref = getSharedPreferences("StopService", 0);
         int test = pref.getInt("sleeptime", 0);
 
-        isDataAvailable = liveUserSleepActivity.getIsDataAvailable();
         userSleepTime = liveUserSleepActivity.getUserSleepTime();
         isSleeping = liveUserSleepActivity.getIsUserSleeping();
 
-        if (isSleeping && (userSleepTime > times.getSleepTime()) && (userSleepTime != test)) {
+        /*if (isSleeping && (userSleepTime > times.getSleepTime()) && (userSleepTime != test)) {
             Calendar calendar = Calendar.getInstance();
             AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 1, getApplicationContext(), 1);
-        }
+        }*/
 
-        Calendar calendar1 = Calendar.getInstance();
-        pref = getSharedPreferences("AlarmChanged", 0);
-        SharedPreferences.Editor ed = pref.edit();
-        ed.putInt("hour", calendar1.get(Calendar.HOUR_OF_DAY));
-        ed.putInt("minute", calendar1.get(Calendar.MINUTE));
-        ed.putInt("sleeptime", userSleepTime);
-        ed.apply();
+
 
         updateNotification("test");
 
@@ -179,13 +202,13 @@ public class ForegroundService extends LifecycleService {
         //AlarmClockReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 1);
 
         //Last Alarm    +1
-        calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1, times.getLastWakeupHour(), times.getLastWakeupMinute());
+        //calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1, times.getLastWakeupHour(), times.getLastWakeupMinute());
         //AlarmReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 4);
-        AlarmClockReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 4);
+        //AlarmClockReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 4);
 
         //Start Calculation    +1
-        //calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1, times.getFirstCalculationHour(), times.getFirstCalculationMinute());
-        //AlarmReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 5);
+        calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1, times.getFirstCalculationHour(), times.getFirstCalculationMinute());
+        AlarmReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 5);
 
         sleepCalculationHandler.checkIsUserSleeping(null);
         sleepHandler.startSleepHandler();

@@ -51,10 +51,7 @@ class MainActivity : AppCompatActivity() {
 
         var pref = getSharedPreferences("AlarmChanged", 0)
         val textAlarm = """
-            Last Sleeptime changed: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt(
-            "sleeptime",
-            0
-        )}
+            Last Alarm changed: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
             
             """.trimIndent()
         pref = getSharedPreferences("StartService", 0)
@@ -177,8 +174,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun xyz() {
-        //var calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance()[Calendar.DAY_OF_WEEK],15,27)
-        //AlarmClockReceiver.startAlarmManager(calenderAlarm[Calendar.DAY_OF_WEEK], calenderAlarm[Calendar.HOUR_OF_DAY], calenderAlarm[Calendar.MINUTE], applicationContext,1)
+        var calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance()[Calendar.DAY_OF_WEEK],14,38)
+        AlarmReceiver.startAlarmManager(calenderAlarm[Calendar.DAY_OF_WEEK], calenderAlarm[Calendar.HOUR_OF_DAY], calenderAlarm[Calendar.MINUTE], applicationContext, 1)
 
         /*calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance()[Calendar.DAY_OF_WEEK], 9, 52)
         AlarmReceiver.startAlarmManager(calenderAlarm[Calendar.DAY_OF_WEEK], calenderAlarm[Calendar.HOUR_OF_DAY], calenderAlarm[Calendar.MINUTE], applicationContext, 4)
