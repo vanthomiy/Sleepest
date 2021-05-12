@@ -4,6 +4,7 @@ import androidx.lifecycle.asLiveData
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationStoreRepository
 import com.doitstudio.sleepest_master.storage.DbRepository
+import com.doitstudio.sleepest_master.storage.db.AlarmEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -15,7 +16,7 @@ class ForegroundObserver(private val fs:ForegroundService) {
     private val dbRepository: DbRepository by lazy {
         (fs.applicationContext as MainApplication).dbRepository
     }
-    private val alarmLivedata by lazy{dbRepository.alarmFlow.asLiveData()}
+    private val alarmLivedata by lazy{dbRepository.activeAlarmsFlow().asLiveData()}
 
     fun resetSleepTime(){
         scope.launch {
@@ -26,7 +27,11 @@ class ForegroundObserver(private val fs:ForegroundService) {
 
     init {
         alarmLivedata.observe(fs) {
-            fs.OnAlarmChanged(2)
+
+            val nextAlarm = it.minByOrNull { x->x.actualWakeup }
+
+            if(nextAlarm != null)
+                fs.OnAlarmChanged(nextAlarm.actualWakeup)
         }
     }
 }

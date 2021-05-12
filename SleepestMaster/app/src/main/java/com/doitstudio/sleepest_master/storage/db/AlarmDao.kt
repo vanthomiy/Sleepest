@@ -15,6 +15,12 @@ interface AlarmDao {
     @Query("SELECT * FROM alarm_properties_table ORDER BY id DESC")
     fun getAll(): Flow<List<AlarmEntity>>
 
+    @Query("SELECT * FROM alarm_properties_table Where isActive=1 And activeDayOfWeek Like :dayOfWeek ORDER BY id DESC")
+    fun getAllActiveOnDay(dayOfWeek: String): Flow<List<AlarmEntity>>
+
+    @Query("SELECT * FROM alarm_properties_table Where isActive=1 ORDER BY id DESC")
+    fun getAllActive(): Flow<List<AlarmEntity>>
+
     @Query("SELECT * FROM alarm_properties_table Where id Like :alarmId")
     fun getAlarmById(alarmId: Int): Flow<AlarmEntity>
 
@@ -29,6 +35,9 @@ interface AlarmDao {
 
     @Query("UPDATE alarm_properties_table SET wakeupEarly =:wakeupEarly Where id LIKE :alarmId")
     suspend fun updateWakeupEarly(wakeupEarly: Int, alarmId:Int)
+
+    @Query("UPDATE alarm_properties_table SET actualWakeup =:wakeupTime Where id LIKE :alarmId")
+    suspend fun updateWakeupTime(wakeupTime: Int, alarmId:Int)
 
     @Query("UPDATE alarm_properties_table SET wakeupLate =:wakeupLate Where id LIKE :alarmId")
     suspend fun updateWakeupLate(wakeupLate: Int, alarmId:Int)

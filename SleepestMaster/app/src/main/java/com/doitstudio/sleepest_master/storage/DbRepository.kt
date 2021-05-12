@@ -7,6 +7,9 @@ import com.doitstudio.sleepest_master.storage.db.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import java.time.DayOfWeek
+import java.time.LocalDateTime
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 /**
@@ -17,9 +20,9 @@ import java.time.DayOfWeek
  *
  */
 class DbRepository(
-        private val sleepSegmentDao: SleepSegmentDao,
-        private val userSleepSessionDao: UserSleepSessionDao,
-        private val alarmDao: AlarmDao
+    private val sleepSegmentDao: SleepSegmentDao,
+    private val userSleepSessionDao: UserSleepSessionDao,
+    private val alarmDao: AlarmDao
 ) {
 
     companion object {
@@ -27,7 +30,11 @@ class DbRepository(
         @Volatile
         private var INSTANCE: DbRepository? = null
 
-        fun getRepo(sleepSegmentDao: SleepSegmentDao, userSleepSessionDao: UserSleepSessionDao, alarmDao: AlarmDao): DbRepository {
+        fun getRepo(
+            sleepSegmentDao: SleepSegmentDao,
+            userSleepSessionDao: UserSleepSessionDao,
+            alarmDao: AlarmDao
+        ): DbRepository {
             return INSTANCE ?: synchronized(this) {
                 val instance = DbRepository(sleepSegmentDao, userSleepSessionDao, alarmDao)
                 INSTANCE = instance
@@ -51,10 +58,10 @@ class DbRepository(
     val allUserSleepSessions: Flow<List<UserSleepSessionEntity>> =
             userSleepSessionDao.getAll()
 
-    fun getSleepSessionById(id:Int): Flow<UserSleepSessionEntity?> =
+    fun getSleepSessionById(id: Int): Flow<UserSleepSessionEntity?> =
             userSleepSessionDao.getById(id)
 
-    suspend fun getOrCreateSleepSessionById(id:Int): UserSleepSessionEntity {
+    suspend fun getOrCreateSleepSessionById(id: Int): UserSleepSessionEntity {
         var userSession = userSleepSessionDao.getById(id).first()
 
         if(userSession == null){
@@ -83,7 +90,7 @@ class DbRepository(
         sleepSegmentDao.insert(sleepClassifyEventEntity)
     }
 
-    suspend fun deleteSleepSegmentsWithin(start:Int, end:Int) {
+    suspend fun deleteSleepSegmentsWithin(start: Int, end: Int) {
         sleepSegmentDao.deleteWithin(start, end)
     }
 
@@ -104,7 +111,28 @@ class DbRepository(
     val alarmFlow: Flow<List<AlarmEntity>> =
             alarmDao.getAll()
 
+    /**
+     * All active alarms and on that specific day
+     */
+    fun activeAlarmsFlow() : Flow<List<AlarmEntity>> {
+        val ldt:LocalDateTime = LocalDateTime.now()
+        val date = if(ldt.hour > 15) ldt.plusDays(1).toLocalDate() else ldt.toLocalDate()
+        val dayOfWeek = "%" + date.dayOfWeek + "%"
+
+        return alarmDao.getAllActiveOnDay(dayOfWeek.toString())
+    }
+
     fun getAlarmById(alarmId: Int): Flow<AlarmEntity> = alarmDao.getAlarmById(alarmId)
+
+    /**
+     * Returns the next alarm that is active or null is no alarm is active in that time duration
+     */
+    suspend fun getNextActiveAlarm() : AlarmEntity?{
+
+        val list = activeAlarmsFlow().first()
+        // get first alarm
+        return list.minByOrNull { x-> x.wakeupEarly }
+    }
 
     suspend fun insertAlarm(alarm: AlarmEntity) {
         alarmDao.insert(alarm)
@@ -116,10 +144,15 @@ class DbRepository(
 
     suspend fun updateWakeupEarly(wakeupEarly: Int, alarmId: Int) {
         alarmDao.updateWakeupEarly(wakeupEarly, alarmId)
+        updateWakeupTime(wakeupEarly, alarmId)
     }
 
     suspend fun updateWakeupLate(wakeupLate: Int, alarmId: Int) {
         alarmDao.updateWakeupLate(wakeupLate, alarmId)
+    }
+
+    suspend fun updateWakeupTime(wakeupTime: Int, alarmId: Int) {
+        alarmDao.updateWakeupTime(wakeupTime, alarmId)
     }
 
     suspend fun updateIsActive(isActive: Boolean, alarmId: Int) {

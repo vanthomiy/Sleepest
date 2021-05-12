@@ -14,6 +14,7 @@ import org.hamcrest.CoreMatchers
 import org.junit.Before
 import org.junit.Test
 import kotlinx.coroutines.runBlocking
+import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
@@ -181,7 +182,8 @@ class SleepCalculationHandlerTest
     @Test
     fun userNotSleepingTest() = runBlocking {
 
-        val actualtime = 1000000
+        val actualtimeSeconds = 1000000
+        val actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(actualtimeSeconds.toLong()*1000), ZoneOffset.UTC)
 
         val sleepCalculationHandler = SleepCalculationHandler.getHandler(context)
 
@@ -189,16 +191,16 @@ class SleepCalculationHandlerTest
         sleepDbRepository.deleteSleepApiRawData()
 
         // if nothing is inside... should not break
-        sleepCalculationHandler.userNotSleeping(actualtime)
+        sleepCalculationHandler.userNotSleeping(actualTime)
 
         for(i in 0..10)
         {
-            val data = SleepApiRawDataEntity(actualtime-i, 1,2,3,sleepState = SleepState.SLEEPING)
+            val data = SleepApiRawDataEntity(actualtimeSeconds-i, 1,2,3,sleepState = SleepState.SLEEPING)
             sleepList.add(data)
             sleepDbRepository.insertSleepApiRawData((sleepList))
         }
 
-        sleepCalculationHandler.userNotSleeping(actualtime)
+        sleepCalculationHandler.userNotSleeping(actualTime)
 
         val newSleepList = sleepDbRepository.allSleepApiRawData.first().filter{x -> x.sleepState == SleepState.SLEEPING }
         assertThat(newSleepList.count(), CoreMatchers.equalTo(0))
@@ -207,7 +209,8 @@ class SleepCalculationHandlerTest
     @Test
     fun userCurrentlyNotSleepingTest() = runBlocking {
 
-        val actualtime = 1000000
+        val actualtimeSeconds = 1000000
+        val actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(actualtimeSeconds.toLong()*1000), ZoneOffset.UTC)
 
         val sleepCalculationHandler = SleepCalculationHandler.getHandler(context)
 
@@ -215,16 +218,16 @@ class SleepCalculationHandlerTest
         sleepDbRepository.deleteSleepApiRawData()
 
         // if nothing is inside... should not break
-        sleepCalculationHandler.userCurrentlyNotSleeping(actualtime)
+        sleepCalculationHandler.userCurrentlyNotSleeping(actualTime)
 
         for(i in 0..10)
         {
-            val data = SleepApiRawDataEntity(actualtime-i, 1,2,3,sleepState = SleepState.SLEEPING)
+            val data = SleepApiRawDataEntity(actualtimeSeconds-i, 1,2,3,sleepState = SleepState.SLEEPING)
             sleepList.add(data)
             sleepDbRepository.insertSleepApiRawData((sleepList))
         }
 
-        sleepCalculationHandler.userCurrentlyNotSleeping(actualtime)
+        sleepCalculationHandler.userCurrentlyNotSleeping(actualTime)
 
         val newSleepList = sleepDbRepository.allSleepApiRawData.first().filter{x -> x.sleepState == SleepState.SLEEPING }
         assertThat(newSleepList.count(), CoreMatchers.equalTo(sleepList.count()-1))

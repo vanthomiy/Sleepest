@@ -63,9 +63,9 @@ class SleepCalculationDbRepository(
      * so we always getting the data from 15:00 the day or day before until the specific time
      * later we have to combine it with the actual sleeptimes
      */
-    suspend fun getSleepApiRawDataFromDateLive(actualTimeInt:Int): Flow<List<SleepApiRawDataEntity>>
+    fun getSleepApiRawDataFromDateLive(actualTime:LocalDateTime): Flow<List<SleepApiRawDataEntity>>
     {
-        val actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(actualTimeInt.toLong()*1000), ZoneOffset.UTC)
+        //val actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(actualTimeInt.toLong()*1000), ZoneOffset.UTC)
 
         val startTime = if (actualTime.hour < 15)
             actualTime.toLocalDate().minusDays(1).atTime(15,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
@@ -81,7 +81,7 @@ class SleepCalculationDbRepository(
      * e.g. the dateTime 20.05.2021 at 20:00 returns all data in between 20.05.2021 15:00 to 21.05.2021 at 15:00
      * later we have to combine it with the actual sleeptimes
      */
-    suspend fun getSleepApiRawDataFromDate(actualTime:LocalDateTime): Flow<List<SleepApiRawDataEntity>>
+    fun getSleepApiRawDataFromDate(actualTime:LocalDateTime): Flow<List<SleepApiRawDataEntity>>
     {
         val startTime = if (actualTime.hour < 15)
             actualTime.toLocalDate().minusDays(1).atTime(15,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
