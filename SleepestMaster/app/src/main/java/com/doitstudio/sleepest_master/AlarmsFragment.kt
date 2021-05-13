@@ -43,7 +43,7 @@ class AlarmsFragment() : Fragment() {
             for (i in alarmList.indices) {
                 usedIds.add(alarmList[i].id)
                 allAlarms.add(alarmList[i])
-                addAlarmEntity(actualContext, i)
+                addAlarmEntity(actualContext, alarmList[i].id)
             }
         }
     }

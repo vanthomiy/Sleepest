@@ -29,4 +29,5 @@ data class AlarmEntity(
 
         @ColumnInfo(name = "actualWakeup")
         val actualWakeup: Int = 21600
+
 )

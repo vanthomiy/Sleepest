@@ -371,6 +371,7 @@ class SleepCalculationHandler(val context: Context) {
 
             // store in the alarm...!!!
             val alarm = normalDbRepository.getNextActiveAlarm()
+
             if(alarm != null)
                 normalDbRepository.updateWakeupTime(wakeupTime = wakeUpTime, alarm.id)
 

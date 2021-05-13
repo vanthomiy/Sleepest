@@ -39,6 +39,17 @@ enum class MobilePosition{
 }
 
 /**
+ * Defines how often the user uses his phone
+ */
+enum class MobileUseFrequency{
+    NONE,
+    VERYLESS,
+    LESS,
+    OFTEN,
+    VERYOFTEN
+}
+
+/**
  * Defines the mood of the user after/before the sleep
  */
 enum class MoodType{

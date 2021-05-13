@@ -57,6 +57,39 @@ message  SleepApiData{
 }
 
 /**
+ * This is a SleepApiData StatusModel
+ * It stores information/status about sleep api data
+ */
+message  SleepParameters{
+
+  /**
+   * The normal sleep time of the user
+   */
+  int32 normalSleepTime = 1;
+
+  /**
+  * Start of the sleep time for the user
+  */
+  int32 sleepTimeStart = 2;
+
+  /**
+  * Start of the sleep time for the user
+  */
+  int32 sleepTimeEnd = 3;
+
+  /**
+  * standard position of the mobile phone
+  */
+  int32 standardMobilePosition = 4;
+
+  /**
+  * standard position of the mobile phone
+  */
+  int32 mobileUseFrequency = 5;
+
+}
+
+/**
  * This is a LiveUserSleepActivity StatusModel
  * It stores information/status about the actual sleep of the user (live data)
  * Is data available from the calculation handler

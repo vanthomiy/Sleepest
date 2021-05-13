@@ -6,6 +6,9 @@ import androidx.datastore.preferences.createDataStore
 
 import com.doitstudio.sleepest_master.LiveUserSleepActivity
 import com.doitstudio.sleepest_master.SleepApiData
+import com.doitstudio.sleepest_master.SleepParameters
+import com.doitstudio.sleepest_master.model.data.MobilePosition
+import com.doitstudio.sleepest_master.model.data.MobileUseFrequency
 import com.doitstudio.sleepest_master.sleepcalculation.datastore.LIVE_USER_ACTIVITY_DATA_NAME
 import com.doitstudio.sleepest_master.sleepcalculation.datastore.LiveUserSleepActivityStatus
 import com.doitstudio.sleepest_master.sleepcalculation.datastore.SLEEP_API_DATA_NAME
@@ -21,8 +24,6 @@ class DataStoreRepository(context: Context) {
         @Volatile
         private var INSTANCE: DataStoreRepository? = null
 
-        var a:Int = 0
-
         fun getRepo(context: Context): DataStoreRepository {
             return INSTANCE ?: synchronized(this) {
                 val instance = DataStoreRepository(context)
@@ -33,27 +34,27 @@ class DataStoreRepository(context: Context) {
         }
     }
 
-    /*
-    //region Alarm
+    //region SleepParameter Status
 
-    private val alarmStatus by lazy{ AlarmStatus(context.createDataStore(
-        ALARM_STATUS_NAME,
-        serializer = AlarmSerializer())
-    )}
+    private val sleepParameterStatus by lazy{ SleepParameterStatus(context.createDataStore(
+        SLEEP_PARAMETER_STATUS,
+        serializer = SleepParameterSerializer())
+    )
+    }
 
+    val sleepParameterFlow: Flow<SleepParameters> = sleepParameterStatus.sleepParameters
+    suspend fun updateSleepTimeEnd(time:Int) =
+        sleepParameterStatus.updateSleepTimeEnd(time)
+    suspend fun updateSleepTimeStart(time:Int) =
+        sleepParameterStatus.updateSleepTimeStart(time)
+    suspend fun updateUserWantedSleepTime(time:Int) =
+        sleepParameterStatus.updateUserWantedSleepTime(time)
+    suspend fun updateStandardMobilePosition(time:MobilePosition) =
+        sleepParameterStatus.updateStandardMobilePosition(time)
+    suspend fun updateUserMobileFequency(time:MobileUseFrequency) =
+        sleepParameterStatus.updateUserMobileFequency(time)
 
-    val alarmFlow: Flow<Alarm> = alarmStatus.alarm
-
-    suspend fun updateSleepDuration(duration: Int) =
-        alarmStatus.updateSleepDuration(duration)
-
-    suspend fun updateWakeUpEarly(timeOfDay: Int) =
-        alarmStatus.updateWakeUpEarly(timeOfDay)
-
-    suspend fun updateWakeUpLate(timeOfDay: Int) =
-        alarmStatus.updateWakeUpLate(timeOfDay)
-
-    //endregion*/
+    //endregion
 
     //region SleepApiData Status
 
@@ -89,7 +90,6 @@ class DataStoreRepository(context: Context) {
 
 
     //endregion
-
 
     //region LiveUserSleepActivity Status
 

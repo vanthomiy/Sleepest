@@ -8,14 +8,12 @@
     android:background="#d2d2d2"
     tools:context=".MainActivity">
 
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="top"
         android:layout_marginBottom="50dp"
         android:id="@+id/navigationFrame"/>
-
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="match_parent"
