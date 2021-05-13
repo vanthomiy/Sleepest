@@ -109,7 +109,7 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
         val items = arrayOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
         val daysOfWeek = DayOfWeek.values()
         val selectedList = ArrayList<Int>()
-        val builder = AlertDialog.Builder(this.context)
+        val builder = AlertDialog.Builder(this.context, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
         val activeDays = getActiveAlarmDays()
 
         for (i in activeDays.indices) { if (activeDays[i]) { selectedList.add(i) } } // Make sure we dont lose pre-selected information
