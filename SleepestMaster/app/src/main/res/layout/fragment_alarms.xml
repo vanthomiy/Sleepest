@@ -6,9 +6,7 @@ android:id="@+id/lL_parent"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:background="@drawable/background_1"
-android:orientation="vertical"
-    >
-//tools:context=".AlarmSettings">
+android:orientation="vertical">
 
 <TextView
     android:id="@+id/tV_topic"
@@ -24,23 +22,30 @@ android:orientation="vertical"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent" />
 
-<LinearLayout
-    android:id="@+id/lL_alarmEntities"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/tV_topic">
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragment_one"
-        android:layout_width="match_parent"
+    <ScrollView
+        android:id="@+id/root_layout"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        tools:layout="@layout/alarm_entity"
-        tools:layout_editor_absoluteX="0dp" />
-</LinearLayout>
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tV_topic">
+
+        <LinearLayout
+            android:id="@+id/lL_insideScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/fragment_one"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                tools:layout="@layout/alarm_entity"
+                tools:layout_editor_absoluteX="0dp" />
+        </LinearLayout>
+    </ScrollView>
 
     <Button
         android:id="@+id/btn_addAlarmEntity"

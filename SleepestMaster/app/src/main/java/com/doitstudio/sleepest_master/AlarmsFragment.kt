@@ -1,16 +1,16 @@
 package com.doitstudio.sleepest_master
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
+import android.widget.*
+import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentTransaction
-import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
-import com.doitstudio.sleepest_master.databinding.FragmentAlarmsBinding
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -31,6 +31,7 @@ class AlarmsFragment() : Fragment() {
 
     lateinit var btnAddAlarmEntity: Button
     var lLAlarmEntities: LinearLayout? = null
+    var lLinsideScrollView: LinearLayout? = null
     lateinit var allAlarms : MutableList<AlarmEntity>
     lateinit var usedIds : MutableSet<Int>
     lateinit var transactions: MutableMap<Int, FragmentTransaction>
@@ -67,7 +68,7 @@ class AlarmsFragment() : Fragment() {
         transactions[alarmId] = childFragmentManager.beginTransaction()
         fragments[alarmId] = AlarmInstance(context, alarmId)
         //fragments[alarmId]?.arguments = intent.extras
-        transactions[alarmId]?.add(R.id.lL_alarmEntities, fragments[alarmId]!!)?.commit()
+        transactions[alarmId]?.add(R.id.lL_insideScrollView, fragments[alarmId]!!)?.commit()
     }
 
     fun removeAlarmEntity(alarmId: Int) {
@@ -81,16 +82,48 @@ class AlarmsFragment() : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         INSTANCE = this
         btnAddAlarmEntity = view.findViewById(R.id.btn_addAlarmEntity)
-        lLAlarmEntities = view.findViewById(R.id.lL_alarmEntities)
+        //lLAlarmEntities = view.findViewById(R.id.lL_alarmEntities)
+        lLAlarmEntities = view.findViewById(R.id.lL_insideScrollView)
+        usedIds = mutableSetOf()
+        transactions = mutableMapOf()
+        fragments = mutableMapOf()
 
         btnAddAlarmEntity.setOnClickListener{
             view -> onAddAlarm(view)
         }
 
+        /*
+        val scrollView = ScrollView(actualContext)
+        val layoutParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT)
+        scrollView.layoutParams = layoutParams
+        //lLTest?.addView(scrollView)
 
-        usedIds = mutableSetOf()
-        transactions = mutableMapOf()
-        fragments = mutableMapOf()
+        val linearLayout = LinearLayout(actualContext)
+        val linearParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT)
+        linearLayout.orientation = LinearLayout.VERTICAL
+        linearLayout.layoutParams = linearParams
+        scrollView.addView(linearLayout)
+
+        val imageView1 = ImageView(actualContext)
+        val params1 =
+            LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT)
+        params1.setMargins(0, 30, 0, 30)
+        params1.gravity = Gravity.CENTER
+        imageView1.setLayoutParams(params1)
+        imageView1.setImageResource(R.drawable.person_icon)
+        linearLayout.addView(imageView1)
+
+        val instance = ImageView(actualContext)
+        instance.setLayoutParams(params1)
+        //instance.setImageResource(R.layout.alarm_entity)
+        linearLayout.addView(instance)
+
+         */
 
         setupAlarms()
     }
