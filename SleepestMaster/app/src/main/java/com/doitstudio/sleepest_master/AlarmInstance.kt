@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.asLiveData
 import com.appyvet.rangebar.RangeBar
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity
@@ -20,7 +19,7 @@ import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalTime
 
-class AlarmInstance(applicationContext: Context, private val alarmId: Int = 0) : Fragment() {
+class AlarmInstance(applicationContext: Context, private var alarmId: Int) : Fragment() {
 
     private val repository by lazy { (applicationContext as MainApplication).dbRepository }
     private val scope: CoroutineScope = MainScope()
@@ -36,6 +35,8 @@ class AlarmInstance(applicationContext: Context, private val alarmId: Int = 0) :
     lateinit var btnDeleteAlarm: Button //Delete current alarm entity
     lateinit var swAlarmActive : Switch //Select whether alarm is on or off
     lateinit var alarmSettings : AlarmEntity
+    lateinit var allAlarms : MutableList<AlarmEntity>
+    lateinit var usedIds : MutableSet<Int>
     private val alarmEntityLiveData by lazy { repository.alarmFlow.asLiveData()}
 
     private fun saveAlarmIsActive(isActive: Boolean) {
@@ -74,7 +75,7 @@ class AlarmInstance(applicationContext: Context, private val alarmId: Int = 0) :
         return activeDays.toBooleanArray()
     }
 
-    private suspend fun SetupAlarmSettings() {
+    private suspend fun setupAlarmSettings() {
         alarmSettings = repository.getAlarmById(alarmId).first()
 
         val wakeupTime = LocalTime.ofSecondOfDay(alarmSettings.sleepDuration.toLong())
@@ -161,6 +162,7 @@ class AlarmInstance(applicationContext: Context, private val alarmId: Int = 0) :
         btnWeekdaySelect = view.findViewById(R.id.btn_alarmDaysWeek)
         swAlarmActive = view.findViewById(R.id.sw_alarmOnOff)
         btnDeleteAlarm = view.findViewById(R.id.btn_deleteAlarm)
+        usedIds = mutableSetOf()
 
         /*
         tViewExpandAlarmSettings.setOnClickListener {
@@ -192,7 +194,7 @@ class AlarmInstance(applicationContext: Context, private val alarmId: Int = 0) :
         }
 
         scope.launch {
-            SetupAlarmSettings()
+            setupAlarmSettings()
         }
 
         sBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
