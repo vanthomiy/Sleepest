@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
 
         var pref = getSharedPreferences("AlarmChanged", 0)
         val textAlarm = """
-            Last Alarm changed: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
+            Last Alarm changed: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt("actualWakeup", 0)},${pref.getInt("alarmUse", 0)}
             
             """.trimIndent()
         pref = getSharedPreferences("StartService", 0)

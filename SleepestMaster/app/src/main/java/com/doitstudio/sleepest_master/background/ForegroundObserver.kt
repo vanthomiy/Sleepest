@@ -8,6 +8,7 @@ import com.doitstudio.sleepest_master.storage.db.AlarmEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class ForegroundObserver(private val fs:ForegroundService) {
 
@@ -25,6 +26,10 @@ class ForegroundObserver(private val fs:ForegroundService) {
             sleepCalculationStoreRepository.updateUserSleepTime(0)
             sleepCalculationStoreRepository.updateIsUserSleeping(false)
         }
+    }
+
+    fun getNextAlarm() : AlarmEntity? = runBlocking {
+        return@runBlocking dbRepository.getNextActiveAlarm()
     }
 
     init {
