@@ -236,11 +236,12 @@ class SleepCalculationHandlerTest
     @Test
     fun findLightUserWakeupTest() = runBlocking {
 
+        val sleepCalculationHandler = SleepCalculationHandler.getHandler(context)
+
         // get actual time
         val now = LocalDateTime.now(ZoneOffset.UTC)
-        val actualTimeSeconds = now.toEpochSecond(ZoneOffset.UTC).toInt()
+        val actualTimeSeconds =  sleepCalculationHandler.localDateTimeToSeconds(now)
 
-        val sleepCalculationHandler = SleepCalculationHandler.getHandler(context)
         var sleepList5 = mutableListOf<SleepApiRawDataEntity>()
         var sleepList30 = mutableListOf<SleepApiRawDataEntity>()
 

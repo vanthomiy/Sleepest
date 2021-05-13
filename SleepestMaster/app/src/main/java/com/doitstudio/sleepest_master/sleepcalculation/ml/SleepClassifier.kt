@@ -187,7 +187,7 @@ class SleepClassifier constructor(private val context: Context) {
             return SleepState.NONE
         }
 
-        return SleepState.NONE
+        return SleepState.AWAKE
     }
 
     /**
