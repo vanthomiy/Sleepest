@@ -10,7 +10,7 @@
     tools:context=".AlarmSettings">
 
     <TextView
-        android:id="@+id/tV_topic"
+        android:id="@+id/tV_appName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -30,7 +30,7 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tV_topic">
+        app:layout_constraintTop_toBottomOf="@+id/tV_appName">
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragment_one"

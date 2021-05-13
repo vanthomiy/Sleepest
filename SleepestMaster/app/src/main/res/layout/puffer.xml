@@ -10,7 +10,7 @@
     tools:context=".AlarmSettings">
 
     <TextView
-        android:id="@+id/tV_topic"
+        android:id="@+id/tV_appName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -24,7 +24,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cL_alarmSettings"
+        android:id="@+id/cL_alarmEntity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -32,7 +32,7 @@
         tools:layout_editor_absoluteY="199dp">
 
         <TextView
-            android:id="@+id/tV_AlarmViewTopic"
+            android:id="@+id/tV_alarmName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/alarm_TextView"
@@ -46,7 +46,7 @@
             tools:ignore="MissingConstraints" />
 
         <Switch
-            android:id="@+id/sw_alarmOnOff"
+            android:id="@+id/sw_alarmIsActive"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="80dp"
@@ -55,12 +55,12 @@
             android:trackTint="@color/teal_200"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/tV_AlarmViewTopic"
+            app:layout_constraintStart_toEndOf="@+id/tV_alarmName"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="MissingConstraints,UseSwitchCompatOrMaterialXml" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cL_extendedAlarmSettings"
+            android:id="@+id/cL_extendedAlarmEntity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -69,7 +69,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tV_AlarmViewTopic"
+            app:layout_constraintTop_toBottomOf="@+id/tV_alarmName"
             app:layout_constraintVertical_bias="0.0"
             tools:visibility="visible">
 
@@ -120,7 +120,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/sBar_sleepAmount" />
 
             <TextView
-                android:id="@+id/tV_swakeupRangeSelection"
+                android:id="@+id/tV_wakeupRangeSelection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/teal_200"
@@ -148,7 +148,7 @@
                 tools:ignore="MissingConstraints" />
 
             <Button
-                android:id="@+id/btn_alarmDaysWeek"
+                android:id="@+id/btn_selectActiveWeekday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Wochentage"
@@ -170,7 +170,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tV_AlarmViewTopic"
+            app:layout_constraintTop_toBottomOf="@+id/tV_alarmName"
             app:layout_constraintVertical_bias="1.0"
             tools:ignore="MissingConstraints,SmallSp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
