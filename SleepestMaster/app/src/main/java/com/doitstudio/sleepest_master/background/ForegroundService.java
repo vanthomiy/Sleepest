@@ -30,6 +30,8 @@ import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity;
 
+import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class ForegroundService extends LifecycleService {
@@ -100,12 +102,11 @@ public class ForegroundService extends LifecycleService {
             startForeground(1, createNotification("Test")); /** TODO: Id zentral anlegen */
       //  }
 
-
-
         sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(getApplicationContext());
         sleepHandler = SleepHandler.Companion.getHandler(getApplicationContext());
 
         sleepHandler.stopSleepHandler();
+
 
     }
 
@@ -131,20 +132,35 @@ public class ForegroundService extends LifecycleService {
         int secondsOfDay = calendar.get(Calendar.HOUR_OF_DAY) * 3600 + calendar.get(Calendar.MINUTE) * 60 + calendar.get(Calendar.SECOND);
         int timeDifference = time.getActualWakeup() - secondsOfDay;
 
+        //Return if the alarm is on the next day or before first calculation
+        if(secondsOfDay < (alarmEntity.getWakeupEarly() - 1800) || (alarmEntity.getWakeupLate() + 3600) < secondsOfDay || alarmClockSet) {
+            return;
+        }
+
         //Check if the next calculation call will be after latest wakeup and set the alarm to latest wakeup
-        if (((time.getWakeupLate() - secondsOfDay) < (times.getWorkmanagerCalculationDuration() * 60)) && !alarmClockSet) {
-            AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), 9, 0, getApplicationContext(), 1);
+        if (((time.getWakeupLate() - secondsOfDay) < (times.getWorkmanagerCalculationDuration() * 60))) {
+            Calendar lastestWakeup = Calendar.getInstance();
+            lastestWakeup.set(Calendar.HOUR_OF_DAY, 0);
+            lastestWakeup.set(Calendar.MINUTE, 0);
+            lastestWakeup.set(Calendar.SECOND, 0);
+            lastestWakeup.add(Calendar.SECOND, alarmEntity.getWakeupLate());
+            AlarmClockReceiver.startAlarmManager(lastestWakeup.get(Calendar.DAY_OF_WEEK), lastestWakeup.get(Calendar.HOUR_OF_DAY), lastestWakeup.get(Calendar.MINUTE), getApplicationContext(), 1);
             alarmClockSet = true;
             ed.putInt("alarmUse", 1);
             return;
         }
 
         //Check if the actual wakeup is earlier than the next calculation call
-        if (timeDifference < (times.getWorkmanagerCalculationDuration() * 60) && !alarmClockSet) {
+        if (timeDifference < (times.getWorkmanagerCalculationDuration() * 60)) {
 
             //Check if the actual wakeup is earlier than the earliest wakeup and set the alarm to earliest wakeup
             if (time.getActualWakeup() < time.getWakeupEarly()) {
-                AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), 6, 0, getApplicationContext(), 1);
+                Calendar earliestWakeup = Calendar.getInstance();
+                earliestWakeup.set(Calendar.HOUR_OF_DAY, 0);
+                earliestWakeup.set(Calendar.MINUTE, 0);
+                earliestWakeup.set(Calendar.SECOND, 0);
+                earliestWakeup.add(Calendar.SECOND, alarmEntity.getWakeupEarly());
+                AlarmClockReceiver.startAlarmManager(earliestWakeup.get(Calendar.DAY_OF_WEEK), earliestWakeup.get(Calendar.HOUR_OF_DAY), earliestWakeup.get(Calendar.MINUTE), getApplicationContext(), 1);
                 alarmClockSet = true;
                 ed.putInt("alarmUse", 2);
                 return;
@@ -152,21 +168,26 @@ public class ForegroundService extends LifecycleService {
 
             //Check if the actual wakeup is later than the latest wakeup and set the alarm to latest wakeup
             if (time.getActualWakeup() > time.getWakeupLate()) {
-                AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), 9, 0, getApplicationContext(), 1);
+                Calendar lastestWakeup = Calendar.getInstance();
+                lastestWakeup.set(Calendar.HOUR_OF_DAY, 0);
+                lastestWakeup.set(Calendar.MINUTE, 0);
+                lastestWakeup.set(Calendar.SECOND, 0);
+                lastestWakeup.add(Calendar.SECOND, alarmEntity.getWakeupLate());
+                AlarmClockReceiver.startAlarmManager(lastestWakeup.get(Calendar.DAY_OF_WEEK), lastestWakeup.get(Calendar.HOUR_OF_DAY), lastestWakeup.get(Calendar.MINUTE), getApplicationContext(), 1);
                 alarmClockSet = true;
                 ed.putInt("alarmUse", 3);
                 return;
             }
 
             //Check if the actual alarm time is already reached and set the alarm to now
-            if (secondsOfDay > time.getActualWakeup() && (secondsOfDay < 54000)) {
+            if (secondsOfDay > time.getActualWakeup()) {
                 AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 1, getApplicationContext(), 1);
                 alarmClockSet = true;
                 ed.putInt("alarmUse", 4);
                 return;
             }
             //Check if the actual time is lower than the actual wakeup and add the difference to the actual time and set the alarm to this new time
-            else if (secondsOfDay <= time.getActualWakeup() && (secondsOfDay < 54000) ){
+            else if (secondsOfDay <= time.getActualWakeup()){
                 calendar.add(Calendar.SECOND, timeDifference);
                 AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 1, getApplicationContext(), 1);
                 alarmClockSet = true;

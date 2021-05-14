@@ -4,25 +4,25 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import android.widget.Toast
-import com.doitstudio.sleepest_master.background.ForegroundService
-import android.provider.Settings
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.doitstudio.sleepest_master.background.AlarmReceiver
+import com.doitstudio.sleepest_master.background.ForegroundService
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
 import com.doitstudio.sleepest_master.model.data.Actions
+import com.doitstudio.sleepest_master.sleepapi.SleepHandler
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationStoreRepository
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.util.*
-import com.doitstudio.sleepest_master.sleepapi.SleepHandler
 
 
 class MainActivity : AppCompatActivity() {
@@ -82,16 +82,16 @@ class MainActivity : AppCompatActivity() {
         pref = getSharedPreferences("SleepCalc2", 0)
         val textCalc2 = """
             Calc2: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt("value1", 0)},${pref.getInt(
-            "value2",
-            0
+                "value2",
+                0
         )}
             
             """.trimIndent()
         pref = getSharedPreferences("AlarmReceiver", 0)
         val textAlarmReceiver = """
             AlarmReceiver: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt(
-            "intent",
-            0
+                "intent",
+                0
         )}
             
             """.trimIndent()
@@ -136,9 +136,9 @@ class MainActivity : AppCompatActivity() {
 
             // If not, form up an Intent to launch the permission request
             val intent = Intent(
-                Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse(
+                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse(
                     "package:$packageName"
-                )
+            )
             )
 
             // Launch Intent, with the supplied request code
@@ -159,22 +159,21 @@ class MainActivity : AppCompatActivity() {
 
             } else {
                 Toast.makeText(
-                    this,
-                    "Sorry. Can't draw overlays without permission...",
-                    Toast.LENGTH_SHORT
+                        this,
+                        "Sorry. Can't draw overlays without permission...",
+                        Toast.LENGTH_SHORT
                 ).show()
             }
         }
     }
 
     fun buttonClick1(view: View){
-
         ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
         //xyz()
     }
 
     fun xyz() {
-        var calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance()[Calendar.DAY_OF_WEEK],14,38)
+        var calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance()[Calendar.DAY_OF_WEEK], 14, 38)
         AlarmReceiver.startAlarmManager(calenderAlarm[Calendar.DAY_OF_WEEK], calenderAlarm[Calendar.HOUR_OF_DAY], calenderAlarm[Calendar.MINUTE], applicationContext, 1)
 
         /*calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance()[Calendar.DAY_OF_WEEK], 9, 52)

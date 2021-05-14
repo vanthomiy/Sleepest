@@ -69,4 +69,8 @@ public class Times {
     public int getFirstWakeupInSeconds() {
         return firstWakeupInSeconds;
     }
+
+    public int getStartForegroundInSeconds() {
+        return (startForegroundHour * 3600 + startForegroundMinute * 60);
+    }
 }
