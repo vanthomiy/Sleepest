@@ -30,6 +30,9 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
     private lateinit var tViewSleepAmount: TextView //Display the selected sleep amount
     private lateinit var tViewWakeupTime: TextView  //Display the selected wake up range
     private lateinit var tViewAlarmName : TextView //Topic of the alarm
+    private lateinit var tViewActiveWeekdays: TextView //Shows the active weekdays
+    private lateinit var tViewSleepAmountHint: TextView //Shows the selected sleep amount as hint
+    private lateinit var tViewWakeupTimeHint: TextView //Shows the selected wake up range as hint
     private lateinit var viewExtendedAlarmSettings : View //Display extended alarm settings
     private lateinit var btnSelectActiveWeekday : Button //Popup window for selecting the weekdays for alarm
     private lateinit var btnDeleteAlarmInstance: Button //Delete current alarm entity
@@ -45,12 +48,14 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
 
     fun saveSleepAmount(time: LocalTime) {
         tViewSleepAmount.text = " " + time.toString() + " Stunden"
+        tViewSleepAmountHint.text = time.toString() + " h"
         scope.launch {
             repository.updateSleepDuration(time.toSecondOfDay(), alarmId) }
     }
 
     private fun saveWakeupRange(wakeupEarly: LocalTime, wakeupLate: LocalTime) {
         tViewWakeupTime.text = " " + wakeupEarly.toString() + " - " + wakeupLate.toString() + " Uhr"
+        tViewWakeupTimeHint.text = wakeupEarly.toString() + " - " + wakeupLate.toString()
         scope.launch {
             repository.updateWakeupEarly(wakeupEarly.toSecondOfDay(), alarmId)
             repository.updateWakeupLate(wakeupLate.toSecondOfDay(), alarmId) }
@@ -78,6 +83,18 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
             }
         }
         return activeDays.toBooleanArray()
+    }
+
+    private fun convertActiveAlarmDays(selectedDays: ArrayList<DayOfWeek>): String {
+        var daysString = ""
+        if (selectedDays.contains(DayOfWeek.MONDAY)) { daysString += "Mo " }
+        if (selectedDays.contains(DayOfWeek.TUESDAY)) { daysString += "Tu " }
+        if (selectedDays.contains(DayOfWeek.WEDNESDAY)) { daysString += "We " }
+        if (selectedDays.contains(DayOfWeek.THURSDAY)) { daysString += "Th " }
+        if (selectedDays.contains(DayOfWeek.FRIDAY)) { daysString += "Fr " }
+        if (selectedDays.contains(DayOfWeek.SATURDAY)) { daysString += "Sa " }
+        if (selectedDays.contains(DayOfWeek.SUNDAY)) { daysString += "Su " }
+        return daysString
     }
 
     private suspend fun setupAlarmSettings() {
@@ -110,6 +127,9 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
         tViewSleepAmount.text = " " + wakeupTime.toString() + " Stunden"
         tViewWakeupTime.text = " " + wakeupEarly.toString() + " - " + wakeupLate.toString() + " Uhr"
         tViewAlarmName.text = alarmName
+        tViewActiveWeekdays.text = convertActiveAlarmDays(alarmSettings.activeDayOfWeek)
+        tViewSleepAmountHint.text = wakeupTime.toString() + " h"
+        tViewWakeupTimeHint.text = wakeupEarly.toString() + " - " + wakeupLate.toString()
     }
 
     private fun selectActiveDaysOfWeek() {
@@ -133,6 +153,7 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
                     for (j in selectedList.indices) { selectedDays.add(daysOfWeek[selectedList[j]]) }
                     if (selectedDays.isNotEmpty()) {
                         saveAlarmDaysWeek(selectedDays)
+                        tViewActiveWeekdays.text = convertActiveAlarmDays(selectedDays)
                         Toast.makeText(applicationContext, "Speichern erfolgreich", Toast.LENGTH_SHORT).show()
                     }
                     else {
@@ -189,6 +210,9 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
         tViewSleepAmount = view.findViewById(R.id.tV_sleepAmountSelection)
         tViewWakeupTime = view.findViewById(R.id.tV_wakeupRangeSelection)
         tViewAlarmName = view.findViewById(R.id.tV_alarmName)
+        tViewActiveWeekdays = view.findViewById(R.id.tV_activeWeekdays)
+        tViewSleepAmountHint = view.findViewById(R.id.tV_wakeupRangeHint)
+        tViewWakeupTimeHint = view.findViewById(R.id.tV_sleepAmountHint)
         viewExtendedAlarmSettings = view.findViewById(R.id.cL_extendedAlarmEntity)
         btnSelectActiveWeekday = view.findViewById(R.id.btn_selectActiveWeekday)
         swAlarmActive = view.findViewById(R.id.sw_alarmIsActive)
@@ -197,6 +221,9 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
 
         tViewAlarmName.setOnClickListener {
             viewExtendedAlarmSettings.isVisible = !viewExtendedAlarmSettings.isVisible
+            tViewActiveWeekdays.isVisible = !tViewActiveWeekdays.isVisible
+            tViewSleepAmountHint.isVisible = !tViewSleepAmountHint.isVisible
+            tViewWakeupTimeHint.isVisible = !tViewWakeupTimeHint.isVisible
         }
 
         tViewAlarmName.setOnLongClickListener {
