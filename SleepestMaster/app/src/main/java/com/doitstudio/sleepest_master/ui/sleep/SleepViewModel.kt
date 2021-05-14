@@ -1,18 +1,32 @@
 package com.doitstudio.sleepest_master.ui.sleep
 
 import android.app.TimePickerDialog
+import android.content.Context
 import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.databinding.Observable
 import androidx.databinding.ObservableField
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import com.doitstudio.sleepest_master.SleepParameters
 import com.doitstudio.sleepest_master.model.data.MobilePosition
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationStoreRepository
+import com.doitstudio.sleepest_master.storage.DataStoreRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.first
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.*
 
 
-class SleepViewModel : ViewModel () {
+class SleepViewModel(val context: Context) : ViewModel () {
+
+    private val scope: CoroutineScope = MainScope()
+    private val dataStoreRepository by lazy {  DataStoreRepository.getRepo(context)}
+    val sleepParamsLiveData by lazy { dataStoreRepository.sleepParameterFlow.asLiveData()}
 
     var sleepDurationValue = ObservableField("7h")
     fun onSleepDurationChanged(seekBar: SeekBar, progresValue: Int, fromUser: Boolean) {
@@ -30,18 +44,7 @@ class SleepViewModel : ViewModel () {
         )
     }
 
-
-    var phonePositionValue = MobilePosition.UNIDENTIFIED
-
     var onTableValue = false
-    fun setPhonePosition(value: Boolean){
-        if(onTableValue != value){
-            phonePositionValue = if(onTableValue) MobilePosition.ONTABLE else MobilePosition.INBED
-        }
-    }
-    fun getPhonePosition() : Boolean{
-        return onTableValue
-    }
 
     var sleepStartValue = ObservableField("07:30")
     var sleepEndValue = ObservableField("07:30")
@@ -85,6 +88,15 @@ class SleepViewModel : ViewModel () {
         )
 
         tpd.show()
+    }
+
+
+
+    suspend fun loadFields() {
+
+        var sleepParams = dataStoreRepository.sleepParameterFlow.first()
+
+
     }
 
 }
