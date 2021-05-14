@@ -8,6 +8,7 @@ import com.doitstudio.sleepest_master.storage.db.AlarmEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class ForegroundObserver(private val fs:ForegroundService) {
 
