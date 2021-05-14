@@ -13,7 +13,7 @@ data class AlarmEntity(
         val id: Int = 0,
 
         @ColumnInfo(name = "isActive")
-        val isActive: Boolean = false,
+        val isActive: Boolean = true,
 
         @ColumnInfo(name = "sleepDuration")
         val sleepDuration: Int = 28800,
@@ -28,5 +28,8 @@ data class AlarmEntity(
         val activeDayOfWeek: ArrayList<DayOfWeek> = arrayListOf(DayOfWeek.MONDAY),
 
         @ColumnInfo(name = "actualWakeup")
-        val actualWakeup: Int = 21600
+        val actualWakeup: Int = 21600,
+
+        @ColumnInfo(name = "alarmName")
+        val alarmName: String = "Alarm"
 )

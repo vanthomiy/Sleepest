@@ -3,6 +3,7 @@ package com.doitstudio.sleepest_master
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +30,6 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
     private lateinit var tViewSleepAmount: TextView //Display the selected sleep amount
     private lateinit var tViewWakeupTime: TextView  //Display the selected wake up range
     private lateinit var tViewAlarmName : TextView //Topic of the alarm
-    private lateinit var tViewAlarmNameId : TextView //AlarmId of the alarm
     private lateinit var viewExtendedAlarmSettings : View //Display extended alarm settings
     private lateinit var btnSelectActiveWeekday : Button //Popup window for selecting the weekdays for alarm
     private lateinit var btnDeleteAlarmInstance: Button //Delete current alarm entity
@@ -62,6 +62,12 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
         }
     }
 
+    private fun saveAlarmName(alarmName: String) {
+        scope.launch {
+            repository.updateAlarmName(alarmName, alarmId)
+        }
+    }
+
     private fun getActiveAlarmDays(): BooleanArray {
         val activeDays = mutableListOf<Boolean>()
         for (i in 0..6) {
@@ -80,6 +86,7 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
         val wakeupTime = LocalTime.ofSecondOfDay(alarmSettings.sleepDuration.toLong())
         val wakeupEarly = LocalTime.ofSecondOfDay(alarmSettings.wakeupEarly.toLong())
         val wakeupLate = LocalTime.ofSecondOfDay(alarmSettings.wakeupLate.toLong())
+        val alarmName = alarmSettings.alarmName
         val isActive = alarmSettings.isActive
 
         // Setup the sleepAmount bar
@@ -102,7 +109,7 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
         //UpdateViews
         tViewSleepAmount.text = " " + wakeupTime.toString() + " Stunden"
         tViewWakeupTime.text = " " + wakeupEarly.toString() + " - " + wakeupLate.toString() + " Uhr"
-        //tViewAlarmNameId.text = " " + alarmId.toString()
+        tViewAlarmName.text = alarmName
     }
 
     private fun selectActiveDaysOfWeek() {
@@ -128,7 +135,8 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
                         saveAlarmDaysWeek(selectedDays)
                         Toast.makeText(applicationContext, "Speichern erfolgreich", Toast.LENGTH_SHORT).show()
                     }
-                    else { Toast.makeText(applicationContext, "Speichern fehlgeschlagen\nMindestens einen Tag auswählen! ", Toast.LENGTH_SHORT).show()
+                    else {
+                        Toast.makeText(applicationContext, "Speichern fehlgeschlagen\nMindestens einen Tag auswählen! ", Toast.LENGTH_SHORT).show()
                     }
                 }
                 .setNegativeButton("Cancel") {
@@ -136,6 +144,31 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
                     Toast.makeText(applicationContext, "Verworfen", Toast.LENGTH_SHORT).show()
                     }
                 .show()
+    }
+
+    private fun getAlarmName(){
+        val input = EditText(context)
+        input.inputType = InputType.TYPE_CLASS_TEXT
+
+        val builder = AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
+        builder.setTitle("Set alarmname")
+            .setView(input)
+            .setPositiveButton("Save") {
+                    _, _ ->
+                val alarmName = input.text.toString()
+                if (alarmName.isEmpty()) {
+                    Toast.makeText(applicationContext, "Speichern fehlgeschlagen\nMindestens einen Char eingeben! ", Toast.LENGTH_SHORT).show()
+                }
+                else {
+                    tViewAlarmName.text = alarmName
+                    saveAlarmName(alarmName)
+                }
+            }
+            .setNegativeButton("Cancel") {
+                dialog, _ ->
+                dialog.cancel()
+            }
+            .show()
     }
 
     private fun deleteAlarmEntity() {
@@ -156,7 +189,6 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
         tViewSleepAmount = view.findViewById(R.id.tV_sleepAmountSelection)
         tViewWakeupTime = view.findViewById(R.id.tV_wakeupRangeSelection)
         tViewAlarmName = view.findViewById(R.id.tV_alarmName)
-        tViewAlarmNameId = view.findViewById(R.id.tV_alarmNameId)
         viewExtendedAlarmSettings = view.findViewById(R.id.cL_extendedAlarmEntity)
         btnSelectActiveWeekday = view.findViewById(R.id.btn_selectActiveWeekday)
         swAlarmActive = view.findViewById(R.id.sw_alarmIsActive)
@@ -165,6 +197,11 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
 
         tViewAlarmName.setOnClickListener {
             viewExtendedAlarmSettings.isVisible = !viewExtendedAlarmSettings.isVisible
+        }
+
+        tViewAlarmName.setOnLongClickListener {
+            getAlarmName()
+            true
         }
 
         alarmEntityLiveData.observe(viewLifecycleOwner) {

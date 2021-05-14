@@ -163,6 +163,10 @@ class DbRepository(
         alarmDao.updateActiveDayOfWeek(activeDayOfWeek, alarmId)
     }
 
+    suspend fun updateAlarmName(alarmName: String, alarmId: Int) {
+        alarmDao.updateAlarmName(alarmName, alarmId)
+    }
+
     suspend fun deleteAlarm(alarm: AlarmEntity) {
         alarmDao.delete(alarm)
     }
