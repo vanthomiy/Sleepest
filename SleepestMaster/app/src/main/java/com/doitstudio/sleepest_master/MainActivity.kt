@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     private val scope: CoroutineScope = MainScope()
     private val sleepCalculationStoreRepository by lazy {  SleepCalculationStoreRepository.getRepo(applicationContext)}
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -112,8 +113,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-    private val sleepHandler : SleepHandler by lazy {SleepHandler.getHandler(this)}
 
     // region get permission for sleep api at first start etc.
     private fun activityRecognitionPermissionApproved(): Boolean {

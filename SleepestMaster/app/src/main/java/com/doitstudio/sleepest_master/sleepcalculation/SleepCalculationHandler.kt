@@ -11,6 +11,7 @@ import com.doitstudio.sleepest_master.sleepcalculation.db.UserSleepSessionEntity
 import com.doitstudio.sleepest_master.sleepcalculation.ml.SleepClassifier
 import com.doitstudio.sleepest_master.storage.DbRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
+import com.doitstudio.sleepest_master.storage.db.SleepSegmentEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -288,7 +289,7 @@ class SleepCalculationHandler(val context: Context) {
      * Stores alarm data in the main
      * [time] = the actual time in seconds
      */
-    fun defineUserWakeup(localTime: LocalDateTime? = null){
+    fun defineUserWakeup(afterSleep:Boolean = false, localTime: LocalDateTime? = null){
         scope.launch {
             // for each sleeping time, we have to define the sleep state
             val time = localTime ?: LocalDateTime.now()
@@ -297,7 +298,7 @@ class SleepCalculationHandler(val context: Context) {
                     .sortedBy { x -> x.timestampSeconds }
 
             // calculate all sleep states when the user is sleeping
-            val id = sleepApiRawDataEntity.minOf { x -> x.timestampSeconds }
+            val id = UserSleepSessionEntity.getIdByTimeStamp(sleepApiRawDataEntity.minOf { x -> x.timestampSeconds })
             val sleepSessionEntity = normalDbRepository.getOrCreateSleepSessionById(id)
 
             sleepSessionEntity.mobilePosition = checkPhonePosition(sleepApiRawDataEntity)
@@ -346,34 +347,72 @@ class SleepCalculationHandler(val context: Context) {
                 (sleepSessionEntity.sleepTimes.lightSleepDuration * (if (sleepSessionEntity.mobilePosition != MobilePosition.INBED) 1f else 0.9f) +
                         sleepSessionEntity.sleepTimes.deepSleepDuration * 1.1f).toInt()
 
-            // now define the new wakeUpPoint for the user...
-            // sleep time
 
-            val sleepTargetTime = 420 // as minutes
-            var restSleepTime = 420 - sleepSessionEntity.sleepTimes.sleepDuration
+            // is after sleep or while sleep ?
 
-            if (restSleepTime < 5) {
-                restSleepTime = 5
+            if(afterSleep){
+                sleepSessionEntity.sleepTimes.sleepTimeEnd =
+                        SleepApiRawDataEntity.getSleepEndTime(sleepApiRawDataEntity)
+
+                // create the sleep segment entitie
+                val sleepSegmentEntites = mutableListOf<SleepSegmentEntity>()
+
+                var previousSleepState = SleepState.NONE
+                var time = 0
+                sleepApiRawDataEntity.forEach{
+                    data ->
+
+                    if(time == 0)
+                    {
+                        time = data.timestampSeconds
+                        previousSleepState = data.sleepState
+                    }
+
+                    if(data.sleepState != previousSleepState)
+                    {
+                        sleepSegmentEntites.add(SleepSegmentEntity(time, data.timestampSeconds, previousSleepState))
+                        time = data.timestampSeconds
+                        previousSleepState = data.sleepState
+                    }
+
+                    if(sleepApiRawDataEntity.last().timestampSeconds == data.timestampSeconds && time != data.timestampSeconds){
+                        sleepSegmentEntites.add(SleepSegmentEntity(time, data.timestampSeconds, previousSleepState))
+                    }
+
+                }
+
+                normalDbRepository.insertSleepSegments(sleepSegmentEntites)
             }
+            else {
+                // now define the new wakeUpPoint for the user...
+                // sleep time
+
+                val sleepTargetTime = 420 // as minutes
+                var restSleepTime = 420 - sleepSessionEntity.sleepTimes.sleepDuration
+
+                if (restSleepTime < 5) {
+                    restSleepTime = 5
+                }
 
 
-            // user wakuptime is
-            val now = LocalDateTime.now(ZoneOffset.UTC)
-            val actualTimeSeconds = now.toEpochSecond(ZoneOffset.UTC)
+                // user wakuptime is
+                val now = LocalDateTime.now(ZoneOffset.UTC)
+                val actualTimeSeconds = now.toEpochSecond(ZoneOffset.UTC)
 
-            var wakeUpTime = actualTimeSeconds.toInt() + (restSleepTime * 60)
+                var wakeUpTime = actualTimeSeconds.toInt() + (restSleepTime * 60)
 
-            // if in bed then check the single states of the sleep
-            if (sleepSessionEntity.mobilePosition == MobilePosition.INBED) {
-                wakeUpTime = findLightUserWakeup(sleepApiRawDataEntity, wakeUpTime.toInt())
+                // if in bed then check the single states of the sleep
+                if (sleepSessionEntity.mobilePosition == MobilePosition.INBED) {
+                    wakeUpTime = findLightUserWakeup(sleepApiRawDataEntity, wakeUpTime.toInt())
+                }
+
+
+                // store in the alarm...!!!
+                val alarm = normalDbRepository.getNextActiveAlarm()
+
+                if(alarm != null)
+                    normalDbRepository.updateWakeupTime(wakeupTime = wakeUpTime, alarm.id)
             }
-
-
-            // store in the alarm...!!!
-            val alarm = normalDbRepository.getNextActiveAlarm()
-
-            if(alarm != null)
-                normalDbRepository.updateWakeupTime(wakeupTime = wakeUpTime, alarm.id)
 
             sleepCalculationRepository.updateUserSleepTime(sleepSessionEntity.sleepTimes.sleepDuration)
             normalDbRepository.insertUserSleepSession(sleepSessionEntity)

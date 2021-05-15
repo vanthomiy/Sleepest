@@ -130,7 +130,7 @@
                     android:text="@{sleepViewModel.phoneUsageString}"
                     android:textSize="15sp" />
 
-                <SeekBar
+                <!--SeekBar
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
@@ -138,10 +138,16 @@
                     android:max="5"
                     android:onProgressChanged="@{sleepViewModel::onPhoneUsageChanged}"
                     android:progressDrawable="@drawable/seekbar_style"
-                    android:thumb="@drawable/custom_thumb" />
+                    android:thumb="@drawable/custom_thumb" /!-->
+
+                <SeekBar
+                    style="@style/Widget.AppCompat.SeekBar.Discrete"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:max="10"
+                    android:progress="3" />
 
             </LinearLayout>
-
 
         </LinearLayout>
 
@@ -161,4 +167,6 @@
         </LinearLayout>
 
     </LinearLayout>
+
+
 </layout>
