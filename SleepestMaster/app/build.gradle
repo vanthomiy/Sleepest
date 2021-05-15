@@ -186,15 +186,18 @@ dependencies {
 
     implementation 'android.arch.lifecycle:extensions:1.1.1'
 
-    // Rangebar - AlarmSettings
+    // Rangebar - alarm_entity
     implementation 'com.appyvet:materialrangebar:1.3'
 
-    // Rangebar - AlarmSettings
+    // PieChart - AlarmSettings Not in Use right now
     implementation 'com.github.furkanaskin:ClickablePieChart:1.0.8'
+
+    // BarChart - fragment_history
+    implementation 'com.github.PhilJay:MPAndroidChart:v2.2.4'
 }
 
 repositories {
-    // Rangebar - AlarmSettings
+    // Rangebar - alarm_entity / BarChart - fragment_history
     maven { url 'https://jitpack.io' }
 }
 

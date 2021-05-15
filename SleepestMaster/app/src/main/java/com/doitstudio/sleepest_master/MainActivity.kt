@@ -12,7 +12,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.replace
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationStoreRepository
 import kotlinx.coroutines.CoroutineScope
@@ -49,7 +48,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.history -> {
-                    fragment = HisotryFragment()
+                    fragment = HistoryFragment()
                     true
                 }
                 R.id.sleep -> {

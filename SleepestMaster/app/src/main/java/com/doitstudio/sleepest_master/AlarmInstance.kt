@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.asLiveData
 import com.appyvet.rangebar.RangeBar
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity
+import com.github.mikephil.charting.charts.BarChart
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -25,8 +26,8 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
     private val repository by lazy { (applicationContext as MainApplication).dbRepository }
     private val scope: CoroutineScope = MainScope()
 
-    private lateinit var seekBar: SeekBar //Selecting the sleep amount
-    private lateinit var rangeBar: RangeBar //Selecting the wake up range https://github.com/Fedorkz/material-range-bar
+    private lateinit var seekBar : SeekBar //Selecting the sleep amount
+    private lateinit var rangeBar : RangeBar //Selecting the wake up range https://github.com/Fedorkz/material-range-bar
     private lateinit var tViewSleepAmount: TextView //Display the selected sleep amount
     private lateinit var tViewWakeupTime: TextView  //Display the selected wake up range
     private lateinit var tViewAlarmName : TextView //Topic of the alarm
