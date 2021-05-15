@@ -48,7 +48,6 @@ public class ForegroundService extends LifecycleService {
     private int userSleepTime = 0;
     private boolean isSleeping = false;
     private int alarmTimeInSeconds = 0;
-
     private boolean alarmClockSet = false;
 
 
@@ -235,7 +234,7 @@ public class ForegroundService extends LifecycleService {
         if (isServiceStarted) {return;}
         //Set start boolean and save it in preferences
         isServiceStarted = true;
-        //new ServiceTracker().setServiceState(this, ServiceState.STARTED);
+        new ServiceTracker().setServiceState(this, ServiceState.STARTED);
 
         // lock that service is not affected by Doze Mode
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -251,7 +250,7 @@ public class ForegroundService extends LifecycleService {
 
         //+1
         //Calendar calenderAlarm;
-        //calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1, times.getFirstWakeupHour(), times.getFirstWakeupMinute());
+        //calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK),13, 27);
         //AlarmReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 2);
         //AlarmClockReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 1);
 

@@ -10,6 +10,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.PowerManager;
 import android.widget.Toast;
 
@@ -61,6 +62,13 @@ public class AlarmClockReceiver extends BroadcastReceiver {
                 stopAlarmIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 stopAlarmIntent.putExtra("intent", 2);
                 context.startActivity(stopAlarmIntent);
+
+                Calendar calendar = Calendar.getInstance();
+                SharedPreferences pref = context.getSharedPreferences("AlarmClock", 0);
+                SharedPreferences.Editor ed = pref.edit();
+                ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
+                ed.putInt("minute", calendar.get(Calendar.MINUTE));
+                ed.apply();
 
                 break;
             case 3: //Snooze button of ScreenOn notification

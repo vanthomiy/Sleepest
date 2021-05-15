@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.KeyguardManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -89,6 +90,13 @@ public class LockScreenAlarmActivity extends AppCompatActivity implements View.O
                 ForegroundService.startOrStopForegroundService(Actions.STOP, getApplicationContext());
                 Calendar calendarAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK), times.getStartForegroundHour(), times.getStartForegroundMinute());
                 AlarmReceiver.startAlarmManager(calendarAlarm.get(Calendar.DAY_OF_WEEK), calendarAlarm.get(Calendar.HOUR_OF_DAY), calendarAlarm.get(Calendar.MINUTE), getApplicationContext(), 1);
+
+                Calendar calendar = Calendar.getInstance();
+                SharedPreferences pref = getSharedPreferences("AlarmClock", 0);
+                SharedPreferences.Editor ed = pref.edit();
+                ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
+                ed.putInt("minute", calendar.get(Calendar.MINUTE));
+                ed.apply();
 
                 finish();
                 break;

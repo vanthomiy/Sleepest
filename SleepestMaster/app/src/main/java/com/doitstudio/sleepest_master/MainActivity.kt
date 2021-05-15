@@ -74,9 +74,9 @@ class MainActivity : AppCompatActivity() {
             Last workmanagerCalc call: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
             
             """.trimIndent()
-        pref = getSharedPreferences("SleepCalc1", 0)
+        pref = getSharedPreferences("AlarmClock", 0)
         val textCalc1 = """
-            Calc1: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
+            Alarmclock: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
             
             """.trimIndent()
         pref = getSharedPreferences("SleepCalc2", 0)
