@@ -65,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="20dp"
-                    android:text="@{sleepViewModel.sleepDurationValue}"
+                    android:text="@{sleepViewModel.sleepDurationString}"
                     android:textSize="20sp" />
 
                 <SeekBar
@@ -73,7 +73,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:onProgressChanged="@{sleepViewModel.onSleepDurationChanged}"
+                    android:progress="@={sleepViewModel.sleepDurationValue}"
+                    android:onProgressChanged="@{sleepViewModel::onSleepDurationChanged}"
+                    android:max="40"
+                    android:min="0"
                     android:layout_marginStart="10dp" />
 
 
@@ -102,7 +105,8 @@
                     android:background="@drawable/bg"
                     android:gravity="center_vertical"
                     android:textAlignment="center"
-                    android:checked="@{sleepViewModel.onTableValue}"
+                    android:checked="@={sleepViewModel.onTableValue}"
+                    android:onClick="@{sleepViewModel.onTableValueChanged}"
                     android:textOff="on table"
                     android:textOn="in bed"
                     tools:ignore="RtlCompat" />
@@ -123,7 +127,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="20dp"
-                    android:text="@{sleepViewModel.phoneUsageValue}"
+                    android:text="@{sleepViewModel.phoneUsageString}"
                     android:textSize="15sp" />
 
                 <SeekBar
@@ -132,8 +136,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="-18dp"
                     android:max="5"
-                    android:onProgressChanged="@{sleepViewModel.onPhoneUsageChanged}"
-                    android:progress="2"
+                    android:onProgressChanged="@{sleepViewModel::onPhoneUsageChanged}"
                     android:progressDrawable="@drawable/seekbar_style"
                     android:thumb="@drawable/custom_thumb" />
 
