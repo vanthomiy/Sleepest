@@ -9,7 +9,7 @@
             type="com.doitstudio.sleepest_master.ui.sleep.SleepViewModel" />
     </data>
 
-    <LinearLayout
+    <!--LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -129,17 +129,6 @@
                     android:layout_marginStart="20dp"
                     android:text="@{sleepViewModel.phoneUsageString}"
                     android:textSize="15sp" />
-
-                <!--SeekBar
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="-18dp"
-                    android:max="5"
-                    android:onProgressChanged="@{sleepViewModel::onPhoneUsageChanged}"
-                    android:progressDrawable="@drawable/seekbar_style"
-                    android:thumb="@drawable/custom_thumb" /!-->
-
                 <SeekBar
                     style="@style/Widget.AppCompat.SeekBar.Discrete"
                     android:layout_width="match_parent"
@@ -166,7 +155,105 @@
 
         </LinearLayout>
 
+    </LinearLayout-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/blueviolet"
+            android:onClick="@{sleepViewModel.onEditSleepSettings}"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your Sleep-Times"
+                android:layout_margin="10dp"
+                android:textColor="@color/white"/>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="45dp"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="to"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:textColor="@color/white"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="10dp"
+                    android:width="150dp"
+                    android:background="@drawable/bg"
+                    android:text="@{sleepViewModel.sleepStartValue}" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:width="150dp"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/bg"
+                    android:text="@{sleepViewModel.sleepEndValue}" />
+            </>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Desired duration of sleep"
+                android:layout_margin="10dp"
+                android:textColor="@color/white"/>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <SeekBar
+                    android:id="@+id/seekBar"
+                    android:layout_width="217dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:max="40"
+                    android:onProgressChanged="@{sleepViewModel.onSleepDurationChanged}"
+                    android:progress="@={sleepViewModel.sleepDurationValue}" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:width="125dp"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/bg"
+                    android:text="@{sleepViewModel.sleepDurationString}" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:onClick="@{sleepViewModel.onHideSleepSettings}">
+            // do some shitt here
+
+        </androidx.core.widget.NestedScrollView>
+
+
     </LinearLayout>
+
 
 
 </layout>

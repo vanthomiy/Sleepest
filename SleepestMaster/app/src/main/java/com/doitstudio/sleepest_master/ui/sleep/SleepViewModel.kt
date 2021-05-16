@@ -52,56 +52,10 @@ class SleepViewModel(application:Application) : AndroidViewModel (application) {
         var minute = (count % 4) * 15
         return LocalTime.of(hour, minute)
     }
-
     private fun getProgressFromSleepCount(time:LocalTime) : Int{
         var count = (time.hour-2) * 4
         count += time.minute / 15
         return count
-    }
-
-
-    val phoneUsageString = ObservableField("Less")
-    val phoneUsageValue = ObservableField(1)
-
-    fun onPhoneUsageChanged(seekBar: SeekBar, progresValue: Int, fromUser: Boolean) {
-
-        if(progresValue < 1){
-            phoneUsageValue.set(1)
-            return
-        }
-        else if(progresValue > 4){
-            phoneUsageValue.set(4)
-            return
-        }
-
-
-        phoneUsageString.set(when(progresValue){
-            1 ->  "very less "
-            2 ->  "less     "
-            3 ->  "often    "
-            else -> "very often"
-        })
-
-        val mobileUse = when(progresValue){
-            1 ->  MobileUseFrequency.VERYLESS
-            2 ->  MobileUseFrequency.LESS
-            3 ->  MobileUseFrequency.OFTEN
-            else -> MobileUseFrequency.VERYOFTEN
-        }
-
-        scope.launch {
-            dataStoreRepository.updateUserMobileFequency(mobileUse)
-        }
-
-    }
-
-
-    val onTableValue = ObservableField<Boolean>(false)
-
-    fun onTableValueChanged(view: View) {
-        scope.launch {
-            dataStoreRepository.updateStandardMobilePosition(if(onTableValue.get()==true) MobilePosition.ONTABLE else MobilePosition.INBED)
-        }
     }
 
     val sleepStartValue = ObservableField("07:30")
@@ -163,16 +117,6 @@ class SleepViewModel(application:Application) : AndroidViewModel (application) {
             sleepDurationValue.set(getProgressFromSleepCount(time))
             sleepDurationString.set(time.toString())
 
-            phoneUsageString.set(when(sleepParams.mobileUseFrequency){
-                1 ->  "very less "
-                2 ->  "less     "
-                3 ->  "often    "
-                else -> "very often"
-            })
-            phoneUsageValue.set(sleepParams.mobileUseFrequency)
-
-            onTableValue.set(sleepParams.standardMobilePosition == 1)
-
             sleepStartTime = LocalTime.ofSecondOfDay(sleepParams.sleepTimeStart.toLong())
             sleepEndTime = LocalTime.ofSecondOfDay(sleepParams.sleepTimeEnd.toLong())
 
@@ -182,4 +126,20 @@ class SleepViewModel(application:Application) : AndroidViewModel (application) {
 
         }
     }
+
+    /**
+     * Shows all controls for editing the sleep settings
+     */
+    fun onEditSleepSettings(view:View){
+
+    }
+
+    /**
+     * Hides the controls for the sleep settings. Only shows the summary of the settings
+     */
+    fun onHideSleepSettings(view: View){
+
+    }
+
+
 }
