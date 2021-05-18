@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 class AlarmSettings : FragmentActivity() {
 
-    private val repository by lazy { (this.applicationContext as MainApplication).dbRepository }
+    private val repository by lazy { (this.applicationContext as MainApplication).dataBaseRepository }
     private val scope: CoroutineScope = MainScope()
 
     lateinit var btnAddAlarmEntity: Button

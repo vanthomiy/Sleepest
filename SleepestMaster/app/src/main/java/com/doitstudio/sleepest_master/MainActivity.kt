@@ -5,20 +5,21 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.widget.Toast
 import android.provider.Settings
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.asLiveData
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
-import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationStoreRepository
+import com.doitstudio.sleepest_master.storage.DataStoreRepository
+import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.ui.profile.ProfileFragment
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
 import com.doitstudio.sleepest_master.ui.sleep.SleepFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
 
 
 class MainActivity : AppCompatActivity() {
@@ -26,47 +27,115 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var bottomBar: BottomNavigationView
 
-    private val scope: CoroutineScope = MainScope()
-    private val sleepCalculationStoreRepository by lazy {  SleepCalculationStoreRepository.getRepo(applicationContext)}
+    // region Databases
 
+    private val scope: CoroutineScope = MainScope()
+
+    private val dataBaseRepository: DatabaseRepository by lazy {
+        (applicationContext as MainApplication).dataBaseRepository
+    }
+
+    private val dataStoreRepository: DataStoreRepository by lazy {
+        (applicationContext as MainApplication).dataStoreRepository
+    }
+
+    val activeAlarmsLiveData by lazy {  dataBaseRepository.activeAlarmsFlow().asLiveData() }
+
+    // endregion
+
+    // region fragments
+
+    lateinit var alarmsFragment : AlarmsFragment
+    lateinit var historyFragment : HistoryFragment
+    lateinit var sleepFragment : SleepFragment
+    lateinit var profileFragment : ProfileFragment
+
+    fun setupFragments(){
+
+        bottomBar = binding.bottomBar
+
+        alarmsFragment = AlarmsFragment()
+        historyFragment = HistoryFragment()
+        sleepFragment = SleepFragment()
+        profileFragment = ProfileFragment()
+
+        supportFragmentManager.beginTransaction().add(R.id.navigationFrame, alarmsFragment).commit()
+
+        bottomBar.setOnNavigationItemSelectedListener { item->
+
+            val ft = supportFragmentManager.beginTransaction()
+
+            when (item.itemId) {
+                R.id.home -> {
+                    if(alarmsFragment.isAdded){
+                        ft.show(alarmsFragment)
+                    }else{
+                        ft.add(R.id.navigationFrame,alarmsFragment)
+                    }
+                }
+                R.id.history -> {
+                    if(historyFragment.isAdded){
+                        ft.show(historyFragment)
+                    }else{
+                        ft.add(R.id.navigationFrame,historyFragment)
+                    }                }
+                R.id.sleep -> {
+                    if(sleepFragment.isAdded){
+                        ft.show(sleepFragment)
+                    }else{
+                        ft.add(R.id.navigationFrame,sleepFragment)
+                    }                }
+                else -> {
+                    if(profileFragment.isAdded){
+                        ft.show(profileFragment)
+                    }else{
+                        ft.add(R.id.navigationFrame,profileFragment)
+                    }
+                }
+            }
+
+            // Hide fragment B
+            if (item.title != "home" && alarmsFragment.isAdded) { ft.hide(alarmsFragment) }
+            if (item.title != "history" && historyFragment.isAdded) { ft.hide(historyFragment) }
+            if (item.title != "sleep" && sleepFragment.isAdded) { ft.hide(sleepFragment) }
+            if (item.title != "profile" && profileFragment.isAdded) { ft.hide(profileFragment) }
+
+            ft.commit()
+
+            true
+        }
+
+    }
+
+    // endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        supportFragmentManager.beginTransaction().replace(R.id.navigationFrame,AlarmsFragment()).commit()
+        setupFragments()
 
-        bottomBar = binding.bottomBar
-
-        bottomBar.setOnNavigationItemSelectedListener { item->
-
-            var fragment: Fragment
-            when (item.itemId) {
-                R.id.home -> {
-                    fragment = AlarmsFragment()
-                    true
-                }
-                R.id.history -> {
-                    fragment = HisotryFragment()
-                    true
-                }
-                R.id.sleep -> {
-                    fragment = SleepFragment()
-                    true
-                }
-                else -> {
-                    fragment = ProfileFragment()
-                    true
-                }
+        activeAlarmsLiveData.observe(this){ list ->
+            // check the list if empty or not
+            if(list.isEmpty())
+            {
+                // Not empty..
+                // We need to check if foreground is active or not... if not active we have to start it from here
+                // if already inside sleeptime
             }
+            else{
+                // Is empty..
+                // We need to check if foreground is active or not... if active we have to stop it from here
+                // if already inside sleeptime
 
-            supportFragmentManager.beginTransaction().replace(R.id.navigationFrame,fragment).commit()
-
-            true
+            }
         }
+
 
         // check permission
         if (!activityRecognitionPermissionApproved()) {
@@ -83,9 +152,9 @@ class MainActivity : AppCompatActivity() {
 
             // If not, form up an Intent to launch the permission request
             val intent = Intent(
-                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse(
                     "package:$packageName"
-            )
+                )
             )
 
             // Launch Intent, with the supplied request code
@@ -106,9 +175,9 @@ class MainActivity : AppCompatActivity() {
 
             } else {
                 Toast.makeText(
-                        this,
-                        "Sorry. Can't draw overlays without permission...",
-                        Toast.LENGTH_SHORT
+                    this,
+                    "Sorry. Can't draw overlays without permission...",
+                    Toast.LENGTH_SHORT
                 ).show()
             }
         }
@@ -121,22 +190,22 @@ class MainActivity : AppCompatActivity() {
         // don't need to check if this is on a device before runtime permissions, that is, a device
         // prior to 29 / Q.
         return PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACTIVITY_RECOGNITION
+            this,
+            Manifest.permission.ACTIVITY_RECOGNITION
         )
     }
 
     private val requestPermissionLauncher: ActivityResultLauncher<String> =
-            registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-                if (!isGranted) {
-                    //mainViewModel.updatePermissionActive(false)
-                    // Permission denied on Android platform that supports runtime permissions.
-                    //displayPermissionSettingsSnackBar()
-                } else {
-                    //mainViewModel.updatePermissionActive(true)
-                    // Permission was granted (either by approval or Android version below Q).
-                }
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (!isGranted) {
+                //mainViewModel.updatePermissionActive(false)
+                // Permission denied on Android platform that supports runtime permissions.
+                //displayPermissionSettingsSnackBar()
+            } else {
+                //mainViewModel.updatePermissionActive(true)
+                // Permission was granted (either by approval or Android version below Q).
             }
+        }
 
 }
 

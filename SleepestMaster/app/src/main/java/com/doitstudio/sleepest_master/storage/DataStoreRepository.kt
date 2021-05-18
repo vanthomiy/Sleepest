@@ -9,11 +9,6 @@ import com.doitstudio.sleepest_master.SleepApiData
 import com.doitstudio.sleepest_master.SleepParameters
 import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.MobileUseFrequency
-import com.doitstudio.sleepest_master.sleepcalculation.datastore.LIVE_USER_ACTIVITY_DATA_NAME
-import com.doitstudio.sleepest_master.sleepcalculation.datastore.LiveUserSleepActivityStatus
-import com.doitstudio.sleepest_master.sleepcalculation.datastore.SLEEP_API_DATA_NAME
-import com.doitstudio.sleepest_master.sleepcalculation.datastore.SleepApiDataStatus
-
 import com.doitstudio.sleepest_master.storage.datastorage.*
 import kotlinx.coroutines.flow.Flow
 
@@ -111,4 +106,5 @@ class DataStoreRepository(context: Context) {
     suspend fun updateUserSleepTime(sleepTime:Int) =
         liveUserSleepActivityStatus.updateUserSleepTime(sleepTime)
     //endregion
+
 }

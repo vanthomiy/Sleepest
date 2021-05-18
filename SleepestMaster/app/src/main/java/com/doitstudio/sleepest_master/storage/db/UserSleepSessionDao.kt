@@ -1,4 +1,4 @@
-package com.doitstudio.sleepest_master.sleepcalculation.db
+package com.doitstudio.sleepest_master.storage.db
 
 import androidx.room.Dao
 import androidx.room.Delete

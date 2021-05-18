@@ -1,4 +1,4 @@
-package com.doitstudio.sleepest_master.sleepcalculation.model.algorithm
+package com.doitstudio.sleepest_master.sleepcalculation.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

@@ -5,9 +5,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.doitstudio.sleepest_master.MainApplication
-import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationDbRepository
-import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationStoreRepository
-import com.doitstudio.sleepest_master.storage.DbRepository
+import com.doitstudio.sleepest_master.storage.DataStoreRepository
+import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.google.android.gms.location.SleepClassifyEvent
 import kotlinx.coroutines.CoroutineScope
@@ -23,8 +22,8 @@ class SleepReceiver : BroadcastReceiver() {
     private val scope: CoroutineScope = MainScope()
 
     override fun onReceive(context: Context, intent: Intent) {
-        val repository: SleepCalculationDbRepository = (context.applicationContext as MainApplication).sleepCalculationDbRepository
-        val sleepCalculationStoreRepository: SleepCalculationStoreRepository = (context.applicationContext as MainApplication).sleepCalculationRepository
+        val repository = (context.applicationContext as MainApplication).dataBaseRepository
+        val sleepCalculationStoreRepository = (context.applicationContext as MainApplication).dataStoreRepository
 
        if (SleepClassifyEvent.hasEvents(intent)) {
             val sleepClassifyEvents: List<SleepClassifyEvent> =
@@ -34,8 +33,8 @@ class SleepReceiver : BroadcastReceiver() {
     }
 
     private fun addSleepClassifyEventsToDatabase(
-        repository: SleepCalculationDbRepository,
-        sleepCalculationStoreRepository: SleepCalculationStoreRepository,
+        repository: DatabaseRepository,
+        sleepCalculationStoreRepository: DataStoreRepository,
         sleepClassifyEvents: List<SleepClassifyEvent>
     ) {
         if (sleepClassifyEvents.isNotEmpty()) {

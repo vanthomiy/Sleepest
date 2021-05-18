@@ -5,17 +5,16 @@ import android.os.Bundle
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.model.data.Actions
-import com.doitstudio.sleepest_master.storage.DbRepository
+import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class ForegroundActivity : Activity() {
 
     private val scope: CoroutineScope = MainScope()
-    private val dbRepository: DbRepository by lazy {
-        (applicationContext as MainApplication).dbRepository
+    private val databaseRepository: DatabaseRepository by lazy {
+        (applicationContext as MainApplication).dataBaseRepository
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +33,7 @@ class ForegroundActivity : Activity() {
                 scope.launch {
 
                     // next alarm or null
-                    if(dbRepository.isAlarmActiv()){
+                    if(databaseRepository.isAlarmActiv()){
                         // start foreground if not null
                         ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
                     }else{

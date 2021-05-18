@@ -1,4 +1,4 @@
-package com.doitstudio.sleepest_master.sleepcalculation.model.userimprovement
+package com.doitstudio.sleepest_master.sleepcalculation.model
 
 import com.doitstudio.sleepest_master.model.data.SleepTimeAdjustment
 
