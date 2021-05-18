@@ -12,6 +12,7 @@ import tensorboard
 from tfliteconverter import *
 import sklearn
 import pathlib
+import tfrecorder
 
 
 def loadDataFrame(csv_file):
@@ -166,6 +167,27 @@ def log_confusion_matrix(model,test, path,epoch, class_names):
     with file_writer_cm.as_default():
         tf.summary.image("Confusion Matrix", cm_image, step=epoch)
 
+def saveTfRecord(csv_file, names):
+  df = pd.read_csv(csv_file, names)
+  df.tensorflow.to_tfr(output_dir='/tfrecords/'+name)
+
+
+def buildTfRecord04(time, length):
+
+  csv_file = 'Datasets/sleep04'+ str(time) +'.csv' 
+
+  # Weight the sleep 2 times more then the awake !
+  class_weights = {
+      0: 1,
+      1: 2,
+  }
+  class_names =['awake', 'sleeping']
+
+  headers = createHeaders(length)
+  saveTfRecord(csv_file, headers)
+  return loss, accuracy
+
+
 def start04(time, length):
 
   csv_file = 'Datasets/sleep04'+ str(time) +'.csv' 
@@ -201,6 +223,9 @@ def start12(time, length):
   model = createModel(2,encoded_features, all_inputs)
   loss, accuracy = trainAndSaveModel(model, val_ds,train_ds, test_ds, 'sleep12'+ str(time), class_weights, class_names, test)
   return loss, accuracy
+
+
+
 
 def startWakeUpLite(time, length):
 
