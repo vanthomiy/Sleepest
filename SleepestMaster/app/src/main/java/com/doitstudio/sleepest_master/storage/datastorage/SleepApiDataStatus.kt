@@ -1,4 +1,4 @@
-package com.doitstudio.sleepest_master.sleepcalculation.datastore
+package com.doitstudio.sleepest_master.storage.datastorage
 
 import android.util.Log
 import androidx.datastore.core.DataStore

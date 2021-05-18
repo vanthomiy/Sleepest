@@ -7,6 +7,7 @@ import android.widget.SeekBar
 import androidx.databinding.BindingAdapter
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
+import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.databinding.FragmentSleepBinding
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.github.mikephil.charting.charts.LineChart
@@ -24,9 +25,11 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
     //private lateinit var binding: FragmentSleepBinding
 
-    private val context by lazy{ getApplication<Application>().applicationContext }
     private val scope: CoroutineScope = MainScope()
-    private val dataStoreRepository by lazy {  DataStoreRepository.getRepo(context)}
+    private val context by lazy{ getApplication<Application>().applicationContext }
+    private val dataStoreRepository: DataStoreRepository by lazy {
+        (context as MainApplication).dataStoreRepository
+    }
 
     val sleepDurationString = ObservableField("7h")
     val sleepDurationValue = ObservableField<Int>(7)

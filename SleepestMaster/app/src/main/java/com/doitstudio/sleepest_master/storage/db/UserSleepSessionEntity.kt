@@ -1,12 +1,12 @@
-package com.doitstudio.sleepest_master.sleepcalculation.db
+package com.doitstudio.sleepest_master.storage.db
 
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.doitstudio.sleepest_master.model.data.MobilePosition
-import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepTimes
-import com.doitstudio.sleepest_master.sleepcalculation.model.userimprovement.UserCalculationRating
-import com.doitstudio.sleepest_master.sleepcalculation.model.userimprovement.UserSleepRating
+import com.doitstudio.sleepest_master.sleepcalculation.model.SleepTimes
+import com.doitstudio.sleepest_master.sleepcalculation.model.UserCalculationRating
+import com.doitstudio.sleepest_master.sleepcalculation.model.UserSleepRating
 import java.time.*
 
 

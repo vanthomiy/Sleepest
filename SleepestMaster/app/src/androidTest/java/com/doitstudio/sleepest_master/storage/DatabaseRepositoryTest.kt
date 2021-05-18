@@ -1,10 +1,6 @@
 package com.doitstudio.sleepest_master.storage
 
-import android.app.Instrumentation
 import android.content.Context
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.asLiveData
 import androidx.test.platform.app.InstrumentationRegistry
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity
@@ -18,12 +14,12 @@ import org.junit.Test
 import java.time.DayOfWeek
 import java.time.LocalDate
 
-class DbRepositoryTest {
+class DatabaseRepositoryTest {
 
     private lateinit var context: Context
-    private lateinit var sleepDbRepository: DbRepository
+    private lateinit var sleepDatabaseRepository: DatabaseRepository
 
-    private val alarmLivedata by lazy { sleepDbRepository.activeAlarmsFlow().asLiveData() }
+    private val alarmLivedata by lazy { sleepDatabaseRepository.activeAlarmsFlow().asLiveData() }
 
     private val dbDatabase by lazy {
         SleepDatabase.getDatabase(context)
@@ -35,7 +31,8 @@ class DbRepositoryTest {
         context = InstrumentationRegistry.getInstrumentation().targetContext
 
 
-        sleepDbRepository = DbRepository.getRepo(
+        sleepDatabaseRepository = DatabaseRepository.getRepo(
+            dbDatabase.sleepApiRawDataDao(),
             dbDatabase.sleepDataDao(),
             dbDatabase.userSleepSessionDao(),
             dbDatabase.alarmDao()
@@ -51,25 +48,25 @@ class DbRepositoryTest {
     fun alarmTimeChanged() = runBlocking {
 
         // remove all alarms
-        sleepDbRepository.deleteAllAlarms()
+        sleepDatabaseRepository.deleteAllAlarms()
 
         // call the get all alarms
-        var alarms = sleepDbRepository.alarmFlow.first()
+        var alarms = sleepDatabaseRepository.alarmFlow.first()
         assertThat(alarms.count(), CoreMatchers.equalTo(0))
 
         // call the get active alarms ( in time )
-        alarms = sleepDbRepository.activeAlarmsFlow().first()
+        alarms = sleepDatabaseRepository.activeAlarmsFlow().first()
         assertThat(alarms.count(), CoreMatchers.equalTo(0))
 
         // insert one with id 1 and false
-        sleepDbRepository.insertAlarm(AlarmEntity(1, false))
+        sleepDatabaseRepository.insertAlarm(AlarmEntity(1, false))
 
         // call the get all alarms
-        alarms = sleepDbRepository.alarmFlow.first()
+        alarms = sleepDatabaseRepository.alarmFlow.first()
         assertThat(alarms.count(), CoreMatchers.equalTo(1))
 
         // call the get active alarms ( in time )
-        alarms = sleepDbRepository.activeAlarmsFlow().first()
+        alarms = sleepDatabaseRepository.activeAlarmsFlow().first()
         assertThat(alarms.count(), CoreMatchers.equalTo(0))
 
         // insert one with id 2 and active yesterday
@@ -78,7 +75,7 @@ class DbRepositoryTest {
         val dayofweektoday = LocalDate.now().dayOfWeek
         val dayofweektomorrow = LocalDate.now().plusDays(1).dayOfWeek
 
-        sleepDbRepository.insertAlarm(
+        sleepDatabaseRepository.insertAlarm(
             AlarmEntity(
                 2,
                 true,
@@ -87,15 +84,15 @@ class DbRepositoryTest {
         )
 
         // call the get all alarms
-        alarms = sleepDbRepository.alarmFlow.first()
+        alarms = sleepDatabaseRepository.alarmFlow.first()
         assertThat(alarms.count(), CoreMatchers.equalTo(2))
 
         // call the get active alarms ( in time )
-        alarms = sleepDbRepository.activeAlarmsFlow().first()
+        alarms = sleepDatabaseRepository.activeAlarmsFlow().first()
         assertThat(alarms.count(), CoreMatchers.equalTo(0))
 
 
-        sleepDbRepository.insertAlarm(
+        sleepDatabaseRepository.insertAlarm(
             AlarmEntity(
                 3,
                 true,
@@ -104,11 +101,11 @@ class DbRepositoryTest {
         )
 
         // call the get all alarms
-        alarms = sleepDbRepository.alarmFlow.first()
+        alarms = sleepDatabaseRepository.alarmFlow.first()
         assertThat(alarms.count(), CoreMatchers.equalTo(3))
 
         // call the get active alarms ( in time )
-        alarms = sleepDbRepository.activeAlarmsFlow().first()
+        alarms = sleepDatabaseRepository.activeAlarmsFlow().first()
         assertThat(alarms.count(), CoreMatchers.equalTo(1))
 
     }
