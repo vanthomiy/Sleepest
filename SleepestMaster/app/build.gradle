@@ -203,11 +203,16 @@ dependencies {
 
     // Rangebar - AlarmSettings
     implementation 'com.github.furkanaskin:ClickablePieChart:1.0.8'
+
+    // Graphs etc.
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
 }
 
 repositories {
     // Rangebar - AlarmSettings
     maven { url 'https://jitpack.io' }
+
 }
 
 protobuf {
