@@ -10,6 +10,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.PowerManager;
 import android.widget.Toast;
 
@@ -41,46 +42,37 @@ public class AlarmClockReceiver extends BroadcastReceiver {
         this.context = context;
         Times times = new Times();
 
-        int intentKey = intent.getIntExtra(context.getString(R.string.alarm_clock_intent_key), 0);
-
-        switch (intentKey) {
+        switch (intent.getIntExtra(context.getString(R.string.alarm_clock_intent_key), 0)) {
             case 0: break;
             case 1: //Init Alarmclock
                 PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
                 if (powerManager.isInteractive()) {
                     showFullscreenNotification();
-
-                    Calendar calendarAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK), times.getStartForegroundHour(), times.getStartForegroundMinute());
-                    AlarmReceiver.startAlarmManager(calendarAlarm.get(Calendar.DAY_OF_WEEK), calendarAlarm.get(Calendar.HOUR_OF_DAY), calendarAlarm.get(Calendar.MINUTE), context, 1);
-
-                    Intent i2 = new Intent(context, ForegroundActivity.class);
-                    i2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    i2.putExtra("intent", 2);
-                    context.startActivity(i2);
                 } else {
                     showNotificationOnLockScreen();
                 }
                 break;
             case 2: //Stop button of ScreenOn notification
                 AlarmClockAudio.getInstance().stopAlarm(false);
+
+                Calendar calendarAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK), times.getStartForegroundHour(), times.getStartForegroundMinute());
+                AlarmReceiver.startAlarmManager(calendarAlarm.get(Calendar.DAY_OF_WEEK), calendarAlarm.get(Calendar.HOUR_OF_DAY), calendarAlarm.get(Calendar.MINUTE), context, 1);
+
+                Intent stopAlarmIntent = new Intent(context, ForegroundActivity.class);
+                stopAlarmIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                stopAlarmIntent.putExtra("intent", 2);
+                context.startActivity(stopAlarmIntent);
+
+                Calendar calendar = Calendar.getInstance();
+                SharedPreferences pref = context.getSharedPreferences("AlarmClock", 0);
+                SharedPreferences.Editor ed = pref.edit();
+                ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
+                ed.putInt("minute", calendar.get(Calendar.MINUTE));
+                ed.apply();
+
                 break;
             case 3: //Snooze button of ScreenOn notification
                 AlarmClockAudio.getInstance().stopAlarm(true);
-                break;
-            case 4:
-                PowerManager powerManager1 = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-                if (powerManager1.isInteractive()) {
-                    showFullscreenNotification();
-                    Calendar calendarAlarm1 = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK), times.getStartForegroundHour(), times.getStartForegroundMinute());
-                    AlarmReceiver.startAlarmManager(calendarAlarm1.get(Calendar.DAY_OF_WEEK), calendarAlarm1.get(Calendar.HOUR_OF_DAY), calendarAlarm1.get(Calendar.MINUTE), context, 1);
-
-                    Intent i2_2 = new Intent(context, ForegroundActivity.class);
-                    i2_2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    i2_2.putExtra("intent", 2);
-                    context.startActivity(i2_2);
-                } else {
-                    showNotificationOnLockScreen();
-                }
                 break;
         }
     }

@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.KeyguardManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -24,6 +25,7 @@ import java.util.Calendar;
 public class LockScreenAlarmActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button btnTurnAlarmOffLockScreen, btnSnoozeAlarmLockScreen;
+    Times times;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,21 +46,19 @@ public class LockScreenAlarmActivity extends AppCompatActivity implements View.O
         //Dismiss Keyguard for this Activity
         KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
         keyguardManager.requestDismissKeyguard(LockScreenAlarmActivity.this, null);
+
+        times = new Times();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        Times times = new Times();
+
 
         AlarmClockAudio.getInstance().init(getApplicationContext());
         AlarmClockAudio.getInstance().startAlarm();
 
-        ForegroundService.startOrStopForegroundService(Actions.STOP, getApplicationContext());
-
-        Calendar calendarAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK), times.getStartForegroundHour(), times.getStartForegroundMinute());
-        AlarmReceiver.startAlarmManager(calendarAlarm.get(Calendar.DAY_OF_WEEK), calendarAlarm.get(Calendar.HOUR_OF_DAY), calendarAlarm.get(Calendar.MINUTE), getApplicationContext(), 1);
 
         new CountDownTimer(60000, 1000) {
 
@@ -87,6 +87,17 @@ public class LockScreenAlarmActivity extends AppCompatActivity implements View.O
         switch(v.getId()) {
             case R.id.btnTurnAlarmOffLockScreen:
                 AlarmClockAudio.getInstance().stopAlarm(false);
+                ForegroundService.startOrStopForegroundService(Actions.STOP, getApplicationContext());
+                Calendar calendarAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK), times.getStartForegroundHour(), times.getStartForegroundMinute());
+                AlarmReceiver.startAlarmManager(calendarAlarm.get(Calendar.DAY_OF_WEEK), calendarAlarm.get(Calendar.HOUR_OF_DAY), calendarAlarm.get(Calendar.MINUTE), getApplicationContext(), 1);
+
+                Calendar calendar = Calendar.getInstance();
+                SharedPreferences pref = getSharedPreferences("AlarmClock", 0);
+                SharedPreferences.Editor ed = pref.edit();
+                ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
+                ed.putInt("minute", calendar.get(Calendar.MINUTE));
+                ed.apply();
+
                 finish();
                 break;
             case R.id.btnSnoozeAlarmLockScreen:

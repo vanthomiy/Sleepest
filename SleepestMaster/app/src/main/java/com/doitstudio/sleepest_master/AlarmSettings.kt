@@ -46,7 +46,7 @@ class AlarmSettings : FragmentActivity() {
             for (i in alarmList.indices) {
                 usedIds.add(alarmList[i].id)
                 allAlarms.add(alarmList[i])
-                addAlarmEntity(context, i)
+                addAlarmEntity(context, alarmList[i].id)
             }
         }
     }

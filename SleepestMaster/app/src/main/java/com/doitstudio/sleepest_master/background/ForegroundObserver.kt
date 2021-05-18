@@ -18,6 +18,8 @@ class ForegroundObserver(private val fs:ForegroundService) {
         (fs.applicationContext as MainApplication).dbRepository
     }
     private val alarmLivedata by lazy{dbRepository.activeAlarmsFlow().asLiveData()}
+    private val userSleepTime by lazy{sleepCalculationStoreRepository.sleepApiDataFlow.asLiveData()}
+    private val liveUserSleepActivityData by lazy{sleepCalculationStoreRepository.liveUserSleepActivityFlow.asLiveData()}
 
     fun resetSleepTime(){
         scope.launch {
@@ -26,13 +28,26 @@ class ForegroundObserver(private val fs:ForegroundService) {
         }
     }
 
+    fun getNextAlarm() : AlarmEntity? = runBlocking {
+        return@runBlocking dbRepository.getNextActiveAlarm()
+    }
+
     init {
         alarmLivedata.observe(fs) {
 
             val nextAlarm = it.minByOrNull { x->x.actualWakeup }
 
             if(nextAlarm != null)
-                fs.OnAlarmChanged(nextAlarm.actualWakeup)
+                fs.OnAlarmChanged(nextAlarm)
+        }
+
+        userSleepTime.observe(fs){
+                ust->
+            fs.OnSleepApiDataChanged(ust)
+        }
+
+        liveUserSleepActivityData.observe(fs){la->
+            fs.OnSleepTimeChanged(la)
         }
     }
 }

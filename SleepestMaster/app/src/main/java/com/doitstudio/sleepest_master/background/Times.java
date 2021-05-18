@@ -15,7 +15,7 @@ public class Times {
     private final int lastWakeupHour = 9;
     private final int lastWakeupMinute = 0;
 
-    private final int firstCalculationHour = 6;
+    private final int firstCalculationHour = 5;
     private final int firstCalculationMinute = 30;
 
     private final int workmanagerDuration = 16; //LiveSleepData in minutes
@@ -68,5 +68,9 @@ public class Times {
 
     public int getFirstWakeupInSeconds() {
         return firstWakeupInSeconds;
+    }
+
+    public int getStartForegroundInSeconds() {
+        return (startForegroundHour * 3600 + startForegroundMinute * 60);
     }
 }
