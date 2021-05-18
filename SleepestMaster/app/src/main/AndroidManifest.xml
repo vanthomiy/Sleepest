@@ -18,8 +18,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SleepestMaster">
+        <activity
+            android:name=".NavigationActivity"
+            android:label="@string/title_activity_navigation">
 
-        <activity android:name=".background.ForegroundActivity"
+        </activity>
+        <activity
+            android:name=".background.ForegroundActivity"
             android:excludeFromRecents="true"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
@@ -73,6 +78,10 @@
             android:name=".sleepapi.SleepReceiver"
             android:enabled="true"
             android:exported="true" />
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

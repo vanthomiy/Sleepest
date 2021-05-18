@@ -61,11 +61,20 @@ android {
     buildFeatures {
         viewBinding true
         mlModelBinding true
+        dataBinding true
     }
+}
 
+
+configurations.all {
+    resolutionStrategy.force "org.antlr:antlr4-runtime:4.7.1"
+    resolutionStrategy.force "org.antlr:antlr4-tool:4.7.1"
 }
 
 dependencies {
+
+    def room_version = "2.3.0"
+
     //implementation 'com.google.firebase:firebase-ml-model-interpreter:22.0.4'
     implementation 'org.tensorflow:tensorflow-lite:2.4.0@aar'
     implementation 'org.tensorflow:tensorflow-lite-select-tf-ops:0.0.0-nightly'
@@ -73,6 +82,12 @@ dependencies {
     implementation 'org.tensorflow:tensorflow-lite-support:0.1.0-rc1'
     implementation 'org.tensorflow:tensorflow-lite-metadata:0.1.0-rc1'
     implementation 'org.tensorflow:tensorflow-lite-gpu:2.2.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
+    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'androidx.preference:preference-ktx:1.1.1'
 
     testImplementation "com.google.truth:truth:1.1.2"
     // Required -- JUnit 4 framework
@@ -105,11 +120,14 @@ dependencies {
     implementation 'androidx.activity:activity-ktx:1.2.0-rc01'
 
     // Room components
-    implementation "androidx.room:room-ktx:2.2.6"
-    implementation 'androidx.room:room-runtime:2.2.6'
-    compileOnly 'com.google.android.wearable:wearable:2.8.1'
-    kapt "androidx.room:room-compiler:2.2.6"
-    androidTestImplementation "androidx.room:room-testing:2.2.6"
+    implementation "androidx.room:room-runtime:$room_version"
+    // To use Kotlin annotation processing tool (kapt)
+    kapt "androidx.room:room-compiler:$room_version"
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation "androidx.room:room-ktx:$room_version"
+
+    // optional - Test helpers
+    testImplementation "androidx.room:room-testing:$room_version"
 
     // DataStore components
     implementation "androidx.datastore:datastore-preferences:1.0.0-alpha06"
@@ -185,11 +203,16 @@ dependencies {
 
     // Rangebar - AlarmSettings
     implementation 'com.github.furkanaskin:ClickablePieChart:1.0.8'
+
+    // Graphs etc.
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
 }
 
 repositories {
     // Rangebar - AlarmSettings
     maven { url 'https://jitpack.io' }
+
 }
 
 protobuf {

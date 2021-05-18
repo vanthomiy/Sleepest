@@ -65,8 +65,6 @@ class SleepCalculationDbRepository(
      */
     fun getSleepApiRawDataFromDateLive(actualTime:LocalDateTime): Flow<List<SleepApiRawDataEntity>>
     {
-        //val actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(actualTimeInt.toLong()*1000), ZoneOffset.UTC)
-
         val startTime = if (actualTime.hour < 15)
             actualTime.toLocalDate().minusDays(1).atTime(15,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
         else actualTime.toLocalDate().atTime(15,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
