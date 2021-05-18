@@ -117,9 +117,9 @@ class DataStoreRepository(context: Context) {
     }
 
     val backgroundServiceFlow: Flow<BackgroundService> = backgroundServiceStatus.backgroundService
-    suspend fun updateIsActive(value:Boolean) =
+    suspend fun backgroundUpdateIsActive(value:Boolean) =
         backgroundServiceStatus.updateIsActive(value)
-    suspend fun updateShouldBeActive(value:Boolean) =
+    suspend fun backgroundUpdateShouldBeActive(value:Boolean) =
         backgroundServiceStatus.updateShouldBeActive(value)
 
 }

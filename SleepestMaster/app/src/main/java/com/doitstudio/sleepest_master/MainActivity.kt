@@ -137,10 +137,8 @@ class MainActivity : AppCompatActivity() {
                             ForegroundService.startOrStopForegroundService(Actions.STOP, applicationContext)
                         }
 
-                        dataStoreRepository.updateIsActive(false)
+                        dataStoreRepository.backgroundUpdateIsActive(false)
                     }
-
-
             }
             else{
                 // Is empty..
@@ -152,7 +150,7 @@ class MainActivity : AppCompatActivity() {
                         ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
                     }
 
-                    dataStoreRepository.updateIsActive(true)
+                    dataStoreRepository.backgroundUpdateIsActive(true)
                 }
             }
         }

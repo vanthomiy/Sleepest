@@ -6,17 +6,23 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.SleepDataFrequency
 import com.doitstudio.sleepest_master.model.data.SleepState
+import com.doitstudio.sleepest_master.sleepcalculation.ml.ModelInputAssignment
+import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
+import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataRealEntity
 import com.doitstudio.sleepest_master.storage.db.SleepDatabase
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.first
 import org.hamcrest.CoreMatchers
 import org.junit.Before
 import org.junit.Test
 import kotlinx.coroutines.runBlocking
+import java.io.BufferedReader
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
+import kotlin.random.Random
 
 class SleepCalculationHandlerTest
 {
@@ -25,6 +31,10 @@ class SleepCalculationHandlerTest
 
     private val sleepCalcDatabase by lazy {
         SleepDatabase.getDatabase(context)
+    }
+
+    private val sleepStoreRepository by lazy {
+        DataStoreRepository.getRepo(context)
     }
 
     @Before
@@ -37,6 +47,10 @@ class SleepCalculationHandlerTest
             sleepCalcDatabase.userSleepSessionDao(),
             sleepCalcDatabase.alarmDao()
         )
+
+
+
+
     }
 
     @Test
@@ -402,6 +416,66 @@ class SleepCalculationHandlerTest
     fun fullSleepCalculationTest() = runBlocking {
 
         // load all data
+        var path = "database/testdata/SleepValues.json"
+        var pathTrue = "database/testdata/SleepValuesTrue.json"
+
+        var gson = Gson()
+
+        val jsonFile = context
+            .assets
+            .open(path)
+            .bufferedReader()
+            .use(BufferedReader::readText)
+
+        val jsonFileTrue = context
+            .assets
+            .open(path)
+            .bufferedReader()
+            .use(BufferedReader::readText)
+
+        var data =  gson.fromJson(jsonFile, Array<SleepApiRawDataEntity>::class.java).asList()
+        var dataTrue =  gson.fromJson(jsonFileTrue, Array<SleepApiRawDataRealEntity>::class.java).asList()
+
+
+        // now we have all sleep data we want to go through all data and keep the data inside of the storage...
+        // we also take the real data and check if the calculated data is far away from the true data
+        // we check it for [LifeUserSleepActivity]
+
+        // assign each time new... to check if it is working also
+        var sleepCalculationHandler = SleepCalculationHandler.getHandler(context)
+
+        var lastTimestamp = 0
+        var holdTime = 15*60
+        data.forEach{
+
+            rawdata ->
+
+            // insert the sleep api data
+            sleepDbRepository.insertSleepApiRawData(rawdata)
+
+            val actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(lastTimestamp.toLong()*1000), ZoneOffset.UTC)
+
+            // only call it every 15 minutes or like so
+            if(lastTimestamp+holdTime < rawdata.timestampSeconds){
+
+                lastTimestamp = rawdata.timestampSeconds
+                // call the sleep calc handler...
+
+                sleepCalculationHandler.checkIsUserSleeping(actualTime)
+            }
+
+            if(actualTime.hour in 5..7){
+
+                sleepCalculationHandler.defineUserWakeup(actualTime)
+
+            }
+
+            hier weiter machen
+        }
+
+
+
+
 
     }
 }
