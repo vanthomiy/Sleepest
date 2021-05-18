@@ -134,6 +134,16 @@ class DbRepository(
         return list.minByOrNull { x-> x.wakeupEarly }
     }
 
+    /**
+     * Returns true or false wheter a alarm is active for the actual/next day or not
+     */
+    suspend fun isAlarmActiv() : Boolean{
+        val list = activeAlarmsFlow().first()
+        // get first alarm
+        return list.isNotEmpty()
+    }
+
+
     suspend fun insertAlarm(alarm: AlarmEntity) {
         alarmDao.insert(alarm)
     }

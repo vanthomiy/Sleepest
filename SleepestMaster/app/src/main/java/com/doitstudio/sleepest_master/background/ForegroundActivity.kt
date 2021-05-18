@@ -34,11 +34,11 @@ class ForegroundActivity : Activity() {
                 scope.launch {
 
                     // next alarm or null
-                    val alarm = dbRepository.getNextActiveAlarm()
-
-                    if(alarm != null){
+                    if(dbRepository.isAlarmActiv()){
                         // start foreground if not null
                         ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
+                    }else{
+                        // mach dein kak
                     }
                 }
             } else if (use == 2) {
