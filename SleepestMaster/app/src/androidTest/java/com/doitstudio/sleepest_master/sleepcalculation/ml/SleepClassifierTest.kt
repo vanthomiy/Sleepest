@@ -6,21 +6,12 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.doitstudio.sleepest_master.model.data.ModelProcess
 import com.doitstudio.sleepest_master.model.data.SleepDataFrequency
 import com.doitstudio.sleepest_master.model.data.SleepState
-import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationDbRepository
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
-import com.doitstudio.sleepest_master.sleepcalculation.db.SleepCalculationDatabase
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
-import com.google.gson.Gson
-import java.io.BufferedReader
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
-import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.equalTo
-import org.junit.Assert.*
 class SleepClassifierTest{
 
     // this is RoomDatabase

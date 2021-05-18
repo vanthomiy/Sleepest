@@ -27,7 +27,17 @@ enum class SleepState {
 enum class MobilePosition{
     INBED,
     ONTABLE,
-    UNIDENTIFIED
+    UNIDENTIFIED;
+
+    companion object {
+        fun getCount(type: Int): MobilePosition {
+            return when (type) {
+                0 -> INBED
+                1 -> ONTABLE
+                else -> UNIDENTIFIED // Avoiding dividing by zero
+            }
+        }
+    }
 }
 
 /**

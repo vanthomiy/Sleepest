@@ -3,12 +3,12 @@ package com.doitstudio.sleepest_master.sleepcalculation
 import org.junit.Assert.*
 import android.content.Context
 import androidx.test.platform.app.InstrumentationRegistry
-import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.SleepDataFrequency
 import com.doitstudio.sleepest_master.model.data.SleepState
-import com.doitstudio.sleepest_master.sleepcalculation.db.SleepCalculationDatabase
+import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
+import com.doitstudio.sleepest_master.storage.db.SleepDatabase
 import kotlinx.coroutines.flow.first
 import org.hamcrest.CoreMatchers
 import org.junit.Before
@@ -21,18 +21,21 @@ import java.time.ZoneOffset
 class SleepCalculationHandlerTest
 {
     private lateinit var context: Context
-    private lateinit var sleepDbRepository: SleepCalculationDbRepository
+    private lateinit var sleepDbRepository: DatabaseRepository
 
     private val sleepCalcDatabase by lazy {
-        SleepCalculationDatabase.getDatabase(context)
+        SleepDatabase.getDatabase(context)
     }
 
     @Before
     fun init(){
         context = InstrumentationRegistry.getInstrumentation().targetContext
 
-        sleepDbRepository = SleepCalculationDbRepository.getRepo(
-                sleepCalcDatabase.sleepApiRawDataDao()
+        sleepDbRepository = DatabaseRepository.getRepo(
+            sleepCalcDatabase.sleepApiRawDataDao(),
+            sleepCalcDatabase.sleepDataDao(),
+            sleepCalcDatabase.userSleepSessionDao(),
+            sleepCalcDatabase.alarmDao()
         )
     }
 
@@ -239,8 +242,7 @@ class SleepCalculationHandlerTest
         val sleepCalculationHandler = SleepCalculationHandler.getHandler(context)
 
         // get actual time
-        val now = LocalDateTime.now(ZoneOffset.UTC)
-        val actualTimeSeconds =  sleepCalculationHandler.localDateTimeToSeconds(now)
+        val actualTimeSeconds =  sleepCalculationHandler.getSecondsOfDay()
 
         var sleepList5 = mutableListOf<SleepApiRawDataEntity>()
         var sleepList30 = mutableListOf<SleepApiRawDataEntity>()
@@ -393,6 +395,13 @@ class SleepCalculationHandlerTest
 
         sleepState = sleepCalculationHandler.defineSleepStates(actualTimeSeconds, sleepList5)
         assertThat((sleepState != SleepState.SLEEPING), CoreMatchers.equalTo(true))
+
+    }
+
+    @Test
+    fun fullSleepCalculationTest() = runBlocking {
+
+        // load all data
 
     }
 }

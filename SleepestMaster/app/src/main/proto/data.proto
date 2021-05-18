@@ -110,4 +110,23 @@ message  LiveUserSleepActivity{
   int32 userSleepTime = 3;
 }
 
+/**
+ * This is a LiveUserSleepActivity StatusModel
+ * It stores information/status about the actual sleep of the user (live data)
+ * Is data available from the calculation handler
+ */
+message BackgroundService{
+
+  /**
+   * Defines if the user currently sleeping
+   */
+  bool shouldBeActive = 1;
+
+  /**
+   * Defines if the user currently sleeping
+   */
+  bool isActive = 2;
+
+}
+
 

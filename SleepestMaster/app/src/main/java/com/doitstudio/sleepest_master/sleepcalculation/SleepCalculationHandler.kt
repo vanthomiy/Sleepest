@@ -310,7 +310,11 @@ class SleepCalculationHandler(val context: Context) {
                 UserSleepSessionEntity.getIdByTimeStamp(sleepApiRawDataEntity.minOf { x -> x.timestampSeconds })
             val sleepSessionEntity = dataBaseRepository.getOrCreateSleepSessionById(id)
 
-            sleepSessionEntity.mobilePosition = checkPhonePosition(sleepApiRawDataEntity)
+            sleepSessionEntity.mobilePosition =
+                if(MobilePosition.getCount(dataStoreRepository.sleepParameterFlow.first().standardMobilePosition) == MobilePosition.UNIDENTIFIED)
+                    checkPhonePosition(sleepApiRawDataEntity)
+                else
+                    MobilePosition.getCount(dataStoreRepository.sleepParameterFlow.first().standardMobilePosition)
 
             // if in bed then check the single states of the sleep
             if (sleepSessionEntity.mobilePosition == MobilePosition.INBED) {

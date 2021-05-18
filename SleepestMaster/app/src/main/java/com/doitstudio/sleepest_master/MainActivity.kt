@@ -12,7 +12,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.asLiveData
+import com.doitstudio.sleepest_master.background.ForegroundService
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
+import com.doitstudio.sleepest_master.model.data.Actions
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.ui.profile.ProfileFragment
@@ -20,6 +22,8 @@ import com.doitstudio.sleepest_master.ui.sleep.SleepFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {
@@ -113,7 +117,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
+        supportActionBar?.hide()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -127,12 +131,29 @@ class MainActivity : AppCompatActivity() {
                 // Not empty..
                 // We need to check if foreground is active or not... if not active we have to start it from here
                 // if already inside sleeptime
+                    scope.launch {
+                        // start activity if not already started
+                        if(dataStoreRepository.backgroundServiceFlow.first().isActive){
+                            ForegroundService.startOrStopForegroundService(Actions.STOP, applicationContext)
+                        }
+
+                        dataStoreRepository.updateIsActive(false)
+                    }
+
+
             }
             else{
                 // Is empty..
                 // We need to check if foreground is active or not... if active we have to stop it from here
                 // if already inside sleeptime
+                scope.launch {
+                    // start activity if not already started
+                    if(!dataStoreRepository.backgroundServiceFlow.first().isActive){
+                        ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
+                    }
 
+                    dataStoreRepository.updateIsActive(true)
+                }
             }
         }
 

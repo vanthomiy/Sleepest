@@ -4,11 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.doitstudio.sleepest_master.AlarmsFragment
-import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.databinding.FragmentSleepBinding
 import com.doitstudio.sleepest_master.ui.charts.SparkLineStyle
 import com.github.mikephil.charting.data.LineData
@@ -54,7 +51,7 @@ class SleepFragment : Fragment() {
 
     fun setupSleepTimeChart(){
 
-        chartStyle.styleChart(binding.sleepTimeChart)
+        chartStyle.styleChartWeek(binding.sleepTimeChart)
         var data = viewModel.setUpSleepTimeChar()
         chartStyle.styleLineDataSet(data)
         binding.sleepTimeChart.data = LineData(data)

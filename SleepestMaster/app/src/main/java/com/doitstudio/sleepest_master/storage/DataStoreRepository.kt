@@ -3,6 +3,7 @@ package com.doitstudio.sleepest_master.storage
 import android.content.Context
 import androidx.datastore.createDataStore
 import androidx.datastore.preferences.createDataStore
+import com.doitstudio.sleepest_master.BackgroundService
 
 import com.doitstudio.sleepest_master.LiveUserSleepActivity
 import com.doitstudio.sleepest_master.SleepApiData
@@ -45,6 +46,8 @@ class DataStoreRepository(context: Context) {
     suspend fun updateUserWantedSleepTime(time:Int) =
         sleepParameterStatus.updateUserWantedSleepTime(time)
     suspend fun updateStandardMobilePosition(time:MobilePosition) =
+        sleepParameterStatus.updateStandardMobilePosition(time)
+    suspend fun updateStandardMobilePosition(time:Int) =
         sleepParameterStatus.updateStandardMobilePosition(time)
     suspend fun updateUserMobileFequency(time:MobileUseFrequency) =
         sleepParameterStatus.updateUserMobileFequency(time)
@@ -106,5 +109,17 @@ class DataStoreRepository(context: Context) {
     suspend fun updateUserSleepTime(sleepTime:Int) =
         liveUserSleepActivityStatus.updateUserSleepTime(sleepTime)
     //endregion
+
+    private val backgroundServiceStatus by lazy{ BackgroundServiceStatus(context.createDataStore(
+        BACKGROUND_SERVICE_STATUS,
+        serializer = BackgroundServiceSerializer())
+    )
+    }
+
+    val backgroundServiceFlow: Flow<BackgroundService> = backgroundServiceStatus.backgroundService
+    suspend fun updateIsActive(value:Boolean) =
+        backgroundServiceStatus.updateIsActive(value)
+    suspend fun updateShouldBeActive(value:Boolean) =
+        backgroundServiceStatus.updateShouldBeActive(value)
 
 }
