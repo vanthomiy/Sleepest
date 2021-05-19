@@ -374,11 +374,11 @@ class SleepCalculationHandler(val context: Context) {
             }
 
             val actualTimeSeconds = getSecondsOfDay()
-            var wakeUpTime = actualTimeSeconds.toInt() + (restSleepTime)
+            var wakeUpTime = actualTimeSeconds + (restSleepTime)
 
             // if in bed then check the single states of the sleep
             if (sleepSessionEntity.mobilePosition == MobilePosition.INBED) {
-                wakeUpTime = findLightUserWakeup(sleepApiRawDataEntity, wakeUpTime.toInt())
+                wakeUpTime = findLightUserWakeup(sleepApiRawDataEntity, wakeUpTime)
             }
 
             // store in the alarm...!!!

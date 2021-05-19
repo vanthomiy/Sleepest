@@ -446,6 +446,11 @@ class SleepCalculationHandlerTest
 
         var lastTimestamp = 0
         var holdTime = 15*60
+        var lastTimestampWakeup = 0
+
+        // problem: we have same days in here so we have to select just a few ...otherwise we will have buggy things
+        val selectedData = data.spliterator()
+
         data.forEach{
 
             rawdata ->
@@ -464,15 +469,15 @@ class SleepCalculationHandlerTest
                 sleepCalculationHandler.checkIsUserSleeping(actualTime)
             }
 
-            if(actualTime.hour in 5..7){
+            if(actualTime.hour in 5..7 && lastTimestampWakeup+holdTime < rawdata.timestampSeconds){
 
+                lastTimestampWakeup = rawdata.timestampSeconds
                 sleepCalculationHandler.defineUserWakeup(actualTime)
-
             }
-
-            hier weiter machen
         }
 
+
+        // at the really end we should have as much sleep user sessions as times....
 
 
 
