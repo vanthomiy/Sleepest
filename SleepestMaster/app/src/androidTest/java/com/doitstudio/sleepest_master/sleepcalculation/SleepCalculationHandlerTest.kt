@@ -416,8 +416,8 @@ class SleepCalculationHandlerTest
     fun fullSleepCalculationTest() = runBlocking {
 
         // load all data
-        var path = "database/testdata/SleepValues.json"
-        var pathTrue = "database/testdata/SleepValuesTrue.json"
+        var path = "databases/testdata/SleepValues.json"
+        var pathTrue = "databases/testdata/SleepValuesTrue.json"
 
         var gson = Gson()
 
@@ -429,12 +429,12 @@ class SleepCalculationHandlerTest
 
         val jsonFileTrue = context
             .assets
-            .open(path)
+            .open(pathTrue)
             .bufferedReader()
             .use(BufferedReader::readText)
 
-        var data =  gson.fromJson(jsonFile, Array<SleepApiRawDataEntity>::class.java).asList()
-        var dataTrue =  gson.fromJson(jsonFileTrue, Array<SleepApiRawDataRealEntity>::class.java).asList()
+        var data =  gson.fromJson(jsonFile, Array<Array<SleepApiRawDataEntity>>::class.java).asList()
+        var dataTrue =  gson.fromJson(jsonFileTrue, Array<Array<SleepApiRawDataRealEntity>>::class.java).asList()
 
 
         // now we have all sleep data we want to go through all data and keep the data inside of the storage...
@@ -454,7 +454,7 @@ class SleepCalculationHandlerTest
         val datasets = mutableMapOf<Int, MutableList<SleepApiRawDataEntity>>()
         val datasetsReal = mutableMapOf<Int, MutableList<SleepApiRawDataRealEntity>>()
         var count = 0
-
+/*
         for(i in 0.. data.lastIndex){
             val actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(data[i].timestampSeconds.toLong()*1000), ZoneOffset.UTC)
 
@@ -468,7 +468,7 @@ class SleepCalculationHandlerTest
             datasets[count]?.add(data[i])
             datasetsReal[count]?.add(dataTrue[i])
         }
-
+*/
 /*
         data.forEach{
 
