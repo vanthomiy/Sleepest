@@ -84,7 +84,7 @@ class BackgroundServiceSerializer() : Serializer<BackgroundService> {
     }
 
     override val defaultValue: BackgroundService = BackgroundService.newBuilder()
-        .setIsActive(false)
-        .setShouldBeActive(false)
+        .setIsForegroundActive(false)
+        .setIsBackgroundActive(false)
         .build()
 }

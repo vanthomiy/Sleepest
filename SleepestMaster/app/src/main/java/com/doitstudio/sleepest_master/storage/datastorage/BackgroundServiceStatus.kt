@@ -27,13 +27,13 @@ class BackgroundServiceStatus(private val dataStore: DataStore<BackgroundService
 
     suspend fun updateShouldBeActive(value:Boolean){
         dataStore.updateData{preference->
-            preference.toBuilder().setShouldBeActive(value).build()
+            preference.toBuilder().setIsBackgroundActive(value).build()
         }
     }
 
     suspend fun updateIsActive(value:Boolean){
         dataStore.updateData{preference->
-            preference.toBuilder().setIsActive(value).build()
+            preference.toBuilder().setIsForegroundActive(value).build()
         }
     }
 

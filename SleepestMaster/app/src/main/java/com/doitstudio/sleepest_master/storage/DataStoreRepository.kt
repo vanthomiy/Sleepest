@@ -12,6 +12,9 @@ import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.MobileUseFrequency
 import com.doitstudio.sleepest_master.storage.datastorage.*
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import java.time.LocalDateTime
+import java.time.LocalTime
 
 class DataStoreRepository(context: Context) {
 
@@ -39,6 +42,19 @@ class DataStoreRepository(context: Context) {
     }
 
     val sleepParameterFlow: Flow<SleepParameters> = sleepParameterStatus.sleepParameters
+
+    /**
+     * Returns if the time is in actual sleep time
+     */
+    suspend fun isInSleepTime(): Boolean {
+
+        var times =  sleepParameterFlow.first()
+
+        val time = LocalTime.now()
+
+        return (time.toSecondOfDay() > times.sleepTimeStart && time.toSecondOfDay() < times.sleepTimeEnd)
+    }
+
     suspend fun updateSleepTimeEnd(time:Int) =
         sleepParameterStatus.updateSleepTimeEnd(time)
     suspend fun updateSleepTimeStart(time:Int) =
@@ -116,10 +132,12 @@ class DataStoreRepository(context: Context) {
     )
     }
 
+
     val backgroundServiceFlow: Flow<BackgroundService> = backgroundServiceStatus.backgroundService
     suspend fun backgroundUpdateIsActive(value:Boolean) =
         backgroundServiceStatus.updateIsActive(value)
     suspend fun backgroundUpdateShouldBeActive(value:Boolean) =
         backgroundServiceStatus.updateShouldBeActive(value)
+
 
 }

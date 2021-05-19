@@ -24,6 +24,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+import java.time.LocalTime
 
 
 class MainActivity : AppCompatActivity() {
@@ -43,7 +45,8 @@ class MainActivity : AppCompatActivity() {
         (applicationContext as MainApplication).dataStoreRepository
     }
 
-    val activeAlarmsLiveData by lazy {  dataBaseRepository.activeAlarmsFlow().asLiveData() }
+    private val activeAlarmsLiveData by lazy {  dataBaseRepository.activeAlarmsFlow().asLiveData() }
+    private val sleepParametersLiveData by lazy {  dataStoreRepository.sleepParameterFlow.asLiveData() }
 
     // endregion
 
@@ -124,36 +127,57 @@ class MainActivity : AppCompatActivity() {
 
         setupFragments()
 
+        // observe alarm changes
         activeAlarmsLiveData.observe(this){ list ->
             // check the list if empty or not
-            //if (dataStoreRepository.isInSleeptime) {
-                if(list.isEmpty())
-                {
-                    // Not empty..
-                    // We need to check if foreground is active or not... if not active we have to start it from here
-                    // if already inside sleeptime
-                    scope.launch {
-                        // start activity if not already started
-                        if(dataStoreRepository.backgroundServiceFlow.first().isActive){
+
+            scope.launch {
+                // is in sleep time ?
+                if (dataStoreRepository.isInSleepTime()) {
+                    if(list.isEmpty())
+                    {
+                        // Not empty..
+                        // We need to check if foreground is active or not... if not active we have to start it from here
+                        // if already inside sleeptime
+                        if(dataStoreRepository.backgroundServiceFlow.first().isForegroundActive){
                             ForegroundService.startOrStopForegroundService(Actions.STOP, applicationContext)
                         }
                     }
-                }
-                else{
-                    // Is empty..
-                    // We need to check if foreground is active or not... if active we have to stop it from here
-                    // if already inside sleeptime
-                    scope.launch {
-                        // start activity if not already started
-                        if(!dataStoreRepository.backgroundServiceFlow.first().isActive){
-                            ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
-                        }
+                    else if(!dataStoreRepository.backgroundServiceFlow.first().isForegroundActive){
+                        // Is empty..
+                        // We need to check if foreground is active or not... if active we have to stop it from here
+                        // if already inside sleeptime
+                        ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
                     }
                 }
-            //}
-
-
+            }
         }
+
+        // observe sleeptime changes
+        sleepParametersLiveData.observe(this) { livedata ->
+
+            scope.launch {
+
+                val time = LocalTime.now()
+
+                // in sleep time
+                if (time.toSecondOfDay() > livedata.sleepTimeStart && time.toSecondOfDay() < livedata.sleepTimeEnd) {
+                    // alarm should be active else set active
+                    if(!dataStoreRepository.backgroundServiceFlow.first().isForegroundActive){
+                        ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
+                    }
+                } else // not in sleep time
+                {
+                    // alarm should be not active else disable and set to a new time...
+                    if(dataStoreRepository.backgroundServiceFlow.first().isForegroundActive){
+                        ForegroundService.startOrStopForegroundService(Actions.STOP, applicationContext)
+                        /** todo set ne start time**/
+                        /** [livedata.sleepTimeStart] **/
+                    }
+                }
+            }
+        }
+
 
 
         // check permission

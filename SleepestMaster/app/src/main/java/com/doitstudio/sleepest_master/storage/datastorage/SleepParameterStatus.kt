@@ -7,6 +7,7 @@ import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.MobileUseFrequency
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import java.io.IOException
 
 const val SLEEP_PARAMETER_STATUS = "sleep_parameter_repo"
@@ -22,6 +23,8 @@ class SleepParameterStatus(private val dataStore: DataStore<SleepParameters>) {
                 throw exception
             }
         }
+
+
 
 
     suspend fun updateSleepTimeStart(duration:Int){

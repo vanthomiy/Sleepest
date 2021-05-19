@@ -120,12 +120,12 @@ message BackgroundService{
   /**
    * Defines if the user currently sleeping
    */
-  bool shouldBeActive = 1;
+  bool isBackgroundActive = 1;
 
   /**
    * Defines if the user currently sleeping
    */
-  bool isActive = 2;
+  bool isForegroundActive = 2;
 
 }
 
