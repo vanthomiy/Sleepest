@@ -167,10 +167,8 @@ class MainActivity : AppCompatActivity() {
 
             scope.launch {
 
-                val time = LocalTime.now()
-
                 // in sleep time
-                if (time.toSecondOfDay() > livedata.sleepTimeStart && time.toSecondOfDay() < livedata.sleepTimeEnd) {
+                if (dataStoreRepository.isInSleepTime()) {
                     // alarm should be active else set active
                     if(!dataStoreRepository.backgroundServiceFlow.first().isForegroundActive){
                         ForegroundService.startOrStopForegroundService(

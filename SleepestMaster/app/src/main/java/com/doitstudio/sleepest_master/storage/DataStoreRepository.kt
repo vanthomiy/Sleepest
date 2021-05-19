@@ -46,13 +46,17 @@ class DataStoreRepository(context: Context) {
     /**
      * Returns if the time is in actual sleep time
      */
-    suspend fun isInSleepTime(): Boolean {
+    suspend fun isInSleepTime(givenTime:LocalTime? = null): Boolean {
 
-        var times =  sleepParameterFlow.first()
+        var times = sleepParameterFlow.first()
 
-        val time = LocalTime.now()
+        val time = givenTime ?: LocalTime.now()
+        val maxTime = (24*60*60) + 1
+        val seconds = time.toSecondOfDay()
 
-        return (time.toSecondOfDay() > times.sleepTimeStart && time.toSecondOfDay() < times.sleepTimeEnd)
+        val overTwoDays = times.sleepTimeStart > times.sleepTimeEnd
+
+        return ((overTwoDays && (seconds in times.sleepTimeStart..maxTime ||  seconds in 0 .. times.sleepTimeEnd)) || (!overTwoDays && seconds in times.sleepTimeStart..times.sleepTimeEnd))
     }
 
     suspend fun updateSleepTimeEnd(time:Int) =
