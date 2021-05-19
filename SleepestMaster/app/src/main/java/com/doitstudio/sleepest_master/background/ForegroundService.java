@@ -68,7 +68,7 @@ public class ForegroundService extends LifecycleService {
         super.onStartCommand(intent, flags,startId);
 
         if (intent != null) {
-            String action = intent.getAction();
+            /*String action = intent.getAction();
 
             if (action != null) {
 
@@ -77,6 +77,12 @@ public class ForegroundService extends LifecycleService {
                 } else if (action.equals(Actions.STOP.name())) {
                     stopService();
                 }
+            }*/
+
+            if (foregroundObserver.getForegroundStatus()) {
+                startService();;
+            } else {
+                stopService();
             }
         }
 
@@ -116,9 +122,9 @@ public class ForegroundService extends LifecycleService {
 
         alarmTimeInSeconds = time.getActualWakeup();
 
-        if (alarmEntity != null) {
-            isAlarmActive = true;
-        }
+
+        isAlarmActive = true;
+
 
         updateNotification("test");
 
@@ -133,7 +139,7 @@ public class ForegroundService extends LifecycleService {
         int timeDifference = time.getActualWakeup() - secondsOfDay;
 
         //Return if the alarm is on the next day or before first calculation
-        if(secondsOfDay < (alarmEntity.getWakeupEarly() - 1800) || (alarmEntity.getWakeupLate() + 3600) < secondsOfDay || alarmClockSet) {
+        if(secondsOfDay < (time.getWakeupEarly() - 1800) || (time.getWakeupLate() + 3600) < secondsOfDay || alarmClockSet) {
             return;
         }
 
@@ -143,7 +149,7 @@ public class ForegroundService extends LifecycleService {
             lastestWakeup.set(Calendar.HOUR_OF_DAY, 0);
             lastestWakeup.set(Calendar.MINUTE, 0);
             lastestWakeup.set(Calendar.SECOND, 0);
-            lastestWakeup.add(Calendar.SECOND, alarmEntity.getWakeupLate());
+            lastestWakeup.add(Calendar.SECOND, time.getWakeupLate());
             AlarmClockReceiver.startAlarmManager(lastestWakeup.get(Calendar.DAY_OF_WEEK), lastestWakeup.get(Calendar.HOUR_OF_DAY), lastestWakeup.get(Calendar.MINUTE), getApplicationContext(), 1);
             alarmClockSet = true;
             pref = getSharedPreferences("AlarmChanged", 0);
@@ -169,7 +175,7 @@ public class ForegroundService extends LifecycleService {
                 earliestWakeup.set(Calendar.HOUR_OF_DAY, 0);
                 earliestWakeup.set(Calendar.MINUTE, 0);
                 earliestWakeup.set(Calendar.SECOND, 0);
-                earliestWakeup.add(Calendar.SECOND, alarmEntity.getWakeupEarly());
+                earliestWakeup.add(Calendar.SECOND, time.getWakeupEarly());
                 AlarmClockReceiver.startAlarmManager(earliestWakeup.get(Calendar.DAY_OF_WEEK), earliestWakeup.get(Calendar.HOUR_OF_DAY), earliestWakeup.get(Calendar.MINUTE), getApplicationContext(), 1);
                 alarmClockSet = true;
                 pref = getSharedPreferences("AlarmChanged", 0);
@@ -192,7 +198,7 @@ public class ForegroundService extends LifecycleService {
                 lastestWakeup.set(Calendar.HOUR_OF_DAY, 0);
                 lastestWakeup.set(Calendar.MINUTE, 0);
                 lastestWakeup.set(Calendar.SECOND, 0);
-                lastestWakeup.add(Calendar.SECOND, alarmEntity.getWakeupLate());
+                lastestWakeup.add(Calendar.SECOND, time.getWakeupLate());
                 AlarmClockReceiver.startAlarmManager(lastestWakeup.get(Calendar.DAY_OF_WEEK), lastestWakeup.get(Calendar.HOUR_OF_DAY), lastestWakeup.get(Calendar.MINUTE), getApplicationContext(), 1);
                 alarmClockSet = true;
                 pref = getSharedPreferences("AlarmChanged", 0);
@@ -258,18 +264,8 @@ public class ForegroundService extends LifecycleService {
 
     public void OnSleepTimeChanged(LiveUserSleepActivity liveUserSleepActivity) {
 
-        SharedPreferences pref = getSharedPreferences("StopService", 0);
-        int test = pref.getInt("sleeptime", 0);
-
         userSleepTime = liveUserSleepActivity.getUserSleepTime();
         isSleeping = liveUserSleepActivity.getIsUserSleeping();
-
-        /*if (isSleeping && (userSleepTime > times.getSleepTime()) && (userSleepTime != test)) {
-            Calendar calendar = Calendar.getInstance();
-            AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 1, getApplicationContext(), 1);
-        }*/
-
-
 
         updateNotification("test");
 
@@ -286,7 +282,7 @@ public class ForegroundService extends LifecycleService {
         if (isServiceStarted) {return;}
         //Set start boolean and save it in preferences
         isServiceStarted = true;
-        new ServiceTracker().setServiceState(this, ServiceState.STARTED);
+        //new ServiceTracker().setServiceState(this, ServiceState.STARTED);
         foregroundObserver.setForegroundStatus(true);
 
         // lock that service is not affected by Doze Mode
@@ -352,7 +348,7 @@ public class ForegroundService extends LifecycleService {
         //Save state in preferences
         isServiceStarted = false;
         foregroundObserver.setForegroundStatus(false);
-        new ServiceTracker().setServiceState(this, ServiceState.STOPPED);
+        //new ServiceTracker().setServiceState(this, ServiceState.STOPPED);
 
         /**
          * TEST
@@ -383,8 +379,8 @@ public class ForegroundService extends LifecycleService {
     public void updateNotification(String text) {
 
         Notification notification = createNotification(text);
-        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(1, notification);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(1, notification);
 
     }
 
@@ -396,7 +392,6 @@ public class ForegroundService extends LifecycleService {
      */
     private Notification createNotification(String text) {
         String notificationChannelId = getString(R.string.foregroundservice_channel);
-
 
         //Init remoteView for expanded notification
         RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.foreground_service_notification);
@@ -467,9 +462,9 @@ public class ForegroundService extends LifecycleService {
         Intent intent = new Intent(context, ForegroundService.class);
         intent.setAction(action.name());
 
-        if (new ServiceTracker().getServiceState(context) == ServiceState.STOPPED && action == Actions.STOP) {
+        /*if (new ServiceTracker().getServiceState(context) == ServiceState.STOPPED && action == Actions.STOP) {
             return;
-        }
+        }*/
 
         context.startForegroundService(intent);
         return;

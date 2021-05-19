@@ -7,6 +7,7 @@ import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -39,7 +40,15 @@ class ForegroundObserver(private val fs: ForegroundService) {
         scope.launch {
             dataStoreRepository.backgroundUpdateIsActive(status)
         }
+    }
 
+    fun getForegroundStatus() : Boolean {
+        var status = false
+        scope.launch {
+            status = dataStoreRepository.backgroundServiceFlow.first().isForegroundActive
+        }
+
+        return status
     }
 
     init {

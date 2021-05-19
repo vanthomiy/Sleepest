@@ -12,6 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.asLiveData
+import com.doitstudio.sleepest_master.background.AlarmReceiver
 import com.doitstudio.sleepest_master.background.ForegroundService
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
 import com.doitstudio.sleepest_master.model.data.Actions
@@ -24,8 +25,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 import java.time.LocalTime
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -74,29 +75,31 @@ class MainActivity : AppCompatActivity() {
 
             when (item.itemId) {
                 R.id.home -> {
-                    if(alarmsFragment.isAdded){
+                    if (alarmsFragment.isAdded) {
                         ft.show(alarmsFragment)
-                    }else{
-                        ft.add(R.id.navigationFrame,alarmsFragment)
+                    } else {
+                        ft.add(R.id.navigationFrame, alarmsFragment)
                     }
                 }
                 R.id.history -> {
-                    if(historyFragment.isAdded){
+                    if (historyFragment.isAdded) {
                         ft.show(historyFragment)
-                    }else{
-                        ft.add(R.id.navigationFrame,historyFragment)
-                    }                }
+                    } else {
+                        ft.add(R.id.navigationFrame, historyFragment)
+                    }
+                }
                 R.id.sleep -> {
-                    if(sleepFragment.isAdded){
+                    if (sleepFragment.isAdded) {
                         ft.show(sleepFragment)
-                    }else{
-                        ft.add(R.id.navigationFrame,sleepFragment)
-                    }                }
+                    } else {
+                        ft.add(R.id.navigationFrame, sleepFragment)
+                    }
+                }
                 else -> {
                     if(profileFragment.isAdded){
                         ft.show(profileFragment)
                     }else{
-                        ft.add(R.id.navigationFrame,profileFragment)
+                        ft.add(R.id.navigationFrame, profileFragment)
                     }
                 }
             }
@@ -140,14 +143,20 @@ class MainActivity : AppCompatActivity() {
                         // We need to check if foreground is active or not... if not active we have to start it from here
                         // if already inside sleeptime
                         if(dataStoreRepository.backgroundServiceFlow.first().isForegroundActive){
-                            ForegroundService.startOrStopForegroundService(Actions.STOP, applicationContext)
+                            ForegroundService.startOrStopForegroundService(
+                                Actions.STOP,
+                                applicationContext
+                            )
                         }
                     }
                     else if(!dataStoreRepository.backgroundServiceFlow.first().isForegroundActive){
                         // Is empty..
                         // We need to check if foreground is active or not... if active we have to stop it from here
                         // if already inside sleeptime
-                        ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
+                        ForegroundService.startOrStopForegroundService(
+                            Actions.START,
+                            applicationContext
+                        )
                     }
                 }
             }
@@ -164,15 +173,34 @@ class MainActivity : AppCompatActivity() {
                 if (time.toSecondOfDay() > livedata.sleepTimeStart && time.toSecondOfDay() < livedata.sleepTimeEnd) {
                     // alarm should be active else set active
                     if(!dataStoreRepository.backgroundServiceFlow.first().isForegroundActive){
-                        ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
+                        ForegroundService.startOrStopForegroundService(
+                            Actions.START,
+                            applicationContext
+                        )
                     }
                 } else // not in sleep time
                 {
                     // alarm should be not active else disable and set to a new time...
                     if(dataStoreRepository.backgroundServiceFlow.first().isForegroundActive){
                         ForegroundService.startOrStopForegroundService(Actions.STOP, applicationContext)
-                        /** todo set ne start time**/
-                        /** [livedata.sleepTimeStart] **/
+
+                        //Cancel old alarm
+                        AlarmReceiver.cancelAlarm(applicationContext, 1)
+
+                        //Create a new instance of calendar for the new foregroundservice start time
+                        val calendarAlarm = Calendar.getInstance()
+                        calendarAlarm[Calendar.HOUR_OF_DAY] = 0
+                        calendarAlarm[Calendar.MINUTE] = 0
+                        calendarAlarm[Calendar.SECOND] = 0
+                        calendarAlarm.add(Calendar.SECOND, livedata.sleepTimeStart)
+
+                        //Start a alarm for the new foregroundservice start time
+                        AlarmReceiver.startAlarmManager(
+                            calendarAlarm[Calendar.DAY_OF_WEEK],
+                            calendarAlarm[Calendar.HOUR_OF_DAY],
+                            calendarAlarm[Calendar.MINUTE],
+                            applicationContext, 1
+                        )
                     }
                 }
             }

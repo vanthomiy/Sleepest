@@ -37,6 +37,7 @@ class ForegroundActivity : Activity() {
                     // next alarm or null
                     if(databaseRepository.isAlarmActiv()){
                         // start foreground if not null
+                            /**TODO: Abfrage, ob Background schon aktive ist*/
                         ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
                     }else{
                         //Next foreground start next day
