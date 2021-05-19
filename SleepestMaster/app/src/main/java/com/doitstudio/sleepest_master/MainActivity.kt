@@ -171,10 +171,12 @@ class MainActivity : AppCompatActivity() {
                 if (dataStoreRepository.isInSleepTime()) {
                     // alarm should be active else set active
                     if(!dataStoreRepository.backgroundServiceFlow.first().isForegroundActive){
-                        ForegroundService.startOrStopForegroundService(
-                            Actions.START,
-                            applicationContext
-                        )
+                        scope.launch {
+
+                            if (dataBaseRepository.getNextActiveAlarm() != null) {
+                                ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
+                            }
+                        }
                     }
                 } else // not in sleep time
                 {

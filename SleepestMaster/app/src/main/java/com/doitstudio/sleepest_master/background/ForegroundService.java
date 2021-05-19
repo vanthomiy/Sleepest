@@ -68,7 +68,7 @@ public class ForegroundService extends LifecycleService {
         super.onStartCommand(intent, flags,startId);
 
         if (intent != null) {
-            /*String action = intent.getAction();
+            String action = intent.getAction();
 
             if (action != null) {
 
@@ -77,13 +77,13 @@ public class ForegroundService extends LifecycleService {
                 } else if (action.equals(Actions.STOP.name())) {
                     stopService();
                 }
-            }*/
+            }
 
-            if (foregroundObserver.getForegroundStatus()) {
+            /*if (foregroundObserver.getForegroundStatus()) {
                 startService();;
             } else {
                 stopService();
-            }
+            }*/
         }
 
         return START_STICKY; // by returning this we make sure the service is restarted if the system kills the service
