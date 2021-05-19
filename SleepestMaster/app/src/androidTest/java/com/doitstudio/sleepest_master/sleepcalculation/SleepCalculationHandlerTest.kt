@@ -449,8 +449,27 @@ class SleepCalculationHandlerTest
         var lastTimestampWakeup = 0
 
         // problem: we have same days in here so we have to select just a few ...otherwise we will have buggy things
-        val selectedData = data.spliterator()
+        val daysCount = 10
+        var startDay = LocalDateTime.MIN
+        val datasets = mutableMapOf<Int, MutableList<SleepApiRawDataEntity>>()
+        val datasetsReal = mutableMapOf<Int, MutableList<SleepApiRawDataRealEntity>>()
+        var count = 0
 
+        for(i in 0.. data.lastIndex){
+            val actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(data[i].timestampSeconds.toLong()*1000), ZoneOffset.UTC)
+
+            if(actualTime > startDay){
+                startDay = actualTime.plusDays(daysCount.toLong())
+                datasets[count] = mutableListOf()
+                datasetsReal[count] = mutableListOf()
+                count++
+            }
+
+            datasets[count]?.add(data[i])
+            datasetsReal[count]?.add(dataTrue[i])
+        }
+
+/*
         data.forEach{
 
             rawdata ->
@@ -475,11 +494,12 @@ class SleepCalculationHandlerTest
                 sleepCalculationHandler.defineUserWakeup(actualTime)
             }
         }
-
+*/
 
         // at the really end we should have as much sleep user sessions as times....
 
-
+        val dasas = datasets
+        val sdfsdf = datasetsReal
 
 
     }
