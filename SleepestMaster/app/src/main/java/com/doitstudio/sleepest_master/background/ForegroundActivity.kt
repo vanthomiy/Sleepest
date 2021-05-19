@@ -48,6 +48,7 @@ class ForegroundActivity : Activity() {
                 ForegroundService.startOrStopForegroundService(Actions.STOP, applicationContext)
             }
         }
+
         finish()
 
     }

@@ -87,9 +87,10 @@ public class LockScreenAlarmActivity extends AppCompatActivity implements View.O
         switch(v.getId()) {
             case R.id.btnTurnAlarmOffLockScreen:
                 AlarmClockAudio.getInstance().stopAlarm(false);
-                ForegroundService.startOrStopForegroundService(Actions.STOP, getApplicationContext());
+
                 Calendar calendarAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK), times.getStartForegroundHour(), times.getStartForegroundMinute());
                 AlarmReceiver.startAlarmManager(calendarAlarm.get(Calendar.DAY_OF_WEEK), calendarAlarm.get(Calendar.HOUR_OF_DAY), calendarAlarm.get(Calendar.MINUTE), getApplicationContext(), 1);
+                ForegroundService.startOrStopForegroundService(Actions.STOP, getApplicationContext());
 
                 Calendar calendar = Calendar.getInstance();
                 SharedPreferences pref = getSharedPreferences("AlarmClock", 0);

@@ -10,12 +10,15 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-class ForegroundObserver(private val fs:ForegroundService) {
+class ForegroundObserver(private val fs: ForegroundService) {
 
     private val scope: CoroutineScope = MainScope()
     private val sleepCalculationStoreRepository by lazy {  DataStoreRepository.getRepo(fs)}
     private val databaseRepository: DatabaseRepository by lazy {
         (fs.applicationContext as MainApplication).dataBaseRepository
+    }
+    private val dataStoreRepository: DataStoreRepository by lazy {
+        (fs.applicationContext as MainApplication).dataStoreRepository
     }
     private val alarmLivedata by lazy{databaseRepository.activeAlarmsFlow().asLiveData()}
     private val userSleepTime by lazy{sleepCalculationStoreRepository.sleepApiDataFlow.asLiveData()}
@@ -32,6 +35,13 @@ class ForegroundObserver(private val fs:ForegroundService) {
         return@runBlocking databaseRepository.getNextActiveAlarm()
     }
 
+    fun setForegroundStatus(status: Boolean) {
+        scope.launch {
+            dataStoreRepository.backgroundUpdateIsActive(status)
+        }
+
+    }
+
     init {
         alarmLivedata.observe(fs) {
 
@@ -41,12 +51,11 @@ class ForegroundObserver(private val fs:ForegroundService) {
                 fs.OnAlarmChanged(nextAlarm)
         }
 
-        userSleepTime.observe(fs){
-                ust->
+        userSleepTime.observe(fs){ ust->
             fs.OnSleepApiDataChanged(ust)
         }
 
-        liveUserSleepActivityData.observe(fs){la->
+        liveUserSleepActivityData.observe(fs){ la->
             fs.OnSleepTimeChanged(la)
         }
     }

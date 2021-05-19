@@ -126,33 +126,33 @@ class MainActivity : AppCompatActivity() {
 
         activeAlarmsLiveData.observe(this){ list ->
             // check the list if empty or not
-            if(list.isEmpty())
-            {
-                // Not empty..
-                // We need to check if foreground is active or not... if not active we have to start it from here
-                // if already inside sleeptime
+            //if (dataStoreRepository.isInSleeptime) {
+                if(list.isEmpty())
+                {
+                    // Not empty..
+                    // We need to check if foreground is active or not... if not active we have to start it from here
+                    // if already inside sleeptime
                     scope.launch {
                         // start activity if not already started
                         if(dataStoreRepository.backgroundServiceFlow.first().isActive){
                             ForegroundService.startOrStopForegroundService(Actions.STOP, applicationContext)
                         }
-
-                        dataStoreRepository.backgroundUpdateIsActive(false)
                     }
-            }
-            else{
-                // Is empty..
-                // We need to check if foreground is active or not... if active we have to stop it from here
-                // if already inside sleeptime
-                scope.launch {
-                    // start activity if not already started
-                    if(!dataStoreRepository.backgroundServiceFlow.first().isActive){
-                        ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
-                    }
-
-                    dataStoreRepository.backgroundUpdateIsActive(true)
                 }
-            }
+                else{
+                    // Is empty..
+                    // We need to check if foreground is active or not... if active we have to stop it from here
+                    // if already inside sleeptime
+                    scope.launch {
+                        // start activity if not already started
+                        if(!dataStoreRepository.backgroundServiceFlow.first().isActive){
+                            ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
+                        }
+                    }
+                }
+            //}
+
+
         }
 
 

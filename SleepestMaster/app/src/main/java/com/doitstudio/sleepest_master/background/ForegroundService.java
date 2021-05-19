@@ -93,6 +93,7 @@ public class ForegroundService extends LifecycleService {
         foregroundObserver = new ForegroundObserver (this);
 
         alarmEntity = foregroundObserver.getNextAlarm();
+        dataStoreRepository = DataStoreRepository.Companion.getRepo(getApplicationContext());
 
         //if (alarmEntity == null) {
           //  Calendar calendarAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1, times.getStartForegroundHour(), times.getStartForegroundMinute());
@@ -286,6 +287,7 @@ public class ForegroundService extends LifecycleService {
         //Set start boolean and save it in preferences
         isServiceStarted = true;
         new ServiceTracker().setServiceState(this, ServiceState.STARTED);
+        foregroundObserver.setForegroundStatus(true);
 
         // lock that service is not affected by Doze Mode
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -349,7 +351,7 @@ public class ForegroundService extends LifecycleService {
         }
         //Save state in preferences
         isServiceStarted = false;
-
+        foregroundObserver.setForegroundStatus(false);
         new ServiceTracker().setServiceState(this, ServiceState.STOPPED);
 
         /**
@@ -360,6 +362,7 @@ public class ForegroundService extends LifecycleService {
 
         AlarmClockReceiver.cancelAlarm(getApplicationContext(), 4);
         AlarmReceiver.cancelAlarm(getApplicationContext(), 4);
+        AlarmReceiver.cancelAlarm(getApplicationContext(), 5);
 
         sleepHandler.stopSleepHandler();
         Toast.makeText(getApplicationContext(), "Foregroundservice stopped", Toast.LENGTH_LONG).show();
