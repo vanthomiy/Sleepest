@@ -53,6 +53,11 @@ class SleepParameterStatus(private val dataStore: DataStore<SleepParameters>) {
             preference.toBuilder().setStandardMobilePosition(position.ordinal).build()
         }
     }
+    suspend fun updateStandardMobilePosition(position: Int){
+        dataStore.updateData{preference->
+            preference.toBuilder().setStandardMobilePosition(position).build()
+        }
+    }
 
 
 }

@@ -12,7 +12,6 @@ import tensorboard
 from tfliteconverter import *
 import sklearn
 import pathlib
-import tfrecorder
 
 
 def loadDataFrame(csv_file):
@@ -168,8 +167,8 @@ def log_confusion_matrix(model,test, path,epoch, class_names):
         tf.summary.image("Confusion Matrix", cm_image, step=epoch)
 
 def saveTfRecord(csv_file, names):
-  df = pd.read_csv(csv_file, names)
-  df.tensorflow.to_tfr(output_dir='/tfrecords/'+name)
+  # create a writer
+  
 
 
 def buildTfRecord04(time, length):

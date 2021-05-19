@@ -2,18 +2,23 @@ package com.doitstudio.sleepest_master.ui.sleep
 
 import android.app.Application
 import android.app.TimePickerDialog
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.view.View
 import android.widget.SeekBar
+import androidx.core.graphics.toColor
 import androidx.databinding.BindingAdapter
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.databinding.FragmentSleepBinding
+import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.data.*
+import dagger.hilt.EntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -112,6 +117,45 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         tpd.show()
     }
 
+
+    val mobilePosition = ObservableField("Auto detect")
+
+    val colorNormal by lazy {Color.parseColor("#9D6CCF") }
+    val colorPressed by lazy {Color.parseColor("#116CCF") }
+
+    val button1Tint = ObservableField(ColorStateList.valueOf(colorNormal))
+    val button2Tint = ObservableField(ColorStateList.valueOf(colorNormal))
+    val button3Tint = ObservableField(ColorStateList.valueOf(colorNormal))
+
+    fun onMobilePositionChanged(view: View){
+        updateMobilePositionChanged(view.tag.toString(), true)
+    }
+
+    private fun updateMobilePositionChanged(value:String, set:Boolean = false){
+        when(value){
+            "2"-> {button1Tint.set(ColorStateList.valueOf(colorPressed));
+                button2Tint.set(ColorStateList.valueOf(colorNormal));
+                button3Tint.set(ColorStateList.valueOf(colorNormal));
+                mobilePosition.set("Auto detect")}
+            "0"-> {button1Tint.set(ColorStateList.valueOf(colorNormal));
+                button2Tint.set(ColorStateList.valueOf(colorPressed));
+                button3Tint.set(ColorStateList.valueOf(colorNormal));
+                mobilePosition.set("In bed")}
+            "1"-> {button1Tint.set(ColorStateList.valueOf(colorNormal));
+                button2Tint.set(ColorStateList.valueOf(colorNormal));
+                button3Tint.set(ColorStateList.valueOf(colorPressed));
+                mobilePosition.set("Out of bed")}
+        }
+
+        scope.launch {
+            dataStoreRepository.updateStandardMobilePosition(value.toInt())
+        }
+
+
+    }
+
+
+
     init {
         scope.launch {
             var sleepParams = dataStoreRepository.sleepParameterFlow.first()
@@ -125,6 +169,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
             sleepStartValue.set((if (sleepStartTime.hour < 10) "0" else "") + sleepStartTime.hour.toString() + ":" + (if (sleepStartTime.minute < 10) "0" else "") + sleepStartTime.minute.toString())
             sleepEndValue.set((if (sleepEndTime.hour < 10) "0" else "") + sleepEndTime.hour.toString() + ":" + (if (sleepEndTime.minute < 10) "0" else "") + sleepEndTime.minute.toString())
 
+            updateMobilePositionChanged(sleepParams.standardMobilePosition.toString())
         }
     }
     // region Movement
@@ -156,10 +201,14 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     fun setUpSleepTimeChar() : LineDataSet {
 
         var entries = mutableListOf<Entry>()
-        entries.add(Entry(1f, 3f))
-        entries.add(Entry(2f, 10f))
-        entries.add(Entry(3f, 5f))
-        entries.add(Entry(4f, 4f))
+        entries.add(Entry(0f, 6.5f))
+        entries.add(Entry(1f, 5f))
+        entries.add(Entry(2f, 8f))
+        entries.add(Entry(3f, 7.5f))
+        entries.add(Entry(4f, 7f))
+        entries.add(Entry(5f, 6f))
+        entries.add(Entry(6f, 10f))
+
         var dataSet = LineDataSet(entries, "Label") // add entries to dataset
         return dataSet
     }

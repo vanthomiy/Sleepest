@@ -28,7 +28,7 @@
                 android:layout_gravity="center_horizontal"
                 android:orientation="horizontal">
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/startTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
                     android:onClick="@{sleepViewModel.onAlarmStartClicked}"
                     android:text="@{sleepViewModel.sleepStartValue}" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/endTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -161,6 +161,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         android:orientation="vertical">
 
         <LinearLayout
@@ -170,13 +171,10 @@
             android:onClick="@{sleepViewModel::onEditSleepSettings}"
             android:orientation="vertical">
 
-
-
-
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginVertical="10dp"
                 android:minHeight="45dp"
                 >
                 <TextView
@@ -189,15 +187,16 @@
                     android:layout_marginLeft="10dp"
                     android:textColor="@color/white"/>
 
-                <Button
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_gravity="end"
                     android:layout_marginEnd="10dp"
                     android:width="200dp"
                     android:background="@drawable/bg"
-                    android:clickable="false"
                     android:visibility="@{sleepViewModel.sleepSettingsNotExpanded, default=gone}"
+                    android:gravity="center"
+                    android:backgroundTint="#00FFFFFF"
                     android:text="@{sleepViewModel.sleepCompleteValue}" />
 
             </FrameLayout>
@@ -227,7 +226,7 @@
                     android:text="to"
                     android:textColor="@color/white" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_gravity="start"
@@ -237,7 +236,7 @@
                     android:onClick="@{sleepViewModel.onAlarmStartClicked}"
                     android:text="@{sleepViewModel.sleepStartValue}" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:width="150dp"
@@ -251,7 +250,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
+                android:layout_marginVertical="10dp"
                 android:minHeight="45dp"
                 >
 
@@ -260,17 +259,21 @@
                     android:layout_height="wrap_content"
                     android:text="Desired duration of sleep"
                     android:textSize="17dp"
+                    android:layout_gravity="center_vertical"
                     android:fontFamily="@font/roboto_medium"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="10dp"
                     android:textColor="@color/white"/>
 
-                <Button
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:width="125dp"
                     android:layout_gravity="end"
                     android:layout_marginEnd="10dp"
                     android:background="@drawable/bg"
+                    android:gravity="center"
+                    android:backgroundTint="#00FFFFFF"
+                    android:textColor="@color/black"
                     android:visibility="@{sleepViewModel.sleepSettingsNotExpanded, default=gone}"
                     android:text="@{sleepViewModel.sleepDurationString}" />
 
@@ -301,7 +304,7 @@
                     android:onProgressChanged="@{sleepViewModel.onSleepDurationChanged}"
                     android:progress="@={sleepViewModel.sleepDurationValue}" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:width="125dp"
@@ -309,6 +312,90 @@
                     android:layout_marginEnd="10dp"
                     android:background="@drawable/bg"
                     android:text="@{sleepViewModel.sleepDurationString}" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:minHeight="45dp"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phone position"
+                    android:textSize="17dp"
+                    android:layout_marginLeft="10dp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:layout_marginVertical="10dp"
+                    android:textColor="@color/white"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:width="125dp"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/bg"
+                    android:gravity="center"
+                    android:backgroundTint="#00FFFFFF"
+                    android:visibility="@{sleepViewModel.sleepSettingsNotExpanded, default=gone}"
+                    android:text="@{sleepViewModel.mobilePosition}" />
+
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="The position where you are placing your phone in the night. If it depends you can choose 'auto detect'"
+                android:layout_marginHorizontal="10dp"
+                android:fontFamily="@font/roboto"
+                android:visibility="@{sleepViewModel.sleepSettingsExpanded, default=visible}"
+                android:textColor="@color/white"/>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:visibility="@{sleepViewModel.sleepSettingsExpanded, default=visible}"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:width="110dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_gravity="start"
+                    android:background="@drawable/bg"
+                    android:tag="2"
+                    android:onClick="@{sleepViewModel.onMobilePositionChanged}"
+                    android:backgroundTint="@{sleepViewModel.button1Tint}"
+                    android:text="Auto detect" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:width="110dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg"
+                    android:tag="0"
+                    android:onClick="@{sleepViewModel.onMobilePositionChanged}"
+                    android:backgroundTint="@{sleepViewModel.button2Tint}"
+                    android:text="In bed" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:width="110dp"
+                    android:layout_gravity="end"
+                    android:tag="1"
+                    android:onClick="@{sleepViewModel.onMobilePositionChanged}"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/bg"
+                    android:backgroundTint="@{sleepViewModel.button3Tint}"
+                    android:text="Not in bed" />
 
             </FrameLayout>
 
@@ -340,28 +427,30 @@
                     android:textColor="@color/black"
                     android:textSize="20sp" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_marginEnd="10dp"
                     android:layout_alignParentEnd="true"
+                    android:tag="year"
                     android:background="@drawable/bgroundedchoosen"
-                    android:backgroundTint="@color/black"
                     android:text="Y" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_marginEnd="65dp"
                     android:layout_alignParentEnd="true"
+                    android:tag="month"
                     android:background="@drawable/bgrounded"
                     android:text="M" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_marginEnd="120dp"
                     android:layout_alignParentEnd="true"
+                    android:tag="week"
                     android:background="@drawable/bgrounded"
                     android:text="W" />
 
@@ -374,8 +463,8 @@
                 android:layout_margin="10dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
-
             </com.github.mikephil.charting.charts.LineChart>
+
         </LinearLayout>
 
 
@@ -384,3 +473,4 @@
 
 
 </layout>
+

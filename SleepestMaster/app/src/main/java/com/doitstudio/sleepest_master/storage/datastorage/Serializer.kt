@@ -2,6 +2,7 @@ package com.doitstudio.sleepest_master.storage.datastorage
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
+import com.doitstudio.sleepest_master.BackgroundService
 import com.doitstudio.sleepest_master.LiveUserSleepActivity
 import com.doitstudio.sleepest_master.SleepApiData
 import com.doitstudio.sleepest_master.SleepParameters
@@ -65,5 +66,25 @@ class SleepParameterSerializer() : Serializer<SleepParameters> {
         .setNormalSleepTime(32400)
         .setSleepTimeStart(80000)
         .setSleepTimeEnd(40000)
+        .build()
+}
+
+class BackgroundServiceSerializer() : Serializer<BackgroundService> {
+
+    override fun readFrom(input: InputStream): BackgroundService {
+        try {
+            return BackgroundService.parseFrom(input)
+        } catch (exception: InvalidProtocolBufferException) {
+            throw CorruptionException("Cannot read proto.", exception)
+        }
+    }
+
+    override fun writeTo(t: BackgroundService, output: OutputStream) {
+        t.writeTo(output)
+    }
+
+    override val defaultValue: BackgroundService = BackgroundService.newBuilder()
+        .setIsActive(false)
+        .setShouldBeActive(false)
         .build()
 }
