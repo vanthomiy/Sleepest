@@ -56,14 +56,4 @@ interface AlarmDao {
 
     @Query("DELETE FROM alarm_properties_table")
     suspend fun deleteAll()
-
-
-    fun setupAlarmDatabase()
-    {
-        val scope: CoroutineScope = MainScope()
-
-        scope.launch {
-            insert(AlarmEntity())
-        }
-    }
 }

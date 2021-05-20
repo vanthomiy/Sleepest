@@ -193,7 +193,7 @@ dependencies {
     implementation 'com.github.furkanaskin:ClickablePieChart:1.0.8'
 
     // BarChart - fragment_history
-    implementation 'com.github.PhilJay:MPAndroidChart:v2.2.4'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }
 
 repositories {

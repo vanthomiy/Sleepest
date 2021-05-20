@@ -31,15 +31,23 @@ class HistoryFragment : Fragment() {
         setBarChart()
         setLineChart()
     }
+    private fun generateDataLineChart(data: List<Int>) {
+        val entries = ArrayList<Entry>()
+        entries.add(Entry(1f, 0f))
+        entries.add(Entry(2f, 1f))
+        entries.add(Entry(3f, 2f))
+        entries.add(Entry(4f, 3f))
+        entries.add(Entry(5f, 4f))
+    }
 
     private fun setLineChart() {
         val entries = ArrayList<Entry>()
 
-        entries.add(Entry(1f, 0))
-        entries.add(Entry(2f, 1))
-        entries.add(Entry(3f, 2))
-        entries.add(Entry(4f, 3))
-        entries.add(Entry(5f, 4))
+        entries.add(Entry(1f, 0f))
+        entries.add(Entry(2f, 1f))
+        entries.add(Entry(3f, 2f))
+        entries.add(Entry(4f, 3f))
+        entries.add(Entry(5f, 4f))
 
         val vl = LineDataSet(entries, "My Type")
         vl.setDrawValues(false)
@@ -50,7 +58,7 @@ class HistoryFragment : Fragment() {
 
         lineChart.xAxis.labelRotationAngle = 0f
 
-        lineChart.data = LineData()
+        lineChart.data = LineData(vl)
 
         lineChart.axisRight.isEnabled = false
 
@@ -67,27 +75,17 @@ class HistoryFragment : Fragment() {
 
     private fun setBarChart() {
         val entries = ArrayList<BarEntry>()
-        entries.add(BarEntry(8f, 0))
-        entries.add(BarEntry(2f, 1))
-        entries.add(BarEntry(5f, 2))
-        entries.add(BarEntry(20f, 3))
-        entries.add(BarEntry(15f, 4))
-        entries.add(BarEntry(19f, 5))
+        entries.add(BarEntry(8f, 0f))
+        entries.add(BarEntry(2f, 1f))
+        entries.add(BarEntry(5f, 2f))
+        entries.add(BarEntry(20f, 3f))
+        entries.add(BarEntry(15f, 4f))
+        entries.add(BarEntry(19f, 5f))
 
         val barDataSet = BarDataSet(entries, "Cells")
 
-        val labels = ArrayList<String>()
-        labels.add("18-Jan")
-        labels.add("19-Jan")
-        labels.add("20-Jan")
-        labels.add("21-Jan")
-        labels.add("22-Jan")
-        labels.add("23-Jan")
-
-        val data = BarData(labels, barDataSet)
-        barChart.data = data // set the data and list of lables into chart
-
-        barChart.setDescription("Set Bar Chart Description")  // set the description
+        val data = BarData(barDataSet)
+        barChart.data = data // set the data and list of lables into char
 
         barDataSet.color = resources.getColor(R.color.colorAccent)
 

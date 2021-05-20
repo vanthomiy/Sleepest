@@ -41,7 +41,7 @@ abstract class SleepDatabase : RoomDatabase() {
                         .addCallback(object:RoomDatabase.Callback(){
                             override fun onCreate(db: SupportSQLiteDatabase) {
                                 super.onCreate(db)
-                                instance.alarmDao().setupAlarmDatabase()
+                                //instance.alarmDao().setupAlarmDatabase()
                             }
                         })
                         // Wipes and rebuilds instead of migrating if no Migration object.
