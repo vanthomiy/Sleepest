@@ -13,6 +13,7 @@ import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataRealEntity
 import com.doitstudio.sleepest_master.storage.db.SleepDatabase
 import com.google.gson.Gson
+import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.first
 import org.hamcrest.CoreMatchers
 import org.junit.Before
@@ -444,63 +445,62 @@ class SleepCalculationHandlerTest
         // assign each time new... to check if it is working also
         var sleepCalculationHandler = SleepCalculationHandler.getHandler(context)
 
-        var lastTimestamp = 0
-        var holdTime = 15*60
-        var lastTimestampWakeup = 0
+
 
         // problem: we have same days in here so we have to select just a few ...otherwise we will have buggy things
-        val daysCount = 10
-        var startDay = LocalDateTime.MIN
-        val datasets = mutableMapOf<Int, MutableList<SleepApiRawDataEntity>>()
-        val datasetsReal = mutableMapOf<Int, MutableList<SleepApiRawDataRealEntity>>()
-        var count = 0
-/*
-        for(i in 0.. data.lastIndex){
-            val actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(data[i].timestampSeconds.toLong()*1000), ZoneOffset.UTC)
+        val increase = 10
+        val maxCount = data.count()-1
 
-            if(actualTime > startDay){
-                startDay = actualTime.plusDays(daysCount.toLong())
-                datasets[count] = mutableListOf()
-                datasetsReal[count] = mutableListOf()
-                count++
+
+        var dayCount = 0
+
+        // take each time 10 days/nights and calculate!!
+        for(i in 0..data.count() step 10) {
+
+            for(j in 0..10){
+
+                var lastTimestamp = 0
+                var holdTime = 15*60
+                var lastTimestampWakeup = 0
+
+                data[i+j].forEach {
+
+                    rawdata->
+
+                    // insert the sleep api data
+                    sleepDbRepository.insertSleepApiRawData(rawdata)
+
+                    val actualTime = LocalDateTime.ofInstant(
+                        Instant.ofEpochMilli(lastTimestamp.toLong() * 1000),
+                        ZoneOffset.UTC
+                    )
+
+                    // only call it every 15 minutes or like so
+                    if (lastTimestamp + holdTime < rawdata.timestampSeconds) {
+
+                        lastTimestamp = rawdata.timestampSeconds
+                        // call the sleep calc handler...
+
+                        sleepCalculationHandler.checkIsUserSleeping(actualTime)
+                    }
+
+                    if (actualTime.hour in 5..7 && lastTimestampWakeup + holdTime < rawdata.timestampSeconds) {
+
+                        lastTimestampWakeup = rawdata.timestampSeconds
+                        sleepCalculationHandler.defineUserWakeup(actualTime)
+                    }
+
+                }
+
+                dayCount+=1
             }
-
-            datasets[count]?.add(data[i])
-            datasetsReal[count]?.add(dataTrue[i])
         }
-*/
-/*
-        data.forEach{
-
-            rawdata ->
-
-            // insert the sleep api data
-            sleepDbRepository.insertSleepApiRawData(rawdata)
-
-            val actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(lastTimestamp.toLong()*1000), ZoneOffset.UTC)
-
-            // only call it every 15 minutes or like so
-            if(lastTimestamp+holdTime < rawdata.timestampSeconds){
-
-                lastTimestamp = rawdata.timestampSeconds
-                // call the sleep calc handler...
-
-                sleepCalculationHandler.checkIsUserSleeping(actualTime)
-            }
-
-            if(actualTime.hour in 5..7 && lastTimestampWakeup+holdTime < rawdata.timestampSeconds){
-
-                lastTimestampWakeup = rawdata.timestampSeconds
-                sleepCalculationHandler.defineUserWakeup(actualTime)
-            }
-        }
-*/
 
         // at the really end we should have as much sleep user sessions as times....
+        val dasas = dayCount
+        val sleepSessions = sleepDbRepository.allUserSleepSessions.first()
 
-        val dasas = datasets
-        val sdfsdf = datasetsReal
-
+        var asas = sleepSessions.count()
 
     }
 }
