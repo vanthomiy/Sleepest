@@ -139,7 +139,7 @@ public class ForegroundService extends LifecycleService {
         int timeDifference = time.getActualWakeup() - secondsOfDay;
 
         //Return if the alarm is on the next day or before first calculation
-        if(secondsOfDay < (time.getWakeupEarly() - 1800) || (time.getWakeupLate() + 3600) < secondsOfDay || alarmClockSet) {
+        if((secondsOfDay < (time.getWakeupEarly() - 1800)) || ((time.getWakeupLate() + 3600) < secondsOfDay) || alarmClockSet) {
             return;
         }
 
@@ -159,8 +159,11 @@ public class ForegroundService extends LifecycleService {
 
             pref = getSharedPreferences("AlarmSet", 0);
             ed = pref.edit();
-            ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
-            ed.putInt("minute", calendar.get(Calendar.MINUTE));
+            ed.putInt("hour", lastestWakeup.get(Calendar.HOUR_OF_DAY));
+            ed.putInt("minute", lastestWakeup.get(Calendar.MINUTE));
+            ed.putInt("hour1", calendar.get(Calendar.HOUR_OF_DAY));
+            ed.putInt("minute1", calendar.get(Calendar.MINUTE));
+            ed.putInt("actualWakeup", time.getActualWakeup());
             ed.apply();
 
             return;
@@ -185,8 +188,11 @@ public class ForegroundService extends LifecycleService {
 
                 pref = getSharedPreferences("AlarmSet", 0);
                 ed = pref.edit();
-                ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
-                ed.putInt("minute", calendar.get(Calendar.MINUTE));
+                ed.putInt("hour", earliestWakeup.get(Calendar.HOUR_OF_DAY));
+                ed.putInt("minute", earliestWakeup.get(Calendar.MINUTE));
+                ed.putInt("hour1", calendar.get(Calendar.HOUR_OF_DAY));
+                ed.putInt("minute1", calendar.get(Calendar.MINUTE));
+                ed.putInt("actualWakeup", time.getActualWakeup());
                 ed.apply();
 
                 return;
@@ -208,8 +214,11 @@ public class ForegroundService extends LifecycleService {
 
                 pref = getSharedPreferences("AlarmSet", 0);
                 ed = pref.edit();
-                ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
-                ed.putInt("minute", calendar.get(Calendar.MINUTE));
+                ed.putInt("hour", lastestWakeup.get(Calendar.HOUR_OF_DAY));
+                ed.putInt("minute", lastestWakeup.get(Calendar.MINUTE));
+                ed.putInt("hour1", calendar.get(Calendar.HOUR_OF_DAY));
+                ed.putInt("minute1", calendar.get(Calendar.MINUTE));
+                ed.putInt("actualWakeup", time.getActualWakeup());
                 ed.apply();
 
                 return;
@@ -229,6 +238,9 @@ public class ForegroundService extends LifecycleService {
                 ed = pref.edit();
                 ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
                 ed.putInt("minute", calendar.get(Calendar.MINUTE));
+                ed.putInt("hour1", Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
+                ed.putInt("minute1", Calendar.getInstance().get(Calendar.MINUTE));
+                ed.putInt("actualWakeup", time.getActualWakeup());
                 ed.apply();
 
                 return;
@@ -247,6 +259,9 @@ public class ForegroundService extends LifecycleService {
                 ed = pref.edit();
                 ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
                 ed.putInt("minute", calendar.get(Calendar.MINUTE));
+                ed.putInt("hour1", Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
+                ed.putInt("minute1", Calendar.getInstance().get(Calendar.MINUTE));
+                ed.putInt("actualWakeup", time.getActualWakeup());
                 ed.apply();
 
                 return;

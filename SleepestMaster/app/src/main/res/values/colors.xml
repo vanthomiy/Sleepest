@@ -21,4 +21,6 @@
     <color name="green">#00FF97</color>
     <color name="blue">#0000FF</color>
     <color name="navy">#000080</color>
+    <color name="cyan_aqua">#2cfdf9</color>
+    <color name="blue_chill">#0f7fa0</color>
 </resources>
