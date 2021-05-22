@@ -51,10 +51,10 @@ class SleepFragment : Fragment() {
 
     fun setupSleepTimeChart(){
 
-        chartStyle.styleChartWeek(binding.sleepTimeChart)
+        //chartStyle.styleChartWeek(binding.sleepTimeChart)
         var data = viewModel.setUpSleepTimeChar()
         chartStyle.styleLineDataSet(data)
-        binding.sleepTimeChart.data = LineData(data)
+       // binding.sleepTimeChart.data = LineData(data)
 
     }
 

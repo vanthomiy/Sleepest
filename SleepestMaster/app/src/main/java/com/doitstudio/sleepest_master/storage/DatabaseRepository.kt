@@ -160,6 +160,10 @@ class DatabaseRepository(
         userSleepSessionDao.insert(userSleepSession)
     }
 
+    suspend fun deleteUserSleepSession() {
+        userSleepSessionDao.deleteAll()
+    }
+
     //endregion
 
     //region Sleep Segments

@@ -62,6 +62,7 @@ message  SleepApiData{
  */
 message  SleepParameters{
 
+
   /**
    * The normal sleep time of the user
    */
@@ -73,7 +74,7 @@ message  SleepParameters{
   int32 sleepTimeStart = 2;
 
   /**
-  * Start of the sleep time for the user
+  * End of the sleep time for the user
   */
   int32 sleepTimeEnd = 3;
 
@@ -83,9 +84,25 @@ message  SleepParameters{
   int32 standardMobilePosition = 4;
 
   /**
-  * standard position of the mobile phone
+  * user frequency use of the mobile phone
   */
   int32 mobileUseFrequency = 5;
+
+  /**
+  * auto sleep times
+  */
+  bool autoSleepTime = 6;
+
+  /**
+  * user activity tracking
+  */
+  bool userActivityTracking = 7;
+
+  /**
+  * implement the user activity tracking in the sleep time
+  */
+  bool implementUserActivityInSleepTime = 8;
+
 
 }
 
