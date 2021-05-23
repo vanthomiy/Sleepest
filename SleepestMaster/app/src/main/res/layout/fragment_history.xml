@@ -10,7 +10,7 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
+        android:id="@+id/cL_SelectDayWeekMonth"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,7 +31,7 @@
             tools:text="Monday 11.05.2021" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/btn_SleepAnalysisPreviousDay"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginEnd="4dp"
@@ -41,7 +41,7 @@
             app:layout_constraintTop_toTopOf="@+id/textView" />
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/btn_SleepAnalysisNextDay"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="4dp"
@@ -51,16 +51,16 @@
             app:layout_constraintTop_toTopOf="@+id/textView" />
 
         <Button
-            android:id="@+id/button4"
+            android:id="@+id/btn_SleepAnalysisDay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Day"
-            app:layout_constraintBottom_toBottomOf="@+id/button5"
-            app:layout_constraintEnd_toStartOf="@+id/button5"
-            app:layout_constraintTop_toTopOf="@+id/button5" />
+            app:layout_constraintBottom_toBottomOf="@+id/btn_SleepAnalysisWeek"
+            app:layout_constraintEnd_toStartOf="@+id/btn_SleepAnalysisWeek"
+            app:layout_constraintTop_toTopOf="@+id/btn_SleepAnalysisWeek" />
 
         <Button
-            android:id="@+id/button5"
+            android:id="@+id/btn_SleepAnalysisWeek"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
@@ -72,43 +72,59 @@
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
         <Button
-            android:id="@+id/button6"
+            android:id="@+id/btn_SleepAnalysisMonth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Month"
-            app:layout_constraintBottom_toBottomOf="@+id/button5"
-            app:layout_constraintStart_toEndOf="@+id/button5"
-            app:layout_constraintTop_toTopOf="@+id/button5" />
+            app:layout_constraintBottom_toBottomOf="@+id/btn_SleepAnalysisWeek"
+            app:layout_constraintStart_toEndOf="@+id/btn_SleepAnalysisWeek"
+            app:layout_constraintTop_toTopOf="@+id/btn_SleepAnalysisWeek" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout2"
-        android:layout_width="match_parent"
+    <ScrollView
+        android:id="@+id/sV_sleepAnalysisChartsDay"
+        android:layout_width="375dp"
         android:layout_height="100dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+        app:layout_constraintTop_toBottomOf="@+id/cL_SelectDayWeekMonth">
 
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/lineChart"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cL_sleepAnalysisChartsDay"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/sV_sleepAnalysisChartsDay">
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/lineChart_sleepAnalysisDay"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pieChart_sleepAnalysisDay"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lineChart_sleepAnalysisDay" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout3"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_marginTop="20dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintVertical_bias="0.8">
 
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/barChart"

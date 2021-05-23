@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.history -> {
-                    fragment = HistoryFragment()
+                    fragment = HistoryFragment(this)
                     true
                 }
                 R.id.sleep -> {

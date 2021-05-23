@@ -94,6 +94,11 @@ class SleepCalculationDbRepository(
         return sleepApiRawDataDao.getBetween(startTime,endTime)
     }
 
+    fun getSleepApiRawDataBetweenTimestamps(startTime: Int, endTime: Int): Flow<List<SleepApiRawDataEntity>>
+    {
+        return sleepApiRawDataDao.getBetween(startTime, endTime)
+    }
+
     suspend fun insertSleepApiRawData(sleepClassifyEventEntity: SleepApiRawDataEntity) {
         sleepApiRawDataDao.insert(sleepClassifyEventEntity)
     }
