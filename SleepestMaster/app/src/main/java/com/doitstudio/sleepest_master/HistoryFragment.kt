@@ -209,17 +209,13 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         pieChart.animateY(1000, Easing.EaseInOutQuad)
     }
 
-    private fun generateDataBarChart() {
-        val barWidth: Float
-        val barSpace: Float
-        val groupSpace: Float
-        val groupCount = 12
+    private fun generateDataBarChart() { //http://developine.com/android-grouped-stacked-bar-chart-using-mpchart-kotlin/
 
-        barWidth = 0.15f
-        barSpace = 0.07f
-        groupSpace = 0.56f
+        val barWidth = 0.15f
+        val barSpace = 0.07f
+        val groupSpace = 0.56f
 
-        var xAxisValues = ArrayList<String>()
+        val xAxisValues = ArrayList<String>()
         xAxisValues.add("Jan")
         xAxisValues.add("Feb")
         xAxisValues.add("Mar")
@@ -227,23 +223,12 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         xAxisValues.add("May")
         xAxisValues.add("June")
         xAxisValues.add("Jul")
-        xAxisValues.add("Aug")
-        xAxisValues.add("Sep")
-        xAxisValues.add("Oct")
-        xAxisValues.add("Nov")
-        xAxisValues.add("Dec")
 
-        var yValueGroup1 = ArrayList<BarEntry>()
-        var yValueGroup2 = ArrayList<BarEntry>()
-
-        // draw the graph
-        var barDataSet1: BarDataSet
-        var barDataSet2: BarDataSet
-
+        val yValueGroup1 = ArrayList<BarEntry>()
+        val yValueGroup2 = ArrayList<BarEntry>()
 
         yValueGroup1.add(BarEntry(1f, floatArrayOf(9.toFloat(), 3.toFloat())))
         yValueGroup2.add(BarEntry(1f, floatArrayOf(2.toFloat(), 7.toFloat())))
-
 
         yValueGroup1.add(BarEntry(2f, floatArrayOf(3.toFloat(), 3.toFloat())))
         yValueGroup2.add(BarEntry(2f, floatArrayOf(4.toFloat(), 15.toFloat())))
@@ -254,44 +239,23 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         yValueGroup1.add(BarEntry(4f, floatArrayOf(3.toFloat(), 3.toFloat())))
         yValueGroup2.add(BarEntry(4f, floatArrayOf(4.toFloat(), 15.toFloat())))
 
-
         yValueGroup1.add(BarEntry(5f, floatArrayOf(9.toFloat(), 3.toFloat())))
         yValueGroup2.add(BarEntry(5f, floatArrayOf(10.toFloat(), 6.toFloat())))
 
         yValueGroup1.add(BarEntry(6f, floatArrayOf(11.toFloat(), 1.toFloat())))
         yValueGroup2.add(BarEntry(6f, floatArrayOf(12.toFloat(), 2.toFloat())))
 
-
         yValueGroup1.add(BarEntry(7f, floatArrayOf(11.toFloat(), 7.toFloat())))
         yValueGroup2.add(BarEntry(7f, floatArrayOf(12.toFloat(), 12.toFloat())))
 
-
-        yValueGroup1.add(BarEntry(8f, floatArrayOf(11.toFloat(), 9.toFloat())))
-        yValueGroup2.add(BarEntry(8f, floatArrayOf(12.toFloat(), 8.toFloat())))
-
-
-        yValueGroup1.add(BarEntry(9f, floatArrayOf(11.toFloat(), 13.toFloat())))
-        yValueGroup2.add(BarEntry(9f, floatArrayOf(12.toFloat(), 12.toFloat())))
-
-        yValueGroup1.add(BarEntry(10f, floatArrayOf(11.toFloat(), 2.toFloat())))
-        yValueGroup2.add(BarEntry(10f, floatArrayOf(12.toFloat(), 7.toFloat())))
-
-        yValueGroup1.add(BarEntry(11f, floatArrayOf(11.toFloat(), 6.toFloat())))
-        yValueGroup2.add(BarEntry(11f, floatArrayOf(12.toFloat(), 5.toFloat())))
-
-        yValueGroup1.add(BarEntry(12f, floatArrayOf(11.toFloat(), 2.toFloat())))
-        yValueGroup2.add(BarEntry(12f, floatArrayOf(12.toFloat(), 3.toFloat())))
-
-
-        barDataSet1 = BarDataSet(yValueGroup1, "")
-        barDataSet1.setColors(Color.BLUE, Color.RED)
+        val barDataSet1 = BarDataSet(yValueGroup1, "")
+        barDataSet1.setColors(Color.BLUE, Color.RED, Color.CYAN)
         barDataSet1.label = "2016"
         barDataSet1.setDrawIcons(false)
         barDataSet1.setDrawValues(false)
 
 
-
-        barDataSet2 = BarDataSet(yValueGroup2, "")
+        val barDataSet2 = BarDataSet(yValueGroup2, "")
 
         barDataSet2.label = "2017"
         barDataSet2.setColors(Color.YELLOW, Color.RED)
@@ -299,72 +263,71 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         barDataSet2.setDrawIcons(false)
         barDataSet2.setDrawValues(false)
 
-        var barData = BarData(barDataSet1, barDataSet2)
+        val barData = BarData(barDataSet1) //, barDataSet2)
 
         barChart.description.isEnabled = false
         barChart.description.textSize = 0f
         barData.setValueFormatter(LargeValueFormatter())
-        barChart.setData(barData)
-        barChart.getBarData().setBarWidth(barWidth)
-        barChart.getXAxis().setAxisMinimum(0f)
-        barChart.getXAxis().setAxisMaximum(12f)
-        barChart.groupBars(0f, groupSpace, barSpace)
-        //   barChartView.setFitBars(true)
-        barChart.getData().setHighlightEnabled(false)
+        barChart.data = barData
+        barChart.barData.barWidth = barWidth
+        barChart.xAxis.axisMinimum = 0f
+        barChart.xAxis.axisMaximum = 7f
+        //barChart.groupBars(0f, groupSpace, barSpace)
+        barChart.data.isHighlightEnabled = false
         barChart.invalidate()
 
         // set bar label
-        var legend = barChart.legend
-        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM)
-        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT)
-        legend.setOrientation(Legend.LegendOrientation.HORIZONTAL)
+        val legend = barChart.legend
+        legend.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+        legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
+        legend.orientation = Legend.LegendOrientation.HORIZONTAL
         legend.setDrawInside(false)
 
-        var legenedEntries = arrayListOf<LegendEntry>()
+        val legenedEntries = arrayListOf<LegendEntry>()
 
         legenedEntries.add(LegendEntry("2016", Legend.LegendForm.SQUARE, 8f, 8f, null, Color.RED))
         legenedEntries.add(LegendEntry("2017", Legend.LegendForm.SQUARE, 8f, 8f, null, Color.YELLOW))
 
         legend.setCustom(legenedEntries)
 
-        legend.setYOffset(2f)
-        legend.setXOffset(2f)
-        legend.setYEntrySpace(0f)
-        legend.setTextSize(5f)
+        legend.yOffset = 2f
+        legend.xOffset = 2f
+        legend.yEntrySpace = 0f
+        legend.textSize = 5f
 
-        val xAxis = barChart.getXAxis()
-        xAxis.setGranularity(1f)
-        xAxis.setGranularityEnabled(true)
+        val xAxis = barChart.xAxis
+        xAxis.granularity = 1f
+        xAxis.isGranularityEnabled = true
         xAxis.setCenterAxisLabels(true)
         xAxis.setDrawGridLines(false)
         xAxis.textSize = 9f
 
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM)
-        xAxis.setValueFormatter(IndexAxisValueFormatter(xAxisValues))
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+        xAxis.valueFormatter = IndexAxisValueFormatter(xAxisValues)
 
-        xAxis.setLabelCount(12)
-        xAxis.mAxisMaximum = 12f
+        xAxis.labelCount = 7
+        xAxis.mAxisMaximum = 7f
         xAxis.setCenterAxisLabels(true)
         xAxis.setAvoidFirstLastClipping(true)
         xAxis.spaceMin = 4f
         xAxis.spaceMax = 4f
 
-        barChart.setVisibleXRangeMaximum(12f)
-        barChart.setVisibleXRangeMinimum(12f)
-        barChart.setDragEnabled(true)
+        barChart.setVisibleXRangeMaximum(7f)
+        barChart.setVisibleXRangeMinimum(7f)
+        barChart.isDragEnabled = true
 
         //Y-axis
-        barChart.getAxisRight().setEnabled(false)
+        barChart.axisRight.isEnabled = false
         barChart.setScaleEnabled(true)
 
-        val leftAxis = barChart.getAxisLeft()
-        leftAxis.setValueFormatter(LargeValueFormatter())
+        val leftAxis = barChart.axisLeft
+        leftAxis.valueFormatter = LargeValueFormatter()
         leftAxis.setDrawGridLines(false)
-        leftAxis.setSpaceTop(1f)
-        leftAxis.setAxisMinimum(0f)
+        leftAxis.spaceTop = 1f
+        leftAxis.axisMinimum = 0f
 
 
         barChart.data = barData
-        barChart.setVisibleXRange(1f, 12f)
+        barChart.setVisibleXRange(1f, 7f)
     }
 }
