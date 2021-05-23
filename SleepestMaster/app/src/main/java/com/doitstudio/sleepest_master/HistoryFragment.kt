@@ -1,12 +1,14 @@
 package com.doitstudio.sleepest_master
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ScrollView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationDbRepository
@@ -19,7 +21,12 @@ import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.LegendEntry
+import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.formatter.LargeValueFormatter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -41,7 +48,9 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
     private lateinit var btnSleepAnalysisMonth : Button
     private lateinit var btnSleepAnalysisPreviousDay : Button
     private lateinit var btnSleepAnalysisNextDay : Button
-    private lateinit var sVSleepAnalysisChartsDay : ScrollView
+    private lateinit var sVSleepAnalysisDay : ScrollView
+    private lateinit var sVSleepAnalysisWeek : ScrollView
+    private lateinit var sVSleepAnalysisMonth : ScrollView
     private lateinit var sleepSessions : MutableList<UserSleepSessionEntity>
     private lateinit var sleepSessionsData : MutableMap<UserSleepSessionEntity, List<SleepApiRawDataEntity>>
 
@@ -56,7 +65,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        barChart = view.findViewById(R.id.barChart)
+        barChart = view.findViewById(R.id.barChart_sleepAnalysisWeek)
         lineChart = view.findViewById(R.id.lineChart_sleepAnalysisDay)
         pieChart = view.findViewById(R.id.pieChart_sleepAnalysisDay)
         btnSleepAnalysisDay = view.findViewById(R.id.btn_SleepAnalysisDay)
@@ -64,21 +73,30 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         btnSleepAnalysisMonth = view.findViewById(R.id.btn_SleepAnalysisMonth)
         btnSleepAnalysisPreviousDay = view.findViewById(R.id.btn_SleepAnalysisPreviousDay)
         btnSleepAnalysisNextDay = view.findViewById(R.id.btn_SleepAnalysisNextDay)
+        sVSleepAnalysisDay = view.findViewById(R.id.sV_sleepAnalysisChartsDays)
+        sVSleepAnalysisWeek = view.findViewById(R.id.sV_sleepAnalysisChartsWeek)
+        //sVSleepAnalysisMonth = view.findViewById(R.id.sV_sleepAnalysisChartsMonth)
 
         sleepSessions = mutableListOf()
         sleepSessionsData = mutableMapOf()
 
-        /*
+
         btnSleepAnalysisDay.setOnClickListener {
-            viewExtendedAlarmSettings.isVisible = !viewExtendedAlarmSettings.isVisible
+            sVSleepAnalysisDay.isVisible = true
+            sVSleepAnalysisWeek.isVisible = false
+            //sVSleepAnalysisMonth.isVisible = false
         }
 
         btnSleepAnalysisWeek.setOnClickListener {
-            viewExtendedAlarmSettings.isVisible = !viewExtendedAlarmSettings.isVisible
+            sVSleepAnalysisDay.isVisible = false
+            sVSleepAnalysisWeek.isVisible = true
+            //sVSleepAnalysisMonth.isVisible = false
         }
 
         btnSleepAnalysisMonth.setOnClickListener {
-            viewExtendedAlarmSettings.isVisible = !viewExtendedAlarmSettings.isVisible
+            sVSleepAnalysisDay.isVisible = false
+            sVSleepAnalysisWeek.isVisible = false
+            //sVSleepAnalysisMonth.isVisible = true
         }
 
         btnSleepAnalysisPreviousDay.setOnClickListener {
@@ -88,8 +106,6 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         btnSleepAnalysisNextDay.setOnClickListener {
 
         }
-
-         */
 
         sleepDbRepository = DbRepository.getRepo(
             dbDatabase.sleepDataDao(),
@@ -112,13 +128,11 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
                 sleepSessionsData[sleepSessions[i]] =
                     sleep1DbRepository.getSleepApiRawDataBetweenTimestamps(startTime, endTime).first().sortedBy { x -> x.timestampSeconds }
             }
-            var b = sleepSessions
+
             setLineChart()
             setPieChart()
+            generateDataBarChart()
         }
-
-        //setBarChart()
-
     }
 
     private fun generateDataLineChart() : ArrayList<Entry> {
@@ -195,22 +209,162 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         pieChart.animateY(1000, Easing.EaseInOutQuad)
     }
 
-    private fun setBarChart() {
-        val entries = ArrayList<BarEntry>()
-        entries.add(BarEntry(8f, 0f))
-        entries.add(BarEntry(2f, 1f))
-        entries.add(BarEntry(5f, 2f))
-        entries.add(BarEntry(20f, 3f))
-        entries.add(BarEntry(15f, 4f))
-        entries.add(BarEntry(19f, 5f))
+    private fun generateDataBarChart() {
+        val barWidth: Float
+        val barSpace: Float
+        val groupSpace: Float
+        val groupCount = 12
 
-        val barDataSet = BarDataSet(entries, "Cells")
+        barWidth = 0.15f
+        barSpace = 0.07f
+        groupSpace = 0.56f
 
-        val data = BarData(barDataSet)
-        barChart.data = data // set the data and list of lables into char
+        var xAxisValues = ArrayList<String>()
+        xAxisValues.add("Jan")
+        xAxisValues.add("Feb")
+        xAxisValues.add("Mar")
+        xAxisValues.add("Apr")
+        xAxisValues.add("May")
+        xAxisValues.add("June")
+        xAxisValues.add("Jul")
+        xAxisValues.add("Aug")
+        xAxisValues.add("Sep")
+        xAxisValues.add("Oct")
+        xAxisValues.add("Nov")
+        xAxisValues.add("Dec")
 
-        barDataSet.color = resources.getColor(R.color.colorAccent)
+        var yValueGroup1 = ArrayList<BarEntry>()
+        var yValueGroup2 = ArrayList<BarEntry>()
 
-        barChart.animateY(100)
+        // draw the graph
+        var barDataSet1: BarDataSet
+        var barDataSet2: BarDataSet
+
+
+        yValueGroup1.add(BarEntry(1f, floatArrayOf(9.toFloat(), 3.toFloat())))
+        yValueGroup2.add(BarEntry(1f, floatArrayOf(2.toFloat(), 7.toFloat())))
+
+
+        yValueGroup1.add(BarEntry(2f, floatArrayOf(3.toFloat(), 3.toFloat())))
+        yValueGroup2.add(BarEntry(2f, floatArrayOf(4.toFloat(), 15.toFloat())))
+
+        yValueGroup1.add(BarEntry(3f, floatArrayOf(3.toFloat(), 3.toFloat())))
+        yValueGroup2.add(BarEntry(3f, floatArrayOf(4.toFloat(), 15.toFloat())))
+
+        yValueGroup1.add(BarEntry(4f, floatArrayOf(3.toFloat(), 3.toFloat())))
+        yValueGroup2.add(BarEntry(4f, floatArrayOf(4.toFloat(), 15.toFloat())))
+
+
+        yValueGroup1.add(BarEntry(5f, floatArrayOf(9.toFloat(), 3.toFloat())))
+        yValueGroup2.add(BarEntry(5f, floatArrayOf(10.toFloat(), 6.toFloat())))
+
+        yValueGroup1.add(BarEntry(6f, floatArrayOf(11.toFloat(), 1.toFloat())))
+        yValueGroup2.add(BarEntry(6f, floatArrayOf(12.toFloat(), 2.toFloat())))
+
+
+        yValueGroup1.add(BarEntry(7f, floatArrayOf(11.toFloat(), 7.toFloat())))
+        yValueGroup2.add(BarEntry(7f, floatArrayOf(12.toFloat(), 12.toFloat())))
+
+
+        yValueGroup1.add(BarEntry(8f, floatArrayOf(11.toFloat(), 9.toFloat())))
+        yValueGroup2.add(BarEntry(8f, floatArrayOf(12.toFloat(), 8.toFloat())))
+
+
+        yValueGroup1.add(BarEntry(9f, floatArrayOf(11.toFloat(), 13.toFloat())))
+        yValueGroup2.add(BarEntry(9f, floatArrayOf(12.toFloat(), 12.toFloat())))
+
+        yValueGroup1.add(BarEntry(10f, floatArrayOf(11.toFloat(), 2.toFloat())))
+        yValueGroup2.add(BarEntry(10f, floatArrayOf(12.toFloat(), 7.toFloat())))
+
+        yValueGroup1.add(BarEntry(11f, floatArrayOf(11.toFloat(), 6.toFloat())))
+        yValueGroup2.add(BarEntry(11f, floatArrayOf(12.toFloat(), 5.toFloat())))
+
+        yValueGroup1.add(BarEntry(12f, floatArrayOf(11.toFloat(), 2.toFloat())))
+        yValueGroup2.add(BarEntry(12f, floatArrayOf(12.toFloat(), 3.toFloat())))
+
+
+        barDataSet1 = BarDataSet(yValueGroup1, "")
+        barDataSet1.setColors(Color.BLUE, Color.RED)
+        barDataSet1.label = "2016"
+        barDataSet1.setDrawIcons(false)
+        barDataSet1.setDrawValues(false)
+
+
+
+        barDataSet2 = BarDataSet(yValueGroup2, "")
+
+        barDataSet2.label = "2017"
+        barDataSet2.setColors(Color.YELLOW, Color.RED)
+
+        barDataSet2.setDrawIcons(false)
+        barDataSet2.setDrawValues(false)
+
+        var barData = BarData(barDataSet1, barDataSet2)
+
+        barChart.description.isEnabled = false
+        barChart.description.textSize = 0f
+        barData.setValueFormatter(LargeValueFormatter())
+        barChart.setData(barData)
+        barChart.getBarData().setBarWidth(barWidth)
+        barChart.getXAxis().setAxisMinimum(0f)
+        barChart.getXAxis().setAxisMaximum(12f)
+        barChart.groupBars(0f, groupSpace, barSpace)
+        //   barChartView.setFitBars(true)
+        barChart.getData().setHighlightEnabled(false)
+        barChart.invalidate()
+
+        // set bar label
+        var legend = barChart.legend
+        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM)
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT)
+        legend.setOrientation(Legend.LegendOrientation.HORIZONTAL)
+        legend.setDrawInside(false)
+
+        var legenedEntries = arrayListOf<LegendEntry>()
+
+        legenedEntries.add(LegendEntry("2016", Legend.LegendForm.SQUARE, 8f, 8f, null, Color.RED))
+        legenedEntries.add(LegendEntry("2017", Legend.LegendForm.SQUARE, 8f, 8f, null, Color.YELLOW))
+
+        legend.setCustom(legenedEntries)
+
+        legend.setYOffset(2f)
+        legend.setXOffset(2f)
+        legend.setYEntrySpace(0f)
+        legend.setTextSize(5f)
+
+        val xAxis = barChart.getXAxis()
+        xAxis.setGranularity(1f)
+        xAxis.setGranularityEnabled(true)
+        xAxis.setCenterAxisLabels(true)
+        xAxis.setDrawGridLines(false)
+        xAxis.textSize = 9f
+
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM)
+        xAxis.setValueFormatter(IndexAxisValueFormatter(xAxisValues))
+
+        xAxis.setLabelCount(12)
+        xAxis.mAxisMaximum = 12f
+        xAxis.setCenterAxisLabels(true)
+        xAxis.setAvoidFirstLastClipping(true)
+        xAxis.spaceMin = 4f
+        xAxis.spaceMax = 4f
+
+        barChart.setVisibleXRangeMaximum(12f)
+        barChart.setVisibleXRangeMinimum(12f)
+        barChart.setDragEnabled(true)
+
+        //Y-axis
+        barChart.getAxisRight().setEnabled(false)
+        barChart.setScaleEnabled(true)
+
+        val leftAxis = barChart.getAxisLeft()
+        leftAxis.setValueFormatter(LargeValueFormatter())
+        leftAxis.setDrawGridLines(false)
+        leftAxis.setSpaceTop(1f)
+        leftAxis.setAxisMinimum(0f)
+
+
+        barChart.data = barData
+        barChart.setVisibleXRange(1f, 12f)
     }
 }
