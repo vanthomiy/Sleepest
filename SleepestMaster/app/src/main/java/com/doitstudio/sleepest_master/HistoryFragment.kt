@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ScrollView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationDbRepository
@@ -131,7 +130,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
 
             setLineChart()
             setPieChart()
-            generateDataBarChart()
+            setBarChart()
         }
     }
 
@@ -162,30 +161,30 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
     }
 
     private fun generateDataPieChart() : ArrayList<PieEntry> {
-        var awake = 0
-        var sleep = 0
-        var ligthSleep = 0
-        var deepSleep = 0
-        var remSleep = 0
+        var awake = 0f
+        var sleep = 0f
+        var ligthSleep = 0f
+        var deepSleep = 0f
+        var remSleep = 0f
         val entries = ArrayList<PieEntry>()
-        var absolute = 0
+        var absolute = 0f
 
         for (i in sleepSessionsData[sleepSessions[0]]!!) {
             when (i.sleepState.ordinal) {
-                0 -> { awake += 1 }
-                1 -> { ligthSleep += 1 }
-                2 -> { deepSleep += 1 }
-                3 -> { remSleep += 1 }
-                4 -> { sleep += 1 }
+                0 -> { awake += 1f }
+                1 -> { ligthSleep += 1f }
+                2 -> { deepSleep += 1f }
+                3 -> { remSleep += 1f }
+                4 -> { sleep += 1f }
             }
             absolute += 1
         }
 
-        if (awake > 0) { entries.add(PieEntry((absolute / awake).toFloat(), "awake")) }
-        if (ligthSleep > 0) { entries.add(PieEntry((absolute / ligthSleep).toFloat(), "light")) }
-        if (deepSleep > 0) { entries.add(PieEntry((absolute / deepSleep).toFloat(), "deep")) }
-        if (remSleep > 0) { entries.add(PieEntry((absolute / remSleep).toFloat(), "rem")) }
-        if (sleep > 0) { entries.add(PieEntry((absolute / sleep).toFloat(), "sleep")) }
+        if (awake > 0) { entries.add(PieEntry((awake / absolute), "awake")) }
+        if (ligthSleep > 0) { entries.add(PieEntry((ligthSleep / absolute), "light")) }
+        if (deepSleep > 0) { entries.add(PieEntry((deepSleep / absolute), "deep")) }
+        if (remSleep > 0) { entries.add(PieEntry((remSleep / absolute), "rem")) }
+        if (sleep > 0) { entries.add(PieEntry((sleep / absolute), "sleep")) }
 
         return entries
     }
@@ -209,61 +208,69 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         pieChart.animateY(1000, Easing.EaseInOutQuad)
     }
 
-    private fun generateDataBarChart() { //http://developine.com/android-grouped-stacked-bar-chart-using-mpchart-kotlin/
+    private fun generateDataBarChart(): ArrayList<BarEntry> {
+        var xIndex = 0
+        var awake = 0f
+        var sleep = 0f
+        var ligthSleep = 0f
+        var deepSleep = 0f
+        var remSleep = 0f
+        val entries = ArrayList<BarEntry>()
+        var absolute = 0
 
+        for (i in sleepSessions) {
+            for (j in sleepSessionsData[i]!!) {
+                when (j.sleepState.ordinal) {
+                    0 -> { awake += 1f }
+                    1 -> { ligthSleep += 1f }
+                    2 -> { deepSleep += 1f }
+                    3 -> { remSleep += 1f }
+                    4 -> { sleep += 1f }
+                }
+                absolute += 1
+            }
+            if (awake > 0) { awake = awake / absolute * 100 }
+            if (ligthSleep > 0) { ligthSleep = ligthSleep / absolute * 100 }
+            if (deepSleep > 0) { deepSleep = deepSleep / absolute * 100 }
+            if (remSleep > 0) { remSleep = remSleep / absolute * 100 }
+            if (sleep > 0) { sleep = sleep / absolute * 100 }
+
+            entries.add(BarEntry(xIndex.toFloat(), floatArrayOf(awake, ligthSleep, deepSleep, remSleep, sleep)))
+
+            xIndex += 1
+            awake = 0f
+            sleep = 0f
+            ligthSleep = 0f
+            deepSleep = 0f
+            remSleep = 0f
+            absolute = 0
+        }
+        return entries
+    }
+
+    private fun setBarChart() { //http://developine.com/android-grouped-stacked-bar-chart-using-mpchart-kotlin/
         val barWidth = 0.15f
-        val barSpace = 0.07f
-        val groupSpace = 0.56f
 
         val xAxisValues = ArrayList<String>()
-        xAxisValues.add("Jan")
-        xAxisValues.add("Feb")
-        xAxisValues.add("Mar")
-        xAxisValues.add("Apr")
-        xAxisValues.add("May")
-        xAxisValues.add("June")
-        xAxisValues.add("Jul")
+        xAxisValues.add("0")
+        xAxisValues.add("1")
+        xAxisValues.add("2")
+        xAxisValues.add("3")
+        xAxisValues.add("4")
+        xAxisValues.add("5")
+        xAxisValues.add("6")
+        xAxisValues.add("7")
+        xAxisValues.add("8")
+        xAxisValues.add("9")
+        xAxisValues.add("10")
 
-        val yValueGroup1 = ArrayList<BarEntry>()
-        val yValueGroup2 = ArrayList<BarEntry>()
-
-        yValueGroup1.add(BarEntry(1f, floatArrayOf(9.toFloat(), 3.toFloat())))
-        yValueGroup2.add(BarEntry(1f, floatArrayOf(2.toFloat(), 7.toFloat())))
-
-        yValueGroup1.add(BarEntry(2f, floatArrayOf(3.toFloat(), 3.toFloat())))
-        yValueGroup2.add(BarEntry(2f, floatArrayOf(4.toFloat(), 15.toFloat())))
-
-        yValueGroup1.add(BarEntry(3f, floatArrayOf(3.toFloat(), 3.toFloat())))
-        yValueGroup2.add(BarEntry(3f, floatArrayOf(4.toFloat(), 15.toFloat())))
-
-        yValueGroup1.add(BarEntry(4f, floatArrayOf(3.toFloat(), 3.toFloat())))
-        yValueGroup2.add(BarEntry(4f, floatArrayOf(4.toFloat(), 15.toFloat())))
-
-        yValueGroup1.add(BarEntry(5f, floatArrayOf(9.toFloat(), 3.toFloat())))
-        yValueGroup2.add(BarEntry(5f, floatArrayOf(10.toFloat(), 6.toFloat())))
-
-        yValueGroup1.add(BarEntry(6f, floatArrayOf(11.toFloat(), 1.toFloat())))
-        yValueGroup2.add(BarEntry(6f, floatArrayOf(12.toFloat(), 2.toFloat())))
-
-        yValueGroup1.add(BarEntry(7f, floatArrayOf(11.toFloat(), 7.toFloat())))
-        yValueGroup2.add(BarEntry(7f, floatArrayOf(12.toFloat(), 12.toFloat())))
-
-        val barDataSet1 = BarDataSet(yValueGroup1, "")
-        barDataSet1.setColors(Color.BLUE, Color.RED, Color.CYAN)
-        barDataSet1.label = "2016"
+        val barDataSet1 = BarDataSet(generateDataBarChart(), "")
+        barDataSet1.setColors(Color.BLUE, Color.RED, Color.CYAN, Color.GREEN, Color.YELLOW)
+        barDataSet1.label = "States"
         barDataSet1.setDrawIcons(false)
         barDataSet1.setDrawValues(false)
 
-
-        val barDataSet2 = BarDataSet(yValueGroup2, "")
-
-        barDataSet2.label = "2017"
-        barDataSet2.setColors(Color.YELLOW, Color.RED)
-
-        barDataSet2.setDrawIcons(false)
-        barDataSet2.setDrawValues(false)
-
-        val barData = BarData(barDataSet1) //, barDataSet2)
+        val barData = BarData(barDataSet1)
 
         barChart.description.isEnabled = false
         barChart.description.textSize = 0f
@@ -271,8 +278,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         barChart.data = barData
         barChart.barData.barWidth = barWidth
         barChart.xAxis.axisMinimum = 0f
-        barChart.xAxis.axisMaximum = 7f
-        //barChart.groupBars(0f, groupSpace, barSpace)
+        barChart.xAxis.axisMaximum = 12f
         barChart.data.isHighlightEnabled = false
         barChart.invalidate()
 
@@ -285,8 +291,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
 
         val legenedEntries = arrayListOf<LegendEntry>()
 
-        legenedEntries.add(LegendEntry("2016", Legend.LegendForm.SQUARE, 8f, 8f, null, Color.RED))
-        legenedEntries.add(LegendEntry("2017", Legend.LegendForm.SQUARE, 8f, 8f, null, Color.YELLOW))
+        legenedEntries.add(LegendEntry("States", Legend.LegendForm.SQUARE, 8f, 8f, null, Color.RED))
 
         legend.setCustom(legenedEntries)
 
@@ -305,15 +310,15 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.valueFormatter = IndexAxisValueFormatter(xAxisValues)
 
-        xAxis.labelCount = 7
-        xAxis.mAxisMaximum = 7f
+        xAxis.labelCount = 12
+        xAxis.mAxisMaximum = 12f
         xAxis.setCenterAxisLabels(true)
         xAxis.setAvoidFirstLastClipping(true)
-        xAxis.spaceMin = 4f
+        xAxis.spaceMin = 2f
         xAxis.spaceMax = 4f
 
-        barChart.setVisibleXRangeMaximum(7f)
-        barChart.setVisibleXRangeMinimum(7f)
+        barChart.setVisibleXRangeMaximum(12f)
+        barChart.setVisibleXRangeMinimum(12f)
         barChart.isDragEnabled = true
 
         //Y-axis
@@ -328,6 +333,6 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
 
 
         barChart.data = barData
-        barChart.setVisibleXRange(1f, 7f)
+        barChart.setVisibleXRange(0f, 12f)
     }
 }

@@ -152,7 +152,7 @@ class DbRepositoryTest {
 
 
 
-        for(i in 0..10){
+        for(i in 45..55){
 
 
             var startTime = dataTrue[i].filter { x -> x.real != "awake" }.minByOrNull { y -> y.timestampSeconds }!!.timestampSeconds
