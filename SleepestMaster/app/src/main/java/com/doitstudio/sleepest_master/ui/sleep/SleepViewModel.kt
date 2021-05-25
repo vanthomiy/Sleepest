@@ -117,6 +117,25 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         tpd.show()
     }
 
+    val sleepTimeInfoExpand = ObservableField(View.GONE)
+
+    fun onInfoClicked(view: View){
+        updateInfoChanged(view.tag.toString(), true)
+    }
+
+    private fun updateInfoChanged(value:String, toggle:Boolean = false){
+        when(value){
+            "0"-> {
+                sleepTimeInfoExpand.set(if(sleepTimeInfoExpand.get() == View.GONE) View.VISIBLE else View.GONE)
+            }
+        }
+
+    }
+
+
+    fun onPhonePositionChanged(view: View){
+
+    }
 
     val mobilePosition = ObservableField("Auto detect")
 
@@ -153,6 +172,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
 
     }
+
 
 
 

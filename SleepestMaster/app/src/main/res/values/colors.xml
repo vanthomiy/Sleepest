@@ -21,4 +21,5 @@
     <color name="green">#00FF97</color>
     <color name="blue">#0000FF</color>
     <color name="navy">#000080</color>
+    <color name="secondTextColor">#e94560</color>
 </resources>
