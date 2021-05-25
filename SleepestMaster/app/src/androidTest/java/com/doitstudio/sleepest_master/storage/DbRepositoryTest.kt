@@ -1,10 +1,6 @@
 package com.doitstudio.sleepest_master.storage
 
-import android.app.Instrumentation
 import android.content.Context
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.asLiveData
 import androidx.test.platform.app.InstrumentationRegistry
 import com.doitstudio.sleepest_master.model.data.SleepState
@@ -134,7 +130,7 @@ class DbRepositoryTest {
     @Test
     fun insertSleepData() = runBlocking {
 
-        sleepDbRepository.deleteSleepSegments()
+        sleepDbRepository.deleteUserSleepSession()
         sleep1DbRepository.deleteSleepApiRawData()
 
         // load all data
@@ -158,6 +154,9 @@ class DbRepositoryTest {
             var startTime = dataTrue[i].filter { x -> x.real != "awake" }.minByOrNull { y -> y.timestampSeconds }!!.timestampSeconds
             var endTimeTime = dataTrue[i].filter { x -> x.real != "awake" }.maxByOrNull { y -> y.timestampSeconds }!!.timestampSeconds
 
+
+            val rawDataList = mutableListOf<SleepApiRawDataEntity>()
+
             dataTrue[i].forEach{
                 singledata->
 
@@ -178,11 +177,16 @@ class DbRepositoryTest {
 
                 var rawData = SleepApiRawDataEntity(singledata.timestampSeconds, singledata.confidence, singledata.motion, singledata.light, sleepstate)
 
-
+                rawDataList.add(rawData)
                 sleep1DbRepository.insertSleepApiRawData(rawData)
             }
 
             var sleepTime = SleepTimes(sleepTimeStart = startTime, sleepTimeEnd = endTimeTime)
+            sleepTime.awakeTime = SleepApiRawDataEntity.getAwakeTime(rawDataList)
+            sleepTime.lightSleepDuration = SleepApiRawDataEntity.getSleepTimeByState(rawDataList, SleepState.LIGHT)
+            sleepTime.deepSleepDuration = SleepApiRawDataEntity.getSleepTimeByState(rawDataList, SleepState.DEEP)
+            sleepTime.remSleepDuration = SleepApiRawDataEntity.getSleepTimeByState(rawDataList, SleepState.REM)
+            sleepTime.sleepDuration = SleepApiRawDataEntity.getSleepTime(rawDataList)
             var session = UserSleepSessionEntity(id = startTime, sleepTimes = sleepTime)
             sleepDbRepository.insertUserSleepSession(session)
 

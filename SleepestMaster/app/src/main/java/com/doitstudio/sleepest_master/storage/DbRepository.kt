@@ -76,6 +76,10 @@ class DbRepository(
         userSleepSessionDao.insert(userSleepSession)
     }
 
+    suspend fun deleteUserSleepSession() {
+        userSleepSessionDao.deleteAll()
+    }
+
     //endregion
 
 
