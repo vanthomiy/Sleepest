@@ -144,8 +144,8 @@ class MainActivity : AppCompatActivity() {
                         // if already inside sleeptime
                         if(dataStoreRepository.backgroundServiceFlow.first().isForegroundActive){
                             ForegroundService.startOrStopForegroundService(
-                                Actions.STOP,
-                                applicationContext
+                                    Actions.STOP,
+                                    applicationContext
                             )
                         }
                     }
@@ -153,10 +153,7 @@ class MainActivity : AppCompatActivity() {
                         // Is empty..
                         // We need to check if foreground is active or not... if active we have to stop it from here
                         // if already inside sleeptime
-                        ForegroundService.startOrStopForegroundService(
-                            Actions.START,
-                            applicationContext
-                        )
+                        ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
                     }
                 }
             }
@@ -173,7 +170,8 @@ class MainActivity : AppCompatActivity() {
                     if(!dataStoreRepository.backgroundServiceFlow.first().isForegroundActive){
                         scope.launch {
 
-                            if (dataBaseRepository.getNextActiveAlarm() != null) {
+                            if (dataBaseRepository.getNextActiveAlarm() != null && (!dataBaseRepository.getNextActiveAlarm()!!.wasFired
+                                            || (dataStoreRepository.getSleepTimeBegin() < LocalTime.now().toSecondOfDay()))) {
                                 ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
                             }
                         }
@@ -196,10 +194,10 @@ class MainActivity : AppCompatActivity() {
 
                         //Start a alarm for the new foregroundservice start time
                         AlarmReceiver.startAlarmManager(
-                            calendarAlarm[Calendar.DAY_OF_WEEK],
-                            calendarAlarm[Calendar.HOUR_OF_DAY],
-                            calendarAlarm[Calendar.MINUTE],
-                            applicationContext, 1
+                                calendarAlarm[Calendar.DAY_OF_WEEK],
+                                calendarAlarm[Calendar.HOUR_OF_DAY],
+                                calendarAlarm[Calendar.MINUTE],
+                                applicationContext, 1
                         )
                     }
                 }
@@ -211,6 +209,13 @@ class MainActivity : AppCompatActivity() {
         // check permission
         if (!activityRecognitionPermissionApproved()) {
             requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
+            scope.launch {
+                val calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeBegin())
+                AlarmReceiver.cancelAlarm(applicationContext, 6)
+                AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), applicationContext, 6)
+
+            }
+
         }
 
         checkDrawOverlayPermission()
@@ -223,9 +228,9 @@ class MainActivity : AppCompatActivity() {
 
             // If not, form up an Intent to launch the permission request
             val intent = Intent(
-                Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse(
+                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse(
                     "package:$packageName"
-                )
+            )
             )
 
             // Launch Intent, with the supplied request code
@@ -246,9 +251,9 @@ class MainActivity : AppCompatActivity() {
 
             } else {
                 Toast.makeText(
-                    this,
-                    "Sorry. Can't draw overlays without permission...",
-                    Toast.LENGTH_SHORT
+                        this,
+                        "Sorry. Can't draw overlays without permission...",
+                        Toast.LENGTH_SHORT
                 ).show()
             }
         }
@@ -261,8 +266,8 @@ class MainActivity : AppCompatActivity() {
         // don't need to check if this is on a device before runtime permissions, that is, a device
         // prior to 29 / Q.
         return PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACTIVITY_RECOGNITION
+                this,
+                Manifest.permission.ACTIVITY_RECOGNITION
         )
     }
 

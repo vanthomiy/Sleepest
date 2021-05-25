@@ -27,6 +27,7 @@
     <string name="workmanager2_tag">Workmanager 2</string>
     <string name="alarmmanager_key">com.doitstudio.sleepest_master.background.AlarmIntentKey</string>
     <string name="title_activity_test">TestActivity</string>
+    <string name="error_start_foreground">Something went wrong, try to start the alarms</string>
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
