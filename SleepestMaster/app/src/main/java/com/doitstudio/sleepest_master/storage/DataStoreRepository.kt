@@ -62,7 +62,9 @@ class DataStoreRepository(context: Context) {
 
         val overTwoDays = times.sleepTimeStart > times.sleepTimeEnd
 
-        return ((overTwoDays && (seconds in times.sleepTimeStart..maxTime ||  seconds in 0 .. times.sleepTimeEnd)) || (!overTwoDays && seconds in times.sleepTimeStart..times.sleepTimeEnd))
+        val bla = ((overTwoDays && (seconds in times.sleepTimeStart..maxTime ||  seconds in 0 .. times.sleepTimeEnd)) || (!overTwoDays && seconds in times.sleepTimeStart..times.sleepTimeEnd))
+
+        return bla
     }
 
     fun getSleepTimeBeginJob() : Int = runBlocking{

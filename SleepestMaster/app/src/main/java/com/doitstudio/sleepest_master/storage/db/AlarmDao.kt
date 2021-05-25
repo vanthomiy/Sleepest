@@ -15,7 +15,7 @@ interface AlarmDao {
     @Query("SELECT * FROM alarm_properties_table ORDER BY id DESC")
     fun getAll(): Flow<List<AlarmEntity>>
 
-    @Query("SELECT * FROM alarm_properties_table Where isActive=1 And activeDayOfWeek Like :dayOfWeek And wasFired=0 ORDER BY id DESC")
+    @Query("SELECT * FROM alarm_properties_table Where isActive=1 And activeDayOfWeek Like :dayOfWeek ORDER BY id DESC")
     fun getAllActiveOnDay(dayOfWeek: String): Flow<List<AlarmEntity>>
 
     @Query("SELECT * FROM alarm_properties_table Where isActive=1 ORDER BY id DESC")

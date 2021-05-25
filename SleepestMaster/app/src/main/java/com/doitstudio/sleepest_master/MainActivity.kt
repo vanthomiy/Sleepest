@@ -139,7 +139,7 @@ class MainActivity : AppCompatActivity() {
                 if (dataStoreRepository.isInSleepTime()) {
                     if(list.isEmpty())
                     {
-                        // Not empty..
+                        // empty..
                         // We need to check if foreground is active or not... if not active we have to start it from here
                         // if already inside sleeptime
                         if(dataStoreRepository.backgroundServiceFlow.first().isForegroundActive){
