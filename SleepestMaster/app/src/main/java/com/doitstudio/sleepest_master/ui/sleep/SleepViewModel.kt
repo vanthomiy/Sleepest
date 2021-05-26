@@ -15,6 +15,7 @@ import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.databinding.FragmentSleepBinding
 import com.doitstudio.sleepest_master.model.data.MobilePosition
+import com.doitstudio.sleepest_master.model.data.MobileUseFrequency
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.*
@@ -132,9 +133,15 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
     }
 
+    val phoneUsageValueString = ObservableField("Normal")
+    val phoneUsageValue = ObservableField<Int>(2)
+    fun onPhoneUsageChanged(seekBar: SeekBar, progresValue: Int, fromUser: Boolean){
 
-    fun onPhonePositionChanged(view: View){
-
+        val mf = MobileUseFrequency.getCount(progresValue)
+        phoneUsageValueString.set(mf.toString().toLowerCase().capitalize())
+        scope.launch {
+            dataStoreRepository.updateUserMobileFequency(mf)
+        }
     }
 
     val mobilePosition = ObservableField("Auto detect")
@@ -188,6 +195,8 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
             sleepStartValue.set((if (sleepStartTime.hour < 10) "0" else "") + sleepStartTime.hour.toString() + ":" + (if (sleepStartTime.minute < 10) "0" else "") + sleepStartTime.minute.toString())
             sleepEndValue.set((if (sleepEndTime.hour < 10) "0" else "") + sleepEndTime.hour.toString() + ":" + (if (sleepEndTime.minute < 10) "0" else "") + sleepEndTime.minute.toString())
+
+            phoneUsageValue.set(sleepParams.mobileUseFrequency)
 
             updateMobilePositionChanged(sleepParams.standardMobilePosition.toString())
         }

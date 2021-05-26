@@ -62,7 +62,7 @@ class SleepParameterSerializer() : Serializer<SleepParameters> {
 
     override val defaultValue: SleepParameters = SleepParameters.newBuilder()
         .setStandardMobilePosition(MobilePosition.UNIDENTIFIED.ordinal)
-        .setMobileUseFrequency(MobileUseFrequency.NONE.ordinal)
+        .setMobileUseFrequency(MobileUseFrequency.getValue(MobileUseFrequency.NONE))
         .setNormalSleepTime(32400)
         .setSleepTimeStart(80000)
         .setSleepTimeEnd(40000)
