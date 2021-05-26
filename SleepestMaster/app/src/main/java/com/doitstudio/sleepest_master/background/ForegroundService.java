@@ -49,6 +49,9 @@ public class ForegroundService extends LifecycleService {
     private DataStoreRepository dataStoreRepository;
     private AlarmEntity alarmEntity = null;
     private SleepCalculationHandler sleepCalculationHandler;
+    private SleepHandler sleepHandler;
+
+    public ForegroundObserver foregroundObserver;
 
     //region service functions
 
@@ -79,7 +82,7 @@ public class ForegroundService extends LifecycleService {
         return START_STICKY; // by returning this we make sure the service is restarted if the system kills the service
     }
 
-    ForegroundObserver foregroundObserver;
+
 
     @Override
     public void onCreate() {
@@ -90,6 +93,18 @@ public class ForegroundService extends LifecycleService {
         alarmEntity = foregroundObserver.getNextAlarm();
         foregroundObserver.updateAlarmWasFired(false, alarmEntity.getId());
         dataStoreRepository = DataStoreRepository.Companion.getRepo(getApplicationContext());
+        sleepHandler =  SleepHandler.Companion.getHandler(getApplicationContext());
+
+        //Check if already subscribed, otherwise subscribe to SleepApi and
+        //start AlarmManager to disable at the end of sleeptime
+        if (!foregroundObserver.getSubscribeStatus()) {
+            sleepHandler.startSleepHandler();
+            AlarmReceiver.cancelAlarm(getApplicationContext(), 6);
+            AlarmReceiver.cancelAlarm(getApplicationContext(), 7);
+            Workmanager.startPeriodicWorkmanager(16, getApplicationContext());
+            Calendar calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeEndJob());
+            AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(),7);
+        }
 
 
 
@@ -183,7 +198,7 @@ public class ForegroundService extends LifecycleService {
         //Save state in preferences
         isServiceStarted = false;
         foregroundObserver.setForegroundStatus(false);
-        foregroundObserver.updateAlarmWasFired(false, alarmEntity.getId());
+        foregroundObserver.updateAlarmWasFired(true, alarmEntity.getId());
         //new ServiceTracker().setServiceState(this, ServiceState.STOPPED);
 
         //Workmanager.stopPeriodicWorkmanager();

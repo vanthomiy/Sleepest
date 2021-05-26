@@ -16,7 +16,7 @@ data class AlarmEntity(
         val isActive: Boolean = true,
 
         @ColumnInfo(name = "wasFired")
-        val wasFired: Boolean = true,
+        val wasFired: Boolean = false,
 
         @ColumnInfo(name = "sleepDuration")
         val sleepDuration: Int = 28800,

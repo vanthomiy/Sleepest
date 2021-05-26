@@ -99,6 +99,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 //Set AlarmManager to stop Workmanager at end of sleeptime
                 calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeEndJob());
                 AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context,7);
+
                 break;
             case 7:
                 //Stop Workmanager at end of sleeptime and unsubscribe to SleepApi
@@ -145,6 +146,16 @@ public class AlarmReceiver extends BroadcastReceiver {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(cancelAlarmContext, usage, intent, 0);
         AlarmManager alarmManager = (AlarmManager) cancelAlarmContext.getSystemService(ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
+        pendingIntent.cancel();
+
+        Toast.makeText(cancelAlarmContext, "AlarmManager canceled: " + usage, Toast.LENGTH_LONG).show();
+    }
+
+    public static boolean isAlarmManagerActive(Context alarmActiveContext, int usage) {
+        Intent intent = new Intent(alarmActiveContext, AlarmReceiver.class);
+        boolean alarmUp = (PendingIntent.getBroadcast(alarmActiveContext, usage, intent, PendingIntent.FLAG_NO_CREATE) != null);
+
+        return alarmUp;
     }
 
 

@@ -48,6 +48,15 @@ class ForegroundObserver(private val fs: ForegroundService) {
         }
     }
 
+    fun getSubscribeStatus() : Boolean {
+        var status = false
+        scope.launch {
+            status =  dataStoreRepository.getSubscribeStatus()
+        }
+
+        return status
+    }
+
     fun getForegroundStatus() : Boolean {
         var status = false
         scope.launch {

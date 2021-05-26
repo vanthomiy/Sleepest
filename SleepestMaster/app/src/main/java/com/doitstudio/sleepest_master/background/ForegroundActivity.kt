@@ -48,8 +48,20 @@ class ForegroundActivity : Activity() {
 
                     } else {
                         //Next foreground start at next day
-                        val calendarAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance()[Calendar.DAY_OF_WEEK] + 1, times.startForegroundHour, times.startForegroundMinute)
-                        AlarmReceiver.startAlarmManager(calendarAlarm[Calendar.DAY_OF_WEEK], calendarAlarm[Calendar.HOUR_OF_DAY], calendarAlarm[Calendar.MINUTE], applicationContext, 1)
+                        val calendarAlarm = Calendar.getInstance()
+                        calendarAlarm[Calendar.HOUR_OF_DAY] = 0
+                        calendarAlarm[Calendar.MINUTE] = 0
+                        calendarAlarm[Calendar.SECOND] = 0
+                        calendarAlarm.add(Calendar.SECOND, dataStoreRepository.getSleepTimeBeginJob())
+                        calendarAlarm.add(Calendar.DAY_OF_YEAR, 1)
+
+                        //Start a alarm for the new foregroundservice start time
+                        AlarmReceiver.startAlarmManager(
+                                calendarAlarm[Calendar.DAY_OF_WEEK],
+                                calendarAlarm[Calendar.HOUR_OF_DAY],
+                                calendarAlarm[Calendar.MINUTE],
+                                applicationContext, 1
+                        )
                     }
                 }}
 

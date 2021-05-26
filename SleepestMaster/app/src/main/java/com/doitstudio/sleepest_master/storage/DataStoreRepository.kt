@@ -109,6 +109,9 @@ class DataStoreRepository(context: Context) {
 
     val sleepApiDataFlow: Flow<SleepApiData> = sleepApiDataStatus.sleepApiData
 
+    suspend fun getSubscribeStatus() : Boolean {
+        return sleepApiDataStatus.sleepApiData.first().isSubscribed }
+
     suspend fun updateIsSubscribed(isActive:Boolean) =
             sleepApiDataStatus.updateIsSubscribed(isActive)
 

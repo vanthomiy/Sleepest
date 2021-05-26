@@ -12,6 +12,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
 import com.doitstudio.sleepest_master.background.AlarmReceiver
+import com.doitstudio.sleepest_master.background.ForegroundService
+import com.doitstudio.sleepest_master.background.ForegroundService.*
+import com.doitstudio.sleepest_master.model.data.Actions
 import java.util.*
 
 
@@ -87,14 +90,17 @@ class ProfileFragment : Fragment() {
 
         val btn : Button = root.findViewById(R.id.btnStartForegroundTest)
         btn.setOnClickListener() {
-            //ForegroundService.startOrStopForegroundService(Actions.START, context.getApplicationContext());
+            startOrStopForegroundService(Actions.START, actualContext);
             /*val startForegroundIntent = Intent(context, ForegroundActivity::class.java)
             startForegroundIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             startForegroundIntent.putExtra("intent", 1)
             startActivity(startForegroundIntent)*/
             val calendar = Calendar.getInstance()
-            AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 1, actualContext, 6)
-        }
+
+
+            AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 2, actualContext, 2)
+
+ }
 
         /**EndTest*/
 
