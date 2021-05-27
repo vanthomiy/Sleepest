@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.R
@@ -77,29 +78,34 @@ class ProfileFragment : Fragment() {
             AlarmReceiver: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt("intent", 0)}
             
             """.trimIndent()
+        pref = actualContext.getSharedPreferences("SleepTime", 0)
+        val textSleepTime= """
+            SleepTime: ${pref.getInt("sleeptime", 0)}
+            
+            """.trimIndent()
         pref = actualContext.getSharedPreferences("StopException", 0)
         val textStopException = """
             Exc.: ${pref.getString("exception", "XX")}
             
             """.trimIndent()
 
-        val textGesamt = textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation + textCalc1 + textCalc2 + textAlarmReceiver + textStopException
+        val textGesamt = textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation + textCalc1 + textCalc2 + textAlarmReceiver + textSleepTime + textStopException
 
         val text: TextView = root.findViewById(R.id.text_dashboard)
         text.setText(textGesamt)
 
         val btn : Button = root.findViewById(R.id.btnStartForegroundTest)
         btn.setOnClickListener() {
-            startOrStopForegroundService(Actions.START, actualContext);
+            //startOrStopForegroundService(Actions.START, actualContext);
             /*val startForegroundIntent = Intent(context, ForegroundActivity::class.java)
             startForegroundIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             startForegroundIntent.putExtra("intent", 1)
             startActivity(startForegroundIntent)*/
-            val calendar = Calendar.getInstance()
+            //val calendar = Calendar.getInstance()
 
 
-            AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 2, actualContext, 2)
-
+            //AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 2, actualContext, 2)
+            Toast.makeText(actualContext, "Gut gemacht, die App wird jetzt zerstört", Toast.LENGTH_LONG).show()
  }
 
         /**EndTest*/

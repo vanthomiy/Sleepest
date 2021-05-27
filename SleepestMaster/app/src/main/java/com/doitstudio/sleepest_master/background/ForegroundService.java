@@ -258,6 +258,7 @@ public class ForegroundService extends LifecycleService {
             lastestWakeup.add(Calendar.SECOND, time.getWakeupLate());
             AlarmClockReceiver.startAlarmManager(lastestWakeup.get(Calendar.DAY_OF_WEEK), lastestWakeup.get(Calendar.HOUR_OF_DAY), lastestWakeup.get(Calendar.MINUTE), getApplicationContext(), 1);
             alarmClockSet = true;
+
             pref = getSharedPreferences("AlarmChanged", 0);
             ed = pref.edit();
             ed.putInt("alarmUse", 1);
@@ -271,6 +272,12 @@ public class ForegroundService extends LifecycleService {
             ed.putInt("minute1", calendar.get(Calendar.MINUTE));
             ed.putInt("actualWakeup", time.getActualWakeup());
             ed.apply();
+
+            Calendar sleepTimeCalender = Calendar.getInstance();
+            SharedPreferences prefs = getSharedPreferences("SleepTime", 0);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt("sleeptime", userSleepTime);
+            editor.apply();
 
             return;
         }
@@ -301,6 +308,12 @@ public class ForegroundService extends LifecycleService {
                 ed.putInt("actualWakeup", time.getActualWakeup());
                 ed.apply();
 
+                Calendar sleepTimeCalender = Calendar.getInstance();
+                SharedPreferences prefs = getSharedPreferences("SleepTime", 0);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putInt("sleeptime", userSleepTime);
+                editor.apply();
+
                 return;
             }
 
@@ -327,6 +340,12 @@ public class ForegroundService extends LifecycleService {
                 ed.putInt("actualWakeup", time.getActualWakeup());
                 ed.apply();
 
+                Calendar sleepTimeCalender = Calendar.getInstance();
+                SharedPreferences prefs = getSharedPreferences("SleepTime", 0);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putInt("sleeptime", userSleepTime);
+                editor.apply();
+
                 return;
             }
 
@@ -348,6 +367,12 @@ public class ForegroundService extends LifecycleService {
                 ed.putInt("minute1", Calendar.getInstance().get(Calendar.MINUTE));
                 ed.putInt("actualWakeup", time.getActualWakeup());
                 ed.apply();
+
+                Calendar sleepTimeCalender = Calendar.getInstance();
+                SharedPreferences prefs = getSharedPreferences("SleepTime", 0);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putInt("sleeptime", userSleepTime);
+                editor.apply();
             }
             //Check if the actual time is lower than the actual wakeup and add the difference to the actual time and set the alarm to this new time
             else if (secondsOfDay <= time.getActualWakeup()){
@@ -367,6 +392,12 @@ public class ForegroundService extends LifecycleService {
                 ed.putInt("minute1", Calendar.getInstance().get(Calendar.MINUTE));
                 ed.putInt("actualWakeup", time.getActualWakeup());
                 ed.apply();
+
+                Calendar sleepTimeCalender = Calendar.getInstance();
+                SharedPreferences prefs = getSharedPreferences("SleepTime", 0);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putInt("sleeptime", userSleepTime);
+                editor.apply();
             }
         }
 
