@@ -54,7 +54,15 @@ class DataStoreRepository(context: Context) {
 
         return (time.toSecondOfDay() > times.sleepTimeStart && time.toSecondOfDay() < times.sleepTimeEnd)
     }
+    suspend fun updateActivityTracking(value:Boolean) =
+            sleepParameterStatus.updateActivityTracking(value)
+    suspend fun updateActivityInCalculation(value:Boolean) =
+            sleepParameterStatus.updateActivityInCalculation(value)
+    suspend fun updateEndAlarmAfterFired(value:Boolean) =
+            sleepParameterStatus.updateEndAlarmAfterFired(value)
 
+    suspend fun updateAutoSleepTime(time:Boolean) =
+            sleepParameterStatus.updateAutoSleepTime(time)
     suspend fun updateSleepTimeEnd(time:Int) =
         sleepParameterStatus.updateSleepTimeEnd(time)
     suspend fun updateSleepTimeStart(time:Int) =

@@ -246,7 +246,6 @@ public class ForegroundService extends LifecycleService {
                 return;
             }
         }
-
     }
 
     public void OnSleepApiDataChanged(SleepApiData sleepApiData){

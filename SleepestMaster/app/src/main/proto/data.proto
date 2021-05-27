@@ -103,6 +103,10 @@ message  SleepParameters{
   */
   bool implementUserActivityInSleepTime = 8;
 
+  /**
+* implement the user activity tracking in the sleep time
+*/
+  bool endAlarmAfterFired = 9;
 
 }
 

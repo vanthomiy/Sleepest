@@ -1,5 +1,6 @@
 package com.doitstudio.sleepest_master.ui.sleep
 
+import android.R
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -33,6 +34,9 @@ class SleepFragment : Fragment() {
     ): View? {
 
         binding = FragmentSleepBinding.inflate(inflater, container, false)
+        viewModel.transitionsContainer = (binding.linearAnimationlayout)
+        viewModel.transitionsContainerAll = (binding.transistionAll)
+        viewModel.animatedTopView = binding.animatedTopView
 
         binding.sleepViewModel = viewModel
 
@@ -43,21 +47,7 @@ class SleepFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        chartStyle = SparkLineStyle(view.context)
-        setupSleepTimeChart()
     }
 
-    // region Charts
-
-    fun setupSleepTimeChart(){
-
-        //chartStyle.styleChartWeek(binding.sleepTimeChart)
-        var data = viewModel.setUpSleepTimeChar()
-        chartStyle.styleLineDataSet(data)
-       // binding.sleepTimeChart.data = LineData(data)
-
-    }
-
-    // endregion
 
 }

@@ -554,7 +554,6 @@ class SleepCalculationHandlerTest
             var diff = abs(timeofday-realWakeup)
 
             // assert that diff is not greater then 30 min
-
             assertThat(diff < (30*60) , CoreMatchers.equalTo(true))
             dayCount +=1
 
