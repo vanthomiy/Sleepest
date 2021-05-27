@@ -49,6 +49,7 @@ public class Workmanager extends Worker {
          * problemlos möglich.
          */
 
+
         sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
         sleepCalculationHandler.checkIsUserSleeping(null);
 

@@ -11,8 +11,12 @@ import com.doitstudio.sleepest_master.SleepParameters
 import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.MobileUseFrequency
 import com.doitstudio.sleepest_master.storage.datastorage.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDateTime
 import java.time.LocalTime
 
@@ -32,6 +36,8 @@ class DataStoreRepository(context: Context) {
             }
         }
     }
+
+    private val scope: CoroutineScope = MainScope()
 
     //region SleepParameter Status
 
@@ -56,7 +62,25 @@ class DataStoreRepository(context: Context) {
 
         val overTwoDays = times.sleepTimeStart > times.sleepTimeEnd
 
-        return ((overTwoDays && (seconds in times.sleepTimeStart..maxTime ||  seconds in 0 .. times.sleepTimeEnd)) || (!overTwoDays && seconds in times.sleepTimeStart..times.sleepTimeEnd))
+        val bla = ((overTwoDays && (seconds in times.sleepTimeStart..maxTime ||  seconds in 0 .. times.sleepTimeEnd)) || (!overTwoDays && seconds in times.sleepTimeStart..times.sleepTimeEnd))
+
+        return bla
+    }
+
+    fun getSleepTimeBeginJob() : Int = runBlocking{
+        return@runBlocking getSleepTimeBegin()
+    }
+
+    fun getSleepTimeEndJob() : Int = runBlocking{
+        return@runBlocking getSleepTimeEnd()
+    }
+
+    suspend fun getSleepTimeBegin() : Int {
+        return sleepParameterFlow.first().sleepTimeStart
+    }
+
+    suspend fun getSleepTimeEnd() : Int {
+        return sleepParameterFlow.first().sleepTimeEnd
     }
 
     suspend fun updateSleepTimeEnd(time:Int) =
@@ -84,6 +108,9 @@ class DataStoreRepository(context: Context) {
 
 
     val sleepApiDataFlow: Flow<SleepApiData> = sleepApiDataStatus.sleepApiData
+
+    suspend fun getSubscribeStatus() : Boolean {
+        return sleepApiDataStatus.sleepApiData.first().isSubscribed }
 
     suspend fun updateIsSubscribed(isActive:Boolean) =
             sleepApiDataStatus.updateIsSubscribed(isActive)

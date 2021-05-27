@@ -139,26 +139,25 @@ class MainActivity : AppCompatActivity() {
                 if (dataStoreRepository.isInSleepTime()) {
                     if(list.isEmpty())
                     {
-                        // Not empty..
+                        // empty..
                         // We need to check if foreground is active or not... if not active we have to start it from here
                         // if already inside sleeptime
                         if(dataStoreRepository.backgroundServiceFlow.first().isForegroundActive){
                             ForegroundService.startOrStopForegroundService(
-                                Actions.STOP,
-                                applicationContext
+                                    Actions.STOP,
+                                    applicationContext
                             )
                         }
                     }
-                    else if(!dataStoreRepository.backgroundServiceFlow.first().isForegroundActive){
+                    else if(!dataStoreRepository.backgroundServiceFlow.first().isForegroundActive && !dataBaseRepository.getNextActiveAlarm()!!.wasFired
+                            && ((LocalTime.now().toSecondOfDay() < dataBaseRepository.getNextActiveAlarm()!!.actualWakeup) || (dataStoreRepository.getSleepTimeBegin() < LocalTime.now().toSecondOfDay()))){
                         // Is empty..
                         // We need to check if foreground is active or not... if active we have to stop it from here
                         // if already inside sleeptime
-                        ForegroundService.startOrStopForegroundService(
-                            Actions.START,
-                            applicationContext
-                        )
+                        ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
                     }
                 }
+
             }
         }
 
@@ -171,11 +170,10 @@ class MainActivity : AppCompatActivity() {
                 if (dataStoreRepository.isInSleepTime()) {
                     // alarm should be active else set active
                     if(!dataStoreRepository.backgroundServiceFlow.first().isForegroundActive){
-                        scope.launch {
 
-                            if (dataBaseRepository.getNextActiveAlarm() != null) {
-                                ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
-                            }
+                        if (dataBaseRepository.getNextActiveAlarm() != null && (!dataBaseRepository.getNextActiveAlarm()!!.wasFired
+                                        || ((LocalTime.now().toSecondOfDay() > dataBaseRepository.getNextActiveAlarm()!!.actualWakeup) && (dataStoreRepository.getSleepTimeBegin() < LocalTime.now().toSecondOfDay())))) {
+                            ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
                         }
                     }
                 } else // not in sleep time
@@ -183,11 +181,17 @@ class MainActivity : AppCompatActivity() {
                     // alarm should be not active else disable and set to a new time...
                     if(dataStoreRepository.backgroundServiceFlow.first().isForegroundActive){
                         ForegroundService.startOrStopForegroundService(Actions.STOP, applicationContext)
+                    }
 
-                        //Cancel old alarm
+                    AlarmReceiver.cancelAlarm(applicationContext, 1)
+
+                    //Create a new instance of calendar for the new foregroundservice start time
+
+                    if (AlarmReceiver.isAlarmManagerActive(applicationContext, 1)) {
                         AlarmReceiver.cancelAlarm(applicationContext, 1)
+                    }
 
-                        //Create a new instance of calendar for the new foregroundservice start time
+                    if (!AlarmReceiver.isAlarmManagerActive(applicationContext, 1)) {
                         val calendarAlarm = Calendar.getInstance()
                         calendarAlarm[Calendar.HOUR_OF_DAY] = 0
                         calendarAlarm[Calendar.MINUTE] = 0
@@ -196,10 +200,10 @@ class MainActivity : AppCompatActivity() {
 
                         //Start a alarm for the new foregroundservice start time
                         AlarmReceiver.startAlarmManager(
-                            calendarAlarm[Calendar.DAY_OF_WEEK],
-                            calendarAlarm[Calendar.HOUR_OF_DAY],
-                            calendarAlarm[Calendar.MINUTE],
-                            applicationContext, 1
+                                calendarAlarm[Calendar.DAY_OF_WEEK],
+                                calendarAlarm[Calendar.HOUR_OF_DAY],
+                                calendarAlarm[Calendar.MINUTE],
+                                applicationContext, 1
                         )
                     }
                 }
@@ -223,9 +227,9 @@ class MainActivity : AppCompatActivity() {
 
             // If not, form up an Intent to launch the permission request
             val intent = Intent(
-                Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse(
+                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse(
                     "package:$packageName"
-                )
+            )
             )
 
             // Launch Intent, with the supplied request code
@@ -246,9 +250,9 @@ class MainActivity : AppCompatActivity() {
 
             } else {
                 Toast.makeText(
-                    this,
-                    "Sorry. Can't draw overlays without permission...",
-                    Toast.LENGTH_SHORT
+                        this,
+                        "Sorry. Can't draw overlays without permission...",
+                        Toast.LENGTH_SHORT
                 ).show()
             }
         }
@@ -261,8 +265,8 @@ class MainActivity : AppCompatActivity() {
         // don't need to check if this is on a device before runtime permissions, that is, a device
         // prior to 29 / Q.
         return PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACTIVITY_RECOGNITION
+                this,
+                Manifest.permission.ACTIVITY_RECOGNITION
         )
     }
 
@@ -275,6 +279,27 @@ class MainActivity : AppCompatActivity() {
             } else {
                 //mainViewModel.updatePermissionActive(true)
                 // Permission was granted (either by approval or Android version below Q).
+
+                scope.launch {
+                    val calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeBegin())
+                    AlarmReceiver.cancelAlarm(applicationContext, 6)
+                    AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), applicationContext, 6)
+
+                    val calendarAlarm = Calendar.getInstance()
+                    calendarAlarm[Calendar.HOUR_OF_DAY] = 0
+                    calendarAlarm[Calendar.MINUTE] = 0
+                    calendarAlarm[Calendar.SECOND] = 0
+                    calendarAlarm.add(Calendar.SECOND, dataStoreRepository.getSleepTimeBegin())
+
+                    //Start a alarm for the new foregroundservice start time
+                    AlarmReceiver.startAlarmManager(
+                            calendarAlarm[Calendar.DAY_OF_WEEK],
+                            calendarAlarm[Calendar.HOUR_OF_DAY],
+                            calendarAlarm[Calendar.MINUTE],
+                            applicationContext, 1
+                    )
+
+                }
             }
         }
 
