@@ -244,6 +244,33 @@ public class ForegroundService extends LifecycleService {
         int secondsOfDay = calendar.get(Calendar.HOUR_OF_DAY) * 3600 + calendar.get(Calendar.MINUTE) * 60 + calendar.get(Calendar.SECOND);
         int timeDifference = time.getActualWakeup() - secondsOfDay;
 
+
+
+        //Check if Alarmclock was set and the alarmclock didn't ring
+        if(alarmClockSet && !time.getWasFired() && (secondsOfDay > time.getWakeupEarly())) {
+            calendar.add(Calendar.SECOND, 60);
+            AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(), 1);
+            pref = getSharedPreferences("AlarmChanged", 0);
+            ed = pref.edit();
+            ed.putInt("alarmUse", 7);
+            ed.apply();
+
+            pref = getSharedPreferences("AlarmSet", 0);
+            ed = pref.edit();
+            ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
+            ed.putInt("minute", calendar.get(Calendar.MINUTE));
+            ed.putInt("hour1", Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
+            ed.putInt("minute1", Calendar.getInstance().get(Calendar.MINUTE));
+            ed.putInt("actualWakeup", time.getActualWakeup());
+            ed.apply();
+
+            Calendar sleepTimeCalender = Calendar.getInstance();
+            SharedPreferences prefs = getSharedPreferences("SleepTime", 0);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt("sleeptime", userSleepTime);
+            editor.apply();
+        }
+
         //Return if the alarm is on the next day or before first calculation
         if((secondsOfDay < (time.getWakeupEarly() - 1800)) || ((time.getWakeupLate() + 3600) < secondsOfDay) || alarmClockSet) {
             return;
@@ -286,7 +313,7 @@ public class ForegroundService extends LifecycleService {
         if (timeDifference < (16 * 60)) {
 
             //Check if the actual wakeup is earlier than the earliest wakeup and set the alarm to earliest wakeup
-            if (time.getActualWakeup() < time.getWakeupEarly()) {
+            if (time.getActualWakeup() < time.getWakeupEarly() && !(time.getWakeupEarly() < secondsOfDay)) {
                 Calendar earliestWakeup = Calendar.getInstance();
                 earliestWakeup.set(Calendar.HOUR_OF_DAY, 0);
                 earliestWakeup.set(Calendar.MINUTE, 0);
@@ -340,7 +367,6 @@ public class ForegroundService extends LifecycleService {
                 ed.putInt("actualWakeup", time.getActualWakeup());
                 ed.apply();
 
-                Calendar sleepTimeCalender = Calendar.getInstance();
                 SharedPreferences prefs = getSharedPreferences("SleepTime", 0);
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putInt("sleeptime", userSleepTime);

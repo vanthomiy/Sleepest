@@ -49,6 +49,10 @@ class MainActivity : AppCompatActivity() {
     private val activeAlarmsLiveData by lazy {  dataBaseRepository.activeAlarmsFlow().asLiveData() }
     private val sleepParametersLiveData by lazy {  dataStoreRepository.sleepParameterFlow.asLiveData() }
 
+    private var sleepTimeBeginTemp = 0
+
+
+
     // endregion
 
     // region fragments
@@ -130,6 +134,8 @@ class MainActivity : AppCompatActivity() {
 
         setupFragments()
 
+        sleepTimeBeginTemp = dataStoreRepository.getSleepTimeBeginJob();
+
         // observe alarm changes
         activeAlarmsLiveData.observe(this){ list ->
             // check the list if empty or not
@@ -175,6 +181,17 @@ class MainActivity : AppCompatActivity() {
                                         || ((LocalTime.now().toSecondOfDay() > dataBaseRepository.getNextActiveAlarm()!!.actualWakeup) && (dataStoreRepository.getSleepTimeBegin() < LocalTime.now().toSecondOfDay())))) {
                             ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
                         }
+                    } else {
+                        AlarmReceiver.cancelAlarm(applicationContext, 5)
+
+                        //Create a new instance of calendar for the new foregroundservice start time
+
+                        if (AlarmReceiver.isAlarmManagerActive(applicationContext, 5)) {
+                            AlarmReceiver.cancelAlarm(applicationContext, 5)
+                        }
+
+                        val calendarFirstCalc = AlarmReceiver.getAlarmDate(dataBaseRepository.getNextActiveAlarm()!!.wakeupEarly - 1800)
+                        AlarmReceiver.startAlarmManager(calendarFirstCalc[Calendar.DAY_OF_WEEK], calendarFirstCalc[Calendar.HOUR_OF_DAY], calendarFirstCalc[Calendar.MINUTE], applicationContext, 5)
                     }
                 } else // not in sleep time
                 {
@@ -183,29 +200,35 @@ class MainActivity : AppCompatActivity() {
                         ForegroundService.startOrStopForegroundService(Actions.STOP, applicationContext)
                     }
 
-                    AlarmReceiver.cancelAlarm(applicationContext, 1)
+                    if (sleepTimeBeginTemp != livedata.sleepTimeStart) {
+                        sleepTimeBeginTemp = livedata.sleepTimeStart
 
-                    //Create a new instance of calendar for the new foregroundservice start time
-
-                    if (AlarmReceiver.isAlarmManagerActive(applicationContext, 1)) {
                         AlarmReceiver.cancelAlarm(applicationContext, 1)
+
+                        //Create a new instance of calendar for the new foregroundservice start time
+
+                        if (AlarmReceiver.isAlarmManagerActive(applicationContext, 1)) {
+                            AlarmReceiver.cancelAlarm(applicationContext, 1)
+                        }
+
+                        if (!AlarmReceiver.isAlarmManagerActive(applicationContext, 1)) {
+                            val calendarAlarm = Calendar.getInstance()
+                            calendarAlarm[Calendar.HOUR_OF_DAY] = 0
+                            calendarAlarm[Calendar.MINUTE] = 0
+                            calendarAlarm[Calendar.SECOND] = 0
+                            calendarAlarm.add(Calendar.SECOND, livedata.sleepTimeStart)
+
+                            //Start a alarm for the new foregroundservice start time
+                            AlarmReceiver.startAlarmManager(
+                                    calendarAlarm[Calendar.DAY_OF_WEEK],
+                                    calendarAlarm[Calendar.HOUR_OF_DAY],
+                                    calendarAlarm[Calendar.MINUTE],
+                                    applicationContext, 1
+                            )
+                        }
                     }
 
-                    if (!AlarmReceiver.isAlarmManagerActive(applicationContext, 1)) {
-                        val calendarAlarm = Calendar.getInstance()
-                        calendarAlarm[Calendar.HOUR_OF_DAY] = 0
-                        calendarAlarm[Calendar.MINUTE] = 0
-                        calendarAlarm[Calendar.SECOND] = 0
-                        calendarAlarm.add(Calendar.SECOND, livedata.sleepTimeStart)
 
-                        //Start a alarm for the new foregroundservice start time
-                        AlarmReceiver.startAlarmManager(
-                                calendarAlarm[Calendar.DAY_OF_WEEK],
-                                calendarAlarm[Calendar.HOUR_OF_DAY],
-                                calendarAlarm[Calendar.MINUTE],
-                                applicationContext, 1
-                        )
-                    }
                 }
             }
         }

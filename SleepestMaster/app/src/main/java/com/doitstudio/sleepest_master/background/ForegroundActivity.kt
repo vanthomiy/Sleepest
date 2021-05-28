@@ -23,7 +23,6 @@ class ForegroundActivity : Activity() {
     private val dataStoreRepository: DataStoreRepository by lazy {
         (applicationContext as MainApplication).dataStoreRepository
     }
-    private val times : Times = Times()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
