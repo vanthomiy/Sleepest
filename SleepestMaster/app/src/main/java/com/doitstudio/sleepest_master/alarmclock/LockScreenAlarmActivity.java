@@ -23,30 +23,31 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.background.AlarmReceiver;
 import com.doitstudio.sleepest_master.background.ForegroundService;
-import com.doitstudio.sleepest_master.background.Times;
 import com.doitstudio.sleepest_master.model.data.Actions;
+import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 
 import java.util.Calendar;
 
 public class LockScreenAlarmActivity extends AppCompatActivity {
 
-    Button btnSnoozeAlarmLockScreen;
-    Times times;
-    SwipeListener swipeListener;
-    TextView tvSwipeUp;
-    ImageView ivSwipeUpArrow;
+    private Button btnSnoozeAlarmLockScreen;
+    private SwipeListener swipeListener;
+    private TextView tvSwipeUp;
+    private ImageView ivSwipeUpArrow;
+    private DataStoreRepository dataStoreRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lock_screen_alarm);
+
+        dataStoreRepository = DataStoreRepository.Companion.getRepo(getApplicationContext());
 
         RelativeLayout relativeLayout = findViewById(R.id.layoutLockscreen);
 
@@ -71,9 +72,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
         KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
         keyguardManager.requestDismissKeyguard(LockScreenAlarmActivity.this, null);
 
-        times = new Times();
-
-       swipeListener = new SwipeListener(relativeLayout);
+        swipeListener = new SwipeListener(relativeLayout);
     }
 
     @Override
@@ -206,7 +205,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
 
                                     AlarmClockAudio.getInstance().stopAlarm(false);
 
-                                    Calendar calendarAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK), times.getStartForegroundHour(), times.getStartForegroundMinute());
+                                    Calendar calendarAlarm = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeBeginJob());
                                     AlarmReceiver.startAlarmManager(calendarAlarm.get(Calendar.DAY_OF_WEEK), calendarAlarm.get(Calendar.HOUR_OF_DAY), calendarAlarm.get(Calendar.MINUTE), getApplicationContext(), 1);
                                     ForegroundService.startOrStopForegroundService(Actions.STOP, getApplicationContext());
 

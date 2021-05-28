@@ -21,7 +21,7 @@ import com.doitstudio.sleepest_master.MainActivity;
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.background.AlarmReceiver;
 import com.doitstudio.sleepest_master.background.ForegroundActivity;
-import com.doitstudio.sleepest_master.background.Times;
+import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 
 import java.util.Calendar;
 import static android.content.Context.ALARM_SERVICE;
@@ -30,6 +30,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
 
     private static int NOTIFICATION_ID = 10;
     private static Context context;
+    private DataStoreRepository dataStoreRepository;
 
     /**
      * Callback to receive the alarm
@@ -40,7 +41,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         this.context = context;
-        Times times = new Times();
+        dataStoreRepository = DataStoreRepository.Companion.getRepo(context);
 
         switch (intent.getIntExtra(context.getString(R.string.alarm_clock_intent_key), 0)) {
             case 0: break;
@@ -55,7 +56,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
             case 2: //Stop button of ScreenOn notification
                 AlarmClockAudio.getInstance().stopAlarm(false);
 
-                Calendar calendarAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK), times.getStartForegroundHour(), times.getStartForegroundMinute());
+                Calendar calendarAlarm = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeBeginJob());
                 AlarmReceiver.startAlarmManager(calendarAlarm.get(Calendar.DAY_OF_WEEK), calendarAlarm.get(Calendar.HOUR_OF_DAY), calendarAlarm.get(Calendar.MINUTE), context, 1);
 
                 Intent stopAlarmIntent = new Intent(context, ForegroundActivity.class);
@@ -102,26 +103,26 @@ public class AlarmClockReceiver extends BroadcastReceiver {
     /**
      * Start a alarm at a specific time
      * @param snoozeTime Time in millis, restart alarm after that duration
-     * @param context1 Context
+     * @param restartAlarmContext Context
      */
-    public static void restartAlarmManager(int snoozeTime, Context context1) {
+    public static void restartAlarmManager(int snoozeTime, Context restartAlarmContext) {
 
-        Intent intent = new Intent(context1, AlarmClockReceiver.class);
+        Intent intent = new Intent(restartAlarmContext, AlarmClockReceiver.class);
         intent.putExtra(context.getString(R.string.alarm_clock_intent_key), 1);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context1, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmManager = (AlarmManager) context1.getSystemService(ALARM_SERVICE);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(restartAlarmContext, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) restartAlarmContext.getSystemService(ALARM_SERVICE);
 
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + snoozeTime, pendingIntent);
     }
 
     /**
      * Cancel a running alarm
-     * @param context1 Context
+     * @param cancelAlarmContext Context
      */
-    public static void cancelAlarm(Context context1, int usage) {
-        Intent intent = new Intent(context1, AlarmClockReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context1, usage, intent, 0);
-        AlarmManager alarmManager = (AlarmManager) context1.getSystemService(ALARM_SERVICE);
+    public static void cancelAlarm(Context cancelAlarmContext, int usage) {
+        Intent intent = new Intent(cancelAlarmContext, AlarmClockReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(cancelAlarmContext, usage, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) cancelAlarmContext.getSystemService(ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
     }
 
@@ -146,6 +147,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
         snoozeAlarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent snoozeAlarmPendingIntent = PendingIntent.getBroadcast(context, 0, snoozeAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        //Build the builder for the notification
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(context, context.getString(R.string.alarm_clock_channel))
                         .setSmallIcon(R.drawable.ic_launcher_background) /**TODO: Icon*/

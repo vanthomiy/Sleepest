@@ -175,6 +175,17 @@ class MainActivity : AppCompatActivity() {
                                         || ((LocalTime.now().toSecondOfDay() > dataBaseRepository.getNextActiveAlarm()!!.actualWakeup) && (dataStoreRepository.getSleepTimeBegin() < LocalTime.now().toSecondOfDay())))) {
                             ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
                         }
+                    } else {
+                        AlarmReceiver.cancelAlarm(applicationContext, 5)
+
+                        //Create a new instance of calendar for the new foregroundservice start time
+
+                        if (AlarmReceiver.isAlarmManagerActive(applicationContext, 5)) {
+                            AlarmReceiver.cancelAlarm(applicationContext, 5)
+                        }
+
+                        val calendarFirstCalc = AlarmReceiver.getAlarmDate(dataBaseRepository.getNextActiveAlarm()!!.wakeupEarly - 1800)
+                        AlarmReceiver.startAlarmManager(calendarFirstCalc[Calendar.DAY_OF_WEEK], calendarFirstCalc[Calendar.HOUR_OF_DAY], calendarFirstCalc[Calendar.MINUTE], applicationContext, 5)
                     }
                 } else // not in sleep time
                 {
