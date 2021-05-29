@@ -153,9 +153,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     public static boolean isAlarmManagerActive(Context alarmActiveContext, int usage) {
         Intent intent = new Intent(alarmActiveContext, AlarmReceiver.class);
-        boolean alarmUp = (PendingIntent.getBroadcast(alarmActiveContext, usage, intent, PendingIntent.FLAG_NO_CREATE) != null);
 
-        return alarmUp;
+        return (PendingIntent.getBroadcast(alarmActiveContext, usage, intent, PendingIntent.FLAG_NO_CREATE) != null);
     }
 
 

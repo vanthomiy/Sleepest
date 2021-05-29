@@ -124,6 +124,13 @@ public class AlarmClockReceiver extends BroadcastReceiver {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(cancelAlarmContext, usage, intent, 0);
         AlarmManager alarmManager = (AlarmManager) cancelAlarmContext.getSystemService(ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
+        pendingIntent.cancel();
+    }
+
+    public static boolean isAlarmClockActive(Context alarmActiveContext, int usage) {
+        Intent intent = new Intent(alarmActiveContext, AlarmClockReceiver.class);
+
+        return (PendingIntent.getBroadcast(alarmActiveContext, usage, intent, PendingIntent.FLAG_NO_CREATE) != null);
     }
 
     private void showFullscreenNotification() {
