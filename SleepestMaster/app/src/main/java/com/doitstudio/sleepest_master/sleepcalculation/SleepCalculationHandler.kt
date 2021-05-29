@@ -16,6 +16,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.ZoneOffset
 
 class SleepCalculationHandler(val context: Context) {
@@ -37,8 +38,7 @@ class SleepCalculationHandler(val context: Context) {
      */
     fun getSecondsOfDay() : Int{
 
-        val now = LocalDateTime.now(ZoneOffset.UTC)
-        return now.toLocalTime().toSecondOfDay()
+        return LocalTime.now().toSecondOfDay()
 
     }
 
