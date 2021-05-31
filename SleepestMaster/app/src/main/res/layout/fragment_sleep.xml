@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="#1a1a1a"
-        android:id="@+id/transistionAll"
+        android:id="@+id/topLayout"
         >
 
         <androidx.constraintlayout.motion.widget.MotionLayout
@@ -51,8 +51,8 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/animHeaderLogo"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="40dp"
                 android:layout_marginRight="60dp"
@@ -91,12 +91,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none"
-            android:onScrollChangeListener="@{sleepViewModel::onScrollChanged}"
-            >
+            android:clipToPadding="true"
+            android:fillViewport="true"
+            android:onTouchListener="@{sleepViewModel::onTouch}">
+            !--android:onScrollChangeListener="@{sleepViewModel::onScrollChanged}"-->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
+                android:windowSoftInputMode="adjustResize"
                 android:id="@+id/linearAnimationlayout"
                 >
 
@@ -237,7 +241,7 @@
 
                     </FrameLayout>
 
-                    <androidx.appcompat.widget.AppCompatToggleButton
+                    <ToggleButton
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/valuesHeight"
                         android:layout_gravity="start"
@@ -249,7 +253,7 @@
                         android:textOn="Auto detect"
                         android:textOff="User defined">
 
-                    </androidx.appcompat.widget.AppCompatToggleButton>
+                    </ToggleButton>
 
                 </LinearLayout>
                 <LinearLayout
@@ -324,7 +328,8 @@
                             android:textStyle="bold"
                             android:text="@{sleepViewModel.sleepDurationString}"
                             />
-                        <androidx.appcompat.widget.AppCompatSeekBar
+
+                        <SeekBar
                             android:layout_height="wrap_content"
                             android:layout_width="match_parent"
                             android:layout_gravity="center_vertical"
@@ -396,8 +401,7 @@
 
                     </FrameLayout>
 
-
-                    <androidx.appcompat.widget.AppCompatSpinner
+                    <Spinner
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/valuesHeight"
                         android:background="@drawable/bgroundedchoosen"
@@ -409,7 +413,7 @@
                         android:textSize="@dimen/valueSize"
                         tools:ignore="RtlCompat">
 
-                    </androidx.appcompat.widget.AppCompatSpinner>
+                    </Spinner>
 
                 </LinearLayout>
                 <LinearLayout
@@ -605,7 +609,7 @@
                                 android:text="track daily activity"
                                 />
 
-                            <androidx.appcompat.widget.SwitchCompat
+                            <Switch
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_gravity="end"
@@ -636,7 +640,7 @@
                                 android:text="include in wakeup time"
                                 />
 
-                            <androidx.appcompat.widget.SwitchCompat
+                            <Switch
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_gravity="end"
@@ -735,7 +739,7 @@
                                 android:text="cancel alarm when already awake"
                                 />
 
-                            <androidx.appcompat.widget.SwitchCompat
+                            <Switch
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_gravity="end"
@@ -783,5 +787,7 @@
         </androidx.core.widget.NestedScrollView>
 
     </LinearLayout>
+
+
 </layout>
 

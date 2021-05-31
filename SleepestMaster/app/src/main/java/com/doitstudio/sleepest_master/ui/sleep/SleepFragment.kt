@@ -35,9 +35,9 @@ class SleepFragment : Fragment() {
 
         binding = FragmentSleepBinding.inflate(inflater, container, false)
         viewModel.transitionsContainer = (binding.linearAnimationlayout)
-        viewModel.transitionsContainerAll = (binding.transistionAll)
+        viewModel.transitionsContainerTop = (binding.topLayout)
+        viewModel.imageMoonView = binding.animHeaderLogo
         viewModel.animatedTopView = binding.animatedTopView
-
         binding.sleepViewModel = viewModel
 
         return binding.root

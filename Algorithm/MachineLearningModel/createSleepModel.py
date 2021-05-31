@@ -186,7 +186,6 @@ def buildTfRecord04(time, length):
   saveTfRecord(csv_file, headers)
   return loss, accuracy
 
-
 def start04(time, length):
 
   csv_file = 'Datasets/sleep04'+ str(time) +'.csv' 
@@ -222,9 +221,6 @@ def start12(time, length):
   model = createModel(2,encoded_features, all_inputs)
   loss, accuracy = trainAndSaveModel(model, val_ds,train_ds, test_ds, 'sleep12'+ str(time), class_weights, class_names, test)
   return loss, accuracy
-
-
-
 
 def startWakeUpLite(time, length):
 

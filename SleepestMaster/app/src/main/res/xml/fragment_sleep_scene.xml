@@ -5,21 +5,21 @@
     <ConstraintSet android:id="@+id/start">
         <Constraint android:id="@+id/widget" />
         <Constraint android:id="@+id/animHeaderLogo"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             />
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
         <Constraint android:id="@id/widget" />
         <Constraint android:id="@+id/animHeaderLogo"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             />
     </ConstraintSet>
 
     <Transition
         app:constraintSetEnd="@id/end"
         app:constraintSetStart="@+id/start"
-        app:duration="3000"/>
+        app:duration="500"/>
 </MotionScene>

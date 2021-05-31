@@ -5,9 +5,11 @@ import android.app.TimePickerDialog
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.transition.TransitionManager
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.ObservableArrayList
@@ -18,10 +20,10 @@ import com.doitstudio.sleepest_master.model.data.MobileUseFrequency
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalTime
+import kotlin.math.abs
 
 
 class SleepViewModel(application: Application) : AndroidViewModel(application) {
@@ -244,8 +246,9 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     //region animation
 
     lateinit var transitionsContainer : ViewGroup
-    lateinit var transitionsContainerAll : ViewGroup
+    lateinit var transitionsContainerTop : ViewGroup
     lateinit var animatedTopView : MotionLayout
+    lateinit var imageMoonView : AppCompatImageView
 
     fun onShowTips(view: View){
         animateTop(true)
@@ -253,24 +256,87 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     var lastScroll = 0
-
+    var lastScrollDelta = 0
+    var progress = 0f
+    var newProgress = 0f
     fun onScrollChanged(v: NestedScrollView, l: Int, t: Int, oldl: Int, oldt: Int) {
         //Log.d(TAG, "scroll changed: " + this.getTop() + " "+t);
-        val scrollY: Int = v.scrollY // For ScrollView herzontial use getScrollX()
+        val scrollY: Int = v.scrollY // For ScrollView hprizontal use getScrollX()
+        val b = l
+        val c = t
+        val d  = oldl
+        //TransitionManager.beginDelayedTransition(transitionsContainerTop);
 
-        val progress = (1f / 500f) * scrollY
+        newProgress = (1f / 500f) * scrollY
+        animatedTopView.progress = newProgress
 
-        TransitionManager.beginDelayedTransition(transitionsContainerAll);
+        if(abs(progress - newProgress) > 0.25 ) {
+            progress = newProgress
+        }
 
-        animatedTopView.progress = progress
+
+        /*
+        if(scrollY < lastScroll && direction == 1 ) {
+            direction = 0
+            lastScrollDelta = scrollY
+            val params = FrameLayout.LayoutParams(
+                    200,
+                    200
+            )
+            imageMoonView.layoutParams = params
+
+        } else if(scrollY  > lastScroll && direction == 0){
+            direction = 1
+            lastScrollDelta = scrollY
+            val params = FrameLayout.LayoutParams(
+                    75,
+                    75
+            )
+            imageMoonView.layoutParams = params
+        }*/
+
+
 
         lastScroll = scrollY
     }
 
+    var lastMotionEvent : Int = MotionEvent.ACTION_UP
+
+    var touchY = 0f
+    var touchYOld = 0f
+
+    fun onTouch(v: View?, event: MotionEvent): Boolean {
+
+
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                touchY = event.y
+
+                if(touchYOld == 0f)
+                    touchYOld = event.y
+            }
+            MotionEvent.ACTION_UP -> {
+                touchYOld = 0f
+                //touchY = 0f
+            }
+        }
+
+        if(abs(touchYOld-touchY) > 50 && event.action == MotionEvent.ACTION_SCROLL)
+        {
+            if(touchYOld < touchY)
+                animatedTopView.transitionToEnd()
+            else
+                animatedTopView.transitionToStart()
+
+            touchYOld = touchY
+        }
+
+        return false
+    }
     val pictureScale = ObservableField(1.0f)
 
 
-    private fun animateTop(expand:Boolean){
+    private fun animateTop(expand: Boolean){
 
 
         if(expand)
