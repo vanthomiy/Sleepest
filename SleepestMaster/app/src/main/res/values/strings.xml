@@ -150,6 +150,8 @@
     </string>
     <string name="sleeptimedescription">Setup your usual sleep times. Beetween the start and end-time we will check if you are sleeping</string>
     <string name="target_sleep_time">target time</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <!--endregion-->
 
 
