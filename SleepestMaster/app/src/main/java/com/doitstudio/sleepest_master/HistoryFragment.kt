@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ScrollView
 import android.widget.TextView
+import androidx.core.util.rangeTo
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationDbRepository
@@ -31,10 +32,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.util.*
+import java.time.format.DateTimeFormatter
 import kotlin.collections.ArrayList
 
 class HistoryFragment(val applicationContext: Context) : Fragment() {
@@ -48,7 +48,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
     private lateinit var barChart: BarChart
     private lateinit var lineChart: LineChart
     private lateinit var pieChart: PieChart
-    private lateinit var tVdisplayedDay: TextView
+    private lateinit var tVDisplayedDay: TextView
     private lateinit var btnSleepAnalysisDay : Button
     private lateinit var btnSleepAnalysisWeek : Button
     private lateinit var btnSleepAnalysisMonth : Button
@@ -59,11 +59,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
     private lateinit var sVSleepAnalysisMonth : ScrollView
     private lateinit var sleepSessions : MutableList<UserSleepSessionEntity>
     private lateinit var sleepSessionsData : MutableMap<UserSleepSessionEntity, List<SleepApiRawDataEntity>>
-    
-    private var dateOfDiagram  = LocalDate.now()
-    private var startTimeDay = Date(dateOfDiagram.year, dateOfDiagram.month, dateOfDiagram.date, 0, 0, 1) //May result in bug due to 2 sec glitch
-    private var endTimeDay = Date(dateOfDiagram.year, dateOfDiagram.month, dateOfDiagram.date, 23, 59, 59)
-    private var dateFormatOfDiagram = SimpleDateFormat("dd/MM/yyyy").format(dateOfDiagram)
+    private var dateOfDiagram  = LocalDate.of(2021, 3, 28) //LocalDate.now()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,7 +75,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         barChart = view.findViewById(R.id.barChart_sleepAnalysisWeek)
         lineChart = view.findViewById(R.id.lineChart_sleepAnalysisDay)
         pieChart = view.findViewById(R.id.pieChart_sleepAnalysisDay)
-        tVdisplayedDay = view.findViewById(R.id.tV_ActualDay)
+        tVDisplayedDay = view.findViewById(R.id.tV_ActualDay)
         btnSleepAnalysisDay = view.findViewById(R.id.btn_SleepAnalysisDay)
         btnSleepAnalysisWeek = view.findViewById(R.id.btn_SleepAnalysisWeek)
         btnSleepAnalysisMonth = view.findViewById(R.id.btn_SleepAnalysisMonth)
@@ -87,9 +83,9 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         btnSleepAnalysisNextDay = view.findViewById(R.id.btn_SleepAnalysisNextDay)
         sVSleepAnalysisDay = view.findViewById(R.id.sV_sleepAnalysisChartsDays)
         sVSleepAnalysisWeek = view.findViewById(R.id.sV_sleepAnalysisChartsWeek)
-        //sVSleepAnalysisMonth = view.findViewById(R.id.sV_sleepAnalysisChartsMonth)
+        sVSleepAnalysisMonth = view.findViewById(R.id.sV_sleepAnalysisChartsMonth)
 
-        tVdisplayedDay.text = dateFormatOfDiagram
+        tVDisplayedDay.text = dateOfDiagram.format(DateTimeFormatter.ISO_DATE)
 
         sleepSessions = mutableListOf()
         sleepSessionsData = mutableMapOf()
@@ -97,42 +93,42 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         btnSleepAnalysisDay.setOnClickListener {
             sVSleepAnalysisDay.isVisible = true
             sVSleepAnalysisWeek.isVisible = false
-            //sVSleepAnalysisMonth.isVisible = false
+            sVSleepAnalysisMonth.isVisible = false
         }
 
         btnSleepAnalysisWeek.setOnClickListener {
             sVSleepAnalysisDay.isVisible = false
             sVSleepAnalysisWeek.isVisible = true
-            //sVSleepAnalysisMonth.isVisible = false
+            sVSleepAnalysisMonth.isVisible = false
         }
 
         btnSleepAnalysisMonth.setOnClickListener {
             sVSleepAnalysisDay.isVisible = false
             sVSleepAnalysisWeek.isVisible = false
-            //sVSleepAnalysisMonth.isVisible = true
+            sVSleepAnalysisMonth.isVisible = true
         }
 
         btnSleepAnalysisPreviousDay.setOnClickListener {
             if (sVSleepAnalysisDay.isVisible) { // Move back in time
-                generateDateData(false, 1) // Day
+                generateDateData(false, 0) // Day
             }
             else if (sVSleepAnalysisWeek.isVisible) {
-                generateDateData(false, 2) // Week
+                generateDateData(false, 1) // Week
             }
             else if (sVSleepAnalysisMonth.isVisible) {
-                generateDateData(false, 3) // Month
+                generateDateData(false, 2) // Month
             }
         }
 
         btnSleepAnalysisNextDay.setOnClickListener {
             if (sVSleepAnalysisDay.isVisible) { // Move ahead in time
-                generateDateData(true, 1) // Day
+                generateDateData(true, 0) // Day
             }
             else if (sVSleepAnalysisWeek.isVisible) {
-                generateDateData(true, 2) // Week
+                generateDateData(true, 1) // Week
             }
             else if (sVSleepAnalysisMonth.isVisible) {
-                generateDateData(true, 3) // Month
+                generateDateData(true, 2) // Month
             }
         }
 
@@ -145,58 +141,49 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         sleep1DbRepository = SleepCalculationDbRepository.getRepo(
             db1Database.sleepApiRawDataDao()
         )
-
-
-        scope.launch {
-            sleepSessions.addAll(sleepDbRepository.allUserSleepSessions.first())
-            sleepSessions.sortBy { x -> x.id }
-
-            for (i in sleepSessions.indices) {
-                val startTime = sleepSessions[i].sleepTimes.sleepTimeStart
-                val endTime = sleepSessions[i].sleepTimes.sleepTimeEnd
-                sleepSessionsData[sleepSessions[i]] =
-                    sleep1DbRepository.getSleepApiRawDataBetweenTimestamps(startTime, endTime).first().sortedBy { x -> x.timestampSeconds }
-            }
-            setLineChart()
-            setPieChart()
-            setBarChart()
-        }
     }
 
     private fun generateDateData(direction: Boolean, range: Int) {
         if (direction) {
             when (range) {
-                1 -> dateOfDiagram = Date(dateOfDiagram.time + 86400000) //Millis per day
-                2 -> dateOfDiagram = Date(dateOfDiagram.time + 86400000) //Millis per week
-                3 -> dateOfDiagram = Date(dateOfDiagram.time + 86400000) //Millis per month
+                0 -> { dateOfDiagram = dateOfDiagram.plusDays(1) }
+                1 -> { dateOfDiagram = dateOfDiagram.plusWeeks(1) }
+                2 -> { dateOfDiagram = dateOfDiagram.plusMonths(1) }
             }
-
-            dateOfDiagram = Date(dateOfDiagram.time + 86400000) //Millis per day
         }
         else {
-            dateOfDiagram = Date(dateOfDiagram.time - 86400000) //Millis per day
+            when (range) {
+                0 -> { dateOfDiagram = dateOfDiagram.minusDays(1) }
+                1 -> { dateOfDiagram = dateOfDiagram.minusWeeks(1) }
+                2 -> { dateOfDiagram = dateOfDiagram.minusMonths(1) }
+            }
         }
-        startTimeDay = Date(dateOfDiagram.year, dateOfDiagram.month, dateOfDiagram.date, 0, 0, 1) //May result in bug due to 2 sec glitch
-        endTimeDay = Date(dateOfDiagram.year, dateOfDiagram.month, dateOfDiagram.date, 23, 59, 59)
-        dateFormatOfDiagram = SimpleDateFormat("dd/MM/yyyy").format(dateOfDiagram)
-
-        tVdisplayedDay.text = dateFormatOfDiagram
-    }
-
-    private fun makeDiagramms() {
+        tVDisplayedDay.text = dateOfDiagram.format(DateTimeFormatter.ISO_DATE)
         setLineChart()
-        setPieChart()
-        setBarChart()
     }
 
-    private fun generateDataLineChart() : ArrayList<Entry> {
+    private fun generateDataLineChart() : ArrayList<Entry> = runBlocking {
         val entries = ArrayList<Entry>()
         var xValue = 0
-        for (i in sleepSessionsData[sleepSessions[0]]!!) {
-            entries.add(Entry(xValue.toFloat(), i.sleepState.ordinal.toFloat()))
-            xValue += 1
-        }
-        return entries
+        val id = UserSleepSessionEntity.getIdByDateTime(dateOfDiagram)
+        val idsOfMonth = mutableListOf<Int>()
+        val listOfDays = mutableListOf<Int>()
+        val beginOfMonth = dateOfDiagram.minusDays((dateOfDiagram.dayOfMonth - 1).toLong())
+        val absolutDaysOfMonth = dateOfDiagram.lengthOfMonth()
+
+        //scope.launch {
+            val session = sleepDbRepository.getSleepSessionById(id).first()
+            session?.let {
+                sleepSessionsData[session] = sleep1DbRepository.getSleepApiRawDataBetweenTimestamps(session.sleepTimes.sleepTimeStart, session.sleepTimes.sleepTimeEnd).first().sortedBy {
+                    x -> x.timestampSeconds }
+
+                for (i in sleepSessionsData[session]!!) {
+                    entries.add(Entry(xValue.toFloat(), i.sleepState.ordinal.toFloat()))
+                    xValue += 1
+                }
+            }
+        //}
+        return@runBlocking entries
     }
 
     private fun setLineChart() {
@@ -212,7 +199,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         lineChart.axisLeft.setStartAtZero(true)
         lineChart.axisLeft.setAxisMaxValue(5f)
 
-        lineChart.animateX(1000)
+        lineChart.animateX(500)
     }
 
     private fun generateDataPieChart() : ArrayList<PieEntry> {

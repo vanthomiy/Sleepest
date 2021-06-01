@@ -187,7 +187,8 @@ class DbRepositoryTest {
             sleepTime.deepSleepDuration = SleepApiRawDataEntity.getSleepTimeByState(rawDataList, SleepState.DEEP)
             sleepTime.remSleepDuration = SleepApiRawDataEntity.getSleepTimeByState(rawDataList, SleepState.REM)
             sleepTime.sleepDuration = SleepApiRawDataEntity.getSleepTime(rawDataList)
-            var session = UserSleepSessionEntity(id = startTime, sleepTimes = sleepTime)
+            val id = UserSleepSessionEntity.getIdByTimeStamp(startTime)
+            var session = UserSleepSessionEntity(id, sleepTimes = sleepTime)
             sleepDbRepository.insertUserSleepSession(session)
 
         }
