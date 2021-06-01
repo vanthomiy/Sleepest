@@ -24,8 +24,27 @@ class SleepParameterStatus(private val dataStore: DataStore<SleepParameters>) {
             }
         }
 
+    suspend fun updateActivityTracking(duration:Boolean){
+        dataStore.updateData{preference->
+            preference.toBuilder().setUserActivityTracking(duration).build()
+        }
+    }
+    suspend fun updateActivityInCalculation(duration:Boolean){
+        dataStore.updateData{preference->
+            preference.toBuilder().setImplementUserActivityInSleepTime(duration).build()
+        }
+    }
+    suspend fun updateEndAlarmAfterFired(duration:Boolean){
+        dataStore.updateData{preference->
+            preference.toBuilder().setEndAlarmAfterFired(duration).build()
+        }
+    }
 
-
+    suspend fun updateAutoSleepTime(duration:Boolean){
+        dataStore.updateData{preference->
+            preference.toBuilder().setAutoSleepTime(duration).build()
+        }
+    }
 
     suspend fun updateSleepTimeStart(duration:Int){
         dataStore.updateData{preference->

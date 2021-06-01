@@ -44,11 +44,34 @@ enum class MobilePosition{
  * Defines how often the user uses his phone
  */
 enum class MobileUseFrequency{
-    NONE,
     VERYLESS,
     LESS,
+    NONE,
     OFTEN,
-    VERYOFTEN
+    VERYOFTEN;
+
+    companion object {
+        fun getCount(type: Int): MobileUseFrequency {
+            return when (type) {
+                0 -> MobileUseFrequency.VERYLESS
+                1 -> MobileUseFrequency.LESS
+                3 -> MobileUseFrequency.OFTEN
+                4 -> MobileUseFrequency.VERYOFTEN
+                else -> MobileUseFrequency.NONE // Avoiding dividing by zero
+            }
+        }
+
+        fun getValue(type: MobileUseFrequency): Int {
+            return when (type) {
+               MobileUseFrequency.VERYLESS -> 0
+                MobileUseFrequency.LESS -> 1
+                MobileUseFrequency.OFTEN-> 3
+                MobileUseFrequency.VERYOFTEN -> 4
+                else ->  2// Avoiding dividing by zero
+            }
+        }
+    }
+
 }
 
 /**

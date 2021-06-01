@@ -207,6 +207,14 @@ dependencies {
     // Graphs etc.
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
+    // Motion
+    implementation 'com.android.support.constraint:constraint-layout:2.0.0-alpha2'
+
+    // Ringtone
+    implementation 'com.kevalpatel2106:ringtonepicker:1.2'
+
+
+
 }
 
 repositories {
