@@ -285,8 +285,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-
+    
     // region get permission for sleep api at first start etc.
     private fun activityRecognitionPermissionApproved(): Boolean {
         // Because this app targets 29 and above (recommendation for using the Sleep APIs), we
@@ -332,6 +331,5 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
 }
 

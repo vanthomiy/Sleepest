@@ -35,6 +35,16 @@
     <string name="hello_world">Hello Square World!</string>
     <!--endregion-->
 
+    <!--region SleepSettings-->
+
+    <string-array name="phonePosition">
+        <item>IN BED</item>
+        <item>ON TABLE</item>
+        <item>AUTO DETECT</item>
+    </string-array>
+
+    <!--endregion-->
+
     <!--region AlarmSettings-->
     <string name="einstellungen">Sleepest</string>
     <string name="schlafdauer">Schlafdauer:</string>

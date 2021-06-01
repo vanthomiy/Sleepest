@@ -4,31 +4,33 @@ import android.app.Application
 import android.app.TimePickerDialog
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
+import android.net.Uri
+import android.transition.TransitionManager
+import android.view.MotionEvent
 import android.view.View
-import android.widget.SeekBar
-import androidx.core.graphics.toColor
-import androidx.databinding.BindingAdapter
+import android.view.ViewGroup
+import android.widget.*
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.core.widget.NestedScrollView
+import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import com.doitstudio.sleepest_master.MainApplication
-import com.doitstudio.sleepest_master.R
-import com.doitstudio.sleepest_master.databinding.FragmentSleepBinding
-import com.doitstudio.sleepest_master.model.data.MobilePosition
+import com.doitstudio.sleepest_master.model.data.MobileUseFrequency
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
-import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.data.*
-import dagger.hilt.EntryPoint
+import com.kevalpatel.ringtonepicker.RingtonePickerDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalTime
+import kotlin.math.abs
 
 
 class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
-    //private lateinit var binding: FragmentSleepBinding
+    //region binding values
 
     private val scope: CoroutineScope = MainScope()
     private val context by lazy{ getApplication<Application>().applicationContext }
@@ -65,27 +67,28 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     var sleepStartTime = LocalTime.now()
     var sleepEndTime = LocalTime.now()
 
+
     fun onAlarmStartClicked(view: View){
 
         val hour = (sleepStartTime.hour)
         val minute = (sleepStartTime.minute)
 
         val tpd = TimePickerDialog(
-            view.context,
-            TimePickerDialog.OnTimeSetListener(function = { view, h, m ->
+                view.context,
+                TimePickerDialog.OnTimeSetListener(function = { view, h, m ->
 
-                sleepStartValue.set((if (h < 10) "0" else "") + h.toString() + ":" + (if (m < 10) "0" else "") + m.toString())
-                sleepStartTime = LocalTime.of(h, m)
+                    sleepStartValue.set((if (h < 10) "0" else "") + h.toString() + ":" + (if (m < 10) "0" else "") + m.toString())
+                    sleepStartTime = LocalTime.of(h, m)
 
-                sleepCompleteValue.set(sleepStartValue.get() + " to " + sleepEndValue.get())
+                    sleepCompleteValue.set(sleepStartValue.get() + " to " + sleepEndValue.get())
 
-                scope.launch {
-                    dataStoreRepository.updateSleepTimeStart(sleepStartTime.toSecondOfDay())
-                }
-            }),
-            hour,
-            minute,
-            false
+                    scope.launch {
+                        dataStoreRepository.updateSleepTimeStart(sleepStartTime.toSecondOfDay())
+                    }
+                }),
+                hour,
+                minute,
+                false
         )
 
         tpd.show()
@@ -96,65 +99,146 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         val minute = (sleepEndTime.minute)
 
         val tpd = TimePickerDialog(
-            view.context,
-            TimePickerDialog.OnTimeSetListener(function = { view, h, m ->
+                view.context,
+                TimePickerDialog.OnTimeSetListener(function = { view, h, m ->
 
-                sleepEndValue.set((if (h < 10) "0" else "") + h.toString() + ":" + (if (m < 10) "0" else "") + m.toString())
+                    sleepEndValue.set((if (h < 10) "0" else "") + h.toString() + ":" + (if (m < 10) "0" else "") + m.toString())
 
-                sleepCompleteValue.set(sleepStartValue.get() + " to " + sleepEndValue.get())
+                    sleepCompleteValue.set(sleepStartValue.get() + " to " + sleepEndValue.get())
 
-                sleepEndTime = LocalTime.of(h, m)
+                    sleepEndTime = LocalTime.of(h, m)
 
-                scope.launch {
-                    dataStoreRepository.updateSleepTimeEnd(sleepEndTime.toSecondOfDay())
-                }
-            }),
-            hour,
-            minute,
-            false
+                    scope.launch {
+                        dataStoreRepository.updateSleepTimeEnd(sleepEndTime.toSecondOfDay())
+                    }
+                }),
+                hour,
+                minute,
+                false
         )
 
         tpd.show()
     }
 
 
-    val mobilePosition = ObservableField("Auto detect")
+    val autoSleepTime = ObservableField(true)
+    val manualSleepTime = ObservableField(true)
+    val manualSleepTimeVisibility = ObservableField(View.GONE)
+
+    fun SleepTimeToogled(view: View){
+        scope.launch{
+            autoSleepTime.get()?.let {
+                dataStoreRepository.updateAutoSleepTime(it)
+                manualSleepTime.set(!it)
+            }
+        }
+
+        TransitionManager.beginDelayedTransition(transitionsContainer);
+
+        autoSleepTime.get()?.let {
+            manualSleepTimeVisibility.set(if (it) View.GONE else View.VISIBLE)
+        }
+
+    }
+
+    val sleepTimeInfoExpand = ObservableField(View.GONE)
+    val phonePositionExpand = ObservableField(View.GONE)
+    val phoneUsageExpand = ObservableField(View.GONE)
+    val activityTrackingExpand = ObservableField(View.GONE)
+    val alarmExpand = ObservableField(View.GONE)
+    val sleepDurationExpand = ObservableField(View.GONE)
+
+    fun onInfoClicked(view: View){
+        updateInfoChanged(view.tag.toString(), true)
+    }
+
+
+
+    private fun updateInfoChanged(value: String, toggle: Boolean = false) {
+
+        TransitionManager.beginDelayedTransition(transitionsContainer);
+
+        sleepTimeInfoExpand.set(if (value == "0" && sleepTimeInfoExpand.get() == View.GONE) View.VISIBLE else View.GONE)
+        sleepDurationExpand.set(if (value == "1" && sleepDurationExpand.get() == View.GONE) View.VISIBLE else View.GONE)
+        phonePositionExpand.set(if (value == "2" && phonePositionExpand.get() == View.GONE) View.VISIBLE else View.GONE)
+        phoneUsageExpand.set(if (value == "3" && phoneUsageExpand.get() == View.GONE) View.VISIBLE else View.GONE)
+        activityTrackingExpand.set(if (value == "4" && activityTrackingExpand.get() == View.GONE) View.VISIBLE else View.GONE)
+        alarmExpand.set(if (value == "5" && alarmExpand.get() == View.GONE) View.VISIBLE else View.GONE)
+    }
+
+    val phoneUsageValueString = ObservableField("Normal")
+    val phoneUsageValue = ObservableField<Int>(2)
+    fun onPhoneUsageChanged(seekBar: SeekBar, progresValue: Int, fromUser: Boolean){
+
+        val mf = MobileUseFrequency.getCount(progresValue)
+        phoneUsageValueString.set(mf.toString().toLowerCase().capitalize())
+        scope.launch {
+            dataStoreRepository.updateUserMobileFequency(mf)
+        }
+    }
+
+    val phonePositionSelections = ObservableArrayList<String>()
+    val mobilePosition = ObservableField(0)
 
     val colorNormal by lazy {Color.parseColor("#9D6CCF") }
-    val colorPressed by lazy {Color.parseColor("#116CCF") }
+    val colorDisabled by lazy {Color.parseColor("#116CCF") }
+    val buttonTint = ObservableField(ColorStateList.valueOf(colorNormal))
 
-    val button1Tint = ObservableField(ColorStateList.valueOf(colorNormal))
-    val button2Tint = ObservableField(ColorStateList.valueOf(colorNormal))
-    val button3Tint = ObservableField(ColorStateList.valueOf(colorNormal))
-
-    fun onMobilePositionChanged(view: View){
-        updateMobilePositionChanged(view.tag.toString(), true)
+    fun onMobilePositionChanged(
+            parent: AdapterView<*>?,
+            selectedItemView: View,
+            position: Int,
+            id: Long
+    ){
+        scope.launch {
+            dataStoreRepository.updateStandardMobilePosition(position)
+        }
     }
 
-    private fun updateMobilePositionChanged(value:String, set:Boolean = false){
-        when(value){
-            "2"-> {button1Tint.set(ColorStateList.valueOf(colorPressed));
-                button2Tint.set(ColorStateList.valueOf(colorNormal));
-                button3Tint.set(ColorStateList.valueOf(colorNormal));
-                mobilePosition.set("Auto detect")}
-            "0"-> {button1Tint.set(ColorStateList.valueOf(colorNormal));
-                button2Tint.set(ColorStateList.valueOf(colorPressed));
-                button3Tint.set(ColorStateList.valueOf(colorNormal));
-                mobilePosition.set("In bed")}
-            "1"-> {button1Tint.set(ColorStateList.valueOf(colorNormal));
-                button2Tint.set(ColorStateList.valueOf(colorNormal));
-                button3Tint.set(ColorStateList.valueOf(colorPressed));
-                mobilePosition.set("Out of bed")}
-        }
+
+    val activityTracking = ObservableField(false)
+    val includeActivityInCalculation = ObservableField(false)
+    val cancelAlarmWhenAwake = ObservableField(false)
+
+
+    val activityTrackingView = ObservableField(View.GONE)
+
+
+    fun onActivityTrackingChanged(buttonView: View) {
+        TransitionManager.beginDelayedTransition(transitionsContainer);
 
         scope.launch {
-            dataStoreRepository.updateStandardMobilePosition(value.toInt())
+            activityTracking.get()?.let {
+                dataStoreRepository.updateActivityTracking(it)
+                activityTrackingView.set(if (it) View.VISIBLE else View.GONE)
+
+            }
         }
 
+        TransitionManager.beginDelayedTransition(transitionsContainer);
 
+        activityTracking.get()?.let {
+            activityTrackingView.set(if (it) View.VISIBLE else View.GONE)
+
+        }
+    }
+
+    fun onActivityInCalcChanged(buttonView: View) {
+        scope.launch {
+            includeActivityInCalculation.get()?.let { dataStoreRepository.updateActivityInCalculation(
+                    it
+            ) }
+        }
+    }
+
+    fun onEndAlarmAfterFiredChanged(buttonView: View) {
+        scope.launch {
+            cancelAlarmWhenAwake.get()?.let { dataStoreRepository.updateEndAlarmAfterFired(it) }
+        }
     }
 
 
+    //endregion
 
     init {
         scope.launch {
@@ -169,50 +253,130 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
             sleepStartValue.set((if (sleepStartTime.hour < 10) "0" else "") + sleepStartTime.hour.toString() + ":" + (if (sleepStartTime.minute < 10) "0" else "") + sleepStartTime.minute.toString())
             sleepEndValue.set((if (sleepEndTime.hour < 10) "0" else "") + sleepEndTime.hour.toString() + ":" + (if (sleepEndTime.minute < 10) "0" else "") + sleepEndTime.minute.toString())
 
-            updateMobilePositionChanged(sleepParams.standardMobilePosition.toString())
+            phoneUsageValue.set(sleepParams.mobileUseFrequency)
+
+            manualSleepTime.set(!sleepParams.autoSleepTime)
+            autoSleepTime.set(sleepParams.autoSleepTime)
+            manualSleepTimeVisibility.set(if (sleepParams.autoSleepTime) View.GONE else View.VISIBLE)
+
+            phonePositionSelections.addAll(arrayListOf<String>("In bed", "On table", "Auto detect"))
+            mobilePosition.set(sleepParams.standardMobilePosition)
+
+            activityTracking.set(sleepParams.userActivityTracking)
+            includeActivityInCalculation.set(sleepParams.implementUserActivityInSleepTime)
+            cancelAlarmWhenAwake.set(sleepParams.endAlarmAfterFired)
+            activityTrackingView.set(if (sleepParams.userActivityTracking) View.VISIBLE else View.GONE)
+
+
         }
     }
-    // region Movement
 
-    val sleepSettingsExpanded = ObservableField(View.VISIBLE)
-    val sleepSettingsNotExpanded = ObservableField(View.GONE)
+    //region animation
 
+    lateinit var transitionsContainer : ViewGroup
+    lateinit var transitionsContainerTop : ViewGroup
+    lateinit var animatedTopView : MotionLayout
+    lateinit var imageMoonView : AppCompatImageView
 
-    /**
-     * Shows all controls for editing the sleep settings
-     */
-    fun onEditSleepSettings(view: View){
-        sleepSettingsExpanded.set(View.VISIBLE)
-        sleepSettingsNotExpanded.set(View.GONE)
+    fun onShowTips(view: View){
+        animateTop(true)
+
     }
 
-    /**
-     * Hides the controls for the sleep settings. Only shows the summary of the settings
-     */
-    fun onHideSleepSettings(view: View){
-        sleepSettingsExpanded.set(View.GONE)
-        sleepSettingsNotExpanded.set(View.VISIBLE)
+    var lastScroll = 0
+    var lastScrollDelta = 0
+    var progress = 0f
+    var newProgress = 0f
+    fun onScrollChanged(v: NestedScrollView, l: Int, t: Int, oldl: Int, oldt: Int) {
+        //Log.d(TAG, "scroll changed: " + this.getTop() + " "+t);
+        val scrollY: Int = v.scrollY // For ScrollView hprizontal use getScrollX()
+        val b = l
+        val c = t
+        val d  = oldl
+        //TransitionManager.beginDelayedTransition(transitionsContainerTop);
+
+        newProgress = (1f / 500f) * scrollY
+        animatedTopView.progress = newProgress
+
+        if(abs(progress - newProgress) > 0.25 ) {
+            progress = newProgress
+        }
+
+
+        /*
+        if(scrollY < lastScroll && direction == 1 ) {
+            direction = 0
+            lastScrollDelta = scrollY
+            val params = FrameLayout.LayoutParams(
+                    200,
+                    200
+            )
+            imageMoonView.layoutParams = params
+
+        } else if(scrollY  > lastScroll && direction == 0){
+            direction = 1
+            lastScrollDelta = scrollY
+            val params = FrameLayout.LayoutParams(
+                    75,
+                    75
+            )
+            imageMoonView.layoutParams = params
+        }*/
+
+
+
+        lastScroll = scrollY
     }
 
-    // endregion
+    var lastMotionEvent : Int = MotionEvent.ACTION_UP
 
-    // region Charts
+    var touchY = 0f
+    var touchYOld = 0f
 
-    fun setUpSleepTimeChar() : LineDataSet {
+    fun onTouch(v: View?, event: MotionEvent): Boolean {
 
-        var entries = mutableListOf<Entry>()
-        entries.add(Entry(0f, 6.5f))
-        entries.add(Entry(1f, 5f))
-        entries.add(Entry(2f, 8f))
-        entries.add(Entry(3f, 7.5f))
-        entries.add(Entry(4f, 7f))
-        entries.add(Entry(5f, 6f))
-        entries.add(Entry(6f, 10f))
 
-        var dataSet = LineDataSet(entries, "Label") // add entries to dataset
-        return dataSet
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                touchY = event.y
+
+                if (touchYOld == 0f)
+                    touchYOld = event.y
+            }
+            MotionEvent.ACTION_UP -> {
+                touchYOld = 0f
+                //touchY = 0f
+            }
+        }
+
+        if(abs(touchYOld - touchY) > 50 && event.action == MotionEvent.ACTION_SCROLL)
+        {
+            if(touchYOld < touchY)
+                animatedTopView.transitionToEnd()
+            else
+                animatedTopView.transitionToStart()
+
+            touchYOld = touchY
+        }
+
+        return false
+    }
+    val pictureScale = ObservableField(1.0f)
+
+
+    private fun animateTop(expand: Boolean){
+
+
+        if(expand)
+        {
+            pictureScale.set(0.25f)
+        }
+        else
+        {
+            pictureScale.set(1f)
+        }
     }
 
 
-    // endregion
+    //endregion
 }

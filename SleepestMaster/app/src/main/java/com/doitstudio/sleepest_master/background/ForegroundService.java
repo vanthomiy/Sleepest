@@ -475,7 +475,6 @@ public class ForegroundService extends LifecycleService {
                 editor.apply();
             }
         }
-
     }
 
     private boolean checkPossibleAlarm() {

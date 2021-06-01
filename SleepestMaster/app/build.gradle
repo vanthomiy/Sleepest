@@ -208,11 +208,20 @@ dependencies {
     // Graphs etc.
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
+
     //Dont kill my app
     implementation('dev.doubledot.doki:library:0.0.1@aar') {
         transitive = true
     }
     implementation 'com.afollestad.material-dialogs:core:3.3.0'
+
+    // Motion
+    implementation 'com.android.support.constraint:constraint-layout:2.0.0-alpha2'
+
+    // Ringtone
+    implementation 'com.kevalpatel2106:ringtonepicker:1.2'
+
+
 
 
 }
