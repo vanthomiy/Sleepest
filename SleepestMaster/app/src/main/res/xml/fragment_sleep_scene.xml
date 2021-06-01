@@ -5,8 +5,8 @@
     <ConstraintSet android:id="@+id/start">
         <Constraint android:id="@+id/widget" />
         <Constraint android:id="@+id/animHeaderLogo"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             />
     </ConstraintSet>
 

@@ -210,6 +210,10 @@ dependencies {
     // Motion
     implementation 'com.android.support.constraint:constraint-layout:2.0.0-alpha2'
 
+    // Ringtone
+    implementation 'com.kevalpatel2106:ringtonepicker:1.2'
+
+
 
 }
 

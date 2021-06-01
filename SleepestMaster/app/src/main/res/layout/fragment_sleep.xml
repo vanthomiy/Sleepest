@@ -24,6 +24,7 @@
             android:layout_margin="20dp"
             android:orientation="vertical"
             android:id="@+id/animatedTopView"
+            android:visibility="gone"
             app:layoutDescription="@xml/fragment_sleep_scene">
 
             <TextView
@@ -51,8 +52,8 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/animHeaderLogo"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="40dp"
                 android:layout_marginRight="60dp"
@@ -165,6 +166,7 @@
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/valuesHeight"
+                        android:visibility="@{sleepViewModel.manualSleepTimeVisibility}"
                         >
 
                         <FrameLayout
@@ -174,12 +176,6 @@
                             android:clickable="@{sleepViewModel.manualSleepTime}"
                             android:onClick="@{sleepViewModel::onAlarmStartClicked}"
                             android:background="@drawable/bgroundedchoosen">
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:visibility="@{sleepViewModel.manualSleepTimeVisibility}"
-                                android:background="@drawable/bgroundedchoosenborder"/>
-
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -209,12 +205,6 @@
                             android:clickable="@{sleepViewModel.manualSleepTime}"
                             android:onClick="@{sleepViewModel::onAlarmEndClicked}"
                             android:background="@drawable/bgroundedchoosen">
-
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:visibility="@{sleepViewModel.manualSleepTimeVisibility}"
-                                android:background="@drawable/bgroundedchoosenborder"/>
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -623,10 +613,12 @@
                         <View
                             android:layout_width="fill_parent"
                             android:layout_height="2dp"
+                            android:visibility="@{sleepViewModel.activityTrackingView}"
                             android:background="@color/gray" />
 
                         <FrameLayout
                             android:layout_width="match_parent"
+                            android:visibility="@{sleepViewModel.activityTrackingView}"
                             android:layout_height="@dimen/valuesHeight">
                             <TextView
                                 android:layout_width="wrap_content"
@@ -761,18 +753,25 @@
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight">
-
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_gravity="start"
-                                android:gravity="center_vertical"
                                 android:layout_marginStart="10dp"
-                                android:textSize="@dimen/valueSize"
-                                android:textColor="@color/secondTextColor"
-                                android:textStyle="bold"
+                                android:gravity="center_vertical"
                                 android:text="sound"
-                                />
+                                android:textColor="@color/secondTextColor"
+                                android:textSize="@dimen/valueSize"
+                                android:textStyle="bold" />
+
+                            <Button
+                                android:id="@+id/soundChange"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end"
+                                android:layout_marginEnd="20dp"
+                                android:background="@drawable/transparent"
+                                android:text="Good morning little looser" />
                         </FrameLayout>
 
 

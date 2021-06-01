@@ -4,6 +4,7 @@ import android.app.Application
 import android.app.TimePickerDialog
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.net.Uri
 import android.transition.TransitionManager
 import android.view.MotionEvent
 import android.view.View
@@ -18,6 +19,7 @@ import androidx.lifecycle.AndroidViewModel
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.model.data.MobileUseFrequency
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
+import com.kevalpatel.ringtonepicker.RingtonePickerDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -65,27 +67,28 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     var sleepStartTime = LocalTime.now()
     var sleepEndTime = LocalTime.now()
 
+
     fun onAlarmStartClicked(view: View){
 
         val hour = (sleepStartTime.hour)
         val minute = (sleepStartTime.minute)
 
         val tpd = TimePickerDialog(
-            view.context,
-            TimePickerDialog.OnTimeSetListener(function = { view, h, m ->
+                view.context,
+                TimePickerDialog.OnTimeSetListener(function = { view, h, m ->
 
-                sleepStartValue.set((if (h < 10) "0" else "") + h.toString() + ":" + (if (m < 10) "0" else "") + m.toString())
-                sleepStartTime = LocalTime.of(h, m)
+                    sleepStartValue.set((if (h < 10) "0" else "") + h.toString() + ":" + (if (m < 10) "0" else "") + m.toString())
+                    sleepStartTime = LocalTime.of(h, m)
 
-                sleepCompleteValue.set(sleepStartValue.get() + " to " + sleepEndValue.get())
+                    sleepCompleteValue.set(sleepStartValue.get() + " to " + sleepEndValue.get())
 
-                scope.launch {
-                    dataStoreRepository.updateSleepTimeStart(sleepStartTime.toSecondOfDay())
-                }
-            }),
-            hour,
-            minute,
-            false
+                    scope.launch {
+                        dataStoreRepository.updateSleepTimeStart(sleepStartTime.toSecondOfDay())
+                    }
+                }),
+                hour,
+                minute,
+                false
         )
 
         tpd.show()
@@ -96,22 +99,22 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         val minute = (sleepEndTime.minute)
 
         val tpd = TimePickerDialog(
-            view.context,
-            TimePickerDialog.OnTimeSetListener(function = { view, h, m ->
+                view.context,
+                TimePickerDialog.OnTimeSetListener(function = { view, h, m ->
 
-                sleepEndValue.set((if (h < 10) "0" else "") + h.toString() + ":" + (if (m < 10) "0" else "") + m.toString())
+                    sleepEndValue.set((if (h < 10) "0" else "") + h.toString() + ":" + (if (m < 10) "0" else "") + m.toString())
 
-                sleepCompleteValue.set(sleepStartValue.get() + " to " + sleepEndValue.get())
+                    sleepCompleteValue.set(sleepStartValue.get() + " to " + sleepEndValue.get())
 
-                sleepEndTime = LocalTime.of(h, m)
+                    sleepEndTime = LocalTime.of(h, m)
 
-                scope.launch {
-                    dataStoreRepository.updateSleepTimeEnd(sleepEndTime.toSecondOfDay())
-                }
-            }),
-            hour,
-            minute,
-            false
+                    scope.launch {
+                        dataStoreRepository.updateSleepTimeEnd(sleepEndTime.toSecondOfDay())
+                    }
+                }),
+                hour,
+                minute,
+                false
         )
 
         tpd.show()
@@ -127,9 +130,15 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
             autoSleepTime.get()?.let {
                 dataStoreRepository.updateAutoSleepTime(it)
                 manualSleepTime.set(!it)
-                manualSleepTimeVisibility.set(if (it) View.VISIBLE else View.GONE)
             }
         }
+
+        TransitionManager.beginDelayedTransition(transitionsContainer);
+
+        autoSleepTime.get()?.let {
+            manualSleepTimeVisibility.set(if (it) View.GONE else View.VISIBLE)
+        }
+
     }
 
     val sleepTimeInfoExpand = ObservableField(View.GONE)
@@ -176,10 +185,10 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     val buttonTint = ObservableField(ColorStateList.valueOf(colorNormal))
 
     fun onMobilePositionChanged(
-        parent: AdapterView<*>?,
-        selectedItemView: View,
-        position: Int,
-        id: Long
+            parent: AdapterView<*>?,
+            selectedItemView: View,
+            position: Int,
+            id: Long
     ){
         scope.launch {
             dataStoreRepository.updateStandardMobilePosition(position)
@@ -192,16 +201,32 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     val cancelAlarmWhenAwake = ObservableField(false)
 
 
+    val activityTrackingView = ObservableField(View.GONE)
+
+
     fun onActivityTrackingChanged(buttonView: View) {
+        TransitionManager.beginDelayedTransition(transitionsContainer);
+
         scope.launch {
-            activityTracking.get()?.let { dataStoreRepository.updateActivityTracking(it) }
+            activityTracking.get()?.let {
+                dataStoreRepository.updateActivityTracking(it)
+                activityTrackingView.set(if (it) View.VISIBLE else View.GONE)
+
+            }
+        }
+
+        TransitionManager.beginDelayedTransition(transitionsContainer);
+
+        activityTracking.get()?.let {
+            activityTrackingView.set(if (it) View.VISIBLE else View.GONE)
+
         }
     }
 
     fun onActivityInCalcChanged(buttonView: View) {
         scope.launch {
             includeActivityInCalculation.get()?.let { dataStoreRepository.updateActivityInCalculation(
-                it
+                    it
             ) }
         }
     }
@@ -211,6 +236,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
             cancelAlarmWhenAwake.get()?.let { dataStoreRepository.updateEndAlarmAfterFired(it) }
         }
     }
+
 
     //endregion
 
@@ -231,7 +257,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
             manualSleepTime.set(!sleepParams.autoSleepTime)
             autoSleepTime.set(sleepParams.autoSleepTime)
-            manualSleepTimeVisibility.set(if (sleepParams.autoSleepTime) View.VISIBLE else View.GONE)
+            manualSleepTimeVisibility.set(if (sleepParams.autoSleepTime) View.GONE else View.VISIBLE)
 
             phonePositionSelections.addAll(arrayListOf<String>("In bed", "On table", "Auto detect"))
             mobilePosition.set(sleepParams.standardMobilePosition)
@@ -239,6 +265,8 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
             activityTracking.set(sleepParams.userActivityTracking)
             includeActivityInCalculation.set(sleepParams.implementUserActivityInSleepTime)
             cancelAlarmWhenAwake.set(sleepParams.endAlarmAfterFired)
+            activityTrackingView.set(if (sleepParams.userActivityTracking) View.VISIBLE else View.GONE)
+
 
         }
     }
@@ -312,7 +340,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
             MotionEvent.ACTION_DOWN -> {
                 touchY = event.y
 
-                if(touchYOld == 0f)
+                if (touchYOld == 0f)
                     touchYOld = event.y
             }
             MotionEvent.ACTION_UP -> {
@@ -321,7 +349,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
 
-        if(abs(touchYOld-touchY) > 50 && event.action == MotionEvent.ACTION_SCROLL)
+        if(abs(touchYOld - touchY) > 50 && event.action == MotionEvent.ACTION_SCROLL)
         {
             if(touchYOld < touchY)
                 animatedTopView.transitionToEnd()
