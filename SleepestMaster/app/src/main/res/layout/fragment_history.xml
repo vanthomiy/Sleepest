@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/tV_ActualDay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
@@ -36,9 +36,9 @@
             android:layout_height="50dp"
             android:layout_marginEnd="4dp"
             android:text="P"
-            app:layout_constraintBottom_toBottomOf="@+id/textView"
-            app:layout_constraintEnd_toStartOf="@+id/textView"
-            app:layout_constraintTop_toTopOf="@+id/textView" />
+            app:layout_constraintBottom_toBottomOf="@+id/tV_ActualDay"
+            app:layout_constraintEnd_toStartOf="@+id/tV_ActualDay"
+            app:layout_constraintTop_toTopOf="@+id/tV_ActualDay" />
 
         <Button
             android:id="@+id/btn_SleepAnalysisNextDay"
@@ -46,9 +46,9 @@
             android:layout_height="50dp"
             android:layout_marginStart="4dp"
             android:text="N"
-            app:layout_constraintBottom_toBottomOf="@+id/textView"
-            app:layout_constraintStart_toEndOf="@+id/textView"
-            app:layout_constraintTop_toTopOf="@+id/textView" />
+            app:layout_constraintBottom_toBottomOf="@+id/tV_ActualDay"
+            app:layout_constraintStart_toEndOf="@+id/tV_ActualDay"
+            app:layout_constraintTop_toTopOf="@+id/tV_ActualDay" />
 
         <Button
             android:id="@+id/btn_SleepAnalysisDay"
@@ -67,9 +67,9 @@
             android:layout_marginBottom="20dp"
             android:text="Week"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/textView"
-            app:layout_constraintStart_toStartOf="@+id/textView"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintEnd_toEndOf="@+id/tV_ActualDay"
+            app:layout_constraintStart_toStartOf="@+id/tV_ActualDay"
+            app:layout_constraintTop_toBottomOf="@+id/tV_ActualDay" />
 
         <Button
             android:id="@+id/btn_SleepAnalysisMonth"

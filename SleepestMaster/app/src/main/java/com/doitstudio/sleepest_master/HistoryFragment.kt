@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ScrollView
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationDbRepository
@@ -30,6 +31,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.util.*
+import kotlin.collections.ArrayList
 
 class HistoryFragment(val applicationContext: Context) : Fragment() {
 
@@ -42,6 +48,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
     private lateinit var barChart: BarChart
     private lateinit var lineChart: LineChart
     private lateinit var pieChart: PieChart
+    private lateinit var tVdisplayedDay: TextView
     private lateinit var btnSleepAnalysisDay : Button
     private lateinit var btnSleepAnalysisWeek : Button
     private lateinit var btnSleepAnalysisMonth : Button
@@ -52,6 +59,11 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
     private lateinit var sVSleepAnalysisMonth : ScrollView
     private lateinit var sleepSessions : MutableList<UserSleepSessionEntity>
     private lateinit var sleepSessionsData : MutableMap<UserSleepSessionEntity, List<SleepApiRawDataEntity>>
+    
+    private var dateOfDiagram  = LocalDate.now()
+    private var startTimeDay = Date(dateOfDiagram.year, dateOfDiagram.month, dateOfDiagram.date, 0, 0, 1) //May result in bug due to 2 sec glitch
+    private var endTimeDay = Date(dateOfDiagram.year, dateOfDiagram.month, dateOfDiagram.date, 23, 59, 59)
+    private var dateFormatOfDiagram = SimpleDateFormat("dd/MM/yyyy").format(dateOfDiagram)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,6 +79,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         barChart = view.findViewById(R.id.barChart_sleepAnalysisWeek)
         lineChart = view.findViewById(R.id.lineChart_sleepAnalysisDay)
         pieChart = view.findViewById(R.id.pieChart_sleepAnalysisDay)
+        tVdisplayedDay = view.findViewById(R.id.tV_ActualDay)
         btnSleepAnalysisDay = view.findViewById(R.id.btn_SleepAnalysisDay)
         btnSleepAnalysisWeek = view.findViewById(R.id.btn_SleepAnalysisWeek)
         btnSleepAnalysisMonth = view.findViewById(R.id.btn_SleepAnalysisMonth)
@@ -76,9 +89,10 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         sVSleepAnalysisWeek = view.findViewById(R.id.sV_sleepAnalysisChartsWeek)
         //sVSleepAnalysisMonth = view.findViewById(R.id.sV_sleepAnalysisChartsMonth)
 
+        tVdisplayedDay.text = dateFormatOfDiagram
+
         sleepSessions = mutableListOf()
         sleepSessionsData = mutableMapOf()
-
 
         btnSleepAnalysisDay.setOnClickListener {
             sVSleepAnalysisDay.isVisible = true
@@ -99,11 +113,27 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         }
 
         btnSleepAnalysisPreviousDay.setOnClickListener {
-
+            if (sVSleepAnalysisDay.isVisible) { // Move back in time
+                generateDateData(false, 1) // Day
+            }
+            else if (sVSleepAnalysisWeek.isVisible) {
+                generateDateData(false, 2) // Week
+            }
+            else if (sVSleepAnalysisMonth.isVisible) {
+                generateDateData(false, 3) // Month
+            }
         }
 
         btnSleepAnalysisNextDay.setOnClickListener {
-
+            if (sVSleepAnalysisDay.isVisible) { // Move ahead in time
+                generateDateData(true, 1) // Day
+            }
+            else if (sVSleepAnalysisWeek.isVisible) {
+                generateDateData(true, 2) // Week
+            }
+            else if (sVSleepAnalysisMonth.isVisible) {
+                generateDateData(true, 3) // Month
+            }
         }
 
         sleepDbRepository = DbRepository.getRepo(
@@ -127,11 +157,36 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
                 sleepSessionsData[sleepSessions[i]] =
                     sleep1DbRepository.getSleepApiRawDataBetweenTimestamps(startTime, endTime).first().sortedBy { x -> x.timestampSeconds }
             }
-
             setLineChart()
             setPieChart()
             setBarChart()
         }
+    }
+
+    private fun generateDateData(direction: Boolean, range: Int) {
+        if (direction) {
+            when (range) {
+                1 -> dateOfDiagram = Date(dateOfDiagram.time + 86400000) //Millis per day
+                2 -> dateOfDiagram = Date(dateOfDiagram.time + 86400000) //Millis per week
+                3 -> dateOfDiagram = Date(dateOfDiagram.time + 86400000) //Millis per month
+            }
+
+            dateOfDiagram = Date(dateOfDiagram.time + 86400000) //Millis per day
+        }
+        else {
+            dateOfDiagram = Date(dateOfDiagram.time - 86400000) //Millis per day
+        }
+        startTimeDay = Date(dateOfDiagram.year, dateOfDiagram.month, dateOfDiagram.date, 0, 0, 1) //May result in bug due to 2 sec glitch
+        endTimeDay = Date(dateOfDiagram.year, dateOfDiagram.month, dateOfDiagram.date, 23, 59, 59)
+        dateFormatOfDiagram = SimpleDateFormat("dd/MM/yyyy").format(dateOfDiagram)
+
+        tVdisplayedDay.text = dateFormatOfDiagram
+    }
+
+    private fun makeDiagramms() {
+        setLineChart()
+        setPieChart()
+        setBarChart()
     }
 
     private fun generateDataLineChart() : ArrayList<Entry> {
@@ -194,9 +249,10 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         listColors.add(resources.getColor(R.color.colorPrimary))
         listColors.add(resources.getColor(R.color.green))
         listColors.add(resources.getColor(R.color.red))
+        listColors.add(resources.getColor(R.color.blue))
 
         val pieDataSet = PieDataSet(generateDataPieChart(), "")
-        //pieDataSet.colors = listColors
+        pieDataSet.colors = listColors
 
         val pieData = PieData(pieDataSet)
         pieChart.data = pieData
