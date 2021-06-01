@@ -213,6 +213,8 @@ dependencies {
     // Ringtone
     implementation 'com.kevalpatel2106:ringtonepicker:1.2'
 
+    // Activity reco
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
 
 
 }

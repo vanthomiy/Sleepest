@@ -19,9 +19,10 @@ class MainApplication : Application() {
     val dataBaseRepository by lazy {
         DatabaseRepository.getRepo(
             database.sleepApiRawDataDao(),
-                database.sleepDataDao(),
-                database.userSleepSessionDao(),
-                database.alarmDao()
+            database.sleepDataDao(),
+            database.userSleepSessionDao(),
+            database.alarmDao(),
+            database.activityApiRawDataDao()
         )
     }
     val dataStoreRepository by lazy {

@@ -16,6 +16,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
+import com.doitstudio.Activityest_master.sleepapi.ActivityHandler
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.model.data.MobileUseFrequency
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
@@ -220,6 +221,10 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         activityTracking.get()?.let {
             activityTrackingView.set(if (it) View.VISIBLE else View.GONE)
 
+            if(it)
+                ActivityHandler.getHandler(getApplication()).startActivityHandler()
+            else
+                ActivityHandler.getHandler(getApplication()).stopActivityHandler()
         }
     }
 

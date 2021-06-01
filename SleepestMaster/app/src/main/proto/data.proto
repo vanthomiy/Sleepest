@@ -57,6 +57,40 @@ message  SleepApiData{
 }
 
 /**
+ * This is a Activity StatusModel
+ * It stores information/status about sleep api data
+ */
+message  ActivityApiData{
+
+  /**
+   * If the user authenticated the needed permissions
+   */
+  bool isPermissionActive = 2;
+  /**
+  * Status of the actual subscribed state
+  */
+  bool isSubscribed = 3;
+  /**
+ * The permission is not given anymore
+ */
+  bool permissionRemovedError = 4;
+  /**
+ * The subscribe failed because of an unidentified error
+ */
+  bool subscribeFailed = 5;
+  /**
+ * The unsubscribe failed because of an unidentified error
+*/
+  bool unsubscribeFailed = 6;
+
+  /**
+  * Count of the sleep api data
+  */
+  int32 activityApiValuesAmount = 7;
+
+}
+
+/**
  * This is a SleepApiData StatusModel
  * It stores information/status about sleep api data
  */

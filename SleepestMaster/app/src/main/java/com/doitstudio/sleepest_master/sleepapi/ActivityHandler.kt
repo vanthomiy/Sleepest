@@ -1,4 +1,4 @@
-package com.doitstudio.sleepest_master.sleepapi
+package com.doitstudio.Activityest_master.sleepapi
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -6,33 +6,33 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
+import com.doitstudio.Activityest_master.Activityapi.ActivityReciver
 import com.doitstudio.sleepest_master.MainApplication
 import com.google.android.gms.location.ActivityRecognition
-import com.google.android.gms.location.SleepSegmentRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 /**
  * Needs to be created with [getHandler] and then nothing much is to do...
- * From Background we need to update unsubscribe and subscribe Sleep Data and the handler will sub/unsubscripe the sleep data recive
+ * From Background we need to update unsubscribe and subscribe Activity Data and the handler will sub/unsubscripe the Activity data recive
  */
-class SleepHandler(private val context: Context) {
+class ActivityHandler(private val context: Context) {
 
     private val scope: CoroutineScope = MainScope()
 
-    private var sleepPendingIntent: PendingIntent = SleepReceiver.createSleepReceiverPendingIntent(context = context)
+    private var activityPendingIntent: PendingIntent = ActivityReciver.createActivityReceiverPendingIntent(context = context)
 
     private val dataStoreRepository by lazy { (context.applicationContext as MainApplication).dataStoreRepository }
 
     companion object {
         // For Singleton instantiation
         @Volatile
-        private var INSTANCE: SleepHandler? = null
+        private var INSTANCE: ActivityHandler? = null
 
-        fun getHandler(context: Context): SleepHandler {
+        fun getHandler(context: Context): ActivityHandler {
             return INSTANCE ?: synchronized(this) {
-                val instance = SleepHandler(context)
+                val instance = ActivityHandler(context)
                 INSTANCE = instance
                 // return instance
                 instance
@@ -41,71 +41,71 @@ class SleepHandler(private val context: Context) {
     }
 
     /**
-     * Listens to sleep data subscribed or not and subscribe or unsubscribe from it automatically
+     * Listens to Activity data subscribed or not and subscribe or unsubscribe from it automatically
      */
-    fun startSleepHandler() {
-        subscribeToSleepSegmentUpdates(context, sleepPendingIntent)
+    fun startActivityHandler() {
+        subscribeToActivitySegmentUpdates(context, activityPendingIntent)
     }
 
-    fun stopSleepHandler(){
-        unsubscribeToSleepSegmentUpdates(context, sleepPendingIntent)
+    fun stopActivityHandler(){
+        unsubscribeToActivitySegmentUpdates(context, activityPendingIntent)
     }
 
     /**
-     * Subscribes to sleep data.
+     * Subscribes to Activity data.
      * Note: Permission isn't missing, it's in the manifest but only for 29+ version. The lint
      * check is the 28 and below version of the activity recognition permission (needed for
-     * accessing sleep data).
+     * accessing Activity data).
      */
     @SuppressLint("MissingPermission")
-    private fun subscribeToSleepSegmentUpdates(context: Context, pendingIntent: PendingIntent) {
+    private fun subscribeToActivitySegmentUpdates(context: Context, pendingIntent: PendingIntent) {
         if (activityRecognitionPermissionApproved(context)) {
             val task =
-                    ActivityRecognition.getClient(context).requestSleepSegmentUpdates(
-                            pendingIntent,
-                            SleepSegmentRequest(SleepSegmentRequest.CLASSIFY_EVENTS_ONLY)
+                    ActivityRecognition.getClient(context).requestActivityUpdates(
+                            1800000, // 1/2 stunden
+                            pendingIntent
                     )
 
             task.addOnSuccessListener {
                 scope.launch {
-                    dataStoreRepository.updateSleepIsSubscribed(true)
-                    dataStoreRepository.updateSleepSubscribeFailed(false)
+                    dataStoreRepository.updateActivityIsSubscribed(true)
+                    dataStoreRepository.updateActivitySubscribeFailed(false)
                 }            }
             task.addOnFailureListener { exception ->
                 scope.launch {
-                    dataStoreRepository.updateSleepIsSubscribed(false)
-                    dataStoreRepository.updateSleepSubscribeFailed(true)
+                    dataStoreRepository.updateActivityIsSubscribed(false)
+                    dataStoreRepository.updateActivitySubscribeFailed(true)
                 }
             }
         } else {
             scope.launch {
-                dataStoreRepository.updateSleepPermissionRemovedError(true)
-                dataStoreRepository.updateSleepPermissionActive(false)
+                dataStoreRepository.updateActivityPermissionRemovedError(true)
+                dataStoreRepository.updateActivityPermissionActive(false)
             }
         }
     }
 
     /**
-     * Unsubscribes to sleep data.
+     * Unsubscribes to Activity data.
      */
-    private fun unsubscribeToSleepSegmentUpdates(context: Context, pendingIntent: PendingIntent) {
-        val task = ActivityRecognition.getClient(context).removeSleepSegmentUpdates(pendingIntent)
+    private fun unsubscribeToActivitySegmentUpdates(context: Context, pendingIntent: PendingIntent) {
+        val task = ActivityRecognition.getClient(context).removeActivityUpdates(pendingIntent)
 
         task.addOnSuccessListener {
             scope.launch {
-                dataStoreRepository.updateSleepIsSubscribed(false)
-                dataStoreRepository.updateSleepUnsubscribeFailed(false)
+                dataStoreRepository.updateActivityIsSubscribed(false)
+                dataStoreRepository.updateActivityUnsubscribeFailed(false)
             }
         }
         task.addOnFailureListener { exception ->
             scope.launch {
-                dataStoreRepository.updateSleepUnsubscribeFailed(true)
+                dataStoreRepository.updateActivityUnsubscribeFailed(true)
             }
         }
     }
 
     private fun activityRecognitionPermissionApproved(context: Context): Boolean {
-        // Because this app targets 29 and above (recommendation for using the Sleep APIs), we
+        // Because this app targets 29 and above (recommendation for using the Activity APIs), we
         // don't need to check if this is on a device before runtime permissions, that is, a device
         // prior to 29 / Q.
         return PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(

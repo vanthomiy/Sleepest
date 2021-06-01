@@ -2,10 +2,7 @@ package com.doitstudio.sleepest_master.storage.datastorage
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
-import com.doitstudio.sleepest_master.BackgroundService
-import com.doitstudio.sleepest_master.LiveUserSleepActivity
-import com.doitstudio.sleepest_master.SleepApiData
-import com.doitstudio.sleepest_master.SleepParameters
+import com.doitstudio.sleepest_master.*
 import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.MobileUseFrequency
 import com.google.protobuf.InvalidProtocolBufferException
@@ -28,6 +25,25 @@ class SleepApiDataSerializer() : Serializer<SleepApiData> {
 
     override val defaultValue: SleepApiData = SleepApiData.getDefaultInstance()
 }
+
+
+class ActivityApiDataSerializer() : Serializer<ActivityApiData> {
+
+    override fun readFrom(input: InputStream): ActivityApiData {
+        try {
+            return ActivityApiData.parseFrom(input)
+        } catch (exception: InvalidProtocolBufferException) {
+            throw CorruptionException("Cannot read proto.", exception)
+        }
+    }
+
+    override fun writeTo(t: ActivityApiData, output: OutputStream) {
+        t.writeTo(output)
+    }
+
+    override val defaultValue: ActivityApiData = ActivityApiData.getDefaultInstance()
+}
+
 
 class LiveUserSleepActivitySerializer() : Serializer<LiveUserSleepActivity> {
 
