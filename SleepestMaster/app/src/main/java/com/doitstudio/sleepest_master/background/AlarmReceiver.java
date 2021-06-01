@@ -38,15 +38,12 @@ import static android.content.Context.ALARM_SERVICE;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
-    private SleepCalculationHandler sleepCalculationHandler;
-    private DataStoreRepository dataStoreRepository;
-    private SleepHandler sleepHandler;
-
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        dataStoreRepository = DataStoreRepository.Companion.getRepo(context);
-        sleepHandler = SleepHandler.Companion.getHandler(context);
+        DataStoreRepository dataStoreRepository = DataStoreRepository.Companion.getRepo(context);
+        SleepHandler sleepHandler = SleepHandler.Companion.getHandler(context);
+        SleepCalculationHandler sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
 
         Calendar calendar = Calendar.getInstance();
         SharedPreferences pref = context.getSharedPreferences("AlarmReceiver", 0);
@@ -84,7 +81,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case 4:
                 //Button not Sleeping
-                sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
                 sleepCalculationHandler.userNotSleepingJob();
                 break;
             case 5:
