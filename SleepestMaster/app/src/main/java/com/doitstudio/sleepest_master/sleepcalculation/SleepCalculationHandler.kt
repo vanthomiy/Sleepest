@@ -16,6 +16,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.ZoneOffset
 
 class SleepCalculationHandler(val context: Context) {
@@ -37,8 +38,7 @@ class SleepCalculationHandler(val context: Context) {
      */
     fun getSecondsOfDay() : Int{
 
-        val now = LocalDateTime.now(ZoneOffset.UTC)
-        return now.toLocalTime().toSecondOfDay()
+        return LocalTime.now().toSecondOfDay()
 
     }
 
@@ -195,11 +195,11 @@ class SleepCalculationHandler(val context: Context) {
      * We do nothing much and just returning the provided [wakeUpTime]
      *
      * CASE 2: Wakeuppoint is in the past
-     * Should not happen but if, we check if the [frequency] * 3 includes the [wakeUpTime]
+     * Should not happen but if, we check if the [frequency] * 2 includes the [wakeUpTime]
      * Yes ? -> We calculate the model and check if next time is a [SleepState.LIGHT] and set it to waekup point
      * No ? -> We set the wakeuppont to now
      *
-     * CASE 3: Wakeuppoint in near future ( 3 times the [frequency] of the data)
+     * CASE 3: Wakeuppoint in near future ( 2 times the [frequency] of the data)
      * So now we are calculating the [SleepState] of the actual data for the next step.
      * If its a [SleepState.LIGHT] we set the wakeuppoint to it.. otherwise we pass back to old wakeup point
 
@@ -216,8 +216,8 @@ class SleepCalculationHandler(val context: Context) {
 
 
         // If we are in allowed timeSpace
-        if (((actualTimeSeconds < wakeUpTime) && actualTimeSeconds > wakeUpTime - (frequencySeconds * 3)) ||
-            ((actualTimeSeconds > wakeUpTime) && actualTimeSeconds < wakeUpTime + (frequencySeconds * 3)))
+        if (((actualTimeSeconds < wakeUpTime) && actualTimeSeconds > wakeUpTime - (frequencySeconds * 2)) ||
+            ((actualTimeSeconds > wakeUpTime) && actualTimeSeconds < wakeUpTime + (frequencySeconds * 2)))
         {
             // check user light sleep future
             // create features for ml model
@@ -375,7 +375,7 @@ class SleepCalculationHandler(val context: Context) {
 
             val actualTimeSeconds = getSecondsOfDay()
             var wakeUpTime = actualTimeSeconds + (restSleepTime)
-
+            //var wakeUpTimeNew = 0
             // if in bed then check the single states of the sleep
             if (sleepSessionEntity.mobilePosition == MobilePosition.INBED) {
                 wakeUpTime = findLightUserWakeup(sleepApiRawDataEntity, wakeUpTime)

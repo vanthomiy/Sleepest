@@ -22,6 +22,7 @@ import java.io.BufferedReader
 import java.time.DayOfWeek
 import java.time.Instant
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.ZoneOffset
 import kotlin.math.abs
 import kotlin.random.Random
@@ -368,6 +369,18 @@ class SleepCalculationHandlerTest
         calPosition = sleepCalculationHandler.checkPhonePosition(sleepList30)
         assertThat(calPosition, CoreMatchers.equalTo(MobilePosition.INBED))
 
+    }
+
+    @Test
+    fun secondsOfDayTest(){
+
+        val sleepCalculationHandler = SleepCalculationHandler.getHandler(context)
+
+        var time = LocalTime.now()
+
+        var seconds = sleepCalculationHandler.getSecondsOfDay()
+
+        assertThat(time.toSecondOfDay(), CoreMatchers.equalTo(seconds))
     }
 
     @Test

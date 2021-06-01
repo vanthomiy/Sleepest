@@ -9,7 +9,7 @@ enum class Actions {
 }
 
 /**
- * Defines the diffrent states of the sleep a user can be in
+ * Defines the different states of the sleep a user can be in
  */
 enum class SleepState {
     AWAKE,

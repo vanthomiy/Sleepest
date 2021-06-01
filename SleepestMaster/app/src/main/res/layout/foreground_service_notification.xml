@@ -2,15 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="130dp"
-    android:background="@color/black"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    style="@style/Theme.AppCompat.DayNight">
 
 
     <ImageView
         android:layout_gravity="center_vertical"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:src="@drawable/logo_notification"/>
+        android:src="@drawable/logo_notification"
+        style="@style/Theme.AppCompat.DayNight"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,9 +28,8 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Alarm active for tomorrow\nActual alarm set at: 6:00\nSleep status:"
                 android:textSize="13sp"
-                android:textColor="@color/teal_700"/>
+                style="@style/Theme.AppCompat.DayNight"/>
 
             <ProgressBar
                 android:id="@+id/pbSleepProgressNotification"
@@ -41,20 +41,38 @@
                 android:layout_marginRight="30dp"
                 android:layout_marginBottom="3dp"
                 android:progressTint="#00BCD4" />
-
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            style="@style/Theme.AppCompat.DayNight">
+
             <Button
-                android:id="@+id/btnEnableAlarmNotification"
-                android:layout_width="match_parent"
+                android:id="@+id/btnDisableAlarmNotification"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
                 android:layout_height="40dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
+                android:layout_marginRight="2dp"
                 android:background="@drawable/rounded_button_green"
-                android:textColor="@color/black"
-                android:text="Enable"
-                android:layout_gravity="bottom"/>
+                style="@style/Theme.AppCompat.DayNight"
+                android:layout_gravity="bottom"
+                android:textSize="15sp"/>
+
+            <Button
+                android:id="@+id/btnNotSleepingNotification"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="2dp"
+                android:background="@drawable/rounded_button_green"
+                style="@style/Theme.AppCompat.DayNight"
+                android:layout_gravity="bottom"
+                android:textSize="15sp"/>
+        </LinearLayout>
 
     </LinearLayout>
 

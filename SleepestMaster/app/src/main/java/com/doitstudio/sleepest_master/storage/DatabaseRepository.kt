@@ -235,6 +235,11 @@ class DatabaseRepository(
         alarmDao.insert(alarm)
     }
 
+
+    suspend fun updateAlarmWasFired(alarmFired: Boolean, alarmId: Int) {
+        alarmDao.updateAlarmWasFired(alarmFired, alarmId)
+    }
+
     suspend fun updateSleepDuration(sleepDuration: Int, alarmId: Int) {
         alarmDao.updateSleepDuration(sleepDuration, alarmId)
     }
