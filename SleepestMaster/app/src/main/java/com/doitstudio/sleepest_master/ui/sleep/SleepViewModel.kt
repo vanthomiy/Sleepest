@@ -17,6 +17,7 @@ import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import com.doitstudio.Activityest_master.sleepapi.ActivityHandler
+import com.doitstudio.Activityest_master.sleepapi.ActivityTransitionHandler
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.model.data.MobileUseFrequency
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
@@ -222,9 +223,9 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
             activityTrackingView.set(if (it) View.VISIBLE else View.GONE)
 
             if(it)
-                ActivityHandler.getHandler(getApplication()).startActivityHandler()
+                ActivityTransitionHandler.getHandler(getApplication()).startActivityHandler()
             else
-                ActivityHandler.getHandler(getApplication()).stopActivityHandler()
+                ActivityTransitionHandler.getHandler(getApplication()).stopActivityHandler()
         }
     }
 
@@ -240,6 +241,12 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         scope.launch {
             cancelAlarmWhenAwake.get()?.let { dataStoreRepository.updateEndAlarmAfterFired(it) }
         }
+    }
+
+    // defines how good the sleep can be messured
+    fun sleepCalculateFactorCalculation(){
+
+        
     }
 
 

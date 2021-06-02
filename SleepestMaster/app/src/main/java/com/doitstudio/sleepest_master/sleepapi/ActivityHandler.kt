@@ -62,7 +62,8 @@ class ActivityHandler(private val context: Context) {
         if (activityRecognitionPermissionApproved(context)) {
             val task =
                     ActivityRecognition.getClient(context).requestActivityUpdates(
-                            1800000, // 1/2 stunden
+                            //1800000, // 1/2 stunden
+                            200000,
                             pendingIntent
                     )
 
@@ -113,6 +114,4 @@ class ActivityHandler(private val context: Context) {
                 Manifest.permission.ACTIVITY_RECOGNITION
         )
     }
-
 }
-
