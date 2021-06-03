@@ -245,8 +245,6 @@ public class ForegroundService extends LifecycleService {
 
         updateNotification("Alarm status: " + isAlarmActive);
 
-        actualWakeUp = time.getActualWakeup();
-
         SharedPreferences pref = getSharedPreferences("AlarmChanged", 0);
         SharedPreferences.Editor ed = pref.edit();
         ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
