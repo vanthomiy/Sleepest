@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.createDataStore
 import androidx.datastore.preferences.createDataStore
 import com.doitstudio.sleepest_master.*
+import com.doitstudio.sleepest_master.model.data.LightConditions
 
 import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.MobileUseFrequency
@@ -94,11 +95,11 @@ class DataStoreRepository(context: Context) {
         sleepParameterStatus.updateSleepTimeStart(time)
     suspend fun updateUserWantedSleepTime(time:Int) =
         sleepParameterStatus.updateUserWantedSleepTime(time)
-    suspend fun updateStandardMobilePosition(time:MobilePosition) =
-        sleepParameterStatus.updateStandardMobilePosition(time)
     suspend fun updateStandardMobilePosition(time:Int) =
         sleepParameterStatus.updateStandardMobilePosition(time)
-    suspend fun updateUserMobileFequency(time:MobileUseFrequency) =
+    suspend fun updateLigthCondition(time:Int) =
+        sleepParameterStatus.updateLigthCondition(time)
+    suspend fun updateUserMobileFequency(time:Int) =
         sleepParameterStatus.updateUserMobileFequency(time)
 
     //endregion
@@ -151,7 +152,7 @@ class DataStoreRepository(context: Context) {
     }
 
 
-    val ActivityApiDataFlow: Flow<ActivityApiData> = ActivityApiDataStatus.activityApiData
+    val activityApiDataFlow: Flow<ActivityApiData> = ActivityApiDataStatus.activityApiData
 
     suspend fun getActivitySubscribeStatus() : Boolean {
         return ActivityApiDataStatus.activityApiData.first().isSubscribed }

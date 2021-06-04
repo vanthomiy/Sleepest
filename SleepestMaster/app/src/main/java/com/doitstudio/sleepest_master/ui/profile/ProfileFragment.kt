@@ -89,7 +89,9 @@ class ProfileFragment : Fragment() {
             
             """.trimIndent()
 
-        val textGesamt = textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation + textCalc1 + textCalc2 + textAlarmReceiver + textSleepTime + textStopException
+        var textGesamt = textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation + textCalc1 + textCalc2 + textAlarmReceiver + textSleepTime + textStopException
+
+
 
         val text: TextView = root.findViewById(R.id.text_dashboard)
         text.setText(textGesamt)

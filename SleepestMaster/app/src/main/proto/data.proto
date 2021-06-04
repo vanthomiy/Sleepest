@@ -118,6 +118,11 @@ message  SleepParameters{
   int32 standardMobilePosition = 4;
 
   /**
+* standard light condition
+*/
+  int32 standardLightCondition = 10;
+
+  /**
   * user frequency use of the mobile phone
   */
   int32 mobileUseFrequency = 5;

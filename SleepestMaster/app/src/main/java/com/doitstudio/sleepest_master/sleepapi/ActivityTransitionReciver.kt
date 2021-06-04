@@ -80,7 +80,7 @@ class ActivityTransitionReciver : BroadcastReceiver(){
                     context,
                     0,
                     ActivityIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT
+                    0
             )
         }
     }
