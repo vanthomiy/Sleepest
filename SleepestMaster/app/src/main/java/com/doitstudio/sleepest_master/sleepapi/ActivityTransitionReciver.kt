@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.widget.Toast
 import com.doitstudio.sleepest_master.ActivityApiData
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
@@ -22,6 +23,7 @@ import java.time.ZoneOffset
 /**
  * Saves Activity Events to Database.
  */
+/*
 class ActivityTransitionReciver : BroadcastReceiver(){
 
     // Used to launch coroutines (non-blocking way to insert data).
@@ -87,4 +89,48 @@ class ActivityTransitionReciver : BroadcastReceiver(){
 
 
 }
+*/
 
+class ActivityTransitionReciver : BroadcastReceiver() {
+
+    private val scope: CoroutineScope = MainScope()
+
+    override fun onReceive(context: Context, intent: Intent) {
+
+        val repository = (context.applicationContext as MainApplication).dataBaseRepository
+        val dataStoreRepository = (context.applicationContext as MainApplication).dataStoreRepository
+
+        if (ActivityTransitionResult.hasResult(intent)) {
+            val result = ActivityTransitionResult.extractResult(intent)
+            scope.launch {
+
+                result?.let {
+
+                    val convertedToEntityVersion = mutableListOf<ActivityApiRawDataEntity>()
+                    it.transitionEvents.forEach { transition ->
+
+                        convertedToEntityVersion.add(
+                                ActivityApiRawDataEntity(
+                                        LocalDateTime.now().toEpochSecond(ZoneOffset.UTC).toInt(),
+                                        transition.activityType,
+                                        (transition.elapsedRealTimeNanos / 60000000000).toInt()
+                                )
+                        )
+
+                    }
+
+                    // Update the raw Activity api data
+                    repository.insertActivityApiRawData(convertedToEntityVersion)
+
+                    // update the amount of data that is beeing recived
+                    dataStoreRepository.updateActivityApiValuesAmount(
+                            it.transitionEvents.count()
+                    )
+
+                    Toast.makeText(context, "hallo", Toast.LENGTH_LONG).show()
+
+                }
+            }
+        }
+    }
+}

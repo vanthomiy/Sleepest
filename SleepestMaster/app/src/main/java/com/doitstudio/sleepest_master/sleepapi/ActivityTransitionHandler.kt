@@ -4,15 +4,16 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import androidx.core.content.ContextCompat
+import com.doitstudio.Activityest_master.Activityapi.ActivityReciver.Companion.createActivityReceiverPendingIntent
 import com.doitstudio.Activityest_master.Activityapi.ActivityTransitionReciver
 import com.doitstudio.Activityest_master.sleepapi.ActivityTransitionHandler.Companion.getHandler
 import com.doitstudio.sleepest_master.MainApplication
-import com.google.android.gms.location.ActivityRecognition
-import com.google.android.gms.location.ActivityTransition
-import com.google.android.gms.location.ActivityTransitionRequest
-import com.google.android.gms.location.DetectedActivity
+import com.doitstudio.sleepest_master.sleepapi.ActivityTransitionUtil
+import com.google.android.gms.location.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -26,9 +27,7 @@ class ActivityTransitionHandler(private val context: Context) {
 
     private val scope: CoroutineScope = MainScope()
 
-    private var activityPendingIntent: PendingIntent = ActivityTransitionReciver.createActivityReceiverPendingIntent(
-        context = context
-    )
+    private val client: ActivityRecognitionClient by lazy { ActivityRecognition.getClient(context) }
 
     private val dataStoreRepository by lazy { (context.applicationContext as MainApplication).dataStoreRepository }
 
@@ -45,92 +44,22 @@ class ActivityTransitionHandler(private val context: Context) {
                 instance
             }
         }
+
+        const val REQUEST_CODE_ACTIVITY_TRANSITION = 123
+        const val REQUEST_CODE_INTENT_ACTIVITY_TRANSITION = 122
     }
 
     /**
      * Listens to Activity data subscribed or not and subscribe or unsubscribe from it automatically
      */
     fun startActivityHandler() {
-        subscribeToActivitySegmentUpdates(context, activityPendingIntent)
+        subscribeToActivitySegmentUpdates()
     }
 
     fun stopActivityHandler(){
-        unsubscribeToActivitySegmentUpdates(context, activityPendingIntent)
+        unsubscribeToActivitySegmentUpdates()
     }
 
-
-    private fun createActivites()
-    : MutableList<ActivityTransition> {
-        val activityTransitionList = mutableListOf<ActivityTransition>()
-
-        activityTransitionList.add(
-            ActivityTransition.Builder()
-                .setActivityType(DetectedActivity.WALKING)
-                .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_ENTER)
-                .build()
-        )
-        activityTransitionList.add(
-            ActivityTransition.Builder()
-                .setActivityType(DetectedActivity.WALKING)
-                .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_EXIT)
-                .build()
-        )
-
-        activityTransitionList.add(
-            ActivityTransition.Builder()
-                .setActivityType(DetectedActivity.RUNNING)
-                .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_ENTER)
-                .build()
-        )
-        activityTransitionList.add(
-            ActivityTransition.Builder()
-                .setActivityType(DetectedActivity.RUNNING)
-                .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_EXIT)
-                .build()
-        )
-
-        activityTransitionList.add(
-            ActivityTransition.Builder()
-                .setActivityType(DetectedActivity.ON_BICYCLE)
-                .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_ENTER)
-                .build()
-        )
-        activityTransitionList.add(
-            ActivityTransition.Builder()
-                .setActivityType(DetectedActivity.ON_BICYCLE)
-                .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_EXIT)
-                .build()
-        )
-
-        activityTransitionList.add(
-            ActivityTransition.Builder()
-                .setActivityType(DetectedActivity.ON_FOOT)
-                .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_ENTER)
-                .build()
-        )
-        activityTransitionList.add(
-            ActivityTransition.Builder()
-                .setActivityType(DetectedActivity.ON_FOOT)
-                .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_EXIT)
-                .build()
-        )
-
-        activityTransitionList.add(
-            ActivityTransition.Builder()
-                .setActivityType(DetectedActivity.STILL)
-                .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_ENTER)
-                .build()
-        )
-        activityTransitionList.add(
-            ActivityTransition.Builder()
-                .setActivityType(DetectedActivity.STILL)
-                .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_EXIT)
-                .build()
-        )
-
-
-        return activityTransitionList
-    }
 
     /**
      * Subscribes to Activity data.
@@ -139,16 +68,16 @@ class ActivityTransitionHandler(private val context: Context) {
      * accessing Activity data).
      */
     @SuppressLint("MissingPermission")
-    private fun subscribeToActivitySegmentUpdates(context: Context, pendingIntent: PendingIntent) {
-        if (activityRecognitionPermissionApproved(context)) {
+    private fun subscribeToActivitySegmentUpdates() {
+        /*if (activityRecognitionPermissionApproved(context)) {
 
             val request = ActivityTransitionRequest(createActivites())
 
             val task =
                     ActivityRecognition.getClient(context).requestActivityTransitionUpdates(
-                        //1800000, // 1/2 stunden
-                        request,
-                        pendingIntent
+                            //1800000, // 1/2 stunden
+                            request,
+                            pendingIntent
                     )
 
             task.addOnSuccessListener {
@@ -167,14 +96,38 @@ class ActivityTransitionHandler(private val context: Context) {
                 dataStoreRepository.updateActivityPermissionRemovedError(true)
                 dataStoreRepository.updateActivityPermissionActive(false)
             }
+        }*/
+
+        if (activityRecognitionPermissionApproved(context)) {
+            client
+                    .requestActivityTransitionUpdates(
+                            ActivityTransitionUtil.getActivityTransitionRequest(),
+                            getPendingIntent()
+                    )
+                    .addOnSuccessListener {
+                        scope.launch {
+                            dataStoreRepository.updateActivityIsSubscribed(true)
+                            dataStoreRepository.updateActivitySubscribeFailed(false)
+                        }                   }
+                    .addOnFailureListener { e: Exception ->
+                        scope.launch {
+                            dataStoreRepository.updateActivityIsSubscribed(false)
+                            dataStoreRepository.updateActivitySubscribeFailed(true)
+                        }                   }
+
+        } else {
+            scope.launch {
+                dataStoreRepository.updateActivityPermissionRemovedError(true)
+                dataStoreRepository.updateActivityPermissionActive(false)
+            }
         }
     }
 
     /**
      * Unsubscribes to Activity data.
      */
-    private fun unsubscribeToActivitySegmentUpdates(context: Context, pendingIntent: PendingIntent) {
-        val task = ActivityRecognition.getClient(context).removeActivityTransitionUpdates(pendingIntent)
+    private fun unsubscribeToActivitySegmentUpdates() {
+        /*val task = ActivityRecognition.getClient(context).removeActivityTransitionUpdates(pendingIntent)
 
         task.addOnSuccessListener {
             scope.launch {
@@ -186,7 +139,34 @@ class ActivityTransitionHandler(private val context: Context) {
             scope.launch {
                 dataStoreRepository.updateActivityUnsubscribeFailed(true)
             }
-        }
+        }*/
+
+        client
+                .removeActivityTransitionUpdates(getPendingIntent())
+                .addOnSuccessListener {
+                    getPendingIntent().cancel()
+                    scope.launch {
+                        dataStoreRepository.updateActivityIsSubscribed(false)
+                        dataStoreRepository.updateActivityUnsubscribeFailed(false)
+                    }
+                }
+                .addOnFailureListener { e: Exception ->
+                    scope.launch {
+                        dataStoreRepository.updateActivityUnsubscribeFailed(true)
+
+                    }
+                }
+    }
+
+
+    private fun getPendingIntent(): PendingIntent {
+        val intent = Intent(context, ActivityTransitionReciver::class.java)
+        return PendingIntent.getBroadcast(
+                context,
+                REQUEST_CODE_INTENT_ACTIVITY_TRANSITION,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+        )
     }
 
     private fun activityRecognitionPermissionApproved(context: Context): Boolean {
@@ -194,8 +174,8 @@ class ActivityTransitionHandler(private val context: Context) {
         // don't need to check if this is on a device before runtime permissions, that is, a device
         // prior to 29 / Q.
         return PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.ACTIVITY_RECOGNITION
+                context,
+                Manifest.permission.ACTIVITY_RECOGNITION
         )
     }
 }

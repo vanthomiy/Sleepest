@@ -30,11 +30,10 @@ data class UserSleepSessionEntity(
                 /**
                  * Returns the id for the assigned stored data of a sleep from a local date
                  */
-                fun getIdByDateTime(time : LocalDate) : Int {
+                fun getIdByDateTime(date : LocalDate) : Int {
 
-                        var newDate = LocalDate.of(time.year, time.month, time.dayOfMonth)
                         var time = LocalTime.of(15,0)
-                        val datetime = LocalDateTime.of(newDate, time)
+                        val datetime = LocalDateTime.of(date.minusDays(1), time)
                         return datetime.toEpochSecond(ZoneOffset.UTC).toInt()
                 }
 
@@ -43,10 +42,10 @@ data class UserSleepSessionEntity(
                  */
                 fun getIdByTimeStamp(timestamp: Int) : Int {
 
-                        val actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp.toLong()*1000), ZoneOffset.UTC)
+                        var actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp.toLong()*1000), ZoneOffset.UTC)
 
                         if(actualTime.hour >= 15){
-                                actualTime.plusDays(1)
+                                actualTime = actualTime.plusDays(1)
                         }
 
                         val date = actualTime.toLocalDate()
