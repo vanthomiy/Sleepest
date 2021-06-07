@@ -153,6 +153,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     val alarmExpand = ObservableField(View.GONE)
     val sleepDurationExpand = ObservableField(View.GONE)
     val lightConditionExpand = ObservableField(View.GONE)
+    val sleepHeaderExpand = ObservableField(View.GONE)
 
     fun onInfoClicked(view: View){
         updateInfoChanged(view.tag.toString(), true)
@@ -165,6 +166,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         TransitionManager.beginDelayedTransition(transitionsContainer);
 
         sleepTimeInfoExpand.set(if (value == "0" && sleepTimeInfoExpand.get() == View.GONE) View.VISIBLE else View.GONE)
+        sleepHeaderExpand.set(if (value == "7" && sleepHeaderExpand.get() == View.GONE) View.VISIBLE else View.GONE)
         lightConditionExpand.set(if (value == "6" && lightConditionExpand.get() == View.GONE) View.VISIBLE else View.GONE)
         sleepDurationExpand.set(if (value == "1" && sleepDurationExpand.get() == View.GONE) View.VISIBLE else View.GONE)
         phonePositionExpand.set(if (value == "2" && phonePositionExpand.get() == View.GONE) View.VISIBLE else View.GONE)
@@ -251,9 +253,9 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
             activityTrackingView.set(if (it) View.VISIBLE else View.GONE)
 
             if(it)
-                ActivityTransitionHandler.getHandler(getApplication()).startActivityHandler()
+                ActivityHandler.getHandler(getApplication()).startActivityHandler()
             else
-                ActivityTransitionHandler.getHandler(getApplication()).stopActivityHandler()
+                ActivityHandler.getHandler(getApplication()).stopActivityHandler()
         }
 
 

@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import com.doitstudio.Activityest_master.Activityapi.ActivityReciver
 import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.sleepapi.ActivityTransitionUtil
 import com.google.android.gms.location.ActivityRecognition
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -60,10 +61,13 @@ class ActivityHandler(private val context: Context) {
     @SuppressLint("MissingPermission")
     private fun subscribeToActivitySegmentUpdates(context: Context, pendingIntent: PendingIntent) {
         if (activityRecognitionPermissionApproved(context)) {
+
+            val request = ActivityTransitionUtil.getActivityTransitionRequest()
+
             val task =
-                    ActivityRecognition.getClient(context).requestActivityUpdates(
+                    ActivityRecognition.getClient(context).requestActivityTransitionUpdates(
                             //1800000, // 1/2 stunden
-                            200000,
+                            request,
                             pendingIntent
                     )
 
@@ -90,7 +94,7 @@ class ActivityHandler(private val context: Context) {
      * Unsubscribes to Activity data.
      */
     private fun unsubscribeToActivitySegmentUpdates(context: Context, pendingIntent: PendingIntent) {
-        val task = ActivityRecognition.getClient(context).removeActivityUpdates(pendingIntent)
+        val task = ActivityRecognition.getClient(context).removeActivityTransitionUpdates(pendingIntent)
 
         task.addOnSuccessListener {
             scope.launch {

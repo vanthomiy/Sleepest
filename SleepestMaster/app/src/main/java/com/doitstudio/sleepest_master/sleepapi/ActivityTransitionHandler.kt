@@ -98,6 +98,7 @@ class ActivityTransitionHandler(private val context: Context) {
             }
         }*/
 
+        /*
         if (activityRecognitionPermissionApproved(context)) {
             client
                     .requestActivityTransitionUpdates(
@@ -120,6 +121,28 @@ class ActivityTransitionHandler(private val context: Context) {
                 dataStoreRepository.updateActivityPermissionRemovedError(true)
                 dataStoreRepository.updateActivityPermissionActive(false)
             }
+        }*/
+
+        if(activityRecognitionPermissionApproved(context)){
+
+            val request = ActivityTransitionUtil.getActivityTransitionRequest()
+
+            // myPendingIntent is the instance of PendingIntent where the app receives callbacks.
+            val task = ActivityRecognition.getClient(context)
+                    .requestActivityTransitionUpdates(request, getPendingIntent())
+
+            task.addOnSuccessListener {
+                scope.launch {
+                    dataStoreRepository.updateActivityIsSubscribed(true)
+                    dataStoreRepository.updateActivitySubscribeFailed(false)
+                }                 }
+
+            task.addOnFailureListener { e: Exception ->
+                scope.launch {
+                    dataStoreRepository.updateActivityPermissionRemovedError(true)
+                    dataStoreRepository.updateActivityPermissionActive(false)
+                }            }
+
         }
     }
 
@@ -140,7 +163,7 @@ class ActivityTransitionHandler(private val context: Context) {
                 dataStoreRepository.updateActivityUnsubscribeFailed(true)
             }
         }*/
-
+        /*
         client
                 .removeActivityTransitionUpdates(getPendingIntent())
                 .addOnSuccessListener {
@@ -156,6 +179,25 @@ class ActivityTransitionHandler(private val context: Context) {
 
                     }
                 }
+*/
+        // myPendingIntent is the instance of PendingIntent where the app receives callbacks.
+
+        val request = ActivityTransitionUtil.getActivityTransitionRequest()
+
+        val task = ActivityRecognition.getClient(context)
+                .requestActivityTransitionUpdates(request, getPendingIntent())
+
+        task.addOnSuccessListener {
+            scope.launch {
+                dataStoreRepository.updateActivityIsSubscribed(false)
+                dataStoreRepository.updateActivityUnsubscribeFailed(false)
+            }        }
+
+        task.addOnFailureListener { e: Exception ->
+            scope.launch {
+                dataStoreRepository.updateActivityUnsubscribeFailed(true)
+
+            }        }
     }
 
 

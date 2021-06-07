@@ -80,8 +80,8 @@ class SleepParameterSerializer() : Serializer<SleepParameters> {
         .setStandardMobilePosition(MobilePosition.UNIDENTIFIED.ordinal)
         .setMobileUseFrequency(MobileUseFrequency.getValue(MobileUseFrequency.NONE))
         .setNormalSleepTime(32400)
-        .setSleepTimeStart(80000)
-        .setSleepTimeEnd(40000)
+        .setSleepTimeStart(72000)
+        .setSleepTimeEnd(36000)
         .build()
 }
 

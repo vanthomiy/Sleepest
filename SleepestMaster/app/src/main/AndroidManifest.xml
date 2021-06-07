@@ -22,11 +22,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SleepestMaster">
-        <activity
-            android:name=".NavigationActivity"
-            android:label="@string/title_activity_navigation">
 
-        </activity>
         <activity
             android:name=".background.ForegroundActivity"
             android:excludeFromRecents="true"

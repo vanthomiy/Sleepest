@@ -127,8 +127,6 @@ class ActivityTransitionReciver : BroadcastReceiver() {
                             it.transitionEvents.count()
                     )
 
-                    Toast.makeText(context, "hallo", Toast.LENGTH_LONG).show()
-
                 }
             }
         }
