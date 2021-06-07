@@ -13,10 +13,15 @@ import android.widget.*
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.widget.NestedScrollView
+import androidx.databinding.Observable
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
+import com.doitstudio.Activityest_master.sleepapi.ActivityHandler
+import com.doitstudio.Activityest_master.sleepapi.ActivityTransitionHandler
 import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.model.data.LightConditions
+import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.MobileUseFrequency
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog
@@ -147,6 +152,8 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     val activityTrackingExpand = ObservableField(View.GONE)
     val alarmExpand = ObservableField(View.GONE)
     val sleepDurationExpand = ObservableField(View.GONE)
+    val lightConditionExpand = ObservableField(View.GONE)
+    val sleepHeaderExpand = ObservableField(View.GONE)
 
     fun onInfoClicked(view: View){
         updateInfoChanged(view.tag.toString(), true)
@@ -159,6 +166,8 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         TransitionManager.beginDelayedTransition(transitionsContainer);
 
         sleepTimeInfoExpand.set(if (value == "0" && sleepTimeInfoExpand.get() == View.GONE) View.VISIBLE else View.GONE)
+        sleepHeaderExpand.set(if (value == "7" && sleepHeaderExpand.get() == View.GONE) View.VISIBLE else View.GONE)
+        lightConditionExpand.set(if (value == "6" && lightConditionExpand.get() == View.GONE) View.VISIBLE else View.GONE)
         sleepDurationExpand.set(if (value == "1" && sleepDurationExpand.get() == View.GONE) View.VISIBLE else View.GONE)
         phonePositionExpand.set(if (value == "2" && phonePositionExpand.get() == View.GONE) View.VISIBLE else View.GONE)
         phoneUsageExpand.set(if (value == "3" && phoneUsageExpand.get() == View.GONE) View.VISIBLE else View.GONE)
@@ -172,17 +181,17 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
         val mf = MobileUseFrequency.getCount(progresValue)
         phoneUsageValueString.set(mf.toString().toLowerCase().capitalize())
+        phoneUsageValue.set(progresValue)
         scope.launch {
-            dataStoreRepository.updateUserMobileFequency(mf)
+            dataStoreRepository.updateUserMobileFequency(mf.ordinal)
+
         }
+
+        sleepCalculateFactorCalculation()
     }
 
     val phonePositionSelections = ObservableArrayList<String>()
     val mobilePosition = ObservableField(0)
-
-    val colorNormal by lazy {Color.parseColor("#9D6CCF") }
-    val colorDisabled by lazy {Color.parseColor("#116CCF") }
-    val buttonTint = ObservableField(ColorStateList.valueOf(colorNormal))
 
     fun onMobilePositionChanged(
             parent: AdapterView<*>?,
@@ -192,7 +201,27 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     ){
         scope.launch {
             dataStoreRepository.updateStandardMobilePosition(position)
+            sleepCalculateFactorCalculation()
+
         }
+
+    }
+
+    val lightConditionSelections = ObservableArrayList<String>()
+    val lightCondition = ObservableField(0)
+
+    fun onLightConditionChanged(
+            parent: AdapterView<*>?,
+            selectedItemView: View,
+            position: Int,
+            id: Long
+    ){
+        scope.launch {
+            dataStoreRepository.updateLigthCondition(position)
+            sleepCalculateFactorCalculation()
+
+        }
+
     }
 
 
@@ -213,6 +242,9 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
                 activityTrackingView.set(if (it) View.VISIBLE else View.GONE)
 
             }
+
+            sleepCalculateFactorCalculation()
+
         }
 
         TransitionManager.beginDelayedTransition(transitionsContainer);
@@ -220,7 +252,13 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         activityTracking.get()?.let {
             activityTrackingView.set(if (it) View.VISIBLE else View.GONE)
 
+            if(it)
+                ActivityHandler.getHandler(getApplication()).startActivityHandler()
+            else
+                ActivityHandler.getHandler(getApplication()).stopActivityHandler()
         }
+
+
     }
 
     fun onActivityInCalcChanged(buttonView: View) {
@@ -228,7 +266,12 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
             includeActivityInCalculation.get()?.let { dataStoreRepository.updateActivityInCalculation(
                     it
             ) }
+
+            sleepCalculateFactorCalculation()
+
         }
+
+
     }
 
     fun onEndAlarmAfterFiredChanged(buttonView: View) {
@@ -238,9 +281,79 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
+
+    val sleepScoreValue = ObservableField("50")
+    val sleepScoreText = ObservableField("50")
+
+    /**
+     *     defines how good the sleep can be messured
+     *     100 is max and 30 is lowest
+     */
+    fun sleepCalculateFactorCalculation() {
+
+        // phone position
+        // phone usage
+        // sleep with light / in dark
+
+        var factor = when(mobilePosition.get()?.let { MobilePosition.getCount(it) })
+        {
+            MobilePosition.INBED -> 1f
+            MobilePosition.ONTABLE -> 0f
+            else -> 0.5f
+        }*2
+
+        factor += when(phoneUsageValue.get()?.let { MobileUseFrequency.getCount(it) })
+        {
+            MobileUseFrequency.VERYOFTEN -> 1f
+            MobileUseFrequency.OFTEN -> 0.75f
+            MobileUseFrequency.LESS -> 0.25f
+            MobileUseFrequency.VERYLESS -> 0f
+            else -> 0.5f
+        }*3
+
+        factor += when(lightCondition.get()?.let { LightConditions.getCount(it) })
+        {
+            LightConditions.DARK -> 1f
+            LightConditions.LIGHT -> 0f
+            else -> 0.5f
+        }*1
+
+        val endFactor = factor / 6
+        val score = 50 + endFactor * 50
+
+        sleepScoreValue.set(score.toInt().toString())
+
+        sleepScoreText.set(when {
+            score < 60 -> {
+                "Really bad sleep detection"
+            }
+            score < 70 -> {
+                "Bad sleep detection"
+            }
+            score < 80 -> {
+                "Sleep detection possible"
+            }
+            score < 90 -> {
+                "Good sleep detection possible"
+            }
+            else -> {
+                "Perfect sleep detection possible"
+            }
+        }
+
+        )
+
+        // activity tracking
+
+
+
+    }
+
+
     //endregion
 
     init {
+
         scope.launch {
             var sleepParams = dataStoreRepository.sleepParameterFlow.first()
             val time = LocalTime.ofSecondOfDay(sleepParams.normalSleepTime.toLong())
@@ -262,10 +375,15 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
             phonePositionSelections.addAll(arrayListOf<String>("In bed", "On table", "Auto detect"))
             mobilePosition.set(sleepParams.standardMobilePosition)
 
+            lightConditionSelections.addAll(arrayListOf<String>("Dark", "Light", "Auto detect"))
+            mobilePosition.set(sleepParams.standardLightCondition)
+
             activityTracking.set(sleepParams.userActivityTracking)
             includeActivityInCalculation.set(sleepParams.implementUserActivityInSleepTime)
             cancelAlarmWhenAwake.set(sleepParams.endAlarmAfterFired)
             activityTrackingView.set(if (sleepParams.userActivityTracking) View.VISIBLE else View.GONE)
+
+            sleepCalculateFactorCalculation()
 
 
         }
@@ -302,65 +420,12 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
             progress = newProgress
         }
 
-
-        /*
-        if(scrollY < lastScroll && direction == 1 ) {
-            direction = 0
-            lastScrollDelta = scrollY
-            val params = FrameLayout.LayoutParams(
-                    200,
-                    200
-            )
-            imageMoonView.layoutParams = params
-
-        } else if(scrollY  > lastScroll && direction == 0){
-            direction = 1
-            lastScrollDelta = scrollY
-            val params = FrameLayout.LayoutParams(
-                    75,
-                    75
-            )
-            imageMoonView.layoutParams = params
-        }*/
-
-
-
         lastScroll = scrollY
     }
 
     var lastMotionEvent : Int = MotionEvent.ACTION_UP
 
-    var touchY = 0f
-    var touchYOld = 0f
 
-    fun onTouch(v: View?, event: MotionEvent): Boolean {
-
-
-        when (event.action) {
-            MotionEvent.ACTION_DOWN -> {
-                touchY = event.y
-
-                if (touchYOld == 0f)
-                    touchYOld = event.y
-            }
-            MotionEvent.ACTION_UP -> {
-                touchYOld = 0f
-                //touchY = 0f
-            }
-        }
-
-        if(abs(touchYOld - touchY) > 50 && event.action == MotionEvent.ACTION_SCROLL)
-        {
-            if(touchYOld < touchY)
-                animatedTopView.transitionToEnd()
-            else
-                animatedTopView.transitionToStart()
-
-            touchYOld = touchY
-        }
-
-        return false
-    }
     val pictureScale = ObservableField(1.0f)
 
 
@@ -380,3 +445,4 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
     //endregion
 }
+

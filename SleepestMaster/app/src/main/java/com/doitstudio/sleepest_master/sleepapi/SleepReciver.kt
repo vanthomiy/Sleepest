@@ -46,7 +46,7 @@ class SleepReceiver : BroadcastReceiver() {
                 // Update the raw sleep api data
                 repository.insertSleepApiRawData(convertedToEntityVersion)
                 // update the amount of data that is beeing recived
-                sleepCalculationStoreRepository.updateSleepApiValuesAmount(convertedToEntityVersion.size)
+                sleepCalculationStoreRepository.updateSleepSleepApiValuesAmount(convertedToEntityVersion.size)
             }
         }
     }

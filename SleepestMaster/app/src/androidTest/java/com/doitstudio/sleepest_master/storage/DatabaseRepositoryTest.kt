@@ -35,7 +35,8 @@ class DatabaseRepositoryTest {
             dbDatabase.sleepApiRawDataDao(),
             dbDatabase.sleepDataDao(),
             dbDatabase.userSleepSessionDao(),
-            dbDatabase.alarmDao()
+            dbDatabase.alarmDao(),
+            dbDatabase.activityApiRawDataDao()
         )
     }
 

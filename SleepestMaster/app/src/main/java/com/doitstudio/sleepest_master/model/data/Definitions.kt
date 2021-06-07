@@ -41,6 +41,25 @@ enum class MobilePosition{
 }
 
 /**
+ * Defines where the light conditions is places at sleep time
+ */
+enum class LightConditions{
+    DARK,
+    LIGHT,
+    UNIDENTIFIED;
+
+    companion object {
+        fun getCount(type: Int): LightConditions {
+            return when (type) {
+                0 -> DARK
+                1 -> LIGHT
+                else -> UNIDENTIFIED // Avoiding dividing by zero
+            }
+        }
+    }
+}
+
+/**
  * Defines how often the user uses his phone
  */
 enum class MobileUseFrequency{
@@ -96,7 +115,20 @@ enum class ActivityOnDay{
     SMALLACTIVITY,
     NORMALACTIVITY,
     MUCHACTIVITY,
-    EXTREMACTIVITY
+    EXTREMACTIVITY;
+
+    companion object {
+        fun getFactor(type: ActivityOnDay): Float {
+            return when (type) {
+                NOACTIVITY -> 0.9f
+                SMALLACTIVITY -> 0.95f
+                NORMALACTIVITY -> 1f
+                MUCHACTIVITY -> 1.05f
+                EXTREMACTIVITY -> 1.1f
+                else -> 1f
+            }
+        }
+    }
 
 }
 

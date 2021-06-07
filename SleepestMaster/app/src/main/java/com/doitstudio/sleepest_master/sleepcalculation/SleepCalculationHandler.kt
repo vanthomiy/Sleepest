@@ -2,15 +2,13 @@ package com.doitstudio.sleepest_master.sleepcalculation
 
 import android.content.Context
 import com.doitstudio.sleepest_master.MainApplication
-import com.doitstudio.sleepest_master.model.data.MobilePosition
-import com.doitstudio.sleepest_master.model.data.ModelProcess
-import com.doitstudio.sleepest_master.model.data.SleepDataFrequency
-import com.doitstudio.sleepest_master.model.data.SleepState
+import com.doitstudio.sleepest_master.model.data.*
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
 import com.doitstudio.sleepest_master.sleepcalculation.ml.SleepClassifier
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
+import com.google.android.gms.location.DetectedActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -111,6 +109,48 @@ class SleepCalculationHandler(val context: Context) {
         }
 
         return Pair(timeNormedData.sortedByDescending { x -> x.timestampSeconds }, frequencyType)
+    }
+
+    /**
+     * Gets the user activity and classifies what type of activity was done
+     */
+    suspend fun getUserActivityOnDay(time:LocalDateTime) : ActivityOnDay{
+
+        val userActivity =
+            dataBaseRepository.getActivityApiRawDataFromDate(time.minusDays(1)!!).first()
+                .sortedBy { x -> x.timestampSeconds }
+
+        var activityCount = 0
+
+        if(userActivity.isEmpty())
+            return ActivityOnDay.NONE
+
+        userActivity.forEach{
+            if(it.activity == DetectedActivity.WALKING || it.activity == DetectedActivity.ON_FOOT){
+
+                activityCount += 1 * it.duration
+
+            }
+            else if(it.activity == DetectedActivity.ON_BICYCLE || it.activity == DetectedActivity.RUNNING){
+
+                activityCount += 3 * it.duration
+
+            }
+        }
+
+        // lets say > 1 Stunde schwer und 3 Stunden leicht ist viel
+        // 60 * 3 + 60 * 3
+        // 360
+
+
+        return when {
+            activityCount > 360 -> ActivityOnDay.EXTREMACTIVITY
+            activityCount > 180 -> ActivityOnDay.MUCHACTIVITY
+            activityCount > 90 -> ActivityOnDay.NORMALACTIVITY
+            activityCount > 45 -> ActivityOnDay.SMALLACTIVITY
+            else -> ActivityOnDay.NOACTIVITY
+        }
+
     }
 
     /**
@@ -364,10 +404,19 @@ class SleepCalculationHandler(val context: Context) {
             // now define the new wakeUpPoint for the user...
             // sleep time
 
+            // get user activity
+            val activity = getUserActivityOnDay(time)
+            sleepSessionEntity.userSleepRating.activityOnDay = activity
+
             // store in the alarm...!!!
             val alarm = dataBaseRepository.getNextActiveAlarm() ?: return@launch
 
-            var restSleepTime = alarm.sleepDuration - (sleepSessionEntity.sleepTimes.sleepDuration * 60)
+            var sleepDuration = alarm.sleepDuration
+            // If include then add the factors to it
+            if(dataStoreRepository.sleepParameterFlow.first().implementUserActivityInSleepTime)
+                sleepDuration = (sleepDuration.toFloat() * ActivityOnDay.getFactor(activity)).toInt()
+
+            var restSleepTime = sleepDuration - (sleepSessionEntity.sleepTimes.sleepDuration * 60)
 
             if (restSleepTime < 3000) {
                 restSleepTime = 3000
@@ -383,6 +432,8 @@ class SleepCalculationHandler(val context: Context) {
 
             // store in the alarm...!!!
             dataBaseRepository.updateWakeupTime(wakeupTime = wakeUpTime, alarm.id)
+
+
 
             dataStoreRepository.updateUserSleepTime(sleepSessionEntity.sleepTimes.sleepDuration)
             dataBaseRepository.insertUserSleepSession(sleepSessionEntity)
