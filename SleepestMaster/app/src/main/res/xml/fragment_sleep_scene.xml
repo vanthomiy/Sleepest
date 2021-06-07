@@ -21,13 +21,11 @@
             android:id="@+id/animTextSleep" />
         <Constraint
             android:layout_height="wrap_content"
-            android:layout_width="100dp"
+            android:layout_width="75dp"
             android:id="@+id/animTextDescription"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="0dp"
             android:layout_marginBottom="65dp"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
+            android:scaleX="1.25"
+            android:scaleY="1.25"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/animHeaderLogo" />
 
@@ -35,11 +33,9 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:id="@+id/animTextNumber"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="0dp"
             android:layout_marginBottom="125dp"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
+            android:scaleX="1.25"
+            android:scaleY="1.25"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/animHeaderLogo" />
 
