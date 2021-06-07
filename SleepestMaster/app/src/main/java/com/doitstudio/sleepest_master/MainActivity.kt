@@ -6,10 +6,13 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.asLiveData
@@ -26,6 +29,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json.Default.context
 import java.time.LocalTime
 import java.util.*
 
@@ -296,11 +300,13 @@ class MainActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (!isGranted) {
                 //mainViewModel.updatePermissionActive(false)
-                // Permission denied on Android platform that supports runtime permissions.
+                //Permission denied on Android platform that supports runtime permissions.
                 //displayPermissionSettingsSnackBar()
             } else {
                 //mainViewModel.updatePermissionActive(true)
                 // Permission was granted (either by approval or Android version below Q).
+
+                DontKillMyAppFragment.show(this@MainActivity)
 
                 scope.launch {
                     val calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeBegin())

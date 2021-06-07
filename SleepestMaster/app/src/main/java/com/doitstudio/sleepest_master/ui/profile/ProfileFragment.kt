@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.doitstudio.sleepest_master.DontKillMyAppFragment
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
 import com.doitstudio.sleepest_master.background.AlarmReceiver
@@ -108,6 +109,8 @@ class ProfileFragment : Fragment() {
 
             //AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 2, actualContext, 2)
             Toast.makeText(actualContext, "Gut gemacht, die App wird jetzt zerstört", Toast.LENGTH_LONG).show()
+
+
  }
 
         /**EndTest*/
