@@ -342,7 +342,7 @@ class SleepCalculationHandler(val context: Context) {
             // for each sleeping time, we have to define the sleep state
             val time = localTime ?: LocalDateTime.now()
             val sleepApiRawDataEntity =
-                dataBaseRepository.getSleepApiRawDataFromDateLive(time!!).first()
+                dataBaseRepository.getSleepApiRawDataFromDateLive(time).first()
                     .sortedBy { x -> x.timestampSeconds }
 
             // calculate all sleep states when the user is sleeping
@@ -350,11 +350,15 @@ class SleepCalculationHandler(val context: Context) {
                 UserSleepSessionEntity.getIdByTimeStamp(sleepApiRawDataEntity.minOf { x -> x.timestampSeconds })
             val sleepSessionEntity = dataBaseRepository.getOrCreateSleepSessionById(id)
 
-            sleepSessionEntity.mobilePosition =
-                if(MobilePosition.getCount(dataStoreRepository.sleepParameterFlow.first().standardMobilePosition) == MobilePosition.UNIDENTIFIED)
-                    checkPhonePosition(sleepApiRawDataEntity)
-                else
-                    MobilePosition.getCount(dataStoreRepository.sleepParameterFlow.first().standardMobilePosition)
+            // only when unidentified
+            if(sleepSessionEntity.mobilePosition == MobilePosition.UNIDENTIFIED){
+                sleepSessionEntity.mobilePosition =
+                    if(MobilePosition.getCount(dataStoreRepository.sleepParameterFlow.first().standardMobilePosition) == MobilePosition.UNIDENTIFIED)
+                        checkPhonePosition(sleepApiRawDataEntity)
+                    else
+                        MobilePosition.getCount(dataStoreRepository.sleepParameterFlow.first().standardMobilePosition)
+            }
+
 
             // if in bed then check the single states of the sleep
             if (sleepSessionEntity.mobilePosition == MobilePosition.INBED) {

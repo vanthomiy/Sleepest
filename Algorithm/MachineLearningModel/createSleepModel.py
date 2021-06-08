@@ -170,7 +170,6 @@ def saveTfRecord(csv_file, names):
   # create a writer
   a = 1
 
-
 def buildTfRecord04(time, length):
   csv_file = 'Datasets/sleep04'+ str(time) +'.csv' 
 
@@ -183,7 +182,6 @@ def buildTfRecord04(time, length):
 
   headers = createHeaders(length)
   saveTfRecord(csv_file, headers)
-
 
 def start04(time, length):
 

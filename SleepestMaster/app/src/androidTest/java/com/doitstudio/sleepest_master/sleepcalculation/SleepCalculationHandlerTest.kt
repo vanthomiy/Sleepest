@@ -474,7 +474,14 @@ class SleepCalculationHandlerTest
 
         // add alarm for each day
         val days = DayOfWeek.values().toCollection(ArrayList())
-        val alarm = AlarmEntity(1, true, 28800, 21600, 32400, days)
+        val alarm = AlarmEntity(1,
+            isActive = true,
+            wasFired = false,
+            sleepDuration = 28800,
+            wakeupEarly = 21600,
+            wakeupLate = 32400,
+            activeDayOfWeek = days
+        )
         sleepDbRepository.insertAlarm(alarm)
 
         var dayCount = 0

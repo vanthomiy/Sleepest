@@ -177,8 +177,8 @@ enum class SleepDataFrequency{
         fun getCount(type:SleepDataFrequency) : Int {
             return when (type) {
                 SleepDataFrequency.FIVE -> 24
-                SleepDataFrequency.TEN -> 11
-                SleepDataFrequency.THIRTY -> 3
+                SleepDataFrequency.TEN -> 12
+                SleepDataFrequency.THIRTY -> 4
                 else -> 1000 // Avoiding dividing by zero
             }
         }

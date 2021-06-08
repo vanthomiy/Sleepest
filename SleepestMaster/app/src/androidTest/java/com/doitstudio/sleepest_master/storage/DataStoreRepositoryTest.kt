@@ -31,7 +31,8 @@ class DataStoreRepositoryTest{
             sleepCalcDatabase.sleepApiRawDataDao(),
             sleepCalcDatabase.sleepDataDao(),
             sleepCalcDatabase.userSleepSessionDao(),
-            sleepCalcDatabase.alarmDao()
+            sleepCalcDatabase.alarmDao(),
+            sleepCalcDatabase.activityApiRawDataDao()
         )
     }
 
