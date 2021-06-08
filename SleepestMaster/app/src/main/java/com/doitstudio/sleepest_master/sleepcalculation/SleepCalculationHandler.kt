@@ -345,6 +345,12 @@ class SleepCalculationHandler(val context: Context) {
                 dataBaseRepository.getSleepApiRawDataFromDateLive(time).first()
                     .sortedBy { x -> x.timestampSeconds }
 
+            if (sleepApiRawDataEntity == null || sleepApiRawDataEntity.count() == 0) {
+                // do something!
+
+                return@launch
+            }
+
             // calculate all sleep states when the user is sleeping
             val id =
                 UserSleepSessionEntity.getIdByTimeStamp(sleepApiRawDataEntity.minOf { x -> x.timestampSeconds })
@@ -426,7 +432,7 @@ class SleepCalculationHandler(val context: Context) {
                 restSleepTime = 3000
             }
 
-            val actualTimeSeconds = getSecondsOfDay()
+            val actualTimeSeconds = localTime?.toLocalTime()?.toSecondOfDay() ?: getSecondsOfDay()
             var wakeUpTime = actualTimeSeconds + (restSleepTime)
             //var wakeUpTimeNew = 0
             // if in bed then check the single states of the sleep
