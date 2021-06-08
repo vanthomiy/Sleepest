@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity() {
     private val sleepParametersLiveData by lazy {  dataStoreRepository.sleepParameterFlow.asLiveData() }
 
     private var sleepTimeBeginTemp = 0
+    private var earliestWakeupTemp = 0
 
 
 
@@ -140,6 +141,16 @@ class MainActivity : AppCompatActivity() {
         setupFragments()
 
         sleepTimeBeginTemp = dataStoreRepository.getSleepTimeBeginJob();
+        scope.launch {
+
+            if (dataBaseRepository.getNextActiveAlarm() != null) {
+                earliestWakeupTemp = dataBaseRepository.getNextActiveAlarm()!!.wakeupEarly
+            } else {
+                earliestWakeupTemp = 0
+            }
+
+        }
+
 
         // observe alarm changes
         activeAlarmsLiveData.observe(this){ list ->
@@ -186,7 +197,9 @@ class MainActivity : AppCompatActivity() {
                                         || ((LocalTime.now().toSecondOfDay() > dataBaseRepository.getNextActiveAlarm()!!.actualWakeup) && (dataStoreRepository.getSleepTimeBegin() < LocalTime.now().toSecondOfDay())))) {
                             ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
                         }
-                    } else {
+                    } else if (earliestWakeupTemp != dataBaseRepository.getNextActiveAlarm()!!.wakeupEarly) {
+
+                        /*earliestWakeupTemp = dataBaseRepository.getNextActiveAlarm()!!.wakeupEarly
                         AlarmReceiver.cancelAlarm(applicationContext, 5)
 
                         //Create a new instance of calendar for the new foregroundservice start time
@@ -197,7 +210,7 @@ class MainActivity : AppCompatActivity() {
 
                         val calendarFirstCalc = AlarmReceiver.getAlarmDate(dataBaseRepository.getNextActiveAlarm()!!.wakeupEarly - 1800)
                         AlarmReceiver.startAlarmManager(calendarFirstCalc[Calendar.DAY_OF_WEEK], calendarFirstCalc[Calendar.HOUR_OF_DAY], calendarFirstCalc[Calendar.MINUTE], applicationContext, 5)
-                    }
+                    */}
                 } else // not in sleep time
                 {
                     // alarm should be not active else disable and set to a new time...
