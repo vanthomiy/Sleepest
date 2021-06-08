@@ -206,7 +206,7 @@ class SleepCalculationHandlerTest
     fun userNotSleepingTest() = runBlocking {
 
         val actualtimeSeconds = 1000000
-        val actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(actualtimeSeconds.toLong()*1000), ZoneOffset.UTC)
+        val actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(actualtimeSeconds.toLong()*1000), ZoneOffset.systemDefault())
 
         val sleepCalculationHandler = SleepCalculationHandler.getHandler(context)
 
@@ -233,7 +233,7 @@ class SleepCalculationHandlerTest
     fun userCurrentlyNotSleepingTest() = runBlocking {
 
         val actualtimeSeconds = 1000000
-        val actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(actualtimeSeconds.toLong()*1000), ZoneOffset.UTC)
+        val actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(actualtimeSeconds.toLong()*1000), ZoneOffset.systemDefault())
 
         val sleepCalculationHandler = SleepCalculationHandler.getHandler(context)
 
@@ -485,12 +485,13 @@ class SleepCalculationHandlerTest
         sleepDbRepository.insertAlarm(alarm)
 
         var dayCount = 0
-        var max = 3
+        var offset = 5
+        var count = 1
 
         var sleepSessionsListReal = mutableListOf<UserSleepSessionEntity>()
 
         // take the real ones and calculate the sleeptimes /wakeuptimes etc.
-        for(i in 0..max) {
+        for(i in offset..offset+count) {
 
             val userSleep = UserSleepSessionEntity(UserSleepSessionEntity.getIdByTimeStamp(dataTrue[i][0].timestampSeconds))
 
@@ -517,7 +518,7 @@ class SleepCalculationHandlerTest
         }
 
         // take each time 10 days/nights and calculate!!
-        for(i in 0..max) {
+        for(i in offset..offset+count) {
 
 
             var lastTimestamp = 0
@@ -537,7 +538,7 @@ class SleepCalculationHandlerTest
 
                 val actualTime = LocalDateTime.ofInstant(
                         Instant.ofEpochMilli(lastTimestamp.toLong() * 1000),
-                        ZoneOffset.UTC
+                        ZoneOffset.systemDefault()
                 )
 
                 // only call it every 15 minutes or like so
@@ -570,7 +571,7 @@ class SleepCalculationHandlerTest
             // wakeuptime is
             var realWakeup = sleepDbRepository.getNextActiveAlarm()!!.actualWakeup
 
-            val actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(lastCall.toLong()*1000), ZoneOffset.UTC)
+            val actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(lastCall.toLong()*1000), ZoneOffset.systemDefault())
             var timeofday = actualTime.toLocalTime().toSecondOfDay()
             timeofday += restsleep
             var diff = abs(timeofday-realWakeup)
