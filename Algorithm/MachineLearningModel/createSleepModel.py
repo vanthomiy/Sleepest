@@ -126,7 +126,7 @@ def trainAndSaveModel(model, val_ds, train_ds, test_ds, modelname, class_weights
 
   #cm_callback = tf.keras.callbacks.LambdaCallback(on_epoch_end=log_confusion_matrix(model,val_ds,path,10, class_names))
  
-  model.fit(train_ds, epochs=500, validation_data=val_ds, class_weight= class_weights, callbacks=[tensorboard_callback])
+  model.fit(train_ds, epochs=50, validation_data=val_ds, class_weight= class_weights, callbacks=[tensorboard_callback])
 
   loss, accuracy = model.evaluate(test_ds)
 
@@ -168,23 +168,20 @@ def log_confusion_matrix(model,test, path,epoch, class_names):
 
 def saveTfRecord(csv_file, names):
   # create a writer
-  
-
+  a = 1
 
 def buildTfRecord04(time, length):
-
   csv_file = 'Datasets/sleep04'+ str(time) +'.csv' 
 
-  # Weight the sleep 2 times more then the awake !
+    # Weight the sleep 2 times more then the awake !
   class_weights = {
-      0: 1,
-      1: 2,
-  }
+        0: 1,
+        1: 2,
+    }
   class_names =['awake', 'sleeping']
 
   headers = createHeaders(length)
   saveTfRecord(csv_file, headers)
-  return loss, accuracy
 
 def start04(time, length):
 

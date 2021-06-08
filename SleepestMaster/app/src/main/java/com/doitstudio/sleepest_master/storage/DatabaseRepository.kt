@@ -25,8 +25,10 @@ class DatabaseRepository(
     private val sleepApiRawDataDao: SleepApiRawDataDao,
     private val sleepSegmentDao: SleepSegmentDao,
     private val userSleepSessionDao: UserSleepSessionDao,
-    private val alarmDao: AlarmDao
-) {
+    private val alarmDao: AlarmDao,
+    private val activityApiRawDataDao: ActivityApiRawDataDao
+
+    ) {
 
     companion object {
         // For Singleton instantiation
@@ -37,10 +39,11 @@ class DatabaseRepository(
             sleepApiRawDataDao: SleepApiRawDataDao,
             sleepSegmentDao: SleepSegmentDao,
             userSleepSessionDao: UserSleepSessionDao,
-            alarmDao: AlarmDao
+            alarmDao: AlarmDao,
+            activityApiRawDataDao: ActivityApiRawDataDao
         ): DatabaseRepository {
             return INSTANCE ?: synchronized(this) {
-                val instance = DatabaseRepository(sleepApiRawDataDao, sleepSegmentDao, userSleepSessionDao, alarmDao)
+                val instance = DatabaseRepository(sleepApiRawDataDao, sleepSegmentDao, userSleepSessionDao, alarmDao, activityApiRawDataDao)
                 INSTANCE = instance
                 // return instance
                 instance
@@ -136,6 +139,79 @@ class DatabaseRepository(
         sleepApiRawDataDao.updateOldSleepState(id,sleepState )
     }
     //endregion
+
+
+    //region Activity API Data
+
+    // Methods for ActivityApiRawDataDao
+// Observed Flow will notify the observer when the data has changed.
+    val allActivityApiRawData: Flow<List<ActivityApiRawDataEntity>> =
+            activityApiRawDataDao.getAll()
+
+    /**
+     * [time] the duration in seconds eg. 86200 would be from 24hours ago to now the data
+     */
+    suspend fun getActivityApiRawDataSince(time:Int): Flow<List<ActivityApiRawDataEntity>>
+    {
+        val now = LocalDateTime.now(ZoneOffset.UTC)
+        val seconds = now.atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+        return activityApiRawDataDao.getSince(seconds-time)
+    }
+
+    /**
+     * [time] the duration in seconds eg. 86200 would be from 24hours ago to now the data
+     */
+    suspend fun getActivityApiRawDataSinceSeconds(time:Int): Flow<List<ActivityApiRawDataEntity>>
+    {
+        val now = LocalDateTime.now(ZoneOffset.UTC)
+        val seconds = now.atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+        return activityApiRawDataDao.getSince(time)
+    }
+
+    /**
+     * Gets the activity api data from a specific state from a date in life time.
+     * so we always getting the data from 15:00 the day or day before until the specific time
+     * later we have to combine it with the actual activitytimes
+     */
+    fun getActivityApiRawDataFromDateLive(actualTime:LocalDateTime): Flow<List<ActivityApiRawDataEntity>>
+    {
+        val startTime = if (actualTime.hour < 15)
+            actualTime.toLocalDate().minusDays(1).atTime(15,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+        else actualTime.toLocalDate().atTime(15,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+
+        val endTime = actualTime.atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+
+        return activityApiRawDataDao.getBetween(startTime,endTime)
+    }
+
+    /**
+     * Gets the activity api data from a specific state from a date
+     * e.g. the dateTime 20.05.2021 at 20:00 returns all data in between 20.05.2021 15:00 to 21.05.2021 at 15:00
+     * later we have to combine it with the actual activitytimes
+     */
+    fun getActivityApiRawDataFromDate(actualTime:LocalDateTime): Flow<List<ActivityApiRawDataEntity>>
+    {
+        val startTime = actualTime.toLocalDate().minusDays(1).atTime(0,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+        val endTime = actualTime.toLocalDate().minusDays(1).atTime(23,59).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+
+        return activityApiRawDataDao.getBetween(startTime,endTime)
+    }
+
+    suspend fun insertActivityApiRawData(activityClassifyEventEntity: ActivityApiRawDataEntity) {
+        activityApiRawDataDao.insert(activityClassifyEventEntity)
+    }
+
+    suspend fun deleteActivityApiRawData() {
+        activityApiRawDataDao.deleteAll()
+    }
+
+    suspend fun insertActivityApiRawData(activityClassifyEventEntities: List<ActivityApiRawDataEntity>) {
+        activityApiRawDataDao.insertAll(activityClassifyEventEntities)
+    }
+
+//endregion
+
+
 
     //region User Sleep Sessions
 

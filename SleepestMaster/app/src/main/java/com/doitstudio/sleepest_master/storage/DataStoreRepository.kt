@@ -3,11 +3,9 @@ package com.doitstudio.sleepest_master.storage
 import android.content.Context
 import androidx.datastore.createDataStore
 import androidx.datastore.preferences.createDataStore
-import com.doitstudio.sleepest_master.BackgroundService
+import com.doitstudio.sleepest_master.*
+import com.doitstudio.sleepest_master.model.data.LightConditions
 
-import com.doitstudio.sleepest_master.LiveUserSleepActivity
-import com.doitstudio.sleepest_master.SleepApiData
-import com.doitstudio.sleepest_master.SleepParameters
 import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.MobileUseFrequency
 import com.doitstudio.sleepest_master.storage.datastorage.*
@@ -97,11 +95,11 @@ class DataStoreRepository(context: Context) {
         sleepParameterStatus.updateSleepTimeStart(time)
     suspend fun updateUserWantedSleepTime(time:Int) =
         sleepParameterStatus.updateUserWantedSleepTime(time)
-    suspend fun updateStandardMobilePosition(time:MobilePosition) =
-        sleepParameterStatus.updateStandardMobilePosition(time)
     suspend fun updateStandardMobilePosition(time:Int) =
         sleepParameterStatus.updateStandardMobilePosition(time)
-    suspend fun updateUserMobileFequency(time:MobileUseFrequency) =
+    suspend fun updateLigthCondition(time:Int) =
+        sleepParameterStatus.updateLigthCondition(time)
+    suspend fun updateUserMobileFequency(time:Int) =
         sleepParameterStatus.updateUserMobileFequency(time)
 
     //endregion
@@ -117,25 +115,25 @@ class DataStoreRepository(context: Context) {
 
     val sleepApiDataFlow: Flow<SleepApiData> = sleepApiDataStatus.sleepApiData
 
-    suspend fun getSubscribeStatus() : Boolean {
+    suspend fun getSleepSubscribeStatus() : Boolean {
         return sleepApiDataStatus.sleepApiData.first().isSubscribed }
 
-    suspend fun updateIsSubscribed(isActive:Boolean) =
+    suspend fun updateSleepIsSubscribed(isActive:Boolean) =
             sleepApiDataStatus.updateIsSubscribed(isActive)
 
-    suspend fun updatePermissionActive(isActive:Boolean) =
+    suspend fun updateSleepPermissionActive(isActive:Boolean) =
             sleepApiDataStatus.updatePermissionActive(isActive)
 
-    suspend fun updatePermissionRemovedError(isActive:Boolean) =
+    suspend fun updateSleepPermissionRemovedError(isActive:Boolean) =
             sleepApiDataStatus.updatePermissionRemovedError(isActive)
 
-    suspend fun updateSubscribeFailed(isActive:Boolean) =
+    suspend fun updateSleepSubscribeFailed(isActive:Boolean) =
             sleepApiDataStatus.updateSubscribeFailed(isActive)
 
-    suspend fun updateUnsubscribeFailed(isActive:Boolean) =
+    suspend fun updateSleepUnsubscribeFailed(isActive:Boolean) =
             sleepApiDataStatus.updateUnsubscribeFailed(isActive)
 
-    suspend fun updateSleepApiValuesAmount(amount:Int) =
+    suspend fun updateSleepSleepApiValuesAmount(amount:Int) =
             sleepApiDataStatus.updateSleepApiValuesAmount(amount)
 
     suspend fun resetSleepApiValuesAmount() =
@@ -143,6 +141,47 @@ class DataStoreRepository(context: Context) {
 
 
     //endregion
+
+
+    //region ActivityApiData Status
+
+    private val ActivityApiDataStatus by lazy{ ActivityApiDataStatus(context.createDataStore(
+            ACTIVITY_API_DATA_NAME,
+            serializer = ActivityApiDataSerializer())
+    )
+    }
+
+
+    val activityApiDataFlow: Flow<ActivityApiData> = ActivityApiDataStatus.activityApiData
+
+    suspend fun getActivitySubscribeStatus() : Boolean {
+        return ActivityApiDataStatus.activityApiData.first().isSubscribed }
+
+    suspend fun updateActivityIsSubscribed(isActive:Boolean) =
+            ActivityApiDataStatus.updateIsSubscribed(isActive)
+
+    suspend fun updateActivityPermissionActive(isActive:Boolean) =
+            ActivityApiDataStatus.updatePermissionActive(isActive)
+
+    suspend fun updateActivityPermissionRemovedError(isActive:Boolean) =
+            ActivityApiDataStatus.updatePermissionRemovedError(isActive)
+
+    suspend fun updateActivitySubscribeFailed(isActive:Boolean) =
+            ActivityApiDataStatus.updateSubscribeFailed(isActive)
+
+    suspend fun updateActivityUnsubscribeFailed(isActive:Boolean) =
+            ActivityApiDataStatus.updateUnsubscribeFailed(isActive)
+
+    suspend fun updateActivityApiValuesAmount(amount:Int) =
+            ActivityApiDataStatus.updateActivityApiValuesAmount(amount)
+
+    suspend fun resetActivityApiValuesAmount() =
+            ActivityApiDataStatus.resetActivityApiValuesAmount()
+
+
+//endregion
+
+
 
     //region LiveUserSleepActivity Status
 

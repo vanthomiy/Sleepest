@@ -68,19 +68,19 @@ class SleepHandler(private val context: Context) {
 
             task.addOnSuccessListener {
                 scope.launch {
-                    dataStoreRepository.updateIsSubscribed(true)
-                    dataStoreRepository.updateSubscribeFailed(false)
+                    dataStoreRepository.updateSleepIsSubscribed(true)
+                    dataStoreRepository.updateSleepSubscribeFailed(false)
                 }            }
             task.addOnFailureListener { exception ->
                 scope.launch {
-                    dataStoreRepository.updateIsSubscribed(false)
-                    dataStoreRepository.updateSubscribeFailed(true)
+                    dataStoreRepository.updateSleepIsSubscribed(false)
+                    dataStoreRepository.updateSleepSubscribeFailed(true)
                 }
             }
         } else {
             scope.launch {
-                dataStoreRepository.updatePermissionRemovedError(true)
-                dataStoreRepository.updatePermissionActive(false)
+                dataStoreRepository.updateSleepPermissionRemovedError(true)
+                dataStoreRepository.updateSleepPermissionActive(false)
             }
         }
     }
@@ -93,13 +93,13 @@ class SleepHandler(private val context: Context) {
 
         task.addOnSuccessListener {
             scope.launch {
-                dataStoreRepository.updateIsSubscribed(false)
-                dataStoreRepository.updateUnsubscribeFailed(false)
+                dataStoreRepository.updateSleepIsSubscribed(false)
+                dataStoreRepository.updateSleepUnsubscribeFailed(false)
             }
         }
         task.addOnFailureListener { exception ->
             scope.launch {
-                dataStoreRepository.updateUnsubscribeFailed(true)
+                dataStoreRepository.updateSleepUnsubscribeFailed(true)
             }
         }
     }

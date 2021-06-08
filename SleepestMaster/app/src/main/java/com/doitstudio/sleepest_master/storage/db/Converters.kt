@@ -2,6 +2,7 @@ package com.doitstudio.sleepest_master.storage.db
 
 import androidx.room.TypeConverter
 import com.doitstudio.sleepest_master.model.data.*
+import com.google.android.gms.location.DetectedActivity
 import java.time.DayOfWeek
 
 /**
@@ -39,6 +40,7 @@ class Converters {
     fun toMobilePosition(mobilePosition: Int) : MobilePosition {
         return MobilePosition.values()[mobilePosition]
     }
+
 
     @TypeConverter
     fun fromMoodType(moodType: MoodType) : Int {

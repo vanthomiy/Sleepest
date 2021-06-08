@@ -3,6 +3,7 @@ package com.doitstudio.sleepest_master.storage.datastorage
 import android.util.Log
 import androidx.datastore.core.DataStore
 import com.doitstudio.sleepest_master.SleepParameters
+import com.doitstudio.sleepest_master.model.data.LightConditions
 import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.MobileUseFrequency
 import kotlinx.coroutines.flow.Flow
@@ -64,20 +65,20 @@ class SleepParameterStatus(private val dataStore: DataStore<SleepParameters>) {
         }
     }
 
-    suspend fun updateUserMobileFequency(frequency: MobileUseFrequency){
+    suspend fun updateUserMobileFequency(frequency: Int){
         dataStore.updateData{preference->
-            preference.toBuilder().setMobileUseFrequency(frequency.ordinal).build()
+            preference.toBuilder().setMobileUseFrequency(frequency).build()
         }
     }
 
-    suspend fun updateStandardMobilePosition(position: MobilePosition){
-        dataStore.updateData{preference->
-            preference.toBuilder().setStandardMobilePosition(position.ordinal).build()
-        }
-    }
     suspend fun updateStandardMobilePosition(position: Int){
         dataStore.updateData{preference->
             preference.toBuilder().setStandardMobilePosition(position).build()
+        }
+    }
+    suspend fun updateLigthCondition(position: Int){
+        dataStore.updateData{preference->
+            preference.toBuilder().setStandardLightCondition(position).build()
         }
     }
 
