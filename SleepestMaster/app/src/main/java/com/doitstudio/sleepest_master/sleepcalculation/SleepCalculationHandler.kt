@@ -428,10 +428,6 @@ class SleepCalculationHandler(val context: Context) {
 
             var restSleepTime = sleepDuration - (sleepSessionEntity.sleepTimes.sleepDuration * 60)
 
-            if (restSleepTime < 3000) {
-                restSleepTime = 3000
-            }
-
             val actualTimeSeconds = localTime?.toLocalTime()?.toSecondOfDay() ?: getSecondsOfDay()
             var wakeUpTime = actualTimeSeconds + (restSleepTime)
             //var wakeUpTimeNew = 0
