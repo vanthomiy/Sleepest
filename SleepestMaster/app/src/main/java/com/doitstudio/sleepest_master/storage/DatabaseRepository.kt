@@ -138,6 +138,10 @@ class DatabaseRepository(
     suspend fun updateOldSleepApiRawDataSleepState(id: Int, sleepState: SleepState){
         sleepApiRawDataDao.updateOldSleepState(id,sleepState )
     }
+
+    suspend fun updateSleepApiRawDataWakeUp(id: Int, wakeup: Int){
+        sleepApiRawDataDao.updateWakeUp(id,wakeup )
+    }
     //endregion
 
 

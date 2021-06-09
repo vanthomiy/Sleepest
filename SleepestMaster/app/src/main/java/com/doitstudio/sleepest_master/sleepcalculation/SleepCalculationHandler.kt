@@ -439,6 +439,11 @@ class SleepCalculationHandler(val context: Context) {
             // store in the alarm...!!!
             dataBaseRepository.updateWakeupTime(wakeupTime = wakeUpTime, alarm.id)
 
+            val last = sleepApiRawDataEntity.last().timestampSeconds
+            dataBaseRepository.updateSleepApiRawDataWakeUp(
+                last,
+                wakeUpTime
+            )
 
 
             dataStoreRepository.updateUserSleepTime(sleepSessionEntity.sleepTimes.sleepDuration)

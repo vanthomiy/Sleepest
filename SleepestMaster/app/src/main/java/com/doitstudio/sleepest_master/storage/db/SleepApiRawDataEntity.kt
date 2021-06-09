@@ -34,7 +34,10 @@ data class SleepApiRawDataEntity(
         var sleepState: SleepState = SleepState.NONE,
 
         @ColumnInfo(name = "oldSleepState")
-        var oldSleepState: SleepState = SleepState.NONE
+        var oldSleepState: SleepState = SleepState.NONE,
+
+        @ColumnInfo(name = "wakeUpTime")
+        var wakeUpTime: Int = 0
 
 ) {
         companion object {
