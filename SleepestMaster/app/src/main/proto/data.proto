@@ -57,6 +57,99 @@ message  SleepApiData{
 }
 
 /**
+ * This is a Activity StatusModel
+ * It stores information/status about sleep api data
+ */
+message  ActivityApiData{
+
+  /**
+   * If the user authenticated the needed permissions
+   */
+  bool isPermissionActive = 2;
+  /**
+  * Status of the actual subscribed state
+  */
+  bool isSubscribed = 3;
+  /**
+ * The permission is not given anymore
+ */
+  bool permissionRemovedError = 4;
+  /**
+ * The subscribe failed because of an unidentified error
+ */
+  bool subscribeFailed = 5;
+  /**
+ * The unsubscribe failed because of an unidentified error
+*/
+  bool unsubscribeFailed = 6;
+
+  /**
+  * Count of the sleep api data
+  */
+  int32 activityApiValuesAmount = 7;
+
+}
+
+/**
+ * This is a SleepApiData StatusModel
+ * It stores information/status about sleep api data
+ */
+message  SleepParameters{
+
+
+  /**
+   * The normal sleep time of the user
+   */
+  int32 normalSleepTime = 1;
+
+  /**
+  * Start of the sleep time for the user
+  */
+  int32 sleepTimeStart = 2;
+
+  /**
+  * End of the sleep time for the user
+  */
+  int32 sleepTimeEnd = 3;
+
+  /**
+  * standard position of the mobile phone
+  */
+  int32 standardMobilePosition = 4;
+
+  /**
+* standard light condition
+*/
+  int32 standardLightCondition = 10;
+
+  /**
+  * user frequency use of the mobile phone
+  */
+  int32 mobileUseFrequency = 5;
+
+  /**
+  * auto sleep times
+  */
+  bool autoSleepTime = 6;
+
+  /**
+  * user activity tracking
+  */
+  bool userActivityTracking = 7;
+
+  /**
+  * implement the user activity tracking in the sleep time
+  */
+  bool implementUserActivityInSleepTime = 8;
+
+  /**
+* implement the user activity tracking in the sleep time
+*/
+  bool endAlarmAfterFired = 9;
+
+}
+
+/**
  * This is a LiveUserSleepActivity StatusModel
  * It stores information/status about the actual sleep of the user (live data)
  * Is data available from the calculation handler
@@ -75,6 +168,25 @@ message  LiveUserSleepActivity{
   * Sleep time in minutes since the sleep time began
   */
   int32 userSleepTime = 3;
+}
+
+/**
+ * This is a LiveUserSleepActivity StatusModel
+ * It stores information/status about the actual sleep of the user (live data)
+ * Is data available from the calculation handler
+ */
+message BackgroundService{
+
+  /**
+   * Defines if the user currently sleeping
+   */
+  bool isBackgroundActive = 1;
+
+  /**
+   * Defines if the user currently sleeping
+   */
+  bool isForegroundActive = 2;
+
 }
 
 

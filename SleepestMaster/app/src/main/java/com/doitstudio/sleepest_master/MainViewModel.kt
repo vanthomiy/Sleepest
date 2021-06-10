@@ -1,37 +1,28 @@
 package com.doitstudio.sleepest_master
 
+import android.os.Build
 import androidx.lifecycle.*
-import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationDbRepository
-import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationStoreRepository
-import com.doitstudio.sleepest_master.storage.DbRepository
+import com.doitstudio.sleepest_master.storage.DataStoreRepository
+import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import org.json.JSONTokener
+import java.net.URL
+import java.util.*
 
-class MainViewModel(private val dbRepository: DbRepository, private val storageStoreRepository: SleepCalculationStoreRepository, private val sleepCalculationDbRepository: SleepCalculationDbRepository) : ViewModel() {
-
-    val rawSleepApiData = sleepCalculationDbRepository.allSleepApiRawData.asLiveData()
-
-    fun updatePermissionActive(permissionActive: Boolean) = viewModelScope.launch {
-        storageStoreRepository.updatePermissionActive(permissionActive)
-    }
-
-    fun deleteApi()= viewModelScope.launch {
-        sleepCalculationDbRepository.deleteSleepApiRawData()
-    }
-
-    fun insertApi(data:List<SleepApiRawDataEntity>)= viewModelScope.launch {
-        sleepCalculationDbRepository.insertSleepApiRawData(data)
-    }
-
+class MainViewModel(private val databaseRepository: DatabaseRepository, private val storageStoreRepository: DataStoreRepository) : ViewModel() {
 
 
 }
 
-class MainViewModelFactory(private val dbRepository: DbRepository, private val storageStoreRepository: SleepCalculationStoreRepository,  private val sleepCalculationDbRepository: SleepCalculationDbRepository) : ViewModelProvider.Factory {
+class MainViewModelFactory(private val databaseRepository: DatabaseRepository, private val storageStoreRepository: DataStoreRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return MainViewModel(dbRepository,storageStoreRepository, sleepCalculationDbRepository) as T
+            return MainViewModel(databaseRepository,storageStoreRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

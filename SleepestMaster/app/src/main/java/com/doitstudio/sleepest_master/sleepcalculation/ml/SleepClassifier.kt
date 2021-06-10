@@ -133,7 +133,6 @@ class SleepClassifier constructor(private val context: Context) {
     fun isUserSleeping(data: FloatArray, sleepDataFrequency: SleepDataFrequency) : SleepState {
 
         try{
-
             val inputCount = SleepDataFrequency.getCount(sleepDataFrequency)
 
             // region assignments
@@ -150,9 +149,9 @@ class SleepClassifier constructor(private val context: Context) {
             }
 
             val outputs = when(model){
-                is Sleep045 -> model.process(inputs[0],inputs[1],inputs[2],inputs[3],inputs[4],inputs[5],inputs[6],inputs[7],inputs[8],inputs[9],inputs[10],inputs[11],inputs[12],inputs[13],inputs[14],inputs[15],inputs[16],inputs[17],inputs[18],inputs[19],inputs[20],inputs[21],inputs[22],inputs[23],inputs[24],inputs[25],inputs[26],inputs[27],inputs[28],inputs[29],inputs[30],inputs[31],inputs[32],inputs[33],inputs[34],inputs[35],inputs[36],inputs[37],inputs[38],inputs[39],inputs[40],inputs[41],inputs[42],inputs[43],inputs[44],inputs[45],inputs[46],inputs[47],inputs[48],inputs[49],inputs[50],inputs[51],inputs[52],inputs[53],inputs[54],inputs[55],inputs[56],inputs[57],inputs[58],inputs[59],inputs[60],inputs[61],inputs[62],inputs[63],inputs[64],inputs[65],inputs[66],inputs[67],inputs[68],inputs[69],inputs[70],inputs[71])
-                is Sleep0410 -> model.process(inputs[0],inputs[1],inputs[2],inputs[3],inputs[4],inputs[5],inputs[6],inputs[7],inputs[8],inputs[9],inputs[10],inputs[11],inputs[12],inputs[13],inputs[14],inputs[15],inputs[16],inputs[17],inputs[18],inputs[19],inputs[20],inputs[21],inputs[22],inputs[23],inputs[24],inputs[25],inputs[26],inputs[27],inputs[28],inputs[29],inputs[30],inputs[31],inputs[32])
-                else -> (model as Sleep0430).process(inputs[0],inputs[1],inputs[2],inputs[3],inputs[4],inputs[5],inputs[6],inputs[7],inputs[8])
+                is Sleep045 -> model.process(inputs[0],inputs[1],inputs[2],inputs[3],inputs[4],inputs[5],inputs[6],inputs[7],inputs[8],inputs[9],inputs[10],inputs[11],inputs[12],inputs[13],inputs[14],inputs[15],inputs[16],inputs[17],inputs[18],inputs[19],inputs[20],inputs[21],inputs[22],inputs[23],inputs[24],inputs[25],inputs[26],inputs[27],inputs[28],inputs[29],inputs[30],inputs[31],inputs[32], inputs[33],inputs[34],inputs[35],inputs[36],inputs[37],inputs[38],inputs[39],inputs[40],inputs[41],inputs[42],inputs[43],inputs[44],inputs[45],inputs[46],inputs[47],inputs[48],inputs[49],inputs[50],inputs[51],inputs[52],inputs[53],inputs[54],inputs[55],inputs[56],inputs[57],inputs[58],inputs[59],inputs[60],inputs[61],inputs[62],inputs[63],inputs[64],inputs[65],inputs[66],inputs[67],inputs[68],inputs[69],inputs[70],inputs[71])
+                is Sleep0410 -> model.process(inputs[0],inputs[1],inputs[2],inputs[3],inputs[4],inputs[5],inputs[6],inputs[7],inputs[8],inputs[9],inputs[10],inputs[11],inputs[12],inputs[13],inputs[14],inputs[15],inputs[16],inputs[17],inputs[18],inputs[19],inputs[20],inputs[21],inputs[22],inputs[23],inputs[24],inputs[25],inputs[26],inputs[27],inputs[28],inputs[29],inputs[30],inputs[31],inputs[32], inputs[33],inputs[34],inputs[35])
+                else -> (model as Sleep0430).process(inputs[0],inputs[1],inputs[2],inputs[3],inputs[4],inputs[5],inputs[6],inputs[7],inputs[8],inputs[9],inputs[10],inputs[11])
             }
 
             val outputFeature = when(outputs){
@@ -187,7 +186,7 @@ class SleepClassifier constructor(private val context: Context) {
             return SleepState.NONE
         }
 
-        return SleepState.NONE
+        return SleepState.AWAKE
     }
 
     /**

@@ -30,6 +30,9 @@ interface SleepApiRawDataDao {
     @Query("UPDATE sleep_api_raw_data_table SET oldSleepState = :sleepState WHERE time_stamp_seconds = :id")
     suspend fun updateOldSleepState(id: Int, sleepState: SleepState)
 
+    @Query("UPDATE sleep_api_raw_data_table SET wakeUpTime = :wakeUp WHERE time_stamp_seconds = :id")
+    suspend fun updateWakeUp(id: Int, wakeUp: Int)
+
     @Delete
     suspend fun delete(sleepSegmentEventEntityRaw: SleepApiRawDataEntity)
 

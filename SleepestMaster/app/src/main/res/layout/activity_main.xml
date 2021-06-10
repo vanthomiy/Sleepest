@@ -8,15 +8,17 @@
     android:background="#d2d2d2"
     tools:context=".MainActivity">
 
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="top"
-        android:layout_marginBottom="0dp"
         android:id="@+id/navigationFrame"/>
-
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/blurryrect"
+        />
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

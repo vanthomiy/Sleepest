@@ -16,4 +16,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="headerSize">16sp</dimen>
+    <dimen name="valueSize">13sp</dimen>
+    <dimen name="valuesHeight">40dp</dimen>
 </resources>

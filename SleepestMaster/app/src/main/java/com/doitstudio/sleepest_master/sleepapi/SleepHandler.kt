@@ -23,7 +23,7 @@ class SleepHandler(private val context: Context) {
 
     private var sleepPendingIntent: PendingIntent = SleepReceiver.createSleepReceiverPendingIntent(context = context)
 
-    private val repository by lazy { (context.applicationContext as MainApplication).sleepCalculationRepository }
+    private val dataStoreRepository by lazy { (context.applicationContext as MainApplication).dataStoreRepository }
 
     companion object {
         // For Singleton instantiation
@@ -68,19 +68,19 @@ class SleepHandler(private val context: Context) {
 
             task.addOnSuccessListener {
                 scope.launch {
-                    repository.updateIsSubscribed(true)
-                    repository.updateSubscribeFailed(false)
+                    dataStoreRepository.updateSleepIsSubscribed(true)
+                    dataStoreRepository.updateSleepSubscribeFailed(false)
                 }            }
             task.addOnFailureListener { exception ->
                 scope.launch {
-                    repository.updateIsSubscribed(false)
-                    repository.updateSubscribeFailed(true)
+                    dataStoreRepository.updateSleepIsSubscribed(false)
+                    dataStoreRepository.updateSleepSubscribeFailed(true)
                 }
             }
         } else {
             scope.launch {
-                repository.updatePermissionRemovedError(true)
-                repository.updatePermissionActive(false)
+                dataStoreRepository.updateSleepPermissionRemovedError(true)
+                dataStoreRepository.updateSleepPermissionActive(false)
             }
         }
     }
@@ -93,13 +93,13 @@ class SleepHandler(private val context: Context) {
 
         task.addOnSuccessListener {
             scope.launch {
-                repository.updateIsSubscribed(false)
-                repository.updateUnsubscribeFailed(false)
+                dataStoreRepository.updateSleepIsSubscribed(false)
+                dataStoreRepository.updateSleepUnsubscribeFailed(false)
             }
         }
         task.addOnFailureListener { exception ->
             scope.launch {
-                repository.updateUnsubscribeFailed(true)
+                dataStoreRepository.updateSleepUnsubscribeFailed(true)
             }
         }
     }

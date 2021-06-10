@@ -8,16 +8,8 @@ enum class Actions {
     START, STOP
 }
 
-internal enum class AlarmReceiverUse {
-    DEFAULT, START_FOREGROUND, STOP_FOREGROUND, DISABLE_ALARM, LAST_WAKEUP, START_CALCULATION
-}
-
-internal enum class AlarmClockUse {
-    DEFAULT, START_ALARM, STOP_ALARM, SNOOZE_ALARM, LAST_WAKEUP_ALARM
-}
-
 /**
- * Defines the diffrent states of the sleep a user can be in
+ * Defines the different states of the sleep a user can be in
  */
 enum class SleepState {
     AWAKE,
@@ -35,7 +27,70 @@ enum class SleepState {
 enum class MobilePosition{
     INBED,
     ONTABLE,
-    UNIDENTIFIED
+    UNIDENTIFIED;
+
+    companion object {
+        fun getCount(type: Int): MobilePosition {
+            return when (type) {
+                0 -> INBED
+                1 -> ONTABLE
+                else -> UNIDENTIFIED // Avoiding dividing by zero
+            }
+        }
+    }
+}
+
+/**
+ * Defines where the light conditions is places at sleep time
+ */
+enum class LightConditions{
+    DARK,
+    LIGHT,
+    UNIDENTIFIED;
+
+    companion object {
+        fun getCount(type: Int): LightConditions {
+            return when (type) {
+                0 -> DARK
+                1 -> LIGHT
+                else -> UNIDENTIFIED // Avoiding dividing by zero
+            }
+        }
+    }
+}
+
+/**
+ * Defines how often the user uses his phone
+ */
+enum class MobileUseFrequency{
+    VERYLESS,
+    LESS,
+    NONE,
+    OFTEN,
+    VERYOFTEN;
+
+    companion object {
+        fun getCount(type: Int): MobileUseFrequency {
+            return when (type) {
+                0 -> MobileUseFrequency.VERYLESS
+                1 -> MobileUseFrequency.LESS
+                3 -> MobileUseFrequency.OFTEN
+                4 -> MobileUseFrequency.VERYOFTEN
+                else -> MobileUseFrequency.NONE // Avoiding dividing by zero
+            }
+        }
+
+        fun getValue(type: MobileUseFrequency): Int {
+            return when (type) {
+               MobileUseFrequency.VERYLESS -> 0
+                MobileUseFrequency.LESS -> 1
+                MobileUseFrequency.OFTEN-> 3
+                MobileUseFrequency.VERYOFTEN -> 4
+                else ->  2// Avoiding dividing by zero
+            }
+        }
+    }
+
 }
 
 /**
@@ -60,7 +115,20 @@ enum class ActivityOnDay{
     SMALLACTIVITY,
     NORMALACTIVITY,
     MUCHACTIVITY,
-    EXTREMACTIVITY
+    EXTREMACTIVITY;
+
+    companion object {
+        fun getFactor(type: ActivityOnDay): Float {
+            return when (type) {
+                NOACTIVITY -> 0.9f
+                SMALLACTIVITY -> 0.95f
+                NORMALACTIVITY -> 1f
+                MUCHACTIVITY -> 1.05f
+                EXTREMACTIVITY -> 1.1f
+                else -> 1f
+            }
+        }
+    }
 
 }
 
@@ -109,8 +177,8 @@ enum class SleepDataFrequency{
         fun getCount(type:SleepDataFrequency) : Int {
             return when (type) {
                 SleepDataFrequency.FIVE -> 24
-                SleepDataFrequency.TEN -> 11
-                SleepDataFrequency.THIRTY -> 3
+                SleepDataFrequency.TEN -> 12
+                SleepDataFrequency.THIRTY -> 4
                 else -> 1000 // Avoiding dividing by zero
             }
         }

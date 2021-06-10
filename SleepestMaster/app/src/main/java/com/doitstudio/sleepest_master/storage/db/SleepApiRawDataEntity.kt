@@ -34,7 +34,10 @@ data class SleepApiRawDataEntity(
         var sleepState: SleepState = SleepState.NONE,
 
         @ColumnInfo(name = "oldSleepState")
-        var oldSleepState: SleepState = SleepState.NONE
+        var oldSleepState: SleepState = SleepState.NONE,
+
+        @ColumnInfo(name = "wakeUpTime")
+        var wakeUpTime: Int = 0
 
 ) {
         companion object {
@@ -116,6 +119,19 @@ data class SleepApiRawDataEntity(
                         }
 
                         return sleepList.minByOrNull { x->x.timestampSeconds }!!.timestampSeconds
+                }
+
+                /**
+                 * Gets the last time as UTC Total seconds when a user sleep was detected
+                 */
+                fun getSleepEndTime(sleepApiRawDataEntity:List<SleepApiRawDataEntity>) : Int{
+                        val sleepList = sleepApiRawDataEntity.filter { x-> x.sleepState != SleepState.NONE && x.sleepState != SleepState.AWAKE }
+
+                        if(sleepList == null || sleepList.count() == 0){
+                                return 0
+                        }
+
+                        return sleepList.maxByOrNull { x->x.timestampSeconds }!!.timestampSeconds
                 }
         }
 }

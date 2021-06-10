@@ -1,6 +1,7 @@
 package com.doitstudio.sleepest_master
 
 import android.annotation.SuppressLint
+import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -21,7 +22,7 @@ import kotlinx.coroutines.launch
 class AlarmsFragment() : Fragment() {
 
     //private lateinit var binding: FragmentAlarmsBinding
-    private val repository by lazy { (actualContext as MainApplication).dbRepository }
+    private val repository by lazy { (actualContext as MainApplication).dataBaseRepository }
     private val scope: CoroutineScope = MainScope()
     private val actualContext: Context by lazy {requireActivity().applicationContext}
 

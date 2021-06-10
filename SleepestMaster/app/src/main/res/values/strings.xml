@@ -27,11 +27,22 @@
     <string name="workmanager2_tag">Workmanager 2</string>
     <string name="alarmmanager_key">com.doitstudio.sleepest_master.background.AlarmIntentKey</string>
     <string name="title_activity_test">TestActivity</string>
+    <string name="error_start_foreground">Something went wrong, try to start the alarms</string>
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
     -->
     <string name="hello_world">Hello Square World!</string>
+    <!--endregion-->
+
+    <!--region SleepSettings-->
+
+    <string-array name="phonePosition">
+        <item>IN BED</item>
+        <item>ON TABLE</item>
+        <item>AUTO DETECT</item>
+    </string-array>
+
     <!--endregion-->
 
     <!--region AlarmSettings-->
@@ -149,6 +160,10 @@
     </string>
     <string name="x">X</string>
     <string name="active_Weekdays">Wochentage</string>
+    <string name="sleeptimedescription">Setup your usual sleep times. Beetween the start and end-time we will check if you are sleeping</string>
+    <string name="target_sleep_time">target time</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <!--endregion-->
 
 

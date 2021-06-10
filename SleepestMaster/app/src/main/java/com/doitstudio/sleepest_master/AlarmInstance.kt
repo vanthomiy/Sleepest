@@ -23,7 +23,7 @@ import java.time.LocalTime
 
 class AlarmInstance(val applicationContext: Context, private var alarmId: Int) : Fragment() {
 
-    private val repository by lazy { (applicationContext as MainApplication).dbRepository }
+    private val repository by lazy { (applicationContext as MainApplication).dataBaseRepository }
     private val scope: CoroutineScope = MainScope()
 
     private lateinit var seekBar : SeekBar //Selecting the sleep amount

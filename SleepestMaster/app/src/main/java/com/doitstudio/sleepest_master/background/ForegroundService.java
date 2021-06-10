@@ -1,7 +1,7 @@
 package com.doitstudio.sleepest_master.background;
 
 /**
- * This class inherits from LifecycleService. It implements all functions of the foreground service
+ * This service class inherits from LifecycleService. It implements all functions of the foreground service
  * like start, stop and foreground notification
  */
 
@@ -30,35 +30,31 @@ import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity;
 
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class ForegroundService extends LifecycleService {
 
     private PowerManager.WakeLock wakeLock = null;
     private boolean isServiceStarted = false;
-
-    private SleepCalculationHandler sleepCalculationHandler;
-    private SleepHandler sleepHandler;
-
     private boolean isAlarmActive = false;
     private int sleepValueAmount = 0;
     private boolean isSubscribed = false;
     private int userSleepTime = 0;
     private boolean isSleeping = false;
-    private boolean isDataAvailable = false;
     private int alarmTimeInSeconds = 0;
-    boolean test = false;
+    private int actualWakeUp = 0;
 
-    private boolean isStartet = false;
+    private DataStoreRepository dataStoreRepository;
+    private AlarmEntity alarmEntity = null;
+    private SleepCalculationHandler sleepCalculationHandler;
+    private SleepHandler sleepHandler;
 
+    public ForegroundObserver foregroundObserver;
 
-    DataStoreRepository dataStoreRepository;
-    Times times;
-
+    //region service functions
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -87,65 +83,46 @@ public class ForegroundService extends LifecycleService {
         return START_STICKY; // by returning this we make sure the service is restarted if the system kills the service
     }
 
-    ForegroundObserver foregroundObserver;
+
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        times = new Times();
-
-        alarmTimeInSeconds = times.getFirstWakeupInSeconds();
         foregroundObserver = new ForegroundObserver (this);
 
-        foregroundObserver = new ForegroundObserver (this);
-        foregroundObserver.resetSleepTime();
+        alarmEntity = foregroundObserver.getNextAlarm();
 
-        startForeground(1, createNotification("Test")); /** TODO: Id zentral anlegen */
+        //Info: the following getId() can not be null, because alarmEntity can not be null with getNextAlarm()
+        foregroundObserver.updateAlarmWasFired(false, alarmEntity.getId());
+        dataStoreRepository = DataStoreRepository.Companion.getRepo(getApplicationContext());
+        sleepHandler =  SleepHandler.Companion.getHandler(getApplicationContext());
 
-        sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(getApplicationContext());
-        sleepHandler = SleepHandler.Companion.getHandler(getApplicationContext());
-
-        sleepHandler.stopSleepHandler();
-
-    }
-
-    public void OnAlarmChanged(int time) {
-
-    }
-
-    public void OnSleepApiDataChanged(SleepApiData sleepApiData){
-        sleepValueAmount = sleepApiData.getSleepApiValuesAmount();
-        isSubscribed = sleepApiData.getIsSubscribed();
-        updateNotification("test");
-
-    }
-
-    public void OnSleepTimeChanged(LiveUserSleepActivity liveUserSleepActivity) {
-
-        SharedPreferences pref = getSharedPreferences("StopService", 0);
-        int test = pref.getInt("sleeptime", 0);
-
-        isDataAvailable = liveUserSleepActivity.getIsDataAvailable();
-        userSleepTime = liveUserSleepActivity.getUserSleepTime();
-        isSleeping = liveUserSleepActivity.getIsUserSleeping();
-
-        if (isSleeping && (userSleepTime > times.getSleepTime()) && (userSleepTime != test)) {
-            Calendar calendar = Calendar.getInstance();
-            AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 1, getApplicationContext(), 1);
+        //Check if already subscribed, otherwise subscribe to SleepApi and
+        //start AlarmManager to disable at the end of sleeptime
+        if (!foregroundObserver.getSubscribeStatus()) {
+            sleepHandler.startSleepHandler();
+            AlarmReceiver.cancelAlarm(getApplicationContext(), 6);
+            AlarmReceiver.cancelAlarm(getApplicationContext(), 7);
+            Workmanager.startPeriodicWorkmanager(16, getApplicationContext());
+            Calendar calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeEndJob());
+            AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(),7);
         }
 
-        Calendar calendar1 = Calendar.getInstance();
-        pref = getSharedPreferences("AlarmChanged", 0);
-        SharedPreferences.Editor ed = pref.edit();
-        ed.putInt("hour", calendar1.get(Calendar.HOUR_OF_DAY));
-        ed.putInt("minute", calendar1.get(Calendar.MINUTE));
-        ed.putInt("sleeptime", userSleepTime);
-        ed.apply();
 
-        updateNotification("test");
+
+        startForeground(1, createNotification("Alarm status: " + isAlarmActive)); /** TODO: Id zentral anlegen */
+
+
+        sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(getApplicationContext());
+        //sleepHandler = SleepHandler.Companion.getHandler(getApplicationContext());
+
+        //sleepHandler.stopSleepHandler();
+
 
     }
+
+
 
     @Override
     public void onDestroy() {
@@ -156,39 +133,42 @@ public class ForegroundService extends LifecycleService {
     private void startService() {
         // If the service is already running, do nothing.
         if (isServiceStarted) {return;}
-
         //Set start boolean and save it in preferences
         isServiceStarted = true;
         //new ServiceTracker().setServiceState(this, ServiceState.STARTED);
+        foregroundObserver.setForegroundStatus(true);
 
         // lock that service is not affected by Doze Mode
-        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        if (pm != null) {
-            wakeLock = pm.newWakeLock(1, "EndlessService::lock");
-            wakeLock.acquire(60 * 1000L /*1 minute*/);
+        PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        if (powerManager != null) {
+            wakeLock = powerManager.newWakeLock(1, "EndlessService::lock");
+            wakeLock.acquire(60 * 1000L); //1 minute timeout
         }
 
 
         Toast.makeText(getApplicationContext(), "Foregroundservice started", Toast.LENGTH_LONG).show();
 
+        //Workmanager.startPeriodicWorkmanager(times.getWorkmanagerDuration(), getApplicationContext());
+
         //+1
-        Calendar calenderAlarm;
-        //calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1, times.getFirstWakeupHour(), times.getFirstWakeupMinute());
+        //Calendar calenderAlarm;
+        //calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK),13, 27);
         //AlarmReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 2);
-        Workmanager.startPeriodicWorkmanager(times.getWorkmanagerDuration(), getApplicationContext());
         //AlarmClockReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 1);
 
         //Last Alarm    +1
-        calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1, times.getLastWakeupHour(), times.getLastWakeupMinute());
+        //calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1, times.getLastWakeupHour(), times.getLastWakeupMinute());
         //AlarmReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 4);
-        AlarmClockReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 4);
+        //AlarmClockReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 4);
 
         //Start Calculation    +1
-        //calenderAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1, times.getFirstCalculationHour(), times.getFirstCalculationMinute());
-        //AlarmReceiver.startAlarmManager(calenderAlarm.get(Calendar.DAY_OF_WEEK), calenderAlarm.get(Calendar.HOUR_OF_DAY), calenderAlarm.get(Calendar.MINUTE), getApplicationContext(), 5);
+        Calendar calenderCalculation = AlarmReceiver.getAlarmDate(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1, 0, 0);
+        calenderCalculation.set(Calendar.SECOND, 0);
+        calenderCalculation.add(Calendar.SECOND, alarmEntity.getWakeupEarly() - 1800);
+        AlarmReceiver.startAlarmManager(calenderCalculation.get(Calendar.DAY_OF_WEEK), calenderCalculation.get(Calendar.HOUR_OF_DAY), calenderCalculation.get(Calendar.MINUTE), getApplicationContext(), 5);
 
         sleepCalculationHandler.checkIsUserSleeping(null);
-        sleepHandler.startSleepHandler();
+        //sleepHandler.startSleepHandler();
 
         Calendar calendar = Calendar.getInstance();
         SharedPreferences pref = getSharedPreferences("StartService", 0);
@@ -220,19 +200,18 @@ public class ForegroundService extends LifecycleService {
         }
         //Save state in preferences
         isServiceStarted = false;
+        foregroundObserver.setForegroundStatus(false);
+        foregroundObserver.updateAlarmWasFired(true, alarmEntity.getId());
+        //new ServiceTracker().setServiceState(this, ServiceState.STOPPED);
 
-        new ServiceTracker().setServiceState(this, ServiceState.STOPPED);
-
-        /**
-         * TEST
-         */
-        Workmanager.stopPeriodicWorkmanager();
+        //Workmanager.stopPeriodicWorkmanager();
         WorkmanagerCalculation.stopPeriodicWorkmanager();
 
         AlarmClockReceiver.cancelAlarm(getApplicationContext(), 4);
         AlarmReceiver.cancelAlarm(getApplicationContext(), 4);
+        AlarmReceiver.cancelAlarm(getApplicationContext(), 5);
 
-        sleepHandler.stopSleepHandler();
+        //sleepHandler.stopSleepHandler();
         Toast.makeText(getApplicationContext(), "Foregroundservice stopped", Toast.LENGTH_LONG).show();
 
         Calendar calendar = Calendar.getInstance();
@@ -240,10 +219,200 @@ public class ForegroundService extends LifecycleService {
         SharedPreferences.Editor ed = pref.edit();
         ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
         ed.putInt("minute", calendar.get(Calendar.MINUTE));
+        ed.apply();
+
+        pref = getSharedPreferences("SleepTime", 0);
+        ed = pref.edit();
         ed.putInt("sleeptime", userSleepTime);
         ed.apply();
     }
 
+    //endregion
+
+    //region changing values
+
+    public void OnAlarmChanged(AlarmEntity time) {
+
+        checkAlarmSet();
+
+        alarmEntity = time;
+
+        Calendar calendar = Calendar.getInstance();
+
+        alarmTimeInSeconds = time.getActualWakeup();
+
+        isAlarmActive = true;
+
+        updateNotification("Alarm status: " + isAlarmActive);
+
+        SharedPreferences pref = getSharedPreferences("AlarmChanged", 0);
+        SharedPreferences.Editor ed = pref.edit();
+        ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
+        ed.putInt("minute", calendar.get(Calendar.MINUTE));
+        ed.putInt("actualWakeup", time.getActualWakeup());
+        ed.apply();
+
+        int secondsOfDay = LocalTime.now().toSecondOfDay();
+        int timeDifference = time.getActualWakeup() - secondsOfDay;
+
+        //Return if the alarm is on the next day or before first calculation
+        if((secondsOfDay < (time.getWakeupEarly() - 1800)) || ((time.getWakeupLate() + 3600) < secondsOfDay) || !checkPossibleAlarm()) {
+            return;
+        }
+
+        //Check if the actual alarm time is already reached and set the alarm to now
+        if ((secondsOfDay > time.getActualWakeup()) && checkPossibleAlarm() && (secondsOfDay > time.getWakeupEarly())) {
+            calendar.add(Calendar.SECOND, 60);
+
+            actualWakeUp = calendarToSecondsOfDay(calendar);
+
+            AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(), 1);
+
+            setPreferences(calendar, alarmTimeInSeconds, 4);
+
+            return;
+            
+        } else if((secondsOfDay > time.getActualWakeup()) && checkPossibleAlarm() && (secondsOfDay < time.getWakeupEarly())) {
+            Calendar earliestWakeup = AlarmReceiver.getAlarmDate(time.getWakeupEarly());
+
+            actualWakeUp = calendarToSecondsOfDay(earliestWakeup);
+
+            AlarmClockReceiver.startAlarmManager(earliestWakeup.get(Calendar.DAY_OF_WEEK), earliestWakeup.get(Calendar.HOUR_OF_DAY), earliestWakeup.get(Calendar.MINUTE), getApplicationContext(), 1);
+
+            setPreferences(earliestWakeup, time.getWakeupEarly(), 8);
+
+            return;
+        }
+
+        //Check if the next calculation call will be after latest wakeup and set the alarm to latest wakeup
+        if (((time.getWakeupLate() - secondsOfDay) < (16 * 60)) && checkPossibleAlarm()) {
+            Calendar latestWakeup = Calendar.getInstance();
+            latestWakeup.set(Calendar.HOUR_OF_DAY, 0);
+            latestWakeup.set(Calendar.MINUTE, 0);
+            latestWakeup.set(Calendar.SECOND, 0);
+            latestWakeup.add(Calendar.SECOND, time.getWakeupLate());
+
+            actualWakeUp = calendarToSecondsOfDay(latestWakeup);
+
+            AlarmClockReceiver.startAlarmManager(latestWakeup.get(Calendar.DAY_OF_WEEK), latestWakeup.get(Calendar.HOUR_OF_DAY), latestWakeup.get(Calendar.MINUTE), getApplicationContext(), 1);
+
+            setPreferences(latestWakeup, time.getWakeupLate(), 1);
+
+            return;
+        }
+
+        //Check if the actual wakeup is earlier than the next calculation call
+        if (timeDifference < (16 * 60) && checkPossibleAlarm()) {
+
+            //Check if the actual wakeup is earlier than the earliest wakeup and set the alarm to earliest wakeup
+            if (time.getActualWakeup() < time.getWakeupEarly() && !(time.getWakeupEarly() < secondsOfDay) && !(time.getActualWakeup() < secondsOfDay)) {
+                Calendar earliestWakeup = AlarmReceiver.getAlarmDate(time.getWakeupEarly());
+
+                actualWakeUp = calendarToSecondsOfDay(earliestWakeup);
+
+                AlarmClockReceiver.startAlarmManager(earliestWakeup.get(Calendar.DAY_OF_WEEK), earliestWakeup.get(Calendar.HOUR_OF_DAY), earliestWakeup.get(Calendar.MINUTE), getApplicationContext(), 1);
+
+                setPreferences(earliestWakeup, time.getWakeupEarly(), 2);
+
+                return;
+            }
+
+            //Check if the actual wakeup is later than the latest wakeup and set the alarm to latest wakeup
+            if (time.getActualWakeup() > time.getWakeupLate()) {
+                Calendar latestWakeup = AlarmReceiver.getAlarmDate(time.getWakeupLate());
+
+                actualWakeUp = calendarToSecondsOfDay(latestWakeup);
+
+                AlarmClockReceiver.startAlarmManager(latestWakeup.get(Calendar.DAY_OF_WEEK), latestWakeup.get(Calendar.HOUR_OF_DAY), latestWakeup.get(Calendar.MINUTE), getApplicationContext(), 1);
+
+                setPreferences(latestWakeup, time.getWakeupLate(), 3);
+
+                return;
+            }
+
+            //Check if the actual time is lower than the actual wakeup and add the difference to the actual time and set the alarm to this new time
+            if (secondsOfDay <= time.getActualWakeup()){
+                calendar.add(Calendar.SECOND, timeDifference);
+
+                actualWakeUp = calendarToSecondsOfDay(calendar);
+
+                AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 1, getApplicationContext(), 1);
+
+                setPreferences(calendar, time.getActualWakeup(), 5);
+            }
+        }
+    }
+
+    private void setPreferences(Calendar calendar, int time, int use) {
+        SharedPreferences pref = getSharedPreferences("AlarmChanged", 0);
+        SharedPreferences.Editor ed = pref.edit();
+        ed.putInt("alarmUse", use);
+        ed.apply();
+
+        pref = getSharedPreferences("AlarmSet", 0);
+        ed = pref.edit();
+        ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
+        ed.putInt("minute", calendar.get(Calendar.MINUTE));
+        ed.putInt("hour1", Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
+        ed.putInt("minute1", Calendar.getInstance().get(Calendar.MINUTE));
+        ed.putInt("actualWakeup", time);
+        ed.apply();
+    }
+
+    private boolean checkPossibleAlarm() {
+        if (!AlarmClockReceiver.isAlarmClockActive(getApplicationContext(), 1) && !alarmEntity.getWasFired()) {
+            return true;
+        }
+        return false;
+    }
+
+    private void checkAlarmSet() {
+        if ((actualWakeUp != 0) && !AlarmClockReceiver.isAlarmClockActive(getApplicationContext(), 1)) {
+            Calendar calendar = AlarmReceiver.getAlarmDate(actualWakeUp);
+            AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK) ,calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(), 1);
+
+            setPreferences(calendar, actualWakeUp, 9);
+        }
+    }
+
+    private int calendarToSecondsOfDay(Calendar calendar) {
+        int day = calendar.get(Calendar.HOUR_OF_DAY) * 3600;
+        int minute = calendar.get(Calendar.MINUTE) * 60;
+        int second = calendar.get(Calendar.SECOND);
+
+        return day + minute + second;
+    }
+
+    public void OnSleepApiDataChanged(SleepApiData sleepApiData) {
+
+        checkAlarmSet();
+
+        sleepValueAmount = sleepApiData.getSleepApiValuesAmount();
+        isSubscribed = sleepApiData.getIsSubscribed();
+
+        updateNotification("Alarm status: " + isAlarmActive);
+
+    }
+
+    public void OnSleepTimeChanged(LiveUserSleepActivity liveUserSleepActivity) {
+
+        checkAlarmSet();
+
+        userSleepTime = liveUserSleepActivity.getUserSleepTime();
+        isSleeping = liveUserSleepActivity.getIsUserSleeping();
+
+        SharedPreferences pref = getSharedPreferences("SleepTime", 0);
+        SharedPreferences.Editor ed = pref.edit();
+        ed.putInt("sleeptime", userSleepTime);
+        ed.apply();
+
+        updateNotification("Alarm status: " + isAlarmActive);
+
+    }
+
+    //endregion
+
+    //region notification
     /**
      * Updates the notification banner with a new text
      * @param text The text at the notification banner
@@ -251,32 +420,40 @@ public class ForegroundService extends LifecycleService {
     public void updateNotification(String text) {
 
         Notification notification = createNotification(text);
-        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(1, notification);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(1, notification);
 
     }
 
     /**TODO Notification noch selbst machen mit eigenem Layout*/
     /**
-     * Creats a notification banner, that is permament to show that the app is still running. Only since Oreo
+     * Creats a notification banner, that is permanent to show that the app is still running.
      * @param text The text at the notification banner
      * @return Notification.Builder
      */
     private Notification createNotification(String text) {
         String notificationChannelId = getString(R.string.foregroundservice_channel);
 
-
         //Init remoteView for expanded notification
         RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.foreground_service_notification);
 
-        //Set button with its intents
+        //Set button for disable alarm with its intents
         Intent btnClickIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
         btnClickIntent.putExtra(getApplicationContext().getString(R.string.alarmmanager_key), 3);
 
-        remoteViews.setTextViewText(R.id.btnEnableAlarmNotification, "Not SLeeping");
+        remoteViews.setTextViewText(R.id.btnDisableAlarmNotification, "Disable Alarm");
 
         PendingIntent btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 3, btnClickIntent, 0);
-        remoteViews.setOnClickPendingIntent(R.id.btnEnableAlarmNotification, btnClickPendingIntent);
+        remoteViews.setOnClickPendingIntent(R.id.btnDisableAlarmNotification, btnClickPendingIntent);
+
+        //Set button for disable alarm with its intents
+        btnClickIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
+        btnClickIntent.putExtra(getApplicationContext().getString(R.string.alarmmanager_key), 4);
+
+        remoteViews.setTextViewText(R.id.btnNotSleepingNotification, "Not Sleeping");
+
+        btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 4, btnClickIntent, 0);
+        remoteViews.setOnClickPendingIntent(R.id.btnNotSleepingNotification, btnClickPendingIntent);
 
         //Set the text in textview of the expanded notification view
         String notificationText = "AlarmActive: " + isAlarmActive + " Value: " + sleepValueAmount
@@ -286,7 +463,7 @@ public class ForegroundService extends LifecycleService {
 
         //Set the progress bar for the sleep progress
         remoteViews.setProgressBar(R.id.pbSleepProgressNotification, 100,
-                getSleepProgress(times.getStartForegroundHour(), times.getLastWakeupHour(), Calendar.getInstance().get(Calendar.HOUR_OF_DAY)), false);
+                getSleepProgress(dataStoreRepository.getSleepTimeBeginJob(), dataStoreRepository.getSleepTimeEndJob(), Calendar.getInstance().get(Calendar.HOUR_OF_DAY)), false);
 
         //Set the Intent for tap on the notification, will start app in MainActivity
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -320,7 +497,7 @@ public class ForegroundService extends LifecycleService {
                 .setStyle(new Notification.DecoratedCustomViewStyle())
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)
-                .setTicker(null)
+                .setOnlyAlertOnce(true)
                 .build();
     }
 
@@ -335,14 +512,21 @@ public class ForegroundService extends LifecycleService {
         Intent intent = new Intent(context, ForegroundService.class);
         intent.setAction(action.name());
 
-        if (new ServiceTracker().getServiceState(context) == ServiceState.STOPPED && action == Actions.STOP) {
+        /*if (new ServiceTracker().getServiceState(context) == ServiceState.STOPPED && action == Actions.STOP) {
             return;
-        }
+        }*/
 
         context.startForegroundService(intent);
         return;
     }
 
+    /**
+     * Calculates the actual progress of the progressbar
+     * @param beginTime Start time of sleeptime in secondsOfDay
+     * @param endTime Stop time of sleeptime in secondsOfDay
+     * @param actualTime Actual time in hours
+     * @return
+     */
     private int getSleepProgress(int beginTime, int endTime, int actualTime) {
         int progress;
 
@@ -358,5 +542,7 @@ public class ForegroundService extends LifecycleService {
 
         return progress;
     }
+
+    //endregion
 
 }

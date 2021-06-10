@@ -1,0 +1,896 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.sleep.SleepFragment">
+
+    <data>
+        <variable
+            name="sleepViewModel"
+            type="com.doitstudio.sleepest_master.ui.sleep.SleepViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#1a1a1a"
+        android:id="@+id/topLayout"
+        >
+
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:clipToPadding="true"
+            android:fillViewport="true"
+            android:onScrollChangeListener="@{sleepViewModel::onScrollChanged}">
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:windowSoftInputMode="adjustResize"
+                android:id="@+id/linearAnimationlayout"
+                >
+
+
+                <androidx.constraintlayout.motion.widget.MotionLayout
+                    android:id="@+id/animatedTopView"
+                    android:layout_width="match_parent"
+                    android:layout_height="275dp"
+                    android:layout_margin="20dp"
+                    android:orientation="vertical"
+                    android:visibility="visible"
+                    app:layoutDescription="@xml/fragment_sleep_scene">
+
+                    <TextView
+                        android:id="@+id/animTextSleep"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Sleep"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/headerSize"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        tools:layout_editor_absoluteX="281dp"
+                        tools:layout_editor_absoluteY="110dp" />
+
+                    <TextView
+                        android:id="@+id/animTextTipp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:gravity="end|center"
+                        android:onClick="@{sleepViewModel::onInfoClicked}"
+                        android:tag="7"
+                        android:text="show tips"
+                        android:textColor="@color/secondTextColor"
+                        android:textSize="@dimen/valueSize"
+                        android:textStyle="bold" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/animHeaderLogo"
+                        android:layout_width="350dp"
+                        android:layout_height="350dp"
+                        android:layout_gravity="bottom"
+                        android:rotation="180"
+                        android:src="@drawable/moon"
+                        tools:layout_editor_absoluteY="150dp" />
+
+
+                    <TextView
+                        android:id="@+id/animTextNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:width="100dp"
+                        android:text="@{sleepViewModel.sleepScoreValue}"
+                        android:textColor="@color/white"
+                        android:textSize="25sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/animTextDescription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@{sleepViewModel.sleepScoreText}"
+                        android:textColor="@color/gray"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        />
+
+                </androidx.constraintlayout.motion.widget.MotionLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:visibility="@{sleepViewModel.sleepHeaderExpand, default=gone}"
+                    android:background="@drawable/bgroundedchoosen"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_margin="10dp"
+                        android:textColor="@color/white"
+                        android:text="The sleeptimes should always be in between your regular sleep. The app only tracks and recognices your sleep when its in the sleep time. You can also set it to auto and we will automatically set your sleeptime."/>
+
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="10dp"
+                    >
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginHorizontal="10dp"
+                        >
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="start"
+                            android:src="@drawable/ic_baseline_bedtime_24"
+                            app:tint="@color/white" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="40dp"
+                            android:textSize="@dimen/headerSize"
+                            android:layout_gravity="start"
+                            android:textColor="@color/white"
+                            android:text="Sleeptimes"/>
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="end"
+                            android:src="@drawable/ic_baseline_info_24"
+                            android:onClick="@{sleepViewModel::onInfoClicked}"
+                            android:tag="0"
+                            app:tint="@color/white" />
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:visibility="@{sleepViewModel.sleepTimeInfoExpand, default=gone}"
+                        android:background="@drawable/bgroundedchoosen"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:layout_margin="10dp"
+                            android:textColor="@color/white"
+                            android:text="The sleeptimes should always be in between your regular sleep. The app only tracks and recognices your sleep when its in the sleep time. You can also set it to auto and we will automatically set your sleeptime."/>
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/valuesHeight"
+                        android:visibility="@{sleepViewModel.manualSleepTimeVisibility}"
+                        >
+
+                        <FrameLayout
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="start"
+                            android:clickable="@{sleepViewModel.manualSleepTime}"
+                            android:onClick="@{sleepViewModel::onAlarmStartClicked}"
+                            android:background="@drawable/bgroundedchoosen">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginStart="10dp"
+                                android:textSize="@dimen/valueSize"
+                                android:textColor="@color/secondTextColor"
+                                android:textStyle="bold"
+                                android:text="Start:"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="end"
+                                android:gravity="center_vertical"
+                                android:layout_marginRight="10dp"
+                                android:textSize="@dimen/valueSize"
+                                android:text="@{sleepViewModel.sleepStartValue}"
+                                />
+
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end"
+                            android:clickable="@{sleepViewModel.manualSleepTime}"
+                            android:onClick="@{sleepViewModel::onAlarmEndClicked}"
+                            android:background="@drawable/bgroundedchoosen">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginStart="10dp"
+                                android:textSize="@dimen/valueSize"
+                                android:textColor="@color/secondTextColor"
+                                android:textStyle="bold"
+                                android:text="End:"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="end"
+                                android:gravity="center_vertical"
+                                android:layout_marginRight="10dp"
+                                android:textSize="@dimen/valueSize"
+                                android:text="@{sleepViewModel.sleepEndValue}"
+                                />
+
+                        </FrameLayout>
+
+
+                    </FrameLayout>
+
+                    <ToggleButton
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/valuesHeight"
+                        android:layout_gravity="start"
+                        android:background="@drawable/bgroundedchoosen"
+                        android:textSize="@dimen/valueSize"
+                        android:layout_marginVertical="5dp"
+                        android:onClick="@{sleepViewModel::SleepTimeToogled}"
+                        android:checked="@={sleepViewModel.autoSleepTime}"
+                        android:textOn="Auto detect"
+                        android:textOff="User defined">
+
+                    </ToggleButton>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="10dp"
+                    >
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginHorizontal="10dp"
+                        >
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="start"
+                            android:src="@drawable/ic_baseline_night_shelter_24"
+                            app:tint="@color/white" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="40dp"
+                            android:textSize="@dimen/headerSize"
+                            android:layout_gravity="start"
+                            android:textColor="@color/white"
+                            android:text="Sleepduration"/>
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="end"
+                            android:src="@drawable/ic_baseline_info_24"
+                            android:onClick="@{sleepViewModel::onInfoClicked}"
+                            android:tag="1"
+                            app:tint="@color/white" />
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:visibility="@{sleepViewModel.sleepDurationExpand, default=gone}"
+                        android:background="@drawable/bgroundedchoosen"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:layout_margin="10dp"
+                            android:textColor="@color/white"
+                            android:text="The sleeptimes should always be in between your regular sleep. The app only tracks and recognices your sleep when its in the sleep time. You can also set it to auto and we will automatically set your sleeptime."/>
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/valuesHeight"
+                        android:layout_gravity="start"
+                        android:background="@drawable/bgroundedchoosen">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="10dp"
+                            android:textSize="@dimen/valueSize"
+                            android:textColor="@color/secondTextColor"
+                            android:textStyle="bold"
+                            android:text="@{sleepViewModel.sleepDurationString}"
+                            />
+
+                        <SeekBar
+                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginLeft="75dp"
+                            android:max="50"
+                            android:min="0"
+                            android:progress="@{sleepViewModel.sleepDurationValue}"
+                            android:onProgressChanged="@{sleepViewModel::onSleepDurationChanged}"
+                            />
+
+                    </FrameLayout>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="10dp"
+                    >
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginHorizontal="10dp"
+                        >
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="start"
+                            android:src="@drawable/ic_baseline_phone_android_24"
+                            app:tint="@color/white" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="40dp"
+                            android:textSize="@dimen/headerSize"
+                            android:layout_gravity="start"
+                            android:textColor="@color/white"
+                            android:text="Light conditions"/>
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="end"
+                            android:src="@drawable/ic_baseline_info_24"
+                            android:onClick="@{sleepViewModel::onInfoClicked}"
+                            android:tag="6"
+                            app:tint="@color/white" />
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:visibility="@{sleepViewModel.lightConditionExpand, default=gone}"
+                        android:background="@drawable/bgroundedchoosen"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:layout_margin="10dp"
+                            android:textColor="@color/white"
+                            android:text="The sleeptimes should always be in between your regular sleep. The app only tracks and recognices your sleep when its in the sleep time. You can also set it to auto and we will automatically set your sleeptime."/>
+
+                    </FrameLayout>
+
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/valuesHeight"
+                        android:background="@drawable/bgroundedchoosen"
+                        android:layout_gravity="start"
+                        android:entries="@{sleepViewModel.lightConditionSelections}"
+                        android:selectedItemPosition="@={sleepViewModel.lightCondition}"
+                        android:onItemSelected = "@{sleepViewModel::onLightConditionChanged}"
+                        android:textAlignment="center"
+                        android:textSize="@dimen/valueSize"
+                        tools:ignore="RtlCompat">
+
+                    </Spinner>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="10dp"
+                    >
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginHorizontal="10dp"
+                        >
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="start"
+                            android:src="@drawable/ic_baseline_phone_android_24"
+                            app:tint="@color/white" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="40dp"
+                            android:textSize="@dimen/headerSize"
+                            android:layout_gravity="start"
+                            android:textColor="@color/white"
+                            android:text="Phone position"/>
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="end"
+                            android:src="@drawable/ic_baseline_info_24"
+                            android:onClick="@{sleepViewModel::onInfoClicked}"
+                            android:tag="2"
+                            app:tint="@color/white" />
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:visibility="@{sleepViewModel.phonePositionExpand, default=gone}"
+                        android:background="@drawable/bgroundedchoosen"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:layout_margin="10dp"
+                            android:textColor="@color/white"
+                            android:text="The sleeptimes should always be in between your regular sleep. The app only tracks and recognices your sleep when its in the sleep time. You can also set it to auto and we will automatically set your sleeptime."/>
+
+                    </FrameLayout>
+
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/valuesHeight"
+                        android:background="@drawable/bgroundedchoosen"
+                        android:layout_gravity="start"
+                        android:entries="@{sleepViewModel.phonePositionSelections}"
+                        android:selectedItemPosition="@={sleepViewModel.mobilePosition}"
+                        android:onItemSelected = "@{sleepViewModel::onMobilePositionChanged}"
+                        android:textAlignment="center"
+                        android:textSize="@dimen/valueSize"
+                        tools:ignore="RtlCompat">
+
+                    </Spinner>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="10dp"
+                    >
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginHorizontal="10dp"
+                        >
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="start"
+                            android:src="@drawable/ic_baseline_data_usage_24"
+                            app:tint="@color/white" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="40dp"
+                            android:textSize="@dimen/headerSize"
+                            android:layout_gravity="start"
+                            android:textColor="@color/white"
+                            android:text="Phone usage"/>
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="end"
+                            android:src="@drawable/ic_baseline_info_24"
+                            android:onClick="@{sleepViewModel::onInfoClicked}"
+                            android:tag="3"
+                            app:tint="@color/white" />
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:visibility="@{sleepViewModel.phoneUsageExpand, default=gone}"
+                        android:background="@drawable/bgroundedchoosen"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:layout_margin="10dp"
+                            android:textColor="@color/white"
+                            android:text="The sleeptimes should always be in between your regular sleep. The app only tracks and recognices your sleep when its in the sleep time. You can also set it to auto and we will automatically set your sleeptime."/>
+
+                    </FrameLayout>
+
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/valuesHeight"
+                        android:layout_gravity="start"
+                        android:background="@drawable/bgroundedchoosen">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="start"
+                            android:gravity="center_vertical"
+                            android:layout_marginStart="10dp"
+                            android:textSize="@dimen/valueSize"
+                            android:textColor="@color/secondTextColor"
+                            android:textStyle="bold"
+                            android:text="less"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end"
+                            android:gravity="center_vertical"
+                            android:layout_marginEnd="10dp"
+                            android:textSize="@dimen/valueSize"
+                            android:textColor="@color/secondTextColor"
+                            android:textStyle="bold"
+                            android:text="often"
+                            />
+
+                        <!--androidx.appcompat.widget.AppCompatSeekBar
+                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginHorizontal="75dp"/-->
+
+                        <SeekBar
+                            android:id="@+id/seekBar"
+                            style="@style/Widget.AppCompat.SeekBar.Discrete"
+                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginHorizontal="75dp"
+                            android:progress="@{sleepViewModel.phoneUsageValue}"
+                            android:onProgressChanged="@{sleepViewModel::onPhoneUsageChanged}"
+                            android:max="4"
+                            />
+
+                    </FrameLayout>
+
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="10dp"
+                    >
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginHorizontal="10dp"
+                        >
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="start"
+                            android:src="@drawable/ic_baseline_pending_actions_24"
+                            android:onClick="@{sleepViewModel::onInfoClicked}"
+                            android:tag="4"
+                            app:tint="@color/white" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="40dp"
+                            android:textSize="@dimen/headerSize"
+                            android:layout_gravity="start"
+                            android:textColor="@color/white"
+                            android:text="Activity tracking"/>
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="end"
+                            android:onClick="@{sleepViewModel::onInfoClicked}"
+                            android:tag="4"
+                            android:src="@drawable/ic_baseline_info_24"
+                            app:tint="@color/white" />
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:visibility="@{sleepViewModel.activityTrackingExpand, default=gone}"
+                        android:background="@drawable/bgroundedchoosen"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:layout_margin="10dp"
+                            android:textColor="@color/white"
+                            android:text="The sleeptimes should always be in between your regular sleep. The app only tracks and recognices your sleep when its in the sleep time. You can also set it to auto and we will automatically set your sleeptime."/>
+
+                    </FrameLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:orientation="vertical"
+                        android:background="@drawable/bgroundedchoosen">
+
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/valuesHeight">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="start"
+                                android:gravity="center_vertical"
+                                android:layout_marginStart="10dp"
+                                android:textSize="@dimen/valueSize"
+                                android:textColor="@color/secondTextColor"
+                                android:textStyle="bold"
+                                android:text="track daily activity"
+                                />
+
+                            <Switch
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="end"
+                                android:gravity="center_vertical"
+                                android:layout_marginEnd="10dp"
+                                android:checked="@={sleepViewModel.activityTracking}"
+                                android:onClick="@{sleepViewModel::onActivityTrackingChanged}"
+                                />
+                        </FrameLayout>
+
+                        <View
+                            android:layout_width="fill_parent"
+                            android:layout_height="2dp"
+                            android:visibility="@{sleepViewModel.activityTrackingView}"
+                            android:background="@color/gray" />
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:visibility="@{sleepViewModel.activityTrackingView}"
+                            android:layout_height="@dimen/valuesHeight">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="start"
+                                android:gravity="center_vertical"
+                                android:layout_marginStart="10dp"
+                                android:textSize="@dimen/valueSize"
+                                android:textColor="@color/secondTextColor"
+                                android:textStyle="bold"
+                                android:text="include in wakeup time"
+                                />
+
+                            <Switch
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="end"
+                                android:gravity="center_vertical"
+                                android:layout_marginEnd="10dp"
+                                android:checked="@={sleepViewModel.includeActivityInCalculation}"
+                                android:onClick="@{sleepViewModel::onActivityInCalcChanged}"
+
+                                />
+
+                        </FrameLayout>
+
+                    </LinearLayout>
+
+
+
+
+                </LinearLayout>
+
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="10dp"
+                    android:background="@color/gray"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="10dp"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="10dp"
+                    >
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginHorizontal="10dp"
+                        >
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="start"
+                            android:src="@drawable/ic_baseline_timer_24"
+                            app:tint="@color/white" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="40dp"
+                            android:textSize="@dimen/headerSize"
+                            android:layout_gravity="start"
+                            android:textColor="@color/white"
+                            android:text="Alarm"/>
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="end"
+                            android:src="@drawable/ic_baseline_info_24"
+                            android:onClick="@{sleepViewModel::onInfoClicked}"
+                            android:tag="5"
+                            app:tint="@color/white" />
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:visibility="@{sleepViewModel.alarmExpand, default=gone}"
+                        android:background="@drawable/bgroundedchoosen"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:layout_margin="10dp"
+                            android:textColor="@color/white"
+                            android:text="The sleeptimes should always be in between your regular sleep. The app only tracks and recognices your sleep when its in the sleep time. You can also set it to auto and we will automatically set your sleeptime."/>
+
+                    </FrameLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:orientation="vertical"
+                        android:background="@drawable/bgroundedchoosen">
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/valuesHeight">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="start"
+                                android:gravity="center_vertical"
+                                android:layout_marginStart="10dp"
+                                android:textSize="@dimen/valueSize"
+                                android:textColor="@color/secondTextColor"
+                                android:textStyle="bold"
+                                android:text="cancel alarm when already awake"
+                                />
+
+                            <Switch
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="end"
+                                android:gravity="center_vertical"
+                                android:layout_marginEnd="10dp"
+                                android:checked="@={sleepViewModel.cancelAlarmWhenAwake}"
+                                android:onClick="@{sleepViewModel::onEndAlarmAfterFiredChanged}"
+                                />
+
+
+                        </FrameLayout>
+
+                        <View
+                            android:id="@+id/view1"
+                            android:layout_width="fill_parent"
+                            android:layout_height="2dp"
+                            android:background="@color/gray" />
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/valuesHeight">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="start"
+                                android:layout_marginStart="10dp"
+                                android:gravity="center_vertical"
+                                android:text="sound"
+                                android:textColor="@color/secondTextColor"
+                                android:textSize="@dimen/valueSize"
+                                android:textStyle="bold" />
+
+                            <Button
+                                android:id="@+id/soundChange"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end"
+                                android:layout_marginEnd="20dp"
+                                android:background="@drawable/transparent"
+                                android:text="Good morning little looser" />
+                        </FrameLayout>
+
+
+
+
+                    </LinearLayout>
+                </LinearLayout>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"></FrameLayout>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
+
+
+</layout>
+

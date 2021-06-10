@@ -2,34 +2,12 @@ package com.doitstudio.sleepest_master.storage.datastorage
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
-import com.doitstudio.sleepest_master.LiveUserSleepActivity
-import com.doitstudio.sleepest_master.SleepApiData
+import com.doitstudio.sleepest_master.*
+import com.doitstudio.sleepest_master.model.data.MobilePosition
+import com.doitstudio.sleepest_master.model.data.MobileUseFrequency
 import com.google.protobuf.InvalidProtocolBufferException
 import java.io.InputStream
 import java.io.OutputStream
-
-/*
-class AlarmSerializer() : Serializer<Alarm> {
-
-    override fun readFrom(input: InputStream): Alarm {
-        try {
-            return Alarm.parseFrom(input)
-        } catch (exception: InvalidProtocolBufferException) {
-            throw CorruptionException("Cannot read proto.", exception)
-        }
-    }
-
-    override fun writeTo(t: Alarm, output: OutputStream) {
-        t.writeTo(output)
-    }
-
-    override val defaultValue: Alarm = Alarm.newBuilder()
-            .setSleepDuration(28800)
-            .setWakeupEarly(21600)
-            .setWakeupLate(32400)
-            .build()
-}
- */
 
 class SleepApiDataSerializer() : Serializer<SleepApiData> {
 
@@ -48,6 +26,25 @@ class SleepApiDataSerializer() : Serializer<SleepApiData> {
     override val defaultValue: SleepApiData = SleepApiData.getDefaultInstance()
 }
 
+
+class ActivityApiDataSerializer() : Serializer<ActivityApiData> {
+
+    override fun readFrom(input: InputStream): ActivityApiData {
+        try {
+            return ActivityApiData.parseFrom(input)
+        } catch (exception: InvalidProtocolBufferException) {
+            throw CorruptionException("Cannot read proto.", exception)
+        }
+    }
+
+    override fun writeTo(t: ActivityApiData, output: OutputStream) {
+        t.writeTo(output)
+    }
+
+    override val defaultValue: ActivityApiData = ActivityApiData.getDefaultInstance()
+}
+
+
 class LiveUserSleepActivitySerializer() : Serializer<LiveUserSleepActivity> {
 
     override fun readFrom(input: InputStream): LiveUserSleepActivity {
@@ -63,4 +60,47 @@ class LiveUserSleepActivitySerializer() : Serializer<LiveUserSleepActivity> {
     }
 
     override val defaultValue: LiveUserSleepActivity = LiveUserSleepActivity.getDefaultInstance()
+}
+
+class SleepParameterSerializer() : Serializer<SleepParameters> {
+
+    override fun readFrom(input: InputStream): SleepParameters {
+        try {
+            return SleepParameters.parseFrom(input)
+        } catch (exception: InvalidProtocolBufferException) {
+            throw CorruptionException("Cannot read proto.", exception)
+        }
+    }
+
+    override fun writeTo(t: SleepParameters, output: OutputStream) {
+        t.writeTo(output)
+    }
+
+    override val defaultValue: SleepParameters = SleepParameters.newBuilder()
+        .setStandardMobilePosition(MobilePosition.UNIDENTIFIED.ordinal)
+        .setMobileUseFrequency(MobileUseFrequency.getValue(MobileUseFrequency.NONE))
+        .setNormalSleepTime(32400)
+        .setSleepTimeStart(72000)
+        .setSleepTimeEnd(36000)
+        .build()
+}
+
+class BackgroundServiceSerializer() : Serializer<BackgroundService> {
+
+    override fun readFrom(input: InputStream): BackgroundService {
+        try {
+            return BackgroundService.parseFrom(input)
+        } catch (exception: InvalidProtocolBufferException) {
+            throw CorruptionException("Cannot read proto.", exception)
+        }
+    }
+
+    override fun writeTo(t: BackgroundService, output: OutputStream) {
+        t.writeTo(output)
+    }
+
+    override val defaultValue: BackgroundService = BackgroundService.newBuilder()
+        .setIsForegroundActive(false)
+        .setIsBackgroundActive(false)
+        .build()
 }

@@ -9,6 +9,10 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
 
     <application
         android:name=".MainApplication"
@@ -18,11 +22,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SleepestMaster">
-        <activity
-            android:name=".NavigationActivity"
-            android:label="@string/title_activity_navigation">
 
-        </activity>
         <activity
             android:name=".background.ForegroundActivity"
             android:excludeFromRecents="true"
@@ -78,6 +78,10 @@
             android:name=".sleepapi.SleepReceiver"
             android:enabled="true"
             android:exported="true" />
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>
