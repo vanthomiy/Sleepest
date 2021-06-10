@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ScrollView
 import android.widget.TextView
-import androidx.core.util.rangeTo
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationDbRepository
@@ -32,7 +31,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.collections.ArrayList
@@ -57,8 +55,8 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
     private lateinit var sVSleepAnalysisDay : ScrollView
     private lateinit var sVSleepAnalysisWeek : ScrollView
     private lateinit var sVSleepAnalysisMonth : ScrollView
-    private lateinit var sleepSessions : MutableSet<UserSleepSessionEntity> //Maybe switch to Set
-    private lateinit var sleepSessionsData : MutableMap<UserSleepSessionEntity, List<SleepApiRawDataEntity>>
+    private lateinit var sleepSessionIDs : MutableSet<Int> //Maybe switch to Set
+    private lateinit var sleepSessionsData : MutableMap<Int, List<SleepApiRawDataEntity>>
     private var dateOfDiagram  = LocalDate.of(2021, 3, 28) //LocalDate.now()
 
     override fun onCreateView(
@@ -87,7 +85,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
 
         tVDisplayedDay.text = dateOfDiagram.format(DateTimeFormatter.ISO_DATE)
 
-        sleepSessions = mutableSetOf()
+        sleepSessionIDs = mutableSetOf()
         sleepSessionsData = mutableMapOf()
 
         btnSleepAnalysisDay.setOnClickListener {
@@ -159,8 +157,8 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
             for (id in ids) {
                 val session = sleepDbRepository.getSleepSessionById(id).first()
                 session?.let {
-                    sleepSessions.add(session) //Maybe use ID as Key for the day since it can be accessed via .getIdByDateTime(LocalDate.of("Day of interest"))
-                    sleepSessionsData[session] = sleep1DbRepository.getSleepApiRawDataBetweenTimestamps(
+                    sleepSessionIDs.add(id) //Maybe use ID as Key for the day since it can be accessed via .getIdByDateTime(LocalDate.of("Day of interest"))
+                    sleepSessionsData[id] = sleep1DbRepository.getSleepApiRawDataBetweenTimestamps(
                         session.sleepTimes.sleepTimeStart,
                         session.sleepTimes.sleepTimeEnd
                     ).first().sortedBy { x -> x.timestampSeconds }
@@ -189,19 +187,20 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         if (currentMonth != dateOfDiagram.month) {
             getSleepData()
         }
+
         setLineChart()
+        setPieChart()
+        setBarChart()
     }
 
     private fun generateDataLineChart() : ArrayList<Entry> {
         val entries = ArrayList<Entry>()
         var xValue = 0
-        val id = UserSleepSessionEntity.getIdByDateTime(dateOfDiagram)
-        val idsOfMonth = mutableListOf<Int>()
-        val listOfDays = mutableListOf<Int>()
-        val beginOfMonth = dateOfDiagram.minusDays((dateOfDiagram.dayOfMonth - 1).toLong())
-        val absolutDaysOfMonth = dateOfDiagram.lengthOfMonth()
+        val values = sleepSessionsData.getOrDefault(
+                UserSleepSessionEntity.getIdByDateTime(dateOfDiagram),
+                sleepSessionsData[UserSleepSessionEntity.getIdByDateTime(LocalDate.of(2021, 3, 26))]!!)
 
-        for (i in sleepSessionsData[session]!!) {
+        for (i in values) {
             entries.add(Entry(xValue.toFloat(), i.sleepState.ordinal.toFloat()))
             xValue += 1
         }
@@ -233,7 +232,11 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         val entries = ArrayList<PieEntry>()
         var absolute = 0f
 
-        for (i in sleepSessionsData[sleepSessions]!!) { // May not king right now
+        val values = sleepSessionsData.getOrDefault(
+            UserSleepSessionEntity.getIdByDateTime(dateOfDiagram),
+            sleepSessionsData[UserSleepSessionEntity.getIdByDateTime(LocalDate.of(2021, 3, 26))]!!)
+
+        for (i in values ) { //sleepSessionsData[UserSleepSessionEntity.getIdByDateTime(dateOfDiagram)]!!) {
             when (i.sleepState.ordinal) {
                 0 -> { awake += 1f }
                 1 -> { ligthSleep += 1f }
@@ -283,7 +286,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         val entries = ArrayList<BarEntry>()
         var absolute = 0
 
-        for (i in sleepSessions) {
+        for (i in sleepSessionIDs) {
             for (j in sleepSessionsData[i]!!) {
                 when (j.sleepState.ordinal) {
                     0 -> { awake += 1f }
