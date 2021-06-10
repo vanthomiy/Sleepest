@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cL_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_1"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cL_SelectDayWeekMonth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tV_ActualDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Monday 11.05.2021"
+            android:textColor="@color/teal_200"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Monday 11.05.2021" />
+
+        <Button
+            android:id="@+id/btn_SleepAnalysisPreviousDay"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="4dp"
+            android:text="P"
+            app:layout_constraintBottom_toBottomOf="@+id/tV_ActualDay"
+            app:layout_constraintEnd_toStartOf="@+id/tV_ActualDay"
+            app:layout_constraintTop_toTopOf="@+id/tV_ActualDay" />
+
+        <Button
+            android:id="@+id/btn_SleepAnalysisNextDay"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="4dp"
+            android:text="N"
+            app:layout_constraintBottom_toBottomOf="@+id/tV_ActualDay"
+            app:layout_constraintStart_toEndOf="@+id/tV_ActualDay"
+            app:layout_constraintTop_toTopOf="@+id/tV_ActualDay" />
+
+        <Button
+            android:id="@+id/btn_SleepAnalysisDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Day"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_SleepAnalysisWeek"
+            app:layout_constraintEnd_toStartOf="@+id/btn_SleepAnalysisWeek"
+            app:layout_constraintTop_toTopOf="@+id/btn_SleepAnalysisWeek" />
+
+        <Button
+            android:id="@+id/btn_SleepAnalysisWeek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="20dp"
+            android:text="Week"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/tV_ActualDay"
+            app:layout_constraintStart_toStartOf="@+id/tV_ActualDay"
+            app:layout_constraintTop_toBottomOf="@+id/tV_ActualDay" />
+
+        <Button
+            android:id="@+id/btn_SleepAnalysisMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Month"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_SleepAnalysisWeek"
+            app:layout_constraintStart_toEndOf="@+id/btn_SleepAnalysisWeek"
+            app:layout_constraintTop_toTopOf="@+id/btn_SleepAnalysisWeek" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ScrollView
+        android:id="@+id/sV_sleepAnalysisChartsDays"
+        android:layout_width="375dp"
+        android:layout_height="400dp"
+        android:layout_marginTop="24dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cL_SelectDayWeekMonth"
+        tools:visibility="gone">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cL_sleepAnalysisChartsDay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:layout_constraintTop_toTopOf="@+id/sV_sleepAnalysisChartsDays">
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/lineChart_sleepAnalysisDay"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pieChart_sleepAnalysisDay"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lineChart_sleepAnalysisDay" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <ScrollView
+        android:id="@+id/sV_sleepAnalysisChartsWeek"
+        android:layout_width="375dp"
+        android:layout_height="400dp"
+        android:layout_marginTop="24dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cL_SelectDayWeekMonth"
+        tools:visibility="visible" >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cL_sleepAnalysisChartsWeek"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:layout_constraintTop_toTopOf="@+id/sV_sleepAnalysisChartsWeek">
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/barChart_sleepAnalysisWeek"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <ScrollView
+        android:id="@+id/sV_sleepAnalysisChartsMonth"
+        android:layout_width="375dp"
+        android:layout_height="400dp"
+        android:layout_marginTop="24dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cL_SelectDayWeekMonth"
+        tools:visibility="gone" >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cL_sleepAnalysisChartsMonth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:layout_constraintTop_toTopOf="@+id/sV_sleepAnalysisChartsMonth">
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

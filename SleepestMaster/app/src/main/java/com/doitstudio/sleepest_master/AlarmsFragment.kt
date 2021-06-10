@@ -1,5 +1,6 @@
 package com.doitstudio.sleepest_master
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.os.Bundle
@@ -7,11 +8,8 @@ import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
+import android.widget.*
 import androidx.fragment.app.FragmentTransaction
-import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
-import com.doitstudio.sleepest_master.databinding.FragmentAlarmsBinding
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -24,14 +22,12 @@ import kotlinx.coroutines.launch
 class AlarmsFragment() : Fragment() {
 
     //private lateinit var binding: FragmentAlarmsBinding
-
     private val repository by lazy { (actualContext as MainApplication).dataBaseRepository }
     private val scope: CoroutineScope = MainScope()
-
     private val actualContext: Context by lazy {requireActivity().applicationContext}
 
-    lateinit var btnAddAlarmEntity: Button
-    var lLAlarmEntities: LinearLayout? = null
+    private lateinit var btnAddAlarmEntity: Button
+    private var lLContainerAlarmEntities: LinearLayout? = null
     lateinit var allAlarms : MutableList<AlarmEntity>
     lateinit var usedIds : MutableSet<Int>
     lateinit var transactions: MutableMap<Int, FragmentTransaction>
@@ -49,7 +45,7 @@ class AlarmsFragment() : Fragment() {
         }
     }
 
-    fun onAddAlarm(view: View) {
+    private fun onAddAlarm(view: View) {
         var newId = 0
         for (id in usedIds.indices) {
             if (usedIds.contains(newId)) {
@@ -64,11 +60,9 @@ class AlarmsFragment() : Fragment() {
     }
 
     private fun addAlarmEntity(context: Context, alarmId: Int) {
-
         transactions[alarmId] = childFragmentManager.beginTransaction()
         fragments[alarmId] = AlarmInstance(context, alarmId)
-        //fragments[alarmId]?.arguments = intent.extras
-        transactions[alarmId]?.add(R.id.lL_alarmEntities, fragments[alarmId]!!)?.commit()
+        transactions[alarmId]?.add(R.id.lL_containerAlarmEntities, fragments[alarmId]!!)?.commit()
     }
 
     fun removeAlarmEntity(alarmId: Int) {
@@ -82,16 +76,14 @@ class AlarmsFragment() : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         INSTANCE = this
         btnAddAlarmEntity = view.findViewById(R.id.btn_addAlarmEntity)
-        lLAlarmEntities = view.findViewById(R.id.lL_alarmEntities)
+        lLContainerAlarmEntities = view.findViewById(R.id.lL_containerAlarmEntities)
+        usedIds = mutableSetOf()
+        transactions = mutableMapOf()
+        fragments = mutableMapOf()
 
         btnAddAlarmEntity.setOnClickListener{
             view -> onAddAlarm(view)
         }
-
-
-        usedIds = mutableSetOf()
-        transactions = mutableMapOf()
-        fragments = mutableMapOf()
 
         setupAlarms()
     }
@@ -104,10 +96,9 @@ class AlarmsFragment() : Fragment() {
         return inflater.inflate(R.layout.fragment_alarms, container, false)
     }
 
-
     companion object {
-
         // For Singleton instantiation
+        @SuppressLint("StaticFieldLeak")
         @Volatile
         private var INSTANCE: AlarmsFragment? = null
 

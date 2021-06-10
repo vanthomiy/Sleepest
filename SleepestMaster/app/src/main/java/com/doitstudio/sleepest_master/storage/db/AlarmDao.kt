@@ -51,19 +51,12 @@ interface AlarmDao {
     @Query("UPDATE alarm_properties_table SET activeDayOfWeek =:activeDayOfWeek Where id LIKE :alarmId")
     suspend fun updateActiveDayOfWeek(activeDayOfWeek: ArrayList<DayOfWeek>, alarmId:Int)
 
+    @Query("UPDATE alarm_properties_table SET alarmName =:alarmName WHERE id LIKE :alarmId")
+    suspend fun updateAlarmName(alarmName: String, alarmId: Int)
+
     @Delete
     suspend fun delete(alarmEntity: AlarmEntity)
 
     @Query("DELETE FROM alarm_properties_table")
     suspend fun deleteAll()
-
-
-    fun setupAlarmDatabase()
-    {
-        val scope: CoroutineScope = MainScope()
-
-        scope.launch {
-            insert(AlarmEntity())
-        }
-    }
 }
