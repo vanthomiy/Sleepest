@@ -29,7 +29,6 @@ class DataStoreRepositoryTest{
 
         sleepDbRepository = DatabaseRepository.getRepo(
             sleepCalcDatabase.sleepApiRawDataDao(),
-            sleepCalcDatabase.sleepDataDao(),
             sleepCalcDatabase.userSleepSessionDao(),
             sleepCalcDatabase.alarmDao(),
             sleepCalcDatabase.activityApiRawDataDao()

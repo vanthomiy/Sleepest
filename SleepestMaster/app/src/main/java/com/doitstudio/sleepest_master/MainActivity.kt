@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
 
         bottomBar = binding.bottomBar
         alarmsFragment = AlarmsFragment()
-        historyFragment = HistoryFragment()
+        historyFragment = HistoryFragment(applicationContext)
         sleepFragment = SleepFragment()
         profileFragment = ProfileFragment()
 

@@ -69,7 +69,7 @@ class AlarmSettings : FragmentActivity() {
         transactions[alarmId] = supportFragmentManager.beginTransaction()
         fragments[alarmId] = AlarmInstance(context, alarmId)
         fragments[alarmId]?.arguments = intent.extras
-        transactions[alarmId]?.add(R.id.lL_alarmEntities, fragments[alarmId]!!)?.commit()
+        transactions[alarmId]?.add(R.id.sV_alarmEntities, fragments[alarmId]!!)?.commit()
     }
 
     fun removeAlarmEntity(alarmId: Int) {
@@ -81,11 +81,11 @@ class AlarmSettings : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_alarm_settings)
+        setContentView(R.layout.fragment_alarms)
 
         INSTANCE = this
         btnAddAlarmEntity = findViewById(R.id.btn_addAlarmEntity)
-        lLAlarmEntities = findViewById(R.id.lL_alarmEntities)
+        lLAlarmEntities = findViewById(R.id.sV_alarmEntities)
         usedIds = mutableSetOf()
         transactions = mutableMapOf()
         fragments = mutableMapOf()

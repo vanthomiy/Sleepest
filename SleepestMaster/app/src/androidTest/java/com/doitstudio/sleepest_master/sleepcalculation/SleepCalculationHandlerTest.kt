@@ -26,7 +26,6 @@ import java.time.LocalTime
 import java.time.ZoneOffset
 import kotlin.math.abs
 import kotlin.random.Random
-import com.doitstudio.sleepest_master.Alarm as Alarmen
 
 class SleepCalculationHandlerTest
 {
@@ -47,7 +46,6 @@ class SleepCalculationHandlerTest
 
         sleepDbRepository = DatabaseRepository.getRepo(
             sleepCalcDatabase.sleepApiRawDataDao(),
-            sleepCalcDatabase.sleepDataDao(),
             sleepCalcDatabase.userSleepSessionDao(),
             sleepCalcDatabase.alarmDao(),
             sleepCalcDatabase.activityApiRawDataDao()

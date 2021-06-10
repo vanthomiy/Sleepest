@@ -4,14 +4,8 @@ import android.content.Context
 import androidx.lifecycle.asLiveData
 import androidx.test.platform.app.InstrumentationRegistry
 import com.doitstudio.sleepest_master.model.data.SleepState
-import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationDbRepository
-import com.doitstudio.sleepest_master.sleepcalculation.db.SleepCalculationDatabase
-import com.doitstudio.sleepest_master.sleepcalculation.db.UserSleepSessionEntity
-import com.doitstudio.sleepest_master.sleepcalculation.model.algorithm.SleepTimes
-import com.doitstudio.sleepest_master.storage.db.AlarmEntity
-import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
-import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataRealEntity
-import com.doitstudio.sleepest_master.storage.db.SleepDatabase
+import com.doitstudio.sleepest_master.sleepcalculation.model.SleepTimes
+import com.doitstudio.sleepest_master.storage.db.*
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -35,11 +29,6 @@ class DatabaseRepositoryTest {
         SleepDatabase.getDatabase(context)
     }
 
-    private val db1Database by lazy {
-        SleepCalculationDatabase.getDatabase(context)
-    }
-
-
     @Before
     fun init() {
         context = InstrumentationRegistry.getInstrumentation().targetContext
@@ -47,14 +36,9 @@ class DatabaseRepositoryTest {
 
         sleepDatabaseRepository = DatabaseRepository.getRepo(
             dbDatabase.sleepApiRawDataDao(),
-            dbDatabase.sleepDataDao(),
             dbDatabase.userSleepSessionDao(),
             dbDatabase.alarmDao(),
             dbDatabase.activityApiRawDataDao()
-        )
-
-        sleep1DbRepository = SleepCalculationDbRepository.getRepo(
-                db1Database.sleepApiRawDataDao()
         )
     }
 
@@ -132,8 +116,7 @@ class DatabaseRepositoryTest {
     @Test
     fun insertSleepData() = runBlocking {
 
-        sleepDbRepository.deleteUserSleepSession()
-        sleep1DbRepository.deleteSleepApiRawData()
+        sleepDatabaseRepository.deleteUserSleepSession()
 
         // load all data
         var pathTrue = "databases/testdata/SleepValuesTrue.json"
@@ -150,8 +133,12 @@ class DatabaseRepositoryTest {
 
 
 
-        for(i in 45..55){
+        for(i in 45..65) {
 
+
+            if (dataTrue[i].isNullOrEmpty()) {
+                continue
+            }
 
             var startTime = dataTrue[i].filter { x -> x.real != "awake" }.minByOrNull { y -> y.timestampSeconds }!!.timestampSeconds
             var endTimeTime = dataTrue[i].filter { x -> x.real != "awake" }.maxByOrNull { y -> y.timestampSeconds }!!.timestampSeconds
@@ -180,7 +167,7 @@ class DatabaseRepositoryTest {
                 var rawData = SleepApiRawDataEntity(singledata.timestampSeconds, singledata.confidence, singledata.motion, singledata.light, sleepstate)
 
                 rawDataList.add(rawData)
-                sleep1DbRepository.insertSleepApiRawData(rawData)
+                sleepDatabaseRepository.insertSleepApiRawData(rawData)
             }
 
             var sleepTime = SleepTimes(sleepTimeStart = startTime, sleepTimeEnd = endTimeTime)
@@ -191,11 +178,9 @@ class DatabaseRepositoryTest {
             sleepTime.sleepDuration = SleepApiRawDataEntity.getSleepTime(rawDataList)
             val id = UserSleepSessionEntity.getIdByTimeStamp(startTime)
             var session = UserSleepSessionEntity(id, sleepTimes = sleepTime)
-            sleepDbRepository.insertUserSleepSession(session)
+            sleepDatabaseRepository.insertUserSleepSession(session)
 
         }
-
-
 
         var a = 1
     }
