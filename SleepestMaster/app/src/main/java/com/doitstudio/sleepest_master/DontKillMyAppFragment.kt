@@ -6,17 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import dev.doubledot.doki.views.DokiContentView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
 
-/**
- * A simple [Fragment] subclass.
- * Use the [DontKillMyAppFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class DontKillMyAppFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -25,6 +21,13 @@ class DontKillMyAppFragment : DialogFragment() {
             it.setButtonsVisibility(false)
             it.loadContent()
         }
+
+        val tvNoticeDontKillMyApp : TextView = dokiCustomView.findViewById(R.id.tvNoticeDontKillMyApp)
+        tvNoticeDontKillMyApp.setText(getString(R.string.notice_dont_kill_my_app))
+
+
+        val tvDescriptionDontKillMyApp : TextView = dokiCustomView.findViewById(R.id.tvDescriptionDontKillMyApp)
+        tvDescriptionDontKillMyApp.setText(getString(R.string.description_dont_kill_my_app))
 
         return MaterialDialog(requireContext()).show {
             customView(view = dokiCustomView)
