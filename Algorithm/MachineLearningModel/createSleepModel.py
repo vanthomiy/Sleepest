@@ -134,7 +134,12 @@ def trainAndSaveModel(model, val_ds, train_ds, test_ds, modelname, class_weights
 
   dot_img_file = modelname + '/model.png'
   tf.keras.utils.plot_model(model, to_file=dot_img_file, show_shapes=True, rankdir="LR")
-
+  tf.keras.utils.plot_model(model, to_file=dot_img_file, show_shapes=True)
+  tf.keras.utils.plot_model(
+      model, to_file=modelname+'model1.png', show_shapes=False, show_dtype=False,
+      show_layer_names=True, rankdir='TB', expand_nested=False, dpi=96
+  )
+  
   log_confusion_matrix(model,test,path,10, class_names)
 
   convertSaveModelWithCustomOps(modelname, 'litemodels/'+ modelname + '.tflite', False)
@@ -198,6 +203,9 @@ def start04(time, length):
   headers = createHeaders(length)
   all_inputs, encoded_features, val_ds,train_ds, test_ds, test = createFeatures(dataframe, headers)
   model = createModel(2,encoded_features, all_inputs)
+
+
+
   loss, accuracy = trainAndSaveModel(model, val_ds,train_ds, test_ds, 'sleep04'+ str(time), class_weights,class_names, test)
   return loss, accuracy
 

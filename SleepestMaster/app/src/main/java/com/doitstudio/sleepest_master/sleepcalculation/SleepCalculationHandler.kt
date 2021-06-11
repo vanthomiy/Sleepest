@@ -407,8 +407,8 @@ class SleepCalculationHandler(val context: Context) {
             // how long have the user slept already? REM is not counted at the moment!!!
             // use some custom factors...except its not on table, then use just 1
             sleepSessionEntity.sleepTimes.sleepDuration =
-                (sleepSessionEntity.sleepTimes.lightSleepDuration * (if (sleepSessionEntity.mobilePosition != MobilePosition.INBED) 1f else 0.9f) +
-                        sleepSessionEntity.sleepTimes.deepSleepDuration * 1.1f).toInt()
+                (sleepSessionEntity.sleepTimes.lightSleepDuration * (if (sleepSessionEntity.mobilePosition != MobilePosition.INBED) 1f else 1f) +
+                        sleepSessionEntity.sleepTimes.deepSleepDuration * 1f).toInt()
 
 
             // now define the new wakeUpPoint for the user...
@@ -455,7 +455,6 @@ class SleepCalculationHandler(val context: Context) {
         scope.launch { userNotSleeping(null) }
     }
 
-
     /**
      * Defines that the user not fall asleep alredy and we should change the states of the passed data to [SleepState.AWAKE]
      * Only call this at the first 1 to 2 hours of the sleep... because we overwriting all sleep data before
@@ -500,11 +499,9 @@ class SleepCalculationHandler(val context: Context) {
         dataStoreRepository.updateUserSleepTime(0)
     }
 
-
     fun userCurrentlyNotSleepingJob(){
         scope.launch { userCurrentlyNotSleeping(null) }
     }
-
 
     /**
      * Defines that the user is currently awake and we should set the actual state to awake
