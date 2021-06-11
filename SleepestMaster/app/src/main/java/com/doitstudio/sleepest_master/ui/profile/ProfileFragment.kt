@@ -1,6 +1,8 @@
 package com.doitstudio.sleepest_master.ui.profile
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,12 +13,23 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.DontKillMyAppFragment
+import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
 import com.doitstudio.sleepest_master.background.AlarmReceiver
 import com.doitstudio.sleepest_master.background.ForegroundService
 import com.doitstudio.sleepest_master.background.ForegroundService.*
 import com.doitstudio.sleepest_master.model.data.Actions
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import java.io.File
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -105,10 +118,10 @@ class ProfileFragment : Fragment() {
             startForegroundIntent.putExtra("intent", 1)
             startActivity(startForegroundIntent)*/
             //val calendar = Calendar.getInstance()
-
+            export();
 
             //AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 2, actualContext, 2)
-            Toast.makeText(actualContext, "Gut gemacht, die App wird jetzt zerstört", Toast.LENGTH_LONG).show()
+            //Toast.makeText(actualContext, "Gut gemacht, die App wird jetzt zerstört", Toast.LENGTH_LONG).show()
 
 
  }
@@ -117,6 +130,71 @@ class ProfileFragment : Fragment() {
 
         return root
     }
+
+
+    // region export
+
+    var sleepOutClassifyOutputExportBed = ""
+
+    private val repository by lazy { (actualContext as MainApplication).dataBaseRepository }
+
+    private fun dataPrep() = runBlocking{
+        val data = repository.allSleepApiRawData.first()
+        data.forEach {
+
+            val time = it.timestampSeconds.toLong() * 1000; // wokraround to change format
+
+            val instantNow = Instant.now()
+            val date = millisToDateTime(time)
+            sleepOutClassifyOutputExportBed += "${date.toLocalDate()};${date.hour}:${date.minute};${it.confidence};${(it.light)};${(it.motion)};0\n"
+            // Just display values that are shorter than 24Hours away
+        }
+    }
+
+    fun export(){
+        dataPrep()
+
+        var switchExportFile =  "Datum;Uhrzeit;Schlaf;Licht;Bewegung;Wahre Zeiten"
+
+        val splitOut  = sleepOutClassifyOutputExportBed.split("\n")
+
+        splitOut.reversed().forEach {
+            switchExportFile += "${it}\n";
+        }
+
+        val shareIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, switchExportFile)
+            type = "text/csv"
+        }
+
+        startActivity(Intent.createChooser(shareIntent, "Export data"))
+    }
+
+    private fun millisToStringDateTime(millis: Long) : String {
+        // define once somewhere in order to reuse it
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+
+        // JVM representation of a millisecond epoch absolute instant
+        val instant = Instant.ofEpochMilli(millis)
+
+        // Adding the timezone information to be able to format it (change accordingly)
+        val date = LocalDateTime.ofInstant(instant, ZoneId.systemDefault())//.plusHours(1) //reudiger workaround haha
+        return formatter.format(date) // 10/12/2019 06:35:45
+    }
+
+    private fun millisToDateTime(millis: Long) : LocalDateTime {
+        // define once somewhere in order to reuse it
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+
+        // JVM representation of a millisecond epoch absolute instant
+        val instant = Instant.ofEpochMilli(millis)
+
+        // Adding the timezone information to be able to format it (change accordingly)
+        return LocalDateTime.ofInstant(instant, ZoneId.systemDefault())//.plusHours(1) //reudiger workaround haha
+    }
+
+    //endregion
 
 }
 

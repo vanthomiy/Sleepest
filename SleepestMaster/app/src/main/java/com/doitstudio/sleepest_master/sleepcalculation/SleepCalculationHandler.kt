@@ -345,6 +345,12 @@ class SleepCalculationHandler(val context: Context) {
                 dataBaseRepository.getSleepApiRawDataFromDateLive(time).first()
                     .sortedBy { x -> x.timestampSeconds }
 
+            if (sleepApiRawDataEntity == null || sleepApiRawDataEntity.count() == 0) {
+                // do something!
+
+                return@launch
+            }
+
             // calculate all sleep states when the user is sleeping
             val id =
                 UserSleepSessionEntity.getIdByTimeStamp(sleepApiRawDataEntity.minOf { x -> x.timestampSeconds })
@@ -401,8 +407,8 @@ class SleepCalculationHandler(val context: Context) {
             // how long have the user slept already? REM is not counted at the moment!!!
             // use some custom factors...except its not on table, then use just 1
             sleepSessionEntity.sleepTimes.sleepDuration =
-                (sleepSessionEntity.sleepTimes.lightSleepDuration * (if (sleepSessionEntity.mobilePosition != MobilePosition.INBED) 1f else 0.9f) +
-                        sleepSessionEntity.sleepTimes.deepSleepDuration * 1.1f).toInt()
+                (sleepSessionEntity.sleepTimes.lightSleepDuration * (if (sleepSessionEntity.mobilePosition != MobilePosition.INBED) 1f else 1f) +
+                        sleepSessionEntity.sleepTimes.deepSleepDuration * 1f).toInt()
 
 
             // now define the new wakeUpPoint for the user...
@@ -422,11 +428,7 @@ class SleepCalculationHandler(val context: Context) {
 
             var restSleepTime = sleepDuration - (sleepSessionEntity.sleepTimes.sleepDuration * 60)
 
-            if (restSleepTime < 3000) {
-                restSleepTime = 3000
-            }
-
-            val actualTimeSeconds = getSecondsOfDay()
+            val actualTimeSeconds = localTime?.toLocalTime()?.toSecondOfDay() ?: getSecondsOfDay()
             var wakeUpTime = actualTimeSeconds + (restSleepTime)
             //var wakeUpTimeNew = 0
             // if in bed then check the single states of the sleep
@@ -437,6 +439,11 @@ class SleepCalculationHandler(val context: Context) {
             // store in the alarm...!!!
             dataBaseRepository.updateWakeupTime(wakeupTime = wakeUpTime, alarm.id)
 
+            val last = sleepApiRawDataEntity.last().timestampSeconds
+            dataBaseRepository.updateSleepApiRawDataWakeUp(
+                last,
+                wakeUpTime
+            )
 
 
             dataStoreRepository.updateUserSleepTime(sleepSessionEntity.sleepTimes.sleepDuration)
@@ -447,7 +454,6 @@ class SleepCalculationHandler(val context: Context) {
     fun userNotSleepingJob(){
         scope.launch { userNotSleeping(null) }
     }
-
 
     /**
      * Defines that the user not fall asleep alredy and we should change the states of the passed data to [SleepState.AWAKE]
@@ -493,11 +499,9 @@ class SleepCalculationHandler(val context: Context) {
         dataStoreRepository.updateUserSleepTime(0)
     }
 
-
     fun userCurrentlyNotSleepingJob(){
         scope.launch { userCurrentlyNotSleeping(null) }
     }
-
 
     /**
      * Defines that the user is currently awake and we should set the actual state to awake

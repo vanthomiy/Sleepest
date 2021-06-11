@@ -184,6 +184,7 @@ class MainActivity : AppCompatActivity() {
         //saveTextFile()
     }
 
+
     private fun CreateFile(){
         val HEADER = "Datum;Uhrzeit;Schlaf;Licht;Bewegung;Wahre Zeiten"
 

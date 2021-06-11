@@ -1,9 +1,9 @@
 import createSleepModel as csm
 
-
-loss, accuracy = csm.start04(5,24)
-loss1, accuracy1 = csm.start04(10,12)
-loss2, accuracy2 = csm.start04(30,4)
+#24
+loss, accuracy = csm.start04(5,10)
+#loss1, accuracy1 = csm.start04(10,12)
+#loss2, accuracy2 = csm.start04(30,4)
 
 '''
 loss3, accuracy3 = csm.start12(5,23)
@@ -18,8 +18,8 @@ loss9, accuracy9 = csm.startTableBed(5)
 '''
 
 print('1. ' + str(loss) +'. and .'+ str(accuracy))
-print('2. ' + str(loss1) +'. and .'+ str(accuracy1))
-print('3. ' + str(loss2) +'. and .'+ str(accuracy2))
+#print('2. ' + str(loss1) +'. and .'+ str(accuracy1))
+#print('3. ' + str(loss2) +'. and .'+ str(accuracy2))
 
 '''
 print('4. ' + str(loss3) +'. and .'+ str(accuracy3))

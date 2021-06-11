@@ -23,7 +23,6 @@ import kotlin.collections.ArrayList
  */
 class DatabaseRepository(
     private val sleepApiRawDataDao: SleepApiRawDataDao,
-    private val sleepSegmentDao: SleepSegmentDao,
     private val userSleepSessionDao: UserSleepSessionDao,
     private val alarmDao: AlarmDao,
     private val activityApiRawDataDao: ActivityApiRawDataDao
@@ -37,13 +36,12 @@ class DatabaseRepository(
 
         fun getRepo(
             sleepApiRawDataDao: SleepApiRawDataDao,
-            sleepSegmentDao: SleepSegmentDao,
             userSleepSessionDao: UserSleepSessionDao,
             alarmDao: AlarmDao,
             activityApiRawDataDao: ActivityApiRawDataDao
         ): DatabaseRepository {
             return INSTANCE ?: synchronized(this) {
-                val instance = DatabaseRepository(sleepApiRawDataDao, sleepSegmentDao, userSleepSessionDao, alarmDao, activityApiRawDataDao)
+                val instance = DatabaseRepository(sleepApiRawDataDao, userSleepSessionDao, alarmDao, activityApiRawDataDao)
                 INSTANCE = instance
                 // return instance
                 instance
@@ -119,6 +117,11 @@ class DatabaseRepository(
         return sleepApiRawDataDao.getBetween(startTime,endTime)
     }
 
+    fun getSleepApiRawDataBetweenTimestamps(startTime: Int, endTime: Int): Flow<List<SleepApiRawDataEntity>>
+    {
+        return sleepApiRawDataDao.getBetween(startTime, endTime)
+    }
+
     suspend fun insertSleepApiRawData(sleepClassifyEventEntity: SleepApiRawDataEntity) {
         sleepApiRawDataDao.insert(sleepClassifyEventEntity)
     }
@@ -138,8 +141,11 @@ class DatabaseRepository(
     suspend fun updateOldSleepApiRawDataSleepState(id: Int, sleepState: SleepState){
         sleepApiRawDataDao.updateOldSleepState(id,sleepState )
     }
-    //endregion
 
+    suspend fun updateSleepApiRawDataWakeUp(id: Int, wakeup: Int){
+        sleepApiRawDataDao.updateWakeUp(id,wakeup )
+    }
+    //endregion
 
     //region Activity API Data
 
@@ -211,8 +217,6 @@ class DatabaseRepository(
 
 //endregion
 
-
-
     //region User Sleep Sessions
 
     val allUserSleepSessions: Flow<List<UserSleepSessionEntity>> =
@@ -238,31 +242,6 @@ class DatabaseRepository(
 
     suspend fun deleteUserSleepSession() {
         userSleepSessionDao.deleteAll()
-    }
-
-    //endregion
-
-    //region Sleep Segments
-
-    // Methods for SleepSegmentDao
-    // Observed Flow will notify the observer when the data has changed.
-    val allSleepSegments: Flow<List<SleepSegmentEntity>> =
-            sleepSegmentDao.getAll()
-
-    suspend fun insertSleepSegment(sleepClassifyEventEntity: SleepSegmentEntity) {
-        sleepSegmentDao.insert(sleepClassifyEventEntity)
-    }
-
-    suspend fun deleteSleepSegmentsWithin(start: Int, end: Int) {
-        sleepSegmentDao.deleteWithin(start, end)
-    }
-
-    suspend fun deleteSleepSegments() {
-        sleepSegmentDao.deleteAll()
-    }
-
-    suspend fun insertSleepSegments(sleepClassifyEventEntities: List<SleepSegmentEntity>) {
-        sleepSegmentDao.insertAll(sleepClassifyEventEntities)
     }
 
     //endregion
@@ -347,6 +326,10 @@ class DatabaseRepository(
 
     suspend fun deleteAllAlarms() {
         alarmDao.deleteAll()
+    }
+
+    suspend fun updateAlarmName(alarmName: String, alarmId: Int) {
+        alarmDao.updateAlarmName(alarmName, alarmId)
     }
 
     //endregion

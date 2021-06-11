@@ -161,6 +161,8 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+    <string name="x">X</string>
+    <string name="active_Weekdays">Wochentage</string>
     <string name="sleeptimedescription">Setup your usual sleep times. Beetween the start and end-time we will check if you are sleeping</string>
     <string name="target_sleep_time">target time</string>
     <!-- TODO: Remove or change this placeholder text -->

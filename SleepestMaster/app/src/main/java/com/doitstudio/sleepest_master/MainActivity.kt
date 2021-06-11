@@ -15,6 +15,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.asLiveData
 import com.doitstudio.sleepest_master.background.AlarmReceiver
 import com.doitstudio.sleepest_master.background.ForegroundService
@@ -72,7 +73,7 @@ class MainActivity : AppCompatActivity() {
 
         bottomBar = binding.bottomBar
         alarmsFragment = AlarmsFragment()
-        historyFragment = HistoryFragment()
+        historyFragment = HistoryFragment(applicationContext)
         sleepFragment = SleepFragment()
         profileFragment = ProfileFragment()
 
