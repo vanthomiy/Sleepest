@@ -103,7 +103,7 @@ public class ForegroundService extends LifecycleService {
         if (!foregroundObserver.getSubscribeStatus()) {
             sleepHandler.startSleepHandler();
             AlarmReceiver.cancelAlarm(getApplicationContext(), 6);
-            AlarmReceiver.cancelAlarm(getApplicationContext(), 7);
+            //AlarmReceiver.cancelAlarm(getApplicationContext(), 7);
             Workmanager.startPeriodicWorkmanager(16, getApplicationContext());
             Calendar calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeEndJob());
             AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(),7);
@@ -146,13 +146,13 @@ public class ForegroundService extends LifecycleService {
         calenderCalculation.set(Calendar.SECOND, 0);
         calenderCalculation.add(Calendar.SECOND, alarmEntity.getWakeupEarly() - 1800);
 
-        if (AlarmReceiver.isAlarmManagerActive(getApplicationContext(), 5)) {
+        /*if (AlarmReceiver.isAlarmManagerActive(getApplicationContext(), 5)) {
             AlarmReceiver.cancelAlarm(getApplicationContext(), 5);
-        }
+        }*/
 
-        if (!AlarmReceiver.isAlarmManagerActive(getApplicationContext(), 5)) {
+        //if (!AlarmReceiver.isAlarmManagerActive(getApplicationContext(), 5)) {
             AlarmReceiver.startAlarmManager(calenderCalculation.get(Calendar.DAY_OF_WEEK), calenderCalculation.get(Calendar.HOUR_OF_DAY), calenderCalculation.get(Calendar.MINUTE), getApplicationContext(), 5);
-        }
+        //}
 
         sleepCalculationHandler.checkIsUserSleeping(null);
 
@@ -193,7 +193,6 @@ public class ForegroundService extends LifecycleService {
         //Workmanager.stopPeriodicWorkmanager();
         WorkmanagerCalculation.stopPeriodicWorkmanager();
 
-        AlarmClockReceiver.cancelAlarm(getApplicationContext(), 4);
         AlarmReceiver.cancelAlarm(getApplicationContext(), 5);
 
         //sleepHandler.stopSleepHandler();
