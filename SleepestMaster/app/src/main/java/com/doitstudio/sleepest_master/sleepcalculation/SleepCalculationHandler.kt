@@ -117,7 +117,7 @@ class SleepCalculationHandler(val context: Context) {
     suspend fun getUserActivityOnDay(time:LocalDateTime) : ActivityOnDay{
 
         val userActivity =
-            dataBaseRepository.getActivityApiRawDataFromDate(time.minusDays(1)!!).first()
+            dataBaseRepository.getActivityApiRawDataFromDate(time.minusDays(1)).first()
                 .sortedBy { x -> x.timestampSeconds }
 
         var activityCount = 0
@@ -430,6 +430,13 @@ class SleepCalculationHandler(val context: Context) {
 
             val actualTimeSeconds = localTime?.toLocalTime()?.toSecondOfDay() ?: getSecondsOfDay()
             var wakeUpTime = actualTimeSeconds + (restSleepTime)
+
+            // if time is greater then 1 day
+            if(wakeUpTime > 86400)
+            {
+                wakeUpTime -= 86400
+            }
+
             //var wakeUpTimeNew = 0
             // if in bed then check the single states of the sleep
             if (sleepSessionEntity.mobilePosition == MobilePosition.INBED) {

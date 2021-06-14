@@ -222,15 +222,21 @@ class DatabaseRepository(
     val allUserSleepSessions: Flow<List<UserSleepSessionEntity>> =
             userSleepSessionDao.getAll()
 
-    fun getSleepSessionById(id: Int): Flow<UserSleepSessionEntity?> =
+    fun getSleepSessionById(id: Int): Flow<List<UserSleepSessionEntity?>> =
             userSleepSessionDao.getById(id)
 
     suspend fun getOrCreateSleepSessionById(id: Int): UserSleepSessionEntity {
-        var userSession = userSleepSessionDao.getById(id).first()
+        //val allData = allUserSleepSessions.first()
+
+
+        var userSession = userSleepSessionDao.getById(id).first().firstOrNull()
+        //val userSession = allData.firstOrNull { x -> x.id == id }
 
         if(userSession == null){
-            userSession = UserSleepSessionEntity(id)
-            insertUserSleepSession(userSession)
+            val session  = UserSleepSessionEntity(id)
+            insertUserSleepSession(session)
+            return session
+
         }
 
         return userSession
