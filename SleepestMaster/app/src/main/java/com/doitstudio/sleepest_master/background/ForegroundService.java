@@ -138,7 +138,6 @@ public class ForegroundService extends LifecycleService {
             wakeLock.acquire(60 * 1000L); //1 minute timeout
         }
 
-
         Toast.makeText(getApplicationContext(), "Foregroundservice started", Toast.LENGTH_LONG).show();
 
         //Start Calculation    +1
@@ -178,37 +177,46 @@ public class ForegroundService extends LifecycleService {
             SharedPreferences.Editor ed = pref.edit();
             ed.putString("exception", "No Exception");
             ed.apply();
+
+            //Save state in preferences
+            isServiceStarted = false;
+            foregroundObserver.setForegroundStatus(false);
+            foregroundObserver.updateAlarmWasFired(true, alarmEntity.getId());
+            //new ServiceTracker().setServiceState(this, ServiceState.STOPPED);
+
+            //Workmanager.stopPeriodicWorkmanager();
+            WorkmanagerCalculation.stopPeriodicWorkmanager();
+
+            AlarmReceiver.cancelAlarm(getApplicationContext(), 5);
+
+            //sleepHandler.stopSleepHandler();
+            Toast.makeText(getApplicationContext(), "Foregroundservice stopped", Toast.LENGTH_LONG).show();
+
+            Calendar calendar = Calendar.getInstance();
+            pref = getSharedPreferences("StopService", 0);
+            ed = pref.edit();
+            ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
+            ed.putInt("minute", calendar.get(Calendar.MINUTE));
+            ed.apply();
+
+            pref = getSharedPreferences("SleepTime", 0);
+            ed = pref.edit();
+            ed.putInt("sleeptime", userSleepTime);
+            ed.apply();
+
+
         } catch (Exception e) {
             SharedPreferences pref = getSharedPreferences("StopException", 0);
             SharedPreferences.Editor ed = pref.edit();
             ed.putString("exception", e.toString());
             ed.apply();
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.SECOND, 60);
+            AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(), 2);
+
         }
-        //Save state in preferences
-        isServiceStarted = false;
-        foregroundObserver.setForegroundStatus(false);
-        foregroundObserver.updateAlarmWasFired(true, alarmEntity.getId());
-        //new ServiceTracker().setServiceState(this, ServiceState.STOPPED);
 
-        //Workmanager.stopPeriodicWorkmanager();
-        WorkmanagerCalculation.stopPeriodicWorkmanager();
-
-        AlarmReceiver.cancelAlarm(getApplicationContext(), 5);
-
-        //sleepHandler.stopSleepHandler();
-        Toast.makeText(getApplicationContext(), "Foregroundservice stopped", Toast.LENGTH_LONG).show();
-
-        Calendar calendar = Calendar.getInstance();
-        SharedPreferences pref = getSharedPreferences("StopService", 0);
-        SharedPreferences.Editor ed = pref.edit();
-        ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
-        ed.putInt("minute", calendar.get(Calendar.MINUTE));
-        ed.apply();
-
-        pref = getSharedPreferences("SleepTime", 0);
-        ed = pref.edit();
-        ed.putInt("sleeptime", userSleepTime);
-        ed.apply();
     }
 
     //endregion
