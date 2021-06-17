@@ -19,6 +19,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.doitstudio.sleepest_master.MainActivity;
+import com.doitstudio.sleepest_master.MainApplication;
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver;
 import com.doitstudio.sleepest_master.model.data.Actions;
@@ -41,7 +42,11 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        DataStoreRepository dataStoreRepository = DataStoreRepository.Companion.getRepo(context);
+        // New from Thomas: With other call...
+        //DataStoreRepository dataStoreRepository = DataStoreRepository.Companion.getRepo(context);
+        DataStoreRepository dataStoreRepository = MainApplication.class.cast(context).getDataStoreRepository();
+
+
         SleepHandler sleepHandler = SleepHandler.Companion.getHandler(context);
         SleepCalculationHandler sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
 

@@ -21,6 +21,7 @@ import androidx.lifecycle.LifecycleService;
 
 import com.doitstudio.sleepest_master.LiveUserSleepActivity;
 import com.doitstudio.sleepest_master.MainActivity;
+import com.doitstudio.sleepest_master.MainApplication;
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.SleepApiData;
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver;
@@ -95,7 +96,10 @@ public class ForegroundService extends LifecycleService {
 
         //Info: the following getId() can not be null, because alarmEntity can not be null with getNextAlarm()
         foregroundObserver.updateAlarmWasFired(false, alarmEntity.getId());
-        dataStoreRepository = DataStoreRepository.Companion.getRepo(getApplicationContext());
+        // New from Thomas: With other call...
+        //dataStoreRepository = DataStoreRepository.Companion.getRepo(getApplicationContext());
+        dataStoreRepository = MainApplication.class.cast(getApplicationContext()).getDataStoreRepository();
+
         sleepHandler =  SleepHandler.Companion.getHandler(getApplicationContext());
 
         //Check if already subscribed, otherwise subscribe to SleepApi and

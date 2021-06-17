@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import java.time.Instant
@@ -139,7 +140,12 @@ class ProfileFragment : Fragment() {
     }
 
     fun export(){
-        dataPrep()
+
+        val handler = SleepCalculationHandler(actualContext)
+
+        handler.defineUserWakeup()
+
+        /*dataPrep()
 
         var switchExportFile =  "Datum;Uhrzeit;Schlaf;Licht;Bewegung;Wahre Zeiten"
 
@@ -155,7 +161,7 @@ class ProfileFragment : Fragment() {
             type = "text/csv"
         }
 
-        startActivity(Intent.createChooser(shareIntent, "Export data"))
+        startActivity(Intent.createChooser(shareIntent, "Export data"))*/
     }
 
     private fun millisToStringDateTime(millis: Long) : String {
