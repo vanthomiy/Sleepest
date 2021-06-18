@@ -171,7 +171,7 @@ public class ForegroundService extends LifecycleService {
     private void stopService() {
         Toast.makeText(this, "Service stopping", Toast.LENGTH_SHORT).show();
         try {
-            if (wakeLock.isHeld()) {
+            if (wakeLock != null && wakeLock.isHeld()) {
                 wakeLock.release();
             }
             stopForeground(true);
