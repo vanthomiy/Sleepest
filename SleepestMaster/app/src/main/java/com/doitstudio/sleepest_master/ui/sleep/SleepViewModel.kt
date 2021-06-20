@@ -20,6 +20,7 @@ import androidx.lifecycle.AndroidViewModel
 import com.doitstudio.Activityest_master.sleepapi.ActivityHandler
 import com.doitstudio.Activityest_master.sleepapi.ActivityTransitionHandler
 import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.model.data.LightConditions
 import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.MobileUseFrequency
@@ -35,7 +36,12 @@ import kotlin.math.abs
 
 class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
+    private fun getStringXml(id:Int): String {
+        return getApplication<Application>().resources.getString(id)
+    }
+
     //region binding values
+
 
     private val scope: CoroutineScope = MainScope()
     private val context by lazy{ getApplication<Application>().applicationContext }
@@ -67,7 +73,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     val sleepStartValue = ObservableField("07:30")
-    val sleepCompleteValue = ObservableField("07:30 to 7:30")
+    val sleepCompleteValue = ObservableField("07:30" + getStringXml(R.string.sleep_sleeptimes_timecombine) +  "7:30")
     val sleepEndValue = ObservableField("07:30")
     var sleepStartTime = LocalTime.now()
     var sleepEndTime = LocalTime.now()
@@ -85,7 +91,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
                     sleepStartValue.set((if (h < 10) "0" else "") + h.toString() + ":" + (if (m < 10) "0" else "") + m.toString())
                     sleepStartTime = LocalTime.of(h, m)
 
-                    sleepCompleteValue.set(sleepStartValue.get() + " to " + sleepEndValue.get())
+                    sleepCompleteValue.set(sleepStartValue.get() +  getStringXml(R.string.sleep_sleeptimes_timecombine)  + sleepEndValue.get())
 
                     scope.launch {
                         dataStoreRepository.updateSleepTimeStart(sleepStartTime.toSecondOfDay())
@@ -109,7 +115,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
                     sleepEndValue.set((if (h < 10) "0" else "") + h.toString() + ":" + (if (m < 10) "0" else "") + m.toString())
 
-                    sleepCompleteValue.set(sleepStartValue.get() + " to " + sleepEndValue.get())
+                    sleepCompleteValue.set(sleepStartValue.get() +   getStringXml(R.string.sleep_sleeptimes_timecombine)   + sleepEndValue.get())
 
                     sleepEndTime = LocalTime.of(h, m)
 
@@ -325,19 +331,19 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
         sleepScoreText.set(when {
             score < 60 -> {
-                "Really bad sleep detection"
+                getStringXml(R.string.sleep_score_text_60)
             }
             score < 70 -> {
-                "Bad sleep detection"
+                getStringXml(R.string.sleep_score_text_70)
             }
             score < 80 -> {
-                "Sleep detection possible"
+                getStringXml(R.string.sleep_score_text_80)
             }
             score < 90 -> {
-                "Good sleep detection possible"
+                getStringXml(R.string.sleep_score_text_90)
             }
             else -> {
-                "Perfect sleep detection possible"
+                getStringXml(R.string.sleep_score_text_100)
             }
         }
 
@@ -372,10 +378,10 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
             autoSleepTime.set(sleepParams.autoSleepTime)
             manualSleepTimeVisibility.set(if (sleepParams.autoSleepTime) View.GONE else View.VISIBLE)
 
-            phonePositionSelections.addAll(arrayListOf<String>("In bed", "On table", "Auto detect"))
+            phonePositionSelections.addAll(arrayListOf<String>(getStringXml(R.string.sleep_phoneposition_inbed), getStringXml(R.string.sleep_phoneposition_ontable), getStringXml(R.string.sleep_phoneposition_auto)))
             mobilePosition.set(sleepParams.standardMobilePosition)
 
-            lightConditionSelections.addAll(arrayListOf<String>("Dark", "Light", "Auto detect"))
+            lightConditionSelections.addAll(arrayListOf<String>(getStringXml(R.string.sleep_lightcondidition_dark), getStringXml(R.string.sleep_lightcondidition_light), getStringXml(R.string.sleep_lightcondidition_auto)))
             mobilePosition.set(sleepParams.standardLightCondition)
 
             activityTracking.set(sleepParams.userActivityTracking)
