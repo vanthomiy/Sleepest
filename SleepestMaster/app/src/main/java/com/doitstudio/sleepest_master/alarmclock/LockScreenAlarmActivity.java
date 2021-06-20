@@ -13,6 +13,7 @@ import android.animation.ValueAnimator;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.DisplayMetrics;
@@ -32,6 +33,7 @@ import com.doitstudio.sleepest_master.background.ForegroundService;
 import com.doitstudio.sleepest_master.model.data.Actions;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 
+import java.io.IOException;
 import java.util.Calendar;
 
 public class LockScreenAlarmActivity extends AppCompatActivity {
@@ -83,6 +85,8 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
 
         AlarmClockAudio.getInstance().init(getApplicationContext());
         AlarmClockAudio.getInstance().startAlarm();
+
+
 
         new CountDownTimer(1000, 1000) {
 

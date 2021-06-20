@@ -104,19 +104,17 @@ public class ForegroundService extends LifecycleService {
 
         //Check if already subscribed, otherwise subscribe to SleepApi and
         //start AlarmManager to disable at the end of sleeptime
-        if (!foregroundObserver.getSubscribeStatus()) {
-            sleepHandler.startSleepHandler();
-            AlarmReceiver.cancelAlarm(getApplicationContext(), 6);
-            //AlarmReceiver.cancelAlarm(getApplicationContext(), 7);
-            Workmanager.startPeriodicWorkmanager(16, getApplicationContext());
-            Calendar calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeEndJob());
-            AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(),7);
-        }
+
+        sleepHandler.startSleepHandler();
+        AlarmReceiver.cancelAlarm(getApplicationContext(), 6);
+        //AlarmReceiver.cancelAlarm(getApplicationContext(), 7);
+        Workmanager.startPeriodicWorkmanager(16, getApplicationContext());
+        Calendar calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeEndJob());
+        AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(),7);
 
         startForeground(1, createNotification("Alarm status: " + isAlarmActive)); /** TODO: Id zentral anlegen */
 
         sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(getApplicationContext());
-
     }
 
 
