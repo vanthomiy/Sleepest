@@ -36,15 +36,25 @@
                 android:id="@+id/linearAnimationlayout"
                 >
 
-
+                <TextView
+                    android:id="@+id/animTextSleep"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Einstellung"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/headerSize"
+                    android:layout_margin="20dp"
+                    android:textStyle="bold"/>
 
                 <androidx.constraintlayout.motion.widget.MotionLayout
                     android:id="@+id/animatedTopView"
                     android:layout_width="match_parent"
-                    android:layout_height="275dp"
+                    android:layout_height="200dp"
                     android:layout_margin="20dp"
                     android:orientation="vertical"
                     android:visibility="visible"
+                    android:background="@drawable/bgroundedwhite"
                     app:layoutDescription="@xml/fragment_profile_scene">
 
 
@@ -55,38 +65,10 @@
                         android:layout_marginLeft="40dp"
                         android:textSize="@dimen/headerSize"
                         android:layout_gravity="start"
-                        android:textColor="@color/white"
-                        android:text="Hallo Thomas"/>
+                        android:textColor="@color/black"
+                        android:text="Wie funktioniert die App?"/>
 
 
-                    <Button
-                        android:id="@+id/appStatus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="App Status: "
-                        android:onClick="@{profileViewModel::onAppStatusClick}"
-                        ></Button>
-                    <Button
-                        android:id="@+id/appFunction"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:onClick="@{profileViewModel::onAppFunctionClick}"
-                        ></Button>
-                    <Button
-                        android:id="@+id/reportProblem"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="left"
-                        android:onClick="@{profileViewModel::onReportProblemClick}"
-                        ></Button>
-                    <Button
-                        android:id="@+id/rateApp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:onClick="@{profileViewModel::onRateAppClick}"
-                        ></Button>
 
                 </androidx.constraintlayout.motion.widget.MotionLayout>
 
@@ -108,7 +90,7 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_gravity="start"
-                            android:src="@drawable/ic_baseline_bedtime_24"
+                            android:src="@drawable/ic_baseline_build_24"
                             app:tint="@color/white" />
                         <TextView
                             android:layout_width="wrap_content"
@@ -124,6 +106,7 @@
                             android:layout_height="25dp"
                             android:layout_gravity="end"
                             android:src="@drawable/ic_baseline_expand_more_24"
+                            android:rotation="@{profileViewModel.designRotation}"
                             android:onClick="@{profileViewModel::onExpandClicked}"
                             android:tag="0"
                             app:tint="@color/white" />
@@ -187,7 +170,7 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_gravity="start"
-                            android:src="@drawable/ic_baseline_bedtime_24"
+                            android:src="@drawable/ic_baseline_help_24"
                             app:tint="@color/white" />
                         <TextView
                             android:layout_width="wrap_content"
@@ -203,6 +186,7 @@
                             android:layout_height="25dp"
                             android:layout_gravity="end"
                             android:src="@drawable/ic_baseline_expand_more_24"
+                            android:rotation="@{profileViewModel.helpRotation}"
                             android:onClick="@{profileViewModel::onExpandClicked}"
                             android:tag="1"
                             app:tint="@color/white" />
@@ -242,6 +226,257 @@
                     </LinearLayout>
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="10dp"
+                    >
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:onClick="@{profileViewModel::onExpandClicked}"
+                        android:tag="2"
+                        >
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="start"
+                            android:src="@drawable/ic_baseline_feedback_24"
+                            app:tint="@color/white" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="40dp"
+                            android:textSize="@dimen/headerSize"
+                            android:layout_gravity="start"
+                            android:textColor="@color/white"
+                            android:text="Die App"/>
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="end"
+                            android:src="@drawable/ic_baseline_expand_more_24"
+                            android:rotation="@{profileViewModel.aboutUsRotation}"
+                            android:onClick="@{profileViewModel::onExpandClicked}"
+                            android:tag="2"
+                            app:tint="@color/white" />
+
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:orientation="vertical"
+                        android:visibility="@{profileViewModel.aboutUsExpand, default=gone}"
+                        >
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:background="@drawable/bgroundedchoosen"
+                            android:textSize="@dimen/valueSize"
+                            android:layout_marginVertical="5dp"
+                            android:text="Verbesserungen vorschlagen"
+                            android:tag="improvement"
+                            android:onClick="@{profileViewModel::onAboutUsClicked}">
+                        </androidx.appcompat.widget.AppCompatButton>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:background="@drawable/bgroundedchoosen"
+                            android:textSize="@dimen/valueSize"
+                            android:layout_marginVertical="5dp"
+                            android:text="App Bewerten"
+                            android:tag="rate"
+                            android:onClick="@{profileViewModel::onAboutUsClicked}">
+                        </androidx.appcompat.widget.AppCompatButton>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:background="@drawable/bgroundedchoosen"
+                            android:textSize="@dimen/valueSize"
+                            android:layout_marginVertical="5dp"
+                            android:text="Fehler melden"
+                            android:tag="error"
+                            android:onClick="@{profileViewModel::onAboutUsClicked}">
+                        </androidx.appcompat.widget.AppCompatButton>
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="10dp"
+                    >
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:onClick="@{profileViewModel::onExpandClicked}"
+                        android:tag="3"
+                        >
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="start"
+                            android:src="@drawable/ic_baseline_person_add_alt_1_24"
+                            app:tint="@color/white" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="40dp"
+                            android:textSize="@dimen/headerSize"
+                            android:layout_gravity="start"
+                            android:textColor="@color/white"
+                            android:text="Berechtigungen"/>
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="end"
+                            android:src="@drawable/ic_baseline_expand_more_24"
+                            android:rotation="@{profileViewModel.permissionsRotation}"
+                            android:onClick="@{profileViewModel::onExpandClicked}"
+                            android:tag="3"
+                            app:tint="@color/white" />
+
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:orientation="vertical"
+                        android:visibility="@{profileViewModel.permissionsExpand, default=gone}"
+                        >
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:background="@drawable/bgroundedchoosen"
+                            android:textSize="@dimen/valueSize"
+                            android:layout_marginVertical="5dp"
+                            android:text="Schlafdaten"
+                            android:tag="sleepActivity"
+                            android:onClick="@{profileViewModel::onPermissionClicked}">
+                        </androidx.appcompat.widget.AppCompatButton>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:background="@drawable/bgroundedchoosen"
+                            android:textSize="@dimen/valueSize"
+                            android:layout_marginVertical="5dp"
+                            android:text="Tägliche Bewegung"
+                            android:tag="dailyActivity"
+                            android:onClick="@{profileViewModel::onPermissionClicked}">
+                        </androidx.appcompat.widget.AppCompatButton>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:background="@drawable/bgroundedchoosen"
+                            android:textSize="@dimen/valueSize"
+                            android:layout_marginVertical="5dp"
+                            android:text="Speicherzugriff"
+                            android:tag="storage"
+                            android:onClick="@{profileViewModel::onPermissionClicked}">
+                        </androidx.appcompat.widget.AppCompatButton>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="10dp"
+                    >
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:onClick="@{profileViewModel::onExpandClicked}"
+                        android:tag="4"
+                        >
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="start"
+                            android:src="@drawable/ic_baseline_sd_storage_24"
+                            app:tint="@color/white" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="40dp"
+                            android:textSize="@dimen/headerSize"
+                            android:layout_gravity="start"
+                            android:textColor="@color/white"
+                            android:text="Daten"/>
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="end"
+                            android:src="@drawable/ic_baseline_expand_more_24"
+                            android:rotation="@{profileViewModel.dataRotation}"
+                            android:onClick="@{profileViewModel::onDataClicked}"
+                            android:tag="4"
+                            app:tint="@color/white" />
+
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:orientation="vertical"
+                        android:visibility="@{profileViewModel.dataExpand, default=gone}"
+                        >
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:background="@drawable/bgroundedchoosen"
+                            android:textSize="@dimen/valueSize"
+                            android:layout_marginVertical="5dp"
+                            android:text="Exportieren"
+                            android:tag="export"
+                            android:onClick="@{profileViewModel::onDataClicked}">
+                        </androidx.appcompat.widget.AppCompatButton>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:background="@drawable/bgroundedchoosen"
+                            android:backgroundTint="@color/red"
+                            android:textSize="@dimen/valueSize"
+                            android:layout_marginVertical="5dp"
+                            android:text="Löschen"
+                            android:tag="delete"
+                            android:onClick="@{profileViewModel::onPermissionClicked}">
+                        </androidx.appcompat.widget.AppCompatButton>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"></FrameLayout>
 
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>

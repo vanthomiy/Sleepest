@@ -81,7 +81,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     // region Help
 
     fun onHelpClicked(view: View) {
-        updateExpandChanged(view.tag.toString(), true)
         when(view.tag.toString()){
             "tutorial" -> "asd"
             "importantSettings" -> "asd"
@@ -97,6 +96,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         when(view.tag.toString()){
             "improvement" -> "asd"
             "rate" -> "asd"
+            "error" -> "asd"
         }
     }
 
@@ -111,8 +111,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     fun onPermissionClicked(view: View) {
         updateExpandChanged(view.tag.toString(), true)
         when(view.tag.toString()){
-            "activity" -> "asd"
-            "alarm" -> "asd"
+            "dailyActivity" -> "asd"
+            "sleepActivity" -> "asd"
             "storage" -> "asd"
         }
     }
@@ -135,6 +135,14 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     val helpExpand = ObservableField(View.GONE)
     val aboutUsExpand = ObservableField(View.GONE)
     val permissionsExpand = ObservableField(View.GONE)
+    val dataExpand = ObservableField(View.GONE)
+
+    val designRotation = ObservableField(0)
+    val helpRotation = ObservableField(0)
+    val aboutUsRotation = ObservableField(0)
+    val permissionsRotation = ObservableField(0)
+    val dataRotation = ObservableField(0)
+
 
     fun onExpandClicked(view: View) {
         updateExpandChanged(view.tag.toString(), true)
@@ -147,6 +155,14 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         helpExpand.set(if (value == "1" && helpExpand.get() == View.GONE) View.VISIBLE else View.GONE)
         aboutUsExpand.set(if (value == "2" && aboutUsExpand.get() == View.GONE) View.VISIBLE else View.GONE)
         permissionsExpand.set(if (value == "3" && permissionsExpand.get() == View.GONE) View.VISIBLE else View.GONE)
+        dataExpand.set(if (value == "4" && dataExpand.get() == View.GONE) View.VISIBLE else View.GONE)
+
+        designRotation.set(if (designExpand.get() == View.GONE) 0 else 180)
+        helpRotation.set(if (helpExpand.get() == View.GONE) 0 else 180)
+        aboutUsRotation.set(if (aboutUsExpand.get() == View.GONE) 0 else 180)
+        permissionsRotation.set(if (permissionsExpand.get() == View.GONE) 0 else 180)
+        dataRotation.set(if (dataExpand.get() == View.GONE) 0 else 180)
+
     }
 
 

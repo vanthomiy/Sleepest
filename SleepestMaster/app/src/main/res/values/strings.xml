@@ -229,6 +229,7 @@
 
     <string name="sleep_sleeptimes_autoOn">Auto erkennung</string>
     <string name="sleep_sleeptimes_autoOff">Benutzerdefiniert</string>
+    <string name="sleep_sleep_header">Schlaf</string>
 
     <!--endregion-->
 
