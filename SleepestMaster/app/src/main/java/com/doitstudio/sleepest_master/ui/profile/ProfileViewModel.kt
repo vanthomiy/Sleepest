@@ -51,31 +51,15 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     }
 
+    // region Design
     val darkMode = ObservableField(true)
     fun darkModeToggled(view: View) {
         scope.launch {
             darkMode.get()?.let {
                 dataStoreRepository.updateAutoSleepTime(it)
-                darkMode.set(!it)
+                //darkMode.set(!it)
             }
         }
-    }
-
-    val designExpand = ObservableField(View.GONE)
-    val helpExpand = ObservableField(View.GONE)
-    val aboutUsExpand = ObservableField(View.GONE)
-    val permissionsExpand = ObservableField(View.GONE)
-    fun onExpandClicked(view: View) {
-        updateExpandChanged(view.tag.toString(), true)
-    }
-    private fun updateExpandChanged(value: String, toggle: Boolean = false) {
-
-        TransitionManager.beginDelayedTransition(transitionsContainer);
-
-        designExpand.set(if (value == "0" && designExpand.get() == View.GONE) View.VISIBLE else View.GONE)
-        helpExpand.set(if (value == "1" && helpExpand.get() == View.GONE) View.VISIBLE else View.GONE)
-        aboutUsExpand.set(if (value == "2" && aboutUsExpand.get() == View.GONE) View.VISIBLE else View.GONE)
-        permissionsExpand.set(if (value == "3" && permissionsExpand.get() == View.GONE) View.VISIBLE else View.GONE)
     }
 
     val languageSelections = ObservableArrayList<String>()
@@ -91,6 +75,81 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         }
 
     }
+
+    // endregion
+
+    // region Help
+
+    fun onHelpClicked(view: View) {
+        updateExpandChanged(view.tag.toString(), true)
+        when(view.tag.toString()){
+            "tutorial" -> "asd"
+            "importantSettings" -> "asd"
+        }
+    }
+
+    // endregion
+
+    // region About us
+
+    fun onAboutUsClicked(view: View) {
+        updateExpandChanged(view.tag.toString(), true)
+        when(view.tag.toString()){
+            "improvement" -> "asd"
+            "rate" -> "asd"
+        }
+    }
+
+    // endregion
+
+    // region Permissions
+
+    val activityPermission = ObservableField(false)
+    val alarmPermission = ObservableField(false)
+    val storagePermission = ObservableField(false)
+
+    fun onPermissionClicked(view: View) {
+        updateExpandChanged(view.tag.toString(), true)
+        when(view.tag.toString()){
+            "activity" -> "asd"
+            "alarm" -> "asd"
+            "storage" -> "asd"
+        }
+    }
+
+    // endregion
+
+    // region Data
+
+    fun onDataClicked(view: View) {
+        updateExpandChanged(view.tag.toString(), true)
+        when(view.tag.toString()){
+            "export" -> "asd"
+            "remove" -> "asd"
+        }
+    }
+
+    // endregion
+
+    val designExpand = ObservableField(View.GONE)
+    val helpExpand = ObservableField(View.GONE)
+    val aboutUsExpand = ObservableField(View.GONE)
+    val permissionsExpand = ObservableField(View.GONE)
+
+    fun onExpandClicked(view: View) {
+        updateExpandChanged(view.tag.toString(), true)
+    }
+    private fun updateExpandChanged(value: String, toggle: Boolean = false) {
+
+        TransitionManager.beginDelayedTransition(transitionsContainer);
+
+        designExpand.set(if (value == "0" && designExpand.get() == View.GONE) View.VISIBLE else View.GONE)
+        helpExpand.set(if (value == "1" && helpExpand.get() == View.GONE) View.VISIBLE else View.GONE)
+        aboutUsExpand.set(if (value == "2" && aboutUsExpand.get() == View.GONE) View.VISIBLE else View.GONE)
+        permissionsExpand.set(if (value == "3" && permissionsExpand.get() == View.GONE) View.VISIBLE else View.GONE)
+    }
+
+
     //endregion
 
     init {

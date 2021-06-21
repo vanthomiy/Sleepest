@@ -8,11 +8,11 @@
         <Constraint
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_marginEnd="10dp"
             android:layout_marginTop="20dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:id="@+id/appStatus" />
+            android:id="@+id/appStatus"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </ConstraintSet>
 

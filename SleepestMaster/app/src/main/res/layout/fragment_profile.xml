@@ -37,6 +37,7 @@
                 >
 
 
+
                 <androidx.constraintlayout.motion.widget.MotionLayout
                     android:id="@+id/animatedTopView"
                     android:layout_width="match_parent"
@@ -46,11 +47,23 @@
                     android:visibility="visible"
                     app:layoutDescription="@xml/fragment_profile_scene">
 
+
+                    <TextView
+                        android:id="@+id/header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="40dp"
+                        android:textSize="@dimen/headerSize"
+                        android:layout_gravity="start"
+                        android:textColor="@color/white"
+                        android:text="Hallo Thomas"/>
+
+
                     <Button
                         android:id="@+id/appStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="left"
+                        android:text="App Status: "
                         android:onClick="@{profileViewModel::onAppStatusClick}"
                         ></Button>
                     <Button
@@ -75,8 +88,6 @@
                         android:onClick="@{profileViewModel::onRateAppClick}"
                         ></Button>
 
-
-
                 </androidx.constraintlayout.motion.widget.MotionLayout>
 
                 <LinearLayout
@@ -90,6 +101,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="5dp"
                         android:layout_marginHorizontal="10dp"
+                        android:onClick="@{profileViewModel::onExpandClicked}"
+                        android:tag="0"
                         >
                         <ImageView
                             android:layout_width="25dp"
@@ -110,7 +123,7 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_gravity="end"
-                            android:src="@drawable/ic_baseline_info_24"
+                            android:src="@drawable/ic_baseline_expand_more_24"
                             android:onClick="@{profileViewModel::onExpandClicked}"
                             android:tag="0"
                             app:tint="@color/white" />
@@ -123,7 +136,6 @@
                         android:layout_marginVertical="10dp"
                         android:orientation="vertical"
                         android:visibility="@{profileViewModel.designExpand, default=gone}"
-                        android:background="@drawable/bgroundedchoosen"
                         >
 
                         <ToggleButton
@@ -156,6 +168,80 @@
 
                     </LinearLayout>
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="10dp"
+                    >
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:onClick="@{profileViewModel::onExpandClicked}"
+                        android:tag="1"
+                        >
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="start"
+                            android:src="@drawable/ic_baseline_bedtime_24"
+                            app:tint="@color/white" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="40dp"
+                            android:textSize="@dimen/headerSize"
+                            android:layout_gravity="start"
+                            android:textColor="@color/white"
+                            android:text="Hilfe"/>
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="end"
+                            android:src="@drawable/ic_baseline_expand_more_24"
+                            android:onClick="@{profileViewModel::onExpandClicked}"
+                            android:tag="1"
+                            app:tint="@color/white" />
+
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:orientation="vertical"
+                        android:visibility="@{profileViewModel.helpExpand, default=gone}"
+                        >
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:background="@drawable/bgroundedchoosen"
+                            android:textSize="@dimen/valueSize"
+                            android:layout_marginVertical="5dp"
+                            android:text="Tutorial"
+                            android:tag="tutorial"
+                            android:onClick="@{profileViewModel::onHelpClicked}">
+                        </androidx.appcompat.widget.AppCompatButton>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:background="@drawable/bgroundedchoosen"
+                            android:textSize="@dimen/valueSize"
+                            android:layout_marginVertical="5dp"
+                            android:text="Wichtige Einstellungen"
+                            android:tag="importantSettings"
+                            android:onClick="@{profileViewModel::onHelpClicked}">
+                        </androidx.appcompat.widget.AppCompatButton>
+
+                    </LinearLayout>
+                </LinearLayout>
+
 
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
