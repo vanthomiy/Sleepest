@@ -1,31 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.profile.ProfileFragment">
 
-    <TextView
-        android:id="@+id/text_dashboard"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:text="Hi fabi"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <data>
+        <variable
+            name="profileViewModel"
+            type="com.doitstudio.sleepest_master.ui.profile.ProfileViewModel" />
+    </data>
 
-    <Button
-        android:id="@+id/btnStartForegroundTest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        app:layout_constraintBottom_toTopOf="@+id/text_dashboard"
-        tools:ignore="MissingConstraints" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#1a1a1a"
+        >
+
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:clipToPadding="true"
+            android:fillViewport="true"
+            android:onScrollChangeListener="@{profileViewModel::onScrollChanged}">
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:windowSoftInputMode="adjustResize"
+                android:id="@+id/linearAnimationlayout"
+                >
+
+
+                <androidx.constraintlayout.motion.widget.MotionLayout
+                    android:id="@+id/animatedTopView"
+                    android:layout_width="match_parent"
+                    android:layout_height="275dp"
+                    android:layout_margin="20dp"
+                    android:orientation="vertical"
+                    android:visibility="visible"
+                    app:layoutDescription="@xml/fragment_profile_scene">
+
+                    <Button
+                        android:id="@+id/appStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:onClick="@{profileViewModel::onAppStatusClick}"
+                        ></Button>
+                    <Button
+                        android:id="@+id/appFunction"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:onClick="@{profileViewModel::onAppFunctionClick}"
+                        ></Button>
+                    <Button
+                        android:id="@+id/reportProblem"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:onClick="@{profileViewModel::onReportProblemClick}"
+                        ></Button>
+                    <Button
+                        android:id="@+id/rateApp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:onClick="@{profileViewModel::onRateAppClick}"
+                        ></Button>
+
+
+
+                </androidx.constraintlayout.motion.widget.MotionLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="10dp"
+                    >
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginHorizontal="10dp"
+                        >
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="start"
+                            android:src="@drawable/ic_baseline_bedtime_24"
+                            app:tint="@color/white" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="40dp"
+                            android:textSize="@dimen/headerSize"
+                            android:layout_gravity="start"
+                            android:textColor="@color/white"
+                            android:text="Design"/>
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="end"
+                            android:src="@drawable/ic_baseline_info_24"
+                            android:onClick="@{profileViewModel::onExpandClicked}"
+                            android:tag="0"
+                            app:tint="@color/white" />
+
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:orientation="vertical"
+                        android:visibility="@{profileViewModel.designExpand, default=gone}"
+                        android:background="@drawable/bgroundedchoosen"
+                        >
+
+                        <ToggleButton
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:layout_gravity="start"
+                            android:background="@drawable/bgroundedchoosen"
+                            android:textSize="@dimen/valueSize"
+                            android:layout_marginVertical="5dp"
+                            android:onClick="@{profileViewModel::darkModeToggled}"
+                            android:checked="@={profileViewModel.darkMode}"
+                            android:textOn="Dark Mode"
+                            android:textOff="Light Mode">
+
+                        </ToggleButton>
+
+                        <Spinner
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:background="@drawable/bgroundedchoosen"
+                            android:layout_gravity="start"
+                            android:entries="@{profileViewModel.languageSelections}"
+                            android:selectedItemPosition="@={profileViewModel.selectedLanguage}"
+                            android:onItemSelected = "@{profileViewModel::onLanguageChanged}"
+                            android:textAlignment="center"
+                            android:textSize="@dimen/valueSize"
+                            tools:ignore="RtlCompat">
+                        </Spinner>
+
+
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
+
+
+</layout>
+
