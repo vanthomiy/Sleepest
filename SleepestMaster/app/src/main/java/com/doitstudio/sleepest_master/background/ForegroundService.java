@@ -97,7 +97,10 @@ public class ForegroundService extends LifecycleService {
         //Info: the following getId() can not be null, because alarmEntity can not be null with getNextAlarm()
         foregroundObserver.updateAlarmWasFired(false, alarmEntity.getId());
         // New from Thomas: With other call...
-        dataStoreRepository = DataStoreRepository.Companion.getRepo(getApplicationContext());
+        //dataStoreRepository = DataStoreRepository.Companion.getRepo(getApplicationContext());
+        dataStoreRepository = ((MainApplication)getApplicationContext()).getDataStoreRepository();
+
+
         //dataStoreRepository = MainApplication.class.cast(getApplicationContext()).getDataStoreRepository();
 
         sleepHandler =  SleepHandler.Companion.getHandler(getApplicationContext());
