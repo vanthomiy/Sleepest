@@ -63,6 +63,12 @@ public class DetectedActivitiesIntentService extends IntentService {
         // device. Each activity is associated with a confidence level, which is an int between
         // 0 and 100.
         ArrayList<DetectedActivity> detectedActivities = (ArrayList) result.getProbableActivities();
+        int actualCount = PreferenceManager.getDefaultSharedPreferences(this).getInt("Anzahl", 0);
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .edit()
+                .putInt("Anzahl",
+                        actualCount+1)
+                .apply();
 
         PreferenceManager.getDefaultSharedPreferences(this)
                 .edit()

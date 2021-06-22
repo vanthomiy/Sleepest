@@ -56,9 +56,24 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     fun darkModeToggled(view: View) {
         scope.launch {
             darkMode.get()?.let {
-                dataStoreRepository.updateAutoSleepTime(it)
-                //darkMode.set(!it)
+                dataStoreRepository.updateDarkMode(it)
             }
+        }
+    }
+
+    val autoDarkMode = ObservableField(true)
+    val showDarkModeSetting = ObservableField(View.GONE)
+    fun autoDarkModeToggled(view: View) {
+        TransitionManager.beginDelayedTransition(transitionsContainer);
+
+        scope.launch {
+            autoDarkMode.get()?.let {
+                dataStoreRepository.updateAutoDarkMode(it)
+            }
+        }
+
+        autoDarkMode.get()?.let {
+            showDarkModeSetting.set(if(it) View.GONE else View.VISIBLE)
         }
     }
 
@@ -71,7 +86,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             id: Long
     ){
         scope.launch {
-            dataStoreRepository.updateStandardMobilePosition(language)
+            dataStoreRepository.updateLanguage(language)
         }
 
     }

@@ -130,6 +130,7 @@ message  SleepParameters{
 */
   bool endAlarmAfterFired = 9;
 
+
 }
 
 /**
@@ -177,7 +178,7 @@ message BackgroundService{
  * It stores information/status about the actual sleep of the user (live data)
  * Is data available from the calculation handler
  */
-message Settings{
+message SettingsData{
 
   /**
    * Defines if the user currently sleeping
@@ -185,18 +186,25 @@ message Settings{
   bool designDarkMode = 1;
 
   /**
+ * Defines if the user currently sleeping
+ */
+  bool designAutoDarkMode = 2;
+
+  /**
    * Defines if the user currently sleeping
+   * 0 German
+   * 1 English
    */
-  bool designLanguage = 2;
+  int32 designLanguage = 3;
 
   /**
  * Defines if the user currently sleeping
  */
-  bool permissionSleepActivity = 3;
+  bool permissionSleepActivity = 4;
 
   /**
 * Defines if the user currently sleeping
 */
-  bool permissionDailyActivity = 4;
+  bool permissionDailyActivity = 5;
 
 }

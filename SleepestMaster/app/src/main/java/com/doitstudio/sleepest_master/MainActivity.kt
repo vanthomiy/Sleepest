@@ -58,8 +58,6 @@ class MainActivity : AppCompatActivity() {
     private var sleepTimeBeginTemp = 0
     private var earliestWakeupTemp = 0
 
-
-
     // endregion
 
     // region fragments

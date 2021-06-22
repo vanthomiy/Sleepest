@@ -143,6 +143,36 @@ class DataStoreRepository(context: Context) {
     //endregion
 
 
+    //region Settings Status
+
+    private val settingsDataStatus by lazy{ SettingsStatus(context.createDataStore(
+            SETTINGS_STATUS_NAME,
+            serializer = SettingsDataSerializer())
+    )
+    }
+
+
+    val settingsDataFlow: Flow<SettingsData> = settingsDataStatus.settingsData
+
+
+    suspend fun updateAutoDarkMode(isActive:Boolean) =
+            settingsDataStatus.updateAutoDarkMode(isActive)
+
+    suspend fun updateDarkMode(isActive:Boolean) =
+            settingsDataStatus.updateDarkMode(isActive)
+
+    suspend fun updateLanguage(isActive:Int) =
+            settingsDataStatus.updateLanguage(isActive)
+
+    suspend fun updatePermissionSleepActivity(isActive:Boolean) =
+            settingsDataStatus.updatePermissionSleepActivity(isActive)
+
+    suspend fun updatePermissionDailyActivity(isActive:Boolean) =
+            settingsDataStatus.updatePermissionDailyActivity(isActive)
+
+
+    //endregion
+
     //region ActivityApiData Status
 
     private val ActivityApiDataStatus by lazy{ ActivityApiDataStatus(context.createDataStore(
@@ -179,9 +209,7 @@ class DataStoreRepository(context: Context) {
             ActivityApiDataStatus.resetActivityApiValuesAmount()
 
 
-//endregion
-
-
+    //endregion
 
     //region LiveUserSleepActivity Status
 

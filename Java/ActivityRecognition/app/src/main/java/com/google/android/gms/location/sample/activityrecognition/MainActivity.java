@@ -28,6 +28,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.ActivityRecognitionClient;
@@ -87,6 +88,12 @@ public class MainActivity extends AppCompatActivity
         detectedActivitiesListView.setAdapter(mAdapter);
 
         mActivityRecognitionClient = new ActivityRecognitionClient(this);
+
+        int actualCount = PreferenceManager.getDefaultSharedPreferences(this).getInt("Anzahl", 0);
+
+        TextView textView = (TextView) findViewById(R.id.detected_activities_title);
+        textView.setText("Anzahl: " + actualCount );
+
     }
 
     @Override
