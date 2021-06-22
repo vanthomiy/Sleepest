@@ -4,23 +4,6 @@ syntax = "proto3";
 option java_package = "com.doitstudio.sleepest_master";
 option java_multiple_files = true;
 
-/**
- * This is a Alarm Model
- * It stores the preferences that are setup by the User
- */
-
-/*
-message  Alarm{
-   // The amount of sleep the user preferres to recieve
-  int32 sleepDuration = 1;
-
-  // The earliest moment, the user wants to be awaked
-  int32 wakeupEarly = 2;
-
-  // The latest moment, the user want to be awaked
-  int32 wakeupLate = 3;
- }
- */
 
 /**
  * This is a SleepApiData StatusModel
@@ -189,4 +172,31 @@ message BackgroundService{
 
 }
 
+/**
+ * This is a LiveUserSleepActivity StatusModel
+ * It stores information/status about the actual sleep of the user (live data)
+ * Is data available from the calculation handler
+ */
+message Settings{
 
+  /**
+   * Defines if the user currently sleeping
+   */
+  bool designDarkMode = 1;
+
+  /**
+   * Defines if the user currently sleeping
+   */
+  bool designLanguage = 2;
+
+  /**
+ * Defines if the user currently sleeping
+ */
+  bool permissionSleepActivity = 3;
+
+  /**
+* Defines if the user currently sleeping
+*/
+  bool permissionDailyActivity = 4;
+
+}

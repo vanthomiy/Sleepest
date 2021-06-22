@@ -13,19 +13,18 @@
         android:layout_height="match_parent"
         android:layout_gravity="top"
         android:id="@+id/navigationFrame"/>
-    <View
+    <!--View
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_gravity="bottom"
         android:background="@drawable/blurryrect"
-        />
+        /!-->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_margin="30dp"
         android:elevation="2dp"
-        android:background="@drawable/bg"
+        android:background="@drawable/transparent"
         app:menu="@menu/menu_items"
         app:labelVisibilityMode="unlabeled"
         app:itemIconSize="30dp"
