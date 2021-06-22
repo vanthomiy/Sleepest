@@ -32,7 +32,7 @@ class SleepCalculationHandler(val context: Context) {
     // region private helpers
 
     /**
-     * convert datetime to seconds
+     * Gets seconds of day with local time
      */
     fun getSecondsOfDay() : Int{
 
