@@ -54,6 +54,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
     private lateinit var sleepSessionsData : MutableMap<Int, List<SleepApiRawDataEntity>>
     private var dateOfDiagram  = LocalDate.now() //of(2021, 3, 13)
     private var currentAnalysisRange = 0 // Day = 0, Week = 1, Month = 2
+    private var diagrammVisibility = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -80,6 +81,9 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         sVSleepAnalysisWeek = view.findViewById(R.id.sV_sleepAnalysisChartsWeek)
         sVSleepAnalysisMonth = view.findViewById(R.id.sV_sleepAnalysisChartsMonth)
 
+        sleepSessionIDs = mutableSetOf()
+        sleepSessionsData = mutableMapOf()
+
         tVDisplayedDay.text = dateOfDiagram.format(DateTimeFormatter.ISO_DATE)
 
         tVDisplayedDay.setOnClickListener {
@@ -87,28 +91,34 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
             tVDisplayedDay.text = dateOfDiagram.format(DateTimeFormatter.ISO_DATE)
         }
 
-        sleepSessionIDs = mutableSetOf()
-        sleepSessionsData = mutableMapOf()
-
         btnSleepAnalysisDay.setOnClickListener {
+            /*
             sVSleepAnalysisDay.isVisible = true
             sVSleepAnalysisWeek.isVisible = false
             sVSleepAnalysisMonth.isVisible = false
+             */
             currentAnalysisRange = 0
+            setDiagrams()
         }
 
         btnSleepAnalysisWeek.setOnClickListener {
+            /*
             sVSleepAnalysisDay.isVisible = false
             sVSleepAnalysisWeek.isVisible = true
             sVSleepAnalysisMonth.isVisible = false
+            */
             currentAnalysisRange = 1
+            setDiagrams()
         }
 
         btnSleepAnalysisMonth.setOnClickListener {
+            /*
             sVSleepAnalysisDay.isVisible = false
             sVSleepAnalysisWeek.isVisible = false
             sVSleepAnalysisMonth.isVisible = true
+            */
             currentAnalysisRange = 2
+            setDiagrams()
         }
 
         btnSleepAnalysisPreviousDay.setOnClickListener {
@@ -135,6 +145,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         )
 
         getSleepData()
+        setDiagrams()
     }
 
     private fun getSleepData() {
@@ -151,7 +162,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
             for (id in ids) {
                 val session = sleepDbRepository.getSleepSessionById(id).first()
                 session?.let {
-                    sleepSessionIDs.add(id) //Use ID as Key for the day since it can be accessed via .getIdByDateTime(LocalDate.of("Day of interest"))
+                    //sleepSessionIDs.add(id) //Use ID as Key for the day since it can be accessed via .getIdByDateTime(LocalDate.of("Day of interest"))
                     sleepSessionsData[id] = sleepDbRepository.getSleepApiRawDataBetweenTimestamps(
                         session.sleepTimes.sleepTimeStart,
                         session.sleepTimes.sleepTimeEnd
@@ -159,7 +170,6 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
                 }
             }
         }
-        setDiagrams()
     }
 
     private fun generateDateData(direction: Boolean, range: Int) {
@@ -182,13 +192,55 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         if (currentMonth != dateOfDiagram.month) {
             getSleepData()
         }
-
         setDiagrams()
     }
 
     private fun setDiagrams() {
         setLineChart()
         setPieChart()
+
+        when (currentAnalysisRange) {
+            0 -> {
+                if (diagrammVisibility) {
+                    sVSleepAnalysisDay.isVisible = true
+                    sVSleepAnalysisWeek.isVisible = false
+                    sVSleepAnalysisMonth.isVisible = false
+                    tVNoDataAvailable.isVisible = false
+                } else {
+                    sVSleepAnalysisDay.isVisible = false
+                    sVSleepAnalysisWeek.isVisible = false
+                    sVSleepAnalysisMonth.isVisible = false
+                    tVNoDataAvailable.isVisible = true
+                }
+            }
+            1 -> {
+                if (diagrammVisibility) {
+                    sVSleepAnalysisDay.isVisible = false
+                    sVSleepAnalysisWeek.isVisible = true
+                    sVSleepAnalysisMonth.isVisible = false
+                    tVNoDataAvailable.isVisible = false
+                } else {
+                    sVSleepAnalysisDay.isVisible = false
+                    sVSleepAnalysisWeek.isVisible = false
+                    sVSleepAnalysisMonth.isVisible = false
+                    tVNoDataAvailable.isVisible = true
+                }
+            }
+            2 -> {
+                if (diagrammVisibility) {
+                    sVSleepAnalysisDay.isVisible = false
+                    sVSleepAnalysisWeek.isVisible = false
+                    sVSleepAnalysisMonth.isVisible = true
+                    tVNoDataAvailable.isVisible = false
+                } else {
+                    sVSleepAnalysisDay.isVisible = false
+                    sVSleepAnalysisWeek.isVisible = false
+                    sVSleepAnalysisMonth.isVisible = false
+                    tVNoDataAvailable.isVisible = true
+                }
+            }
+        }
+
         //setBarChart()
     }
 
@@ -204,13 +256,11 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
                 entries.add(Entry(xValue.toFloat(), i.sleepState.ordinal.toFloat()))
                 xValue += 1
             }
-            sVSleepAnalysisDay.isVisible = true
-            tVNoDataAvailable.isVisible = false
+            diagrammVisibility = true //Check if all daily diagrams should be visible
         }
         else {
             entries.add(Entry(1F,1F))
-            sVSleepAnalysisDay.isVisible = false
-            tVNoDataAvailable.isVisible = true
+            diagrammVisibility = false //Check if all daily diagrams should be visible
         }
 
         return entries
