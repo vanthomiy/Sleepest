@@ -160,7 +160,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
 
         scope.launch {
             for (id in ids) {
-                val session = sleepDbRepository.getSleepSessionById(id).first()
+                val session = sleepDbRepository.getSleepSessionById(id).first().firstOrNull()
                 session?.let {
                     //sleepSessionIDs.add(id) //Use ID as Key for the day since it can be accessed via .getIdByDateTime(LocalDate.of("Day of interest"))
                     sleepSessionsData[id] = sleepDbRepository.getSleepApiRawDataBetweenTimestamps(

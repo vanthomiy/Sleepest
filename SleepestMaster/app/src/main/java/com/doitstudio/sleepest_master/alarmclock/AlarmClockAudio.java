@@ -3,11 +3,22 @@ package com.doitstudio.sleepest_master.alarmclock;
 /** This class is singleton and you can start the alarm audio from everywhere */
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.CountDownTimer;
 
+import androidx.annotation.RequiresApi;
+
 import com.doitstudio.sleepest_master.R;
+
+import java.io.IOException;
+import java.util.stream.Stream;
 
 public class AlarmClockAudio {
 
@@ -19,6 +30,7 @@ public class AlarmClockAudio {
     private Context appContext;
     private static AlarmClockAudio alarmClockAudioInstance;
 
+
     /**
      * Initialize the singleton class
      * @param context Application context
@@ -26,7 +38,7 @@ public class AlarmClockAudio {
     public void init(Context context) {
         if(appContext == null) {
             this.appContext = context;
-            audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+
         }
     }
 
@@ -79,10 +91,17 @@ public class AlarmClockAudio {
     public void startAlarm() {
 
         mediaPlayer = AlarmClockAudio.getInstance().getMediaPlayer();
+
         mediaPlayer.start();
         mediaPlayer.setLooping(true);
 
+        audioManager = (AudioManager) appContext.getSystemService(Context.AUDIO_SERVICE);
         //Saves the actual audio volume height
+        SharedPreferences pref = appContext.getSharedPreferences("Audio", 0);
+        SharedPreferences.Editor ed = pref.edit();
+        ed.putInt("volume", audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+        ed.apply();
+
         audioVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC) / 2), 0); /**TODO: Settings of Alarm height*/
 
@@ -114,12 +133,18 @@ public class AlarmClockAudio {
             AlarmClockReceiver.restartAlarmManager(600000, getInstanceContext());
         }
 
-        //mediaPlayer = SingleTonExample.getInstance().getMediaPlayer();
+        //restore the audio volume height and cancel countdown and notification
+        //audioManager = (AudioManager) appContext.getSystemService(Context.AUDIO_SERVICE);
+        //audioManager.setStreamVolume(AudioManager.STREAM_ALARM, audioVolume, 0);
+
         mediaPlayer.stop();
         mediaPlayer.setLooping(false);
 
-        //restore the audio volume height and cancel countdown and notification
-        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, audioVolume, 0);
+        SharedPreferences pref = appContext.getSharedPreferences("Audio", 0);
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, pref.getInt("volume", 0), 0);
+
+       // mediaPlayer.setVolume(volume, volume);
+
         countDownTimer.cancel();
         AlarmClockReceiver.cancelNotification();
     }

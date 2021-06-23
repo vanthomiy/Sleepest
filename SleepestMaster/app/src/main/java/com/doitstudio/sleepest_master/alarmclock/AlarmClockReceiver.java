@@ -11,6 +11,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.os.PowerManager;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ import com.doitstudio.sleepest_master.background.AlarmReceiver;
 import com.doitstudio.sleepest_master.background.ForegroundActivity;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 
+import java.io.IOException;
 import java.util.Calendar;
 import static android.content.Context.ALARM_SERVICE;
 
@@ -46,6 +48,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
         switch (intent.getIntExtra(context.getString(R.string.alarm_clock_intent_key), 0)) {
             case 0: break;
             case 1: //Init Alarmclock
+
                 PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
                 if (powerManager.isInteractive()) {
                     showFullscreenNotification();
@@ -55,6 +58,8 @@ public class AlarmClockReceiver extends BroadcastReceiver {
                 break;
             case 2: //Stop button of ScreenOn notification
                 AlarmClockAudio.getInstance().stopAlarm(false);
+                //audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+                //audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0);
 
                 Calendar calendarAlarm = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeBeginJob());
                 AlarmReceiver.startAlarmManager(calendarAlarm.get(Calendar.DAY_OF_WEEK), calendarAlarm.get(Calendar.HOUR_OF_DAY), calendarAlarm.get(Calendar.MINUTE), context, 1);

@@ -24,4 +24,8 @@
     <color name="secondTextColor">#e94560</color>
     <color name="cyan_aqua">#2cfdf9</color>
     <color name="blue_chill">#0f7fa0</color>
+    <color name="gray_blue">#34495e</color>
+    <color name="dark_gray">#2c3e50</color>
+    <color name="dark_green">#27ae60</color>
+    <color name="light_gray">#bdc3c7</color>
 </resources>
