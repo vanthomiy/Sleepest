@@ -5,6 +5,7 @@ package com.doitstudio.sleepest_master.background;
  * like start, stop and foreground notification
  */
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -98,6 +99,8 @@ public class ForegroundService extends LifecycleService {
         foregroundObserver.updateAlarmWasFired(false, alarmEntity.getId());
         // New from Thomas: With other call...
         //dataStoreRepository = DataStoreRepository.Companion.getRepo(getApplicationContext());
+        // activity = (Activity) getApplicationContext();
+        //dataStoreRepository = ((MainApplication)activity.getApplication()).getDataStoreRepository();
         dataStoreRepository = ((MainApplication)getApplicationContext()).getDataStoreRepository();
 
 

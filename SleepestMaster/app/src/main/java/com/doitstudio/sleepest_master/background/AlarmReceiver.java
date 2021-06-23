@@ -2,6 +2,7 @@ package com.doitstudio.sleepest_master.background;
 
 /**This class inherits from Broadcastreceiver and starts an alarm at a specific time and date*/
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -45,7 +46,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         // New from Thomas: With other call...
         //DataStoreRepository dataStoreRepository = DataStoreRepository.Companion.getRepo(context);
         //DataStoreRepository dataStoreRepository = MainApplication.class.cast(context).getDataStoreRepository();
-        DataStoreRepository dataStoreRepository = ((MainApplication)context).getDataStoreRepository();
+        Activity activity = (Activity) context;
+        DataStoreRepository dataStoreRepository = ((MainApplication)activity.getApplication()).getDataStoreRepository();
 
 
         SleepHandler sleepHandler = SleepHandler.Companion.getHandler(context);
