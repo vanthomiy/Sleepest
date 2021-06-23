@@ -17,6 +17,8 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
+
+import com.doitstudio.sleepest_master.MainApplication;
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver;
 import com.doitstudio.sleepest_master.model.data.Actions;
@@ -50,7 +52,7 @@ public class Workmanager extends Worker {
          */
 
 
-        sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
+        sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(MainApplication.Companion.applicationContext());
         sleepCalculationHandler.checkIsUserSleeping(null);
 
         Calendar calendar = Calendar.getInstance();
