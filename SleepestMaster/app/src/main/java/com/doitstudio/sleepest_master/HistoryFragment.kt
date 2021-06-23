@@ -41,6 +41,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
     private lateinit var lineChart: LineChart
     private lateinit var pieChart: PieChart
     private lateinit var tVDisplayedDay: TextView
+    private lateinit var tVNoDataAvailable: TextView
     private lateinit var btnSleepAnalysisDay : Button
     private lateinit var btnSleepAnalysisWeek : Button
     private lateinit var btnSleepAnalysisMonth : Button
@@ -51,7 +52,9 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
     private lateinit var sVSleepAnalysisMonth : ScrollView
     private lateinit var sleepSessionIDs : MutableSet<Int> //Maybe switch to Set
     private lateinit var sleepSessionsData : MutableMap<Int, List<SleepApiRawDataEntity>>
-    private var dateOfDiagram  = LocalDate.of(2021, 3, 13) //LocalDate.now()
+    private var dateOfDiagram  = LocalDate.now() //of(2021, 3, 13)
+    private var currentAnalysisRange = 0 // Day = 0, Week = 1, Month = 2
+    private var diagrammVisibility = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,6 +71,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         lineChart = view.findViewById(R.id.lineChart_sleepAnalysisDay)
         pieChart = view.findViewById(R.id.pieChart_sleepAnalysisDay)
         tVDisplayedDay = view.findViewById(R.id.tV_ActualDay)
+        tVNoDataAvailable = view.findViewById(R.id.tV_noDataAvailable)
         btnSleepAnalysisDay = view.findViewById(R.id.btn_SleepAnalysisDay)
         btnSleepAnalysisWeek = view.findViewById(R.id.btn_SleepAnalysisWeek)
         btnSleepAnalysisMonth = view.findViewById(R.id.btn_SleepAnalysisMonth)
@@ -77,50 +81,59 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         sVSleepAnalysisWeek = view.findViewById(R.id.sV_sleepAnalysisChartsWeek)
         sVSleepAnalysisMonth = view.findViewById(R.id.sV_sleepAnalysisChartsMonth)
 
-        tVDisplayedDay.text = dateOfDiagram.format(DateTimeFormatter.ISO_DATE)
-
         sleepSessionIDs = mutableSetOf()
         sleepSessionsData = mutableMapOf()
 
+        tVDisplayedDay.text = dateOfDiagram.format(DateTimeFormatter.ISO_DATE)
+
+        tVDisplayedDay.setOnClickListener {
+            dateOfDiagram = LocalDate.now()
+            tVDisplayedDay.text = dateOfDiagram.format(DateTimeFormatter.ISO_DATE)
+        }
+
         btnSleepAnalysisDay.setOnClickListener {
+            /*
             sVSleepAnalysisDay.isVisible = true
             sVSleepAnalysisWeek.isVisible = false
             sVSleepAnalysisMonth.isVisible = false
+             */
+            currentAnalysisRange = 0
+            setDiagrams()
         }
 
         btnSleepAnalysisWeek.setOnClickListener {
+            /*
             sVSleepAnalysisDay.isVisible = false
             sVSleepAnalysisWeek.isVisible = true
             sVSleepAnalysisMonth.isVisible = false
+            */
+            currentAnalysisRange = 1
+            setDiagrams()
         }
 
         btnSleepAnalysisMonth.setOnClickListener {
+            /*
             sVSleepAnalysisDay.isVisible = false
             sVSleepAnalysisWeek.isVisible = false
             sVSleepAnalysisMonth.isVisible = true
+            */
+            currentAnalysisRange = 2
+            setDiagrams()
         }
 
         btnSleepAnalysisPreviousDay.setOnClickListener {
-            if (sVSleepAnalysisDay.isVisible) { // Move back in time
-                generateDateData(false, 0) // Day
-            }
-            else if (sVSleepAnalysisWeek.isVisible) {
-                generateDateData(false, 1) // Week
-            }
-            else if (sVSleepAnalysisMonth.isVisible) {
-                generateDateData(false, 2) // Month
+            when (currentAnalysisRange) { // Move back in time
+                0 -> generateDateData(false, 0) // Day
+                1 -> generateDateData(false, 1) // Week
+                2 -> generateDateData(false, 2) // Month
             }
         }
 
         btnSleepAnalysisNextDay.setOnClickListener {
-            if (sVSleepAnalysisDay.isVisible) { // Move ahead in time
-                generateDateData(true, 0) // Day
-            }
-            else if (sVSleepAnalysisWeek.isVisible) {
-                generateDateData(true, 1) // Week
-            }
-            else if (sVSleepAnalysisMonth.isVisible) {
-                generateDateData(true, 2) // Month
+            when (currentAnalysisRange) { // Move ahead in time
+                0 -> generateDateData(true, 0) // Day
+                1 -> generateDateData(true, 1) // Week
+                2 -> generateDateData(true, 2) // Month
             }
         }
 
@@ -132,6 +145,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         )
 
         getSleepData()
+        setDiagrams()
     }
 
     private fun getSleepData() {
@@ -148,7 +162,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
             for (id in ids) {
                 val session = sleepDbRepository.getSleepSessionById(id).first().firstOrNull()
                 session?.let {
-                    sleepSessionIDs.add(id) //Maybe use ID as Key for the day since it can be accessed via .getIdByDateTime(LocalDate.of("Day of interest"))
+                    //sleepSessionIDs.add(id) //Use ID as Key for the day since it can be accessed via .getIdByDateTime(LocalDate.of("Day of interest"))
                     sleepSessionsData[id] = sleepDbRepository.getSleepApiRawDataBetweenTimestamps(
                         session.sleepTimes.sleepTimeStart,
                         session.sleepTimes.sleepTimeEnd
@@ -178,24 +192,77 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         if (currentMonth != dateOfDiagram.month) {
             getSleepData()
         }
+        setDiagrams()
+    }
 
+    private fun setDiagrams() {
         setLineChart()
         setPieChart()
-        setBarChart()
+
+        when (currentAnalysisRange) {
+            0 -> {
+                if (diagrammVisibility) {
+                    sVSleepAnalysisDay.isVisible = true
+                    sVSleepAnalysisWeek.isVisible = false
+                    sVSleepAnalysisMonth.isVisible = false
+                    tVNoDataAvailable.isVisible = false
+                } else {
+                    sVSleepAnalysisDay.isVisible = false
+                    sVSleepAnalysisWeek.isVisible = false
+                    sVSleepAnalysisMonth.isVisible = false
+                    tVNoDataAvailable.isVisible = true
+                }
+            }
+            1 -> {
+                if (diagrammVisibility) {
+                    sVSleepAnalysisDay.isVisible = false
+                    sVSleepAnalysisWeek.isVisible = true
+                    sVSleepAnalysisMonth.isVisible = false
+                    tVNoDataAvailable.isVisible = false
+                } else {
+                    sVSleepAnalysisDay.isVisible = false
+                    sVSleepAnalysisWeek.isVisible = false
+                    sVSleepAnalysisMonth.isVisible = false
+                    tVNoDataAvailable.isVisible = true
+                }
+            }
+            2 -> {
+                if (diagrammVisibility) {
+                    sVSleepAnalysisDay.isVisible = false
+                    sVSleepAnalysisWeek.isVisible = false
+                    sVSleepAnalysisMonth.isVisible = true
+                    tVNoDataAvailable.isVisible = false
+                } else {
+                    sVSleepAnalysisDay.isVisible = false
+                    sVSleepAnalysisWeek.isVisible = false
+                    sVSleepAnalysisMonth.isVisible = false
+                    tVNoDataAvailable.isVisible = true
+                }
+            }
+        }
+
+        //setBarChart()
     }
 
     private fun generateDataLineChart() : ArrayList<Entry> {
         val entries = ArrayList<Entry>()
         var xValue = 0
-        val values = sleepSessionsData.getOrDefault(
-            UserSleepSessionEntity.getIdByDateTime(dateOfDiagram),
-            sleepSessionsData[UserSleepSessionEntity.getIdByDateTime(LocalDate.of(2021, 3, 12))]!!)
+        val values: List<SleepApiRawDataEntity>
 
+        if (sleepSessionsData.containsKey(UserSleepSessionEntity.getIdByDateTime(dateOfDiagram))) {
+            values = sleepSessionsData[UserSleepSessionEntity.getIdByDateTime(dateOfDiagram)]!!
 
-        for (i in values) {
-            entries.add(Entry(xValue.toFloat(), i.sleepState.ordinal.toFloat()))
-            xValue += 1
+            for (i in values) {
+                entries.add(Entry(xValue.toFloat(), i.sleepState.ordinal.toFloat()))
+                xValue += 1
+            }
+            diagrammVisibility = true //Check if all daily diagrams should be visible
         }
+        else {
+            entries.add(Entry(1F,1F))
+            diagrammVisibility = false //Check if all daily diagrams should be visible
+        }
+
         return entries
     }
 
@@ -218,32 +285,36 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
     private fun generateDataPieChart() : ArrayList<PieEntry> {
         var awake = 0f
         var sleep = 0f
-        var ligthSleep = 0f
+        var lightSleep = 0f
         var deepSleep = 0f
         var remSleep = 0f
         val entries = ArrayList<PieEntry>()
         var absolute = 0f
 
-        val values = sleepSessionsData.getOrDefault(
-            UserSleepSessionEntity.getIdByDateTime(dateOfDiagram),
-            sleepSessionsData[UserSleepSessionEntity.getIdByDateTime(LocalDate.of(2021, 3, 12))]!!)
+        val values: List<SleepApiRawDataEntity>
 
-        for (i in values ) { //sleepSessionsData[UserSleepSessionEntity.getIdByDateTime(dateOfDiagram)]!!) {
-            when (i.sleepState.ordinal) {
-                0 -> { awake += 1f }
-                1 -> { ligthSleep += 1f }
-                2 -> { deepSleep += 1f }
-                3 -> { remSleep += 1f }
-                4 -> { sleep += 1f }
+        if (sleepSessionsData.containsKey(UserSleepSessionEntity.getIdByDateTime(dateOfDiagram))) {
+            values = sleepSessionsData[UserSleepSessionEntity.getIdByDateTime(dateOfDiagram)]!!
+
+            for (i in values ) { //sleepSessionsData[UserSleepSessionEntity.getIdByDateTime(dateOfDiagram)]!!) {
+                when (i.sleepState.ordinal) {
+                    0 -> { awake += 1f }
+                    1 -> { lightSleep += 1f }
+                    2 -> { deepSleep += 1f }
+                    3 -> { remSleep += 1f }
+                    4 -> { sleep += 1f }
+                }
+                absolute += 1
             }
-            absolute += 1
         }
 
         if (awake > 0) { entries.add(PieEntry((awake / absolute), "awake")) }
-        if (ligthSleep > 0) { entries.add(PieEntry((ligthSleep / absolute), "light")) }
+        if (lightSleep > 0) { entries.add(PieEntry((lightSleep / absolute), "light")) }
         if (deepSleep > 0) { entries.add(PieEntry((deepSleep / absolute), "deep")) }
         if (remSleep > 0) { entries.add(PieEntry((remSleep / absolute), "rem")) }
         if (sleep > 0) { entries.add(PieEntry((sleep / absolute), "sleep")) }
+
+        if (absolute == 0F) { entries.add(PieEntry(1F, "no data")) }
 
         return entries
     }
