@@ -337,7 +337,7 @@ class SleepCalculationHandler(val context: Context) {
      * Stores alarm data in the main
      * [time] = the actual time in seconds
      */
-    fun defineUserWakeup(localTime: LocalDateTime? = null) {
+    fun defineUserWakeup(localTime: LocalDateTime? = null, setAlarm:Boolean = true) {
         scope.launch {
             // for each sleeping time, we have to define the sleep state
             val time = localTime ?: LocalDateTime.now()
@@ -414,44 +414,53 @@ class SleepCalculationHandler(val context: Context) {
             // now define the new wakeUpPoint for the user...
             // sleep time
 
-            // get user activity
-            val activity = getUserActivityOnDay(time)
-            sleepSessionEntity.userSleepRating.activityOnDay = activity
+            if(setAlarm) {
+                // get user activity
+                val activity = getUserActivityOnDay(time)
+                sleepSessionEntity.userSleepRating.activityOnDay = activity
 
-            // store in the alarm...!!!
-            val alarm = dataBaseRepository.getNextActiveAlarm() ?: return@launch
+                // store in the alarm...!!!
+                val alarm = dataBaseRepository.getNextActiveAlarm() ?: return@launch
 
-            var sleepDuration = alarm.sleepDuration
-            // If include then add the factors to it
-            if(dataStoreRepository.sleepParameterFlow.first().implementUserActivityInSleepTime)
-                sleepDuration = (sleepDuration.toFloat() * ActivityOnDay.getFactor(activity)).toInt()
+                var sleepDuration = alarm.sleepDuration
+                // If include then add the factors to it
+                if (dataStoreRepository.sleepParameterFlow.first().implementUserActivityInSleepTime)
+                    sleepDuration = (sleepDuration.toFloat() * ActivityOnDay.getFactor(activity)).toInt()
 
-            var restSleepTime = sleepDuration - (sleepSessionEntity.sleepTimes.sleepDuration * 60)
+                var restSleepTime = sleepDuration - (sleepSessionEntity.sleepTimes.sleepDuration * 60)
 
-            val actualTimeSeconds = localTime?.toLocalTime()?.toSecondOfDay() ?: getSecondsOfDay()
-            var wakeUpTime = actualTimeSeconds + (restSleepTime)
+                val actualTimeSeconds = localTime?.toLocalTime()?.toSecondOfDay()
+                        ?: getSecondsOfDay()
+                var wakeUpTime = actualTimeSeconds + (restSleepTime)
 
-            // if time is greater then 1 day
-            if(wakeUpTime > 86400)
-            {
-                wakeUpTime -= 86400
+                // if time is greater then 1 day
+                if (wakeUpTime > 86400) {
+                    wakeUpTime -= 86400
+                }
+
+                //var wakeUpTimeNew = 0
+                // if in bed then check the single states of the sleep
+                if (sleepSessionEntity.mobilePosition == MobilePosition.INBED) {
+                    wakeUpTime = findLightUserWakeup(sleepApiRawDataEntity, wakeUpTime)
+                }
+
+                // store in the alarm...!!!
+                dataBaseRepository.updateWakeupTime(wakeupTime = wakeUpTime, alarm.id)
+
+                val last = sleepApiRawDataEntity.last().timestampSeconds
+                dataBaseRepository.updateSleepApiRawDataWakeUp(
+                        last,
+                        wakeUpTime
+                )
+
+                sleepSessionEntity.sleepTimes.sleepTimeEnd = wakeUpTime
+
             }
+            else {
+                sleepSessionEntity.sleepTimes.sleepTimeEnd =
+                        SleepApiRawDataEntity.getSleepEndTime(sleepApiRawDataEntity)
 
-            //var wakeUpTimeNew = 0
-            // if in bed then check the single states of the sleep
-            if (sleepSessionEntity.mobilePosition == MobilePosition.INBED) {
-                wakeUpTime = findLightUserWakeup(sleepApiRawDataEntity, wakeUpTime)
             }
-
-            // store in the alarm...!!!
-            dataBaseRepository.updateWakeupTime(wakeupTime = wakeUpTime, alarm.id)
-
-            val last = sleepApiRawDataEntity.last().timestampSeconds
-            dataBaseRepository.updateSleepApiRawDataWakeUp(
-                last,
-                wakeUpTime
-            )
-
 
             dataStoreRepository.updateUserSleepTime(sleepSessionEntity.sleepTimes.sleepDuration)
             dataBaseRepository.insertUserSleepSession(sleepSessionEntity)
