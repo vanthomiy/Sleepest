@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:elevation="2dp"
-        android:background="@drawable/transparent"
+        android:background="#1a1a1a"
         app:menu="@menu/menu_items"
         app:labelVisibilityMode="unlabeled"
         app:itemIconSize="30dp"
