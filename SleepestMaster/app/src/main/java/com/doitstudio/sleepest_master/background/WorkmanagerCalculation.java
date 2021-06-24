@@ -59,12 +59,6 @@ public class WorkmanagerCalculation extends Worker {
 
     public static void startPeriodicWorkmanager(int duration, Context context1) {
 
-        //Constraints not necessary, but useful
-        /*Constraints constraints = new Constraints.Builder()
-                .setRequiresBatteryNotLow(true) //Trigger fires only, when battery is not low
-                .setRequiresStorageNotLow(true) //Trigger fires only, when enough storage is left
-                .build();*/
-
         PeriodicWorkRequest periodicDataWork =
                 new PeriodicWorkRequest.Builder(WorkmanagerCalculation.class, duration, TimeUnit.MINUTES)
                         .addTag(context1.getString(R.string.workmanager2_tag)) //Tag is needed for canceling the periodic work

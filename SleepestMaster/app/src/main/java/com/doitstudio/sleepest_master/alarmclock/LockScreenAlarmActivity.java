@@ -4,6 +4,7 @@ package com.doitstudio.sleepest_master.alarmclock;
  * cancel or snooze the alarm with buttons.
  */
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.Animator;
@@ -14,6 +15,7 @@ import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.DisplayMetrics;
@@ -77,6 +79,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
         swipeListener = new SwipeListener(relativeLayout);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     protected void onResume() {
         super.onResume();
@@ -218,6 +221,14 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
                                     SharedPreferences.Editor ed = pref.edit();
                                     ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
                                     ed.putInt("minute", calendar.get(Calendar.MINUTE));
+                                    ed.apply();
+
+                                    pref = getSharedPreferences("AlarmReceiver1", 0);
+                                    ed = pref.edit();
+                                    ed.putString("usage", "LockScreenAlarmActivity");
+                                    ed.putInt("day", calendarAlarm.get(Calendar.DAY_OF_WEEK));
+                                    ed.putInt("hour", calendarAlarm.get(Calendar.HOUR_OF_DAY));
+                                    ed.putInt("minute", calendarAlarm.get(Calendar.MINUTE));
                                     ed.apply();
 
                                     finish();
