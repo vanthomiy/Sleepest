@@ -23,8 +23,7 @@
             android:layout_height="match_parent"
             android:scrollbars="none"
             android:clipToPadding="true"
-            android:fillViewport="true"
-            android:onScrollChangeListener="@{profileViewModel::onScrollChanged}">
+            android:fillViewport="true">
 
 
 
@@ -53,7 +52,7 @@
                     android:layout_height="200dp"
                     android:layout_margin="20dp"
                     android:orientation="vertical"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:background="@drawable/bgroundedwhite"
                     app:layoutDescription="@xml/fragment_profile_scene">
 
@@ -121,14 +120,23 @@
                         android:visibility="@{profileViewModel.designExpand, default=gone}"
                         >
 
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="0dp"
+                            android:textSize="@dimen/headerSize"
+                            android:layout_gravity="start"
+                            android:textColor="@color/white"
+                            android:text="Dark Mode"/>
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
+                            android:layout_marginLeft="0dp"
                             android:orientation="vertical"
                             android:layout_marginVertical="10dp"
                             android:background="@drawable/bgroundedchoosen">
-
 
                             <FrameLayout
                                 android:layout_width="match_parent"
@@ -142,7 +150,7 @@
                                     android:textSize="@dimen/valueSize"
                                     android:textColor="@color/white"
                                     android:textStyle="bold"
-                                    android:text="System Dark Mode"
+                                    android:text="Use system settings"
                                     />
 
                                 <Switch
@@ -156,13 +164,13 @@
                                     />
                             </FrameLayout>
 
-                            <View
+                            <!--View
                                 android:layout_width="fill_parent"
                                 android:layout_height="2dp"
                                 android:visibility="@{profileViewModel.showDarkModeSetting}"
-                                android:background="@color/gray" />
+                                android:background="@color/gray" /!-->
 
-                            <FrameLayout
+                            <!--FrameLayout
                                 android:layout_width="match_parent"
                                 android:visibility="@{profileViewModel.showDarkModeSetting}"
                                 android:layout_height="@dimen/valuesHeight">
@@ -189,15 +197,38 @@
 
                                     />
 
-                            </FrameLayout>
+                            </FrameLayout-->
 
                         </LinearLayout>
+
+                    <androidx.appcompat.widget.AppCompatToggleButton
+                        android:layout_width="match_parent"
+                        android:visibility="@{profileViewModel.showDarkModeSetting}"
+                        android:layout_height="@dimen/valuesHeight"
+                        android:background="@drawable/bgroundedchoosen"
+                        android:textOn="Dark Mode"
+                        android:textOff="Light Mode"
+                        android:layout_marginBottom="10dp"
+                        android:checked="@={profileViewModel.darkMode}"
+                        android:onClick="@{profileViewModel::darkModeToggled}"
+                        />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="0dp"
+                            android:textSize="@dimen/headerSize"
+                            android:layout_gravity="start"
+                            android:textColor="@color/white"
+                            android:text="Sprache"/>
 
                         <Spinner
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
                             android:background="@drawable/bgroundedchoosen"
                             android:layout_gravity="start"
+                            android:layout_marginLeft="0dp"
+                            android:layout_marginVertical="10dp"
                             android:entries="@{profileViewModel.languageSelections}"
                             android:selectedItemPosition="@={profileViewModel.selectedLanguage}"
                             android:onItemSelected = "@{profileViewModel::onLanguageChanged}"
@@ -433,19 +464,49 @@
                                 android:layout_marginVertical="5dp"
                                 android:text="Schlafdaten"
                                 android:tag="sleepActivity"
-                                android:onClick="@{profileViewModel::onPermissionClicked}">
+                                android:id="@+id/sleepActivityPermission"
+                                android:onClick="onPermissionClicked">
                             </androidx.appcompat.widget.AppCompatButton>
 
-                            <ImageView
+                            <androidx.appcompat.widget.AppCompatImageView
                                 android:layout_width="35dp"
                                 android:layout_height="35dp"
                                 android:layout_gravity="end"
                                 android:layout_marginTop="5dp"
                                 android:foregroundGravity="center_vertical"
-                                android:src="@drawable/ic_baseline_gpp_bad_24"
-                                app:tint="@color/red" />
+                                android:src="@{profileViewModel.activityPermission ? @drawable/ic_baseline_gpp_good_24 :@drawable/ic_baseline_gpp_bad_24}"
+                                android:tint="@{profileViewModel.activityPermission ? @color/green :@color/red}"/>
 
                         </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="@{profileViewModel.activityPermissionDescription}"
+                            android:layout_margin="10dp"
+                            >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/headerSize"
+                                android:layout_gravity="start"
+                                android:textColor="@color/white"
+                                android:text="ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk"/>
+
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/valuesHeight"
+                                android:background="@drawable/bgroundedchoosen"
+                                android:backgroundTint="@color/red"
+                                android:textSize="@dimen/valueSize"
+                                android:layout_marginVertical="5dp"
+                                android:text="Entfernen"
+                                android:tag="activityPermissionDelete"
+                                android:onClick="@{profileViewModel::onPermissionRemovedClicked}">
+                            </androidx.appcompat.widget.AppCompatButton>
+                        </LinearLayout>
 
                         <FrameLayout
                             android:layout_width="match_parent"
@@ -455,25 +516,54 @@
                             <androidx.appcompat.widget.AppCompatButton
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/valuesHeight"
+                                android:layout_marginVertical="5dp"
                                 android:layout_marginEnd="50dp"
                                 android:background="@drawable/bgroundedchoosen"
-                                android:textSize="@dimen/valueSize"
-                                android:layout_marginVertical="5dp"
-                                android:text="Tägliche Aktivität"
+                                android:onClick="onPermissionClicked"
                                 android:tag="dailyActivity"
-                                android:onClick="@{profileViewModel::onPermissionClicked}">
-                            </androidx.appcompat.widget.AppCompatButton>
+                                android:id="@+id/dailyActivityPermission"
+                                android:text="Tägliche Aktivität"
+                                android:textSize="@dimen/valueSize"></androidx.appcompat.widget.AppCompatButton>
 
-                            <ImageView
+                            <androidx.appcompat.widget.AppCompatImageView
                                 android:layout_width="35dp"
                                 android:layout_height="35dp"
                                 android:layout_marginTop="5dp"
                                 android:layout_gravity="end"
                                 android:foregroundGravity="center_vertical"
-                                android:src="@drawable/ic_baseline_gpp_good_24"
-                                app:tint="@color/green" />
+                                android:src="@{profileViewModel.dailyPermission ? @drawable/ic_baseline_gpp_good_24 :@drawable/ic_baseline_gpp_bad_24}"
+                                android:tint="@{profileViewModel.dailyPermission ? @color/green :@color/red}"/>
 
                         </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="@{profileViewModel.dailyPermissionDescription}"
+                            android:layout_margin="10dp"
+                            >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/headerSize"
+                                android:layout_gravity="start"
+                                android:textColor="@color/white"
+                                android:text="ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk"/>
+
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/valuesHeight"
+                                android:background="@drawable/bgroundedchoosen"
+                                android:backgroundTint="@color/red"
+                                android:textSize="@dimen/valueSize"
+                                android:layout_marginVertical="5dp"
+                                android:text="Entfernen"
+                                android:tag="dailyPermissionDelete"
+                                android:onClick="onPermissionClicked">
+                            </androidx.appcompat.widget.AppCompatButton>
+                        </LinearLayout>
 
                         <FrameLayout
                             android:layout_width="match_parent"
@@ -489,19 +579,49 @@
                                 android:layout_marginVertical="5dp"
                                 android:text="Speicherzugriff"
                                 android:tag="storage"
-                                android:onClick="@{profileViewModel::onPermissionClicked}">
+                                android:id="@+id/storagePermission"
+                                android:onClick="onPermissionClicked">
                             </androidx.appcompat.widget.AppCompatButton>
 
-                            <ImageView
+                            <androidx.appcompat.widget.AppCompatImageView
                                 android:layout_width="35dp"
                                 android:layout_height="35dp"
                                 android:layout_marginTop="5dp"
                                 android:layout_gravity="end"
                                 android:foregroundGravity="center_vertical"
-                                android:src="@drawable/ic_baseline_gpp_good_24"
-                                app:tint="@color/green" />
+                                android:src="@{profileViewModel.storagePermission ? @drawable/ic_baseline_gpp_good_24 :@drawable/ic_baseline_gpp_bad_24}"
+                                android:tint="@{profileViewModel.storagePermission ? @color/green :@color/red}"/>
 
                         </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="@{profileViewModel.storagePermissionDescription}"
+                            android:layout_margin="10dp"
+                            >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/headerSize"
+                                android:layout_gravity="start"
+                                android:textColor="@color/white"
+                                android:text="ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk"/>
+
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/valuesHeight"
+                                android:background="@drawable/bgroundedchoosen"
+                                android:backgroundTint="@color/red"
+                                android:textSize="@dimen/valueSize"
+                                android:layout_marginVertical="5dp"
+                                android:text="Entfernen"
+                                android:tag="storagePermissionDelete"
+                                android:onClick="@{profileViewModel::onPermissionRemovedClicked}">
+                            </androidx.appcompat.widget.AppCompatButton>
+                        </LinearLayout>
 
                     </LinearLayout>
 
@@ -576,7 +696,7 @@
                             android:layout_marginVertical="5dp"
                             android:text="Löschen"
                             android:tag="delete"
-                            android:onClick="@{profileViewModel::onPermissionClicked}">
+                            android:onClick="onPermissionClicked">
                         </androidx.appcompat.widget.AppCompatButton>
                     </LinearLayout>
 
