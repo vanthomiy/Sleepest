@@ -44,10 +44,10 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         // New from Thomas: With other call...
-        //DataStoreRepository dataStoreRepository = DataStoreRepository.Companion.getRepo(context);
+        DataStoreRepository dataStoreRepository = DataStoreRepository.Companion.getRepo(context);
         //DataStoreRepository dataStoreRepository = MainApplication.class.cast(context).getDataStoreRepository();
-        Activity activity = (Activity) context;
-        DataStoreRepository dataStoreRepository = ((MainApplication)activity.getApplication()).getDataStoreRepository();
+        //Activity activity = (Activity) context;
+        //DataStoreRepository dataStoreRepository = ((MainApplication)activity.getApplication()).getDataStoreRepository();
 
 
         SleepHandler sleepHandler = SleepHandler.Companion.getHandler(MainApplication.Companion.applicationContext());

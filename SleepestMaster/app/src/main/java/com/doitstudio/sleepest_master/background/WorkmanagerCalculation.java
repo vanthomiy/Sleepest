@@ -11,6 +11,7 @@ import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.doitstudio.sleepest_master.MainApplication;
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 
@@ -43,7 +44,7 @@ public class WorkmanagerCalculation extends Worker {
          * angeschaut wird. Prozesse, die den Nutzer nicht benötigen, sind hier aber im Normalfall
          * problemlos möglich.
          */
-        sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
+        sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(MainApplication.Companion.applicationContext());
         sleepCalculationHandler.defineUserWakeup( null, false);
 
         Calendar calendar = Calendar.getInstance();
