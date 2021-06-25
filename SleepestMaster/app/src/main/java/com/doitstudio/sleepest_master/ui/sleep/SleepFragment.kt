@@ -71,7 +71,5 @@ class SleepFragment : Fragment() {
     private fun onAlarmSoundChange(view: View){
 
     }
-
-
-
+    
 }
