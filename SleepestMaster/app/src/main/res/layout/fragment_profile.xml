@@ -494,17 +494,6 @@
                                 android:textColor="@color/white"
                                 android:text="ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk"/>
 
-                            <androidx.appcompat.widget.AppCompatButton
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/valuesHeight"
-                                android:background="@drawable/bgroundedchoosen"
-                                android:backgroundTint="@color/red"
-                                android:textSize="@dimen/valueSize"
-                                android:layout_marginVertical="5dp"
-                                android:text="Entfernen"
-                                android:tag="activityPermissionDelete"
-                                android:onClick="@{profileViewModel::onPermissionRemovedClicked}">
-                            </androidx.appcompat.widget.AppCompatButton>
                         </LinearLayout>
 
                         <FrameLayout
@@ -551,17 +540,6 @@
                                 android:textColor="@color/white"
                                 android:text="ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk"/>
 
-                            <androidx.appcompat.widget.AppCompatButton
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/valuesHeight"
-                                android:background="@drawable/bgroundedchoosen"
-                                android:backgroundTint="@color/red"
-                                android:textSize="@dimen/valueSize"
-                                android:layout_marginVertical="5dp"
-                                android:text="Entfernen"
-                                android:tag="dailyPermissionDelete"
-                                android:onClick="onPermissionClicked">
-                            </androidx.appcompat.widget.AppCompatButton>
                         </LinearLayout>
 
                         <FrameLayout
@@ -602,6 +580,7 @@
                             >
 
                             <TextView
+                                android:layout_margin="5dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="@dimen/headerSize"
@@ -609,17 +588,6 @@
                                 android:textColor="@color/white"
                                 android:text="ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk"/>
 
-                            <androidx.appcompat.widget.AppCompatButton
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/valuesHeight"
-                                android:background="@drawable/bgroundedchoosen"
-                                android:backgroundTint="@color/red"
-                                android:textSize="@dimen/valueSize"
-                                android:layout_marginVertical="5dp"
-                                android:text="Entfernen"
-                                android:tag="storagePermissionDelete"
-                                android:onClick="@{profileViewModel::onPermissionRemovedClicked}">
-                            </androidx.appcompat.widget.AppCompatButton>
                         </LinearLayout>
 
                         <FrameLayout
@@ -667,17 +635,6 @@
                                 android:textColor="@color/white"
                                 android:text="ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk"/>
 
-                            <androidx.appcompat.widget.AppCompatButton
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/valuesHeight"
-                                android:background="@drawable/bgroundedchoosen"
-                                android:backgroundTint="@color/red"
-                                android:textSize="@dimen/valueSize"
-                                android:layout_marginVertical="5dp"
-                                android:text="Entfernen"
-                                android:tag="overlayPermissionDelete"
-                                android:onClick="@{profileViewModel::onPermissionRemovedClicked}">
-                            </androidx.appcompat.widget.AppCompatButton>
                         </LinearLayout>
 
                     </LinearLayout>
@@ -759,6 +716,34 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="10dp"
+                    >
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/valuesHeight"
+                        android:background="@drawable/bgroundedchoosen"
+                        android:textSize="@dimen/valueSize"
+                        android:layout_marginVertical="5dp"
+                        android:text="Datenschutz"
+                        android:tag="export"
+                        android:onClick="@{profileViewModel::onDataClicked}">
+                    </androidx.appcompat.widget.AppCompatButton>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:textAlignment="center"
+                        android:textSize="@dimen/headerSize"
+                        android:layout_gravity="center_horizontal"
+                        android:textColor="@color/white"
+                        android:text="Sleepest\nMade with LOVE in Bavaria\n\n The app was created by 3 students as a students project  "/>
+
+                </LinearLayout>
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="100dp"></FrameLayout>

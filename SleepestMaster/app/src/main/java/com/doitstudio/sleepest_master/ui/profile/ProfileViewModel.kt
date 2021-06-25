@@ -121,11 +121,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     val overlayPermissionDescription = ObservableField(View.GONE)
 
 
-
-    fun onPermissionRemovedClicked(view: View) {
-
-    }
-
     fun showPermissionInfo(permission:String){
         TransitionManager.beginDelayedTransition(transitionsContainer);
 
@@ -164,8 +159,12 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     fun onDataClicked(view: View) {
         updateExpandChanged(view.tag.toString(), true)
         when(view.tag.toString()){
-            "export" -> "asd"
-            "remove" -> "asd"
+            "export" -> {
+
+            }
+            "remove" -> {
+
+            }
         }
     }
 
