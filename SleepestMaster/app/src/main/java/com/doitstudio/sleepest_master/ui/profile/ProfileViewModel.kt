@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Application
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.provider.Settings
 import android.transition.TransitionManager
 import android.view.MotionEvent
 import android.view.View
@@ -112,10 +113,12 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     val activityPermission = ObservableField(false)
     val dailyPermission = ObservableField(false)
     val storagePermission = ObservableField(false)
+    val overlayPermission = ObservableField(false)
 
     val activityPermissionDescription = ObservableField(View.GONE)
     val dailyPermissionDescription = ObservableField(View.GONE)
     val storagePermissionDescription = ObservableField(View.GONE)
+    val overlayPermissionDescription = ObservableField(View.GONE)
 
 
 
@@ -129,6 +132,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         activityPermissionDescription.set(if(permission == "sleepActivity") if(activityPermissionDescription.get() != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
         dailyPermissionDescription.set(if(permission == "dailyActivity") if(dailyPermissionDescription.get() != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
         storagePermissionDescription.set(if(permission == "storage") if(storagePermissionDescription.get() != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
+        overlayPermissionDescription.set(if(permission == "overlay") if(overlayPermissionDescription.get() != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
     }
 
     fun checkPermissions(){
@@ -147,6 +151,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                 context,
                 Manifest.permission.ANSWER_PHONE_CALLS
         ))
+
+        overlayPermission.set(Settings.canDrawOverlays(context))
 
     }
 

@@ -4,7 +4,9 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -67,6 +69,10 @@ class ProfileFragment : Fragment() {
             //your implementation goes here
             onPermissionClicked(it)
         }
+        binding.overlayPermission.setOnClickListener {
+            //your implementation goes here
+            onPermissionClicked(it)
+        }
 
         return binding.root
 
@@ -82,8 +88,31 @@ class ProfileFragment : Fragment() {
             "dailyActivity" -> if (viewModel.dailyPermission.get() != true) requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION) else viewModel.showPermissionInfo("dailyActivity")
             "sleepActivity" -> if (viewModel.activityPermission.get() != true) requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION) else viewModel.showPermissionInfo("sleepActivity")
             "storage" -> if (viewModel.storagePermission.get() != true) requestPermissionLauncher.launch(Manifest.permission.ANSWER_PHONE_CALLS) else viewModel.showPermissionInfo("storage")
+            "overlay" -> if (viewModel.overlayPermission.get() != true) {
+                // If not, form up an Intent to launch the permission request
+                val intent = Intent(
+                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse(
+                        "package:${actualContext.packageName}"
+                )
+                )
+
+                // Launch Intent, with the supplied request code
+                startActivityForResult(intent, 1234)
+
+            } else viewModel.showPermissionInfo("overlay")
         }
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        // Check if a request code is received that matches that which we provided for the overlay draw request
+        if (requestCode == 1234) {
+
+            viewModel.checkPermissions()
+        }
+    }
+
 
     private val requestPermissionLauncher =
             registerForActivityResult(ActivityResultContracts.RequestPermission()

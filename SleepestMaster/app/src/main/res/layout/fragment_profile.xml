@@ -149,7 +149,6 @@
                                     android:layout_marginStart="10dp"
                                     android:textSize="@dimen/valueSize"
                                     android:textColor="@color/white"
-                                    android:textStyle="bold"
                                     android:text="Use system settings"
                                     />
 
@@ -619,6 +618,64 @@
                                 android:layout_marginVertical="5dp"
                                 android:text="Entfernen"
                                 android:tag="storagePermissionDelete"
+                                android:onClick="@{profileViewModel::onPermissionRemovedClicked}">
+                            </androidx.appcompat.widget.AppCompatButton>
+                        </LinearLayout>
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/valuesHeight"
+                                android:layout_marginEnd="50dp"
+                                android:background="@drawable/bgroundedchoosen"
+                                android:textSize="@dimen/valueSize"
+                                android:layout_marginVertical="5dp"
+                                android:text="App Überlappen"
+                                android:tag="overlay"
+                                android:id="@+id/overlayPermission"
+                                android:onClick="onPermissionClicked">
+                            </androidx.appcompat.widget.AppCompatButton>
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_gravity="end"
+                                android:foregroundGravity="center_vertical"
+                                android:src="@{profileViewModel.overlayPermission ? @drawable/ic_baseline_gpp_good_24 :@drawable/ic_baseline_gpp_bad_24}"
+                                android:tint="@{profileViewModel.overlayPermission ? @color/green :@color/red}"/>
+
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="@{profileViewModel.overlayPermissionDescription}"
+                            android:layout_margin="10dp"
+                            >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/headerSize"
+                                android:layout_gravity="start"
+                                android:textColor="@color/white"
+                                android:text="ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk"/>
+
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/valuesHeight"
+                                android:background="@drawable/bgroundedchoosen"
+                                android:backgroundTint="@color/red"
+                                android:textSize="@dimen/valueSize"
+                                android:layout_marginVertical="5dp"
+                                android:text="Entfernen"
+                                android:tag="overlayPermissionDelete"
                                 android:onClick="@{profileViewModel::onPermissionRemovedClicked}">
                             </androidx.appcompat.widget.AppCompatButton>
                         </LinearLayout>
