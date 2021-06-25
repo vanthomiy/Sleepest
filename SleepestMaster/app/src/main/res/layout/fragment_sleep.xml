@@ -878,10 +878,21 @@
                                 android:text="Good morning little looser" />
                         </FrameLayout>
 
-
-
-
                     </LinearLayout>
+
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/valuesHeight"
+                        android:background="@drawable/bgroundedchoosen"
+                        android:layout_gravity="start"
+                        android:layout_marginVertical="5dp"
+                        android:entries="@{sleepViewModel.alarmArtSelections}"
+                        android:selectedItemPosition="@={sleepViewModel.alarmArt}"
+                        android:onItemSelected = "@{sleepViewModel::onAlarmArtChanged}"
+                        android:textAlignment="center"
+                        android:textSize="@dimen/valueSize"
+                        tools:ignore="RtlCompat"/>
+
                 </LinearLayout>
                 <FrameLayout
                     android:layout_width="match_parent"

@@ -70,48 +70,6 @@ class SleepFragment : Fragment() {
 
     private fun onAlarmSoundChange(view: View){
 
-        checkPermission(
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            101)
-        checkPermission(
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            102)
-
-        /*
-        var soundUri : Uri = Uri.EMPTY
-
-        val ringtonePickerBuilder: RingtonePickerDialog.Builder = RingtonePickerDialog.Builder(
-            actualContext,
-            childFragmentManager
-        ) //Set title of the dialog.
-            //If set null, no title will be displayed.
-            .setTitle("Select ringtone") //set the currently selected uri, to mark that ringtone as checked by default.
-            //If no ringtone is currently selected, pass null.
-            .setCurrentRingtoneUri(soundUri) //Set true to allow allow user to select default ringtone set in phone settings.
-            .displayDefaultRingtone(true) //Set true to allow user to select silent (i.e. No ringtone.).
-            .displaySilentRingtone(true) //set the text to display of the positive (ok) button.
-            //If not set OK will be the default text.
-            .setPositiveButtonText("SET RINGTONE") //set text to display as negative button.
-            //If set null, negative button will not be displayed.
-            .setCancelButtonText("CANCEL") //Set flag true if you want to play the sample of the clicked tone.
-            .setPlaySampleWhileSelection(true) //Set the callback listener.
-            .setListener { ringtoneName, ringtoneUri ->
-                TODO("Not yet implemented")
-
-            }
-
-//Add the desirable ringtone types.
-
-//Add the desirable ringtone types.
-        ringtonePickerBuilder.addRingtoneType(RingtonePickerDialog.Builder.TYPE_MUSIC)
-        ringtonePickerBuilder.addRingtoneType(RingtonePickerDialog.Builder.TYPE_NOTIFICATION)
-        ringtonePickerBuilder.addRingtoneType(RingtonePickerDialog.Builder.TYPE_RINGTONE)
-        ringtonePickerBuilder.addRingtoneType(RingtonePickerDialog.Builder.TYPE_ALARM)
-
-//Display the dialog.
-
-//Display the dialog.
-        ringtonePickerBuilder.show()*/
     }
 
 
