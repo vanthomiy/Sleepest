@@ -136,7 +136,7 @@ class ProfileFragment : Fragment() {
             )*/
 
             //val calendar = Calendar.getInstance()
-
+        
 
             //AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 2, actualContext, 1)
 
