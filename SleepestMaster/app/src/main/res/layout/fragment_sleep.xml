@@ -47,7 +47,7 @@
                     android:visibility="visible"
                     app:layoutDescription="@xml/fragment_sleep_scene">
 
-                    <TextView
+                    <View
                         android:id="@+id/animTextSleep"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
                         android:gravity="end|center"
                         android:onClick="@{sleepViewModel::onInfoClicked}"
                         android:tag="7"
-                        android:text="show tips"
+                        android:text="@string/show_tips"
                         android:textColor="@color/secondTextColor"
                         android:textSize="@dimen/valueSize"
                         android:textStyle="bold" />
@@ -123,7 +123,7 @@
                         android:gravity="center"
                         android:layout_margin="10dp"
                         android:textColor="@color/white"
-                        android:text="The sleeptimes should always be in between your regular sleep. The app only tracks and recognices your sleep when its in the sleep time. You can also set it to auto and we will automatically set your sleeptime."/>
+                        android:text="@string/sleep_general_info"/>
 
                 </FrameLayout>
 
@@ -152,7 +152,7 @@
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
                             android:textColor="@color/white"
-                            android:text="Sleeptimes"/>
+                            android:text="@string/sleep_sleeptimes_header"/>
 
                         <ImageView
                             android:layout_width="25dp"
@@ -180,7 +180,7 @@
                             android:gravity="center"
                             android:layout_margin="10dp"
                             android:textColor="@color/white"
-                            android:text="The sleeptimes should always be in between your regular sleep. The app only tracks and recognices your sleep when its in the sleep time. You can also set it to auto and we will automatically set your sleeptime."/>
+                            android:text="@string/sleep_sleeptimes_info"/>
 
                     </FrameLayout>
 
@@ -205,7 +205,7 @@
                                 android:textSize="@dimen/valueSize"
                                 android:textColor="@color/secondTextColor"
                                 android:textStyle="bold"
-                                android:text="Start:"
+                                android:text="@string/sleep_sleeptime_start"
                                 />
                             <TextView
                                 android:layout_width="wrap_content"
@@ -235,7 +235,7 @@
                                 android:textSize="@dimen/valueSize"
                                 android:textColor="@color/secondTextColor"
                                 android:textStyle="bold"
-                                android:text="End:"
+                                android:text="@string/sleep_sleeptime_end"
                                 />
                             <TextView
                                 android:layout_width="wrap_content"
@@ -261,8 +261,8 @@
                         android:layout_marginVertical="5dp"
                         android:onClick="@{sleepViewModel::SleepTimeToogled}"
                         android:checked="@={sleepViewModel.autoSleepTime}"
-                        android:textOn="Auto detect"
-                        android:textOff="User defined">
+                        android:textOn="@string/sleep_sleeptimes_autoOn"
+                        android:textOff="@string/sleep_sleeptimes_autoOff">
 
                     </ToggleButton>
 
@@ -292,7 +292,7 @@
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
                             android:textColor="@color/white"
-                            android:text="Sleepduration"/>
+                            android:text="@string/sleep_sleepduration_header"/>
 
                         <ImageView
                             android:layout_width="25dp"
@@ -320,7 +320,7 @@
                             android:gravity="center"
                             android:layout_margin="10dp"
                             android:textColor="@color/white"
-                            android:text="The sleeptimes should always be in between your regular sleep. The app only tracks and recognices your sleep when its in the sleep time. You can also set it to auto and we will automatically set your sleeptime."/>
+                            android:text="@string/sleep_sleepduration_info"/>
 
                     </FrameLayout>
 
@@ -380,7 +380,7 @@
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
                             android:textColor="@color/white"
-                            android:text="Light conditions"/>
+                            android:text="@string/sleep_lightcondition_header"/>
 
                         <ImageView
                             android:layout_width="25dp"
@@ -408,7 +408,7 @@
                             android:gravity="center"
                             android:layout_margin="10dp"
                             android:textColor="@color/white"
-                            android:text="The sleeptimes should always be in between your regular sleep. The app only tracks and recognices your sleep when its in the sleep time. You can also set it to auto and we will automatically set your sleeptime."/>
+                            android:text="@string/sleep_lightcondition_info"/>
 
                     </FrameLayout>
 
@@ -453,7 +453,7 @@
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
                             android:textColor="@color/white"
-                            android:text="Phone position"/>
+                            android:text="@string/sleep_phoneposition_header"/>
 
                         <ImageView
                             android:layout_width="25dp"
@@ -481,7 +481,7 @@
                             android:gravity="center"
                             android:layout_margin="10dp"
                             android:textColor="@color/white"
-                            android:text="The sleeptimes should always be in between your regular sleep. The app only tracks and recognices your sleep when its in the sleep time. You can also set it to auto and we will automatically set your sleeptime."/>
+                            android:text="@string/sleep_phoneposition_info"/>
 
                     </FrameLayout>
 
@@ -525,7 +525,7 @@
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
                             android:textColor="@color/white"
-                            android:text="Phone usage"/>
+                            android:text="@string/sleep_phoneusage_header"/>
 
                         <ImageView
                             android:layout_width="25dp"
@@ -553,7 +553,7 @@
                             android:gravity="center"
                             android:layout_margin="10dp"
                             android:textColor="@color/white"
-                            android:text="The sleeptimes should always be in between your regular sleep. The app only tracks and recognices your sleep when its in the sleep time. You can also set it to auto and we will automatically set your sleeptime."/>
+                            android:text="@string/sleep_phoneusage_info"/>
 
                     </FrameLayout>
 
@@ -572,7 +572,7 @@
                             android:textSize="@dimen/valueSize"
                             android:textColor="@color/secondTextColor"
                             android:textStyle="bold"
-                            android:text="less"
+                            android:text="@string/sleep_phoneusage_less"
                             />
 
                         <TextView
@@ -584,7 +584,7 @@
                             android:textSize="@dimen/valueSize"
                             android:textColor="@color/secondTextColor"
                             android:textStyle="bold"
-                            android:text="often"
+                            android:text="@string/sleep_phoneusage_often"
                             />
 
                         <!--androidx.appcompat.widget.AppCompatSeekBar
@@ -637,7 +637,7 @@
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
                             android:textColor="@color/white"
-                            android:text="Activity tracking"/>
+                            android:text="@string/sleep_activitytracking_header"/>
 
                         <ImageView
                             android:layout_width="25dp"
@@ -665,7 +665,7 @@
                             android:gravity="center"
                             android:layout_margin="10dp"
                             android:textColor="@color/white"
-                            android:text="The sleeptimes should always be in between your regular sleep. The app only tracks and recognices your sleep when its in the sleep time. You can also set it to auto and we will automatically set your sleeptime."/>
+                            android:text="@string/sleep_activitytracking_info"/>
 
                     </FrameLayout>
 
@@ -690,7 +690,7 @@
                                 android:textSize="@dimen/valueSize"
                                 android:textColor="@color/secondTextColor"
                                 android:textStyle="bold"
-                                android:text="track daily activity"
+                                android:text="@string/sleep_trackactivity_header"
                                 />
 
                             <Switch
@@ -723,7 +723,7 @@
                                 android:textSize="@dimen/valueSize"
                                 android:textColor="@color/secondTextColor"
                                 android:textStyle="bold"
-                                android:text="include in wakeup time"
+                                android:text="@string/sleep_trackactivity_include_in_wakeup"
                                 />
 
                             <Switch
@@ -780,7 +780,7 @@
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
                             android:textColor="@color/white"
-                            android:text="Alarm"/>
+                            android:text="@string/sleep_alarm_header"/>
 
                         <ImageView
                             android:layout_width="25dp"
@@ -808,7 +808,7 @@
                             android:gravity="center"
                             android:layout_margin="10dp"
                             android:textColor="@color/white"
-                            android:text="The sleeptimes should always be in between your regular sleep. The app only tracks and recognices your sleep when its in the sleep time. You can also set it to auto and we will automatically set your sleeptime."/>
+                            android:text="@string/sleep_alarm_info"/>
 
                     </FrameLayout>
 
@@ -832,7 +832,7 @@
                                 android:textSize="@dimen/valueSize"
                                 android:textColor="@color/secondTextColor"
                                 android:textStyle="bold"
-                                android:text="cancel alarm when already awake"
+                                android:text="@string/sleep_alarm_auto_cancel_alarm"
                                 />
 
                             <Switch
@@ -863,7 +863,7 @@
                                 android:layout_gravity="start"
                                 android:layout_marginStart="10dp"
                                 android:gravity="center_vertical"
-                                android:text="sound"
+                                android:text="@string/sleep_alarm_sound"
                                 android:textColor="@color/secondTextColor"
                                 android:textSize="@dimen/valueSize"
                                 android:textStyle="bold" />
@@ -878,10 +878,21 @@
                                 android:text="Good morning little looser" />
                         </FrameLayout>
 
-
-
-
                     </LinearLayout>
+
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/valuesHeight"
+                        android:background="@drawable/bgroundedchoosen"
+                        android:layout_gravity="start"
+                        android:layout_marginVertical="5dp"
+                        android:entries="@{sleepViewModel.alarmArtSelections}"
+                        android:selectedItemPosition="@={sleepViewModel.alarmArt}"
+                        android:onItemSelected = "@{sleepViewModel::onAlarmArtChanged}"
+                        android:textAlignment="center"
+                        android:textSize="@dimen/valueSize"
+                        tools:ignore="RtlCompat"/>
+
                 </LinearLayout>
                 <FrameLayout
                     android:layout_width="match_parent"

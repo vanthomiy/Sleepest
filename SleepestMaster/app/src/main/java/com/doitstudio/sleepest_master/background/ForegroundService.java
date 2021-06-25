@@ -5,6 +5,7 @@ package com.doitstudio.sleepest_master.background;
  * like start, stop and foreground notification
  */
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -97,7 +98,12 @@ public class ForegroundService extends LifecycleService {
         //Info: the following getId() can not be null, because alarmEntity can not be null with getNextAlarm()
         foregroundObserver.updateAlarmWasFired(false, alarmEntity.getId());
         // New from Thomas: With other call...
-        dataStoreRepository = DataStoreRepository.Companion.getRepo(getApplicationContext());
+        //dataStoreRepository = DataStoreRepository.Companion.getRepo(getApplicationContext());
+        // activity = (Activity) getApplicationContext();
+        //dataStoreRepository = ((MainApplication)activity.getApplication()).getDataStoreRepository();
+        dataStoreRepository = ((MainApplication)getApplicationContext()).getDataStoreRepository();
+
+
         //dataStoreRepository = MainApplication.class.cast(getApplicationContext()).getDataStoreRepository();
 
         sleepHandler =  SleepHandler.Companion.getHandler(getApplicationContext());
@@ -113,7 +119,7 @@ public class ForegroundService extends LifecycleService {
 
         startForeground(1, createNotification("Alarm status: " + isAlarmActive)); /** TODO: Id zentral anlegen */
 
-        sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(getApplicationContext());
+        sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(MainApplication.Companion.applicationContext());
     }
 
 

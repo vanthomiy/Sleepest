@@ -29,6 +29,7 @@ public class BootReceiver extends BroadcastReceiver {
                 context.startForegroundService(intent); //restart foreground service
                 return;
             }
+
             context.startService(intent);
         }
     }

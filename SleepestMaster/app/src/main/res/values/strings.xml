@@ -169,5 +169,68 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <!--endregion-->
 
+    <!--region Sleep Fragment texts -->
+    <string name="show_tips">Tipps anzeigen</string>
+    <string name="sleep_general_info">
+        Du kannst hier allgemeine parameter zu deinem Schlaf einstellen. Die Punktzahl gibt an, wie gut wir deinen Schlaf überwachen können. Umso höher der Wert ist, umso besser können wir deinen Schlaf bestimmen.
+    </string>
+    <string name="sleep_sleeptimes_header">Schlafzeiten</string>
+    <string name="sleep_sleeptimes_info">
+        Die Schlafzeit sollte immer die komplette Zeit erfassen, in der du schläfst. Die App zeichnet nur in dieser Zeit die Daten auf und kann damit deinen Schlaf erkennen. Du kannst es auch auf Automatisch einstellen und die App passt deine Schlafzeit den eingestellten Weckern an.
+    </string>
+    <string name="sleep_sleeptime_start">Start:</string>
+    <string name="sleep_sleeptime_end">Ende:</string>
+    <string name="sleep_sleepduration_header">Schlafdauer</string>
+    <string name="sleep_sleepduration_info">
+        Über die Schlafdauer kannst du einstellen, wie lange du standardmäßig schlafen willst. Die App passt den Aufweckzeitpunkt dann daran an. Du kannst für jeden Alarm die Schlafdauer extra anpassen.
+    </string>
+    <string name="sleep_lightcondition_header">Lichtverhältnisse</string>
+    <string name="sleep_lightcondition_info">
+        Ob du im dunkeln oder im hellen schläfst beeinträchtigt wie gut die App deinen Schlaf bestimmen kann. Wenn du eine richtig gute Schlafüberwachung haben willst solltest du im Dunkeln schlafen.
+    </string>
+    <string name="sleep_phoneposition_header">Handyposition</string>
+    <string name="sleep_phoneposition_info">
+        Für eine gute Schlafbestimmung sollte das Handy beim Schlafen mit im Bett liegen. Du kannst das Handy aber auch nur neben das Bett oder im Raum haben, dementsprechend versuchen wir nur deine Schlafzeiten zu bestimmen.
+    </string>
+    <string name="sleep_phoneusage_header">Handynutzung</string>
+    <string name="sleep_phoneusage_info">
+        Umso öfter du dein Handy regulär verwendest, umso genauer können wir deinen Einschlafzeitpunkt bestimmen. Wenn du dein Handy wirklich nie benutzt kann die App keine zuverlässige bestimmung des Einschlafzeitpunkts treffen.
+    </string>
+    <string name="sleep_phoneusage_less">Wenig</string>
+    <string name="sleep_phoneusage_often">Häufig</string>
+    <string name="sleep_activitytracking_header">Aktivitätsverfolgung</string>
+    <string name="sleep_activitytracking_info">
+        Aktivierst du die Aktivitätsverfolgung bestimmen wir deine Aktivität über den Tag und zeigen diese in Verlauf für die einzelnen Tage an. Zudem kannst du mit "In Schlafenszeit einbeziehen" auswählen, dass die App dir mehr oder weniger Schlaf gibt, je nach dem wie viel Bewegung du am Tag hattest.
+    </string>
+    <string name="sleep_trackactivity_header">Tägliche aktivitäten aufzeichnen</string>
+    <string name="sleep_trackactivity_include_in_wakeup">In Schlafzeit einbeziehen</string>
+    <string name="sleep_alarm_header">Alarm</string>
+    <string name="sleep_alarm_info">
+        Du kannst den Alarmton für die Alarme einstellen. Zudem kannst du ein experimentelles feature aktivieren in dem sich der Wecker automatisch ausschaltet wenn die App erkennt dass du bereits Wach bist.
+    </string>
+    <string name="sleep_alarm_auto_cancel_alarm">Alarm automatisch ausschalten</string>
+    <string name="sleep_alarm_sound">Alarm ton</string>
+
+    <string name="sleep_score_text_60">Sehr schlechte Schlaferkennung</string>
+    <string name="sleep_score_text_70">Schlechte Schlaferkennung</string>
+    <string name="sleep_score_text_80">Schlaferkennung möglich</string>
+    <string name="sleep_score_text_90">Gute Schlaferkennung möglich</string>
+    <string name="sleep_score_text_100">Sehr gute Schlaferkennung möglich</string>
+
+    <string name="sleep_phoneposition_inbed">Im Bett</string>
+    <string name="sleep_phoneposition_ontable">Neben dem Bett</string>
+    <string name="sleep_phoneposition_auto">Auto erkennung</string>
+
+    <string name="sleep_lightcondidition_dark">Dunkel</string>
+    <string name="sleep_lightcondidition_light">Hell</string>
+    <string name="sleep_lightcondidition_auto">Auto erkennung</string>
+
+    <string name="sleep_sleeptimes_timecombine"> bis </string>
+
+    <string name="sleep_sleeptimes_autoOn">Auto erkennung</string>
+    <string name="sleep_sleeptimes_autoOff">Benutzerdefiniert</string>
+
+    <!--endregion-->
+
 
 </resources>

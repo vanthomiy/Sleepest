@@ -69,10 +69,10 @@
             android:rotation="180" />
         <Constraint
             android:layout_height="wrap_content"
-            android:layout_width="100dp"
+            android:layout_width="75dp"
             android:id="@+id/animTextDescription"
-            android:layout_marginLeft="00dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginBottom="5dp"
             android:scaleX="0.75"
             android:scaleY="0.75"
             app:layout_constraintBottom_toBottomOf="parent"

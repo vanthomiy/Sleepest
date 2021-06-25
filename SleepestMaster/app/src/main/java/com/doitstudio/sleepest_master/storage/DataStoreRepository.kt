@@ -86,7 +86,8 @@ class DataStoreRepository(context: Context) {
             sleepParameterStatus.updateActivityInCalculation(value)
     suspend fun updateEndAlarmAfterFired(value:Boolean) =
             sleepParameterStatus.updateEndAlarmAfterFired(value)
-
+    suspend fun updateAlarmArt(value:Int) =
+        sleepParameterStatus.updateAlarmArt(value)
     suspend fun updateAutoSleepTime(time:Boolean) =
             sleepParameterStatus.updateAutoSleepTime(time)
     suspend fun updateSleepTimeEnd(time:Int) =

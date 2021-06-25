@@ -16,15 +16,15 @@ import java.io.BufferedReader
 
 class SleepClassifier constructor(private val context: Context) {
 
-    val inputSleep045 = lazy { loadInputAssigmentFile(ModelProcess.SLEEP04, SleepDataFrequency.FIVE)  }
-    val inputSleep0410 = lazy { loadInputAssigmentFile(ModelProcess.SLEEP04, SleepDataFrequency.TEN)  }
-    val inputSleep0430 = lazy { loadInputAssigmentFile(ModelProcess.SLEEP04, SleepDataFrequency.THIRTY)  }
+    private val inputSleep045 = lazy { loadInputAssigmentFile(ModelProcess.SLEEP04, SleepDataFrequency.FIVE)  }
+    private val inputSleep0410 = lazy { loadInputAssigmentFile(ModelProcess.SLEEP04, SleepDataFrequency.TEN)  }
+    private val inputSleep0430 = lazy { loadInputAssigmentFile(ModelProcess.SLEEP04, SleepDataFrequency.THIRTY)  }
 
-    val inputSleep125 = lazy { loadInputAssigmentFile(ModelProcess.SLEEP12, SleepDataFrequency.FIVE)  }
-    val inputSleep1210 = lazy { loadInputAssigmentFile(ModelProcess.SLEEP12, SleepDataFrequency.TEN)  }
-    val inputSleep1230 = lazy { loadInputAssigmentFile(ModelProcess.SLEEP12, SleepDataFrequency.THIRTY)  }
+    private val inputSleep125 = lazy { loadInputAssigmentFile(ModelProcess.SLEEP12, SleepDataFrequency.FIVE)  }
+    private val inputSleep1210 = lazy { loadInputAssigmentFile(ModelProcess.SLEEP12, SleepDataFrequency.TEN)  }
+    private val inputSleep1230 = lazy { loadInputAssigmentFile(ModelProcess.SLEEP12, SleepDataFrequency.THIRTY)  }
 
-    val inputTableBed = lazy { loadInputAssigmentFile(ModelProcess.TABLEBED)  }
+    private val inputTableBed = lazy { loadInputAssigmentFile(ModelProcess.TABLEBED)  }
 
     /**
      * loading the model inputs indexes for preparing model input
@@ -50,8 +50,8 @@ class SleepClassifier constructor(private val context: Context) {
 
     /**
      * Pass the actual raw sleep api data entity
-     * It returns the last 10 sleep api data and fills the rest with 0 is neccessary
-     */
+     * It returns the last 10 sleep api data and fills the rest with 0 if necessary
+     **/
     fun createFeatures(data: List<SleepApiRawDataEntity>, modelProcess: ModelProcess, sleepDataFrequency: SleepDataFrequency) : FloatArray {
 
 
