@@ -102,7 +102,12 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                 //Set AlarmManager to stop Workmanager at end of sleeptime
                 calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeEndJob());
-                AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context,7);
+                if (LocalTime.now().toSecondOfDay() < dataStoreRepository.getSleepTimeEndJob()) {
+                    AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context,7);
+                } else {
+                    AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK) + 1, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context,7);
+                }
+
 
                 break;
             case 7:

@@ -1,19 +1,22 @@
 package com.doitstudio.sleepest_master.ui.profile
 
 import android.content.Context
-import android.content.Intent
+import android.media.AudioManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
+import com.doitstudio.sleepest_master.alarmclock.AlarmClockAudio
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
+import com.kevalpatel.ringtonepicker.RingtonePickerDialog
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import java.time.Instant
@@ -29,9 +32,9 @@ class ProfileFragment : Fragment() {
     private val actualContext: Context by lazy {requireActivity().applicationContext}
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_profile, container, false)
@@ -41,8 +44,8 @@ class ProfileFragment : Fragment() {
         var pref = actualContext.getSharedPreferences("AlarmChanged", 0)
         val textAlarm = """
             Last Alarm changed: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt(
-                "actualWakeup",
-                0
+            "actualWakeup",
+            0
         )},${pref.getInt("alarmUse", 0)}
             
             """.trimIndent()
@@ -73,13 +76,19 @@ class ProfileFragment : Fragment() {
             """.trimIndent()
         pref = actualContext.getSharedPreferences("AlarmSet", 0)
         val textCalc2 = """
-            AlarmSet: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt("hour1", 0)}:${pref.getInt("minute1", 0)},${
+            AlarmSet: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt(
+            "hour1",
+            0
+        )}:${pref.getInt("minute1", 0)},${
             pref.getInt("actualWakeup", 0)}
             
             """.trimIndent()
         pref = actualContext.getSharedPreferences("AlarmReceiver", 0)
         val textAlarmReceiver = """
-            AlarmReceiver: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt("intent", 0)}
+            AlarmReceiver: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt(
+            "intent",
+            0
+        )}
             
             """.trimIndent()
         pref = actualContext.getSharedPreferences("SleepTime", 0)
@@ -92,8 +101,16 @@ class ProfileFragment : Fragment() {
             Exc.: ${pref.getString("exception", "XX")}
             
             """.trimIndent()
+        pref = actualContext.getSharedPreferences("AlarmReceiver1", 0)
+        val textAlarmReceiver1 = """
+            AlarmReceiver1: ${pref.getString("usage", "XX")},${pref.getInt("day", 0)},${pref.getInt(
+            "hour",
+            0
+        )},${pref.getInt("minute", 0)}
+            
+            """.trimIndent()
 
-        var textGesamt = textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation + textCalc1 + textCalc2 + textAlarmReceiver + textSleepTime + textStopException
+        var textGesamt = textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation + textCalc1 + textCalc2 + textAlarmReceiver + textSleepTime + textStopException + textAlarmReceiver1
 
 
 
@@ -107,16 +124,48 @@ class ProfileFragment : Fragment() {
             startForegroundIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             startForegroundIntent.putExtra("intent", 1)
             startActivity(startForegroundIntent)*/
+
+            //selectRingTone()
             //val calendar = Calendar.getInstance()
-            export();
+            export()
+
+            /*AlarmClockReceiver.startAlarmManager(
+                calendar.get(Calendar.DAY_OF_WEEK), calendar.get(
+                    Calendar.HOUR_OF_DAY
+                ), calendar.get(Calendar.MINUTE) + 2, actualContext, 1
+            )*/
+
+            //val calendar = Calendar.getInstance()
+        
 
             //AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 2, actualContext, 1)
+
             //Toast.makeText(actualContext, "Gut gemacht, die App wird jetzt zerstört", Toast.LENGTH_LONG).show()
         }
 
         //endregion
 
         return root
+    }
+
+    private fun selectRingTone() {
+
+        //check if audio volume is 0
+        val audioManager = actualContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        if (audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) <= 0) {
+            Toast.makeText(actualContext, "Increase volume to hear sounds", Toast.LENGTH_LONG).show()
+        }
+
+        val ringtonePickerBuilder = RingtonePickerDialog.Builder(actualContext, parentFragmentManager)
+            .setTitle("Select your ringtone")
+            .displayDefaultRingtone(true)
+            .setPositiveButtonText("Set")
+            .setCancelButtonText("Cancel")
+            .setPlaySampleWhileSelection(true)
+            .setListener { ringtoneName, ringtoneUri -> Toast.makeText(actualContext, ringtoneUri.toString(), Toast.LENGTH_LONG).show()}
+
+        ringtonePickerBuilder.addRingtoneType(RingtonePickerDialog.Builder.TYPE_ALARM)
+        ringtonePickerBuilder.show()
     }
 
 

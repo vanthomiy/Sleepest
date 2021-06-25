@@ -4,6 +4,7 @@ package com.doitstudio.sleepest_master.alarmclock;
  * cancel or snooze the alarm with buttons.
  */
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.Animator;
@@ -14,6 +15,7 @@ import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.DisplayMetrics;
@@ -43,7 +45,9 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
     private TextView tvSwipeUp;
     private ImageView ivSwipeUpArrow;
     private DataStoreRepository dataStoreRepository;
+    private boolean isStarted = false;
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,39 +79,47 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
         keyguardManager.requestDismissKeyguard(LockScreenAlarmActivity.this, null);
 
         swipeListener = new SwipeListener(relativeLayout);
+
+
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     protected void onResume() {
         super.onResume();
 
-        fadeColor(tvSwipeUp);
+        if (!isStarted) {
+            isStarted = true;
+            fadeColor(tvSwipeUp);
 
-        AlarmClockAudio.getInstance().init(getApplicationContext());
-        AlarmClockAudio.getInstance().startAlarm();
-
-
-
-        new CountDownTimer(1000, 1000) {
-
-            public void onTick(long millisUntilFinished) { }
-
-            public void onFinish() {
-                moveView(ivSwipeUpArrow);
-            }
-
-        }.start();
+            AlarmClockAudio.getInstance().init(getApplicationContext());
+            AlarmClockAudio.getInstance().startAlarm();
 
 
-        new CountDownTimer(60000, 1000) {
 
-            public void onTick(long millisUntilFinished) { }
+            new CountDownTimer(1000, 1000) {
 
-            public void onFinish() {
-                finish();
-            }
+                public void onTick(long millisUntilFinished) { }
 
-        }.start();
+                public void onFinish() {
+                    moveView(ivSwipeUpArrow);
+                }
+
+            }.start();
+
+
+            new CountDownTimer(60000, 1000) {
+
+                public void onTick(long millisUntilFinished) { }
+
+                public void onFinish() {
+                    finish();
+                }
+
+            }.start();
+        }
+
+
     }
 
     @Override
@@ -218,6 +230,14 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
                                     SharedPreferences.Editor ed = pref.edit();
                                     ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
                                     ed.putInt("minute", calendar.get(Calendar.MINUTE));
+                                    ed.apply();
+
+                                    pref = getSharedPreferences("AlarmReceiver1", 0);
+                                    ed = pref.edit();
+                                    ed.putString("usage", "LockScreenAlarmActivity");
+                                    ed.putInt("day", calendarAlarm.get(Calendar.DAY_OF_WEEK));
+                                    ed.putInt("hour", calendarAlarm.get(Calendar.HOUR_OF_DAY));
+                                    ed.putInt("minute", calendarAlarm.get(Calendar.MINUTE));
                                     ed.apply();
 
                                     finish();
