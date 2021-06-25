@@ -27,7 +27,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.time.LocalDate
+import java.time.*
+import java.time.Instant.ofEpochMilli
 import java.time.format.DateTimeFormatter
 import kotlin.collections.ArrayList
 
@@ -50,7 +51,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
     private lateinit var sVSleepAnalysisDay : ScrollView
     private lateinit var sVSleepAnalysisWeek : ScrollView
     private lateinit var sVSleepAnalysisMonth : ScrollView
-    private lateinit var sleepSessionIDs : MutableSet<Int> //Maybe switch to Set
+    private lateinit var sleepSessionIDs : MutableSet<Int>
     private lateinit var sleepSessionsData : MutableMap<Int, List<SleepApiRawDataEntity>>
     private var dateOfDiagram  = LocalDate.now() //of(2021, 3, 13)
     private var currentAnalysisRange = 0 // Day = 0, Week = 1, Month = 2
@@ -279,13 +280,13 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
     }
 
     private fun generateDataPieChart() : ArrayList<PieEntry> {
-        var awake = 0f
-        var sleep = 0f
-        var lightSleep = 0f
-        var deepSleep = 0f
-        var remSleep = 0f
+        var awake = 0.01f
+        var sleep = 0.01f
+        var lightSleep = 0.01f
+        var deepSleep = 0.01f
+        var remSleep = 0.01f
         val entries = ArrayList<PieEntry>()
-        var absolute = 0f
+        var absolute = 0.05f
 
         val values: List<SleepApiRawDataEntity>
 
@@ -310,19 +311,20 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         if (remSleep > 0) { entries.add(PieEntry((remSleep / absolute), "rem")) }
         if (sleep > 0) { entries.add(PieEntry((sleep / absolute), "sleep")) }
 
-        if (absolute == 0F) { entries.add(PieEntry(1F, "no data")) }
+        if (absolute == 0.05F) { entries.add(PieEntry(1F, "no data")) }
 
         return entries
     }
 
     private fun setPieChart() {
         val listColors = ArrayList<Int>()
-        listColors.add(resources.getColor(R.color.colorPrimary))
+        listColors.add(resources.getColor(R.color.black))
         listColors.add(resources.getColor(R.color.green))
         listColors.add(resources.getColor(R.color.red))
         listColors.add(resources.getColor(R.color.blue))
+        listColors.add(resources.getColor(R.color.dark_green))
 
-        val pieDataSet = PieDataSet(generateDataPieChart(), "")
+        val pieDataSet = PieDataSet(generateDataPieChart(), "Sleep states")
         pieDataSet.colors = listColors
 
         val pieData = PieData(pieDataSet)
@@ -335,7 +337,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         pieChart.animateY(1000, Easing.EaseInOutQuad)
     }
 
-    private fun generateDataBarChart(): ArrayList<BarEntry> {
+    private fun generateDataBarChart(): Pair<ArrayList<BarEntry>, List<Int>> { //ArrayList<BarEntry> {
         var xIndex = 0
         var awake = 0f
         var sleep = 0f
@@ -344,6 +346,8 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         var remSleep = 0f
         val entries = ArrayList<BarEntry>()
         var absolute = 0
+
+        val xAxisLabels = mutableListOf<Int>()
 
         val ids = mutableSetOf<Int>()
         for (i in -6..0) {
@@ -377,6 +381,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
                 if (sleep > 0) { sleep = sleep / absolute * 100 }
 
                 entries.add(BarEntry(xIndex.toFloat(), floatArrayOf(awake, ligthSleep, deepSleep, remSleep, sleep)))
+                xAxisLabels.add(id)
 
                 xIndex += 1
                 awake = 0f
@@ -387,29 +392,47 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
                 absolute = 0
             } else {
                 entries.add(BarEntry(0F, 0F))
+                xAxisLabels.add(id)
             }
         }
 
-        return entries
+        return Pair(entries, xAxisLabels)
     }
 
     private fun setBarChart() { //http://developine.com/android-grouped-stacked-bar-chart-using-mpchart-kotlin/
         val barWidth = 0.3f
 
-        val xAxisValues = ArrayList<String>()
-        xAxisValues.add("0")
-        xAxisValues.add("1")
-        xAxisValues.add("2")
-        xAxisValues.add("3")
-        xAxisValues.add("4")
-        xAxisValues.add("5")
-        xAxisValues.add("6")
+        val diagramData = generateDataBarChart()
 
-        val barDataSet1 = BarDataSet(generateDataBarChart(), "")
-        barDataSet1.setColors(Color.BLUE, Color.RED, Color.CYAN, Color.GREEN, Color.YELLOW)
+        val barDataSet1 = BarDataSet(diagramData.first, "")
+        barDataSet1.setColors(Color.RED, Color.MAGENTA, Color.BLUE, Color.BLACK, Color.YELLOW)
         barDataSet1.label = "States"
         barDataSet1.setDrawIcons(false)
         barDataSet1.setDrawValues(false)
+
+        val xAxisValues = ArrayList<String>()
+        for (i in diagramData.second.indices) {
+            val date = LocalDateTime.ofInstant(
+                ofEpochMilli(diagramData.second[i].toLong() * 1000),
+                ZoneOffset.systemDefault())
+
+            val month = when (date.month) {
+                Month.JANUARY -> "Jan"
+                Month.FEBRUARY -> "Feb"
+                Month.MARCH -> "Mar"
+                Month.APRIL -> "Apr"
+                Month.MAY -> "May"
+                Month.JUNE -> "Jun"
+                Month.JULY -> "Jul"
+                Month.AUGUST -> "Aug"
+                Month.SEPTEMBER -> "Sep"
+                Month.OCTOBER -> "Oct"
+                Month.NOVEMBER -> "Nov"
+                Month.DECEMBER -> "Dec"
+                else -> "Fail"
+            }
+            xAxisValues.add(date.dayOfMonth.toString() + ". " + month)
+        }
 
         val barData = BarData(barDataSet1)
 
@@ -431,32 +454,34 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         legend.setDrawInside(false)
 
         val legenedEntries = arrayListOf<LegendEntry>()
-
-        legenedEntries.add(LegendEntry("States", Legend.LegendForm.SQUARE, 8f, 8f, null, Color.RED))
-
+        legenedEntries.add((LegendEntry("Awake", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.RED)))
+        legenedEntries.add((LegendEntry("Light", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.MAGENTA)))
+        legenedEntries.add((LegendEntry("Deep", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.BLUE)))
+        legenedEntries.add((LegendEntry("REM", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.BLACK)))
+        legenedEntries.add((LegendEntry("Sleep", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.YELLOW)))
         legend.setCustom(legenedEntries)
 
         //legend.yOffset = 2f
         //legend.xOffset = 2f
         legend.yEntrySpace = 0f
-        legend.textSize = 5f
+        legend.textSize = 12f
 
         val xAxis = barChart.xAxis
-        xAxis.granularity = 1f
-        xAxis.isGranularityEnabled = true
-        xAxis.setCenterAxisLabels(true)
-        xAxis.setDrawGridLines(false)
-        xAxis.textSize = 9f
+        //xAxis.granularity = 1f
+        //xAxis.isGranularityEnabled = true
+        //xAxis.setCenterAxisLabels(true)
+        //xAxis.setDrawGridLines(false)
+        xAxis.textSize = 12f
 
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.valueFormatter = IndexAxisValueFormatter(xAxisValues)
 
         xAxis.labelCount = 7
         xAxis.mAxisMaximum = 7f
-        xAxis.setCenterAxisLabels(true)
-        xAxis.setAvoidFirstLastClipping(true)
-        xAxis.spaceMin = 2f
-        xAxis.spaceMax = 4f
+        //xAxis.setCenterAxisLabels(true)
+        //xAxis.setAvoidFirstLastClipping(true)
+        //xAxis.spaceMin = 2f
+        //xAxis.spaceMax = 4f
 
         barChart.setVisibleXRangeMaximum(7f)
         barChart.setVisibleXRangeMinimum(7f)
