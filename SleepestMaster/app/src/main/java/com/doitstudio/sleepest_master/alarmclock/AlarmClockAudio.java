@@ -3,6 +3,7 @@ package com.doitstudio.sleepest_master.alarmclock;
 /** This class is singleton and you can start the alarm audio from everywhere */
 
 import android.app.NotificationManager;
+import android.app.Service;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.AudioAttributes;
@@ -13,6 +14,8 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.CountDownTimer;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,8 +33,9 @@ public class AlarmClockAudio {
 
     static MediaPlayer mediaPlayer;
     static Ringtone ringtoneManager;
-    private AudioManager audioManager;
-    private static int audioVolume = 0;
+    static Vibrator vibrator;
+    static AudioManager audioManager;
+    private int audioVolume;
     private CountDownTimer countDownTimer;
     private int ringerMode;
 
@@ -96,6 +100,10 @@ public class AlarmClockAudio {
         return mediaPlayer;
     }
 
+    /**
+     * Get instance of ringtone
+     * @return instance
+     */
     private static Ringtone getRingtoneManager() {
         /**TODO: Verschiedene Alarme einfügen, über Einstellungen anpassbar */
 
@@ -106,90 +114,124 @@ public class AlarmClockAudio {
         return ringtoneManager;
     }
 
+    /**
+     * Get instance of vibrator
+     * @return instance
+     */
+    private static Vibrator getVibrator() {
+        if (vibrator == null) {
+            vibrator = (Vibrator) getInstanceContext().getSystemService(Context.VIBRATOR_SERVICE);
+        }
+
+        return vibrator;
+    }
+
+    /**
+     * Get instance of audio manager
+     * @return instance
+     */
+    private static AudioManager getAudioManager() {
+        if (audioManager == null) {
+            audioManager = (AudioManager) getInstanceContext().getSystemService(Context.AUDIO_SERVICE);
+        }
+        return audioManager;
+    }
+
+    /**
+     * Start the alarm and check the settings for the alarm
+     */
     @RequiresApi(api = Build.VERSION_CODES.P)
     public void startAlarm() {
         NotificationManager notificationManager = (NotificationManager) appContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
+        //Check for do not disturb permission, otherwise play sound with help of music stream
         if(notificationManager.isNotificationPolicyAccessGranted()) {
 
-            audioManager = (AudioManager) appContext.getSystemService(Context.AUDIO_SERVICE);
-            ringerMode = audioManager.getRingerMode();
-            audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+            /**TODO: Abfrage, ob Ton oder nur vibrieren*/
 
-            ringtoneManager = AlarmClockAudio.getRingtoneManager();
-            ringtoneManager.setVolume((float) audioManager.getStreamVolume(AudioManager.STREAM_ALARM) / (float) audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM));
-            ringtoneManager.play();
-
-            countDownTimer = new CountDownTimer(60000, 1000) {
-
-                public void onTick(long millisUntilFinished) {
-                }
-
-                public void onFinish() {
-
-                    if (ringtoneManager.isPlaying()) {
-                        stopAlarm(true);
-                    }
-                }
-
-            }.start();
+            startVibration();
+            //startRingtoneWithPermission();
 
         } else {
 
-
-            audioManager = (AudioManager) appContext.getSystemService(Context.AUDIO_SERVICE);
-
-            mediaPlayer = AlarmClockAudio.getInstance().getMediaPlayer();
-
-            mediaPlayer.start();
-            mediaPlayer.setLooping(true);
-
-
-            //Saves the actual audio volume height
-            SharedPreferences pref = appContext.getSharedPreferences("Audio", 0);
-            SharedPreferences.Editor ed = pref.edit();
-            ed.putInt("volume", audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
-            ed.apply();
-
-            audioVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC) / 2), 0);
-
-            /**TODO: VIBRATION, if necessary */
-
-            //Timer of 1 minute, which snoozes the alarm after finishing
-            countDownTimer = new CountDownTimer(60000, 1000) {
-
-                public void onTick(long millisUntilFinished) {
-                }
-
-                public void onFinish() {
-
-                    if (mediaPlayer.isPlaying()) {
-                        stopAlarm(true);
-                    }
-                }
-
-            }.start();
+            startRingtoneWithoutPermission();
         }
-    }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
-    public void test() {
-        final Ringtone r = RingtoneManager.getRingtone(appContext, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM));
-        r.setLooping(true);
-        //r.play();
-        countDownTimer = new CountDownTimer(10000, 1000) {
+        //Timer of 1 minute, which snoozes the alarm after finishing
+        countDownTimer = new CountDownTimer(60000, 1000) {
 
-            public void onTick(long millisUntilFinished) { }
+            public void onTick(long millisUntilFinished) {
+            }
 
             public void onFinish() {
 
-                if (r.isPlaying()) {
-                    r.stop();
+                if (ringtoneManager.isPlaying()) {
+                    stopAlarm(true);
                 }
             }
 
         }.start();
+    }
+
+    /**
+     * Start the vibration
+     */
+    private void startVibration() {
+
+        //Get instance of audio manager and save the actual ringer mode and set vibration mode
+        audioManager = getAudioManager();
+        ringerMode = audioManager.getRingerMode();
+        audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+
+        //Init waveform for vibration and start vibration
+        long[] waveform = {0, 400, 800, 400, 800, 400, 800};
+        vibrator = AlarmClockAudio.getVibrator();
+        vibrator.vibrate(VibrationEffect.createWaveform(waveform, 0));
+    }
+
+    /**
+     * Start the alarm tone with do not disturb permission
+     */
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    private void startRingtoneWithPermission() {
+
+        //Get instance of audio manager and save the actual ringer mode and deactivate silence mode
+        audioManager = getAudioManager();
+        ringerMode = audioManager.getRingerMode();
+        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+
+        //Get instance of ringtone
+        ringtoneManager = getRingtoneManager();
+        /**TODO: Abfrage, ob Uri noch mit dem eingestellten übereinstimmt*/
+
+        //Convert integer volume to float volume 0.0 - 1.0 for ringtone
+        if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) > 0) {
+            ringtoneManager.setVolume((float) audioManager.getStreamVolume(AudioManager.STREAM_ALARM) / (float) audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM));
+        } else {
+            ringtoneManager.setVolume(0.0f);
+        }
+
+        //play ringtone
+        ringtoneManager.play();
+
+
+
+    }
+
+    /**
+     * Start ring tone without permission
+     */
+    private void startRingtoneWithoutPermission() {
+        audioManager = getAudioManager();
+
+        //Play sound with mediaplayer
+        mediaPlayer = getMediaPlayer();
+        mediaPlayer.start();
+        mediaPlayer.setLooping(true);
+
+        //Set audio volume to half of max volume
+        audioVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC) / 2), 0);
     }
 
     /**
@@ -204,19 +246,30 @@ public class AlarmClockAudio {
         }
 
         NotificationManager notificationManager = (NotificationManager) appContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        audioManager = getAudioManager();
 
         if(notificationManager.isNotificationPolicyAccessGranted()) {
-            ringtoneManager.stop();
             audioManager.setRingerMode(ringerMode);
-        } else {
-            //restore the audio volume height and cancel countdown and notification
-            audioManager = (AudioManager) appContext.getSystemService(Context.AUDIO_SERVICE);
-            audioManager.setStreamVolume(AudioManager.STREAM_ALARM, audioVolume, 0);
 
+
+            /**TODO: Abfrage Vibration*/
+
+            vibrator = getVibrator();
+            vibrator.cancel();
+
+            //ringtoneManager = getRingtoneManager();
+            //ringtoneManager.stop();
+
+        } else {
+            //restore the audio volume height
+            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, audioVolume, 0);
+
+            mediaPlayer = getMediaPlayer();
             mediaPlayer.stop();
             mediaPlayer.setLooping(false);
         }
 
+        //cancel countdown and notification
         countDownTimer.cancel();
         AlarmClockReceiver.cancelNotification();
 

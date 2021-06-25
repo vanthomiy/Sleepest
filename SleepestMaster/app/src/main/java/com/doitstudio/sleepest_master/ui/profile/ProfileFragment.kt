@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockAudio
+import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog
 import kotlinx.coroutines.flow.first
@@ -125,7 +126,7 @@ class ProfileFragment : Fragment() {
             startActivity(startForegroundIntent)*/
             //selectRingTone()
             //val calendar = Calendar.getInstance()
-            export();
+            export()
 
             /*AlarmClockReceiver.startAlarmManager(
                 calendar.get(Calendar.DAY_OF_WEEK), calendar.get(

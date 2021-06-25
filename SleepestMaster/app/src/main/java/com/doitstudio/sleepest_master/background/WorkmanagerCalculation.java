@@ -62,7 +62,6 @@ public class WorkmanagerCalculation extends Worker {
         PeriodicWorkRequest periodicDataWork =
                 new PeriodicWorkRequest.Builder(WorkmanagerCalculation.class, duration, TimeUnit.MINUTES)
                         .addTag(context1.getString(R.string.workmanager2_tag)) //Tag is needed for canceling the periodic work
-                        //.setConstraints(constraints)
                         .build();
 
         WorkManager workManager = WorkManager.getInstance(context);

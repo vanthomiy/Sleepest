@@ -45,7 +45,9 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
     private TextView tvSwipeUp;
     private ImageView ivSwipeUpArrow;
     private DataStoreRepository dataStoreRepository;
+    private boolean isStarted = false;
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +79,8 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
         keyguardManager.requestDismissKeyguard(LockScreenAlarmActivity.this, null);
 
         swipeListener = new SwipeListener(relativeLayout);
+
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.P)
@@ -84,33 +88,38 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        fadeColor(tvSwipeUp);
+        if (!isStarted) {
+            isStarted = true;
+            fadeColor(tvSwipeUp);
 
-        AlarmClockAudio.getInstance().init(getApplicationContext());
-        AlarmClockAudio.getInstance().startAlarm();
-
-
-
-        new CountDownTimer(1000, 1000) {
-
-            public void onTick(long millisUntilFinished) { }
-
-            public void onFinish() {
-                moveView(ivSwipeUpArrow);
-            }
-
-        }.start();
+            AlarmClockAudio.getInstance().init(getApplicationContext());
+            AlarmClockAudio.getInstance().startAlarm();
 
 
-        new CountDownTimer(60000, 1000) {
 
-            public void onTick(long millisUntilFinished) { }
+            new CountDownTimer(1000, 1000) {
 
-            public void onFinish() {
-                finish();
-            }
+                public void onTick(long millisUntilFinished) { }
 
-        }.start();
+                public void onFinish() {
+                    moveView(ivSwipeUpArrow);
+                }
+
+            }.start();
+
+
+            new CountDownTimer(60000, 1000) {
+
+                public void onTick(long millisUntilFinished) { }
+
+                public void onFinish() {
+                    finish();
+                }
+
+            }.start();
+        }
+
+
     }
 
     @Override
