@@ -22,7 +22,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import com.doitstudio.sleepest_master.MainApplication;
 import com.doitstudio.sleepest_master.R;
+import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog;
 import com.kevalpatel.ringtonepicker.RingtonePickerListener;
 
@@ -41,6 +43,7 @@ public class AlarmClockAudio {
 
     private Context appContext;
     private static AlarmClockAudio alarmClockAudioInstance;
+    private DataStoreRepository dataStoreRepository;
 
 
     /**
@@ -50,6 +53,7 @@ public class AlarmClockAudio {
     public void init(Context context) {
         if(appContext == null) {
             this.appContext = context;
+            dataStoreRepository = ((MainApplication)appContext).getDataStoreRepository();
 
         }
     }
@@ -104,12 +108,16 @@ public class AlarmClockAudio {
      * Get instance of ringtone
      * @return instance
      */
-    private static Ringtone getRingtoneManager() {
+    private static Ringtone getRingtoneManager(String tone) {
         /**TODO: Verschiedene Alarme einfügen, über Einstellungen anpassbar */
 
         if (ringtoneManager == null) {
-            ringtoneManager = RingtoneManager.getRingtone(getInstanceContext(), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM));
-        }
+            if (tone == "null") {
+                ringtoneManager = RingtoneManager.getRingtone(getInstanceContext(), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM));
+            } else {
+                ringtoneManager = RingtoneManager.getRingtone(getInstanceContext(), Uri.parse(tone));
+            }
+ }
 
         return ringtoneManager;
     }
@@ -144,14 +152,23 @@ public class AlarmClockAudio {
     public void startAlarm() {
         NotificationManager notificationManager = (NotificationManager) appContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
+
         //Check for do not disturb permission, otherwise play sound with help of music stream
         if(notificationManager.isNotificationPolicyAccessGranted()) {
-
-            /**TODO: Abfrage, ob Ton oder nur vibrieren*/
-
-            startVibration();
-            //startRingtoneWithPermission();
-
+            audioManager = getAudioManager();
+            ringerMode = audioManager.getRingerMode();
+            switch(dataStoreRepository.getAlarmArtJob()) {
+                case 0:
+                    startRingtoneWithPermission();
+                    break;
+                case 1:
+                    startVibration();
+                    startRingtoneWithPermission();
+                    break;
+                case 2:
+                    startVibration();
+                    break;
+            }
         } else {
 
             startRingtoneWithoutPermission();
@@ -180,7 +197,6 @@ public class AlarmClockAudio {
 
         //Get instance of audio manager and save the actual ringer mode and set vibration mode
         audioManager = getAudioManager();
-        ringerMode = audioManager.getRingerMode();
         audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
 
         //Init waveform for vibration and start vibration
@@ -197,11 +213,10 @@ public class AlarmClockAudio {
 
         //Get instance of audio manager and save the actual ringer mode and deactivate silence mode
         audioManager = getAudioManager();
-        ringerMode = audioManager.getRingerMode();
         audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
 
         //Get instance of ringtone
-        ringtoneManager = getRingtoneManager();
+        ringtoneManager = getRingtoneManager(dataStoreRepository.getAlarmToneJob());
         /**TODO: Abfrage, ob Uri noch mit dem eingestellten übereinstimmt*/
 
         //Convert integer volume to float volume 0.0 - 1.0 for ringtone
