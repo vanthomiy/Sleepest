@@ -12,9 +12,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.PowerManager;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -146,6 +148,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
         return (PendingIntent.getBroadcast(alarmActiveContext, usage, intent, PendingIntent.FLAG_NO_CREATE) != null);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     private void showFullscreenNotification() {
 
         createNotificationChannel();

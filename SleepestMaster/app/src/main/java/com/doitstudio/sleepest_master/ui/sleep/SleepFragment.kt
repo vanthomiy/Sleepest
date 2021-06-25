@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.media.AudioManager
+import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -87,9 +88,17 @@ class SleepFragment : Fragment() {
                 Toast.makeText(actualContext, "Increase volume to hear sounds", Toast.LENGTH_LONG).show()
             }
 
+            var savedRingtoneUri = Uri.parse(dataStoreRepository.getAlarmToneJob())
+
+            if(dataStoreRepository.getAlarmToneJob() == "null") {
+                savedRingtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
+            }
+
+
             val ringtonePickerBuilder = RingtonePickerDialog.Builder(actualContext, parentFragmentManager)
                 .setTitle("Select your ringtone")
                 .displayDefaultRingtone(true)
+                .setCurrentRingtoneUri(savedRingtoneUri)
                 .setPositiveButtonText("Set")
                 .setCancelButtonText("Cancel")
                 .setPlaySampleWhileSelection(true)
