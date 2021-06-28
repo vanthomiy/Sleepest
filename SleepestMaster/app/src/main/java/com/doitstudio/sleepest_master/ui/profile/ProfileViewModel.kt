@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
@@ -189,8 +190,14 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                         userExporSessions.add(userExporSession)
                     }
 
-                    val export = gson.toJson(userExporSessions)
+                    val exportFile = gson.toJson(userExporSessions)
+                    val shareIntent: Intent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_TEXT, exportFile)
+                        type = "text/csv"
+                    }
 
+                    startActivity(Intent.createChooser(shareIntent, "Export data"))*/
                     
                 }
 
