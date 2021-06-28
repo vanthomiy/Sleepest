@@ -19,6 +19,9 @@ import android.os.PowerManager;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 import androidx.lifecycle.LifecycleService;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import com.doitstudio.sleepest_master.LiveUserSleepActivity;
 import com.doitstudio.sleepest_master.MainActivity;
@@ -36,6 +39,7 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 public class ForegroundService extends LifecycleService {
 
@@ -98,10 +102,12 @@ public class ForegroundService extends LifecycleService {
         //Info: the following getId() can not be null, because alarmEntity can not be null with getNextAlarm()
         foregroundObserver.updateAlarmWasFired(false, alarmEntity.getId());
         // New from Thomas: With other call...
-        //dataStoreRepository = DataStoreRepository.Companion.getRepo(getApplicationContext());
+        dataStoreRepository = DataStoreRepository.Companion.getRepo(getApplicationContext());
         // activity = (Activity) getApplicationContext();
         //dataStoreRepository = ((MainApplication)activity.getApplication()).getDataStoreRepository();
-        dataStoreRepository = ((MainApplication)getApplicationContext()).getDataStoreRepository();
+
+        //das hier:
+        //dataStoreRepository = ((MainApplication)getApplicationContext()).getDataStoreRepository();
 
 
         //dataStoreRepository = MainApplication.class.cast(getApplicationContext()).getDataStoreRepository();
@@ -113,7 +119,18 @@ public class ForegroundService extends LifecycleService {
 
         sleepHandler.startSleepHandler();
         AlarmReceiver.cancelAlarm(getApplicationContext(), 6);
-        Workmanager.startPeriodicWorkmanager(16, getApplicationContext());
+        //Workmanager.Companion.startPeriodicWorkmanager(16, getApplicationContext());
+
+        PeriodicWorkRequest periodicDataWork =
+                new PeriodicWorkRequest.Builder(Workmanager.class, 16, TimeUnit.MINUTES)
+                        .addTag(getApplicationContext().getString(R.string.workmanager1_tag)) //Tag is needed for canceling the periodic work
+                        .build();
+
+        WorkManager workManager = WorkManager.getInstance(getApplicationContext());
+        workManager.enqueueUniquePeriodicWork(getApplicationContext().getString(R.string.workmanager1_tag), ExistingPeriodicWorkPolicy.KEEP, periodicDataWork);
+
+        Toast.makeText(getApplicationContext(), "Workmanager started", Toast.LENGTH_LONG).show();
+
         Calendar calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeEndJob());
         AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(),7);
 
