@@ -58,19 +58,15 @@ class ProfileFragment : Fragment() {
         binding.profileViewModel = viewModel
 
         binding.sleepActivityPermission.setOnClickListener {
-            //your implementation goes here
             onPermissionClicked(it)
         }
         binding.dailyActivityPermission.setOnClickListener {
-            //your implementation goes here
             onPermissionClicked(it)
         }
         binding.storagePermission.setOnClickListener {
-            //your implementation goes here
             onPermissionClicked(it)
         }
         binding.overlayPermission.setOnClickListener {
-            //your implementation goes here
             onPermissionClicked(it)
         }
 

@@ -38,7 +38,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="Einstellung"
+                    android:text="Einstellungen"
                     android:textColor="@color/white"
                     android:textSize="@dimen/headerSize"
                     android:layout_margin="20dp"
@@ -707,8 +707,8 @@
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="Löschen"
-                            android:tag="delete"
-                            android:onClick="onPermissionClicked">
+                            android:tag="remove"
+                            android:onClick="@{profileViewModel::onDataClicked}">
                         </androidx.appcompat.widget.AppCompatButton>
                     </LinearLayout>
 
@@ -727,16 +727,6 @@
                     android:orientation="vertical"
                     android:layout_margin="10dp"
                     >
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/valuesHeight"
-                        android:background="@drawable/bgroundedchoosen"
-                        android:textSize="@dimen/valueSize"
-                        android:layout_marginVertical="5dp"
-                        android:text="Datenschutz"
-                        android:tag="export"
-                        android:onClick="@{profileViewModel::onDataClicked}">
-                    </androidx.appcompat.widget.AppCompatButton>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -746,7 +736,7 @@
                         android:textSize="@dimen/headerSize"
                         android:layout_gravity="center_horizontal"
                         android:textColor="@color/white"
-                        android:text="Sleepest\nMade with LOVE in Bavaria\n\n The app was created by 3 students as a students project  "/>
+                        android:text="Sleepest - App\nMade with LOVE in Bavaria\n\n This app was created by 3 students as a students project and will be improved and maintained in the future  "/>
 
                 </LinearLayout>
                 <FrameLayout

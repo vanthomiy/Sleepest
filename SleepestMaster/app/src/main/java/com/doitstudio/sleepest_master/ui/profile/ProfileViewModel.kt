@@ -1,6 +1,7 @@
 package com.doitstudio.sleepest_master.ui.profile
 
 import android.Manifest
+import android.app.AlertDialog
 import android.app.Application
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
@@ -10,6 +11,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.Toast
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.ContextCompat
@@ -157,7 +159,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     // region Data
 
     fun onDataClicked(view: View) {
-        updateExpandChanged(view.tag.toString(), true)
         when(view.tag.toString()){
             "export" -> {
 
