@@ -23,10 +23,16 @@ import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
 import com.doitstudio.sleepest_master.databinding.FragmentProfileBinding
 import com.doitstudio.sleepest_master.databinding.FragmentSleepBinding
+import com.doitstudio.sleepest_master.model.data.export.UserSleepExportData
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
+import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.ui.sleep.SleepFragment
 import com.doitstudio.sleepest_master.ui.sleep.SleepViewModel
+import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.time.Instant
 import java.time.LocalDateTime
@@ -40,7 +46,10 @@ class ProfileFragment : Fragment() {
     private val viewModel by lazy { ViewModelProvider(this).get(ProfileViewModel::class.java)}
     private lateinit var binding: FragmentProfileBinding
     private val actualContext: Context by lazy {requireActivity().applicationContext}
-
+    private val scope: CoroutineScope = MainScope()
+    private val dataBaseRepository: DatabaseRepository by lazy {
+        (actualContext as MainApplication).dataBaseRepository
+    }
 
     companion object {
         fun newInstance() = SleepFragment()
@@ -69,6 +78,12 @@ class ProfileFragment : Fragment() {
         binding.overlayPermission.setOnClickListener {
             onPermissionClicked(it)
         }
+        binding.importButton.setOnClickListener {
+            onDataClicked(it)
+        }
+        binding.exportButton.setOnClickListener {
+            onDataClicked(it)
+        }
 
         return binding.root
 
@@ -78,6 +93,50 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
     }
+
+    fun onDataClicked(view: View) {
+        when (view.tag.toString()) {
+            "export" -> {
+                var gson = Gson()
+
+                scope.launch {
+
+                    val userSessions = dataBaseRepository.allUserSleepSessions.first()
+
+                    val userExporSessions = mutableListOf<UserSleepExportData>()
+
+                    userSessions.forEach { session ->
+
+                        val sessionSleepData = dataBaseRepository.getSleepApiRawDataBetweenTimestamps(session.sleepTimes.sleepTimeStart, session.sleepTimes.sleepTimeEnd).first()
+
+                        val userExporSession = UserSleepExportData(
+                                session.id,
+                                session.mobilePosition,
+                                session.sleepTimes,
+                                session.userSleepRating,
+                                session.userCalculationRating,
+                                sessionSleepData
+                        )
+
+                        userExporSessions.add(userExporSession)
+                    }
+
+                    val exportFile = gson.toJson(userExporSessions)
+                    val shareIntent: Intent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_TEXT, exportFile)
+                        type = "text/json"
+                    }
+
+                    startActivity(Intent.createChooser(shareIntent, "Export data"))
+                }
+            }
+            "import" -> {
+
+            }
+        }
+    }
+
 
     fun onPermissionClicked(view: View) {
         when (view.tag.toString()) {

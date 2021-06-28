@@ -694,10 +694,19 @@
                             android:background="@drawable/bgroundedchoosen"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
-                            android:text="Exportieren"
+                            android:text="Daten Exportieren"
                             android:tag="export"
-                            android:onClick="@{profileViewModel::onDataClicked}">
-                        </androidx.appcompat.widget.AppCompatButton>
+                            android:id="@+id/exportButton"/>
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:background="@drawable/bgroundedchoosen"
+                            android:textSize="@dimen/valueSize"
+                            android:layout_marginVertical="5dp"
+                            android:text="Daten Importieren"
+                            android:tag="import"
+                            android:id="@+id/importButton" />
+
 
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
@@ -706,7 +715,7 @@
                             android:backgroundTint="@color/red"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
-                            android:text="Löschen"
+                            android:text="@{profileViewModel.removeButtonText}"
                             android:tag="remove"
                             android:onClick="@{profileViewModel::onDataClicked}">
                         </androidx.appcompat.widget.AppCompatButton>

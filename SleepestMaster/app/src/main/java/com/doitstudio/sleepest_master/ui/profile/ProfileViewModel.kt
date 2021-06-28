@@ -17,6 +17,7 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import com.doitstudio.sleepest_master.MainActivity
 import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.model.data.export.UserSleepExportData
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
@@ -37,9 +38,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     private val dataStoreRepository: DataStoreRepository by lazy {
         (context as MainApplication).dataStoreRepository
     }
-
-
-
 
     private val dataBaseRepository: DatabaseRepository by lazy {
         (context as MainApplication).dataBaseRepository
@@ -159,53 +157,18 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     // region Data
 
+    val removeButtonText = ObservableField("delete all data")
+
     fun onDataClicked(view: View) {
         when(view.tag.toString()){
             "export" -> {
-
-                // UserSleepSessionEntity
-                // Containing all SleepApiRawDataSleep for this day...
-                var gson = Gson()
-
-
-                scope.launch {
-
-                    val userSessions = dataBaseRepository.allUserSleepSessions.first()
-
-                    val userExporSessions = mutableListOf<UserSleepExportData>()
-
-                    userSessions.forEach{session->
-
-                        val sessionSleepData = dataBaseRepository.getSleepApiRawDataBetweenTimestamps(session.sleepTimes.sleepTimeStart, session.sleepTimes.sleepTimeEnd).first()
-
-                        val userExporSession = UserSleepExportData(
-                                session.id,
-                                session.mobilePosition,
-                                session.sleepTimes,
-                                session.userSleepRating,
-                                session.userCalculationRating,
-                                sessionSleepData
-                        )
-
-                        userExporSessions.add(userExporSession)
-                    }
-
-                    val exportFile = gson.toJson(userExporSessions)
-                    val shareIntent: Intent = Intent().apply {
-                        action = Intent.ACTION_SEND
-                        putExtra(Intent.EXTRA_TEXT, exportFile)
-                        type = "text/csv"
-                    }
-
-                    startActivity(Intent.createChooser(shareIntent, "Export data"))*/
-                    
-                }
 
             }
             "remove" -> {
                 TransitionManager.beginDelayedTransition(transitionsContainer);
 
                 removeExpand.set(if (removeExpand.get() == View.GONE) View.VISIBLE else View.GONE)
+                removeButtonText.set(if (removeExpand.get() == View.GONE) "delete all data" else "return")
             }
             "removeAckn" -> {
 
