@@ -132,22 +132,17 @@ class ProfileFragment : Fragment() {
 
             //selectRingTone()
             //val calendar = Calendar.getInstance()
-            export()
 
-            /*AlarmClockReceiver.startAlarmManager(
+            //export()
+            /*
+            AlarmClockReceiver.startAlarmManager(
                 calendar.get(Calendar.DAY_OF_WEEK), calendar.get(
                     Calendar.HOUR_OF_DAY
                 ), calendar.get(Calendar.MINUTE) + 2, actualContext, 1
-            )*/
-
-            //Workmanager.startPeriodicWorkmanager(16, actualContext)
-
-            /*val periodicDataWork = PeriodicWorkRequest.Builder(Workmanager::class.java, 16, TimeUnit.MINUTES)
-                .addTag("Workmanager 1") //Tag is needed for canceling the periodic work
-                .build()
-
-            WorkManager.getInstance(actualContext).enqueueUniquePeriodicWork("Workmanager 1",
-                ExistingPeriodicWorkPolicy.KEEP, periodicDataWork)*/
+            )
+            */
+            val sch = SleepCalculationHandler.getHandler(actualContext)
+            sch.defineUserWakeup()
 
             //val calendar = Calendar.getInstance()
         
