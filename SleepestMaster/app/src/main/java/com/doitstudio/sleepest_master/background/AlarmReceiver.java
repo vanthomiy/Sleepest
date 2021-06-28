@@ -18,6 +18,9 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import com.doitstudio.sleepest_master.MainActivity;
 import com.doitstudio.sleepest_master.MainApplication;
@@ -32,6 +35,7 @@ import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
 
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;
@@ -97,7 +101,18 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case 6:
                 //Start Workmanager at sleeptime and subscribe to SleepApi
-                Workmanager.startPeriodicWorkmanager(16, context);
+                //Workmanager.Companion.startPeriodicWorkmanager(16, context);
+
+                PeriodicWorkRequest periodicDataWork =
+                        new PeriodicWorkRequest.Builder(Workmanager.class, 16, TimeUnit.MINUTES)
+                                .addTag(context.getString(R.string.workmanager1_tag)) //Tag is needed for canceling the periodic work
+                                .build();
+
+                WorkManager workManager = WorkManager.getInstance(context);
+                workManager.enqueueUniquePeriodicWork(context.getString(R.string.workmanager1_tag), ExistingPeriodicWorkPolicy.KEEP, periodicDataWork);
+
+                Toast.makeText(context, "Workmanager started", Toast.LENGTH_LONG).show();
+
                 sleepHandler.startSleepHandler();
 
                 //Set AlarmManager to stop Workmanager at end of sleeptime
@@ -112,7 +127,10 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case 7:
                 //Stop Workmanager at end of sleeptime and unsubscribe to SleepApi
-                Workmanager.stopPeriodicWorkmanager();
+                //Workmanager.Companion.stopPeriodicWorkmanager();
+
+                WorkManager.getInstance(context).cancelAllWorkByTag("Workmanager 1");
+
                 sleepHandler.stopSleepHandler();
 
                 //Set AlarmManager to start Workmanager at begin of sleeptime

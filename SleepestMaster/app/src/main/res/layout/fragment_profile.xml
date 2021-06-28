@@ -28,4 +28,13 @@
         android:text="Button"
         app:layout_constraintBottom_toTopOf="@+id/text_dashboard"
         tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/buttonWorkmanagaer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:text="Button"
+        app:layout_constraintBottom_toTopOf="@+id/text_dashboard"
+        app:layout_constraintStart_toEndOf="@+id/btnStartForegroundTest" />
 </androidx.constraintlayout.widget.ConstraintLayout>

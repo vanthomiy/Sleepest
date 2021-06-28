@@ -11,10 +11,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockAudio
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
+import com.doitstudio.sleepest_master.background.Workmanager
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog
 import kotlinx.coroutines.flow.first
@@ -24,6 +28,7 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class ProfileFragment : Fragment() {
@@ -127,6 +132,7 @@ class ProfileFragment : Fragment() {
 
             //selectRingTone()
             //val calendar = Calendar.getInstance()
+
             //export()
             /*
             AlarmClockReceiver.startAlarmManager(
@@ -137,6 +143,7 @@ class ProfileFragment : Fragment() {
             */
             val sch = SleepCalculationHandler.getHandler(actualContext)
             sch.defineUserWakeup()
+
             //val calendar = Calendar.getInstance()
         
 
@@ -144,6 +151,24 @@ class ProfileFragment : Fragment() {
 
             //Toast.makeText(actualContext, "Gut gemacht, die App wird jetzt zerstört", Toast.LENGTH_LONG).show()
         }
+
+        val btn1 : Button = root.findViewById(R.id.buttonWorkmanagaer)
+        btn1.setOnClickListener() {
+            //startOrStopForegroundService(Actions.START, actualContext);
+            /*val startForegroundIntent = Intent(context, ForegroundActivity::class.java)
+            startForegroundIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            startForegroundIntent.putExtra("intent", 1)
+            startActivity(startForegroundIntent)*/
+
+            //WorkManager.getInstance(actualContext).cancelAllWorkByTag("Workmanager 1")
+            //val calendar = Calendar.getInstance()
+
+
+            //AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 2, actualContext, 1)
+
+            //Toast.makeText(actualContext, "Gut gemacht, die App wird jetzt zerstört", Toast.LENGTH_LONG).show()
+        }
+
 
         //endregion
 
