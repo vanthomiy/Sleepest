@@ -126,15 +126,17 @@ class ProfileFragment : Fragment() {
             startActivity(startForegroundIntent)*/
 
             //selectRingTone()
-            val calendar = Calendar.getInstance()
+            //val calendar = Calendar.getInstance()
             //export()
-
+            /*
             AlarmClockReceiver.startAlarmManager(
                 calendar.get(Calendar.DAY_OF_WEEK), calendar.get(
                     Calendar.HOUR_OF_DAY
                 ), calendar.get(Calendar.MINUTE) + 2, actualContext, 1
             )
-
+            */
+            val sch = SleepCalculationHandler.getHandler(actualContext)
+            sch.defineUserWakeup()
             //val calendar = Calendar.getInstance()
         
 

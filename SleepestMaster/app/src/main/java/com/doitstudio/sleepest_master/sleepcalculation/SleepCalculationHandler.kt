@@ -375,10 +375,10 @@ class SleepCalculationHandler(val context: Context) {
                         // we need to calculate the sleep state
                         // and then we update it in the sleep api raw data entity
                         val result = defineSleepStates(it.timestampSeconds, sleepApiRawDataEntity)
-                        dataBaseRepository.updateSleepApiRawDataSleepState(
+                        /*dataBaseRepository.updateSleepApiRawDataSleepState(
                             it.timestampSeconds,
                             result
-                        )
+                        )*/
                         it.sleepState = result
                     }
                 }
@@ -447,11 +447,14 @@ class SleepCalculationHandler(val context: Context) {
                 // store in the alarm...!!!
                 dataBaseRepository.updateWakeupTime(wakeupTime = wakeUpTime, alarm.id)
 
+                /*
                 val last = sleepApiRawDataEntity.last().timestampSeconds
                 dataBaseRepository.updateSleepApiRawDataWakeUp(
                         last,
                         wakeUpTime
-                )
+                )*/
+
+                sleepApiRawDataEntity.last().wakeUpTime = wakeUpTime
 
                 sleepSessionEntity.sleepTimes.sleepTimeEnd = wakeUpTime
 
@@ -462,6 +465,7 @@ class SleepCalculationHandler(val context: Context) {
 
             }
 
+            dataBaseRepository.insertSleepApiRawData(sleepApiRawDataEntity)
             dataStoreRepository.updateUserSleepTime(sleepSessionEntity.sleepTimes.sleepDuration)
             dataBaseRepository.insertUserSleepSession(sleepSessionEntity)
         }
