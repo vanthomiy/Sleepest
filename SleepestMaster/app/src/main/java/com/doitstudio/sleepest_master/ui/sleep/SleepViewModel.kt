@@ -42,7 +42,6 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
     //region binding values
 
-
     private val scope: CoroutineScope = MainScope()
     private val context by lazy{ getApplication<Application>().applicationContext }
     private val dataStoreRepository: DataStoreRepository by lazy {

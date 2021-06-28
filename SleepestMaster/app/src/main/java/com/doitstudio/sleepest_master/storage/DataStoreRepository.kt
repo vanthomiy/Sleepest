@@ -37,6 +37,20 @@ class DataStoreRepository(context: Context) {
 
     private val scope: CoroutineScope = MainScope()
 
+    /**
+     *  Sets all data to default values
+     */
+    suspend fun deleteAllData(){
+        activityApiDataStatus.loadDefault()
+        liveUserSleepActivityStatus.loadDefault()
+        backgroundServiceStatus.loadDefault()
+        settingsDataStatus.loadDefault()
+        sleepApiDataStatus.loadDefault()
+        sleepParameterStatus.loadDefault()
+
+        updateRestartApp(true)
+    }
+
     //region SleepParameter Status
 
     private val sleepParameterStatus by lazy{ SleepParameterStatus(context.createDataStore(
@@ -142,7 +156,6 @@ class DataStoreRepository(context: Context) {
 
     //endregion
 
-
     //region Settings Status
 
     private val settingsDataStatus by lazy{ SettingsStatus(context.createDataStore(
@@ -164,6 +177,9 @@ class DataStoreRepository(context: Context) {
     suspend fun updateLanguage(isActive:Int) =
             settingsDataStatus.updateLanguage(isActive)
 
+    suspend fun updateRestartApp(isActive:Boolean) =
+            settingsDataStatus.updateRestartApp(isActive)
+
     suspend fun updatePermissionSleepActivity(isActive:Boolean) =
             settingsDataStatus.updatePermissionSleepActivity(isActive)
 
@@ -175,38 +191,38 @@ class DataStoreRepository(context: Context) {
 
     //region ActivityApiData Status
 
-    private val ActivityApiDataStatus by lazy{ ActivityApiDataStatus(context.createDataStore(
+    private val activityApiDataStatus by lazy{ ActivityApiDataStatus(context.createDataStore(
             ACTIVITY_API_DATA_NAME,
             serializer = ActivityApiDataSerializer())
     )
     }
 
 
-    val activityApiDataFlow: Flow<ActivityApiData> = ActivityApiDataStatus.activityApiData
+    val activityApiDataFlow: Flow<ActivityApiData> = activityApiDataStatus.activityApiData
 
     suspend fun getActivitySubscribeStatus() : Boolean {
-        return ActivityApiDataStatus.activityApiData.first().isSubscribed }
+        return activityApiDataStatus.activityApiData.first().isSubscribed }
 
     suspend fun updateActivityIsSubscribed(isActive:Boolean) =
-            ActivityApiDataStatus.updateIsSubscribed(isActive)
+            activityApiDataStatus.updateIsSubscribed(isActive)
 
     suspend fun updateActivityPermissionActive(isActive:Boolean) =
-            ActivityApiDataStatus.updatePermissionActive(isActive)
+            activityApiDataStatus.updatePermissionActive(isActive)
 
     suspend fun updateActivityPermissionRemovedError(isActive:Boolean) =
-            ActivityApiDataStatus.updatePermissionRemovedError(isActive)
+            activityApiDataStatus.updatePermissionRemovedError(isActive)
 
     suspend fun updateActivitySubscribeFailed(isActive:Boolean) =
-            ActivityApiDataStatus.updateSubscribeFailed(isActive)
+            activityApiDataStatus.updateSubscribeFailed(isActive)
 
     suspend fun updateActivityUnsubscribeFailed(isActive:Boolean) =
-            ActivityApiDataStatus.updateUnsubscribeFailed(isActive)
+            activityApiDataStatus.updateUnsubscribeFailed(isActive)
 
     suspend fun updateActivityApiValuesAmount(amount:Int) =
-            ActivityApiDataStatus.updateActivityApiValuesAmount(amount)
+            activityApiDataStatus.updateActivityApiValuesAmount(amount)
 
     suspend fun resetActivityApiValuesAmount() =
-            ActivityApiDataStatus.resetActivityApiValuesAmount()
+            activityApiDataStatus.resetActivityApiValuesAmount()
 
 
     //endregion

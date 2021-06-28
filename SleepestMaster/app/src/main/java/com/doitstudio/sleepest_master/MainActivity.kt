@@ -1,21 +1,18 @@
 package com.doitstudio.sleepest_master
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat.recreate
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.asLiveData
 import com.doitstudio.sleepest_master.background.AlarmReceiver
 import com.doitstudio.sleepest_master.background.ForegroundService
@@ -30,7 +27,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json.Default.context
 import java.time.LocalTime
 import java.util.*
 
@@ -54,6 +50,8 @@ class MainActivity : AppCompatActivity() {
 
     private val activeAlarmsLiveData by lazy {  dataBaseRepository.activeAlarmsFlow().asLiveData() }
     private val sleepParametersLiveData by lazy {  dataStoreRepository.sleepParameterFlow.asLiveData() }
+    private val settingsLiveData by lazy {  dataStoreRepository.settingsDataFlow.asLiveData() }
+
 
     private var sleepTimeBeginTemp = 0
     private var earliestWakeupTemp = 0
@@ -140,6 +138,8 @@ class MainActivity : AppCompatActivity() {
 
         sleepTimeBeginTemp = dataStoreRepository.getSleepTimeBeginJob();
         scope.launch {
+
+            //dataStoreRepository.updateRestartApp(false)
 
             if (dataBaseRepository.getNextActiveAlarm() != null) {
                 earliestWakeupTemp = dataBaseRepository.getNextActiveAlarm()!!.wakeupEarly
@@ -250,7 +250,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        settingsLiveData.observe(this) { livedata ->
 
+            if(livedata.restartApp)
+            {
+                scope.launch {
+                    dataStoreRepository.updateRestartApp(false)
+                    recreate()
+                }
+            }
+        }
 
         // check permission
         if (!activityRecognitionPermissionApproved()) {

@@ -1,36 +1,30 @@
 package com.doitstudio.sleepest_master.ui.profile
 
 import android.Manifest
-import android.app.AlertDialog
 import android.app.Application
-import android.content.pm.PackageInfo
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.provider.Settings
 import android.transition.TransitionManager
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.Toast
 import androidx.constraintlayout.motion.widget.MotionLayout
-import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.ContextCompat
-import androidx.core.widget.NestedScrollView
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
-import com.doitstudio.sleepest_master.DontKillMyAppFragment
+import com.doitstudio.sleepest_master.MainActivity
 import com.doitstudio.sleepest_master.MainApplication
-import com.doitstudio.sleepest_master.R
-import com.doitstudio.sleepest_master.background.AlarmReceiver
+import com.doitstudio.sleepest_master.model.data.export.UserSleepExportData
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
+import com.doitstudio.sleepest_master.storage.DatabaseRepository
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.time.LocalTime
 import java.util.*
-import kotlin.math.abs
 
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -43,6 +37,12 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         (context as MainApplication).dataStoreRepository
     }
 
+
+
+
+    private val dataBaseRepository: DatabaseRepository by lazy {
+        (context as MainApplication).dataBaseRepository
+    }
 
     // region Design
     val darkMode = ObservableField(true)
@@ -123,13 +123,13 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     val overlayPermissionDescription = ObservableField(View.GONE)
 
 
-    fun showPermissionInfo(permission:String){
+    fun showPermissionInfo(permission: String){
         TransitionManager.beginDelayedTransition(transitionsContainer);
 
-        activityPermissionDescription.set(if(permission == "sleepActivity") if(activityPermissionDescription.get() != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
-        dailyPermissionDescription.set(if(permission == "dailyActivity") if(dailyPermissionDescription.get() != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
-        storagePermissionDescription.set(if(permission == "storage") if(storagePermissionDescription.get() != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
-        overlayPermissionDescription.set(if(permission == "overlay") if(overlayPermissionDescription.get() != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
+        activityPermissionDescription.set(if (permission == "sleepActivity") if (activityPermissionDescription.get() != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
+        dailyPermissionDescription.set(if (permission == "dailyActivity") if (dailyPermissionDescription.get() != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
+        storagePermissionDescription.set(if (permission == "storage") if (storagePermissionDescription.get() != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
+        overlayPermissionDescription.set(if (permission == "overlay") if (overlayPermissionDescription.get() != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
     }
 
     fun checkPermissions(){
@@ -162,9 +162,56 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         when(view.tag.toString()){
             "export" -> {
 
+                // UserSleepSessionEntity
+                // Containing all SleepApiRawDataSleep for this day...
+                var gson = Gson()
+
+
+                scope.launch {
+
+                    val userSessions = dataBaseRepository.allUserSleepSessions.first()
+
+                    val userExporSessions = mutableListOf<UserSleepExportData>()
+
+                    userSessions.forEach{session->
+
+                        val sessionSleepData = dataBaseRepository.getSleepApiRawDataBetweenTimestamps(session.sleepTimes.sleepTimeStart, session.sleepTimes.sleepTimeEnd).first()
+
+                        val userExporSession = UserSleepExportData(
+                                session.id,
+                                session.mobilePosition,
+                                session.sleepTimes,
+                                session.userSleepRating,
+                                session.userCalculationRating,
+                                sessionSleepData
+                        )
+
+                        userExporSessions.add(userExporSession)
+                    }
+
+                    val export = gson.toJson(userExporSessions)
+
+                    
+                }
+
             }
             "remove" -> {
+                TransitionManager.beginDelayedTransition(transitionsContainer);
 
+                removeExpand.set(if (removeExpand.get() == View.GONE) View.VISIBLE else View.GONE)
+            }
+            "removeAckn" -> {
+
+
+                scope.launch {
+
+                    dataBaseRepository.deleteAllAlarms()
+                    dataBaseRepository.deleteActivityApiRawData()
+                    dataBaseRepository.deleteSleepApiRawData()
+                    dataBaseRepository.deleteUserSleepSession()
+
+                    dataStoreRepository.deleteAllData()
+                }
             }
         }
     }
@@ -176,6 +223,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     val aboutUsExpand = ObservableField(View.GONE)
     val permissionsExpand = ObservableField(View.GONE)
     val dataExpand = ObservableField(View.GONE)
+    val removeExpand = ObservableField(View.GONE)
 
     val designRotation = ObservableField(0)
     val helpRotation = ObservableField(0)
@@ -197,6 +245,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         aboutUsExpand.set(if (value == "2" && aboutUsExpand.get() == View.GONE) View.VISIBLE else View.GONE)
         permissionsExpand.set(if (value == "3" && permissionsExpand.get() == View.GONE) View.VISIBLE else View.GONE)
         dataExpand.set(if (value == "4" && dataExpand.get() == View.GONE) View.VISIBLE else View.GONE)
+        removeExpand.set(if (dataExpand.get() == View.GONE) View.GONE else removeExpand.get())
 
         designRotation.set(if (designExpand.get() == View.GONE) 0 else 180)
         helpRotation.set(if (helpExpand.get() == View.GONE) 0 else 180)
@@ -217,7 +266,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
             darkMode.set(settingsParams.designDarkMode)
             autoDarkMode.set(settingsParams.designAutoDarkMode)
-            showDarkModeSetting.set(if(settingsParams.designAutoDarkMode) View.GONE else View.VISIBLE)
+            showDarkModeSetting.set(if (settingsParams.designAutoDarkMode) View.GONE else View.VISIBLE)
             selectedLanguage.set(settingsParams.designLanguage)
 
         }

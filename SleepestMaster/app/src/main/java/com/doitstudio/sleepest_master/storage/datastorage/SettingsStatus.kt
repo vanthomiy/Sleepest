@@ -13,6 +13,14 @@ const val SETTINGS_STATUS_NAME = "settings_status_name"
 
 class SettingsStatus(private val dataStore: DataStore<SettingsData>) {
 
+    suspend fun loadDefault(){
+        dataStore.updateData  {
+            obj ->
+            obj.toBuilder()
+                    .build()
+        }
+    }
+
     val settingsData: Flow<SettingsData> = dataStore.data
             .catch { exception->
                 if(exception is IOException){
@@ -38,6 +46,12 @@ class SettingsStatus(private val dataStore: DataStore<SettingsData>) {
     suspend fun updateLanguage(isActive:Int){
         dataStore.updateData{preference->
             preference.toBuilder().setDesignLanguage(isActive).build()
+        }
+    }
+
+    suspend fun updateRestartApp(isActive:Boolean){
+        dataStore.updateData{preference->
+            preference.toBuilder().setRestartApp(isActive).build()
         }
     }
 

@@ -13,6 +13,12 @@ const val LIVE_USER_ACTIVITY_DATA_NAME = "live_user_activity_data_repo"
 
 class LiveUserSleepActivityStatus(private val dataStore: DataStore<LiveUserSleepActivity>) {
 
+    suspend fun loadDefault(){
+        dataStore.updateData  {
+            LiveUserSleepActivity.getDefaultInstance()
+        }
+    }
+
     val liveUserSleepActivity: Flow<LiveUserSleepActivity> = dataStore.data
         .catch { exception ->
             if (exception is IOException) {

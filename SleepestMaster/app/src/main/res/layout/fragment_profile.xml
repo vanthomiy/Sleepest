@@ -710,6 +710,37 @@
                             android:tag="remove"
                             android:onClick="@{profileViewModel::onDataClicked}">
                         </androidx.appcompat.widget.AppCompatButton>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="10dp"
+                            android:orientation="vertical"
+                            android:visibility="@{profileViewModel.removeExpand, default=gone}"
+                            >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="40dp"
+                                android:textSize="@dimen/headerSize"
+                                android:layout_gravity="start"
+                                android:textColor="@color/white"
+                                android:text="Ohje, alle daten werden gelöscht ok?"/>
+
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/valuesHeight"
+                                android:background="@drawable/bgroundedchoosen"
+                                android:backgroundTint="@color/red"
+                                android:textSize="@dimen/valueSize"
+                                android:layout_marginVertical="5dp"
+                                android:text="Verstanden und löschen"
+                                android:tag="removeAckn"
+                                android:onClick="@{profileViewModel::onDataClicked}">
+                            </androidx.appcompat.widget.AppCompatButton>
+                        </LinearLayout>
+
                     </LinearLayout>
 
                 </LinearLayout>

@@ -207,4 +207,9 @@ message SettingsData{
 */
   bool permissionDailyActivity = 5;
 
+  /**
+* Defines if the user currently sleeping
+*/
+  bool restartApp = 6;
+
 }
