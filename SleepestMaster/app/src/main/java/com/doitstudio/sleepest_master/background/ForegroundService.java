@@ -441,7 +441,6 @@ public class ForegroundService extends LifecycleService {
 
     }
 
-    /**TODO Notification noch selbst machen mit eigenem Layout*/
     /**
      * Creats a notification banner, that is permanent to show that the app is still running.
      * @param text The text at the notification banner
@@ -477,10 +476,6 @@ public class ForegroundService extends LifecycleService {
                 + "\nIsSleeping: " + isSleeping + " Wakeup: " + alarmTimeInSeconds;
         remoteViews.setTextViewText(R.id.tvTextAlarm, notificationText);
 
-        //Set the progress bar for the sleep progress
-        remoteViews.setProgressBar(R.id.pbSleepProgressNotification, 100,
-                getSleepProgress(dataStoreRepository.getSleepTimeBeginJob(), dataStoreRepository.getSleepTimeEndJob(), Calendar.getInstance().get(Calendar.HOUR_OF_DAY)), false);
-
         //Set the Intent for tap on the notification, will start app in MainActivity
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -511,7 +506,7 @@ public class ForegroundService extends LifecycleService {
                 .setContentText(text)
                 .setCustomBigContentView(remoteViews)
                 .setStyle(new Notification.DecoratedCustomViewStyle())
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.logo_notification)
                 .setContentIntent(pendingIntent)
                 .setOnlyAlertOnce(true)
                 .build();
@@ -528,35 +523,8 @@ public class ForegroundService extends LifecycleService {
         Intent intent = new Intent(context, ForegroundService.class);
         intent.setAction(action.name());
 
-        /*if (new ServiceTracker().getServiceState(context) == ServiceState.STOPPED && action == Actions.STOP) {
-            return;
-        }*/
-
         context.startForegroundService(intent);
         return;
-    }
-
-    /**
-     * Calculates the actual progress of the progressbar
-     * @param beginTime Start time of sleeptime in secondsOfDay
-     * @param endTime Stop time of sleeptime in secondsOfDay
-     * @param actualTime Actual time in hours
-     * @return
-     */
-    private int getSleepProgress(int beginTime, int endTime, int actualTime) {
-        int progress;
-
-        if (beginTime < endTime) {
-            progress = (actualTime - beginTime) / (endTime - beginTime) * 100;
-        } else {
-            if (actualTime <= 23 && actualTime > beginTime) {
-                progress = (actualTime - beginTime) / (endTime + 24 - beginTime) * 100;
-            } else {
-                progress = (actualTime + 24 - beginTime) / (endTime + 24 - beginTime) * 100;
-            }
-        }
-
-        return progress;
     }
 
     //endregion

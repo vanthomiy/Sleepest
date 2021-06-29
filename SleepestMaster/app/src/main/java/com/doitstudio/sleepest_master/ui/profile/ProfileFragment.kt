@@ -1,6 +1,9 @@
 package com.doitstudio.sleepest_master.ui.profile
 
+import android.app.Notification
+import android.app.NotificationManager
 import android.content.Context
+import android.content.Context.NOTIFICATION_SERVICE
 import android.media.AudioManager
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,16 +12,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequest
-import androidx.work.WorkManager
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
-import com.doitstudio.sleepest_master.alarmclock.AlarmClockAudio
-import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
-import com.doitstudio.sleepest_master.background.Workmanager
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog
 import kotlinx.coroutines.flow.first
@@ -28,7 +26,6 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 
 class ProfileFragment : Fragment() {
@@ -167,6 +164,8 @@ class ProfileFragment : Fragment() {
             //AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 2, actualContext, 1)
 
             //Toast.makeText(actualContext, "Gut gemacht, die App wird jetzt zerstört", Toast.LENGTH_LONG).show()
+
+            val test = getActiveNotification(1)
         }
 
 
@@ -175,6 +174,17 @@ class ProfileFragment : Fragment() {
         return root
     }
 
+    fun getActiveNotification(notificationId: Int): Notification? {
+        val notificationManager =
+            actualContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager?
+        val barNotifications = notificationManager!!.activeNotifications
+        for (notification in barNotifications) {
+            if (notification.id == notificationId) {
+                return notification.notification
+            }
+        }
+        return null
+    }
     private fun selectRingTone() {
 
         //check if audio volume is 0
@@ -183,13 +193,20 @@ class ProfileFragment : Fragment() {
             Toast.makeText(actualContext, "Increase volume to hear sounds", Toast.LENGTH_LONG).show()
         }
 
-        val ringtonePickerBuilder = RingtonePickerDialog.Builder(actualContext, parentFragmentManager)
+        val ringtonePickerBuilder = RingtonePickerDialog.Builder(
+            actualContext,
+            parentFragmentManager
+        )
             .setTitle("Select your ringtone")
             .displayDefaultRingtone(true)
             .setPositiveButtonText("Set")
             .setCancelButtonText("Cancel")
             .setPlaySampleWhileSelection(true)
-            .setListener { ringtoneName, ringtoneUri -> Toast.makeText(actualContext, ringtoneUri.toString(), Toast.LENGTH_LONG).show()}
+            .setListener { ringtoneName, ringtoneUri -> Toast.makeText(
+                actualContext,
+                ringtoneUri.toString(),
+                Toast.LENGTH_LONG
+            ).show()}
 
         ringtonePickerBuilder.addRingtoneType(RingtonePickerDialog.Builder.TYPE_ALARM)
         ringtonePickerBuilder.show()
