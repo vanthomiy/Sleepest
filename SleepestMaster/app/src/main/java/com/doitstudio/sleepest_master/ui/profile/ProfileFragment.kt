@@ -1,51 +1,43 @@
 package com.doitstudio.sleepest_master.ui.profile
 
 import android.Manifest
+import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.provider.DocumentsContract
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.MainApplication
-import com.doitstudio.sleepest_master.R
-import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
 import com.doitstudio.sleepest_master.databinding.FragmentProfileBinding
-import com.doitstudio.sleepest_master.databinding.FragmentSleepBinding
 import com.doitstudio.sleepest_master.model.data.export.UserSleepExportData
-import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
+import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
+import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
 import com.doitstudio.sleepest_master.ui.sleep.SleepFragment
-import com.doitstudio.sleepest_master.ui.sleep.SleepViewModel
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
 import java.util.*
 
 
 class ProfileFragment : Fragment() {
 
-    private val viewModel by lazy { ViewModelProvider(this).get(ProfileViewModel::class.java)}
+    private val viewModel by lazy { ViewModelProvider(this).get(ProfileViewModel::class.java) }
     private lateinit var binding: FragmentProfileBinding
-    private val actualContext: Context by lazy {requireActivity().applicationContext}
+    private val actualContext: Context by lazy { requireActivity().applicationContext }
     private val scope: CoroutineScope = MainScope()
     private val dataBaseRepository: DatabaseRepository by lazy {
         (actualContext as MainApplication).dataBaseRepository
@@ -97,9 +89,11 @@ class ProfileFragment : Fragment() {
     fun onDataClicked(view: View) {
         when (view.tag.toString()) {
             "export" -> {
-                var gson = Gson()
 
+                //val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+                //startActivityForResult(intent, 1121)
                 scope.launch {
+                    var gson = Gson()
 
                     val userSessions = dataBaseRepository.allUserSleepSessions.first()
 
@@ -122,21 +116,29 @@ class ProfileFragment : Fragment() {
                     }
 
                     val exportFile = gson.toJson(userExporSessions)
-                    val shareIntent: Intent = Intent().apply {
-                        action = Intent.ACTION_SEND
-                        putExtra(Intent.EXTRA_TEXT, exportFile)
+
+                    val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                        addCategory(Intent.CATEGORY_OPENABLE)
                         type = "text/json"
+                        putExtra(Intent.EXTRA_TITLE, "Schlafdaten.json")
+                        putExtra(Intent.EXTRA_TEXT, exportFile)
                     }
 
-                    startActivity(Intent.createChooser(shareIntent, "Export data"))
+                    startActivityForResult(intent, 1010)
+
                 }
+
             }
             "import" -> {
+                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type = "text/json"
+                }
 
+                startActivityForResult(intent, 1011)
             }
         }
     }
-
 
     fun onPermissionClicked(view: View) {
         when (view.tag.toString()) {
@@ -163,9 +165,78 @@ class ProfileFragment : Fragment() {
 
         // Check if a request code is received that matches that which we provided for the overlay draw request
         if (requestCode == 1234) {
-
             viewModel.checkPermissions()
         }
+        else if (requestCode == 1011) {
+
+            val uri = data?.data
+
+            uri?.let {
+                val importJson = readTextFromUri(it)
+
+                var data = mutableListOf<UserSleepExportData>()
+                try {
+                    var gson = Gson()
+
+                    data.addAll(gson.fromJson(importJson, Array<UserSleepExportData>::class.java).asList())
+                } catch (ex: Exception) {
+                    Toast.makeText(actualContext, "Wrong data format", Toast.LENGTH_SHORT).show()
+                    return@let
+                }
+
+
+
+                try {
+
+                    var sessions = mutableListOf<UserSleepSessionEntity>()
+                    var sleepApiRawDataEntity = mutableListOf<SleepApiRawDataEntity>()
+
+                    data.forEach { session ->
+
+                        sessions.add(UserSleepSessionEntity(
+                                session.id,
+                                session.mobilePosition,
+                                session.sleepTimes,
+                                session.userSleepRating,
+                                session.userCalculationRating
+                        ))
+
+                        sleepApiRawDataEntity.addAll(session.sleepApiRawData)
+                    }
+
+                    scope.launch {
+                        dataBaseRepository.insertSleepApiRawData(sleepApiRawDataEntity)
+                        dataBaseRepository.insertUserSleepSessions(sessions)
+                    }
+                } catch (ex: Exception) {
+                    Toast.makeText(actualContext, "Cant write to database", Toast.LENGTH_SHORT).show()
+                    return@let
+                } finally {
+                    Toast.makeText(actualContext, "Successful imported data", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+        else if (requestCode == 1010) {
+            Toast.makeText(actualContext, if(resultCode == RESULT_OK) "Successfully exported" else "Export failed", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
+    val contentResolver by lazy {actualContext.contentResolver}
+
+    //@Throws(IOException::class)
+    private fun readTextFromUri(uri: Uri): String {
+        val stringBuilder = StringBuilder()
+        contentResolver.openInputStream(uri)?.use { inputStream ->
+            BufferedReader(InputStreamReader(inputStream)).use { reader ->
+                var line: String? = reader.readLine()
+                while (line != null) {
+                    stringBuilder.append(line)
+                    line = reader.readLine()
+                }
+            }
+        }
+        return stringBuilder.toString()
     }
 
 
@@ -185,6 +256,7 @@ class ProfileFragment : Fragment() {
                     viewModel.checkPermissions()
                 }
             }
+
 }
 
 

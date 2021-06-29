@@ -85,7 +85,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
         val tpd = TimePickerDialog(
                 view.context,
-                TimePickerDialog.OnTimeSetListener(function = { view, h, m ->
+                { view, h, m ->
 
                     sleepStartValue.set((if (h < 10) "0" else "") + h.toString() + ":" + (if (m < 10) "0" else "") + m.toString())
                     sleepStartTime = LocalTime.of(h, m)
@@ -95,7 +95,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
                     scope.launch {
                         dataStoreRepository.updateSleepTimeStart(sleepStartTime.toSecondOfDay())
                     }
-                }),
+                },
                 hour,
                 minute,
                 false
