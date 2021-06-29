@@ -45,7 +45,8 @@ public class WorkmanagerCalculation extends Worker {
          * problemlos möglich.
          */
         sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(MainApplication.Companion.applicationContext());
-        sleepCalculationHandler.defineUserWakeup( null, false);
+        //sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
+        sleepCalculationHandler.defineUserWakeup( null, true);
 
         Calendar calendar = Calendar.getInstance();
 
