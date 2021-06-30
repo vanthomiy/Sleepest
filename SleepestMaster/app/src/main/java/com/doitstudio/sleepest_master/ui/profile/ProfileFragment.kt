@@ -1,6 +1,7 @@
 package com.doitstudio.sleepest_master.ui.profile
 
 import android.Manifest
+import android.R
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
@@ -27,9 +28,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.io.BufferedReader
-import java.io.IOException
-import java.io.InputStreamReader
+import java.io.*
 import java.util.*
 
 
@@ -90,52 +89,24 @@ class ProfileFragment : Fragment() {
         when (view.tag.toString()) {
             "export" -> {
 
-                //val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
-                //startActivityForResult(intent, 1121)
-                scope.launch {
-                    var gson = Gson()
-
-                    val userSessions = dataBaseRepository.allUserSleepSessions.first()
-
-                    val userExporSessions = mutableListOf<UserSleepExportData>()
-
-                    userSessions.forEach { session ->
-
-                        val sessionSleepData = dataBaseRepository.getSleepApiRawDataBetweenTimestamps(session.sleepTimes.sleepTimeStart, session.sleepTimes.sleepTimeEnd).first()
-
-                        val userExporSession = UserSleepExportData(
-                                session.id,
-                                session.mobilePosition,
-                                session.sleepTimes,
-                                session.userSleepRating,
-                                session.userCalculationRating,
-                                sessionSleepData
-                        )
-
-                        userExporSessions.add(userExporSession)
-                    }
-
-                    val exportFile = gson.toJson(userExporSessions)
-
-                    val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
-                        addCategory(Intent.CATEGORY_OPENABLE)
-                        type = "text/json"
-                        putExtra(Intent.EXTRA_TITLE, "Schlafdaten.json")
-                        putExtra(Intent.EXTRA_TEXT, exportFile)
-                    }
-
-                    startActivityForResult(intent, 1010)
-
+                val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type = "text/*"
+                    putExtra(Intent.EXTRA_TITLE, "Schlafdaten.json")
                 }
+
+                startActivityForResult(intent, 1010)
 
             }
             "import" -> {
-                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-                    addCategory(Intent.CATEGORY_OPENABLE)
-                    type = "text/json"
+
+                // Choose a directory using the system's file picker.
+                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
+                    // Optionally, specify a URI for the directory that should be opened in
+                    // the system file picker when it loads.
                 }
 
-                startActivityForResult(intent, 1011)
+                startActivityForResult(intent, 1012)
             }
         }
     }
@@ -167,6 +138,18 @@ class ProfileFragment : Fragment() {
         if (requestCode == 1234) {
             viewModel.checkPermissions()
         }
+        else if (requestCode == 1012) {
+
+            val uri = data?.data
+
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                addCategory(Intent.CATEGORY_OPENABLE)
+                putExtra(DocumentsContract.EXTRA_INITIAL_URI, uri)
+                type = "text/*"
+            }
+
+            startActivityForResult(intent, 1011)
+        }
         else if (requestCode == 1011) {
 
             val uri = data?.data
@@ -183,8 +166,6 @@ class ProfileFragment : Fragment() {
                     Toast.makeText(actualContext, "Wrong data format", Toast.LENGTH_SHORT).show()
                     return@let
                 }
-
-
 
                 try {
 
@@ -217,14 +198,45 @@ class ProfileFragment : Fragment() {
             }
         }
         else if (requestCode == 1010) {
-            Toast.makeText(actualContext, if(resultCode == RESULT_OK) "Successfully exported" else "Export failed", Toast.LENGTH_SHORT).show()
+
+            try {
+                scope.launch {
+                    var gson = Gson()
+
+                    val userSessions = dataBaseRepository.allUserSleepSessions.first()
+
+                    val userExporSessions = mutableListOf<UserSleepExportData>()
+
+                    userSessions.forEach { session ->
+
+                        val sessionSleepData = dataBaseRepository.getSleepApiRawDataBetweenTimestamps(session.sleepTimes.sleepTimeStart, session.sleepTimes.sleepTimeEnd).first()
+
+                        val userExporSession = UserSleepExportData(
+                                session.id,
+                                session.mobilePosition,
+                                session.sleepTimes,
+                                session.userSleepRating,
+                                session.userCalculationRating,
+                                sessionSleepData
+                        )
+
+                        userExporSessions.add(userExporSession)
+                    }
+
+                    val exportFile = gson.toJson(userExporSessions)
+
+                    data?.data?.let { writeTextToUri(it, exportFile) }
+                }
+
+            } catch (e: IOException) {
+                Toast.makeText(actualContext, "Export failed", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
 
     val contentResolver by lazy {actualContext.contentResolver}
 
-    //@Throws(IOException::class)
     private fun readTextFromUri(uri: Uri): String {
         val stringBuilder = StringBuilder()
         contentResolver.openInputStream(uri)?.use { inputStream ->
@@ -239,6 +251,25 @@ class ProfileFragment : Fragment() {
         return stringBuilder.toString()
     }
 
+    private fun writeTextToUri(uri: Uri, text:String) {
+        try {
+            contentResolver.openFileDescriptor(uri, "w")?.use {
+                FileOutputStream(it.fileDescriptor).use {
+                    it.write(
+                            text
+                                    .toByteArray()
+                    )
+                }
+            }
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        Toast.makeText(actualContext, "Export successfully", Toast.LENGTH_SHORT).show()
+
+    }
 
     private val requestPermissionLauncher =
             registerForActivityResult(ActivityResultContracts.RequestPermission()

@@ -38,7 +38,6 @@ public class AlarmClockAudio {
     public void init(Context context) {
         if(appContext == null) {
             this.appContext = context;
-
         }
     }
 
