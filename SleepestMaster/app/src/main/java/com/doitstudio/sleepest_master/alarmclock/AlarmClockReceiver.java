@@ -41,6 +41,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
      * @param context Context
      * @param intent Intent
      */
+    @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     public void onReceive(Context context, Intent intent) {
 

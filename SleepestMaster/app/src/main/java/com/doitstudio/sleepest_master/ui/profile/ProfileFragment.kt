@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
+import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog
 import kotlinx.coroutines.flow.first
@@ -158,10 +159,10 @@ class ProfileFragment : Fragment() {
             startActivity(startForegroundIntent)*/
 
             //WorkManager.getInstance(actualContext).cancelAllWorkByTag("Workmanager 1")
-            //val calendar = Calendar.getInstance()
+            val calendar = Calendar.getInstance()
 
 
-            //AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 2, actualContext, 1)
+            AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 2, actualContext, 1)
 
             //Toast.makeText(actualContext, "Gut gemacht, die App wird jetzt zerstört", Toast.LENGTH_LONG).show()
 
