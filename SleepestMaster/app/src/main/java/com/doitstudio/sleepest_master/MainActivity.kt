@@ -22,6 +22,7 @@ import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.ui.profile.ProfileFragment
 import com.doitstudio.sleepest_master.ui.sleep.SleepFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -258,11 +259,16 @@ class MainActivity : AppCompatActivity() {
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
         if (!notificationManager.isNotificationPolicyAccessGranted){
-            Toast.makeText(this,"Alarm could be silence without this permission", Toast.LENGTH_SHORT).show()
-        }
-
-        if(!Settings.canDrawOverlays(this)) {
-            Toast.makeText(this,"Sorry. Can't draw overlays without permission...", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this,"Alarm could be silence without this permission", Toast.LENGTH_SHORT).show()
+            val snack = Snackbar.make(findViewById(android.R.id.content),"This is a simple Snackbar",Snackbar.LENGTH_INDEFINITE)
+            snack.show()
+        } else if(!Settings.canDrawOverlays(this)) {
+            //Toast.makeText(this,"Sorry. Can't draw overlays without permission...", Toast.LENGTH_SHORT).show()
+            val snack = Snackbar.make(findViewById(android.R.id.content),"This is a simple Snackbar",Snackbar.LENGTH_INDEFINITE)
+            snack.show()
+        } else if(!activityRecognitionPermissionApproved()) {
+            val snack = Snackbar.make(findViewById(android.R.id.content),"This is a simple Snackbar",Snackbar.LENGTH_INDEFINITE)
+            snack.show()
         }
 
     }
