@@ -55,6 +55,12 @@ class SettingsStatus(private val dataStore: DataStore<SettingsData>) {
         }
     }
 
+    suspend fun updateAfterRestartApp(isActive:Boolean){
+        dataStore.updateData{preference->
+            preference.toBuilder().setAfterRestartApp(isActive).build()
+        }
+    }
+
     suspend fun updatePermissionSleepActivity(isActive:Boolean){
         dataStore.updateData{preference->
             preference.toBuilder().setPermissionSleepActivity(isActive).build()

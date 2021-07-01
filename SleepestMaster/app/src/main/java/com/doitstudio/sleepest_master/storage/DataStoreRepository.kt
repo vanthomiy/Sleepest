@@ -49,6 +49,7 @@ class DataStoreRepository(context: Context) {
         sleepParameterStatus.loadDefault()
 
         updateRestartApp(true)
+        updateAfterRestartApp(true)
     }
 
     //region SleepParameter Status
@@ -179,6 +180,9 @@ class DataStoreRepository(context: Context) {
 
     suspend fun updateRestartApp(isActive:Boolean) =
             settingsDataStatus.updateRestartApp(isActive)
+
+    suspend fun updateAfterRestartApp(isActive:Boolean) =
+            settingsDataStatus.updateAfterRestartApp(isActive)
 
     suspend fun updatePermissionSleepActivity(isActive:Boolean) =
             settingsDataStatus.updatePermissionSleepActivity(isActive)

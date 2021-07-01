@@ -212,4 +212,9 @@ message SettingsData{
 */
   bool restartApp = 6;
 
+  /**
+* Defines if the user currently sleeping
+*/
+  bool afterRestartApp = 7;
+
 }

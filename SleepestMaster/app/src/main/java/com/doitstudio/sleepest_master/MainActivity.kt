@@ -68,62 +68,80 @@ class MainActivity : AppCompatActivity() {
     lateinit var profileFragment : ProfileFragment
 
     fun setupFragments(isStart:Boolean){
+        scope.launch {
 
-        bottomBar = binding.bottomBar
-        alarmsFragment = AlarmsFragment()
-        historyFragment = HistoryFragment(applicationContext)
-        sleepFragment = SleepFragment()
-        profileFragment = ProfileFragment()
+            val settings = dataStoreRepository.settingsDataFlow.first()
 
-        supportFragmentManager.beginTransaction().add(R.id.navigationFrame, if(isStart) alarmsFragment  else profileFragment).commit()
+            bottomBar = binding.bottomBar
+            alarmsFragment = AlarmsFragment()
+            historyFragment = HistoryFragment(applicationContext)
+            sleepFragment = SleepFragment()
+            profileFragment = ProfileFragment()
 
-        profileFragment.darkModeSwitched = !isStart
-
-        bottomBar.setOnNavigationItemSelectedListener { item->
-
-            val ft = supportFragmentManager.beginTransaction()
-
-            when (item.itemId) {
-                R.id.home -> {
-                    if (alarmsFragment.isAdded) {
-                        ft.show(alarmsFragment)
-                    } else {
-                        ft.add(R.id.navigationFrame, alarmsFragment)
-                    }
+            if(isStart){
+                supportFragmentManager.beginTransaction().add(R.id.navigationFrame, alarmsFragment).commit()
+            }
+            else{
+                supportFragmentManager.beginTransaction().replace(R.id.navigationFrame, profileFragment).commit()
+                if(settings.afterRestartApp){
+                    profileFragment.caseOfEntrie = 2
+                    dataStoreRepository.updateAfterRestartApp(false)
                 }
-                R.id.history -> {
-                    if (historyFragment.isAdded) {
-                        ft.show(historyFragment)
-                    } else {
-                        ft.add(R.id.navigationFrame, historyFragment)
-                    }
-                }
-                R.id.sleep -> {
-                    if (sleepFragment.isAdded) {
-                        ft.show(sleepFragment)
-                    } else {
-                        ft.add(R.id.navigationFrame, sleepFragment)
-                    }
-                }
-                else -> {
-                    if(profileFragment.isAdded){
-                        ft.show(profileFragment)
-                    }else{
-                        ft.add(R.id.navigationFrame, profileFragment)
-                    }
+                else{
+                    profileFragment.caseOfEntrie = if(isStart) 0 else 1
                 }
             }
 
-            // Hide fragment B
-            if (item.title != "home" && alarmsFragment.isAdded) { ft.hide(alarmsFragment) }
-            if (item.title != "history" && historyFragment.isAdded) { ft.hide(historyFragment) }
-            if (item.title != "sleep" && sleepFragment.isAdded) { ft.hide(sleepFragment) }
-            if (item.title != "profile" && profileFragment.isAdded) { ft.hide(profileFragment) }
 
-            ft.commit()
 
-            true
+            bottomBar.setOnNavigationItemSelectedListener { item->
+
+                val ft = supportFragmentManager.beginTransaction()
+
+                when (item.itemId) {
+                    R.id.home -> {
+                        if (alarmsFragment.isAdded) {
+                            ft.show(alarmsFragment)
+                        } else {
+                            ft.add(R.id.navigationFrame, alarmsFragment)
+                        }
+                    }
+                    R.id.history -> {
+                        if (historyFragment.isAdded) {
+                            ft.show(historyFragment)
+                        } else {
+                            ft.add(R.id.navigationFrame, historyFragment)
+                        }
+                    }
+                    R.id.sleep -> {
+                        if (sleepFragment.isAdded) {
+                            ft.show(sleepFragment)
+                        } else {
+                            ft.add(R.id.navigationFrame, sleepFragment)
+                        }
+                    }
+                    else -> {
+                        if(profileFragment.isAdded){
+                            ft.show(profileFragment)
+                        }else{
+                            ft.add(R.id.navigationFrame, profileFragment)
+                        }
+                    }
+                }
+
+                // Hide fragment B
+                if (item.title != "home" && alarmsFragment.isAdded) { ft.hide(alarmsFragment) }
+                if (item.title != "history" && historyFragment.isAdded) { ft.hide(historyFragment) }
+                if (item.title != "sleep" && sleepFragment.isAdded) { ft.hide(sleepFragment) }
+                if (item.title != "profile" && profileFragment.isAdded) { ft.hide(profileFragment) }
+
+                ft.commit()
+
+                true
+            }
+
         }
+
 
     }
 
@@ -135,12 +153,30 @@ class MainActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
 
+        scope.launch {
+            // check system dark mode if neccessarry and safe in
+            val settings = dataStoreRepository.settingsDataFlow.first()
+            if(settings.designAutoDarkMode){
+                AppCompatDelegate
+                        .setDefaultNightMode(
+                                AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+            }
+            /*else {
+                AppCompatDelegate
+                        .setDefaultNightMode(if(settings.designDarkMode)
+                            AppCompatDelegate.MODE_NIGHT_YES else
+                            AppCompatDelegate.MODE_NIGHT_NO);
+            }*/
+        }
+
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setupFragments(savedInstanceState == null)
 
         sleepTimeBeginTemp = dataStoreRepository.getSleepTimeBeginJob();
+
         scope.launch {
 
             if (dataBaseRepository.getNextActiveAlarm() != null) {
@@ -149,19 +185,7 @@ class MainActivity : AppCompatActivity() {
                 earliestWakeupTemp = 0
             }
 
-            // check system dark mode if neccessarry and safe in
-            val settings = dataStoreRepository.settingsDataFlow.first()
-            if(settings.designAutoDarkMode){
-                AppCompatDelegate
-                        .setDefaultNightMode(
-                                            AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-            }
-            else {
-                AppCompatDelegate
-                        .setDefaultNightMode(if(settings.designDarkMode)
-                                AppCompatDelegate.MODE_NIGHT_YES else
-                                    AppCompatDelegate.MODE_NIGHT_NO);
-            }
+
         }
 
 
@@ -267,7 +291,7 @@ class MainActivity : AppCompatActivity() {
 
         settingsLiveData.observe(this) { livedata ->
 
-            if(livedata.restartApp)
+            if(livedata.restartApp && livedata.afterRestartApp)
             {
                 scope.launch {
                     dataStoreRepository.updateRestartApp(false)

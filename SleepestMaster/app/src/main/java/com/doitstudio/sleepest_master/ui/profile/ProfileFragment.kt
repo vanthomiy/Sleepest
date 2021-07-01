@@ -42,7 +42,7 @@ class ProfileFragment : Fragment() {
         (actualContext as MainApplication).dataBaseRepository
     }
 
-    var darkModeSwitched = false
+    var caseOfEntrie = 0
 
 
     companion object {
@@ -79,7 +79,8 @@ class ProfileFragment : Fragment() {
             onDataClicked(it)
         }
 
-        viewModel.designExpand.set(if(darkModeSwitched) View.VISIBLE else View.GONE)
+        viewModel.designExpand.set(if(caseOfEntrie == 1) View.VISIBLE else View.GONE)
+        viewModel.dataExpand.set(if(caseOfEntrie == 2) View.VISIBLE else View.GONE)
 
         return binding.root
 
