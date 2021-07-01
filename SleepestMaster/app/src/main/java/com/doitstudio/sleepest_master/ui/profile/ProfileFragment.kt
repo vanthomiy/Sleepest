@@ -42,6 +42,9 @@ class ProfileFragment : Fragment() {
         (actualContext as MainApplication).dataBaseRepository
     }
 
+    var darkModeSwitched = false
+
+
     companion object {
         fun newInstance() = SleepFragment()
     }
@@ -76,13 +79,14 @@ class ProfileFragment : Fragment() {
             onDataClicked(it)
         }
 
+        viewModel.designExpand.set(if(darkModeSwitched) View.VISIBLE else View.GONE)
+
         return binding.root
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
     }
 
     fun onDataClicked(view: View) {
@@ -130,6 +134,7 @@ class ProfileFragment : Fragment() {
             } else viewModel.showPermissionInfo("overlay")
         }
     }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

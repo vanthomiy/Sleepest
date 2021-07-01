@@ -9,6 +9,8 @@ import android.transition.TransitionManager
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import androidx.annotation.NonNull
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
@@ -49,6 +51,10 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         scope.launch {
             darkMode.get()?.let {
                 dataStoreRepository.updateDarkMode(it)
+                AppCompatDelegate
+                        .setDefaultNightMode(if(it)
+                            AppCompatDelegate.MODE_NIGHT_YES else
+                            AppCompatDelegate.MODE_NIGHT_NO);
             }
         }
     }
@@ -64,8 +70,17 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             }
         }
 
-        autoDarkMode.get()?.let {
-            showDarkModeSetting.set(if (it) View.GONE else View.VISIBLE)
+        autoDarkMode.get()?.let { auto ->
+            showDarkModeSetting.set(if (auto) View.GONE else View.VISIBLE)
+            AppCompatDelegate
+                    .setDefaultNightMode(if(auto)
+                        AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM else
+                        darkMode.get().let { mode ->
+                                if(mode == true)
+                                AppCompatDelegate.MODE_NIGHT_YES else
+                                AppCompatDelegate.MODE_NIGHT_NO
+                            })
+
         }
     }
 

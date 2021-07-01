@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -11,6 +12,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat.recreate
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.asLiveData
@@ -65,7 +67,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var sleepFragment : SleepFragment
     lateinit var profileFragment : ProfileFragment
 
-    fun setupFragments(){
+    fun setupFragments(isStart:Boolean){
 
         bottomBar = binding.bottomBar
         alarmsFragment = AlarmsFragment()
@@ -73,7 +75,9 @@ class MainActivity : AppCompatActivity() {
         sleepFragment = SleepFragment()
         profileFragment = ProfileFragment()
 
-        supportFragmentManager.beginTransaction().add(R.id.navigationFrame, alarmsFragment).commit()
+        supportFragmentManager.beginTransaction().add(R.id.navigationFrame, if(isStart) alarmsFragment  else profileFragment).commit()
+
+        profileFragment.darkModeSwitched = !isStart
 
         bottomBar.setOnNavigationItemSelectedListener { item->
 
@@ -134,12 +138,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupFragments()
+        setupFragments(savedInstanceState == null)
 
         sleepTimeBeginTemp = dataStoreRepository.getSleepTimeBeginJob();
         scope.launch {
-
-            //dataStoreRepository.updateRestartApp(false)
 
             if (dataBaseRepository.getNextActiveAlarm() != null) {
                 earliestWakeupTemp = dataBaseRepository.getNextActiveAlarm()!!.wakeupEarly
@@ -147,6 +149,19 @@ class MainActivity : AppCompatActivity() {
                 earliestWakeupTemp = 0
             }
 
+            // check system dark mode if neccessarry and safe in
+            val settings = dataStoreRepository.settingsDataFlow.first()
+            if(settings.designAutoDarkMode){
+                AppCompatDelegate
+                        .setDefaultNightMode(
+                                            AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+            }
+            else {
+                AppCompatDelegate
+                        .setDefaultNightMode(if(settings.designDarkMode)
+                                AppCompatDelegate.MODE_NIGHT_YES else
+                                    AppCompatDelegate.MODE_NIGHT_NO);
+            }
         }
 
 
@@ -352,5 +367,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
 }
 

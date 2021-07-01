@@ -28,5 +28,6 @@
     <color name="dark_gray">#2c3e50</color>
     <color name="dark_green">#27ae60</color>
     <color name="light_gray">#bdc3c7</color>
-    <color name="background">#1a1a1a</color>
+    <color name="background">#fafafa</color>
+
 </resources>
