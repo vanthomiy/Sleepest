@@ -8,6 +8,36 @@ enum class Actions {
     START, STOP
 }
 
+interface IAlarmReceiverUsage {
+    fun getAlarmReceiverUsageValue() : Int
+}
+enum class AlarmReceiverUsage : IAlarmReceiverUsage {
+    DEFAULT {
+        override fun getAlarmReceiverUsageValue(): Int = 0
+    },
+    START_FOREGROUND{
+        override fun getAlarmReceiverUsageValue(): Int = 1
+    },
+    STOP_FOREGROUND{
+        override fun getAlarmReceiverUsageValue(): Int = 2
+    },
+    DISABLE_ALARM{
+        override fun getAlarmReceiverUsageValue(): Int = 3
+    },
+    NOT_SLEEPING{
+        override fun getAlarmReceiverUsageValue(): Int = 4
+    },
+    START_WORKMANAGER_CALCULATION{
+        override fun getAlarmReceiverUsageValue(): Int = 5
+    },
+    START_WORKMANAGER{
+        override fun getAlarmReceiverUsageValue(): Int = 6
+    },
+    STOP_WORKMANAGER{
+        override fun getAlarmReceiverUsageValue(): Int = 7
+    }
+}
+
 /**
  * Defines the different states of the sleep a user can be in
  */
