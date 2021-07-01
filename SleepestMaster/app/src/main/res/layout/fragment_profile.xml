@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@color/background"
+        android:background="@color/primary_app_background"
         >
 
 
@@ -24,7 +24,7 @@
             android:scrollbars="none"
             android:clipToPadding="true"
             android:fillViewport="true">
-            
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -39,7 +39,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="Einstellungen"
-                    android:textColor="@color/white"
+                    android:textColor="@color/primary_text_color"
                     android:textSize="@dimen/headerSize"
                     android:layout_margin="20dp"
                     android:textStyle="bold"/>
@@ -62,7 +62,7 @@
                         android:layout_marginLeft="40dp"
                         android:textSize="@dimen/headerSize"
                         android:layout_gravity="start"
-                        android:textColor="@color/black"
+                        android:textColor="@color/secondary_text_color"
                         android:text="Wie funktioniert die App?"/>
 
 
@@ -88,14 +88,14 @@
                             android:layout_height="25dp"
                             android:layout_gravity="start"
                             android:src="@drawable/ic_baseline_build_24"
-                            app:tint="@color/white" />
+                            app:tint="@color/primary_text_color" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="40dp"
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
-                            android:textColor="@color/white"
+                            android:textColor="@color/primary_text_color"
                             android:text="Design"/>
 
                         <ImageView
@@ -106,7 +106,7 @@
                             android:rotation="@{profileViewModel.designRotation}"
                             android:onClick="@{profileViewModel::onExpandClicked}"
                             android:tag="0"
-                            app:tint="@color/white" />
+                            app:tint="@color/primary_text_color" />
 
                     </FrameLayout>
 
@@ -124,7 +124,7 @@
                             android:layout_marginLeft="0dp"
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
-                            android:textColor="@color/white"
+                            android:textColor="@color/primary_text_color"
                             android:text="Dark Mode"/>
 
                         <LinearLayout
@@ -146,7 +146,7 @@
                                     android:gravity="center_vertical"
                                     android:layout_marginStart="10dp"
                                     android:textSize="@dimen/valueSize"
-                                    android:textColor="@color/white"
+                                    android:textColor="@color/primary_text_color"
                                     android:text="Use system settings"
                                     />
 
@@ -161,54 +161,21 @@
                                     />
                             </FrameLayout>
 
-                            <!--View
-                                android:layout_width="fill_parent"
-                                android:layout_height="2dp"
-                                android:visibility="@{profileViewModel.showDarkModeSetting}"
-                                android:background="@color/gray" /!-->
 
-                            <!--FrameLayout
-                                android:layout_width="match_parent"
-                                android:visibility="@{profileViewModel.showDarkModeSetting}"
-                                android:layout_height="@dimen/valuesHeight">
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    android:layout_gravity="start"
-                                    android:gravity="center_vertical"
-                                    android:layout_marginStart="10dp"
-                                    android:textSize="@dimen/valueSize"
-                                    android:textColor="@color/white"
-                                    android:textStyle="bold"
-                                    android:text="Dark Mode"
-                                    />
-
-                                <Switch
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    android:layout_gravity="end"
-                                    android:gravity="center_vertical"
-                                    android:layout_marginEnd="10dp"
-                                    android:checked="@={profileViewModel.darkMode}"
-                                    android:onClick="@{profileViewModel::darkModeToggled}"
-
-                                    />
-
-                            </FrameLayout-->
 
                         </LinearLayout>
 
-                    <androidx.appcompat.widget.AppCompatToggleButton
-                        android:layout_width="match_parent"
-                        android:visibility="@{profileViewModel.showDarkModeSetting}"
-                        android:layout_height="@dimen/valuesHeight"
-                        android:background="@drawable/bgroundedchoosen"
-                        android:textOn="Dark Mode"
-                        android:textOff="Light Mode"
-                        android:layout_marginBottom="10dp"
-                        android:checked="@={profileViewModel.darkMode}"
-                        android:onClick="@{profileViewModel::darkModeToggled}"
-                        />
+                        <androidx.appcompat.widget.AppCompatToggleButton
+                            android:layout_width="match_parent"
+                            android:visibility="@{profileViewModel.showDarkModeSetting}"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:background="@drawable/bgroundedchoosen"
+                            android:textOn="Dark Mode"
+                            android:textOff="Light Mode"
+                            android:layout_marginBottom="10dp"
+                            android:checked="@={profileViewModel.darkMode}"
+                            android:onClick="@{profileViewModel::darkModeToggled}"
+                            />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -216,7 +183,7 @@
                             android:layout_marginLeft="0dp"
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
-                            android:textColor="@color/white"
+                            android:textColor="@color/primary_text_color"
                             android:text="Sprache"/>
 
                         <Spinner
@@ -257,14 +224,14 @@
                             android:layout_height="25dp"
                             android:layout_gravity="start"
                             android:src="@drawable/ic_baseline_help_24"
-                            app:tint="@color/white" />
+                            app:tint="@color/primary_text_color" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="40dp"
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
-                            android:textColor="@color/white"
+                            android:textColor="@color/primary_text_color"
                             android:text="Hilfe"/>
 
                         <ImageView
@@ -275,7 +242,7 @@
                             android:rotation="@{profileViewModel.helpRotation}"
                             android:onClick="@{profileViewModel::onExpandClicked}"
                             android:tag="1"
-                            app:tint="@color/white" />
+                            app:tint="@color/primary_text_color" />
 
                     </FrameLayout>
 
@@ -331,14 +298,14 @@
                             android:layout_height="25dp"
                             android:layout_gravity="start"
                             android:src="@drawable/ic_baseline_feedback_24"
-                            app:tint="@color/white" />
+                            app:tint="@color/primary_text_color" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="40dp"
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
-                            android:textColor="@color/white"
+                            android:textColor="@color/primary_text_color"
                             android:text="Die App"/>
 
                         <ImageView
@@ -349,7 +316,7 @@
                             android:rotation="@{profileViewModel.aboutUsRotation}"
                             android:onClick="@{profileViewModel::onExpandClicked}"
                             android:tag="2"
-                            app:tint="@color/white" />
+                            app:tint="@color/primary_text_color" />
 
                     </FrameLayout>
 
@@ -418,14 +385,14 @@
                             android:layout_height="25dp"
                             android:layout_gravity="start"
                             android:src="@drawable/ic_baseline_person_add_alt_1_24"
-                            app:tint="@color/white" />
+                            app:tint="@color/primary_text_color" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="40dp"
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
-                            android:textColor="@color/white"
+                            android:textColor="@color/primary_text_color"
                             android:text="Berechtigungen"/>
 
                         <ImageView
@@ -436,7 +403,7 @@
                             android:rotation="@{profileViewModel.permissionsRotation}"
                             android:onClick="@{profileViewModel::onExpandClicked}"
                             android:tag="3"
-                            app:tint="@color/white" />
+                            app:tint="@color/primary_text_color" />
 
                     </FrameLayout>
 
@@ -472,7 +439,7 @@
                                 android:layout_marginTop="5dp"
                                 android:foregroundGravity="center_vertical"
                                 android:src="@{profileViewModel.activityPermission ? @drawable/ic_baseline_gpp_good_24 :@drawable/ic_baseline_gpp_bad_24}"
-                                android:tint="@{profileViewModel.activityPermission ? @color/green :@color/red}"/>
+                                android:tint="@{profileViewModel.activityPermission ? @color/accent_text_color :@color/error_color}"/>
 
                         </FrameLayout>
 
@@ -489,7 +456,7 @@
                                 android:layout_height="wrap_content"
                                 android:textSize="@dimen/headerSize"
                                 android:layout_gravity="start"
-                                android:textColor="@color/white"
+                                android:textColor="@color/primary_text_color"
                                 android:text="ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk"/>
 
                         </LinearLayout>
@@ -518,7 +485,7 @@
                                 android:layout_gravity="end"
                                 android:foregroundGravity="center_vertical"
                                 android:src="@{profileViewModel.dailyPermission ? @drawable/ic_baseline_gpp_good_24 :@drawable/ic_baseline_gpp_bad_24}"
-                                android:tint="@{profileViewModel.dailyPermission ? @color/green :@color/red}"/>
+                                android:tint="@{profileViewModel.dailyPermission ? @color/accent_text_color :@color/error_color}"/>
 
                         </FrameLayout>
 
@@ -535,7 +502,7 @@
                                 android:layout_height="wrap_content"
                                 android:textSize="@dimen/headerSize"
                                 android:layout_gravity="start"
-                                android:textColor="@color/white"
+                                android:textColor="@color/primary_text_color"
                                 android:text="ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk"/>
 
                         </LinearLayout>
@@ -565,7 +532,7 @@
                                 android:layout_gravity="end"
                                 android:foregroundGravity="center_vertical"
                                 android:src="@{profileViewModel.storagePermission ? @drawable/ic_baseline_gpp_good_24 :@drawable/ic_baseline_gpp_bad_24}"
-                                android:tint="@{profileViewModel.storagePermission ? @color/green :@color/red}"/>
+                                android:tint="@{profileViewModel.storagePermission ? @color/accent_text_color :@color/error_color}"/>
 
                         </FrameLayout>
 
@@ -583,7 +550,7 @@
                                 android:layout_height="wrap_content"
                                 android:textSize="@dimen/headerSize"
                                 android:layout_gravity="start"
-                                android:textColor="@color/white"
+                                android:textColor="@color/primary_text_color"
                                 android:text="ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk"/>
 
                         </LinearLayout>
@@ -613,7 +580,7 @@
                                 android:layout_gravity="end"
                                 android:foregroundGravity="center_vertical"
                                 android:src="@{profileViewModel.overlayPermission ? @drawable/ic_baseline_gpp_good_24 :@drawable/ic_baseline_gpp_bad_24}"
-                                android:tint="@{profileViewModel.overlayPermission ? @color/green :@color/red}"/>
+                                android:tint="@{profileViewModel.overlayPermission ? @color/accent_text_color :@color/error_color}"/>
 
                         </FrameLayout>
 
@@ -630,7 +597,7 @@
                                 android:layout_height="wrap_content"
                                 android:textSize="@dimen/headerSize"
                                 android:layout_gravity="start"
-                                android:textColor="@color/white"
+                                android:textColor="@color/primary_text_color"
                                 android:text="ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk"/>
 
                         </LinearLayout>
@@ -658,14 +625,14 @@
                             android:layout_height="25dp"
                             android:layout_gravity="start"
                             android:src="@drawable/ic_baseline_sd_storage_24"
-                            app:tint="@color/white" />
+                            app:tint="@color/primary_text_color" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="40dp"
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
-                            android:textColor="@color/white"
+                            android:textColor="@color/primary_text_color"
                             android:text="Daten"/>
 
                         <ImageView
@@ -676,7 +643,7 @@
                             android:rotation="@{profileViewModel.dataRotation}"
                             android:onClick="@{profileViewModel::onDataClicked}"
                             android:tag="4"
-                            app:tint="@color/white" />
+                            app:tint="@color/primary_text_color" />
 
                     </FrameLayout>
 
@@ -712,7 +679,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
                             android:background="@drawable/bgroundedchoosen"
-                            android:backgroundTint="@color/red"
+                            android:backgroundTint="@color/error_color"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@{profileViewModel.removeButtonText}"
@@ -734,14 +701,14 @@
                                 android:layout_marginLeft="40dp"
                                 android:textSize="@dimen/headerSize"
                                 android:layout_gravity="start"
-                                android:textColor="@color/white"
+                                android:textColor="@color/primary_text_color"
                                 android:text="Ohje, alle daten werden gelöscht ok?"/>
 
                             <androidx.appcompat.widget.AppCompatButton
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/valuesHeight"
                                 android:background="@drawable/bgroundedchoosen"
-                                android:backgroundTint="@color/red"
+                                android:backgroundTint="@color/error_color"
                                 android:textSize="@dimen/valueSize"
                                 android:layout_marginVertical="5dp"
                                 android:text="Verstanden und löschen"
@@ -759,7 +726,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="2dp"
                     android:layout_marginVertical="10dp"
-                    android:background="@color/gray" />
+                    android:background="@color/primary_button_color" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -775,7 +742,7 @@
                         android:textAlignment="center"
                         android:textSize="@dimen/headerSize"
                         android:layout_gravity="center_horizontal"
-                        android:textColor="@color/white"
+                        android:textColor="@color/primary_text_color"
                         android:text="Sleepest - App\nMade with LOVE in Bavaria\n\n This app was created by 3 students as a students project and will be improved and maintained in the future  "/>
 
                 </LinearLayout>
