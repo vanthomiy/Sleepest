@@ -457,7 +457,7 @@ class SleepCalculationHandler(val context: Context) {
 
                 sleepApiRawDataEntity.last().wakeUpTime = wakeUpTime
 
-                sleepSessionEntity.sleepTimes.sleepTimeEnd = wakeUpTime
+                sleepSessionEntity.sleepTimes.sleepTimeEnd = last
 
             }
             else {
