@@ -1,46 +1,97 @@
 package com.doitstudio.sleepest_master.ui.profile
 
+
+import android.Manifest
+import android.R
+import android.app.Activity.RESULT_OK
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.app.Notification
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.media.AudioManager
 import android.os.Bundle
+import android.provider.DocumentsContract
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.MainApplication
-import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
+import com.doitstudio.sleepest_master.databinding.FragmentProfileBinding
+import com.doitstudio.sleepest_master.model.data.export.UserSleepExportData
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
-import com.kevalpatel.ringtonepicker.RingtonePickerDialog
+import com.doitstudio.sleepest_master.storage.DatabaseRepository
+import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
+import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
+import com.doitstudio.sleepest_master.ui.sleep.SleepFragment
+import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
+import kotlinx.coroutines.launch
+import java.io.*
 import java.util.*
 
 
 class ProfileFragment : Fragment() {
 
-    private lateinit var profileViewModel: ProfileViewModel
-    private val actualContext: Context by lazy {requireActivity().applicationContext}
+    private val viewModel by lazy { ViewModelProvider(this).get(ProfileViewModel::class.java) }
+    private lateinit var binding: FragmentProfileBinding
+    private val actualContext: Context by lazy { requireActivity().applicationContext }
+    private val scope: CoroutineScope = MainScope()
+    private val dataBaseRepository: DatabaseRepository by lazy {
+        (actualContext as MainApplication).dataBaseRepository
+    }
+
+    var caseOfEntrie = 0
+
+
+    companion object {
+        fun newInstance() = SleepFragment()
+    }
+
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
-        profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_profile, container, false)
+
+        binding = FragmentProfileBinding.inflate(inflater, container, false)
+        viewModel.transitionsContainer = (binding.linearAnimationlayout)
+        viewModel.animatedTopView = binding.animatedTopView
+        binding.profileViewModel = viewModel
+
+        binding.sleepActivityPermission.setOnClickListener {
+            onPermissionClicked(it)
+        }
+        binding.dailyActivityPermission.setOnClickListener {
+            onPermissionClicked(it)
+        }
+        binding.storagePermission.setOnClickListener {
+            onPermissionClicked(it)
+        }
+        binding.overlayPermission.setOnClickListener {
+            onPermissionClicked(it)
+        }
+        binding.importButton.setOnClickListener {
+            onDataClicked(it)
+        }
+        binding.exportButton.setOnClickListener {
+            onDataClicked(it)
+        }
+
+        viewModel.designExpand.set(if(caseOfEntrie == 1) View.VISIBLE else View.GONE)
+        viewModel.dataExpand.set(if(caseOfEntrie == 2) View.VISIBLE else View.GONE)
+
 
         //region Test
 
@@ -80,8 +131,8 @@ class ProfileFragment : Fragment() {
         pref = actualContext.getSharedPreferences("AlarmSet", 0)
         val textCalc2 = """
             AlarmSet: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt(
-            "hour1",
-            0
+                "hour1",
+                0
         )}:${pref.getInt("minute1", 0)},${
             pref.getInt("actualWakeup", 0)}
             
@@ -89,8 +140,9 @@ class ProfileFragment : Fragment() {
         pref = actualContext.getSharedPreferences("AlarmReceiver", 0)
         val textAlarmReceiver = """
             AlarmReceiver: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt(
-            "intent",
-            0
+
+                "intent",
+                0
         )}
             
             """.trimIndent()
@@ -107,8 +159,8 @@ class ProfileFragment : Fragment() {
         pref = actualContext.getSharedPreferences("AlarmReceiver1", 0)
         val textAlarmReceiver1 = """
             AlarmReceiver1: ${pref.getString("usage", "XX")},${pref.getInt("day", 0)},${pref.getInt(
-            "hour",
-            0
+                "hour",
+                0
         )},${pref.getInt("minute", 0)}
             
             """.trimIndent()
@@ -116,172 +168,222 @@ class ProfileFragment : Fragment() {
         var textGesamt = textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation + textCalc1 + textCalc2 + textAlarmReceiver + textSleepTime + textStopException + textAlarmReceiver1
 
 
-
-        val text: TextView = root.findViewById(R.id.text_dashboard)
-        text.setText(textGesamt)
-
-        val btn : Button = root.findViewById(R.id.btnStartForegroundTest)
-        btn.setOnClickListener() {
-            //startOrStopForegroundService(Actions.START, actualContext);
-            /*val startForegroundIntent = Intent(context, ForegroundActivity::class.java)
-            startForegroundIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-            startForegroundIntent.putExtra("intent", 1)
-            startActivity(startForegroundIntent)*/
-
-            //selectRingTone()
-            //val calendar = Calendar.getInstance()
-
-            //export()
-            /*
-            AlarmClockReceiver.startAlarmManager(
-                calendar.get(Calendar.DAY_OF_WEEK), calendar.get(
-                    Calendar.HOUR_OF_DAY
-                ), calendar.get(Calendar.MINUTE) + 2, actualContext, 1
-            )
-            */
-            val sch = SleepCalculationHandler.getHandler(actualContext)
-            sch.defineUserWakeup()
-
-            //val calendar = Calendar.getInstance()
-        
-
-            //AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 2, actualContext, 1)
-
-            //Toast.makeText(actualContext, "Gut gemacht, die App wird jetzt zerstört", Toast.LENGTH_LONG).show()
-        }
-
-        val btn1 : Button = root.findViewById(R.id.buttonWorkmanagaer)
-        btn1.setOnClickListener() {
-            //startOrStopForegroundService(Actions.START, actualContext);
-            /*val startForegroundIntent = Intent(context, ForegroundActivity::class.java)
-            startForegroundIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-            startForegroundIntent.putExtra("intent", 1)
-            startActivity(startForegroundIntent)*/
-
-            //WorkManager.getInstance(actualContext).cancelAllWorkByTag("Workmanager 1")
-            val calendar = Calendar.getInstance()
+        binding.testText.text = textGesamt
 
 
-            AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 2, actualContext, 1)
+        return binding.root
 
-            //Toast.makeText(actualContext, "Gut gemacht, die App wird jetzt zerstört", Toast.LENGTH_LONG).show()
-
-            val test = getActiveNotification(1)
-        }
-
-
-        //endregion
-
-        return root
     }
 
-    fun getActiveNotification(notificationId: Int): Notification? {
-        val notificationManager =
-            actualContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager?
-        val barNotifications = notificationManager!!.activeNotifications
-        for (notification in barNotifications) {
-            if (notification.id == notificationId) {
-                return notification.notification
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+    }
+
+
+    fun onDataClicked(view: View) {
+        when (view.tag.toString()) {
+            "export" -> {
+
+                val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type = "text/*"
+                    putExtra(Intent.EXTRA_TITLE, "Schlafdaten.json")
+                }
+
+                startActivityForResult(intent, 1010)
+
+            }
+            "import" -> {
+
+                // Choose a directory using the system's file picker.
+                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
+                    // Optionally, specify a URI for the directory that should be opened in
+                    // the system file picker when it loads.
+                }
+
+                startActivityForResult(intent, 1012)
             }
         }
-        return null
-    }
-    private fun selectRingTone() {
-
-        //check if audio volume is 0
-        val audioManager = actualContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        if (audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) <= 0) {
-            Toast.makeText(actualContext, "Increase volume to hear sounds", Toast.LENGTH_LONG).show()
-        }
-
-        val ringtonePickerBuilder = RingtonePickerDialog.Builder(
-            actualContext,
-            parentFragmentManager
-        )
-            .setTitle("Select your ringtone")
-            .displayDefaultRingtone(true)
-            .setPositiveButtonText("Set")
-            .setCancelButtonText("Cancel")
-            .setPlaySampleWhileSelection(true)
-            .setListener { ringtoneName, ringtoneUri -> Toast.makeText(
-                actualContext,
-                ringtoneUri.toString(),
-                Toast.LENGTH_LONG
-            ).show()}
-
-        ringtonePickerBuilder.addRingtoneType(RingtonePickerDialog.Builder.TYPE_ALARM)
-        ringtonePickerBuilder.show()
     }
 
+    fun onPermissionClicked(view: View) {
+        when (view.tag.toString()) {
+            "dailyActivity" -> if (viewModel.dailyPermission.get() != true) requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION) else viewModel.showPermissionInfo("dailyActivity")
+            "sleepActivity" -> if (viewModel.activityPermission.get() != true) requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION) else viewModel.showPermissionInfo("sleepActivity")
+            "storage" -> if (viewModel.storagePermission.get() != true) requestPermissionLauncher.launch(Manifest.permission.ANSWER_PHONE_CALLS) else viewModel.showPermissionInfo("storage")
+            "overlay" -> if (viewModel.overlayPermission.get() != true) {
+                // If not, form up an Intent to launch the permission request
+                val intent = Intent(
+                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse(
+                        "package:${actualContext.packageName}"
+                )
+                )
 
-    // region export
+                // Launch Intent, with the supplied request code
+                startActivityForResult(intent, 1234)
 
-    var sleepOutClassifyOutputExportBed = ""
-
-    private val repository by lazy { (actualContext as MainApplication).dataBaseRepository }
-
-    private fun dataPrep() = runBlocking{
-        val data = repository.allSleepApiRawData.first()
-        data.forEach {
-
-            val time = it.timestampSeconds.toLong() * 1000; // wokraround to change format
-
-            val instantNow = Instant.now()
-            val date = millisToDateTime(time)
-            sleepOutClassifyOutputExportBed += "${date.toLocalDate()};${date.hour}:${date.minute};${it.confidence};${(it.light)};${(it.motion)};0\n"
-            // Just display values that are shorter than 24Hours away
+            } else viewModel.showPermissionInfo("overlay")
         }
     }
 
-    fun export(){
 
-        val handler = SleepCalculationHandler(actualContext)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
-        handler.defineUserWakeup()
+        // Check if a request code is received that matches that which we provided for the overlay draw request
+        if (requestCode == 1234) {
+            viewModel.checkPermissions()
+        }
+        else if (requestCode == 1012) {
 
-        /*dataPrep()
+            val uri = data?.data
 
-        var switchExportFile =  "Datum;Uhrzeit;Schlaf;Licht;Bewegung;Wahre Zeiten"
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                addCategory(Intent.CATEGORY_OPENABLE)
+                putExtra(DocumentsContract.EXTRA_INITIAL_URI, uri)
+                type = "text/*"
+            }
 
-        val splitOut  = sleepOutClassifyOutputExportBed.split("\n")
+            startActivityForResult(intent, 1011)
+        }
+        else if (requestCode == 1011) {
 
-        splitOut.reversed().forEach {
-            switchExportFile += "${it}\n";
+            val uri = data?.data
+
+            uri?.let {
+                val importJson = readTextFromUri(it)
+
+                var data = mutableListOf<UserSleepExportData>()
+                try {
+                    var gson = Gson()
+
+                    data.addAll(gson.fromJson(importJson, Array<UserSleepExportData>::class.java).asList())
+                } catch (ex: Exception) {
+                    Toast.makeText(actualContext, "Wrong data format", Toast.LENGTH_SHORT).show()
+                    return@let
+                }
+
+                try {
+
+                    var sessions = mutableListOf<UserSleepSessionEntity>()
+                    var sleepApiRawDataEntity = mutableListOf<SleepApiRawDataEntity>()
+
+                    data.forEach { session ->
+
+                        sessions.add(UserSleepSessionEntity(
+                                session.id,
+                                session.mobilePosition,
+                                session.sleepTimes,
+                                session.userSleepRating,
+                                session.userCalculationRating
+                        ))
+
+                        sleepApiRawDataEntity.addAll(session.sleepApiRawData)
+                    }
+
+                    scope.launch {
+                        dataBaseRepository.insertSleepApiRawData(sleepApiRawDataEntity)
+                        dataBaseRepository.insertUserSleepSessions(sessions)
+                    }
+                } catch (ex: Exception) {
+                    Toast.makeText(actualContext, "Cant write to database", Toast.LENGTH_SHORT).show()
+                    return@let
+                } finally {
+                    Toast.makeText(actualContext, "Successful imported data", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+        else if (requestCode == 1010) {
+
+            try {
+                scope.launch {
+                    var gson = Gson()
+
+                    val userSessions = dataBaseRepository.allUserSleepSessions.first()
+
+                    val userExporSessions = mutableListOf<UserSleepExportData>()
+
+                    userSessions.forEach { session ->
+
+                        val sessionSleepData = dataBaseRepository.getSleepApiRawDataBetweenTimestamps(session.sleepTimes.sleepTimeStart, session.sleepTimes.sleepTimeEnd).first()
+
+                        val userExporSession = UserSleepExportData(
+                                session.id,
+                                session.mobilePosition,
+                                session.sleepTimes,
+                                session.userSleepRating,
+                                session.userCalculationRating,
+                                sessionSleepData
+                        )
+
+                        userExporSessions.add(userExporSession)
+                    }
+
+                    val exportFile = gson.toJson(userExporSessions)
+
+                    data?.data?.let { writeTextToUri(it, exportFile) }
+                }
+
+            } catch (e: IOException) {
+                Toast.makeText(actualContext, "Export failed", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+
+    val contentResolver by lazy {actualContext.contentResolver}
+
+    private fun readTextFromUri(uri: Uri): String {
+        val stringBuilder = StringBuilder()
+        contentResolver.openInputStream(uri)?.use { inputStream ->
+            BufferedReader(InputStreamReader(inputStream)).use { reader ->
+                var line: String? = reader.readLine()
+                while (line != null) {
+                    stringBuilder.append(line)
+                    line = reader.readLine()
+                }
+            }
+        }
+        return stringBuilder.toString()
+    }
+
+    private fun writeTextToUri(uri: Uri, text:String) {
+        try {
+            contentResolver.openFileDescriptor(uri, "w")?.use {
+                FileOutputStream(it.fileDescriptor).use {
+                    it.write(
+                            text
+                                    .toByteArray()
+                    )
+                }
+            }
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
 
-        val shareIntent: Intent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TEXT, switchExportFile)
-            type = "text/csv"
-        }
+        Toast.makeText(actualContext, "Export successfully", Toast.LENGTH_SHORT).show()
 
-        startActivity(Intent.createChooser(shareIntent, "Export data"))*/
     }
 
-    private fun millisToStringDateTime(millis: Long) : String {
-        // define once somewhere in order to reuse it
-        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-
-        // JVM representation of a millisecond epoch absolute instant
-        val instant = Instant.ofEpochMilli(millis)
-
-        // Adding the timezone information to be able to format it (change accordingly)
-        val date = LocalDateTime.ofInstant(instant, ZoneId.systemDefault())//.plusHours(1) //reudiger workaround haha
-        return formatter.format(date) // 10/12/2019 06:35:45
-    }
-
-    private fun millisToDateTime(millis: Long) : LocalDateTime {
-        // define once somewhere in order to reuse it
-        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-
-        // JVM representation of a millisecond epoch absolute instant
-        val instant = Instant.ofEpochMilli(millis)
-
-        // Adding the timezone information to be able to format it (change accordingly)
-        return LocalDateTime.ofInstant(instant, ZoneId.systemDefault())//.plusHours(1) //reudiger workaround haha
-    }
-
-    //endregion
+    private val requestPermissionLauncher =
+            registerForActivityResult(ActivityResultContracts.RequestPermission()
+            ) { isGranted: Boolean ->
+                if (isGranted) {
+                    // Permission is granted. Continue the action or workflow in your
+                    // app.
+                    viewModel.checkPermissions()
+                } else {
+                    // Explain to the user that the feature is unavailable because the
+                    // features requires a permission that the user has denied. At the
+                    // same time, respect the user's decision. Don't link to system
+                    // settings in an effort to convince the user to change their
+                    // decision.
+                    viewModel.checkPermissions()
+                }
+            }
 
 }
 

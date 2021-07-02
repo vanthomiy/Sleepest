@@ -1,40 +1,770 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.profile.ProfileFragment">
 
-    <TextView
-        android:id="@+id/text_dashboard"
+    <data>
+        <variable
+            name="profileViewModel"
+            type="com.doitstudio.sleepest_master.ui.profile.ProfileViewModel" />
+    </data>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:text="Hi fabi"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/primary_app_background"
+        >
 
-    <Button
-        android:id="@+id/btnStartForegroundTest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        app:layout_constraintBottom_toTopOf="@+id/text_dashboard"
-        tools:ignore="MissingConstraints" />
 
-    <Button
-        android:id="@+id/buttonWorkmanagaer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:text="Button"
-        app:layout_constraintBottom_toTopOf="@+id/text_dashboard"
-        app:layout_constraintStart_toEndOf="@+id/btnStartForegroundTest" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:clipToPadding="true"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:windowSoftInputMode="adjustResize"
+                android:id="@+id/linearAnimationlayout"
+                >
+
+                <TextView
+                    android:id="@+id/animTextSleep"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Einstellungen"
+                    android:textColor="@color/primary_text_color"
+                    android:textSize="@dimen/headerSize"
+                    android:layout_margin="20dp"
+                    android:textStyle="bold"/>
+
+                <androidx.constraintlayout.motion.widget.MotionLayout
+                    android:id="@+id/animatedTopView"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_margin="20dp"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:background="@drawable/bgroundedwhite"
+                    app:layoutDescription="@xml/fragment_profile_scene">
+
+
+                    <TextView
+                        android:id="@+id/header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="40dp"
+                        android:textSize="@dimen/headerSize"
+                        android:layout_gravity="start"
+                        android:textColor="@color/secondary_text_color"
+                        android:text="Wie funktioniert die App?"/>
+
+
+
+                </androidx.constraintlayout.motion.widget.MotionLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="10dp"
+                    >
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:onClick="@{profileViewModel::onExpandClicked}"
+                        android:tag="0"
+                        >
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="start"
+                            android:src="@drawable/ic_baseline_build_24"
+                            app:tint="@color/primary_text_color" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="40dp"
+                            android:textSize="@dimen/headerSize"
+                            android:layout_gravity="start"
+                            android:textColor="@color/primary_text_color"
+                            android:text="Design"/>
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="end"
+                            android:src="@drawable/ic_baseline_expand_more_24"
+                            android:rotation="@{profileViewModel.designRotation}"
+                            android:onClick="@{profileViewModel::onExpandClicked}"
+                            android:tag="0"
+                            app:tint="@color/primary_text_color" />
+
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:orientation="vertical"
+                        android:visibility="@{profileViewModel.designExpand, default=gone}"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="0dp"
+                            android:textSize="@dimen/headerSize"
+                            android:layout_gravity="start"
+                            android:textColor="@color/primary_text_color"
+                            android:text="Dark Mode"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:layout_marginLeft="0dp"
+                            android:orientation="vertical"
+                            android:layout_marginVertical="10dp"
+                            android:background="@drawable/bgroundedchoosen">
+
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/valuesHeight">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="start"
+                                    android:gravity="center_vertical"
+                                    android:layout_marginStart="10dp"
+                                    android:textSize="@dimen/valueSize"
+                                    android:textColor="@color/primary_text_color"
+                                    android:text="Use system settings"
+                                    />
+
+                                <Switch
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="end"
+                                    android:gravity="center_vertical"
+                                    android:layout_marginEnd="10dp"
+                                    android:checked="@={profileViewModel.autoDarkMode}"
+                                    android:onClick="@{profileViewModel::autoDarkModeToggled}"
+                                    />
+                            </FrameLayout>
+
+
+
+                        </LinearLayout>
+
+                        <androidx.appcompat.widget.AppCompatToggleButton
+                            android:layout_width="match_parent"
+                            android:visibility="@{profileViewModel.showDarkModeSetting}"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:background="@drawable/bgroundedchoosen"
+                            android:textOn="Dark Mode"
+                            android:textOff="Light Mode"
+                            android:layout_marginBottom="10dp"
+                            android:checked="@={profileViewModel.darkMode}"
+                            android:onClick="@{profileViewModel::darkModeToggled}"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="0dp"
+                            android:textSize="@dimen/headerSize"
+                            android:layout_gravity="start"
+                            android:textColor="@color/primary_text_color"
+                            android:text="Sprache"/>
+
+                        <Spinner
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:background="@drawable/bgroundedchoosen"
+                            android:layout_gravity="start"
+                            android:layout_marginLeft="0dp"
+                            android:layout_marginVertical="10dp"
+                            android:entries="@{profileViewModel.languageSelections}"
+                            android:selectedItemPosition="@={profileViewModel.selectedLanguage}"
+                            android:onItemSelected = "@{profileViewModel::onLanguageChanged}"
+                            android:textAlignment="center"
+                            android:textSize="@dimen/valueSize"
+                            tools:ignore="RtlCompat">
+                        </Spinner>
+
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="10dp"
+                    >
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:onClick="@{profileViewModel::onExpandClicked}"
+                        android:tag="1"
+                        >
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="start"
+                            android:src="@drawable/ic_baseline_help_24"
+                            app:tint="@color/primary_text_color" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="40dp"
+                            android:textSize="@dimen/headerSize"
+                            android:layout_gravity="start"
+                            android:textColor="@color/primary_text_color"
+                            android:text="Hilfe"/>
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="end"
+                            android:src="@drawable/ic_baseline_expand_more_24"
+                            android:rotation="@{profileViewModel.helpRotation}"
+                            android:onClick="@{profileViewModel::onExpandClicked}"
+                            android:tag="1"
+                            app:tint="@color/primary_text_color" />
+
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:orientation="vertical"
+                        android:visibility="@{profileViewModel.helpExpand, default=gone}"
+                        >
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:background="@drawable/bgroundedchoosen"
+                            android:textSize="@dimen/valueSize"
+                            android:layout_marginVertical="5dp"
+                            android:text="Tutorial"
+                            android:tag="tutorial"
+                            android:onClick="@{profileViewModel::onHelpClicked}">
+                        </androidx.appcompat.widget.AppCompatButton>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:background="@drawable/bgroundedchoosen"
+                            android:textSize="@dimen/valueSize"
+                            android:layout_marginVertical="5dp"
+                            android:text="Wichtige Einstellungen"
+                            android:tag="importantSettings"
+                            android:onClick="@{profileViewModel::onHelpClicked}">
+                        </androidx.appcompat.widget.AppCompatButton>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="10dp"
+                    >
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:onClick="@{profileViewModel::onExpandClicked}"
+                        android:tag="2"
+                        >
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="start"
+                            android:src="@drawable/ic_baseline_feedback_24"
+                            app:tint="@color/primary_text_color" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="40dp"
+                            android:textSize="@dimen/headerSize"
+                            android:layout_gravity="start"
+                            android:textColor="@color/primary_text_color"
+                            android:text="Die App"/>
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="end"
+                            android:src="@drawable/ic_baseline_expand_more_24"
+                            android:rotation="@{profileViewModel.aboutUsRotation}"
+                            android:onClick="@{profileViewModel::onExpandClicked}"
+                            android:tag="2"
+                            app:tint="@color/primary_text_color" />
+
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:orientation="vertical"
+                        android:visibility="@{profileViewModel.aboutUsExpand, default=gone}"
+                        >
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:background="@drawable/bgroundedchoosen"
+                            android:textSize="@dimen/valueSize"
+                            android:layout_marginVertical="5dp"
+                            android:text="Verbesserungen vorschlagen"
+                            android:tag="improvement"
+                            android:onClick="@{profileViewModel::onAboutUsClicked}">
+                        </androidx.appcompat.widget.AppCompatButton>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:background="@drawable/bgroundedchoosen"
+                            android:textSize="@dimen/valueSize"
+                            android:layout_marginVertical="5dp"
+                            android:text="App Bewerten"
+                            android:tag="rate"
+                            android:onClick="@{profileViewModel::onAboutUsClicked}">
+                        </androidx.appcompat.widget.AppCompatButton>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:background="@drawable/bgroundedchoosen"
+                            android:textSize="@dimen/valueSize"
+                            android:layout_marginVertical="5dp"
+                            android:text="Fehler melden"
+                            android:tag="error"
+                            android:onClick="@{profileViewModel::onAboutUsClicked}">
+                        </androidx.appcompat.widget.AppCompatButton>
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="10dp"
+                    >
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:onClick="@{profileViewModel::onExpandClicked}"
+                        android:tag="3"
+                        >
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="start"
+                            android:src="@drawable/ic_baseline_person_add_alt_1_24"
+                            app:tint="@color/primary_text_color" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="40dp"
+                            android:textSize="@dimen/headerSize"
+                            android:layout_gravity="start"
+                            android:textColor="@color/primary_text_color"
+                            android:text="Berechtigungen"/>
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="end"
+                            android:src="@drawable/ic_baseline_expand_more_24"
+                            android:rotation="@{profileViewModel.permissionsRotation}"
+                            android:onClick="@{profileViewModel::onExpandClicked}"
+                            android:tag="3"
+                            app:tint="@color/primary_text_color" />
+
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:orientation="vertical"
+                        android:visibility="@{profileViewModel.permissionsExpand}"
+                        >
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/valuesHeight"
+                                android:layout_marginEnd="50dp"
+                                android:background="@drawable/bgroundedchoosen"
+                                android:textSize="@dimen/valueSize"
+                                android:layout_marginVertical="5dp"
+                                android:text="Schlafdaten"
+                                android:tag="sleepActivity"
+                                android:id="@+id/sleepActivityPermission"
+                                android:onClick="onPermissionClicked">
+                            </androidx.appcompat.widget.AppCompatButton>
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"
+                                android:layout_gravity="end"
+                                android:layout_marginTop="5dp"
+                                android:foregroundGravity="center_vertical"
+                                android:src="@{profileViewModel.activityPermission ? @drawable/ic_baseline_gpp_good_24 :@drawable/ic_baseline_gpp_bad_24}"
+                                android:tint="@{profileViewModel.activityPermission ? @color/accent_text_color :@color/error_color}"/>
+
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="@{profileViewModel.activityPermissionDescription}"
+                            android:layout_margin="10dp"
+                            >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/headerSize"
+                                android:layout_gravity="start"
+                                android:textColor="@color/primary_text_color"
+                                android:text="ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk"/>
+
+                        </LinearLayout>
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/valuesHeight"
+                                android:layout_marginVertical="5dp"
+                                android:layout_marginEnd="50dp"
+                                android:background="@drawable/bgroundedchoosen"
+                                android:onClick="onPermissionClicked"
+                                android:tag="dailyActivity"
+                                android:id="@+id/dailyActivityPermission"
+                                android:text="Tägliche Aktivität"
+                                android:textSize="@dimen/valueSize"></androidx.appcompat.widget.AppCompatButton>
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_gravity="end"
+                                android:foregroundGravity="center_vertical"
+                                android:src="@{profileViewModel.dailyPermission ? @drawable/ic_baseline_gpp_good_24 :@drawable/ic_baseline_gpp_bad_24}"
+                                android:tint="@{profileViewModel.dailyPermission ? @color/accent_text_color :@color/error_color}"/>
+
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="@{profileViewModel.dailyPermissionDescription}"
+                            android:layout_margin="10dp"
+                            >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/headerSize"
+                                android:layout_gravity="start"
+                                android:textColor="@color/primary_text_color"
+                                android:text="ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk"/>
+
+                        </LinearLayout>
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/valuesHeight"
+                                android:layout_marginEnd="50dp"
+                                android:background="@drawable/bgroundedchoosen"
+                                android:textSize="@dimen/valueSize"
+                                android:layout_marginVertical="5dp"
+                                android:text="Speicherzugriff"
+                                android:tag="storage"
+                                android:id="@+id/storagePermission"
+                                android:onClick="onPermissionClicked">
+                            </androidx.appcompat.widget.AppCompatButton>
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_gravity="end"
+                                android:foregroundGravity="center_vertical"
+                                android:src="@{profileViewModel.storagePermission ? @drawable/ic_baseline_gpp_good_24 :@drawable/ic_baseline_gpp_bad_24}"
+                                android:tint="@{profileViewModel.storagePermission ? @color/accent_text_color :@color/error_color}"/>
+
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="@{profileViewModel.storagePermissionDescription}"
+                            android:layout_margin="10dp"
+                            >
+
+                            <TextView
+                                android:layout_margin="5dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/headerSize"
+                                android:layout_gravity="start"
+                                android:textColor="@color/primary_text_color"
+                                android:text="ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk"/>
+
+                        </LinearLayout>
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/valuesHeight"
+                                android:layout_marginEnd="50dp"
+                                android:background="@drawable/bgroundedchoosen"
+                                android:textSize="@dimen/valueSize"
+                                android:layout_marginVertical="5dp"
+                                android:text="App Überlappen"
+                                android:tag="overlay"
+                                android:id="@+id/overlayPermission"
+                                android:onClick="onPermissionClicked">
+                            </androidx.appcompat.widget.AppCompatButton>
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_gravity="end"
+                                android:foregroundGravity="center_vertical"
+                                android:src="@{profileViewModel.overlayPermission ? @drawable/ic_baseline_gpp_good_24 :@drawable/ic_baseline_gpp_bad_24}"
+                                android:tint="@{profileViewModel.overlayPermission ? @color/accent_text_color :@color/error_color}"/>
+
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="@{profileViewModel.overlayPermissionDescription}"
+                            android:layout_margin="10dp"
+                            >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/headerSize"
+                                android:layout_gravity="start"
+                                android:textColor="@color/primary_text_color"
+                                android:text="ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="10dp"
+                    >
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:onClick="@{profileViewModel::onExpandClicked}"
+                        android:tag="4"
+                        >
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="start"
+                            android:src="@drawable/ic_baseline_sd_storage_24"
+                            app:tint="@color/primary_text_color" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="40dp"
+                            android:textSize="@dimen/headerSize"
+                            android:layout_gravity="start"
+                            android:textColor="@color/primary_text_color"
+                            android:text="Daten"/>
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="end"
+                            android:src="@drawable/ic_baseline_expand_more_24"
+                            android:rotation="@{profileViewModel.dataRotation}"
+                            android:onClick="@{profileViewModel::onDataClicked}"
+                            android:tag="4"
+                            app:tint="@color/primary_text_color" />
+
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:orientation="vertical"
+                        android:visibility="@{profileViewModel.dataExpand, default=gone}"
+                        >
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:background="@drawable/bgroundedchoosen"
+                            android:textSize="@dimen/valueSize"
+                            android:layout_marginVertical="5dp"
+                            android:text="Daten Exportieren"
+                            android:tag="export"
+                            android:id="@+id/exportButton"/>
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:background="@drawable/bgroundedchoosen"
+                            android:textSize="@dimen/valueSize"
+                            android:layout_marginVertical="5dp"
+                            android:text="Daten Importieren"
+                            android:tag="import"
+                            android:id="@+id/importButton" />
+
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:background="@drawable/bgroundedchoosen"
+                            android:backgroundTint="@color/error_color"
+                            android:textSize="@dimen/valueSize"
+                            android:layout_marginVertical="5dp"
+                            android:text="@{profileViewModel.removeButtonText}"
+                            android:tag="remove"
+                            android:onClick="@{profileViewModel::onDataClicked}">
+                        </androidx.appcompat.widget.AppCompatButton>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="10dp"
+                            android:orientation="vertical"
+                            android:visibility="@{profileViewModel.removeExpand, default=gone}"
+                            >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="40dp"
+                                android:textSize="@dimen/headerSize"
+                                android:layout_gravity="start"
+                                android:textColor="@color/primary_text_color"
+                                android:text="Ohje, alle daten werden gelöscht ok?"/>
+
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/valuesHeight"
+                                android:background="@drawable/bgroundedchoosen"
+                                android:backgroundTint="@color/error_color"
+                                android:textSize="@dimen/valueSize"
+                                android:layout_marginVertical="5dp"
+                                android:text="Verstanden und löschen"
+                                android:tag="removeAckn"
+                                android:onClick="@{profileViewModel::onDataClicked}">
+                            </androidx.appcompat.widget.AppCompatButton>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/view1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginVertical="10dp"
+                    android:background="@color/primary_button_color" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="10dp"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:textAlignment="center"
+                        android:textSize="@dimen/headerSize"
+                        android:layout_gravity="center_horizontal"
+                        android:textColor="@color/primary_text_color"
+                        android:text="Sleepest - App\nMade with LOVE in Bavaria\n\n This app was created by 3 students as a students project and will be improved and maintained in the future  "/>
+
+                </LinearLayout>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"></FrameLayout>
+
+                <TextView
+                    android:id="@+id/test_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/headerSize"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/primary_text_color"/>
+
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
+
+
+</layout>

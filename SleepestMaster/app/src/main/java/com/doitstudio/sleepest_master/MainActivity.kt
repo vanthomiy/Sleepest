@@ -1,9 +1,11 @@
 package com.doitstudio.sleepest_master
 
 import android.Manifest
+import android.app.Activity
 import android.app.NotificationManager
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -11,6 +13,8 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ActivityCompat.recreate
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.asLiveData
 import com.doitstudio.sleepest_master.background.AlarmReceiver
@@ -49,11 +53,11 @@ class MainActivity : AppCompatActivity() {
 
     private val activeAlarmsLiveData by lazy {  dataBaseRepository.activeAlarmsFlow().asLiveData() }
     private val sleepParametersLiveData by lazy {  dataStoreRepository.sleepParameterFlow.asLiveData() }
+    private val settingsLiveData by lazy {  dataStoreRepository.settingsDataFlow.asLiveData() }
+
 
     private var sleepTimeBeginTemp = 0
     private var earliestWakeupTemp = 0
-
-
 
     // endregion
 
@@ -64,61 +68,81 @@ class MainActivity : AppCompatActivity() {
     lateinit var sleepFragment : SleepFragment
     lateinit var profileFragment : ProfileFragment
 
-    fun setupFragments(){
+    fun setupFragments(isStart:Boolean){
+        scope.launch {
 
-        bottomBar = binding.bottomBar
-        alarmsFragment = AlarmsFragment()
-        historyFragment = HistoryFragment(applicationContext)
-        sleepFragment = SleepFragment()
-        profileFragment = ProfileFragment()
+            val settings = dataStoreRepository.settingsDataFlow.first()
 
-        supportFragmentManager.beginTransaction().add(R.id.navigationFrame, alarmsFragment).commit()
+            bottomBar = binding.bottomBar
+            alarmsFragment = AlarmsFragment()
+            historyFragment = HistoryFragment(applicationContext)
+            sleepFragment = SleepFragment()
+            profileFragment = ProfileFragment()
 
-        bottomBar.setOnNavigationItemSelectedListener { item->
-
-            val ft = supportFragmentManager.beginTransaction()
-
-            when (item.itemId) {
-                R.id.home -> {
-                    if (alarmsFragment.isAdded) {
-                        ft.show(alarmsFragment)
-                    } else {
-                        ft.add(R.id.navigationFrame, alarmsFragment)
-                    }
+            if(isStart){
+                supportFragmentManager.beginTransaction().add(R.id.navigationFrame, alarmsFragment).commit()
+            }
+            else{
+                supportFragmentManager.beginTransaction().replace(R.id.navigationFrame, profileFragment).commit()
+                if(settings.afterRestartApp){
+                    profileFragment.caseOfEntrie = 2
+                    dataStoreRepository.updateAfterRestartApp(false)
                 }
-                R.id.history -> {
-                    if (historyFragment.isAdded) {
-                        ft.show(historyFragment)
-                    } else {
-                        ft.add(R.id.navigationFrame, historyFragment)
-                    }
-                }
-                R.id.sleep -> {
-                    if (sleepFragment.isAdded) {
-                        ft.show(sleepFragment)
-                    } else {
-                        ft.add(R.id.navigationFrame, sleepFragment)
-                    }
-                }
-                else -> {
-                    if(profileFragment.isAdded){
-                        ft.show(profileFragment)
-                    }else{
-                        ft.add(R.id.navigationFrame, profileFragment)
-                    }
+                else{
+                    profileFragment.caseOfEntrie = if(isStart) 0 else 1
                 }
             }
 
-            // Hide fragment B
-            if (item.title != "home" && alarmsFragment.isAdded) { ft.hide(alarmsFragment) }
-            if (item.title != "history" && historyFragment.isAdded) { ft.hide(historyFragment) }
-            if (item.title != "sleep" && sleepFragment.isAdded) { ft.hide(sleepFragment) }
-            if (item.title != "profile" && profileFragment.isAdded) { ft.hide(profileFragment) }
 
-            ft.commit()
 
-            true
+            bottomBar.setOnNavigationItemSelectedListener { item->
+
+                val ft = supportFragmentManager.beginTransaction()
+
+                when (item.itemId) {
+                    R.id.home -> {
+                        if (alarmsFragment.isAdded) {
+                            ft.show(alarmsFragment)
+                        } else {
+                            ft.add(R.id.navigationFrame, alarmsFragment)
+                        }
+                    }
+                    R.id.history -> {
+                        if (historyFragment.isAdded) {
+                            ft.show(historyFragment)
+                        } else {
+                            ft.add(R.id.navigationFrame, historyFragment)
+                        }
+                    }
+                    R.id.sleep -> {
+                        if (sleepFragment.isAdded) {
+                            ft.show(sleepFragment)
+                        } else {
+                            ft.add(R.id.navigationFrame, sleepFragment)
+                        }
+                    }
+                    else -> {
+                        if(profileFragment.isAdded){
+                            ft.show(profileFragment)
+                        }else{
+                            ft.add(R.id.navigationFrame, profileFragment)
+                        }
+                    }
+                }
+
+                // Hide fragment B
+                if (item.title != "home" && alarmsFragment.isAdded) { ft.hide(alarmsFragment) }
+                if (item.title != "history" && historyFragment.isAdded) { ft.hide(historyFragment) }
+                if (item.title != "sleep" && sleepFragment.isAdded) { ft.hide(sleepFragment) }
+                if (item.title != "profile" && profileFragment.isAdded) { ft.hide(profileFragment) }
+
+                ft.commit()
+
+                true
+            }
+
         }
+
 
     }
 
@@ -130,12 +154,30 @@ class MainActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
 
+        scope.launch {
+            // check system dark mode if neccessarry and safe in
+            val settings = dataStoreRepository.settingsDataFlow.first()
+            if(settings.designAutoDarkMode){
+                AppCompatDelegate
+                        .setDefaultNightMode(
+                                AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+            }
+            /*else {
+                AppCompatDelegate
+                        .setDefaultNightMode(if(settings.designDarkMode)
+                            AppCompatDelegate.MODE_NIGHT_YES else
+                            AppCompatDelegate.MODE_NIGHT_NO);
+            }*/
+        }
+
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupFragments()
+        setupFragments(savedInstanceState == null)
 
         sleepTimeBeginTemp = dataStoreRepository.getSleepTimeBeginJob();
+
         scope.launch {
 
             if (dataBaseRepository.getNextActiveAlarm() != null) {
@@ -143,6 +185,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 earliestWakeupTemp = 0
             }
+
 
         }
 
@@ -243,6 +286,18 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+
+        settingsLiveData.observe(this) { livedata ->
+
+            if(livedata.restartApp && livedata.afterRestartApp)
+            {
+                scope.launch {
+                    dataStoreRepository.updateRestartApp(false)
+                    recreate()
+                }
+            }
+        }
+
         // check permission
         if (!activityRecognitionPermissionApproved()) {
             requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
@@ -336,5 +391,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
 }
 

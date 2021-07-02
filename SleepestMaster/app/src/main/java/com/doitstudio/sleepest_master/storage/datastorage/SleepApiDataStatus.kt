@@ -12,6 +12,14 @@ const val SLEEP_API_DATA_NAME = "sleep_api_data_repo"
 
 class SleepApiDataStatus(private val dataStore: DataStore<SleepApiData>) {
 
+    suspend fun loadDefault(){
+        dataStore.updateData  {
+            obj ->
+            obj.toBuilder()
+                    .build()
+        }
+    }
+
     val sleepApiData: Flow<SleepApiData> = dataStore.data
             .catch { exception->
                 if(exception is IOException){

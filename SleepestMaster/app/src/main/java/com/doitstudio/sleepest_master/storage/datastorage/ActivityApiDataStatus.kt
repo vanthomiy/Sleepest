@@ -13,6 +13,13 @@ const val ACTIVITY_API_DATA_NAME = "activity_api_data_repo"
 
 class ActivityApiDataStatus(private val dataStore: DataStore<ActivityApiData>) {
 
+    suspend fun loadDefault(){
+        dataStore.updateData  {
+            obj ->
+            obj.toBuilder().build()
+        }
+    }
+
     val activityApiData: Flow<ActivityApiData> = dataStore.data
             .catch { exception->
                 if(exception is IOException){
