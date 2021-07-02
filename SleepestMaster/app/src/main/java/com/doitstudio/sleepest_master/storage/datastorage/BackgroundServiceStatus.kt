@@ -14,6 +14,14 @@ const val BACKGROUND_SERVICE_STATUS = "background_service_status"
 
 class BackgroundServiceStatus(private val dataStore: DataStore<BackgroundService>) {
 
+    suspend fun loadDefault(){
+        dataStore.updateData  {
+            obj ->
+            obj.toBuilder()
+                    .build()
+        }
+    }
+
     val backgroundService: Flow<BackgroundService> = dataStore.data
         .catch { exception->
             if(exception is IOException){

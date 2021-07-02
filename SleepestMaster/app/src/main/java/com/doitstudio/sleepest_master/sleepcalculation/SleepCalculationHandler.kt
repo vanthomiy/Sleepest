@@ -375,10 +375,10 @@ class SleepCalculationHandler(val context: Context) {
                         // we need to calculate the sleep state
                         // and then we update it in the sleep api raw data entity
                         val result = defineSleepStates(it.timestampSeconds, sleepApiRawDataEntity)
-                        /*dataBaseRepository.updateSleepApiRawDataSleepState(
+                        dataBaseRepository.updateSleepApiRawDataSleepState(
                             it.timestampSeconds,
                             result
-                        )*/
+                        )
                         it.sleepState = result
                     }
                 }
@@ -440,23 +440,24 @@ class SleepCalculationHandler(val context: Context) {
 
                 //var wakeUpTimeNew = 0
                 // if in bed then check the single states of the sleep
+                // TODO check how good light user wakeup is working... for testing it will be deactivated first
                 if (sleepSessionEntity.mobilePosition == MobilePosition.INBED) {
-                    wakeUpTime = findLightUserWakeup(sleepApiRawDataEntity, wakeUpTime)
+                    //wakeUpTime = findLightUserWakeup(sleepApiRawDataEntity, wakeUpTime)
                 }
 
                 // store in the alarm...!!!
                 dataBaseRepository.updateWakeupTime(wakeupTime = wakeUpTime, alarm.id)
 
-                /*
+
                 val last = sleepApiRawDataEntity.last().timestampSeconds
                 dataBaseRepository.updateSleepApiRawDataWakeUp(
                         last,
                         wakeUpTime
-                )*/
+                )
 
                 sleepApiRawDataEntity.last().wakeUpTime = wakeUpTime
 
-                sleepSessionEntity.sleepTimes.sleepTimeEnd = wakeUpTime
+                sleepSessionEntity.sleepTimes.sleepTimeEnd = last
 
             }
             else {
@@ -465,7 +466,7 @@ class SleepCalculationHandler(val context: Context) {
 
             }
 
-            dataBaseRepository.insertSleepApiRawData(sleepApiRawDataEntity)
+            //dataBaseRepository.insertSleepApiRawData(sleepApiRawDataEntity)
             dataStoreRepository.updateUserSleepTime(sleepSessionEntity.sleepTimes.sleepDuration)
             dataBaseRepository.insertUserSleepSession(sleepSessionEntity)
         }

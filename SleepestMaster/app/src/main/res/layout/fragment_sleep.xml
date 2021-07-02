@@ -47,12 +47,12 @@
                     android:visibility="visible"
                     app:layoutDescription="@xml/fragment_sleep_scene">
 
-                    <View
+                    <TextView
                         android:id="@+id/animTextSleep"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:text="Sleep"
+                        android:text="@string/sleep_sleep_header"
                         android:textColor="@color/white"
                         android:textSize="@dimen/headerSize"
                         android:textStyle="bold"

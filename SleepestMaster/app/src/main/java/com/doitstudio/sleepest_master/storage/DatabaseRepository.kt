@@ -246,6 +246,10 @@ class DatabaseRepository(
         userSleepSessionDao.insert(userSleepSession)
     }
 
+    suspend fun insertUserSleepSessions(userSleepSession: List<UserSleepSessionEntity>) {
+        userSleepSessionDao.insertAll(userSleepSession)
+    }
+
     suspend fun deleteUserSleepSession() {
         userSleepSessionDao.deleteAll()
     }

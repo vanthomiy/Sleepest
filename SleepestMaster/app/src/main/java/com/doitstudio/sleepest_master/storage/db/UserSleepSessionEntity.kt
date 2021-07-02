@@ -44,9 +44,9 @@ data class UserSleepSessionEntity(
 
                         var actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp.toLong()*1000), ZoneOffset.UTC)
 
-                        if(actualTime.hour >= 15){
+                        /*if(actualTime.hour >= 15){
                                 actualTime = actualTime.plusDays(1)
-                        }
+                        }*/
 
                         val date = actualTime.toLocalDate()
                         var newTime = LocalTime.of(15,0)

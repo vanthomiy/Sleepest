@@ -2,6 +2,7 @@ package com.doitstudio.sleepest_master.storage.datastorage
 
 import android.util.Log
 import androidx.datastore.core.DataStore
+import com.doitstudio.sleepest_master.LiveUserSleepActivity
 import com.doitstudio.sleepest_master.SleepParameters
 import com.doitstudio.sleepest_master.model.data.LightConditions
 import com.doitstudio.sleepest_master.model.data.MobilePosition
@@ -24,6 +25,18 @@ class SleepParameterStatus(private val dataStore: DataStore<SleepParameters>) {
                 throw exception
             }
         }
+
+    suspend fun loadDefault(){
+        dataStore.updateData  {
+            SleepParameters.newBuilder()
+                    .setStandardMobilePosition(MobilePosition.UNIDENTIFIED.ordinal)
+                    .setMobileUseFrequency(MobileUseFrequency.getValue(MobileUseFrequency.NONE))
+                    .setNormalSleepTime(32400)
+                    .setSleepTimeStart(72000)
+                    .setSleepTimeEnd(36000)
+                    .build()
+        }
+    }
 
     suspend fun updateActivityTracking(duration:Boolean){
         dataStore.updateData{preference->

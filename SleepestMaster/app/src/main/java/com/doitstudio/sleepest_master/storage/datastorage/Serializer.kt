@@ -45,6 +45,23 @@ class ActivityApiDataSerializer() : Serializer<ActivityApiData> {
 }
 
 
+class SettingsDataSerializer() : Serializer<SettingsData> {
+
+    override fun readFrom(input: InputStream): SettingsData {
+        try {
+            return SettingsData.parseFrom(input)
+        } catch (exception: InvalidProtocolBufferException) {
+            throw CorruptionException("Cannot read proto.", exception)
+        }
+    }
+
+    override fun writeTo(t: SettingsData, output: OutputStream) {
+        t.writeTo(output)
+    }
+
+    override val defaultValue: SettingsData = SettingsData.getDefaultInstance()
+}
+
 class LiveUserSleepActivitySerializer() : Serializer<LiveUserSleepActivity> {
 
     override fun readFrom(input: InputStream): LiveUserSleepActivity {
