@@ -35,6 +35,9 @@ enum class AlarmReceiverUsage : IAlarmReceiverUsage {
     },
     STOP_WORKMANAGER{
         override fun getAlarmReceiverUsageValue(): Int = 7
+    },
+    CURRENTLY_NOT_SLEEPING{
+        override fun getAlarmReceiverUsageValue(): Int = 8
     }
 }
 interface IAlarmClockReceiverUsage {
