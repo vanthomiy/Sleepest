@@ -33,6 +33,7 @@ import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.background.AlarmReceiver;
 import com.doitstudio.sleepest_master.background.ForegroundService;
 import com.doitstudio.sleepest_master.model.data.Actions;
+import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 
 import java.io.IOException;
@@ -222,7 +223,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
                                     AlarmClockAudio.getInstance().stopAlarm(false);
 
                                     Calendar calendarAlarm = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeBeginJob());
-                                    AlarmReceiver.startAlarmManager(calendarAlarm.get(Calendar.DAY_OF_WEEK), calendarAlarm.get(Calendar.HOUR_OF_DAY), calendarAlarm.get(Calendar.MINUTE), getApplicationContext(), 1);
+                                    AlarmReceiver.startAlarmManager(calendarAlarm.get(Calendar.DAY_OF_WEEK), calendarAlarm.get(Calendar.HOUR_OF_DAY), calendarAlarm.get(Calendar.MINUTE), getApplicationContext(), AlarmReceiverUsage.START_FOREGROUND);
                                     ForegroundService.startOrStopForegroundService(Actions.STOP, getApplicationContext());
 
                                     Calendar calendar = Calendar.getInstance();

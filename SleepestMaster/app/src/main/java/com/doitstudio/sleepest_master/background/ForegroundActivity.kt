@@ -6,6 +6,7 @@ import android.widget.Toast
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.model.data.Actions
+import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import kotlinx.coroutines.CoroutineScope
@@ -70,7 +71,7 @@ class ForegroundActivity : Activity() {
                                 calendarAlarm[Calendar.HOUR_OF_DAY],
                                 calendarAlarm[Calendar.MINUTE],
                                 applicationContext,
-                                1
+                                AlarmReceiverUsage.START_FOREGROUND
                             )
                             val pref = getSharedPreferences("AlarmReceiver1", 0)
                             val ed = pref.edit()

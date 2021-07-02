@@ -5,15 +5,30 @@ import android.Manifest
 import android.R
 import android.app.Activity.RESULT_OK
 import android.content.Context
+
+import android.content.Context.NOTIFICATION_SERVICE
+import android.os.Bundle
+import android.service.notification.StatusBarNotification
+
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.DocumentsContract
 import android.provider.Settings
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+
+import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.R
+import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
+
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -27,6 +42,7 @@ import com.doitstudio.sleepest_master.ui.sleep.SleepFragment
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
+
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.*
@@ -172,6 +188,7 @@ class ProfileFragment : Fragment() {
     }
 
 
+
     fun onDataClicked(view: View) {
         when (view.tag.toString()) {
             "export" -> {
@@ -192,6 +209,7 @@ class ProfileFragment : Fragment() {
                     // Optionally, specify a URI for the directory that should be opened in
                     // the system file picker when it loads.
                 }
+
 
                 startActivityForResult(intent, 1012)
             }
@@ -221,6 +239,7 @@ class ProfileFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
 
         // Check if a request code is received that matches that which we provided for the overlay draw request
         if (requestCode == 1234) {

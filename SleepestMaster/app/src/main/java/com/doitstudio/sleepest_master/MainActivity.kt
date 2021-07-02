@@ -21,11 +21,13 @@ import com.doitstudio.sleepest_master.background.AlarmReceiver
 import com.doitstudio.sleepest_master.background.ForegroundService
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
 import com.doitstudio.sleepest_master.model.data.Actions
+import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.ui.profile.ProfileFragment
 import com.doitstudio.sleepest_master.ui.sleep.SleepFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -247,7 +249,7 @@ class MainActivity : AppCompatActivity() {
                         earliestWakeupTemp = dataBaseRepository.getNextActiveAlarm()!!.wakeupEarly
 
                         val calendarFirstCalc = AlarmReceiver.getAlarmDate(dataBaseRepository.getNextActiveAlarm()!!.wakeupEarly - 1800)
-                        AlarmReceiver.startAlarmManager(calendarFirstCalc[Calendar.DAY_OF_WEEK], calendarFirstCalc[Calendar.HOUR_OF_DAY], calendarFirstCalc[Calendar.MINUTE], applicationContext,5)
+                        AlarmReceiver.startAlarmManager(calendarFirstCalc[Calendar.DAY_OF_WEEK], calendarFirstCalc[Calendar.HOUR_OF_DAY], calendarFirstCalc[Calendar.MINUTE], applicationContext,AlarmReceiverUsage.START_WORKMANAGER_CALCULATION)
                     }
                 } else // not in sleep time
                 {
@@ -269,7 +271,7 @@ class MainActivity : AppCompatActivity() {
                         calendarAlarm.add(Calendar.SECOND, livedata.sleepTimeStart)
 
                         //Start a alarm for the new foregroundservice start time
-                        AlarmReceiver.startAlarmManager(calendarAlarm[Calendar.DAY_OF_WEEK], calendarAlarm[Calendar.HOUR_OF_DAY], calendarAlarm[Calendar.MINUTE], applicationContext, 1)
+                        AlarmReceiver.startAlarmManager(calendarAlarm[Calendar.DAY_OF_WEEK], calendarAlarm[Calendar.HOUR_OF_DAY], calendarAlarm[Calendar.MINUTE], applicationContext, AlarmReceiverUsage.START_FOREGROUND)
 
                         val pref = getSharedPreferences("AlarmReceiver1", 0)
                         val ed = pref.edit()
@@ -313,11 +315,16 @@ class MainActivity : AppCompatActivity() {
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
         if (!notificationManager.isNotificationPolicyAccessGranted){
-            Toast.makeText(this,"Alarm could be silence without this permission", Toast.LENGTH_SHORT).show()
-        }
-
-        if(!Settings.canDrawOverlays(this)) {
-            Toast.makeText(this,"Sorry. Can't draw overlays without permission...", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this,"Alarm could be silence without this permission", Toast.LENGTH_SHORT).show()
+            val snack = Snackbar.make(findViewById(android.R.id.content),"This is a simple Snackbar",Snackbar.LENGTH_INDEFINITE)
+            snack.show()
+        } else if(!Settings.canDrawOverlays(this)) {
+            //Toast.makeText(this,"Sorry. Can't draw overlays without permission...", Toast.LENGTH_SHORT).show()
+            val snack = Snackbar.make(findViewById(android.R.id.content),"This is a simple Snackbar",Snackbar.LENGTH_INDEFINITE)
+            snack.show()
+        } else if(!activityRecognitionPermissionApproved()) {
+            val snack = Snackbar.make(findViewById(android.R.id.content),"This is a simple Snackbar",Snackbar.LENGTH_INDEFINITE)
+            snack.show()
         }
 
     }
@@ -371,7 +378,7 @@ class MainActivity : AppCompatActivity() {
                     AlarmReceiver.startAlarmManager(
                         calendar.get(Calendar.DAY_OF_WEEK), calendar.get(
                             Calendar.HOUR_OF_DAY
-                        ), calendar.get(Calendar.MINUTE), applicationContext, 6
+                        ), calendar.get(Calendar.MINUTE), applicationContext, AlarmReceiverUsage.START_WORKMANAGER
                     )
 
                     val calendarAlarm = Calendar.getInstance()
@@ -385,7 +392,7 @@ class MainActivity : AppCompatActivity() {
                         calendarAlarm[Calendar.DAY_OF_WEEK],
                         calendarAlarm[Calendar.HOUR_OF_DAY],
                         calendarAlarm[Calendar.MINUTE],
-                        applicationContext, 1
+                        applicationContext, AlarmReceiverUsage.START_FOREGROUND
                     )
 
                 }

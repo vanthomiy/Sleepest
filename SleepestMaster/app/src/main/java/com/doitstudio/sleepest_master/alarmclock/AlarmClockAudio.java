@@ -114,7 +114,7 @@ public class AlarmClockAudio {
         /**TODO: Verschiedene Alarme einfügen, über Einstellungen anpassbar */
 
         if (ringtoneManager == null) {
-            if (tone == "null") {
+            if (tone.equals("null")) {
                 ringtoneManager = RingtoneManager.getRingtone(getInstanceContext(), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM));
             } else {
                 ringtoneManager = RingtoneManager.getRingtone(getInstanceContext(), Uri.parse(tone));
