@@ -30,6 +30,8 @@ import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.SleepApiData;
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver;
 import com.doitstudio.sleepest_master.model.data.Actions;
+import com.doitstudio.sleepest_master.model.data.AlarmClockReceiverUsage;
+import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage;
 import com.doitstudio.sleepest_master.sleepapi.SleepHandler;
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
@@ -118,7 +120,7 @@ public class ForegroundService extends LifecycleService {
         //start AlarmManager to disable at the end of sleeptime
 
         sleepHandler.startSleepHandler();
-        AlarmReceiver.cancelAlarm(getApplicationContext(), 6);
+        AlarmReceiver.cancelAlarm(getApplicationContext(), AlarmReceiverUsage.START_WORKMANAGER);
         //Workmanager.Companion.startPeriodicWorkmanager(16, getApplicationContext());
 
         PeriodicWorkRequest periodicDataWork =
@@ -132,7 +134,7 @@ public class ForegroundService extends LifecycleService {
         Toast.makeText(getApplicationContext(), "Workmanager started", Toast.LENGTH_LONG).show();
 
         Calendar calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeEndJob());
-        AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(),7);
+        AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(),AlarmReceiverUsage.STOP_WORKMANAGER);
 
         startForeground(1, createNotification("Alarm status: " + isAlarmActive)); /** TODO: Id zentral anlegen */
 
@@ -174,7 +176,7 @@ public class ForegroundService extends LifecycleService {
         }*/
 
         //if (!AlarmReceiver.isAlarmManagerActive(getApplicationContext(), 5)) {
-            AlarmReceiver.startAlarmManager(calenderCalculation.get(Calendar.DAY_OF_WEEK), calenderCalculation.get(Calendar.HOUR_OF_DAY), calenderCalculation.get(Calendar.MINUTE), getApplicationContext(), 5);
+            AlarmReceiver.startAlarmManager(calenderCalculation.get(Calendar.DAY_OF_WEEK), calenderCalculation.get(Calendar.HOUR_OF_DAY), calenderCalculation.get(Calendar.MINUTE), getApplicationContext(), AlarmReceiverUsage.START_WORKMANAGER_CALCULATION);
         //}
 
         sleepCalculationHandler.checkIsUserSleeping(null);
@@ -211,7 +213,7 @@ public class ForegroundService extends LifecycleService {
             //Workmanager.stopPeriodicWorkmanager();
             WorkmanagerCalculation.stopPeriodicWorkmanager();
 
-            AlarmReceiver.cancelAlarm(getApplicationContext(), 5);
+            AlarmReceiver.cancelAlarm(getApplicationContext(), AlarmReceiverUsage.START_WORKMANAGER_CALCULATION);
 
             //sleepHandler.stopSleepHandler();
             Toast.makeText(getApplicationContext(), "Foregroundservice stopped", Toast.LENGTH_LONG).show();
@@ -237,7 +239,7 @@ public class ForegroundService extends LifecycleService {
 
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.SECOND, 60);
-            AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(), 2);
+            AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(), AlarmReceiverUsage.STOP_FOREGROUND);
 
         }
 
@@ -282,7 +284,7 @@ public class ForegroundService extends LifecycleService {
 
             actualWakeUp = calendarToSecondsOfDay(calendar);
 
-            AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(), 1);
+            AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
 
             setPreferences(calendar, alarmTimeInSeconds, 4);
 
@@ -293,7 +295,7 @@ public class ForegroundService extends LifecycleService {
 
             actualWakeUp = calendarToSecondsOfDay(earliestWakeup);
 
-            AlarmClockReceiver.startAlarmManager(earliestWakeup.get(Calendar.DAY_OF_WEEK), earliestWakeup.get(Calendar.HOUR_OF_DAY), earliestWakeup.get(Calendar.MINUTE), getApplicationContext(), 1);
+            AlarmClockReceiver.startAlarmManager(earliestWakeup.get(Calendar.DAY_OF_WEEK), earliestWakeup.get(Calendar.HOUR_OF_DAY), earliestWakeup.get(Calendar.MINUTE), getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
 
             setPreferences(earliestWakeup, time.getWakeupEarly(), 8);
 
@@ -310,7 +312,7 @@ public class ForegroundService extends LifecycleService {
 
             actualWakeUp = calendarToSecondsOfDay(latestWakeup);
 
-            AlarmClockReceiver.startAlarmManager(latestWakeup.get(Calendar.DAY_OF_WEEK), latestWakeup.get(Calendar.HOUR_OF_DAY), latestWakeup.get(Calendar.MINUTE), getApplicationContext(), 1);
+            AlarmClockReceiver.startAlarmManager(latestWakeup.get(Calendar.DAY_OF_WEEK), latestWakeup.get(Calendar.HOUR_OF_DAY), latestWakeup.get(Calendar.MINUTE), getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
 
             setPreferences(latestWakeup, time.getWakeupLate(), 1);
 
@@ -326,7 +328,7 @@ public class ForegroundService extends LifecycleService {
 
                 actualWakeUp = calendarToSecondsOfDay(earliestWakeup);
 
-                AlarmClockReceiver.startAlarmManager(earliestWakeup.get(Calendar.DAY_OF_WEEK), earliestWakeup.get(Calendar.HOUR_OF_DAY), earliestWakeup.get(Calendar.MINUTE), getApplicationContext(), 1);
+                AlarmClockReceiver.startAlarmManager(earliestWakeup.get(Calendar.DAY_OF_WEEK), earliestWakeup.get(Calendar.HOUR_OF_DAY), earliestWakeup.get(Calendar.MINUTE), getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
 
                 setPreferences(earliestWakeup, time.getWakeupEarly(), 2);
 
@@ -339,7 +341,7 @@ public class ForegroundService extends LifecycleService {
 
                 actualWakeUp = calendarToSecondsOfDay(latestWakeup);
 
-                AlarmClockReceiver.startAlarmManager(latestWakeup.get(Calendar.DAY_OF_WEEK), latestWakeup.get(Calendar.HOUR_OF_DAY), latestWakeup.get(Calendar.MINUTE), getApplicationContext(), 1);
+                AlarmClockReceiver.startAlarmManager(latestWakeup.get(Calendar.DAY_OF_WEEK), latestWakeup.get(Calendar.HOUR_OF_DAY), latestWakeup.get(Calendar.MINUTE), getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
 
                 setPreferences(latestWakeup, time.getWakeupLate(), 3);
 
@@ -352,7 +354,7 @@ public class ForegroundService extends LifecycleService {
 
                 actualWakeUp = calendarToSecondsOfDay(calendar);
 
-                AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 1, getApplicationContext(), 1);
+                AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 1, getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
 
                 setPreferences(calendar, time.getActualWakeup(), 5);
             }
@@ -376,16 +378,16 @@ public class ForegroundService extends LifecycleService {
     }
 
     private boolean checkPossibleAlarm() {
-        if (!AlarmClockReceiver.isAlarmClockActive(getApplicationContext(), 1) && !alarmEntity.getWasFired()) {
+        if (!AlarmClockReceiver.isAlarmClockActive(getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK) && !alarmEntity.getWasFired()) {
             return true;
         }
         return false;
     }
 
     private void checkAlarmSet() {
-        if ((actualWakeUp != 0) && !AlarmClockReceiver.isAlarmClockActive(getApplicationContext(), 1)) {
+        if ((actualWakeUp != 0) && !AlarmClockReceiver.isAlarmClockActive(getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK)) {
             Calendar calendar = AlarmReceiver.getAlarmDate(actualWakeUp);
-            AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK) ,calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(), 1);
+            AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK) ,calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
 
             setPreferences(calendar, actualWakeUp, 9);
         }

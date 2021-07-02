@@ -64,85 +64,10 @@ public class AlarmReceiver extends BroadcastReceiver {
         SharedPreferences.Editor ed = pref.edit();
         ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
         ed.putInt("minute", calendar.get(Calendar.MINUTE));
-        ed.putInt("intent", intent.getIntExtra(context.getString(R.string.alarmmanager_key), 0));
+        ed.putString("intent", intent.getStringExtra(context.getString(R.string.alarmmanager_key)));
         ed.apply();
 
-        switch (intent.getIntExtra(context.getString(R.string.alarmmanager_key), 0)) {
-            case 0:
-                break;
-            case 1:
-                //Start foregroundservice with an activity
-                Intent startForegroundIntent = new Intent(context, ForegroundActivity.class);
-                startForegroundIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startForegroundIntent.putExtra("intent", 1);
-                context.startActivity(startForegroundIntent);
-                break;
-            case 2:
-                //Stop foregorundservice with an activity
-                Intent stopForegroundIntent = new Intent(context, ForegroundActivity.class);
-                stopForegroundIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                stopForegroundIntent.putExtra("intent", 2);
-                context.startActivity(stopForegroundIntent);
-                break;
-            case 3:
-
-                /** Eventuell über ForegroundActivity aufrufen, wenn es nicht geht*/
-
-
-                /**TODO: Turn Alarm off, set Alarm for the day after or check for the next day
-                 * TODO: Stop Foregroundservice and send Toast
-                 */
-                break;
-            case 4:
-                //Button not Sleeping
-                sleepCalculationHandler.userNotSleepingJob();
-                break;
-            case 5:
-                //Start the workmanager for the calculation of the sleep
-                WorkmanagerCalculation.startPeriodicWorkmanager(16, context.getApplicationContext());
-                break;
-            case 6:
-                //Start Workmanager at sleeptime and subscribe to SleepApi
-                //Workmanager.Companion.startPeriodicWorkmanager(16, context);
-
-                PeriodicWorkRequest periodicDataWork =
-                        new PeriodicWorkRequest.Builder(Workmanager.class, 16, TimeUnit.MINUTES)
-                                .addTag(context.getString(R.string.workmanager1_tag)) //Tag is needed for canceling the periodic work
-                                .build();
-
-                WorkManager workManager = WorkManager.getInstance(context);
-                workManager.enqueueUniquePeriodicWork(context.getString(R.string.workmanager1_tag), ExistingPeriodicWorkPolicy.KEEP, periodicDataWork);
-
-                Toast.makeText(context, "Workmanager started", Toast.LENGTH_LONG).show();
-
-                sleepHandler.startSleepHandler();
-
-                //Set AlarmManager to stop Workmanager at end of sleeptime
-                calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeEndJob());
-                if (LocalTime.now().toSecondOfDay() < dataStoreRepository.getSleepTimeEndJob()) {
-                    AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context,7);
-                } else {
-                    AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK) + 1, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context,7);
-                }
-
-
-                break;
-            case 7:
-                //Stop Workmanager at end of sleeptime and unsubscribe to SleepApi
-                //Workmanager.Companion.stopPeriodicWorkmanager();
-
-                WorkManager.getInstance(context).cancelAllWorkByTag("Workmanager 1");
-
-                sleepHandler.stopSleepHandler();
-
-                sleepCalculationHandler.defineUserWakeup( null, false);
-
-                //Set AlarmManager to start Workmanager at begin of sleeptime
-                calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeBeginJob());
-                AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context,6);
-        }
-
-        switch ((AlarmReceiverUsage)intent.getSerializableExtra((context.getString(R.string.alarmmanager_key)))) {
+        switch (AlarmReceiverUsage.valueOf(intent.getStringExtra((context.getString(R.string.alarmmanager_key))))) {
             case DEFAULT:
                 break;
             case START_FOREGROUND:
@@ -195,9 +120,9 @@ public class AlarmReceiver extends BroadcastReceiver {
                 //Set AlarmManager to stop Workmanager at end of sleeptime
                 calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeEndJob());
                 if (LocalTime.now().toSecondOfDay() < dataStoreRepository.getSleepTimeEndJob()) {
-                    AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context,7);
+                    AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context,AlarmReceiverUsage.STOP_FOREGROUND);
                 } else {
-                    AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK) + 1, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context,7);
+                    AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK) + 1, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context, AlarmReceiverUsage.STOP_FOREGROUND);
                 }
 
 
@@ -214,32 +139,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                 //Set AlarmManager to start Workmanager at begin of sleeptime
                 calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeBeginJob());
-                AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context,6);
+                AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context,AlarmReceiverUsage.START_WORKMANAGER_CALCULATION);
         }
-    }
-
-    /**
-     * Start a alarm at a specific time
-     * @param day Number from 1-7, Sunday=1, Saturday=7
-     * @param hour Hour from 0-23
-     * @param min Minute from 0-59
-     * @param alarmContext Application Context
-     */
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT) //Android KITKAT is minimum version!
-    public static void startAlarmManager(int day, int hour, int min, Context alarmContext, int usage) {
-
-        //Get an instance of calendar and set time, when alarm should be fired
-        Calendar calenderAlarm = getAlarmDate(day, hour, min);
-
-        Intent intent = new Intent(alarmContext, AlarmReceiver.class);
-        intent.putExtra(alarmContext.getString(R.string.alarmmanager_key), usage);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(alarmContext, usage, intent, 0);
-        AlarmManager alarmManager = (AlarmManager) alarmContext.getSystemService(ALARM_SERVICE);
-
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calenderAlarm.getTimeInMillis(), pendingIntent);
-
-        Toast.makeText(alarmContext, "AlarmManager set to " + calenderAlarm.get(Calendar.DAY_OF_WEEK) + ": "
-                + calenderAlarm.get(Calendar.HOUR_OF_DAY) + ":" + calenderAlarm.get(Calendar.MINUTE) + ", usage: " + usage, Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -256,7 +157,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         Calendar calenderAlarm = getAlarmDate(day, hour, min);
 
         Intent intent = new Intent(alarmContext, AlarmReceiver.class);
-        intent.putExtra(alarmContext.getString(R.string.alarmmanager_key), alarmReceiverUsage);
+        intent.putExtra(alarmContext.getString(R.string.alarmmanager_key), alarmReceiverUsage.name());
         PendingIntent pendingIntent = PendingIntent.getBroadcast(alarmContext, alarmReceiverUsage.getAlarmReceiverUsageValue(), intent, 0);
         AlarmManager alarmManager = (AlarmManager) alarmContext.getSystemService(ALARM_SERVICE);
 
@@ -264,21 +165,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         Toast.makeText(alarmContext, "AlarmManager set to " + calenderAlarm.get(Calendar.DAY_OF_WEEK) + ": "
                 + calenderAlarm.get(Calendar.HOUR_OF_DAY) + ":" + calenderAlarm.get(Calendar.MINUTE) + ", usage: " + alarmReceiverUsage.getAlarmReceiverUsageValue(), Toast.LENGTH_LONG).show();
-    }
-
-    /**
-     * Cancel a specific alarm by pending intent
-     * @param cancelAlarmContext Application Context
-     */
-    public static void cancelAlarm(Context cancelAlarmContext, int usage) {
-
-        Intent intent = new Intent(cancelAlarmContext, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(cancelAlarmContext, usage, intent, 0);
-        AlarmManager alarmManager = (AlarmManager) cancelAlarmContext.getSystemService(ALARM_SERVICE);
-        alarmManager.cancel(pendingIntent);
-        pendingIntent.cancel();
-
-        Toast.makeText(cancelAlarmContext, "AlarmManager canceled: " + usage, Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -294,12 +180,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         pendingIntent.cancel();
 
         Toast.makeText(cancelAlarmContext, "AlarmManager canceled: " + alarmReceiverUsage.getAlarmReceiverUsageValue(), Toast.LENGTH_LONG).show();
-    }
-
-    public static boolean isAlarmManagerActive(Context alarmActiveContext, int usage) {
-        Intent intent = new Intent(alarmActiveContext, AlarmReceiver.class);
-
-        return (PendingIntent.getBroadcast(alarmActiveContext, usage, intent, PendingIntent.FLAG_NO_CREATE) != null);
     }
 
     public static boolean isAlarmManagerActive(Context alarmActiveContext, AlarmReceiverUsage alarmReceiverUsage) {

@@ -37,6 +37,23 @@ enum class AlarmReceiverUsage : IAlarmReceiverUsage {
         override fun getAlarmReceiverUsageValue(): Int = 7
     }
 }
+interface IAlarmClockReceiverUsage {
+    fun getAlarmClockReceiverUsageValue() : Int
+}
+enum class AlarmClockReceiverUsage : IAlarmClockReceiverUsage{
+    DEFAULT {
+        override fun getAlarmClockReceiverUsageValue(): Int = 0
+    },
+    START_ALARMCLOCK {
+        override fun getAlarmClockReceiverUsageValue(): Int = 1
+    },
+    STOP_ALARMCLOCK {
+        override fun getAlarmClockReceiverUsageValue(): Int = 2
+    },
+    SNOOZE_ALARMCLOCK {
+        override fun getAlarmClockReceiverUsageValue(): Int = 3
+    }
+}
 
 /**
  * Defines the different states of the sleep a user can be in
