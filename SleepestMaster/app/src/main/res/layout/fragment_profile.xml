@@ -641,7 +641,7 @@
                             android:layout_gravity="end"
                             android:src="@drawable/ic_baseline_expand_more_24"
                             android:rotation="@{profileViewModel.dataRotation}"
-                            android:onClick="@{profileViewModel::onDataClicked}"
+                            android:onClick="@{profileViewModel::onExpandClicked}"
                             android:tag="4"
                             app:tint="@color/primary_text_color" />
 
