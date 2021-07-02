@@ -1,11 +1,17 @@
 package com.doitstudio.sleepest_master.ui.profile
 
+
 import android.Manifest
 import android.R
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.app.Notification
+import android.app.NotificationManager
+import android.content.Context
+import android.content.Context.NOTIFICATION_SERVICE
+import android.media.AudioManager
 import android.os.Bundle
 import android.provider.DocumentsContract
 import android.provider.Settings
@@ -92,8 +98,8 @@ class ProfileFragment : Fragment() {
         var pref = actualContext.getSharedPreferences("AlarmChanged", 0)
         val textAlarm = """
             Last Alarm changed: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt(
-                "actualWakeup",
-                0
+            "actualWakeup",
+            0
         )},${pref.getInt("alarmUse", 0)}
             
             """.trimIndent()
@@ -134,6 +140,7 @@ class ProfileFragment : Fragment() {
         pref = actualContext.getSharedPreferences("AlarmReceiver", 0)
         val textAlarmReceiver = """
             AlarmReceiver: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt(
+
                 "intent",
                 0
         )}
@@ -164,16 +171,15 @@ class ProfileFragment : Fragment() {
         binding.testText.text = textGesamt
 
 
-        //endregion
-
-
         return binding.root
 
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
     }
+
 
     fun onDataClicked(view: View) {
         when (view.tag.toString()) {

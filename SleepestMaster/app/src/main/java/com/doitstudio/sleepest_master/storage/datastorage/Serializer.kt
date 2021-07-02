@@ -99,6 +99,8 @@ class SleepParameterSerializer() : Serializer<SleepParameters> {
         .setNormalSleepTime(32400)
         .setSleepTimeStart(72000)
         .setSleepTimeEnd(36000)
+        .setAlarmtone("null")
+        .setAlarmArt(0)
         .build()
 }
 

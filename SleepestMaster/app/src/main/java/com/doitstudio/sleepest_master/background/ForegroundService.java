@@ -5,6 +5,7 @@ package com.doitstudio.sleepest_master.background;
  * like start, stop and foreground notification
  */
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -18,6 +19,9 @@ import android.os.PowerManager;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 import androidx.lifecycle.LifecycleService;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import com.doitstudio.sleepest_master.LiveUserSleepActivity;
 import com.doitstudio.sleepest_master.MainActivity;
@@ -35,6 +39,7 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 public class ForegroundService extends LifecycleService {
 
@@ -98,6 +103,13 @@ public class ForegroundService extends LifecycleService {
         foregroundObserver.updateAlarmWasFired(false, alarmEntity.getId());
         // New from Thomas: With other call...
         dataStoreRepository = DataStoreRepository.Companion.getRepo(getApplicationContext());
+        // activity = (Activity) getApplicationContext();
+        //dataStoreRepository = ((MainApplication)activity.getApplication()).getDataStoreRepository();
+
+        //das hier:
+        //dataStoreRepository = ((MainApplication)getApplicationContext()).getDataStoreRepository();
+
+
         //dataStoreRepository = MainApplication.class.cast(getApplicationContext()).getDataStoreRepository();
 
         sleepHandler =  SleepHandler.Companion.getHandler(getApplicationContext());
@@ -107,14 +119,24 @@ public class ForegroundService extends LifecycleService {
 
         sleepHandler.startSleepHandler();
         AlarmReceiver.cancelAlarm(getApplicationContext(), 6);
-        //AlarmReceiver.cancelAlarm(getApplicationContext(), 7);
-        Workmanager.startPeriodicWorkmanager(16, getApplicationContext());
+        //Workmanager.Companion.startPeriodicWorkmanager(16, getApplicationContext());
+
+        PeriodicWorkRequest periodicDataWork =
+                new PeriodicWorkRequest.Builder(Workmanager.class, 16, TimeUnit.MINUTES)
+                        .addTag(getApplicationContext().getString(R.string.workmanager1_tag)) //Tag is needed for canceling the periodic work
+                        .build();
+
+        WorkManager workManager = WorkManager.getInstance(getApplicationContext());
+        workManager.enqueueUniquePeriodicWork(getApplicationContext().getString(R.string.workmanager1_tag), ExistingPeriodicWorkPolicy.KEEP, periodicDataWork);
+
+        Toast.makeText(getApplicationContext(), "Workmanager started", Toast.LENGTH_LONG).show();
+
         Calendar calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeEndJob());
         AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(),7);
 
         startForeground(1, createNotification("Alarm status: " + isAlarmActive)); /** TODO: Id zentral anlegen */
 
-        sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(getApplicationContext());
+        sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(MainApplication.Companion.applicationContext());
     }
 
 
@@ -419,7 +441,6 @@ public class ForegroundService extends LifecycleService {
 
     }
 
-    /**TODO Notification noch selbst machen mit eigenem Layout*/
     /**
      * Creats a notification banner, that is permanent to show that the app is still running.
      * @param text The text at the notification banner
@@ -455,10 +476,6 @@ public class ForegroundService extends LifecycleService {
                 + "\nIsSleeping: " + isSleeping + " Wakeup: " + alarmTimeInSeconds;
         remoteViews.setTextViewText(R.id.tvTextAlarm, notificationText);
 
-        //Set the progress bar for the sleep progress
-        remoteViews.setProgressBar(R.id.pbSleepProgressNotification, 100,
-                getSleepProgress(dataStoreRepository.getSleepTimeBeginJob(), dataStoreRepository.getSleepTimeEndJob(), Calendar.getInstance().get(Calendar.HOUR_OF_DAY)), false);
-
         //Set the Intent for tap on the notification, will start app in MainActivity
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -489,7 +506,7 @@ public class ForegroundService extends LifecycleService {
                 .setContentText(text)
                 .setCustomBigContentView(remoteViews)
                 .setStyle(new Notification.DecoratedCustomViewStyle())
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.logo_notification)
                 .setContentIntent(pendingIntent)
                 .setOnlyAlertOnce(true)
                 .build();
@@ -506,35 +523,8 @@ public class ForegroundService extends LifecycleService {
         Intent intent = new Intent(context, ForegroundService.class);
         intent.setAction(action.name());
 
-        /*if (new ServiceTracker().getServiceState(context) == ServiceState.STOPPED && action == Actions.STOP) {
-            return;
-        }*/
-
         context.startForegroundService(intent);
         return;
-    }
-
-    /**
-     * Calculates the actual progress of the progressbar
-     * @param beginTime Start time of sleeptime in secondsOfDay
-     * @param endTime Stop time of sleeptime in secondsOfDay
-     * @param actualTime Actual time in hours
-     * @return
-     */
-    private int getSleepProgress(int beginTime, int endTime, int actualTime) {
-        int progress;
-
-        if (beginTime < endTime) {
-            progress = (actualTime - beginTime) / (endTime - beginTime) * 100;
-        } else {
-            if (actualTime <= 23 && actualTime > beginTime) {
-                progress = (actualTime - beginTime) / (endTime + 24 - beginTime) * 100;
-            } else {
-                progress = (actualTime + 24 - beginTime) / (endTime + 24 - beginTime) * 100;
-            }
-        }
-
-        return progress;
     }
 
     //endregion

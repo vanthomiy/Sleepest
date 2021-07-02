@@ -11,6 +11,7 @@ import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.doitstudio.sleepest_master.MainApplication;
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 
@@ -43,8 +44,9 @@ public class WorkmanagerCalculation extends Worker {
          * angeschaut wird. Prozesse, die den Nutzer nicht benötigen, sind hier aber im Normalfall
          * problemlos möglich.
          */
-        sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
-        sleepCalculationHandler.defineUserWakeup( null);
+        sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(MainApplication.Companion.applicationContext());
+        //sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
+        sleepCalculationHandler.defineUserWakeup( null, true);
 
         Calendar calendar = Calendar.getInstance();
 
@@ -59,16 +61,9 @@ public class WorkmanagerCalculation extends Worker {
 
     public static void startPeriodicWorkmanager(int duration, Context context1) {
 
-        //Constraints not necessary, but useful
-        /*Constraints constraints = new Constraints.Builder()
-                .setRequiresBatteryNotLow(true) //Trigger fires only, when battery is not low
-                .setRequiresStorageNotLow(true) //Trigger fires only, when enough storage is left
-                .build();*/
-
         PeriodicWorkRequest periodicDataWork =
                 new PeriodicWorkRequest.Builder(WorkmanagerCalculation.class, duration, TimeUnit.MINUTES)
                         .addTag(context1.getString(R.string.workmanager2_tag)) //Tag is needed for canceling the periodic work
-                        //.setConstraints(constraints)
                         .build();
 
         WorkManager workManager = WorkManager.getInstance(context);

@@ -53,6 +53,17 @@ class SleepParameterStatus(private val dataStore: DataStore<SleepParameters>) {
             preference.toBuilder().setEndAlarmAfterFired(duration).build()
         }
     }
+    suspend fun updateAlarmArt(art:Int){
+        dataStore.updateData{preference->
+            preference.toBuilder().setAlarmArt(art).build()
+        }
+    }
+
+    suspend fun updateAlarmTone(tone:String){
+        dataStore.updateData{preference->
+            preference.toBuilder().setAlarmtone(tone).build()
+        }
+    }
 
     suspend fun updateAutoSleepTime(duration:Boolean){
         dataStore.updateData{preference->

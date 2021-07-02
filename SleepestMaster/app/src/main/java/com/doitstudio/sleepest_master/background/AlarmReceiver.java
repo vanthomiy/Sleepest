@@ -2,6 +2,7 @@ package com.doitstudio.sleepest_master.background;
 
 /**This class inherits from Broadcastreceiver and starts an alarm at a specific time and date*/
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -17,6 +18,9 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import com.doitstudio.sleepest_master.MainActivity;
 import com.doitstudio.sleepest_master.MainApplication;
@@ -31,6 +35,7 @@ import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
 
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;
@@ -45,10 +50,12 @@ public class AlarmReceiver extends BroadcastReceiver {
         // New from Thomas: With other call...
         DataStoreRepository dataStoreRepository = DataStoreRepository.Companion.getRepo(context);
         //DataStoreRepository dataStoreRepository = MainApplication.class.cast(context).getDataStoreRepository();
+        //Activity activity = (Activity) context;
+        //DataStoreRepository dataStoreRepository = ((MainApplication)activity.getApplication()).getDataStoreRepository();
 
 
-        SleepHandler sleepHandler = SleepHandler.Companion.getHandler(context);
-        SleepCalculationHandler sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
+        SleepHandler sleepHandler = SleepHandler.Companion.getHandler(MainApplication.Companion.applicationContext());
+        SleepCalculationHandler sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(MainApplication.Companion.applicationContext());
 
         Calendar calendar = Calendar.getInstance();
         SharedPreferences pref = context.getSharedPreferences("AlarmReceiver", 0);
@@ -94,18 +101,39 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case 6:
                 //Start Workmanager at sleeptime and subscribe to SleepApi
-                Workmanager.startPeriodicWorkmanager(16, context);
+                //Workmanager.Companion.startPeriodicWorkmanager(16, context);
+
+                PeriodicWorkRequest periodicDataWork =
+                        new PeriodicWorkRequest.Builder(Workmanager.class, 16, TimeUnit.MINUTES)
+                                .addTag(context.getString(R.string.workmanager1_tag)) //Tag is needed for canceling the periodic work
+                                .build();
+
+                WorkManager workManager = WorkManager.getInstance(context);
+                workManager.enqueueUniquePeriodicWork(context.getString(R.string.workmanager1_tag), ExistingPeriodicWorkPolicy.KEEP, periodicDataWork);
+
+                Toast.makeText(context, "Workmanager started", Toast.LENGTH_LONG).show();
+
                 sleepHandler.startSleepHandler();
 
                 //Set AlarmManager to stop Workmanager at end of sleeptime
                 calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeEndJob());
-                AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context,7);
+                if (LocalTime.now().toSecondOfDay() < dataStoreRepository.getSleepTimeEndJob()) {
+                    AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context,7);
+                } else {
+                    AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK) + 1, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context,7);
+                }
+
 
                 break;
             case 7:
                 //Stop Workmanager at end of sleeptime and unsubscribe to SleepApi
-                Workmanager.stopPeriodicWorkmanager();
+                //Workmanager.Companion.stopPeriodicWorkmanager();
+
+                WorkManager.getInstance(context).cancelAllWorkByTag("Workmanager 1");
+
                 sleepHandler.stopSleepHandler();
+
+                sleepCalculationHandler.defineUserWakeup( null, false);
 
                 //Set AlarmManager to start Workmanager at begin of sleeptime
                 calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeBeginJob());

@@ -130,6 +130,16 @@ message  SleepParameters{
 */
   bool endAlarmAfterFired = 9;
 
+  /**
+* implement the user activity tracking in the sleep time
+*/
+  int32 alarmArt = 11;
+
+  /**
+* implement the user activity tracking in the sleep time
+*/
+  string alarmtone = 12;
+
 
 }
 

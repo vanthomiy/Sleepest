@@ -32,37 +32,56 @@ class ForegroundActivity : Activity() {
 
         if (extras != null) {
             when (extras.getInt("intent", 0)) {
-                1 -> {scope.launch {
+                1 -> {
+                    scope.launch {
 
-                    // next alarm or null
-                    if(databaseRepository.isAlarmActiv()){
-                        // start foreground if not null
-                        /**TODO: Abfrage, ob Background schon aktive ist*/
+                        // next alarm or null
+                        if (databaseRepository.isAlarmActiv()) {
+                            // start foreground if not null
 
-                        if (!dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
-                            ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
+                            if (!dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
+                                ForegroundService.startOrStopForegroundService(
+                                    Actions.START,
+                                    applicationContext
+                                )
+                            } else {
+                                Toast.makeText(
+                                    applicationContext,
+                                    application.getString(R.string.error_start_foreground),
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+
                         } else {
-                            Toast.makeText(applicationContext, application.getString(R.string.error_start_foreground), Toast.LENGTH_LONG).show()
-                        }
+                            //Next foreground start at next day
+                            val calendarAlarm = Calendar.getInstance()
+                            calendarAlarm[Calendar.HOUR_OF_DAY] = 0
+                            calendarAlarm[Calendar.MINUTE] = 0
+                            calendarAlarm[Calendar.SECOND] = 0
+                            calendarAlarm.add(
+                                Calendar.SECOND,
+                                dataStoreRepository.getSleepTimeBeginJob()
+                            )
+                            calendarAlarm.add(Calendar.DAY_OF_YEAR, 1)
 
-                    } else {
-                        //Next foreground start at next day
-                        val calendarAlarm = Calendar.getInstance()
-                        calendarAlarm[Calendar.HOUR_OF_DAY] = 0
-                        calendarAlarm[Calendar.MINUTE] = 0
-                        calendarAlarm[Calendar.SECOND] = 0
-                        calendarAlarm.add(Calendar.SECOND, dataStoreRepository.getSleepTimeBeginJob())
-                        calendarAlarm.add(Calendar.DAY_OF_YEAR, 1)
-
-                        //Start a alarm for the new foregroundservice start time
-                        AlarmReceiver.startAlarmManager(
+                            //Start a alarm for the new foregroundservice start time
+                            AlarmReceiver.startAlarmManager(
                                 calendarAlarm[Calendar.DAY_OF_WEEK],
                                 calendarAlarm[Calendar.HOUR_OF_DAY],
                                 calendarAlarm[Calendar.MINUTE],
-                                applicationContext, 1
-                        )
+                                applicationContext,
+                                1
+                            )
+                            val pref = getSharedPreferences("AlarmReceiver1", 0)
+                            val ed = pref.edit()
+                            ed.putString("usage", "ForegroundActivity")
+                            ed.putInt("day", calendarAlarm[Calendar.DAY_OF_WEEK])
+                            ed.putInt("hour", calendarAlarm[Calendar.HOUR_OF_DAY])
+                            ed.putInt("minute", calendarAlarm[Calendar.MINUTE])
+                            ed.apply()
+                        }
                     }
-                }}
+                }
 
                 2 -> {
                     ForegroundService.startOrStopForegroundService(Actions.STOP, applicationContext)

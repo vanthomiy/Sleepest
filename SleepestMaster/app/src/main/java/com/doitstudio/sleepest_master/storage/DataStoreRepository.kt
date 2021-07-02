@@ -88,6 +88,14 @@ class DataStoreRepository(context: Context) {
         return@runBlocking getSleepTimeEnd()
     }
 
+    fun getAlarmArtJob() : Int = runBlocking{
+        return@runBlocking getAlarmArt()
+    }
+
+    fun getAlarmToneJob() : String = runBlocking{
+        return@runBlocking getAlarmTone()
+    }
+
     suspend fun getSleepTimeBegin() : Int {
         return sleepParameterFlow.first().sleepTimeStart
     }
@@ -95,13 +103,22 @@ class DataStoreRepository(context: Context) {
     suspend fun getSleepTimeEnd() : Int {
         return sleepParameterFlow.first().sleepTimeEnd
     }
+    suspend fun getAlarmArt() : Int {
+        return sleepParameterFlow.first().alarmArt
+    }
+    suspend fun getAlarmTone() : String {
+        return sleepParameterFlow.first().alarmtone
+    }
     suspend fun updateActivityTracking(value:Boolean) =
             sleepParameterStatus.updateActivityTracking(value)
     suspend fun updateActivityInCalculation(value:Boolean) =
             sleepParameterStatus.updateActivityInCalculation(value)
     suspend fun updateEndAlarmAfterFired(value:Boolean) =
             sleepParameterStatus.updateEndAlarmAfterFired(value)
-
+    suspend fun updateAlarmArt(value:Int) =
+        sleepParameterStatus.updateAlarmArt(value)
+    suspend fun updateAlarmTone(value:String) =
+        sleepParameterStatus.updateAlarmTone(value)
     suspend fun updateAutoSleepTime(time:Boolean) =
             sleepParameterStatus.updateAutoSleepTime(time)
     suspend fun updateSleepTimeEnd(time:Int) =

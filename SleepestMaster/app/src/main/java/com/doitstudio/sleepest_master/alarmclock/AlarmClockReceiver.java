@@ -12,9 +12,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.PowerManager;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -39,6 +41,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
      * @param context Context
      * @param intent Intent
      */
+    @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -64,14 +67,22 @@ public class AlarmClockReceiver extends BroadcastReceiver {
                 Calendar calendarAlarm = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeBeginJob());
                 AlarmReceiver.startAlarmManager(calendarAlarm.get(Calendar.DAY_OF_WEEK), calendarAlarm.get(Calendar.HOUR_OF_DAY), calendarAlarm.get(Calendar.MINUTE), context, 1);
 
+                SharedPreferences pref = context.getSharedPreferences("AlarmReceiver1", 0);
+                SharedPreferences.Editor ed = pref.edit();
+                ed.putString("usage", "AlarmClockReceiver");
+                ed.putInt("day", calendarAlarm.get(Calendar.DAY_OF_WEEK));
+                ed.putInt("hour", calendarAlarm.get(Calendar.HOUR_OF_DAY));
+                ed.putInt("minute", calendarAlarm.get(Calendar.MINUTE));
+                ed.apply();
+
                 Intent stopAlarmIntent = new Intent(context, ForegroundActivity.class);
                 stopAlarmIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 stopAlarmIntent.putExtra("intent", 2);
                 context.startActivity(stopAlarmIntent);
 
                 Calendar calendar = Calendar.getInstance();
-                SharedPreferences pref = context.getSharedPreferences("AlarmClock", 0);
-                SharedPreferences.Editor ed = pref.edit();
+                pref = context.getSharedPreferences("AlarmClock", 0);
+                ed = pref.edit();
                 ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
                 ed.putInt("minute", calendar.get(Calendar.MINUTE));
                 ed.apply();
@@ -138,6 +149,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
         return (PendingIntent.getBroadcast(alarmActiveContext, usage, intent, PendingIntent.FLAG_NO_CREATE) != null);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     private void showFullscreenNotification() {
 
         createNotificationChannel();

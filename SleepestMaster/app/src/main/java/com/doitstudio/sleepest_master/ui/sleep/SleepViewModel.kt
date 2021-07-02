@@ -232,9 +232,6 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
     val activityTracking = ObservableField(false)
     val includeActivityInCalculation = ObservableField(false)
-    val cancelAlarmWhenAwake = ObservableField(false)
-
-
     val activityTrackingView = ObservableField(View.GONE)
 
 
@@ -269,7 +266,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     fun onActivityInCalcChanged(buttonView: View) {
         scope.launch {
             includeActivityInCalculation.get()?.let { dataStoreRepository.updateActivityInCalculation(
-                    it
+                it
             ) }
 
             sleepCalculateFactorCalculation()
@@ -279,13 +276,34 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
     }
 
+    // region Alarm
+
+    val cancelAlarmWhenAwake = ObservableField(false)
+
+
+    val alarmArtSelections = ObservableArrayList<String>()
+    val alarmArt = ObservableField(0)
+
+    fun onAlarmArtChanged(
+        parent: AdapterView<*>?,
+        selectedItemView: View,
+        art: Int,
+        id: Long
+    ){
+        scope.launch {
+            dataStoreRepository.updateAlarmArt(art)
+        }
+    }
+
+
+
     fun onEndAlarmAfterFiredChanged(buttonView: View) {
         scope.launch {
             cancelAlarmWhenAwake.get()?.let { dataStoreRepository.updateEndAlarmAfterFired(it) }
         }
     }
 
-
+    //endregion
 
     val sleepScoreValue = ObservableField("50")
     val sleepScoreText = ObservableField("50")
@@ -385,8 +403,12 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
             activityTracking.set(sleepParams.userActivityTracking)
             includeActivityInCalculation.set(sleepParams.implementUserActivityInSleepTime)
-            cancelAlarmWhenAwake.set(sleepParams.endAlarmAfterFired)
             activityTrackingView.set(if (sleepParams.userActivityTracking) View.VISIBLE else View.GONE)
+
+
+            cancelAlarmWhenAwake.set(sleepParams.endAlarmAfterFired)
+            alarmArtSelections.addAll(arrayListOf<String>(("Nur Alarm"), ("Alarm und Vibration"), ("Nur Vibration")))
+            alarmArt.set(sleepParams.alarmArt)
 
             sleepCalculateFactorCalculation()
 
@@ -403,7 +425,6 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
     fun onShowTips(view: View){
         animateTop(true)
-
     }
 
     var lastScroll = 0
