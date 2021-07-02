@@ -2,12 +2,10 @@ package com.doitstudio.sleepest_master.ui.profile
 
 
 import android.Manifest
-import android.R
 import android.app.Activity.RESULT_OK
 import android.content.Context
 
 import android.content.Context.NOTIFICATION_SERVICE
-import android.os.Bundle
 import android.service.notification.StatusBarNotification
 
 import android.content.Intent
@@ -22,9 +20,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.doitstudio.sleepest_master.MainApplication
+
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
@@ -33,6 +29,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.MainApplication
+
 import com.doitstudio.sleepest_master.databinding.FragmentProfileBinding
 import com.doitstudio.sleepest_master.model.data.export.UserSleepExportData
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
@@ -146,10 +143,10 @@ class ProfileFragment : Fragment() {
             """.trimIndent()
         pref = actualContext.getSharedPreferences("AlarmReceiver", 0)
         val textAlarmReceiver = """
-            AlarmReceiver: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt(
+            AlarmReceiver: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getString(
 
                 "intent",
-                0
+                "XX"
         )}
             
             """.trimIndent()
