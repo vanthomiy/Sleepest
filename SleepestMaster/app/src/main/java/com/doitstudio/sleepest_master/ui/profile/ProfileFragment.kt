@@ -12,13 +12,17 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
 import com.doitstudio.sleepest_master.databinding.FragmentProfileBinding
 import com.doitstudio.sleepest_master.model.data.export.UserSleepExportData
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
@@ -81,6 +85,87 @@ class ProfileFragment : Fragment() {
 
         viewModel.designExpand.set(if(caseOfEntrie == 1) View.VISIBLE else View.GONE)
         viewModel.dataExpand.set(if(caseOfEntrie == 2) View.VISIBLE else View.GONE)
+
+
+        //region Test
+
+        var pref = actualContext.getSharedPreferences("AlarmChanged", 0)
+        val textAlarm = """
+            Last Alarm changed: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt(
+                "actualWakeup",
+                0
+        )},${pref.getInt("alarmUse", 0)}
+            
+            """.trimIndent()
+        pref = actualContext.getSharedPreferences("StartService", 0)
+        val textStartService = """
+            Last service start: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
+            
+            """.trimIndent()
+        pref = actualContext.getSharedPreferences("StopService", 0)
+        val textStopService = """
+            Last service stop: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
+            
+            """.trimIndent()
+        pref = actualContext.getSharedPreferences("Workmanager", 0)
+        val textLastWorkmanager = """
+            Last workmanager call: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
+            
+            """.trimIndent()
+        pref = actualContext.getSharedPreferences("WorkmanagerCalculation", 0)
+        val textLastWorkmanagerCalculation = """
+            Last workmanagerCalc call: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
+            
+            """.trimIndent()
+        pref = actualContext.getSharedPreferences("AlarmClock", 0)
+        val textCalc1 = """
+            Alarmclock: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
+            
+            """.trimIndent()
+        pref = actualContext.getSharedPreferences("AlarmSet", 0)
+        val textCalc2 = """
+            AlarmSet: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt(
+                "hour1",
+                0
+        )}:${pref.getInt("minute1", 0)},${
+            pref.getInt("actualWakeup", 0)}
+            
+            """.trimIndent()
+        pref = actualContext.getSharedPreferences("AlarmReceiver", 0)
+        val textAlarmReceiver = """
+            AlarmReceiver: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt(
+                "intent",
+                0
+        )}
+            
+            """.trimIndent()
+        pref = actualContext.getSharedPreferences("SleepTime", 0)
+        val textSleepTime= """
+            SleepTime: ${pref.getInt("sleeptime", 0)}
+            
+            """.trimIndent()
+        pref = actualContext.getSharedPreferences("StopException", 0)
+        val textStopException = """
+            Exc.: ${pref.getString("exception", "XX")}
+            
+            """.trimIndent()
+        pref = actualContext.getSharedPreferences("AlarmReceiver1", 0)
+        val textAlarmReceiver1 = """
+            AlarmReceiver1: ${pref.getString("usage", "XX")},${pref.getInt("day", 0)},${pref.getInt(
+                "hour",
+                0
+        )},${pref.getInt("minute", 0)}
+            
+            """.trimIndent()
+
+        var textGesamt = textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation + textCalc1 + textCalc2 + textAlarmReceiver + textSleepTime + textStopException + textAlarmReceiver1
+
+
+        binding.testText.text = textGesamt
+
+
+        //endregion
+
 
         return binding.root
 
