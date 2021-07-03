@@ -339,7 +339,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
     }
 
     private fun generateDataBarChart(): Pair<ArrayList<BarEntry>, List<Int>> { //ArrayList<BarEntry> {
-        var xIndex = 0
+        var xIndex = 0.75f
         var awake = 0f
         var sleep = 0f
         var ligthSleep = 0f
@@ -376,13 +376,13 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
                     }
                     absolute += 1
                 }
-                if (awake > 0) { awake = (awake / absolute) * (sleepDuration / 60) }
-                if (ligthSleep > 0) { ligthSleep = (ligthSleep / absolute) * (sleepDuration / 60) }
-                if (deepSleep > 0) { deepSleep = (deepSleep / absolute) * (sleepDuration / 60) }
-                if (remSleep > 0) { remSleep = (remSleep / absolute) * (sleepDuration / 60) }
-                if (sleep > 0) { sleep = (sleep / absolute) * (sleepDuration / 60) }
+                if (awake > 0) { awake = (awake / absolute) * (sleepDuration) }
+                if (ligthSleep > 0) { ligthSleep = (ligthSleep / absolute) * (sleepDuration) }
+                if (deepSleep > 0) { deepSleep = (deepSleep / absolute) * (sleepDuration) }
+                if (remSleep > 0) { remSleep = (remSleep / absolute) * (sleepDuration) }
+                if (sleep > 0) { sleep = (sleep / absolute) * (sleepDuration) }
 
-                entries.add(BarEntry(xIndex.toFloat(), floatArrayOf(awake, ligthSleep, deepSleep, remSleep, sleep)))
+                entries.add(BarEntry(xIndex, floatArrayOf(awake, ligthSleep, deepSleep, remSleep, sleep)))
                 xAxisLabels.add(id)
 
                 xIndex += 1
@@ -393,7 +393,8 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
                 remSleep = 0f
                 absolute = 0
             } else {
-                entries.add(BarEntry(0F, 0F))
+                entries.add(BarEntry(xIndex, 0F))
+                xIndex += 1
                 xAxisLabels.add(id)
             }
         }
@@ -402,14 +403,12 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
     }
 
     private fun setBarChart() { //http://developine.com/android-grouped-stacked-bar-chart-using-mpchart-kotlin/
-        val barWidth = 0.3f
-
         val diagramData = generateDataBarChart()
 
         val barDataSet1 = BarDataSet(diagramData.first, "")
-        barDataSet1.setColors(Color.RED, Color.MAGENTA, Color.BLUE, Color.BLACK, Color.YELLOW)
-        barDataSet1.label = "States"
-        barDataSet1.setDrawIcons(false)
+        barDataSet1.setColors(Color.YELLOW, Color.MAGENTA, Color.BLUE, Color.BLACK, Color.RED)
+        //barDataSet1.label = "States"
+        //barDataSet1.setDrawIcons(false)
         barDataSet1.setDrawValues(false)
 
         val xAxisValues = ArrayList<String>()
@@ -439,10 +438,10 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         val barData = BarData(barDataSet1)
 
         barChart.description.isEnabled = false
-        barChart.description.textSize = 0f
-        barData.setValueFormatter(LargeValueFormatter())
+        //barChart.description.textSize = 0f
+        //barData.setValueFormatter(LargeValueFormatter())
         barChart.data = barData
-        barChart.barData.barWidth = barWidth
+        barChart.barData.barWidth = 0.5f
         barChart.xAxis.axisMinimum = 0f
         barChart.xAxis.axisMaximum = 7f
         barChart.data.isHighlightEnabled = false
@@ -455,54 +454,56 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         legend.orientation = Legend.LegendOrientation.HORIZONTAL
         legend.setDrawInside(false)
 
-        val legenedEntries = arrayListOf<LegendEntry>()
-        legenedEntries.add((LegendEntry("Awake", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.RED)))
-        legenedEntries.add((LegendEntry("Light", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.MAGENTA)))
-        legenedEntries.add((LegendEntry("Deep", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.BLUE)))
-        legenedEntries.add((LegendEntry("REM", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.BLACK)))
-        legenedEntries.add((LegendEntry("Sleep", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.YELLOW)))
-        legend.setCustom(legenedEntries)
+        val legendEntries = arrayListOf<LegendEntry>()
+        legendEntries.add((LegendEntry("Awake", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.YELLOW)))
+        legendEntries.add((LegendEntry("Light", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.MAGENTA)))
+        legendEntries.add((LegendEntry("Deep", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.BLUE)))
+        legendEntries.add((LegendEntry("REM", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.BLACK)))
+        legendEntries.add((LegendEntry("Sleep", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.RED)))
+        legend.setCustom(legendEntries)
 
         //legend.yOffset = 2f
         //legend.xOffset = 2f
-        legend.yEntrySpace = 0f
+        //legend.yEntrySpace = 0f
         legend.textSize = 12f
+
 
         val xAxis = barChart.xAxis
         //xAxis.granularity = 1f
         //xAxis.isGranularityEnabled = true
         //xAxis.setCenterAxisLabels(true)
         xAxis.setDrawGridLines(true)
-        xAxis.textSize = 12f
+        //xAxis.textSize = 12f
 
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.valueFormatter = IndexAxisValueFormatter(xAxisValues)
 
-        xAxis.labelCount = 7
-        xAxis.mAxisMaximum = 7f
-        //xAxis.setCenterAxisLabels(true)
+        //xAxis.labelCount = 7
+        //xAxis.mAxisMaximum = 6f
+        xAxis.setCenterAxisLabels(true)
         //xAxis.setAvoidFirstLastClipping(true)
         //xAxis.spaceMin = 2f
         //xAxis.spaceMax = 4f
 
 
-        barChart.setVisibleXRangeMaximum(7f)
-        barChart.setVisibleXRangeMinimum(7f)
+        //barChart.setVisibleXRangeMaximum(7f)
         barChart.isDragEnabled = true
 
         //Y-axis
-        barChart.axisRight.isEnabled = false
-        barChart.setScaleEnabled(true)
+        barChart.axisRight.isEnabled = true
+        barChart.axisRight.axisMinimum = 0f
+        barChart.axisRight.axisMaximum = 10f
+        barChart.axisRight.labelCount = 10
+        //barChart.setScaleEnabled(true)
 
         val leftAxis = barChart.axisLeft
-        leftAxis.valueFormatter = LargeValueFormatter()
-        leftAxis.setDrawGridLines(false)
-        leftAxis.spaceTop = 1f
+        //leftAxis.valueFormatter = LargeValueFormatter()
+        //leftAxis.setDrawGridLines(false)
+        leftAxis.spaceTop = 60f
         leftAxis.axisMinimum = 0f
-        leftAxis.axisMaximum = 10f
-        leftAxis.axisMinimum = 0f
+        leftAxis.axisMaximum = 600f
+        leftAxis.labelCount = 20
 
-        barChart.data = barData
-        barChart.setVisibleXRange(0f, 7f)
+        //barChart.setVisibleXRange(0f, 7f)
     }
 }
