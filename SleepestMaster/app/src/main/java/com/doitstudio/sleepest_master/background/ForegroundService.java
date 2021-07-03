@@ -456,21 +456,33 @@ public class ForegroundService extends LifecycleService {
 
         //Set button for disable alarm with its intents
         Intent btnClickIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
-        btnClickIntent.putExtra(getApplicationContext().getString(R.string.alarmmanager_key), 3);
+        btnClickIntent.putExtra(getApplicationContext().getString(R.string.alarmmanager_key), AlarmReceiverUsage.DISABLE_ALARM.name());
 
-        remoteViews.setTextViewText(R.id.btnDisableAlarmNotification, "Disable Alarm");
+        remoteViews.setTextViewText(R.id.btnDisableAlarmNotification, "Disable alarm");
 
-        PendingIntent btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 3, btnClickIntent, 0);
+        PendingIntent btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), AlarmReceiverUsage.DISABLE_ALARM.getAlarmReceiverUsageValue(), btnClickIntent, 0);
         remoteViews.setOnClickPendingIntent(R.id.btnDisableAlarmNotification, btnClickPendingIntent);
 
-        //Set button for disable alarm with its intents
-        btnClickIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
-        btnClickIntent.putExtra(getApplicationContext().getString(R.string.alarmmanager_key), 4);
 
-        remoteViews.setTextViewText(R.id.btnNotSleepingNotification, "Not Sleeping");
 
-        btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 4, btnClickIntent, 0);
-        remoteViews.setOnClickPendingIntent(R.id.btnNotSleepingNotification, btnClickPendingIntent);
+        if(userSleepTime <= 60) {
+            //Set button for not sleeping
+            btnClickIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
+            btnClickIntent.putExtra(getApplicationContext().getString(R.string.alarmmanager_key), AlarmReceiverUsage.NOT_SLEEPING.name());
+            remoteViews.setTextViewText(R.id.btnNotSleepingNotification, "Not sleeping");
+
+            btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), AlarmReceiverUsage.NOT_SLEEPING.getAlarmReceiverUsageValue(), btnClickIntent, 0);
+            remoteViews.setOnClickPendingIntent(R.id.btnNotSleepingNotification, btnClickPendingIntent);
+        } else {
+            //Set button for currently not sleeping
+            btnClickIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
+            btnClickIntent.putExtra(getApplicationContext().getString(R.string.alarmmanager_key), AlarmReceiverUsage.CURRENTLY_NOT_SLEEPING.name());
+            remoteViews.setTextViewText(R.id.btnNotSleepingNotification, "Currently not sleeping");
+
+            btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), AlarmReceiverUsage.CURRENTLY_NOT_SLEEPING.getAlarmReceiverUsageValue(), btnClickIntent, 0);
+            remoteViews.setOnClickPendingIntent(R.id.btnNotSleepingNotification, btnClickPendingIntent);
+        }
+
 
         //Set the text in textview of the expanded notification view
         String notificationText = "AlarmActive: " + isAlarmActive + " Value: " + sleepValueAmount

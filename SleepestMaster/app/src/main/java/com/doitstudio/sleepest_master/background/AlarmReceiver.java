@@ -140,6 +140,10 @@ public class AlarmReceiver extends BroadcastReceiver {
                 //Set AlarmManager to start Workmanager at begin of sleeptime
                 calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeBeginJob());
                 AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context,AlarmReceiverUsage.START_WORKMANAGER_CALCULATION);
+                break;
+            case CURRENTLY_NOT_SLEEPING:
+                sleepCalculationHandler.userCurrentlyNotSleepingJob();
+                break;
         }
     }
 

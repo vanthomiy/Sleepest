@@ -157,7 +157,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         scope.launch {
-            // check system dark mode if neccessarry and safe in
+            // check system dark mode if necessary and safe in
             val settings = dataStoreRepository.settingsDataFlow.first()
             if(settings.designAutoDarkMode){
                 AppCompatDelegate
