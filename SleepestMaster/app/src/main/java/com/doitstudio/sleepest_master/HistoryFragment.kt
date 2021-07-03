@@ -339,7 +339,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
     }
 
     private fun generateDataBarChart(): Pair<ArrayList<BarEntry>, List<Int>> { //ArrayList<BarEntry> {
-        var xIndex = 0.75f
+        var xIndex = 0.5f
         var awake = 0f
         var sleep = 0f
         var ligthSleep = 0f
@@ -441,7 +441,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         //barChart.description.textSize = 0f
         //barData.setValueFormatter(LargeValueFormatter())
         barChart.data = barData
-        barChart.barData.barWidth = 0.5f
+        barChart.barData.barWidth = 0.75f
         barChart.xAxis.axisMinimum = 0f
         barChart.xAxis.axisMaximum = 7f
         barChart.data.isHighlightEnabled = false
