@@ -52,10 +52,10 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
     private lateinit var sVSleepAnalysisWeek : ScrollView
     private lateinit var sVSleepAnalysisMonth : ScrollView
     private lateinit var sleepSessionIDs : MutableSet<Int>
-    private lateinit var sleepSessionsData : MutableMap<Int, List<SleepApiRawDataEntity>>
+    private lateinit var sleepSessionsData : MutableMap<Int, Pair<List<SleepApiRawDataEntity>, Int>>
     private var dateOfDiagram  = LocalDate.now() //of(2021, 3, 13)
     private var currentAnalysisRange = 0 // Day = 0, Week = 1, Month = 2
-    private var diagrammVisibility = false
+    private var diagramVisibility = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -161,10 +161,11 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
                 val session = sleepDbRepository.getSleepSessionById(id).first().firstOrNull()
                 session?.let {
                     //sleepSessionIDs.add(id) //Use ID as Key for the day since it can be accessed via .getIdByDateTime(LocalDate.of("Day of interest"))
-                    sleepSessionsData[id] = sleepDbRepository.getSleepApiRawDataBetweenTimestamps(
+                    sleepSessionsData[id] = Pair(sleepDbRepository.getSleepApiRawDataBetweenTimestamps(
                         session.sleepTimes.sleepTimeStart,
                         session.sleepTimes.sleepTimeEnd
-                    ).first().sortedBy { x -> x.timestampSeconds }
+                    ).first().sortedBy { x -> x.timestampSeconds },
+                        session.sleepTimes.sleepDuration)
                 }
             }
         }
@@ -200,7 +201,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
 
         when (currentAnalysisRange) {
             0 -> {
-                if (diagrammVisibility) {
+                if (diagramVisibility) {
                     sVSleepAnalysisDay.isVisible = true
                     sVSleepAnalysisWeek.isVisible = false
                     sVSleepAnalysisMonth.isVisible = false
@@ -213,7 +214,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
                 }
             }
             1 -> {
-                if (diagrammVisibility) {
+                if (diagramVisibility) {
                     sVSleepAnalysisDay.isVisible = false
                     sVSleepAnalysisWeek.isVisible = true
                     sVSleepAnalysisMonth.isVisible = false
@@ -226,7 +227,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
                 }
             }
             2 -> {
-                if (diagrammVisibility) {
+                if (diagramVisibility) {
                     sVSleepAnalysisDay.isVisible = false
                     sVSleepAnalysisWeek.isVisible = false
                     sVSleepAnalysisMonth.isVisible = true
@@ -244,20 +245,20 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
     private fun generateDataLineChart() : ArrayList<Entry> {
         val entries = ArrayList<Entry>()
         var xValue = 0
-        val values: List<SleepApiRawDataEntity>
+        val values: Pair<List<SleepApiRawDataEntity>, Int>
 
         if (sleepSessionsData.containsKey(UserSleepSessionEntity.getIdByDateTime(dateOfDiagram))) {
             values = sleepSessionsData[UserSleepSessionEntity.getIdByDateTime(dateOfDiagram)]!!
 
-            for (i in values) {
+            for (i in values.first) {
                 entries.add(Entry(xValue.toFloat(), i.sleepState.ordinal.toFloat()))
                 xValue += 1
             }
-            diagrammVisibility = true //Check if all daily diagrams should be visible
+            diagramVisibility = true //Check if all daily diagrams should be visible
         }
         else {
             entries.add(Entry(1F,1F))
-            diagrammVisibility = false //Check if all daily diagrams should be visible
+            diagramVisibility = false //Check if all daily diagrams should be visible
         }
 
         return entries
@@ -288,12 +289,12 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         val entries = ArrayList<PieEntry>()
         var absolute = 0.05f
 
-        val values: List<SleepApiRawDataEntity>
+        val values: Pair<List<SleepApiRawDataEntity>, Int>
 
         if (sleepSessionsData.containsKey(UserSleepSessionEntity.getIdByDateTime(dateOfDiagram))) {
             values = sleepSessionsData[UserSleepSessionEntity.getIdByDateTime(dateOfDiagram)]!!
 
-            for (i in values ) { //sleepSessionsData[UserSleepSessionEntity.getIdByDateTime(dateOfDiagram)]!!) {
+            for (i in values.first ) { //sleepSessionsData[UserSleepSessionEntity.getIdByDateTime(dateOfDiagram)]!!) {
                 when (i.sleepState.ordinal) {
                     0 -> { awake += 1f }
                     1 -> { lightSleep += 1f }
@@ -358,13 +359,14 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
             )))
         }
 
-        var values: List<SleepApiRawDataEntity>
-
+        var values: Pair<List<SleepApiRawDataEntity>, Int>
+        ids.reversed()
         for (id in ids) {
             if (sleepSessionsData.containsKey(id)) {
                 values = sleepSessionsData[id]!!
+                val sleepDuration = values.second
 
-                for (i in values) {
+                for (i in values.first) {
                     when (i.sleepState.ordinal) {
                         0 -> { awake += 1f }
                         1 -> { ligthSleep += 1f }
@@ -374,11 +376,11 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
                     }
                     absolute += 1
                 }
-                if (awake > 0) { awake = awake / absolute * 100 }
-                if (ligthSleep > 0) { ligthSleep = ligthSleep / absolute * 100 }
-                if (deepSleep > 0) { deepSleep = deepSleep / absolute * 100 }
-                if (remSleep > 0) { remSleep = remSleep / absolute * 100 }
-                if (sleep > 0) { sleep = sleep / absolute * 100 }
+                if (awake > 0) { awake = (awake / absolute) * (sleepDuration / 60) }
+                if (ligthSleep > 0) { ligthSleep = (ligthSleep / absolute) * (sleepDuration / 60) }
+                if (deepSleep > 0) { deepSleep = (deepSleep / absolute) * (sleepDuration / 60) }
+                if (remSleep > 0) { remSleep = (remSleep / absolute) * (sleepDuration / 60) }
+                if (sleep > 0) { sleep = (sleep / absolute) * (sleepDuration / 60) }
 
                 entries.add(BarEntry(xIndex.toFloat(), floatArrayOf(awake, ligthSleep, deepSleep, remSleep, sleep)))
                 xAxisLabels.add(id)
@@ -470,7 +472,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         //xAxis.granularity = 1f
         //xAxis.isGranularityEnabled = true
         //xAxis.setCenterAxisLabels(true)
-        //xAxis.setDrawGridLines(false)
+        xAxis.setDrawGridLines(true)
         xAxis.textSize = 12f
 
         xAxis.position = XAxis.XAxisPosition.BOTTOM
@@ -482,6 +484,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         //xAxis.setAvoidFirstLastClipping(true)
         //xAxis.spaceMin = 2f
         //xAxis.spaceMax = 4f
+
 
         barChart.setVisibleXRangeMaximum(7f)
         barChart.setVisibleXRangeMinimum(7f)
@@ -496,7 +499,8 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         leftAxis.setDrawGridLines(false)
         leftAxis.spaceTop = 1f
         leftAxis.axisMinimum = 0f
-
+        leftAxis.axisMaximum = 10f
+        leftAxis.axisMinimum = 0f
 
         barChart.data = barData
         barChart.setVisibleXRange(0f, 7f)
