@@ -32,11 +32,16 @@
     <string name="title_activity_test">TestActivity</string>
     <string name="error_start_foreground">Something went wrong, try to start the alarms</string>
     <string name="disable_alarm_message">You can reactivate the alarm in Sleepest at any time</string>
+    <string name="reactivate_alarm_message">Reactivated alarm</string>
     <string name="not_sleeping_message">Sleep time until now deleted</string>
-    <string name="currently_not_sleeping_message">Last few minutet of sleep deleted</string>
+    <string name="currently_not_sleeping_message">Last few minutes of sleep deleted</string>
     <string name="btn_not_sleeping_text">Not slept yet</string>
     <string name="btn_currently_not_sleeping_text">Currently not sleeping</string>
     <string name="btn_disable_alarm">Disable alarm</string>
+    <string name="btn_reactivate_alarm">Reactivate alarm</string>
+    <string name="alarm_status_false">Alarm not active</string>
+    <string name="alarm_status_true">Alarm active</string>
+    <string name="wakelock_tag">Foregroundservice_lock</string>
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.

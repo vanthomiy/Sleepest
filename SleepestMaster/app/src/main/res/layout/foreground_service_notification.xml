@@ -1,30 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="130dp"
+    android:layout_height="120dp"
     android:orientation="horizontal"
     style="@style/Theme.AppCompat.DayNight">
-
-
-    <ImageView
-        android:layout_gravity="center_vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:src="@drawable/logo_notification"
-        style="@style/Theme.AppCompat.DayNight"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tvTextAlarm"
-            android:layout_gravity="center_horizontal"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="13sp"
-            style="@style/Theme.AppCompat.DayNight"/>
+            android:orientation="horizontal">
+
+            <ImageView
+                style="@style/Theme.AppCompat.DayNight"
+                android:layout_width="wrap_content"
+                android:layout_height="69dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/logo_notification" />
+
+            <TextView
+                android:id="@+id/tvTextAlarm"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:textSize="13sp"
+                style="@style/Theme.AppCompat.DayNight"/>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -42,7 +48,7 @@
                 android:background="@drawable/rounded_button_green"
                 style="@style/Theme.AppCompat.DayNight"
                 android:layout_gravity="bottom"
-                android:textSize="15sp"/>
+                android:textSize="16sp"/>
 
             <Button
                 android:id="@+id/btnNotSleepingNotification"
@@ -54,7 +60,7 @@
                 android:background="@drawable/rounded_button_green"
                 style="@style/Theme.AppCompat.DayNight"
                 android:layout_gravity="bottom"
-                android:textSize="15sp"/>
+                android:textSize="16sp"/>
         </LinearLayout>
 
     </LinearLayout>

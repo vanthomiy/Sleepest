@@ -28,6 +28,7 @@ import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver;
 import com.doitstudio.sleepest_master.model.data.Actions;
 import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage;
+import com.doitstudio.sleepest_master.model.data.Constants;
 import com.doitstudio.sleepest_master.model.data.SleepState;
 import com.doitstudio.sleepest_master.sleepapi.SleepHandler;
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
@@ -88,14 +89,16 @@ public class AlarmReceiver extends BroadcastReceiver {
                 context.startActivity(stopForegroundIntent);
                 break;
             case DISABLE_ALARM:
-
-                /** Eventuell über ForegroundActivity aufrufen, wenn es nicht geht*/
-
-
-                /**TODO: Turn Alarm off, set Alarm for the day after or check for the next day
-                 * TODO: Stop Foregroundservice and send Toast
-                 */
-                Toast.makeText(context.getApplicationContext(), context.getApplicationContext().getString(R.string.disable_alarm_message), Toast.LENGTH_LONG).show();
+                if((databaseRepository.getNextActiveAlarmJob() != null) && !databaseRepository.getNextActiveAlarmJob().getTempDisabled()) {
+                    databaseRepository.updateAlarmTempDisabledJob(true, databaseRepository.getNextActiveAlarmJob().getId());
+                    Calendar calendarStopForeground = Calendar.getInstance();
+                    AlarmReceiver.startAlarmManager(calendarStopForeground.get(Calendar.DAY_OF_WEEK), calendarStopForeground.get(Calendar.HOUR_OF_DAY),
+                            calendarStopForeground.get(Calendar.MINUTE) + 5, context.getApplicationContext(), AlarmReceiverUsage.STOP_FOREGROUND);
+                    Toast.makeText(context.getApplicationContext(), context.getApplicationContext().getString(R.string.disable_alarm_message), Toast.LENGTH_LONG).show();
+                } else if ((databaseRepository.getNextActiveAlarmJob() != null) && databaseRepository.getNextActiveAlarmJob().getTempDisabled()) {
+                    databaseRepository.updateAlarmTempDisabledJob(false, databaseRepository.getNextActiveAlarmJob().getId());
+                    AlarmReceiver.cancelAlarm(context.getApplicationContext(), AlarmReceiverUsage.STOP_FOREGROUND);
+                }
                 break;
             case NOT_SLEEPING:
                 //Button not Sleeping
@@ -104,14 +107,12 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case START_WORKMANAGER_CALCULATION:
                 //Start the workmanager for the calculation of the sleep
-                WorkmanagerCalculation.startPeriodicWorkmanager(16, context.getApplicationContext());
+                WorkmanagerCalculation.startPeriodicWorkmanager(Constants.WORKMANAGER_CALCULATION_DURATION, context.getApplicationContext());
                 break;
             case START_WORKMANAGER:
                 //Start Workmanager at sleeptime and subscribe to SleepApi
-                //Workmanager.Companion.startPeriodicWorkmanager(16, context);
-
                 PeriodicWorkRequest periodicDataWork =
-                        new PeriodicWorkRequest.Builder(Workmanager.class, 16, TimeUnit.MINUTES)
+                        new PeriodicWorkRequest.Builder(Workmanager.class, Constants.WORKMANAGER_DURATION, TimeUnit.MINUTES)
                                 .addTag(context.getString(R.string.workmanager1_tag)) //Tag is needed for canceling the periodic work
                                 .build();
 
@@ -132,9 +133,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case STOP_WORKMANAGER:
                 //Stop Workmanager at end of sleeptime and unsubscribe to SleepApi
-                //Workmanager.Companion.stopPeriodicWorkmanager();
-
-                WorkManager.getInstance(context).cancelAllWorkByTag("Workmanager 1");
+                //TODO: Überprüfen, ob der Workmanager noch richtig abgebrochen wird
+                WorkManager.getInstance(context.getApplicationContext()).cancelAllWorkByTag(context.getApplicationContext().getString(R.string.workmanager1_tag));
 
                 sleepHandler.stopSleepHandler();
 

@@ -32,6 +32,7 @@ import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver;
 import com.doitstudio.sleepest_master.model.data.Actions;
 import com.doitstudio.sleepest_master.model.data.AlarmClockReceiverUsage;
 import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage;
+import com.doitstudio.sleepest_master.model.data.Constants;
 import com.doitstudio.sleepest_master.sleepapi.SleepHandler;
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
@@ -124,7 +125,7 @@ public class ForegroundService extends LifecycleService {
         //Workmanager.Companion.startPeriodicWorkmanager(16, getApplicationContext());
 
         PeriodicWorkRequest periodicDataWork =
-                new PeriodicWorkRequest.Builder(Workmanager.class, 16, TimeUnit.MINUTES)
+                new PeriodicWorkRequest.Builder(Workmanager.class, Constants.WORKMANAGER_DURATION, TimeUnit.MINUTES)
                         .addTag(getApplicationContext().getString(R.string.workmanager1_tag)) //Tag is needed for canceling the periodic work
                         .build();
 
@@ -136,7 +137,7 @@ public class ForegroundService extends LifecycleService {
         Calendar calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeEndJob());
         AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(),AlarmReceiverUsage.STOP_WORKMANAGER);
 
-        startForeground(1, createNotification("Alarm status: " + isAlarmActive)); /** TODO: Id zentral anlegen */
+        startForeground(Constants.FOREGROUND_SERVICE_ID, createNotification());
 
         sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(MainApplication.Companion.applicationContext());
     }
@@ -160,8 +161,8 @@ public class ForegroundService extends LifecycleService {
         // lock that service is not affected by Doze Mode
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         if (powerManager != null) {
-            wakeLock = powerManager.newWakeLock(1, "EndlessService::lock");
-            wakeLock.acquire(60 * 1000L); //1 minute timeout
+            wakeLock = powerManager.newWakeLock(Constants.LEVEL_AND_FLAGS, getString(R.string.wakelock_tag));
+            wakeLock.acquire(Constants.WAKE_LOCK_TIMEOUT);
         }
 
         Toast.makeText(getApplicationContext(), "Foregroundservice started", Toast.LENGTH_LONG).show();
@@ -261,7 +262,7 @@ public class ForegroundService extends LifecycleService {
 
         isAlarmActive = true;
 
-        updateNotification("Alarm status: " + isAlarmActive);
+        updateNotification();
 
         SharedPreferences pref = getSharedPreferences("AlarmChanged", 0);
         SharedPreferences.Editor ed = pref.edit();
@@ -408,7 +409,7 @@ public class ForegroundService extends LifecycleService {
         sleepValueAmount = sleepApiData.getSleepApiValuesAmount();
         isSubscribed = sleepApiData.getIsSubscribed();
 
-        updateNotification("Alarm status: " + isAlarmActive);
+        updateNotification();
 
     }
 
@@ -424,7 +425,7 @@ public class ForegroundService extends LifecycleService {
         ed.putInt("sleeptime", userSleepTime);
         ed.apply();
 
-        updateNotification("Alarm status: " + isAlarmActive);
+        updateNotification();
 
     }
 
@@ -433,11 +434,10 @@ public class ForegroundService extends LifecycleService {
     //region notification
     /**
      * Updates the notification banner with a new text
-     * @param text The text at the notification banner
      */
-    public void updateNotification(String text) {
+    public void updateNotification() {
 
-        Notification notification = createNotification(text);
+        Notification notification = createNotification();
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(1, notification);
 
@@ -448,7 +448,7 @@ public class ForegroundService extends LifecycleService {
      * @param text The text at the notification banner
      * @return Notification.Builder
      */
-    private Notification createNotification(String text) {
+    private Notification createNotification() {
         String notificationChannelId = getString(R.string.foregroundservice_channel);
 
         //Init remoteView for expanded notification
@@ -456,14 +456,23 @@ public class ForegroundService extends LifecycleService {
 
         //Set button for disable alarm with its intents
         Intent btnClickIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
-        btnClickIntent.putExtra(getApplicationContext().getString(R.string.alarmmanager_key), AlarmReceiverUsage.DISABLE_ALARM.name());
+        PendingIntent btnClickPendingIntent;
 
-        remoteViews.setTextViewText(R.id.btnDisableAlarmNotification, getString(R.string.btn_disable_alarm));
+        if (alarmEntity.getTempDisabled()) {
+            btnClickIntent.putExtra(getApplicationContext().getString(R.string.alarmmanager_key), AlarmReceiverUsage.DISABLE_ALARM.name());
 
-        PendingIntent btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), AlarmReceiverUsage.DISABLE_ALARM.getAlarmReceiverUsageValue(), btnClickIntent, 0);
-        remoteViews.setOnClickPendingIntent(R.id.btnDisableAlarmNotification, btnClickPendingIntent);
+            remoteViews.setTextViewText(R.id.btnDisableAlarmNotification, getString(R.string.btn_reactivate_alarm));
 
+            btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), AlarmReceiverUsage.DISABLE_ALARM.getAlarmReceiverUsageValue(), btnClickIntent, 0);
+            remoteViews.setOnClickPendingIntent(R.id.btnDisableAlarmNotification, btnClickPendingIntent);
+        } else {
+            btnClickIntent.putExtra(getApplicationContext().getString(R.string.alarmmanager_key), AlarmReceiverUsage.DISABLE_ALARM.name());
 
+            remoteViews.setTextViewText(R.id.btnDisableAlarmNotification, getString(R.string.btn_disable_alarm));
+
+            btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), AlarmReceiverUsage.DISABLE_ALARM.getAlarmReceiverUsageValue(), btnClickIntent, 0);
+            remoteViews.setOnClickPendingIntent(R.id.btnDisableAlarmNotification, btnClickPendingIntent);
+        }
 
         if(userSleepTime <= 60) {
             //Set button for not sleeping
@@ -483,6 +492,17 @@ public class ForegroundService extends LifecycleService {
             remoteViews.setOnClickPendingIntent(R.id.btnNotSleepingNotification, btnClickPendingIntent);
         }
 
+        if (alarmEntity.getTempDisabled()) {
+            isAlarmActive = false;
+        }
+
+        String contentText;
+
+        if (isAlarmActive) {
+            contentText = getString(R.string.alarm_status_true);
+        } else {
+            contentText = getString(R.string.alarm_status_false);
+        }
 
         //Set the text in textview of the expanded notification view
         String notificationText = "AlarmActive: " + isAlarmActive + " Value: " + sleepValueAmount
@@ -490,7 +510,7 @@ public class ForegroundService extends LifecycleService {
                 + "\nIsSleeping: " + isSleeping + " Wakeup: " + alarmTimeInSeconds;
         remoteViews.setTextViewText(R.id.tvTextAlarm, notificationText);
 
-        //Set the Intent for tap on the notification, will start app in MainActivity
+        //Set the Intent for tap on the notification, it will launch MainActivity
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -517,7 +537,7 @@ public class ForegroundService extends LifecycleService {
 
         return builder
                 .setContentTitle(getString(R.string.foregroundservice_notification_title))
-                .setContentText(text)
+                .setContentText(contentText)
                 .setCustomBigContentView(remoteViews)
                 .setStyle(new Notification.DecoratedCustomViewStyle())
                 .setSmallIcon(R.drawable.logo_notification)
