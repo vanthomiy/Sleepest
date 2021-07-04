@@ -346,6 +346,7 @@
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="App Bewerten"
+                            android:textColor="@color/primary_button_color"
                             android:tag="rate"
                             android:onClick="@{profileViewModel::onAboutUsClicked}">
                         </androidx.appcompat.widget.AppCompatButton>
@@ -427,6 +428,7 @@
                                 android:textSize="@dimen/valueSize"
                                 android:layout_marginVertical="5dp"
                                 android:text="Schlafdaten"
+                                android:textColor="@color/primary_button_color"
                                 android:tag="sleepActivity"
                                 android:id="@+id/sleepActivityPermission"
                                 android:onClick="onPermissionClicked">
@@ -476,6 +478,7 @@
                                 android:tag="dailyActivity"
                                 android:id="@+id/dailyActivityPermission"
                                 android:text="Tägliche Aktivität"
+                                android:textColor="@color/primary_button_color"
                                 android:textSize="@dimen/valueSize"></androidx.appcompat.widget.AppCompatButton>
 
                             <androidx.appcompat.widget.AppCompatImageView
@@ -568,6 +571,7 @@
                                 android:textSize="@dimen/valueSize"
                                 android:layout_marginVertical="5dp"
                                 android:text="App Überlappen"
+                                android:textColor="@color/primary_button_color"
                                 android:tag="overlay"
                                 android:id="@+id/overlayPermission"
                                 android:onClick="onPermissionClicked">
