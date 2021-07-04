@@ -38,7 +38,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="Einstellungen"
+                    android:text="@string/profile_header"
                     android:textColor="@color/primary_text_color"
                     android:textSize="@dimen/headerSize"
                     android:layout_margin="20dp"
@@ -63,7 +63,7 @@
                         android:textSize="@dimen/headerSize"
                         android:layout_gravity="start"
                         android:textColor="@color/secondary_text_color"
-                        android:text="Wie funktioniert die App?"/>
+                        android:text="@string/profile_app_function"/>
 
 
 
@@ -96,7 +96,7 @@
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
                             android:textColor="@color/primary_text_color"
-                            android:text="Design"/>
+                            android:text="@string/profile_design"/>
 
                         <ImageView
                             android:layout_width="25dp"
@@ -125,7 +125,7 @@
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
                             android:textColor="@color/primary_text_color"
-                            android:text="Dark Mode"/>
+                            android:text="@string/profile_dark_mode"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -147,7 +147,7 @@
                                     android:layout_marginStart="10dp"
                                     android:textSize="@dimen/valueSize"
                                     android:textColor="@color/primary_text_color"
-                                    android:text="Use system settings"
+                                    android:text="@string/profile_auto_dark_mode"
                                     />
 
                                 <Switch
@@ -184,7 +184,7 @@
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
                             android:textColor="@color/primary_text_color"
-                            android:text="Sprache"/>
+                            android:text="@string/profile_language"/>
 
                         <Spinner
                             android:layout_width="match_parent"
@@ -232,7 +232,7 @@
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
                             android:textColor="@color/primary_text_color"
-                            android:text="Hilfe"/>
+                            android:text="@string/profile_help"/>
 
                         <ImageView
                             android:layout_width="25dp"
@@ -260,7 +260,7 @@
                             android:background="@drawable/bgroundedchoosen"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
-                            android:text="Tutorial"
+                            android:text="@string/profile_tutorial"
                             android:tag="tutorial"
                             android:onClick="@{profileViewModel::onHelpClicked}">
                         </androidx.appcompat.widget.AppCompatButton>
@@ -271,7 +271,7 @@
                             android:background="@drawable/bgroundedchoosen"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
-                            android:text="Wichtige Einstellungen"
+                            android:text="@string/profile_neccessary_settings"
                             android:tag="importantSettings"
                             android:onClick="@{profileViewModel::onHelpClicked}">
                         </androidx.appcompat.widget.AppCompatButton>
@@ -306,7 +306,7 @@
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
                             android:textColor="@color/primary_text_color"
-                            android:text="Die App"/>
+                            android:text="@string/profile_app_info"/>
 
                         <ImageView
                             android:layout_width="25dp"
@@ -334,7 +334,7 @@
                             android:background="@drawable/bgroundedchoosen"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
-                            android:text="Verbesserungen vorschlagen"
+                            android:text="@string/profile_suggestions"
                             android:tag="improvement"
                             android:onClick="@{profileViewModel::onAboutUsClicked}">
                         </androidx.appcompat.widget.AppCompatButton>
@@ -345,8 +345,7 @@
                             android:background="@drawable/bgroundedchoosen"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
-                            android:text="App Bewerten"
-                            android:textColor="@color/primary_button_color"
+                            android:text="@string/profile_rate"
                             android:tag="rate"
                             android:onClick="@{profileViewModel::onAboutUsClicked}">
                         </androidx.appcompat.widget.AppCompatButton>
@@ -357,7 +356,7 @@
                             android:background="@drawable/bgroundedchoosen"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
-                            android:text="Fehler melden"
+                            android:text="@string/profile_report_error"
                             android:tag="error"
                             android:onClick="@{profileViewModel::onAboutUsClicked}">
                         </androidx.appcompat.widget.AppCompatButton>
@@ -394,7 +393,7 @@
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
                             android:textColor="@color/primary_text_color"
-                            android:text="Berechtigungen"/>
+                            android:text="@string/profile_permissions"/>
 
                         <ImageView
                             android:layout_width="25dp"
@@ -427,8 +426,7 @@
                                 android:background="@drawable/bgroundedchoosen"
                                 android:textSize="@dimen/valueSize"
                                 android:layout_marginVertical="5dp"
-                                android:text="Schlafdaten"
-                                android:textColor="@color/primary_button_color"
+                                android:text="@string/profile_sleepdata"
                                 android:tag="sleepActivity"
                                 android:id="@+id/sleepActivityPermission"
                                 android:onClick="onPermissionClicked">
@@ -459,7 +457,7 @@
                                 android:textSize="@dimen/headerSize"
                                 android:layout_gravity="start"
                                 android:textColor="@color/primary_text_color"
-                                android:text="ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk"/>
+                                android:text="@string/profile_permission_sleepdata"/>
 
                         </LinearLayout>
 
@@ -477,8 +475,7 @@
                                 android:onClick="onPermissionClicked"
                                 android:tag="dailyActivity"
                                 android:id="@+id/dailyActivityPermission"
-                                android:text="Tägliche Aktivität"
-                                android:textColor="@color/primary_button_color"
+                                android:text="@string/profile_daily_activity"
                                 android:textSize="@dimen/valueSize"></androidx.appcompat.widget.AppCompatButton>
 
                             <androidx.appcompat.widget.AppCompatImageView
@@ -506,7 +503,7 @@
                                 android:textSize="@dimen/headerSize"
                                 android:layout_gravity="start"
                                 android:textColor="@color/primary_text_color"
-                                android:text="ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk"/>
+                                android:text="@string/profile_permission_daily_activity"/>
 
                         </LinearLayout>
 
@@ -522,7 +519,7 @@
                                 android:background="@drawable/bgroundedchoosen"
                                 android:textSize="@dimen/valueSize"
                                 android:layout_marginVertical="5dp"
-                                android:text="Speicherzugriff"
+                                android:text="@string/profile_storage"
                                 android:tag="storage"
                                 android:id="@+id/storagePermission"
                                 android:onClick="onPermissionClicked">
@@ -554,7 +551,7 @@
                                 android:textSize="@dimen/headerSize"
                                 android:layout_gravity="start"
                                 android:textColor="@color/primary_text_color"
-                                android:text="ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk"/>
+                                android:text="@string/profile_permission_storage"/>
 
                         </LinearLayout>
 
@@ -570,8 +567,7 @@
                                 android:background="@drawable/bgroundedchoosen"
                                 android:textSize="@dimen/valueSize"
                                 android:layout_marginVertical="5dp"
-                                android:text="App Überlappen"
-                                android:textColor="@color/primary_button_color"
+                                android:text="@string/profile_overlapp_app"
                                 android:tag="overlay"
                                 android:id="@+id/overlayPermission"
                                 android:onClick="onPermissionClicked">
@@ -602,7 +598,7 @@
                                 android:textSize="@dimen/headerSize"
                                 android:layout_gravity="start"
                                 android:textColor="@color/primary_text_color"
-                                android:text="ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk"/>
+                                android:text="@string/profile_permission_overlapp_app"/>
 
                         </LinearLayout>
 
@@ -637,7 +633,7 @@
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
                             android:textColor="@color/primary_text_color"
-                            android:text="Daten"/>
+                            android:text="@string/profile_data"/>
 
                         <ImageView
                             android:layout_width="25dp"
@@ -665,7 +661,7 @@
                             android:background="@drawable/bgroundedchoosen"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
-                            android:text="Daten Exportieren"
+                            android:text="@string/profile_export_data"
                             android:tag="export"
                             android:id="@+id/exportButton"/>
                         <androidx.appcompat.widget.AppCompatButton
@@ -674,7 +670,7 @@
                             android:background="@drawable/bgroundedchoosen"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
-                            android:text="Daten Importieren"
+                            android:text="@string/profile_import_data"
                             android:tag="import"
                             android:id="@+id/importButton" />
 
@@ -706,7 +702,7 @@
                                 android:textSize="@dimen/headerSize"
                                 android:layout_gravity="start"
                                 android:textColor="@color/primary_text_color"
-                                android:text="Ohje, alle daten werden gelöscht ok?"/>
+                                android:text="@string/profile_remove_data_warning"/>
 
                             <androidx.appcompat.widget.AppCompatButton
                                 android:layout_width="match_parent"
@@ -715,7 +711,7 @@
                                 android:backgroundTint="@color/error_color"
                                 android:textSize="@dimen/valueSize"
                                 android:layout_marginVertical="5dp"
-                                android:text="Verstanden und löschen"
+                                android:text="@string/profile_remove_data_ackn"
                                 android:tag="removeAckn"
                                 android:onClick="@{profileViewModel::onDataClicked}">
                             </androidx.appcompat.widget.AppCompatButton>
@@ -747,7 +743,7 @@
                         android:textSize="@dimen/headerSize"
                         android:layout_gravity="center_horizontal"
                         android:textColor="@color/primary_text_color"
-                        android:text="Sleepest - App\nMade with LOVE in Bavaria\n\n This app was created by 3 students as a students project and will be improved and maintained in the future  "/>
+                        android:text="@string/profile_about_us"/>
 
                 </LinearLayout>
                 <FrameLayout
