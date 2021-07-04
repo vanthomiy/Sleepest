@@ -273,7 +273,7 @@
                             android:layout_marginVertical="5dp"
                             android:text="Wichtige Einstellungen"
                             android:tag="importantSettings"
-                            android:onClick="@{profileViewModel::onHelpClicked}">
+                            android:id="@+id/btnImportantSettings">
                         </androidx.appcompat.widget.AppCompatButton>
 
                     </LinearLayout>
@@ -746,9 +746,6 @@
                         android:text="Sleepest - App\nMade with LOVE in Bavaria\n\n This app was created by 3 students as a students project and will be improved and maintained in the future  "/>
 
                 </LinearLayout>
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"></FrameLayout>
 
                 <TextView
                     android:id="@+id/test_text"
@@ -759,6 +756,12 @@
                     android:textSize="@dimen/headerSize"
                     android:layout_gravity="center_horizontal"
                     android:textColor="@color/primary_text_color"/>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"></FrameLayout>
+
+
 
 
             </LinearLayout>

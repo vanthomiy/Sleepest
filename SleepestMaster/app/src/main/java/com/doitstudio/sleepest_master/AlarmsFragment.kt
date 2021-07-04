@@ -1,16 +1,24 @@
 package com.doitstudio.sleepest_master
 
+import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Application
+import android.app.Activity
+import android.app.NotificationManager
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.provider.ContactsContract
+import android.provider.Settings
 import android.view.LayoutInflater
-import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity
+import com.doitstudio.sleepest_master.ui.profile.ProfileFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -82,18 +90,46 @@ class AlarmsFragment() : Fragment() {
         fragments = mutableMapOf()
 
         btnAddAlarmEntity.setOnClickListener{
-            view -> onAddAlarm(view)
+            //view ->  onAddAlarm(view)
+            if (checkPermissions()) {
+                onAddAlarm(view)
+            } else {
+                Toast.makeText(actualContext, "Please grant all permissions", Toast.LENGTH_LONG).show()
+
+                /*val transaction = getParentFragmentManager().beginTransaction()
+                transaction.replace(R.id.navigationFrame, ProfileFragment()) // give your fragment container id in first parameter
+
+                transaction.addToBackStack(null) // if written, this transaction will be added to backstack
+
+                transaction.commit()*/
+
+                (activity as MainActivity).changeFragment()
+
+            }
         }
 
         setupAlarms()
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_alarms, container, false)
+    }
+
+    fun checkPermissions() : Boolean {
+        val notificationManager = actualContext.getSystemService(AppCompatActivity.NOTIFICATION_SERVICE) as NotificationManager
+        if (!notificationManager.isNotificationPolicyAccessGranted){
+            return false
+        } else if(!Settings.canDrawOverlays(actualContext)) {
+            return false
+        } else if(PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(actualContext, Manifest.permission.ACTIVITY_RECOGNITION)) {
+            return false
+        }
+
+        return true
     }
 
     companion object {

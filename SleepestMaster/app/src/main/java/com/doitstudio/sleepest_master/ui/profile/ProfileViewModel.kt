@@ -2,33 +2,26 @@ package com.doitstudio.sleepest_master.ui.profile
 
 import android.Manifest
 import android.app.Application
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.provider.Settings
 import android.transition.TransitionManager
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
-import com.doitstudio.sleepest_master.MainActivity
+import com.doitstudio.sleepest_master.DontKillMyAppFragment
 import com.doitstudio.sleepest_master.MainApplication
-import com.doitstudio.sleepest_master.R
-import com.doitstudio.sleepest_master.model.data.export.UserSleepExportData
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
-import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.util.*
 
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -105,7 +98,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     fun onHelpClicked(view: View) {
         when (view.tag.toString()) {
             "tutorial" -> "asd"
-            "importantSettings" -> "asd"
+            "importantSettings" -> "saas"
         }
     }
 

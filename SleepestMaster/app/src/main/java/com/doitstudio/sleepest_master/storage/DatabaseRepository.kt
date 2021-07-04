@@ -7,6 +7,7 @@ import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
 import com.doitstudio.sleepest_master.storage.db.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import java.time.DayOfWeek
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -275,6 +276,10 @@ class DatabaseRepository(
     }
 
     fun getAlarmById(alarmId: Int): Flow<AlarmEntity> = alarmDao.getAlarmById(alarmId)
+
+    fun getNextActiveAlarmJob() : AlarmEntity? = runBlocking{
+        return@runBlocking getNextActiveAlarm()
+    }
 
     /**
      * Returns the next alarm that is active or null is no alarm is active in that time duration
