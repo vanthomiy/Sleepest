@@ -2,29 +2,16 @@ package com.doitstudio.sleepest_master.ui.profile
 
 
 import android.Manifest
-import android.app.Activity.RESULT_OK
 import android.content.Context
-
-import android.content.Context.NOTIFICATION_SERVICE
-import android.service.notification.StatusBarNotification
-
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.DocumentsContract
 import android.provider.Settings
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-
-import androidx.annotation.RequiresApi
-
-import com.doitstudio.sleepest_master.R
-import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
-import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
-
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -38,11 +25,12 @@ import com.doitstudio.sleepest_master.ui.sleep.SleepFragment
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
-
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.*
 import java.util.*
+import java.io.File
+
 
 
 class ProfileFragment : Fragment() {
@@ -92,8 +80,8 @@ class ProfileFragment : Fragment() {
             onDataClicked(it)
         }
 
-        viewModel.designExpand.set(if(caseOfEntrie == 1) View.VISIBLE else View.GONE)
-        viewModel.dataExpand.set(if(caseOfEntrie == 2) View.VISIBLE else View.GONE)
+        viewModel.designExpand.set(if (caseOfEntrie == 1) View.VISIBLE else View.GONE)
+        viewModel.dataExpand.set(if (caseOfEntrie == 2) View.VISIBLE else View.GONE)
 
 
         //region Test
@@ -101,8 +89,8 @@ class ProfileFragment : Fragment() {
         var pref = actualContext.getSharedPreferences("AlarmChanged", 0)
         val textAlarm = """
             Last Alarm changed: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt(
-            "actualWakeup",
-            0
+                "actualWakeup",
+                0
         )},${pref.getInt("alarmUse", 0)}
             
             """.trimIndent()
@@ -196,6 +184,8 @@ class ProfileFragment : Fragment() {
                 }
 
                 startActivityForResult(intent, 1010)
+
+
 
             }
             "import" -> {
@@ -354,7 +344,7 @@ class ProfileFragment : Fragment() {
         return stringBuilder.toString()
     }
 
-    private fun writeTextToUri(uri: Uri, text:String) {
+    private fun writeTextToUri(uri: Uri, text: String) {
         try {
             contentResolver.openFileDescriptor(uri, "w")?.use {
                 FileOutputStream(it.fileDescriptor).use {
@@ -372,6 +362,14 @@ class ProfileFragment : Fragment() {
 
         Toast.makeText(actualContext, "Export successfully", Toast.LENGTH_SHORT).show()
 
+        val intentShareFile = Intent(Intent.ACTION_SEND)
+
+        intentShareFile.type = "text/json"
+        intentShareFile.putExtra(Intent.EXTRA_STREAM, uri)
+        intentShareFile.putExtra(Intent.EXTRA_SUBJECT,
+                "Sharing File...")
+        intentShareFile.putExtra(Intent.EXTRA_TEXT, "Sharing File...")
+        startActivity(Intent.createChooser(intentShareFile, "Share File"))
     }
 
     private val requestPermissionLauncher =

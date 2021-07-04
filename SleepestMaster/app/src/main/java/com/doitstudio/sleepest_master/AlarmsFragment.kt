@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
  */
 class AlarmsFragment() : Fragment() {
 
+
     //private lateinit var binding: FragmentAlarmsBinding
     private val repository by lazy { (actualContext as MainApplication).dataBaseRepository }
     private val scope: CoroutineScope = MainScope()
