@@ -310,6 +310,10 @@ class DatabaseRepository(
         alarmDao.updateAlarmWasFired(alarmFired, alarmId)
     }
 
+    suspend fun updateAlarmTempDisabled(alarmDisabled: Boolean, alarmId: Int) {
+        alarmDao.updateAlarmTempDisabled(alarmDisabled, alarmId)
+    }
+
     suspend fun updateSleepDuration(sleepDuration: Int, alarmId: Int) {
         alarmDao.updateSleepDuration(sleepDuration, alarmId)
     }
