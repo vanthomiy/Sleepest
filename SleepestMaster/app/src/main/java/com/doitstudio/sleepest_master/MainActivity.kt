@@ -151,7 +151,7 @@ class MainActivity : AppCompatActivity() {
     // endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        super.onCreate(null)
         setContentView(R.layout.activity_main)
 
         supportActionBar?.hide()
