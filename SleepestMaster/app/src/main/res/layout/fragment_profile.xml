@@ -62,7 +62,7 @@
                         android:layout_marginLeft="40dp"
                         android:textSize="@dimen/headerSize"
                         android:layout_gravity="start"
-                        android:textColor="@color/secondary_text_color"
+                        android:textColor="@color/tertiary_text_color"
                         android:text="@string/profile_app_function"/>
 
 
@@ -146,7 +146,7 @@
                                     android:gravity="center_vertical"
                                     android:layout_marginStart="10dp"
                                     android:textSize="@dimen/valueSize"
-                                    android:textColor="@color/primary_text_color"
+                                    android:textColor="@color/tertiary_text_color"
                                     android:text="@string/profile_auto_dark_mode"
                                     />
 
@@ -172,6 +172,7 @@
                             android:background="@drawable/bgroundedchoosen"
                             android:textOn="Dark Mode"
                             android:textOff="Light Mode"
+                            android:textColor="@color/tertiary_text_color"
                             android:layout_marginBottom="10dp"
                             android:checked="@={profileViewModel.darkMode}"
                             android:onClick="@{profileViewModel::darkModeToggled}"
@@ -198,6 +199,8 @@
                             android:onItemSelected = "@{profileViewModel::onLanguageChanged}"
                             android:textAlignment="center"
                             android:textSize="@dimen/valueSize"
+                            android:textColor="@color/tertiary_text_color"
+
                             tools:ignore="RtlCompat">
                         </Spinner>
 
@@ -261,6 +264,8 @@
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_tutorial"
+                            android:textColor="@color/tertiary_text_color"
+
                             android:tag="tutorial"
                             android:onClick="@{profileViewModel::onHelpClicked}">
                         </androidx.appcompat.widget.AppCompatButton>
@@ -272,6 +277,8 @@
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_neccessary_settings"
+                            android:textColor="@color/tertiary_text_color"
+
                             android:tag="importantSettings"
                             android:onClick="@{profileViewModel::onHelpClicked}">
                         </androidx.appcompat.widget.AppCompatButton>
@@ -335,6 +342,8 @@
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_suggestions"
+                            android:textColor="@color/tertiary_text_color"
+
                             android:tag="improvement"
                             android:onClick="@{profileViewModel::onAboutUsClicked}">
                         </androidx.appcompat.widget.AppCompatButton>
@@ -346,6 +355,8 @@
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_rate"
+                            android:textColor="@color/tertiary_text_color"
+
                             android:tag="rate"
                             android:onClick="@{profileViewModel::onAboutUsClicked}">
                         </androidx.appcompat.widget.AppCompatButton>
@@ -357,6 +368,7 @@
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_report_error"
+                            android:textColor="@color/tertiary_text_color"
                             android:tag="error"
                             android:onClick="@{profileViewModel::onAboutUsClicked}">
                         </androidx.appcompat.widget.AppCompatButton>
@@ -425,6 +437,7 @@
                                 android:layout_marginEnd="50dp"
                                 android:background="@drawable/bgroundedchoosen"
                                 android:textSize="@dimen/valueSize"
+                                android:textColor="@color/tertiary_text_color"
                                 android:layout_marginVertical="5dp"
                                 android:text="@string/profile_sleepdata"
                                 android:tag="sleepActivity"
@@ -476,6 +489,7 @@
                                 android:tag="dailyActivity"
                                 android:id="@+id/dailyActivityPermission"
                                 android:text="@string/profile_daily_activity"
+                                android:textColor="@color/tertiary_text_color"
                                 android:textSize="@dimen/valueSize"></androidx.appcompat.widget.AppCompatButton>
 
                             <androidx.appcompat.widget.AppCompatImageView
@@ -520,6 +534,8 @@
                                 android:textSize="@dimen/valueSize"
                                 android:layout_marginVertical="5dp"
                                 android:text="@string/profile_storage"
+                                android:textColor="@color/tertiary_text_color"
+
                                 android:tag="storage"
                                 android:id="@+id/storagePermission"
                                 android:onClick="onPermissionClicked">
@@ -568,6 +584,8 @@
                                 android:textSize="@dimen/valueSize"
                                 android:layout_marginVertical="5dp"
                                 android:text="@string/profile_overlapp_app"
+                                android:textColor="@color/tertiary_text_color"
+
                                 android:tag="overlay"
                                 android:id="@+id/overlayPermission"
                                 android:onClick="onPermissionClicked">
@@ -662,6 +680,8 @@
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_export_data"
+                            android:textColor="@color/tertiary_text_color"
+
                             android:tag="export"
                             android:id="@+id/exportButton"/>
                         <androidx.appcompat.widget.AppCompatButton
@@ -671,6 +691,7 @@
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_import_data"
+                            android:textColor="@color/tertiary_text_color"
                             android:tag="import"
                             android:id="@+id/importButton" />
 
@@ -683,6 +704,8 @@
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@{profileViewModel.removeButtonText}"
+                            android:textColor="@color/tertiary_text_color"
+
                             android:tag="remove"
                             android:onClick="@{profileViewModel::onDataClicked}">
                         </androidx.appcompat.widget.AppCompatButton>
@@ -712,6 +735,8 @@
                                 android:textSize="@dimen/valueSize"
                                 android:layout_marginVertical="5dp"
                                 android:text="@string/profile_remove_data_ackn"
+                                android:textColor="@color/primary_text_color"
+
                                 android:tag="removeAckn"
                                 android:onClick="@{profileViewModel::onDataClicked}">
                             </androidx.appcompat.widget.AppCompatButton>
@@ -768,3 +793,4 @@
 
 
 </layout>
+
