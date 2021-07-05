@@ -5,11 +5,24 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.NotificationManager
 import android.content.Context
+import android.content.pm.PackageManager
+import android.media.AudioManager
+import android.media.RingtoneManager
+import android.net.Uri
+import android.os.Bundle
+import android.provider.Settings
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
+import com.doitstudio.sleepest_master.storage.db.AlarmEntity
+import com.kevalpatel.ringtonepicker.RingtonePickerDialog
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -25,7 +38,7 @@ class AlarmsFragment() : Fragment() {
     private val repository by lazy { (actualContext as MainApplication).dataBaseRepository }
     private val dataStoreRepository by lazy { (actualContext as MainApplication).dataStoreRepository }
     private val scope: CoroutineScope = MainScope()
-    private val actualContext: Context by lazy {requireActivity().applicationContext}
+    private val actualContext: Context by lazy { requireActivity().applicationContext }
 
     private lateinit var btnAddAlarmEntity: Button
     private var lLContainerAlarmEntities: LinearLayout? = null
@@ -37,8 +50,8 @@ class AlarmsFragment() : Fragment() {
     lateinit var btnChangeAlarmSound: Button
     lateinit var btnTemporaryDisableAlarm: Button
 
-    lateinit var allAlarms : MutableList<AlarmEntity>
-    lateinit var usedIds : MutableSet<Int>
+    lateinit var allAlarms: MutableList<AlarmEntity>
+    lateinit var usedIds: MutableSet<Int>
     lateinit var transactions: MutableMap<Int, FragmentTransaction>
     lateinit var fragments: MutableMap<Int, AlarmInstance>
 
@@ -86,23 +99,31 @@ class AlarmsFragment() : Fragment() {
 
         val audioManager = actualContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         if (audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) <= 0) {
-            Toast.makeText(actualContext, "Increase volume to hear sounds", Toast.LENGTH_LONG).show()
+            Toast.makeText(actualContext, "Increase volume to hear sounds", Toast.LENGTH_LONG)
+                .show()
         }
 
         var savedRingtoneUri = Uri.parse(dataStoreRepository.getAlarmToneJob())
 
-        if(dataStoreRepository.getAlarmToneJob() == "null") {
+        if (dataStoreRepository.getAlarmToneJob() == "null") {
             savedRingtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
         }
 
-        val ringtonePickerBuilder = RingtonePickerDialog.Builder(actualContext, parentFragmentManager)
-            .setTitle("Select your ringtone")
-            .displayDefaultRingtone(true)
-            .setCurrentRingtoneUri(savedRingtoneUri)
-            .setPositiveButtonText("Set")
-            .setCancelButtonText("Cancel")
-            .setPlaySampleWhileSelection(true)
-            .setListener { ringtoneName, ringtoneUri ->  scope.launch{ dataStoreRepository.updateAlarmTone(ringtoneUri.toString()) }}
+        val ringtonePickerBuilder =
+            RingtonePickerDialog.Builder(actualContext, parentFragmentManager)
+                .setTitle("Select your ringtone")
+                .displayDefaultRingtone(true)
+                .setCurrentRingtoneUri(savedRingtoneUri)
+                .setPositiveButtonText("Set")
+                .setCancelButtonText("Cancel")
+                .setPlaySampleWhileSelection(true)
+                .setListener { ringtoneName, ringtoneUri ->
+                    scope.launch {
+                        dataStoreRepository.updateAlarmTone(
+                            ringtoneUri.toString()
+                        )
+                    }
+                }
 
         ringtonePickerBuilder.addRingtoneType(RingtonePickerDialog.Builder.TYPE_ALARM)
         ringtonePickerBuilder.show()
@@ -127,16 +148,18 @@ class AlarmsFragment() : Fragment() {
         fragments = mutableMapOf()
 
 
-        btnAddAlarmEntity.setOnClickListener{
+        btnAddAlarmEntity.setOnClickListener {
             //view ->  onAddAlarm(view)
             if (checkPermissions()) {
                 onAddAlarm(view)
             } else {
-                Toast.makeText(actualContext, "Please grant all permissions", Toast.LENGTH_LONG).show()
+                Toast.makeText(actualContext, "Please grant all permissions", Toast.LENGTH_LONG)
+                    .show()
 
             }
+        }
 
-        /*
+            /*
         var disableNextAlarm = false
         scope.launch {
             //disableNextAlarm = repository.getNextActiveAlarm().tempDisabled //liefert Ture oder False
@@ -154,25 +177,25 @@ class AlarmsFragment() : Fragment() {
 
 
 
-        btnExpandAlarmSoundSettings.setOnClickListener {
-            lLAlarmSoundSettings.isVisible = !lLAlarmSoundSettings.isVisible
-        }
-
-        btnExpandAlarmSoundInformation.setOnClickListener {
-            fLAlarmSoundInformation.isVisible = !fLAlarmSoundInformation.isVisible
-        }
-
-        swAutoCancelAlarm.setOnClickListener {
-            scope.launch {
-                dataStoreRepository.updateEndAlarmAfterFired(swAutoCancelAlarm.isChecked)
+            btnExpandAlarmSoundSettings.setOnClickListener {
+                lLAlarmSoundSettings.isVisible = !lLAlarmSoundSettings.isVisible
             }
-        }
 
-        btnChangeAlarmSound.setOnClickListener {
-            onAlarmSoundChange(view)
-        }
+            btnExpandAlarmSoundInformation.setOnClickListener {
+                fLAlarmSoundInformation.isVisible = !fLAlarmSoundInformation.isVisible
+            }
 
-        /*
+            swAutoCancelAlarm.setOnClickListener {
+                scope.launch {
+                    dataStoreRepository.updateEndAlarmAfterFired(swAutoCancelAlarm.isChecked)
+                }
+            }
+
+            btnChangeAlarmSound.setOnClickListener {
+                onAlarmSoundChange(view)
+            }
+
+            /*
         btnTemporaryDisableAlarm.setOnClickListener {
             scope.launch {
                 if (disableNextAlarm) {
@@ -187,42 +210,48 @@ class AlarmsFragment() : Fragment() {
         }
          */
 
-        setupAlarms()
-    }
+            setupAlarms()
+        }
 
-    override fun onCreateView(
+        override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_alarms, container, false)
-    }
-
-    fun checkPermissions() : Boolean {
-        val notificationManager = actualContext.getSystemService(AppCompatActivity.NOTIFICATION_SERVICE) as NotificationManager
-        if (!notificationManager.isNotificationPolicyAccessGranted){
-            return false
-        } else if(!Settings.canDrawOverlays(actualContext)) {
-            return false
-        } else if(PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(actualContext, Manifest.permission.ACTIVITY_RECOGNITION)) {
-            return false
+        ): View? {
+            return inflater.inflate(R.layout.fragment_alarms, container, false)
         }
 
-        return true
-    }
+        fun checkPermissions(): Boolean {
+            val notificationManager =
+                actualContext.getSystemService(AppCompatActivity.NOTIFICATION_SERVICE) as NotificationManager
+            if (!notificationManager.isNotificationPolicyAccessGranted) {
+                return false
+            } else if (!Settings.canDrawOverlays(actualContext)) {
+                return false
+            } else if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(
+                    actualContext,
+                    Manifest.permission.ACTIVITY_RECOGNITION
+                )
+            ) {
+                return false
+            }
 
-    companion object {
-        // For Singleton instantiation
-        @SuppressLint("StaticFieldLeak")
-        @Volatile
-        private var INSTANCE: AlarmsFragment? = null
+            return true
+        }
 
-        fun getAlarmFragment(): AlarmsFragment {
-            return INSTANCE ?: synchronized(this) {
-                val instance = AlarmsFragment()
-                INSTANCE = instance
-                instance
+        companion object {
+            // For Singleton instantiation
+            @SuppressLint("StaticFieldLeak")
+            @Volatile
+            private var INSTANCE: AlarmsFragment? = null
+
+            fun getAlarmFragment(): AlarmsFragment {
+                return INSTANCE ?: synchronized(this) {
+                    val instance = AlarmsFragment()
+                    INSTANCE = instance
+                    instance
+                }
             }
         }
     }
-}
+
