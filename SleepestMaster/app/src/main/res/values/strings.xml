@@ -25,6 +25,10 @@
     <string name="foregroundservice_channel">Foregroundservice Notification Channel</string>
     <string name="foregroundservice_channel_name">Foregroundservice Channel</string>
     <string name="foregroundservice_channel_description">This channel is for the notification banner of the foregroundservice</string>
+    <string name="information_notification_channel">Information Notification Channel</string>
+    <string name="information_notification_channel_name">Information Notification Channel</string>
+    <string name="information_notification_channel_description">This channel is for the notification to show the user that it is time to sleep</string>
+    <string name="information_notification_text">You should go to sleep now or change your latest wake-up time as you will no longer be able to reach your sleep time</string>
     <string name="foregroundservice_notification_title">Sleepest - The best sleep you ever had</string>
     <string name="workmanager1_tag">Workmanager 1</string>
     <string name="workmanager2_tag">Workmanager 2</string>
