@@ -86,6 +86,14 @@ class ForegroundActivity : Activity() {
 
                 2 -> {
                     ForegroundService.startOrStopForegroundService(Actions.STOP, applicationContext)
+                    val calendarAlarm =
+                        AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeBeginJob())
+                    AlarmReceiver.startAlarmManager(
+                        calendarAlarm[Calendar.DAY_OF_WEEK],
+                        calendarAlarm[Calendar.HOUR_OF_DAY],
+                        calendarAlarm[Calendar.MINUTE], applicationContext, AlarmReceiverUsage.START_FOREGROUND
+                    )
+
                 }
 
                 else -> {

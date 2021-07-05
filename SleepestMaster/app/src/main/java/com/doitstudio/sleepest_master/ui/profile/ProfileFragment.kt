@@ -2,11 +2,7 @@ package com.doitstudio.sleepest_master.ui.profile
 
 
 import android.Manifest
-import android.app.Activity.RESULT_OK
 import android.content.Context
-
-import android.content.Context.NOTIFICATION_SERVICE
-import android.service.notification.StatusBarNotification
 
 import android.content.Intent
 import android.net.Uri
@@ -19,17 +15,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 
-import androidx.annotation.RequiresApi
-
-import com.doitstudio.sleepest_master.R
-import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
-import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
-
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.doitstudio.sleepest_master.DontKillMyAppFragment
 import com.doitstudio.sleepest_master.MainApplication
+
 import com.doitstudio.sleepest_master.databinding.FragmentProfileBinding
+import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage
 import com.doitstudio.sleepest_master.model.data.export.UserSleepExportData
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
@@ -38,6 +31,7 @@ import com.doitstudio.sleepest_master.ui.sleep.SleepFragment
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
+import com.doitstudio.sleepest_master.background.AlarmReceiver
 
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -90,6 +84,11 @@ class ProfileFragment : Fragment() {
         }
         binding.exportButton.setOnClickListener {
             onDataClicked(it)
+        }
+        binding.btnImportantSettings.setOnClickListener() {
+            //DontKillMyAppFragment.show(parentFragment.activity)
+            val calendar = Calendar.getInstance()
+            AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)+2, actualContext, AlarmReceiverUsage.DISABLE_ALARM)
         }
 
         viewModel.designExpand.set(if(caseOfEntrie == 1) View.VISIBLE else View.GONE)
@@ -167,8 +166,13 @@ class ProfileFragment : Fragment() {
         )},${pref.getInt("minute", 0)}
             
             """.trimIndent()
+        pref = actualContext.getSharedPreferences("BootTime1", 0)
+        val textBooReceiver1= """
+            Last Boot: ${pref.getInt("hour",0 )},${pref.getInt("minute", 0)}
+            
+            """.trimIndent()
 
-        var textGesamt = textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation + textCalc1 + textCalc2 + textAlarmReceiver + textSleepTime + textStopException + textAlarmReceiver1
+        var textGesamt = textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation + textCalc1 + textCalc2 + textAlarmReceiver + textSleepTime + textBooReceiver1 + textStopException + textAlarmReceiver1
 
 
         binding.testText.text = textGesamt
