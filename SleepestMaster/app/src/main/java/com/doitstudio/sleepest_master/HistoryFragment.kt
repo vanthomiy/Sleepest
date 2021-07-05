@@ -53,7 +53,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
     private lateinit var sleepSessionIDs : MutableSet<Int>
     private lateinit var sleepSessionsRawData : MutableMap<Int, Pair<List<SleepApiRawDataEntity>, Int>>
     private lateinit var sleepSessionData : MutableMap<Int, UserSleepSessionEntity>
-    private var dateOfDiagram  = LocalDate.of(2021, 3, 30) //now()
+    private var dateOfDiagram  = LocalDate.now() //of(2021, 3, 30) //now()
     private var currentAnalysisRange = 0 // Day = 0, Week = 1, Month = 2
     private var diagramVisibility = false
 
@@ -352,26 +352,27 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
             if (sleepSessionData.containsKey(id)) {
                 val values = sleepSessionData[id]!!
 
-                val awake = values.sleepTimes.awakeTime
+                //val awake = values.sleepTimes.awakeTime
                 val sleep = values.sleepTimes.sleepDuration
                 val lightSleep = values.sleepTimes.lightSleepDuration
                 val deepSleep = values.sleepTimes.deepSleepDuration
                 val remSleep = values.sleepTimes.remSleepDuration
 
-                if ((sleep + awake) > maxSleepTime) { maxSleepTime = (sleep + awake) }  //Later delete awake from here
+                //if ((sleep + awake) > maxSleepTime) { maxSleepTime = (sleep + awake) }  //Later delete awake from here
+                if (sleep > maxSleepTime) { maxSleepTime = sleep }
 
                 entries.add(
                     BarEntry(
                         xIndex, floatArrayOf(
-                            awake.toFloat(),
+                            //awake.toFloat(),
                             lightSleep.toFloat(),
                             deepSleep.toFloat(),
                             remSleep.toFloat(),
-                            sleep.toFloat()
+                            //sleep.toFloat()
                         )
                     )
                 )
-            } else { entries.add(BarEntry(xIndex, 0F)) }
+            } else { entries.add(BarEntry(xIndex, floatArrayOf(0F, 0F, 0F))) }
             xAxisLabels.add(id)
             xIndex += 1
         }
@@ -383,7 +384,8 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         val diagramData = generateDataBarChart()
 
         val barDataSet1 = BarDataSet(diagramData.first, "")
-        barDataSet1.setColors(Color.YELLOW, Color.MAGENTA, Color.BLUE, Color.BLACK, Color.RED)
+        //barDataSet1.setColors(Color.YELLOW, Color.MAGENTA, Color.BLUE, Color.BLACK, Color.RED)
+        barDataSet1.setColors(Color.MAGENTA, Color.BLUE, Color.BLACK)
         //barDataSet1.label = "States"
         //barDataSet1.setDrawIcons(false)
         barDataSet1.setDrawValues(false)
@@ -432,11 +434,11 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         legend.setDrawInside(false)
 
         val legendEntries = arrayListOf<LegendEntry>()
-        legendEntries.add((LegendEntry("Awake", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.YELLOW)))
+        //legendEntries.add((LegendEntry("Awake", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.YELLOW)))
         legendEntries.add((LegendEntry("Light", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.MAGENTA)))
         legendEntries.add((LegendEntry("Deep", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.BLUE)))
         legendEntries.add((LegendEntry("REM", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.BLACK)))
-        legendEntries.add((LegendEntry("Sleep", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.RED)))
+        //legendEntries.add((LegendEntry("Sleep", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.RED)))
         legend.setCustom(legendEntries)
 
         //legend.yOffset = 2f
