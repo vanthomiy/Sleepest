@@ -36,6 +36,7 @@ import com.doitstudio.sleepest_master.model.data.Constants;
 import com.doitstudio.sleepest_master.sleepapi.SleepHandler;
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
+import com.doitstudio.sleepest_master.storage.DatabaseRepository;
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity;
 
 import java.time.DayOfWeek;
@@ -57,6 +58,7 @@ public class ForegroundService extends LifecycleService {
     private int actualWakeUp = 0;
 
     private DataStoreRepository dataStoreRepository;
+    private DatabaseRepository databaseRepository;
     private AlarmEntity alarmEntity = null;
     private SleepCalculationHandler sleepCalculationHandler;
     private SleepHandler sleepHandler;
@@ -100,10 +102,14 @@ public class ForegroundService extends LifecycleService {
 
         foregroundObserver = new ForegroundObserver (this);
 
-        alarmEntity = foregroundObserver.getNextAlarm();
+        databaseRepository = ((MainApplication)getApplicationContext()).getDataBaseRepository();
+
+        alarmEntity = databaseRepository.getNextActiveAlarmJob();
 
         //Info: the following getId() can not be null, because alarmEntity can not be null with getNextAlarm()
-        foregroundObserver.updateAlarmWasFired(false, alarmEntity.getId());
+        if (alarmEntity != null) {
+            foregroundObserver.updateAlarmWasFired(false, alarmEntity.getId());
+        }
         // New from Thomas: With other call...
         dataStoreRepository = DataStoreRepository.Companion.getRepo(getApplicationContext());
         // activity = (Activity) getApplicationContext();
@@ -208,10 +214,11 @@ public class ForegroundService extends LifecycleService {
             //Save state in preferences
             isServiceStarted = false;
             foregroundObserver.setForegroundStatus(false);
-            foregroundObserver.updateAlarmWasFired(true, alarmEntity.getId());
-            //new ServiceTracker().setServiceState(this, ServiceState.STOPPED);
 
-            //Workmanager.stopPeriodicWorkmanager();
+            if (alarmEntity != null) {
+                foregroundObserver.updateAlarmWasFired(true, alarmEntity.getId());
+            }
+
             WorkmanagerCalculation.stopPeriodicWorkmanager();
 
             AlarmReceiver.cancelAlarm(getApplicationContext(), AlarmReceiverUsage.START_WORKMANAGER_CALCULATION);
@@ -445,7 +452,6 @@ public class ForegroundService extends LifecycleService {
 
     /**
      * Creats a notification banner, that is permanent to show that the app is still running.
-     * @param text The text at the notification banner
      * @return Notification.Builder
      */
     private Notification createNotification() {
