@@ -1,20 +1,16 @@
 package com.doitstudio.sleepest_master
 
 import android.Manifest
-import android.app.Activity
 import android.app.NotificationManager
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.app.ActivityCompat.recreate
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.asLiveData
 import com.doitstudio.sleepest_master.background.AlarmReceiver
@@ -148,6 +144,21 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    fun changeFragment() {
+        val ft = supportFragmentManager.beginTransaction()
+
+
+
+        if(profileFragment.isAdded){
+            ft.show(profileFragment)
+        }else{
+            ft.add(R.id.navigationFrame, profileFragment)
+        }
+
+        ft.commit()
+
+    }
+
     // endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -211,7 +222,7 @@ class MainActivity : AppCompatActivity() {
                             )
                         }
                     }
-                    else if(!dataStoreRepository.backgroundServiceFlow.first().isForegroundActive && !dataBaseRepository.getNextActiveAlarm()!!.wasFired
+                    else if(!dataStoreRepository.backgroundServiceFlow.first().isForegroundActive && !dataBaseRepository.getNextActiveAlarm()!!.wasFired && !dataBaseRepository.getNextActiveAlarm()!!.tempDisabled
                             && ((LocalTime.now().toSecondOfDay() < dataBaseRepository.getNextActiveAlarm()!!.actualWakeup) || (dataStoreRepository.getSleepTimeBegin() < LocalTime.now().toSecondOfDay()))){
                         // Is empty..
                         // We need to check if foreground is active or not... if active we have to stop it from here
@@ -238,11 +249,12 @@ class MainActivity : AppCompatActivity() {
 
                         if (!dataBaseRepository.getNextActiveAlarm()!!.wasFired ||
                                 ((LocalTime.now().toSecondOfDay() > dataBaseRepository.getNextActiveAlarm()!!.actualWakeup) &&
-                                        (dataStoreRepository.getSleepTimeBegin() < LocalTime.now().toSecondOfDay()))) {
+                                        (dataStoreRepository.getSleepTimeBegin() < LocalTime.now().toSecondOfDay())) && !dataBaseRepository.getNextActiveAlarm()!!.tempDisabled) {
                             ForegroundService.startOrStopForegroundService(
                                 Actions.START,
                                 applicationContext
                             )
+
                         }
                     } else if (earliestWakeupTemp != dataBaseRepository.getNextActiveAlarm()!!.wakeupEarly) {
 
@@ -317,14 +329,14 @@ class MainActivity : AppCompatActivity() {
         if (!notificationManager.isNotificationPolicyAccessGranted){
             //Toast.makeText(this,"Alarm could be silence without this permission", Toast.LENGTH_SHORT).show()
             val snack = Snackbar.make(findViewById(android.R.id.content),"This is a simple Snackbar",Snackbar.LENGTH_INDEFINITE)
-            snack.show()
+            //snack.show()
         } else if(!Settings.canDrawOverlays(this)) {
             //Toast.makeText(this,"Sorry. Can't draw overlays without permission...", Toast.LENGTH_SHORT).show()
             val snack = Snackbar.make(findViewById(android.R.id.content),"This is a simple Snackbar",Snackbar.LENGTH_INDEFINITE)
-            snack.show()
+            //snack.show()
         } else if(!activityRecognitionPermissionApproved()) {
             val snack = Snackbar.make(findViewById(android.R.id.content),"This is a simple Snackbar",Snackbar.LENGTH_INDEFINITE)
-            snack.show()
+            //snack.show()
         }
 
     }

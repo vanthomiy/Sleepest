@@ -1,22 +1,16 @@
 package com.doitstudio.sleepest_master
 
+import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Application
+import android.app.Activity
+import android.app.NotificationManager
 import android.content.Context
-import android.media.AudioManager
-import android.media.RingtoneManager
-import android.net.Uri
-import android.os.Bundle
-import android.transition.TransitionManager
+
 import android.view.LayoutInflater
-import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.view.isVisible
-import androidx.fragment.app.FragmentTransaction
-import com.doitstudio.sleepest_master.storage.db.AlarmEntity
-import com.kevalpatel.ringtonepicker.RingtonePickerDialog
+
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -132,6 +126,16 @@ class AlarmsFragment() : Fragment() {
         transactions = mutableMapOf()
         fragments = mutableMapOf()
 
+
+        btnAddAlarmEntity.setOnClickListener{
+            //view ->  onAddAlarm(view)
+            if (checkPermissions()) {
+                onAddAlarm(view)
+            } else {
+                Toast.makeText(actualContext, "Please grant all permissions", Toast.LENGTH_LONG).show()
+
+            }
+
         /*
         var disableNextAlarm = false
         scope.launch {
@@ -148,9 +152,7 @@ class AlarmsFragment() : Fragment() {
         }
          */
 
-        btnAddAlarmEntity.setOnClickListener {
-            view -> onAddAlarm(view)
-        }
+
 
         btnExpandAlarmSoundSettings.setOnClickListener {
             lLAlarmSoundSettings.isVisible = !lLAlarmSoundSettings.isVisible
@@ -189,11 +191,24 @@ class AlarmsFragment() : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_alarms, container, false)
+    }
+
+    fun checkPermissions() : Boolean {
+        val notificationManager = actualContext.getSystemService(AppCompatActivity.NOTIFICATION_SERVICE) as NotificationManager
+        if (!notificationManager.isNotificationPolicyAccessGranted){
+            return false
+        } else if(!Settings.canDrawOverlays(actualContext)) {
+            return false
+        } else if(PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(actualContext, Manifest.permission.ACTIVITY_RECOGNITION)) {
+            return false
+        }
+
+        return true
     }
 
     companion object {

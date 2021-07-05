@@ -26,6 +26,7 @@ import com.doitstudio.sleepest_master.background.AlarmReceiver;
 import com.doitstudio.sleepest_master.background.ForegroundActivity;
 import com.doitstudio.sleepest_master.model.data.AlarmClockReceiverUsage;
 import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage;
+import com.doitstudio.sleepest_master.model.data.Constants;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 
 import java.io.IOException;
@@ -34,7 +35,6 @@ import static android.content.Context.ALARM_SERVICE;
 
 public class AlarmClockReceiver extends BroadcastReceiver {
 
-    private static int NOTIFICATION_ID = 10;
     private static Context context;
     private DataStoreRepository dataStoreRepository;
 
@@ -185,7 +185,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
                         .addAction(R.drawable.ic_launcher_foreground, context.getString(R.string.alarm_notification_button_1), cancelAlarmPendingIntent) /**TODO: Icon*/
                         .addAction(R.drawable.ic_launcher_background, context.getString(R.string.alarm_notification_button_2), snoozeAlarmPendingIntent); /**TODO: Icon*/
 
-        NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, notificationBuilder.build());
+        NotificationManagerCompat.from(context).notify(Constants.ALARM_CLOCK_NOTIFICATION_ID, notificationBuilder.build());
 
         //Starts a new singleton audio class and init it, if not init yet
         AlarmClockAudio.getInstance().init(context);
@@ -208,7 +208,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
                         .setCategory(NotificationCompat.CATEGORY_ALARM)
                         .setContentIntent(pendingIntent)
                         .setFullScreenIntent(pendingIntent, true);
-        NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, notificationBuilder.build());
+        NotificationManagerCompat.from(context).notify(Constants.ALARM_CLOCK_NOTIFICATION_ID, notificationBuilder.build());
     }
 
     private void createNotificationChannel() {
@@ -224,7 +224,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
     }
 
     public static void cancelNotification() {
-        NotificationManagerCompat.from(context).cancel(NOTIFICATION_ID);
+        NotificationManagerCompat.from(context).cancel(Constants.ALARM_CLOCK_NOTIFICATION_ID);
     }
 
 }
