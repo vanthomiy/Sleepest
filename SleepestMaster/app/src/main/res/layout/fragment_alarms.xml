@@ -5,7 +5,7 @@
     android:id="@+id/cL_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_1"
+    android:background="@color/primary_app_background"
     android:orientation="vertical">
 
     <TextView
@@ -16,7 +16,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/einstellungen"
         android:textAlignment="center"
-        android:textColor="@color/teal_200"
+        android:textColor="@color/primary_text_color"
         android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
