@@ -6,7 +6,7 @@
     android:id="@+id/cL_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_1"
+    android:background="@color/primary_app_background"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:text="Monday 11.05.2021"
-            android:textColor="@color/teal_200"
+            android:textColor="@color/primary_text_color"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -35,6 +35,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginEnd="4dp"
+            android:backgroundTint="@color/primary_button_color"
             android:text="P"
             app:layout_constraintBottom_toBottomOf="@+id/tV_ActualDay"
             app:layout_constraintEnd_toStartOf="@+id/tV_ActualDay"
@@ -46,6 +47,7 @@
             android:layout_height="50dp"
             android:layout_marginStart="4dp"
             android:text="N"
+            android:backgroundTint="@color/primary_button_color"
             app:layout_constraintBottom_toBottomOf="@+id/tV_ActualDay"
             app:layout_constraintStart_toEndOf="@+id/tV_ActualDay"
             app:layout_constraintTop_toTopOf="@+id/tV_ActualDay" />
@@ -55,6 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Day"
+            android:backgroundTint="@color/primary_button_color"
             app:layout_constraintBottom_toBottomOf="@+id/btn_SleepAnalysisWeek"
             app:layout_constraintEnd_toStartOf="@+id/btn_SleepAnalysisWeek"
             app:layout_constraintTop_toTopOf="@+id/btn_SleepAnalysisWeek" />
@@ -66,6 +69,7 @@
             android:layout_marginTop="30dp"
             android:layout_marginBottom="20dp"
             android:text="Week"
+            android:backgroundTint="@color/primary_button_color"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/tV_ActualDay"
             app:layout_constraintStart_toStartOf="@+id/tV_ActualDay"
@@ -76,6 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Month"
+            android:backgroundTint="@color/primary_button_color"
             app:layout_constraintBottom_toBottomOf="@+id/btn_SleepAnalysisWeek"
             app:layout_constraintStart_toEndOf="@+id/btn_SleepAnalysisWeek"
             app:layout_constraintTop_toTopOf="@+id/btn_SleepAnalysisWeek" />
@@ -109,8 +114,8 @@
 
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/pieChart_sleepAnalysisDay"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
                 android:layout_marginTop="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -139,7 +144,7 @@
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/barChart_sleepAnalysisWeek"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="350dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -172,7 +177,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="No data available for this day"
-        android:textColor="@color/teal_200"
+        android:textColor="@color/primary_text_color"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

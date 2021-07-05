@@ -22,7 +22,6 @@ import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.github.mikephil.charting.formatter.LargeValueFormatter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -52,10 +51,11 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
     private lateinit var sVSleepAnalysisWeek : ScrollView
     private lateinit var sVSleepAnalysisMonth : ScrollView
     private lateinit var sleepSessionIDs : MutableSet<Int>
-    private lateinit var sleepSessionsData : MutableMap<Int, List<SleepApiRawDataEntity>>
-    private var dateOfDiagram  = LocalDate.now() //of(2021, 3, 13)
+    private lateinit var sleepSessionsRawData : MutableMap<Int, Pair<List<SleepApiRawDataEntity>, Int>>
+    private lateinit var sleepSessionData : MutableMap<Int, UserSleepSessionEntity>
+    private var dateOfDiagram  = LocalDate.of(2021, 3, 30) //now()
     private var currentAnalysisRange = 0 // Day = 0, Week = 1, Month = 2
-    private var diagrammVisibility = false
+    private var diagramVisibility = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -83,7 +83,8 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         sVSleepAnalysisMonth = view.findViewById(R.id.sV_sleepAnalysisChartsMonth)
 
         sleepSessionIDs = mutableSetOf()
-        sleepSessionsData = mutableMapOf()
+        sleepSessionsRawData = mutableMapOf()
+        sleepSessionData = mutableMapOf()
 
         tVDisplayedDay.text = dateOfDiagram.format(DateTimeFormatter.ISO_DATE)
 
@@ -161,10 +162,15 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
                 val session = sleepDbRepository.getSleepSessionById(id).first().firstOrNull()
                 session?.let {
                     //sleepSessionIDs.add(id) //Use ID as Key for the day since it can be accessed via .getIdByDateTime(LocalDate.of("Day of interest"))
-                    sleepSessionsData[id] = sleepDbRepository.getSleepApiRawDataBetweenTimestamps(
-                        session.sleepTimes.sleepTimeStart,
-                        session.sleepTimes.sleepTimeEnd
-                    ).first().sortedBy { x -> x.timestampSeconds }
+                    sleepSessionsRawData[id] = Pair(
+                        sleepDbRepository.getSleepApiRawDataBetweenTimestamps(
+                            session.sleepTimes.sleepTimeStart,
+                            session.sleepTimes.sleepTimeEnd
+                        ).first().sortedBy { x -> x.timestampSeconds },
+                        session.sleepTimes.sleepDuration
+                    )
+
+                    sleepSessionData[id] = session
                 }
             }
         }
@@ -200,7 +206,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
 
         when (currentAnalysisRange) {
             0 -> {
-                if (diagrammVisibility) {
+                if (diagramVisibility) {
                     sVSleepAnalysisDay.isVisible = true
                     sVSleepAnalysisWeek.isVisible = false
                     sVSleepAnalysisMonth.isVisible = false
@@ -213,7 +219,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
                 }
             }
             1 -> {
-                if (diagrammVisibility) {
+                if (diagramVisibility) {
                     sVSleepAnalysisDay.isVisible = false
                     sVSleepAnalysisWeek.isVisible = true
                     sVSleepAnalysisMonth.isVisible = false
@@ -226,7 +232,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
                 }
             }
             2 -> {
-                if (diagrammVisibility) {
+                if (diagramVisibility) {
                     sVSleepAnalysisDay.isVisible = false
                     sVSleepAnalysisWeek.isVisible = false
                     sVSleepAnalysisMonth.isVisible = true
@@ -244,20 +250,20 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
     private fun generateDataLineChart() : ArrayList<Entry> {
         val entries = ArrayList<Entry>()
         var xValue = 0
-        val values: List<SleepApiRawDataEntity>
+        val values: Pair<List<SleepApiRawDataEntity>, Int>
 
-        if (sleepSessionsData.containsKey(UserSleepSessionEntity.getIdByDateTime(dateOfDiagram))) {
-            values = sleepSessionsData[UserSleepSessionEntity.getIdByDateTime(dateOfDiagram)]!!
+        if (sleepSessionsRawData.containsKey(UserSleepSessionEntity.getIdByDateTime(dateOfDiagram))) {
+            values = sleepSessionsRawData[UserSleepSessionEntity.getIdByDateTime(dateOfDiagram)]!!
 
-            for (i in values) {
+            for (i in values.first) {
                 entries.add(Entry(xValue.toFloat(), i.sleepState.ordinal.toFloat()))
                 xValue += 1
             }
-            diagrammVisibility = true //Check if all daily diagrams should be visible
+            diagramVisibility = true //Check if all daily diagrams should be visible
         }
         else {
             entries.add(Entry(1F,1F))
-            diagrammVisibility = false //Check if all daily diagrams should be visible
+            diagramVisibility = false //Check if all daily diagrams should be visible
         }
 
         return entries
@@ -280,38 +286,27 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
     }
 
     private fun generateDataPieChart() : ArrayList<PieEntry> {
-        var awake = 0.01f
-        var sleep = 0.01f
-        var lightSleep = 0.01f
-        var deepSleep = 0.01f
-        var remSleep = 0.01f
         val entries = ArrayList<PieEntry>()
-        var absolute = 0.05f
 
-        val values: List<SleepApiRawDataEntity>
+        if (sleepSessionData.containsKey(UserSleepSessionEntity.getIdByDateTime(dateOfDiagram))) {
+            val values = sleepSessionData[UserSleepSessionEntity.getIdByDateTime(dateOfDiagram)]!!
 
-        if (sleepSessionsData.containsKey(UserSleepSessionEntity.getIdByDateTime(dateOfDiagram))) {
-            values = sleepSessionsData[UserSleepSessionEntity.getIdByDateTime(dateOfDiagram)]!!
+            val awake = values.sleepTimes.awakeTime
+            val sleep = values.sleepTimes.sleepDuration
+            val lightSleep = values.sleepTimes.lightSleepDuration
+            val deepSleep = values.sleepTimes.deepSleepDuration
+            val remSleep = values.sleepTimes.remSleepDuration
 
-            for (i in values ) { //sleepSessionsData[UserSleepSessionEntity.getIdByDateTime(dateOfDiagram)]!!) {
-                when (i.sleepState.ordinal) {
-                    0 -> { awake += 1f }
-                    1 -> { lightSleep += 1f }
-                    2 -> { deepSleep += 1f }
-                    3 -> { remSleep += 1f }
-                    4 -> { sleep += 1f }
-                }
-                absolute += 1
+            if (sleep == 0) {
+                entries.add(PieEntry(sleep.toFloat(), "sleep", R.color.dark_green))
             }
+            else {
+                entries.add(PieEntry(lightSleep.toFloat(), "light"))
+                entries.add(PieEntry(deepSleep.toFloat(), "deep"))
+                entries.add(PieEntry(remSleep.toFloat(), "rem"))
+            }
+            entries.add(PieEntry(awake.toFloat(), "awake"))
         }
-
-        if (awake > 0) { entries.add(PieEntry((awake / absolute), "awake")) }
-        if (lightSleep > 0) { entries.add(PieEntry((lightSleep / absolute), "light")) }
-        if (deepSleep > 0) { entries.add(PieEntry((deepSleep / absolute), "deep")) }
-        if (remSleep > 0) { entries.add(PieEntry((remSleep / absolute), "rem")) }
-        if (sleep > 0) { entries.add(PieEntry((sleep / absolute), "sleep")) }
-
-        if (absolute == 0.05F) { entries.add(PieEntry(1F, "no data")) }
 
         return entries
     }
@@ -337,17 +332,11 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         pieChart.animateY(1000, Easing.EaseInOutQuad)
     }
 
-    private fun generateDataBarChart(): Pair<ArrayList<BarEntry>, List<Int>> { //ArrayList<BarEntry> {
-        var xIndex = 0
-        var awake = 0f
-        var sleep = 0f
-        var ligthSleep = 0f
-        var deepSleep = 0f
-        var remSleep = 0f
+    private fun generateDataBarChart(): Triple<ArrayList<BarEntry>, List<Int>, Int> { //ArrayList<BarEntry> {
         val entries = ArrayList<BarEntry>()
-        var absolute = 0
-
         val xAxisLabels = mutableListOf<Int>()
+        var xIndex = 0.5f
+        var maxSleepTime = 0
 
         val ids = mutableSetOf<Int>()
         for (i in -6..0) {
@@ -358,56 +347,45 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
             )))
         }
 
-        var values: List<SleepApiRawDataEntity>
-
+        ids.reversed()
         for (id in ids) {
-            if (sleepSessionsData.containsKey(id)) {
-                values = sleepSessionsData[id]!!
+            if (sleepSessionData.containsKey(id)) {
+                val values = sleepSessionData[id]!!
 
-                for (i in values) {
-                    when (i.sleepState.ordinal) {
-                        0 -> { awake += 1f }
-                        1 -> { ligthSleep += 1f }
-                        2 -> { deepSleep += 1f }
-                        3 -> { remSleep += 1f }
-                        4 -> { sleep += 1f }
-                    }
-                    absolute += 1
-                }
-                if (awake > 0) { awake = awake / absolute * 100 }
-                if (ligthSleep > 0) { ligthSleep = ligthSleep / absolute * 100 }
-                if (deepSleep > 0) { deepSleep = deepSleep / absolute * 100 }
-                if (remSleep > 0) { remSleep = remSleep / absolute * 100 }
-                if (sleep > 0) { sleep = sleep / absolute * 100 }
+                val awake = values.sleepTimes.awakeTime
+                val sleep = values.sleepTimes.sleepDuration
+                val lightSleep = values.sleepTimes.lightSleepDuration
+                val deepSleep = values.sleepTimes.deepSleepDuration
+                val remSleep = values.sleepTimes.remSleepDuration
 
-                entries.add(BarEntry(xIndex.toFloat(), floatArrayOf(awake, ligthSleep, deepSleep, remSleep, sleep)))
-                xAxisLabels.add(id)
+                if ((sleep + awake) > maxSleepTime) { maxSleepTime = (sleep + awake) }  //Later delete awake from here
 
-                xIndex += 1
-                awake = 0f
-                sleep = 0f
-                ligthSleep = 0f
-                deepSleep = 0f
-                remSleep = 0f
-                absolute = 0
-            } else {
-                entries.add(BarEntry(0F, 0F))
-                xAxisLabels.add(id)
-            }
+                entries.add(
+                    BarEntry(
+                        xIndex, floatArrayOf(
+                            awake.toFloat(),
+                            lightSleep.toFloat(),
+                            deepSleep.toFloat(),
+                            remSleep.toFloat(),
+                            sleep.toFloat()
+                        )
+                    )
+                )
+            } else { entries.add(BarEntry(xIndex, 0F)) }
+            xAxisLabels.add(id)
+            xIndex += 1
         }
 
-        return Pair(entries, xAxisLabels)
+        return Triple(entries, xAxisLabels, maxSleepTime)
     }
 
     private fun setBarChart() { //http://developine.com/android-grouped-stacked-bar-chart-using-mpchart-kotlin/
-        val barWidth = 0.3f
-
         val diagramData = generateDataBarChart()
 
         val barDataSet1 = BarDataSet(diagramData.first, "")
-        barDataSet1.setColors(Color.RED, Color.MAGENTA, Color.BLUE, Color.BLACK, Color.YELLOW)
-        barDataSet1.label = "States"
-        barDataSet1.setDrawIcons(false)
+        barDataSet1.setColors(Color.YELLOW, Color.MAGENTA, Color.BLUE, Color.BLACK, Color.RED)
+        //barDataSet1.label = "States"
+        //barDataSet1.setDrawIcons(false)
         barDataSet1.setDrawValues(false)
 
         val xAxisValues = ArrayList<String>()
@@ -437,10 +415,10 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         val barData = BarData(barDataSet1)
 
         barChart.description.isEnabled = false
-        barChart.description.textSize = 0f
-        barData.setValueFormatter(LargeValueFormatter())
+        //barChart.description.textSize = 0f
+        //barData.setValueFormatter(LargeValueFormatter())
         barChart.data = barData
-        barChart.barData.barWidth = barWidth
+        barChart.barData.barWidth = 0.75f
         barChart.xAxis.axisMinimum = 0f
         barChart.xAxis.axisMaximum = 7f
         barChart.data.isHighlightEnabled = false
@@ -453,52 +431,76 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         legend.orientation = Legend.LegendOrientation.HORIZONTAL
         legend.setDrawInside(false)
 
-        val legenedEntries = arrayListOf<LegendEntry>()
-        legenedEntries.add((LegendEntry("Awake", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.RED)))
-        legenedEntries.add((LegendEntry("Light", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.MAGENTA)))
-        legenedEntries.add((LegendEntry("Deep", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.BLUE)))
-        legenedEntries.add((LegendEntry("REM", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.BLACK)))
-        legenedEntries.add((LegendEntry("Sleep", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.YELLOW)))
-        legend.setCustom(legenedEntries)
+        val legendEntries = arrayListOf<LegendEntry>()
+        legendEntries.add((LegendEntry("Awake", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.YELLOW)))
+        legendEntries.add((LegendEntry("Light", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.MAGENTA)))
+        legendEntries.add((LegendEntry("Deep", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.BLUE)))
+        legendEntries.add((LegendEntry("REM", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.BLACK)))
+        legendEntries.add((LegendEntry("Sleep", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.RED)))
+        legend.setCustom(legendEntries)
 
         //legend.yOffset = 2f
         //legend.xOffset = 2f
-        legend.yEntrySpace = 0f
+        //legend.yEntrySpace = 0f
         legend.textSize = 12f
+
 
         val xAxis = barChart.xAxis
         //xAxis.granularity = 1f
         //xAxis.isGranularityEnabled = true
         //xAxis.setCenterAxisLabels(true)
-        //xAxis.setDrawGridLines(false)
-        xAxis.textSize = 12f
+        xAxis.setDrawGridLines(true)
+        //xAxis.textSize = 12f
 
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.valueFormatter = IndexAxisValueFormatter(xAxisValues)
 
-        xAxis.labelCount = 7
-        xAxis.mAxisMaximum = 7f
-        //xAxis.setCenterAxisLabels(true)
+        //xAxis.labelCount = 7
+        //xAxis.mAxisMaximum = 6f
+        xAxis.setCenterAxisLabels(true)
         //xAxis.setAvoidFirstLastClipping(true)
         //xAxis.spaceMin = 2f
         //xAxis.spaceMax = 4f
 
-        barChart.setVisibleXRangeMaximum(7f)
-        barChart.setVisibleXRangeMinimum(7f)
+
+        //barChart.setVisibleXRangeMaximum(7f)
         barChart.isDragEnabled = true
 
         //Y-axis
-        barChart.axisRight.isEnabled = false
-        barChart.setScaleEnabled(true)
+        barChart.axisRight.isEnabled = true
+        barChart.axisRight.axisMinimum = 0f
+        barChart.axisRight.labelCount = 10
+        //barChart.setScaleEnabled(true)
 
-        val leftAxis = barChart.axisLeft
-        leftAxis.valueFormatter = LargeValueFormatter()
-        leftAxis.setDrawGridLines(false)
-        leftAxis.spaceTop = 1f
-        leftAxis.axisMinimum = 0f
+        //val leftAxis = barChart.axisLeft
+        //leftAxis.valueFormatter = LargeValueFormatter()
+        //leftAxis.setDrawGridLines(false)
+        barChart.axisLeft.spaceTop = 60f
+        barChart.axisLeft.axisMinimum = 0f
+        barChart.axisLeft.labelCount = 20
 
 
-        barChart.data = barData
-        barChart.setVisibleXRange(0f, 7f)
+        if ((diagramData.third > 600) && (diagramData.third < 720)) {
+            barChart.axisRight.axisMaximum = 12f
+            barChart.axisLeft.axisMaximum = 720f
+        }
+        else if ((diagramData.third > 720) && (diagramData.third < 840)) {
+            barChart.axisRight.axisMaximum = 14f
+            barChart.axisLeft.axisMaximum = 840f
+        }
+        else if ((diagramData.third > 840) && (diagramData.third < 960)) {
+            barChart.axisRight.axisMaximum = 16f
+            barChart.axisLeft.axisMaximum = 960f
+        }
+        else if (diagramData.third > 960) { // between 12h and 14h
+            barChart.axisRight.axisMaximum = 24f
+            barChart.axisLeft.axisMaximum = 1440f
+        }
+        else {
+            barChart.axisRight.axisMaximum = 10f
+            barChart.axisLeft.axisMaximum = 600f
+        }
+
+        //barChart.setVisibleXRange(0f, 7f)
     }
 }
