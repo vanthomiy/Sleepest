@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Spinner" parent="Widget.AppCompat.Light.DropDownItem.Spinner">
+        <item name="android:textColor">@color/tertiary_text_color</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">@dimen/valueSize</item>
+        <item name="android:background">@drawable/bgroundedchoosen</item>
+
+    </style></resources>

@@ -112,7 +112,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
                     android:layout_marginHorizontal="10dp"
-                    android:visibility="@{sleepViewModel.sleepHeaderExpand, default=gone}"
+                    android:visibility="@{sleepViewModel.actualExpand == 7 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}"
                     android:background="@drawable/bgroundedchoosen"
                     >
 
@@ -169,7 +169,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="10dp"
-                        android:visibility="@{sleepViewModel.sleepTimeInfoExpand, default=gone}"
+                        android:visibility="@{sleepViewModel.actualExpand == 0 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}"
                         android:background="@drawable/bgroundedchoosen"
                         >
 
@@ -313,7 +313,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="10dp"
-                        android:visibility="@{sleepViewModel.sleepDurationExpand, default=gone}"
+                        android:visibility="@{sleepViewModel.actualExpand == 1 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}"
                         android:background="@drawable/bgroundedchoosen"
                         >
 
@@ -402,7 +402,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="10dp"
-                        android:visibility="@{sleepViewModel.lightConditionExpand, default=gone}"
+                        android:visibility="@{sleepViewModel.actualExpand == 6 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}"
                         android:background="@drawable/bgroundedchoosen"
                         >
 
@@ -476,7 +476,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="10dp"
-                        android:visibility="@{sleepViewModel.phonePositionExpand, default=gone}"
+                        android:visibility="@{sleepViewModel.actualExpand == 2 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}"
                         android:background="@drawable/bgroundedchoosen"
                         >
 
@@ -491,20 +491,16 @@
 
                     </FrameLayout>
 
-                    <Spinner
+                    <androidx.appcompat.widget.AppCompatSpinner
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/valuesHeight"
-                        android:background="@drawable/bgroundedchoosen"
                         android:layout_gravity="start"
+                        android:theme="@style/Spinner"
                         android:entries="@{sleepViewModel.phonePositionSelections}"
                         android:selectedItemPosition="@={sleepViewModel.mobilePosition}"
-                        android:onItemSelected = "@{sleepViewModel::onMobilePositionChanged}"
-                        android:textAlignment="center"
-                        android:textSize="@dimen/valueSize"
-                        android:textColor="@color/tertiary_text_color"
-                        tools:ignore="RtlCompat">
+                        android:onItemSelected = "@{sleepViewModel::onMobilePositionChanged}">
 
-                    </Spinner>
+                    </androidx.appcompat.widget.AppCompatSpinner>
 
                 </LinearLayout>
                 <LinearLayout
@@ -549,7 +545,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="10dp"
-                        android:visibility="@{sleepViewModel.phoneUsageExpand, default=gone}"
+                        android:visibility="@{sleepViewModel.actualExpand == 3 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}"
                         android:background="@drawable/bgroundedchoosen"
                         >
 
@@ -661,7 +657,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="10dp"
-                        android:visibility="@{sleepViewModel.activityTrackingExpand, default=gone}"
+                        android:visibility="@{sleepViewModel.actualExpand == 4 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}"
                         android:background="@drawable/bgroundedchoosen"
                         >
 
@@ -804,7 +800,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="10dp"
-                        android:visibility="@{sleepViewModel.alarmExpand, default=gone}"
+                        android:visibility="@{sleepViewModel.actualExpand == 5 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}"
                         android:background="@drawable/bgroundedchoosen"
                         >
 

@@ -80,8 +80,8 @@ class ProfileFragment : Fragment() {
             onDataClicked(it)
         }
 
-        viewModel.designExpand.set(if (caseOfEntrie == 1) View.VISIBLE else View.GONE)
-        viewModel.dataExpand.set(if (caseOfEntrie == 2) View.VISIBLE else View.GONE)
+        viewModel.actualExpand.set(if (caseOfEntrie == 1) 0 else -1)
+        viewModel.actualExpand.set(if (caseOfEntrie == 2) 4 else -1)
 
 
         //region Test
