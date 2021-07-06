@@ -148,9 +148,14 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         autoSleepTime.get()?.let {
             manualSleepTimeVisibility.set(if (it) View.GONE else View.VISIBLE)
         }
-
     }
 
+
+    val actualExpand = ObservableField(-1)
+    val goneState = ObservableField(View.GONE)
+    val visibleState = ObservableField(View.VISIBLE)
+
+    /*
     val sleepTimeInfoExpand = ObservableField(View.GONE)
     val phonePositionExpand = ObservableField(View.GONE)
     val phoneUsageExpand = ObservableField(View.GONE)
@@ -159,6 +164,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     val sleepDurationExpand = ObservableField(View.GONE)
     val lightConditionExpand = ObservableField(View.GONE)
     val sleepHeaderExpand = ObservableField(View.GONE)
+    */
 
     fun onInfoClicked(view: View){
         updateInfoChanged(view.tag.toString(), true)
@@ -170,14 +176,17 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
         TransitionManager.beginDelayedTransition(transitionsContainer);
 
-        sleepTimeInfoExpand.set(if (value == "0" && sleepTimeInfoExpand.get() == View.GONE) View.VISIBLE else View.GONE)
+
+        actualExpand.set(if(actualExpand.get() == value.toIntOrNull()) -1 else value.toIntOrNull() )
+
+        /*sleepTimeInfoExpand.set(if (value == "0" && sleepTimeInfoExpand.get() == View.GONE) View.VISIBLE else View.GONE)
         sleepHeaderExpand.set(if (value == "7" && sleepHeaderExpand.get() == View.GONE) View.VISIBLE else View.GONE)
         lightConditionExpand.set(if (value == "6" && lightConditionExpand.get() == View.GONE) View.VISIBLE else View.GONE)
         sleepDurationExpand.set(if (value == "1" && sleepDurationExpand.get() == View.GONE) View.VISIBLE else View.GONE)
         phonePositionExpand.set(if (value == "2" && phonePositionExpand.get() == View.GONE) View.VISIBLE else View.GONE)
         phoneUsageExpand.set(if (value == "3" && phoneUsageExpand.get() == View.GONE) View.VISIBLE else View.GONE)
         activityTrackingExpand.set(if (value == "4" && activityTrackingExpand.get() == View.GONE) View.VISIBLE else View.GONE)
-        alarmExpand.set(if (value == "5" && alarmExpand.get() == View.GONE) View.VISIBLE else View.GONE)
+        alarmExpand.set(if (value == "5" && alarmExpand.get() == View.GONE) View.VISIBLE else View.GONE)*/
     }
 
     val phoneUsageValueString = ObservableField("Normal")

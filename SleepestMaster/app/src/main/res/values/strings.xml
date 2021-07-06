@@ -248,5 +248,41 @@
 
     <!--endregion-->
 
+    <!--region Profile Fragment texts -->
+    <string name="profile_remove_button_text_normal">Daten Löschen</string>
+    <string name="profile_remove_button_text_choosen">Abbrechen</string>
+    <string name="profile_language_german">Deutsch</string>
+    <string name="profile_language_english">Englisch</string>
+    <string name="profile_header">Einstellungen</string>
+    <string name="profile_app_function">Wie funktioniert die App?</string>
+    <string name="profile_design">Design</string>
+    <string name="profile_dark_mode">Dark Mode</string>
+    <string name="profile_auto_dark_mode">Use system settings</string>
+    <string name="profile_language">Sprache</string>
+    <string name="profile_help">Hilfe</string>
+    <string name="profile_tutorial">Tutorial</string>
+    <string name="profile_neccessary_settings">Wichtige Einstellungen</string>
+    <string name="profile_app_info">Die App</string>
+    <string name="profile_suggestions">Verbesserungen vorschlagen</string>
+    <string name="profile_rate">App Bewerten</string>
+    <string name="profile_report_error">Fehler melden</string>
+    <string name="profile_permissions">Berechtigungen</string>
+    <string name="profile_sleepdata">Schlafdaten</string>
+    <string name="profile_permission_sleepdata">ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk</string>
+    <string name="profile_daily_activity">Tägliche Aktivität</string>
+    <string name="profile_permission_daily_activity">ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk</string>
+    <string name="profile_storage">Speicherzugriff</string>
+    <string name="profile_permission_storage">ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk</string>
+    <string name="profile_overlapp_app">App Überlappen</string>
+    <string name="profile_permission_overlapp_app">ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk</string>
+    <string name="profile_data">Daten</string>
+    <string name="profile_export_data">Daten Exportieren</string>
+    <string name="profile_import_data">Daten Importieren</string>
+    <string name="profile_remove_data_warning">Ohje, alle daten werden gelöscht ok?</string>
+    <string name="profile_remove_data_ackn">Verstanden und löschen</string>
+    <string name="profile_about_us">Sleepest - App\nMade with LOVE in Bavaria\n\n This app was created by 3 students as a students project and will be improved and maintained in the future</string>
+
+    <!--endregion-->
+
 
 </resources>

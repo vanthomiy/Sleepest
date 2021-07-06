@@ -175,8 +175,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             "remove" -> {
                 TransitionManager.beginDelayedTransition(transitionsContainer);
 
-                removeExpand.set(if (removeExpand.get() == View.GONE) View.VISIBLE else View.GONE)
-                removeButtonText.set(if (removeExpand.get() == View.GONE) "delete all data" else "return")
+                removeExpand.set(removeExpand.get() != true)
+                removeButtonText.set(if (removeExpand.get() == true) "delete all data" else "return")
             }
             "removeAckn" -> {
 
@@ -196,18 +196,13 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     // endregion
 
-    val designExpand = ObservableField(View.GONE)
-    val helpExpand = ObservableField(View.GONE)
-    val aboutUsExpand = ObservableField(View.GONE)
-    val permissionsExpand = ObservableField(View.GONE)
-    val dataExpand = ObservableField(View.GONE)
-    val removeExpand = ObservableField(View.GONE)
+    val actualExpand = ObservableField(-1)
+    val goneState = ObservableField(View.GONE)
+    val visibleState = ObservableField(View.VISIBLE)
+    val removeExpand = ObservableField(false)
 
-    val designRotation = ObservableField(0)
-    val helpRotation = ObservableField(0)
-    val aboutUsRotation = ObservableField(0)
-    val permissionsRotation = ObservableField(0)
-    val dataRotation = ObservableField(0)
+    val normalRotationState = ObservableField(0)
+    val rotatedState = ObservableField(180)
 
 
     fun onExpandClicked(view: View) {
@@ -218,18 +213,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
         TransitionManager.beginDelayedTransition(transitionsContainer);
 
-        designExpand.set(if (value == "0" && designExpand.get() == View.GONE) View.VISIBLE else View.GONE)
-        helpExpand.set(if (value == "1" && helpExpand.get() == View.GONE) View.VISIBLE else View.GONE)
-        aboutUsExpand.set(if (value == "2" && aboutUsExpand.get() == View.GONE) View.VISIBLE else View.GONE)
-        permissionsExpand.set(if (value == "3" && permissionsExpand.get() == View.GONE) View.VISIBLE else View.GONE)
-        dataExpand.set(if (value == "4" && dataExpand.get() == View.GONE) View.VISIBLE else View.GONE)
-        removeExpand.set(if (dataExpand.get() == View.GONE) View.GONE else removeExpand.get())
-
-        designRotation.set(if (designExpand.get() == View.GONE) 0 else 180)
-        helpRotation.set(if (helpExpand.get() == View.GONE) 0 else 180)
-        aboutUsRotation.set(if (aboutUsExpand.get() == View.GONE) 0 else 180)
-        permissionsRotation.set(if (permissionsExpand.get() == View.GONE) 0 else 180)
-        dataRotation.set(if (dataExpand.get() == View.GONE) 0 else 180)
+        actualExpand.set(if(actualExpand.get() == value.toIntOrNull()) -1 else value.toIntOrNull() )
+        removeExpand.set(if (actualExpand.get() == 4) removeExpand.get() else false)
 
     }
 
