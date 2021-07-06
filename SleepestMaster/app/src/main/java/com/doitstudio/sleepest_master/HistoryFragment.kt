@@ -229,6 +229,10 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         }
     }
 
+    /**
+     * Alter the dateOfMonth based on the button click "next" or "previous".
+     * This means move back or ahead in the analysis time.
+     */
     private fun generateDateData(direction: Boolean, range: Int) {
         val currentMonth = dateOfDiagram.month
         if (direction) {
@@ -246,12 +250,18 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
             }
         }
         tVDisplayedDay.text = dateOfDiagram.format(DateTimeFormatter.ISO_DATE)
+
+        // TODO Check if this call is still necessary and if it´s valid
         if (currentMonth != dateOfDiagram.month) {
             getSleepData()
         }
         setDiagrams()
     }
 
+    /**
+     * Sets and changes visibility of the analysis diagrams.
+     * TODO Check if this can be improved or refactored.
+     */
     private fun setDiagrams() {
         setLineChart()
         setPieChart()
@@ -300,6 +310,9 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         }
     }
 
+    /**
+     * Generates the analysis data for the daily analysis with the line chart.
+     */
     private fun generateDataLineChart() : ArrayList<Entry> {
         val entries = ArrayList<Entry>()
         var xValue = 0
@@ -322,6 +335,9 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         return entries
     }
 
+    /**
+     * Sets the line chart. Calls generateDataLineChart for diagram data.
+     */
     private fun setLineChart() {
         val vl = LineDataSet(generateDataLineChart(), "Sleep state")
         vl.setDrawValues(false)
@@ -338,6 +354,9 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         lineChart.animateX(500)
     }
 
+    /**
+     * Generates the analysis data for the daily analysis with the pie chart.
+     */
     private fun generateDataPieChart() : ArrayList<PieEntry> {
         val entries = ArrayList<PieEntry>()
 
@@ -364,6 +383,9 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         return entries
     }
 
+    /**
+     * Sets the pie chart. Calls generateDataPieChart for diagram data.
+     */
     private fun setPieChart() {
         val listColors = ArrayList<Int>()
         listColors.add(resources.getColor(R.color.black))
@@ -385,6 +407,9 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         pieChart.animateY(1000, Easing.EaseInOutQuad)
     }
 
+    /**
+     * Generates the analysis data for the weekly analysis with the bar chart.
+     */
     private fun generateDataBarChart(): Triple<ArrayList<BarEntry>, List<Int>, Int> { //ArrayList<BarEntry> {
         val entries = ArrayList<BarEntry>()
         val xAxisLabels = mutableListOf<Int>()
@@ -433,6 +458,9 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         return Triple(entries, xAxisLabels, maxSleepTime)
     }
 
+    /**
+     * Sets the bar chart. Calls generateDataBarChart for diagram data.
+     */
     private fun setBarChart() { //http://developine.com/android-grouped-stacked-bar-chart-using-mpchart-kotlin/
         val diagramData = generateDataBarChart()
 
