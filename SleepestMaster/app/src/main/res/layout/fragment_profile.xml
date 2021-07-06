@@ -277,7 +277,7 @@
                             android:textColor="@color/tertiary_text_color"
 
                             android:tag="importantSettings"
-                            android:onClick="@{profileViewModel::onHelpClicked}">
+                            android:id="@+id/btnImportantSettings">
                         </androidx.appcompat.widget.AppCompatButton>
 
                     </LinearLayout>
@@ -768,9 +768,6 @@
                         android:text="@string/profile_about_us"/>
 
                 </LinearLayout>
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"></FrameLayout>
 
                 <TextView
                     android:id="@+id/test_text"
@@ -781,6 +778,12 @@
                     android:textSize="@dimen/headerSize"
                     android:layout_gravity="center_horizontal"
                     android:textColor="@color/primary_text_color"/>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"></FrameLayout>
+
+
 
 
             </LinearLayout>

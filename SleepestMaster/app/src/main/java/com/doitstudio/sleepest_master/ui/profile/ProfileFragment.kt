@@ -15,8 +15,10 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.doitstudio.sleepest_master.DontKillMyAppFragment
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.databinding.FragmentProfileBinding
+import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage
 import com.doitstudio.sleepest_master.model.data.export.UserSleepExportData
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
@@ -78,6 +80,11 @@ class ProfileFragment : Fragment() {
         }
         binding.exportButton.setOnClickListener {
             onDataClicked(it)
+        }
+        binding.btnImportantSettings.setOnClickListener() {
+            //DontKillMyAppFragment.show(parentFragment.activity)
+            val calendar = Calendar.getInstance()
+            AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)+2, actualContext, AlarmReceiverUsage.DISABLE_ALARM)
         }
 
         viewModel.actualExpand.set(if (caseOfEntrie == 1) 0 else -1)
@@ -155,8 +162,13 @@ class ProfileFragment : Fragment() {
         )},${pref.getInt("minute", 0)}
             
             """.trimIndent()
+        pref = actualContext.getSharedPreferences("BootTime1", 0)
+        val textBooReceiver1= """
+            Last Boot: ${pref.getInt("hour",0 )},${pref.getInt("minute", 0)}
+            
+            """.trimIndent()
 
-        var textGesamt = textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation + textCalc1 + textCalc2 + textAlarmReceiver + textSleepTime + textStopException + textAlarmReceiver1
+        var textGesamt = textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation + textCalc1 + textCalc2 + textAlarmReceiver + textSleepTime + textBooReceiver1 + textStopException + textAlarmReceiver1
 
 
         binding.testText.text = textGesamt
