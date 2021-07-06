@@ -33,29 +33,75 @@ import kotlin.collections.ArrayList
 
 class HistoryFragment(val applicationContext: Context) : Fragment() {
 
+    // region variable declarations
+    /** TODO Description */
     private lateinit var sleepDbRepository: DatabaseRepository
+
+    /** Used for access suspend functions and database. */
     private val scope: CoroutineScope = MainScope()
+
+    /** TODO Description */
     private val dbDatabase by lazy { SleepDatabase.getDatabase(applicationContext) }
 
+    /** Weekly sleep analysis (Sleep phases) */
     private lateinit var barChart: BarChart
+
+    /** Daily sleep analysis (Sleep phases) */
     private lateinit var lineChart: LineChart
+
+    /** Daily sleep analysis */
     private lateinit var pieChart: PieChart
+
+    /** Displays the current analysis day */
     private lateinit var tVDisplayedDay: TextView
+
+    /** Pops up if no sleep analysis data is available */
     private lateinit var tVNoDataAvailable: TextView
+
+    /** Switch to day analysis */
     private lateinit var btnSleepAnalysisDay : Button
+
+    /** Switch to week analysis */
     private lateinit var btnSleepAnalysisWeek : Button
+
+    /** Switch to month analysis */
     private lateinit var btnSleepAnalysisMonth : Button
-    private lateinit var btnSleepAnalysisPreviousDay : Button
-    private lateinit var btnSleepAnalysisNextDay : Button
+
+    /** Move into the past in time (analysis) */
+    private lateinit var btnSleepAnalysisPrevious : Button
+
+    /** Move ahead in time (analysis) */
+    private lateinit var btnSleepAnalysisNext : Button
+
+    /** Contains the daily analysis */
     private lateinit var sVSleepAnalysisDay : ScrollView
+
+    /** Contains the weekly analysis */
     private lateinit var sVSleepAnalysisWeek : ScrollView
+
+    /** Contains the monthly analysis */
     private lateinit var sVSleepAnalysisMonth : ScrollView
+
+    /** Contains all sleep session ids which are loaded */
     private lateinit var sleepSessionIDs : MutableSet<Int>
+
+    /** Int: Sleep session id, Pair0: List of the sessions raw api data for each id, Pair1: Sleep duration of the session */
+    // TODO Check if the Pair[1]: Int ist still in use
     private lateinit var sleepSessionsRawData : MutableMap<Int, Pair<List<SleepApiRawDataEntity>, Int>>
+
+    /** Int: Sleep session id, UserSleepSessionEntity: Sleep session corresponding to id */
+    // TODO Check if sleepSessionsRawData and sleepSessionIDs can be combined
     private lateinit var sleepSessionData : MutableMap<Int, UserSleepSessionEntity>
+
+    /** Analysis date */
     private var dateOfDiagram  = LocalDate.now() //of(2021, 3, 30) //now()
+
+    /** Analysis range */
     private var currentAnalysisRange = 0 // Day = 0, Week = 1, Month = 2
+
+    /** Maintains the visibility of the diagrams */
     private var diagramVisibility = false
+    //endregion
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,6 +114,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //region variable initializations
         barChart = view.findViewById(R.id.barChart_sleepAnalysisWeek)
         lineChart = view.findViewById(R.id.lineChart_sleepAnalysisDay)
         pieChart = view.findViewById(R.id.pieChart_sleepAnalysisDay)
@@ -76,17 +123,17 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         btnSleepAnalysisDay = view.findViewById(R.id.btn_SleepAnalysisDay)
         btnSleepAnalysisWeek = view.findViewById(R.id.btn_SleepAnalysisWeek)
         btnSleepAnalysisMonth = view.findViewById(R.id.btn_SleepAnalysisMonth)
-        btnSleepAnalysisPreviousDay = view.findViewById(R.id.btn_SleepAnalysisPreviousDay)
-        btnSleepAnalysisNextDay = view.findViewById(R.id.btn_SleepAnalysisNextDay)
+        btnSleepAnalysisPrevious = view.findViewById(R.id.btn_SleepAnalysisPreviousDay)
+        btnSleepAnalysisNext = view.findViewById(R.id.btn_SleepAnalysisNextDay)
         sVSleepAnalysisDay = view.findViewById(R.id.sV_sleepAnalysisChartsDays)
         sVSleepAnalysisWeek = view.findViewById(R.id.sV_sleepAnalysisChartsWeek)
         sVSleepAnalysisMonth = view.findViewById(R.id.sV_sleepAnalysisChartsMonth)
+        tVDisplayedDay.text = dateOfDiagram.format(DateTimeFormatter.ISO_DATE)
 
         sleepSessionIDs = mutableSetOf()
         sleepSessionsRawData = mutableMapOf()
         sleepSessionData = mutableMapOf()
-
-        tVDisplayedDay.text = dateOfDiagram.format(DateTimeFormatter.ISO_DATE)
+        //endregion
 
         tVDisplayedDay.setOnClickListener {
             dateOfDiagram = LocalDate.now()
@@ -109,7 +156,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
             setDiagrams()
         }
 
-        btnSleepAnalysisPreviousDay.setOnClickListener {
+        btnSleepAnalysisPrevious.setOnClickListener {
             when (currentAnalysisRange) { // Move back in time
                 0 -> generateDateData(false, 0) // Day
                 1 -> generateDateData(false, 1) // Week
@@ -117,7 +164,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
             }
         }
 
-        btnSleepAnalysisNextDay.setOnClickListener {
+        btnSleepAnalysisNext.setOnClickListener {
             when (currentAnalysisRange) { // Move ahead in time
                 0 -> generateDateData(true, 0) // Day
                 1 -> generateDateData(true, 1) // Week
@@ -136,13 +183,19 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         setDiagrams()
     }
 
+    /** Accesses the database and gets the required sleep session data for the current analysis range */
     private fun getSleepData() {
         val ids = mutableSetOf<Int>()
-        val beginOfMonth = dateOfDiagram.minusDays((dateOfDiagram.dayOfMonth - 1).toLong())
         var numberDaysPerMonth = dateOfDiagram.lengthOfMonth()
         var date = 1
+
+        // TODO Refactor and combine both for loops
+        // Get all ids for the current dateOfDiagram month
         for (day in 1..numberDaysPerMonth) {
-            ids.add(UserSleepSessionEntity.getIdByDateTime(LocalDate.of(dateOfDiagram.year, dateOfDiagram.month, date)))
+            ids.add(UserSleepSessionEntity.getIdByDateTime(LocalDate.of(
+                dateOfDiagram.year,
+                dateOfDiagram.month,
+                date)))
             date += 1
         }
 
@@ -157,19 +210,19 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
             date += 1
         }
 
+        // Get raw api data for ever sleep session id
         scope.launch {
             for (id in ids) {
                 val session = sleepDbRepository.getSleepSessionById(id).first().firstOrNull()
                 session?.let {
-                    //sleepSessionIDs.add(id) //Use ID as Key for the day since it can be accessed via .getIdByDateTime(LocalDate.of("Day of interest"))
                     sleepSessionsRawData[id] = Pair(
                         sleepDbRepository.getSleepApiRawDataBetweenTimestamps(
                             session.sleepTimes.sleepTimeStart,
-                            session.sleepTimes.sleepTimeEnd
-                        ).first().sortedBy { x -> x.timestampSeconds },
+                            session.sleepTimes.sleepTimeEnd).first().sortedBy { x -> x.timestampSeconds },
                         session.sleepTimes.sleepDuration
                     )
 
+                    // Add the current sleep session to the map of sleep sessions
                     sleepSessionData[id] = session
                 }
             }
