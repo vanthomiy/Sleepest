@@ -197,11 +197,8 @@
                             android:entries="@{profileViewModel.languageSelections}"
                             android:selectedItemPosition="@={profileViewModel.selectedLanguage}"
                             android:onItemSelected = "@{profileViewModel::onLanguageChanged}"
-                            android:textAlignment="center"
-                            android:textSize="@dimen/valueSize"
-                            android:textColor="@color/tertiary_text_color"
+                            android:theme="@style/Spinner">
 
-                            tools:ignore="RtlCompat">
                         </Spinner>
 
 

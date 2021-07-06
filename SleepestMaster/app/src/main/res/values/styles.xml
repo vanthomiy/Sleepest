@@ -2,10 +2,14 @@
 <resources>
 
     <style name="Spinner" parent="Widget.AppCompat.Light.DropDownItem.Spinner">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/valuesHeight</item>
+        <!--item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/valuesHeight</item!-->
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
         <item name="android:textColor">@color/tertiary_text_color</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textSize">@dimen/valueSize</item>
-        <item name="android:background">@drawable/bgroundedchoosen</item>
-    </style></resources>
+        <item name="android:background">@color/primary_button_color</item>
+    </style>
+
+</resources>
