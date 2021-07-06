@@ -417,20 +417,18 @@
 
                     </FrameLayout>
 
-                    <Spinner
+                    <androidx.appcompat.widget.AppCompatSpinner
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/valuesHeight"
                         android:background="@drawable/bgroundedchoosen"
                         android:layout_gravity="start"
+                        android:theme="@style/Spinner"
                         android:entries="@{sleepViewModel.lightConditionSelections}"
                         android:selectedItemPosition="@={sleepViewModel.lightCondition}"
                         android:onItemSelected = "@{sleepViewModel::onLightConditionChanged}"
-                        android:textAlignment="center"
-                        android:textSize="@dimen/valueSize"
-                        android:textColor="@color/tertiary_text_color"
                         tools:ignore="RtlCompat">
 
-                    </Spinner>
+                    </androidx.appcompat.widget.AppCompatSpinner>
 
                 </LinearLayout>
 
@@ -496,6 +494,7 @@
                         android:layout_height="@dimen/valuesHeight"
                         android:layout_gravity="start"
                         android:theme="@style/Spinner"
+                        android:background="@drawable/bgroundedchoosen"
                         android:entries="@{sleepViewModel.phonePositionSelections}"
                         android:selectedItemPosition="@={sleepViewModel.mobilePosition}"
                         android:onItemSelected = "@{sleepViewModel::onMobilePositionChanged}">
