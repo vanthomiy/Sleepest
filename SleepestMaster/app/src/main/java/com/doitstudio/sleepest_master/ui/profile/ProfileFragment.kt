@@ -83,8 +83,8 @@ class ProfileFragment : Fragment() {
         }
         binding.btnImportantSettings.setOnClickListener() {
             //DontKillMyAppFragment.show(parentFragment.activity)
-            val calendar = Calendar.getInstance()
-            AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)+2, actualContext, AlarmReceiverUsage.DISABLE_ALARM)
+            //val calendar = Calendar.getInstance()
+            //AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)+2, actualContext, AlarmReceiverUsage.DISABLE_ALARM)
         }
 
         viewModel.actualExpand.set(if (caseOfEntrie == 1) 0 else -1)
