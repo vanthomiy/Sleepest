@@ -32,6 +32,10 @@ import java.time.Instant.ofEpochMilli
 import java.time.format.DateTimeFormatter
 import kotlin.collections.ArrayList
 
+/**
+ * Fragment which handles the sleep analysis for previous captured sleep sessions.
+ * Displayed as daily, weekly and monthly analysis charts.
+ */
 class HistoryFragment(val applicationContext: Context) : Fragment() {
 
     // region variable declarations
