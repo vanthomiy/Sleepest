@@ -41,18 +41,18 @@ class AlarmsFragment() : Fragment() {
 
     private lateinit var btnAddAlarmEntity: Button
     private var lLContainerAlarmEntities: LinearLayout? = null
-    lateinit var lLAlarmSoundSettings: LinearLayout
-    lateinit var btnExpandAlarmSoundSettings: ImageButton
-    lateinit var btnExpandAlarmSoundInformation: ImageButton
-    lateinit var fLAlarmSoundInformation: FrameLayout
-    lateinit var swAutoCancelAlarm: Switch
-    lateinit var btnChangeAlarmSound: Button
-    lateinit var btnTemporaryDisableAlarm: Button
+    private lateinit var lLAlarmSoundSettings: LinearLayout
+    private lateinit var btnExpandAlarmSoundSettings: ImageButton
+    private lateinit var btnExpandAlarmSoundInformation: ImageButton
+    private lateinit var fLAlarmSoundInformation: FrameLayout
+    private lateinit var swAutoCancelAlarm: Switch
+    private lateinit var btnChangeAlarmSound: Button
+    private lateinit var btnTemporaryDisableAlarm: Button
 
-    lateinit var allAlarms: MutableList<AlarmEntity>
-    lateinit var usedIds: MutableSet<Int>
-    lateinit var transactions: MutableMap<Int, FragmentTransaction>
-    lateinit var fragments: MutableMap<Int, AlarmInstance>
+    private lateinit var allAlarms: MutableList<AlarmEntity>
+    private lateinit var usedIds: MutableSet<Int>
+    private lateinit var transactions: MutableMap<Int, FragmentTransaction>
+    private lateinit var fragments: MutableMap<Int, AlarmInstance>
 
     private fun setupAlarms() {
         allAlarms = mutableListOf()
@@ -126,7 +126,6 @@ class AlarmsFragment() : Fragment() {
 
         ringtonePickerBuilder.addRingtoneType(RingtonePickerDialog.Builder.TYPE_ALARM)
         ringtonePickerBuilder.show()
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -158,7 +157,7 @@ class AlarmsFragment() : Fragment() {
             }
         }
 
-            /*
+        /*
         var disableNextAlarm = false
         scope.launch {
             //disableNextAlarm = repository.getNextActiveAlarm().tempDisabled //liefert Ture oder False
@@ -172,29 +171,27 @@ class AlarmsFragment() : Fragment() {
                 btnTemporaryDisableAlarm.isVisible = false
             }
         }
-         */
+        */
 
+        btnExpandAlarmSoundSettings.setOnClickListener {
+            lLAlarmSoundSettings.isVisible = !lLAlarmSoundSettings.isVisible
+        }
 
+        btnExpandAlarmSoundInformation.setOnClickListener {
+            fLAlarmSoundInformation.isVisible = !fLAlarmSoundInformation.isVisible
+        }
 
-            btnExpandAlarmSoundSettings.setOnClickListener {
-                lLAlarmSoundSettings.isVisible = !lLAlarmSoundSettings.isVisible
+        swAutoCancelAlarm.setOnClickListener {
+            scope.launch {
+                dataStoreRepository.updateEndAlarmAfterFired(swAutoCancelAlarm.isChecked)
             }
+        }
 
-            btnExpandAlarmSoundInformation.setOnClickListener {
-                fLAlarmSoundInformation.isVisible = !fLAlarmSoundInformation.isVisible
-            }
+        btnChangeAlarmSound.setOnClickListener {
+            onAlarmSoundChange(view)
+        }
 
-            swAutoCancelAlarm.setOnClickListener {
-                scope.launch {
-                    dataStoreRepository.updateEndAlarmAfterFired(swAutoCancelAlarm.isChecked)
-                }
-            }
-
-            btnChangeAlarmSound.setOnClickListener {
-                onAlarmSoundChange(view)
-            }
-
-            /*
+        /*
         btnTemporaryDisableAlarm.setOnClickListener {
             scope.launch {
                 if (disableNextAlarm) {
@@ -207,50 +204,50 @@ class AlarmsFragment() : Fragment() {
                 }
             }
         }
-         */
+        */
 
-            setupAlarms()
+        setupAlarms()
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_alarms, container, false)
+    }
+
+    private fun checkPermissions(): Boolean {
+        val notificationManager =
+            actualContext.getSystemService(AppCompatActivity.NOTIFICATION_SERVICE) as NotificationManager
+        if (!notificationManager.isNotificationPolicyAccessGranted) {
+            return false
+        } else if (!Settings.canDrawOverlays(actualContext)) {
+            return false
+        } else if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(
+                actualContext,
+                Manifest.permission.ACTIVITY_RECOGNITION
+            )
+        ) {
+            return false
         }
 
-        override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-        ): View? {
-            return inflater.inflate(R.layout.fragment_alarms, container, false)
-        }
+        return true
+    }
 
-        fun checkPermissions(): Boolean {
-            val notificationManager =
-                actualContext.getSystemService(AppCompatActivity.NOTIFICATION_SERVICE) as NotificationManager
-            if (!notificationManager.isNotificationPolicyAccessGranted) {
-                return false
-            } else if (!Settings.canDrawOverlays(actualContext)) {
-                return false
-            } else if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(
-                    actualContext,
-                    Manifest.permission.ACTIVITY_RECOGNITION
-                )
-            ) {
-                return false
-            }
+    companion object {
+        // For Singleton instantiation
+        @SuppressLint("StaticFieldLeak")
+        @Volatile
+        private var INSTANCE: AlarmsFragment? = null
 
-            return true
-        }
-
-        companion object {
-            // For Singleton instantiation
-            @SuppressLint("StaticFieldLeak")
-            @Volatile
-            private var INSTANCE: AlarmsFragment? = null
-
-            fun getAlarmFragment(): AlarmsFragment {
-                return INSTANCE ?: synchronized(this) {
-                    val instance = AlarmsFragment()
-                    INSTANCE = instance
-                    instance
-                }
+        fun getAlarmFragment(): AlarmsFragment {
+            return INSTANCE ?: synchronized(this) {
+                val instance = AlarmsFragment()
+                INSTANCE = instance
+                instance
             }
         }
     }
+}
 
