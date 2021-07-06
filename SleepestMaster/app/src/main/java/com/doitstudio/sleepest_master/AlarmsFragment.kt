@@ -159,21 +159,18 @@ class AlarmsFragment() : Fragment() {
             }
         }
 
-            /*
-        var disableNextAlarm = false
         scope.launch {
-            //disableNextAlarm = repository.getNextActiveAlarm().tempDisabled //liefert Ture oder False
-            if (disableNextAlarm) {
-                btnTemporaryDisableAlarm.text = "Reactivate next alarm"
-            }
-            else if (!disableNextAlarm) {
-                btnTemporaryDisableAlarm.text = "Disable next alarm"
-            }
-            else {
+            if (repository.getNextActiveAlarm() != null) {
+                if (repository.getNextActiveAlarm()!!.tempDisabled) {
+                    btnTemporaryDisableAlarm.text = "Reactivate next alarm"
+                } else {
+                    btnTemporaryDisableAlarm.text = "Disable next alarm"
+                }
+            } else {
                 btnTemporaryDisableAlarm.isVisible = false
             }
         }
-         */
+
 
 
 
@@ -195,20 +192,23 @@ class AlarmsFragment() : Fragment() {
                 onAlarmSoundChange(view)
             }
 
-            /*
+
         btnTemporaryDisableAlarm.setOnClickListener {
             scope.launch {
-                if (disableNextAlarm) {
-                    repository.updateAlarmTempDisabled()
-                    btnTemporaryDisableAlarm.text = "Disable next alarm"
+                if (repository.getNextActiveAlarm() != null) {
+                    if (repository.getNextActiveAlarm()!!.tempDisabled) {
+                        repository.updateAlarmTempDisabled(false, repository.getNextActiveAlarm()!!.id)
+                        btnTemporaryDisableAlarm.text = "Reactivate next alarm"
+                    }
+                    else  {
+                        repository.updateAlarmTempDisabled(true ,repository.getNextActiveAlarm()!!.id)
+                        btnTemporaryDisableAlarm.text = "Disable next alarm"
+                    }
                 }
-                else  {
-                    repository.updateAlarmTempDisabled()
-                    btnTemporaryDisableAlarm.text = "Reactivate next alarm"
-                }
+
             }
         }
-         */
+
 
             setupAlarms()
         }

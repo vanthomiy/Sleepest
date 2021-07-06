@@ -223,7 +223,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                     else if(!dataStoreRepository.backgroundServiceFlow.first().isForegroundActive && !dataBaseRepository.getNextActiveAlarm()!!.wasFired && !dataBaseRepository.getNextActiveAlarm()!!.tempDisabled
-                            && ((LocalTime.now().toSecondOfDay() < dataBaseRepository.getNextActiveAlarm()!!.actualWakeup) || (dataStoreRepository.getSleepTimeBegin() < LocalTime.now().toSecondOfDay()))){
+                        && !dataBaseRepository.getNextActiveAlarm()!!.tempDisabled && ((LocalTime.now().toSecondOfDay() < dataBaseRepository.getNextActiveAlarm()!!.actualWakeup) || (dataStoreRepository.getSleepTimeBegin() < LocalTime.now().toSecondOfDay()))){
                         // Is empty..
                         // We need to check if foreground is active or not... if active we have to stop it from here
                         // if already inside sleeptime
@@ -247,7 +247,7 @@ class MainActivity : AppCompatActivity() {
                     // alarm should be active else set active
                     if(!dataStoreRepository.backgroundServiceFlow.first().isForegroundActive){
 
-                        if (!dataBaseRepository.getNextActiveAlarm()!!.wasFired ||
+                        if (!dataBaseRepository.getNextActiveAlarm()!!.wasFired && !dataBaseRepository.getNextActiveAlarm()!!.tempDisabled ||
                                 ((LocalTime.now().toSecondOfDay() > dataBaseRepository.getNextActiveAlarm()!!.actualWakeup) &&
                                         (dataStoreRepository.getSleepTimeBegin() < LocalTime.now().toSecondOfDay())) && !dataBaseRepository.getNextActiveAlarm()!!.tempDisabled) {
                             ForegroundService.startOrStopForegroundService(

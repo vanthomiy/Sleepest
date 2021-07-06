@@ -34,7 +34,7 @@ class BootReceiver : BroadcastReceiver() {
 
                 scope.launch {
                     if(dataStoreRepository.backgroundServiceFlow.first().isForegroundActive && dataBaseRepository.getNextActiveAlarm() != null) {
-                        if (!dataBaseRepository.getNextActiveAlarm()!!.wasFired && ((LocalTime.now().toSecondOfDay() < dataBaseRepository.getNextActiveAlarm()!!.actualWakeup) ||
+                        if (!dataBaseRepository.getNextActiveAlarm()!!.wasFired && !dataBaseRepository.getNextActiveAlarm()!!.tempDisabled && ((LocalTime.now().toSecondOfDay() < dataBaseRepository.getNextActiveAlarm()!!.actualWakeup) ||
                                     (dataStoreRepository.getSleepTimeBegin() < LocalTime.now().toSecondOfDay())) && dataStoreRepository.isInSleepTime() && (dataBaseRepository.getNextActiveAlarm() != null)) {
                             ForegroundService.startOrStopForegroundService(Actions.START, context.applicationContext)
                             val calendarFirstCalc = AlarmReceiver.getAlarmDate(dataBaseRepository.getNextActiveAlarm()!!.wakeupEarly - 1800)
@@ -50,7 +50,7 @@ class BootReceiver : BroadcastReceiver() {
                             }
                         }
                     } else if (!dataStoreRepository.backgroundServiceFlow.first().isForegroundActive && dataBaseRepository.getNextActiveAlarm() != null) {
-                        if (!dataBaseRepository.getNextActiveAlarm()!!.wasFired && ((LocalTime.now().toSecondOfDay() < dataBaseRepository.getNextActiveAlarm()!!.actualWakeup) ||
+                        if (!dataBaseRepository.getNextActiveAlarm()!!.wasFired && !dataBaseRepository.getNextActiveAlarm()!!.tempDisabled && ((LocalTime.now().toSecondOfDay() < dataBaseRepository.getNextActiveAlarm()!!.actualWakeup) ||
                                     (dataStoreRepository.getSleepTimeBegin() < LocalTime.now().toSecondOfDay())) && dataStoreRepository.isInSleepTime() && (dataBaseRepository.getNextActiveAlarm() != null)) {
                             ForegroundService.startOrStopForegroundService(Actions.START, context.applicationContext)
                             val calendarFirstCalc = AlarmReceiver.getAlarmDate(dataBaseRepository.getNextActiveAlarm()!!.wakeupEarly - 1800)
