@@ -1,4 +1,4 @@
-package com.doitstudio.Activityest_master.sleepapi
+package com.doitstudio.sleepest_master.sleepapi
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -6,13 +6,9 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import androidx.core.content.ContextCompat
-import com.doitstudio.Activityest_master.Activityapi.ActivityReciver.Companion.createActivityReceiverPendingIntent
-import com.doitstudio.Activityest_master.Activityapi.ActivityTransitionReciver
-import com.doitstudio.Activityest_master.sleepapi.ActivityTransitionHandler.Companion.getHandler
+import com.doitstudio.sleepest_master.sleepapi.ActivityTransitionHandler.Companion.getHandler
 import com.doitstudio.sleepest_master.MainApplication
-import com.doitstudio.sleepest_master.sleepapi.ActivityTransitionUtil
 import com.google.android.gms.location.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope

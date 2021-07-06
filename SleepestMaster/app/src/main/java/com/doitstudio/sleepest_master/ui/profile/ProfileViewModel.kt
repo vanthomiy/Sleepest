@@ -224,6 +224,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     init {
 
         scope.launch {
+
             var settingsParams = dataStoreRepository.settingsDataFlow.first()
             languageSelections.addAll(arrayListOf<String>("Deutsch", "Englisch"))
 
@@ -231,7 +232,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             autoDarkMode.set(settingsParams.designAutoDarkMode)
             showDarkModeSetting.set(if (settingsParams.designAutoDarkMode) View.GONE else View.VISIBLE)
             selectedLanguage.set(settingsParams.designLanguage)
-
         }
 
         checkPermissions()
