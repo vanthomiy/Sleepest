@@ -1,4 +1,4 @@
-package com.doitstudio.sleepest_master
+package com.doitstudio.sleepest_master.ui.alarm
 
 import android.app.AlertDialog
 import android.content.Context
@@ -12,8 +12,9 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.asLiveData
 import com.appyvet.rangebar.RangeBar
+import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity
-import com.github.mikephil.charting.charts.BarChart
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first

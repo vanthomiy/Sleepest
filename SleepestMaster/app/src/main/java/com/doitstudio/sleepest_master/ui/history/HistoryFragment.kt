@@ -1,4 +1,4 @@
-package com.doitstudio.sleepest_master
+package com.doitstudio.sleepest_master.ui.history
 
 import android.content.Context
 import android.graphics.Color
@@ -11,6 +11,7 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.storage.db.*
 import com.github.mikephil.charting.animation.Easing

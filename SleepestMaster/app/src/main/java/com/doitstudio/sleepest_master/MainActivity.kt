@@ -20,6 +20,8 @@ import com.doitstudio.sleepest_master.model.data.Actions
 import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
+import com.doitstudio.sleepest_master.ui.alarm.AlarmsFragment
+import com.doitstudio.sleepest_master.ui.history.HistoryFragment
 import com.doitstudio.sleepest_master.ui.profile.ProfileFragment
 import com.doitstudio.sleepest_master.ui.sleep.SleepFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
