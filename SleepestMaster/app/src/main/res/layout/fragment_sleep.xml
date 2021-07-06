@@ -695,7 +695,7 @@
                                 android:text="@string/sleep_trackactivity_header"
                                 />
 
-                            <Switch
+                            <androidx.appcompat.widget.SwitchCompat
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_gravity="end"
@@ -728,7 +728,7 @@
                                 android:text="@string/sleep_trackactivity_include_in_wakeup"
                                 />
 
-                            <Switch
+                            <androidx.appcompat.widget.SwitchCompat
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_gravity="end"
@@ -837,7 +837,7 @@
                                 android:text="@string/sleep_alarm_auto_cancel_alarm"
                                 />
 
-                            <Switch
+                            <androidx.appcompat.widget.SwitchCompat
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_gravity="end"
@@ -883,7 +883,7 @@
 
                     </LinearLayout>
 
-                    <Spinner
+                    <androidx.appcompat.widget.AppCompatSpinner
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/valuesHeight"
                         android:background="@drawable/bgroundedchoosen"

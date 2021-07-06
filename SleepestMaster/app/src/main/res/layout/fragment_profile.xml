@@ -150,7 +150,7 @@
                                     android:text="@string/profile_auto_dark_mode"
                                     />
 
-                                <Switch
+                                <androidx.appcompat.widget.SwitchCompat
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     android:layout_gravity="end"
@@ -187,7 +187,7 @@
                             android:textColor="@color/primary_text_color"
                             android:text="@string/profile_language"/>
 
-                        <Spinner
+                        <androidx.appcompat.widget.AppCompatSpinner
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
                             android:background="@drawable/bgroundedchoosen"
@@ -199,7 +199,7 @@
                             android:onItemSelected = "@{profileViewModel::onLanguageChanged}"
                             android:theme="@style/Spinner">
 
-                        </Spinner>
+                        </androidx.appcompat.widget.AppCompatSpinner>
 
 
                     </LinearLayout>
