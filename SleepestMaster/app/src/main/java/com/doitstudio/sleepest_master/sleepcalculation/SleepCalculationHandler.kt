@@ -125,16 +125,15 @@ class SleepCalculationHandler(val context: Context) {
         if(userActivity.isEmpty())
             return ActivityOnDay.NONE
 
-        userActivity.forEach{
-            if(it.activity == DetectedActivity.WALKING || it.activity == DetectedActivity.ON_FOOT){
+        for (i in userActivity.indices-1){
+            if(userActivity[i].activity == DetectedActivity.WALKING || userActivity[i].activity == DetectedActivity.ON_FOOT){
 
-                activityCount += 1 * it.duration
+                activityCount += (userActivity[i+1].timestampSeconds - userActivity[i].timestampSeconds) / 60
 
             }
-            else if(it.activity == DetectedActivity.ON_BICYCLE || it.activity == DetectedActivity.RUNNING){
+            else if(userActivity[i].activity == DetectedActivity.ON_BICYCLE || userActivity[i].activity == DetectedActivity.RUNNING){
 
-                activityCount += 3 * it.duration
-
+                activityCount += 3 * (userActivity[i+1].timestampSeconds - userActivity[i].timestampSeconds) / 60
             }
         }
 
@@ -150,7 +149,6 @@ class SleepCalculationHandler(val context: Context) {
             activityCount > 45 -> ActivityOnDay.SMALLACTIVITY
             else -> ActivityOnDay.NOACTIVITY
         }
-
     }
 
     /**

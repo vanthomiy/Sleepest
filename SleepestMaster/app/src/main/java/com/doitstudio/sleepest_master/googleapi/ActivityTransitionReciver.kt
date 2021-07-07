@@ -34,8 +34,7 @@ class ActivityTransitionReciver : BroadcastReceiver() {
                         convertedToEntityVersion.add(
                             ActivityApiRawDataEntity(
                                 LocalDateTime.now().toEpochSecond(ZoneOffset.UTC).toInt(),
-                                transition.activityType,
-                                (transition.elapsedRealTimeNanos / 60000000000).toInt()
+                                transition.activityType
                             )
                         )
 
@@ -43,9 +42,7 @@ class ActivityTransitionReciver : BroadcastReceiver() {
 
                     // Update the raw Activity api data
                     repository.insertActivityApiRawData(convertedToEntityVersion)
-                    Toast.makeText(context, "Neue Transition gefunden: " + it.transitionEvents.count(), Toast.LENGTH_LONG
 
-                    ).show()
                     // update the amount of data that is beeing recived
                     dataStoreRepository.updateActivityApiValuesAmount(
                         it.transitionEvents.count()

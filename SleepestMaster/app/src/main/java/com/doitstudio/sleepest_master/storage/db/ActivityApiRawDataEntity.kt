@@ -16,6 +16,4 @@ data class ActivityApiRawDataEntity(
         @ColumnInfo(name = "activity")
         var activity: Int = DetectedActivity.UNKNOWN,
 
-        @ColumnInfo(name = "duration")
-        var duration: Int = 0,
 )
