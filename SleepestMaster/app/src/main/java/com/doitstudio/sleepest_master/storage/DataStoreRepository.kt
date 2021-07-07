@@ -2,20 +2,14 @@ package com.doitstudio.sleepest_master.storage
 
 import android.content.Context
 import androidx.datastore.createDataStore
-import androidx.datastore.preferences.createDataStore
 import com.doitstudio.sleepest_master.*
-import com.doitstudio.sleepest_master.model.data.LightConditions
 
-import com.doitstudio.sleepest_master.model.data.MobilePosition
-import com.doitstudio.sleepest_master.model.data.MobileUseFrequency
 import com.doitstudio.sleepest_master.storage.datastorage.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.time.LocalDateTime
 import java.time.LocalTime
 
 class DataStoreRepository(context: Context) {
@@ -75,9 +69,7 @@ class DataStoreRepository(context: Context) {
 
         val overTwoDays = times.sleepTimeStart > times.sleepTimeEnd
 
-        val bla = ((overTwoDays && (seconds in times.sleepTimeStart..maxTime ||  seconds in 0 .. times.sleepTimeEnd)) || (!overTwoDays && seconds in times.sleepTimeStart..times.sleepTimeEnd))
-
-        return bla
+        return ((overTwoDays && (seconds in times.sleepTimeStart..maxTime ||  seconds in 0 .. times.sleepTimeEnd)) || (!overTwoDays && seconds in times.sleepTimeStart..times.sleepTimeEnd))
     }
 
     fun getSleepTimeBeginJob() : Int = runBlocking{

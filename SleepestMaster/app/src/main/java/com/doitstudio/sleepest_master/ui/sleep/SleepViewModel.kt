@@ -2,9 +2,6 @@ package com.doitstudio.sleepest_master.ui.sleep
 
 import android.app.Application
 import android.app.TimePickerDialog
-import android.content.res.ColorStateList
-import android.graphics.Color
-import android.net.Uri
 import android.transition.TransitionManager
 import android.view.MotionEvent
 import android.view.View
@@ -13,19 +10,16 @@ import android.widget.*
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.widget.NestedScrollView
-import androidx.databinding.Observable
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
-import com.doitstudio.Activityest_master.sleepapi.ActivityHandler
-import com.doitstudio.Activityest_master.sleepapi.ActivityTransitionHandler
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.model.data.LightConditions
 import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.MobileUseFrequency
+import com.doitstudio.sleepest_master.googleapi.ActivityTransitionHandler
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
-import com.kevalpatel.ringtonepicker.RingtonePickerDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -264,12 +258,10 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
             activityTrackingView.set(if (it) View.VISIBLE else View.GONE)
 
             if(it)
-                ActivityHandler.getHandler(getApplication()).startActivityHandler()
+                ActivityTransitionHandler.getHandler(getApplication()).startActivityHandler()
             else
-                ActivityHandler.getHandler(getApplication()).stopActivityHandler()
+                ActivityTransitionHandler.getHandler(getApplication()).stopActivityHandler()
         }
-
-
     }
 
     fun onActivityInCalcChanged(buttonView: View) {
@@ -420,6 +412,10 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
             alarmArt.set(sleepParams.alarmArt)
 
             sleepCalculateFactorCalculation()
+
+            //var activity = dataStoreRepository.activityApiDataFlow.first()
+            //val amount =  activity.activityApiValuesAmount
+            //sleepScoreValue.set(amount.toString())
 
 
         }

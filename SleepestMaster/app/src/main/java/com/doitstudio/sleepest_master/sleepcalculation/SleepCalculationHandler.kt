@@ -183,7 +183,7 @@ class SleepCalculationHandler(val context: Context) {
 
 
     /**
-     * Checks wheter the phone is on bed or on table. Error returns [MobilePosition.UNIDENTIFIED]
+     * Checks whether the phone is on bed or on table. Error returns [MobilePosition.UNIDENTIFIED]
      */
     fun checkPhonePosition(sleepApiRawDataEntity:List<SleepApiRawDataEntity>) : MobilePosition {
 
