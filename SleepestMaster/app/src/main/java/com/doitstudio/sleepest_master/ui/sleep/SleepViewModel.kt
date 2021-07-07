@@ -345,7 +345,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         val endFactor = factor / 6
         val score = 50 + endFactor * 50
 
-        //sleepScoreValue.set(score.toInt().toString())
+        sleepScoreValue.set(score.toInt().toString())
 
         sleepScoreText.set(when {
             score < 60 -> {
@@ -413,9 +413,9 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
             sleepCalculateFactorCalculation()
 
-            var activity = dataStoreRepository.activityApiDataFlow.first()
-            val amount =  activity.activityApiValuesAmount
-            sleepScoreValue.set(amount.toString())
+            //var activity = dataStoreRepository.activityApiDataFlow.first()
+            //val amount =  activity.activityApiValuesAmount
+            //sleepScoreValue.set(amount.toString())
 
 
         }
