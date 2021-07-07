@@ -297,6 +297,7 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
         usedIds = mutableSetOf()
         //endregion
 
+        // region on click listeners
         tViewAlarmName.setOnClickListener {
             viewExtendedAlarmSettings.isVisible = !viewExtendedAlarmSettings.isVisible
             tViewActiveWeekdays.isVisible = !tViewActiveWeekdays.isVisible
@@ -325,11 +326,14 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
         btnDeleteAlarmInstance.setOnClickListener {
             deleteAlarmEntity()
         }
+        //endregion
 
+        // Get the alarm settings for the alarm entity from the database
         scope.launch {
             setupAlarmSettings()
         }
 
+        // Seekbar listener for changes on the bar
         seekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(sBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 val progressTemp = progress*0.5 + 5
@@ -356,6 +360,7 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
             }
         })
 
+        // Rangebar listener for changes on the bar
         rangeBar.setOnRangeBarChangeListener { _, _, _, _, _ ->
             var minutesLeft = 0
             var minutesRight = 0

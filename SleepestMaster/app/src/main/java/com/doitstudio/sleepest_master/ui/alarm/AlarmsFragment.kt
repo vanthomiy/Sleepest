@@ -31,30 +31,64 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /**
- * A fragment representing a list of Items.
+ * A fragment which contains the alarm instances.
  */
-class AlarmsFragment() : Fragment() {
+class AlarmsFragment : Fragment() {
 
+    /**  */
     private val repository by lazy { (actualContext as MainApplication).dataBaseRepository }
+
+    /**  */
     private val dataStoreRepository by lazy { (actualContext as MainApplication).dataStoreRepository }
+
+    /**  */
     private val scope: CoroutineScope = MainScope()
+
+    /**  */
     private val actualContext: Context by lazy { requireActivity().applicationContext }
 
+    /** Button which lets the user create a new [AlarmInstance]. */
     private lateinit var btnAddAlarmEntity: Button
+
+    /**  */
     private var lLContainerAlarmEntities: LinearLayout? = null
+
+    /** [LinearLayout] which contains the alarm sound settings for all alarm entities. */
     private lateinit var lLAlarmSoundSettings: LinearLayout
+
+    /** [ImageButton] which maintains the expansion of the alarm sound settings. */
     private lateinit var btnExpandAlarmSoundSettings: ImageButton
+
+    /** [ImageButton] which maintains the expansion of the further information about the alarm sound settings. */
     private lateinit var btnExpandAlarmSoundInformation: ImageButton
+
+    /**  */
     private lateinit var fLAlarmSoundInformation: FrameLayout
+
+    /**  */
     private lateinit var swAutoCancelAlarm: Switch
+
+    /** [Button] which lets the user alter the alarm sound. */
     private lateinit var btnChangeAlarmSound: Button
+
+    /**  */
     private lateinit var btnTemporaryDisableAlarm: Button
 
+    /**  */
     private lateinit var allAlarms: MutableList<AlarmEntity>
+
+    /**  */
     private lateinit var usedIds: MutableSet<Int>
+
+    /**  */
     private lateinit var transactions: MutableMap<Int, FragmentTransaction>
+
+    /**  */
     private lateinit var fragments: MutableMap<Int, AlarmInstance>
 
+    /**
+     *
+     */
     private fun setupAlarms() {
         allAlarms = mutableListOf()
         scope.launch {
@@ -67,6 +101,9 @@ class AlarmsFragment() : Fragment() {
         }
     }
 
+    /**
+     *
+     */
     private fun onAddAlarm(view: View) {
         var newId = 0
         for (id in usedIds.indices) {
@@ -81,12 +118,18 @@ class AlarmsFragment() : Fragment() {
         usedIds.add(newId)
     }
 
+    /**
+     *
+     */
     private fun addAlarmEntity(context: Context, alarmId: Int) {
         transactions[alarmId] = childFragmentManager.beginTransaction()
         fragments[alarmId] = AlarmInstance(context, alarmId)
         transactions[alarmId]?.add(R.id.lL_containerAlarmEntities, fragments[alarmId]!!)?.commit()
     }
 
+    /**
+     *
+     */
     fun removeAlarmEntity(alarmId: Int) {
         childFragmentManager.beginTransaction().remove(fragments[alarmId]!!).commit()
         transactions.remove(alarmId)
@@ -94,6 +137,9 @@ class AlarmsFragment() : Fragment() {
         usedIds.remove(alarmId)
     }
 
+    /**
+     *
+     */
     private fun onAlarmSoundChange(view: View) {
         //check if audio volume is 0
 
@@ -129,6 +175,9 @@ class AlarmsFragment() : Fragment() {
         ringtonePickerBuilder.show()
     }
 
+    /**
+     *
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         INSTANCE = this
@@ -218,6 +267,9 @@ class AlarmsFragment() : Fragment() {
         return inflater.inflate(R.layout.fragment_alarms, container, false)
     }
 
+    /**
+     *
+     */
     private fun checkPermissions(): Boolean {
         val notificationManager =
             actualContext.getSystemService(AppCompatActivity.NOTIFICATION_SERVICE) as NotificationManager
@@ -236,6 +288,9 @@ class AlarmsFragment() : Fragment() {
         return true
     }
 
+    /**
+     *
+     */
     companion object {
         // For Singleton instantiation
         @SuppressLint("StaticFieldLeak")
