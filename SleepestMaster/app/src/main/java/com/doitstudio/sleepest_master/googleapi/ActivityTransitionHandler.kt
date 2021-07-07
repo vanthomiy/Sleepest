@@ -65,60 +65,6 @@ class ActivityTransitionHandler(private val context: Context) {
      */
     @SuppressLint("MissingPermission")
     private fun subscribeToActivitySegmentUpdates() {
-        /*if (activityRecognitionPermissionApproved(context)) {
-
-            val request = ActivityTransitionRequest(createActivites())
-
-            val task =
-                    ActivityRecognition.getClient(context).requestActivityTransitionUpdates(
-                            //1800000, // 1/2 stunden
-                            request,
-                            pendingIntent
-                    )
-
-            task.addOnSuccessListener {
-                scope.launch {
-                    dataStoreRepository.updateActivityIsSubscribed(true)
-                    dataStoreRepository.updateActivitySubscribeFailed(false)
-                }            }
-            task.addOnFailureListener { exception ->
-                scope.launch {
-                    dataStoreRepository.updateActivityIsSubscribed(false)
-                    dataStoreRepository.updateActivitySubscribeFailed(true)
-                }
-            }
-        } else {
-            scope.launch {
-                dataStoreRepository.updateActivityPermissionRemovedError(true)
-                dataStoreRepository.updateActivityPermissionActive(false)
-            }
-        }*/
-
-        /*
-        if (activityRecognitionPermissionApproved(context)) {
-            client
-                    .requestActivityTransitionUpdates(
-                            ActivityTransitionUtil.getActivityTransitionRequest(),
-                            getPendingIntent()
-                    )
-                    .addOnSuccessListener {
-                        scope.launch {
-                            dataStoreRepository.updateActivityIsSubscribed(true)
-                            dataStoreRepository.updateActivitySubscribeFailed(false)
-                        }                   }
-                    .addOnFailureListener { e: Exception ->
-                        scope.launch {
-                            dataStoreRepository.updateActivityIsSubscribed(false)
-                            dataStoreRepository.updateActivitySubscribeFailed(true)
-                        }                   }
-
-        } else {
-            scope.launch {
-                dataStoreRepository.updateActivityPermissionRemovedError(true)
-                dataStoreRepository.updateActivityPermissionActive(false)
-            }
-        }*/
-
         if(activityRecognitionPermissionApproved(context)){
 
             val request = ActivityTransitionUtil.getActivityTransitionRequest()
