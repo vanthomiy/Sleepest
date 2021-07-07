@@ -1,4 +1,4 @@
-package com.doitstudio.sleepest_master.sleepapi
+package com.doitstudio.sleepest_master.googleapi
 
 import android.app.PendingIntent
 import android.content.BroadcastReceiver

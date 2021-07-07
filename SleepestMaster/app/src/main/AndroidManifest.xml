@@ -93,11 +93,11 @@
             android:enabled="true"
             android:exported="true" />
         <receiver
-            android:name=".sleepapi.SleepReceiver"
+            android:name=".googleapi.SleepReceiver"
             android:enabled="true"
             android:exported="true" />
         <receiver
-            android:name=".sleepapi.ActivityTransitionReciver"
+            android:name=".googleapi.ActivityTransitionReciver"
             android:enabled="true"
             android:exported="true" />
 

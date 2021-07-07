@@ -1,7 +1,4 @@
-package com.doitstudio.sleepest_master.sleepapi;
-
-import android.content.Context;
-import android.content.res.Resources;
+package com.doitstudio.sleepest_master.googleapi;
 
 import com.google.android.gms.location.DetectedActivity;
 import com.google.gson.Gson;

@@ -13,13 +13,12 @@ import androidx.core.widget.NestedScrollView
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
-import com.doitstudio.Activityest_master.sleepapi.ActivityHandler
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.model.data.LightConditions
 import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.MobileUseFrequency
-import com.doitstudio.sleepest_master.sleepapi.ActivityTransitionHandler
+import com.doitstudio.sleepest_master.googleapi.ActivityTransitionHandler
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope

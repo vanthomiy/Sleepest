@@ -1,4 +1,4 @@
-package com.doitstudio.sleepest_master.sleepapi
+package com.doitstudio.sleepest_master.googleapi
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -7,7 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
-import com.doitstudio.sleepest_master.sleepapi.ActivityTransitionHandler.Companion.getHandler
+import com.doitstudio.sleepest_master.googleapi.ActivityTransitionHandler.Companion.getHandler
 import com.doitstudio.sleepest_master.MainApplication
 import com.google.android.gms.location.*
 import kotlinx.coroutines.CoroutineScope

@@ -1,4 +1,4 @@
-package com.doitstudio.sleepest_master.sleepapi
+package com.doitstudio.sleepest_master.googleapi
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -12,7 +12,6 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.ZoneOffset
-import java.util.*
 
 class ActivityTransitionReciver : BroadcastReceiver() {
 

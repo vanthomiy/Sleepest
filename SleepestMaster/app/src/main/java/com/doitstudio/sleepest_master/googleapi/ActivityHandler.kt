@@ -8,7 +8,7 @@ import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import com.doitstudio.Activityest_master.Activityapi.ActivityReciver
 import com.doitstudio.sleepest_master.MainApplication
-import com.doitstudio.sleepest_master.sleepapi.ActivityTransitionUtil
+import com.doitstudio.sleepest_master.googleapi.ActivityTransitionUtil
 import com.google.android.gms.location.ActivityRecognition
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
