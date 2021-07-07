@@ -31,10 +31,6 @@ class SleepFragment : Fragment() {
     private lateinit var binding: FragmentSleepBinding
     private val actualContext: Context by lazy {requireActivity().applicationContext}
 
-    // initializer block
-    init {
-
-    }
 
     companion object {
         fun newInstance() = SleepFragment()
@@ -55,7 +51,6 @@ class SleepFragment : Fragment() {
 
 
         binding.soundChange.setOnClickListener {
-            //your implementation goes here
             onAlarmSoundChange(it)
         }
 
