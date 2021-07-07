@@ -62,6 +62,18 @@ object ActivityTransitionUtil {
                         .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_EXIT)
                         .build()
 
+        transitions +=
+            ActivityTransition.Builder()
+                .setActivityType(DetectedActivity.ON_FOOT)
+                .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_ENTER)
+                .build()
+
+        transitions +=
+            ActivityTransition.Builder()
+                .setActivityType(DetectedActivity.ON_FOOT)
+                .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_EXIT)
+                .build()
+
         return transitions
     }
 
@@ -70,8 +82,8 @@ object ActivityTransitionUtil {
     @RequiresApi(Build.VERSION_CODES.Q)
     fun hasActivityTransitionPermissions(context: Context): Boolean =
             EasyPermissions.hasPermissions(
-                    context,
-                    Manifest.permission.ACTIVITY_RECOGNITION
+                context,
+                Manifest.permission.ACTIVITY_RECOGNITION
             )
 
     fun toActivityString(activity: Int): String {
