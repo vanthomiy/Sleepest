@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.asLiveData
-import com.afollestad.materialdialogs.utils.MDUtil.isLandscape
 import com.doitstudio.sleepest_master.background.AlarmReceiver
 import com.doitstudio.sleepest_master.background.ForegroundService
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
@@ -158,18 +157,37 @@ class MainActivity : AppCompatActivity() {
         context.resources.updateConfiguration(config, context.resources.displayMetrics)
     }
 
-    public  switchLanguage
+    fun switchLanguage(locale:Locale, itemId: Int, changeType:Int = -1) {
+        setAppLocale(this,locale)
+
+        recreate()
+    }
 
     // endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(null)
         setupFragments(savedInstanceState == null)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+
+        scope.launch {
+            val settings = dataStoreRepository.settingsDataFlow.first()
+
+            val language = when(settings.designLanguage){
+                0 -> Locale.GERMAN
+                else -> Locale.ENGLISH
+            }
+
+            val default = Locale.getDefault()
+            if(language.language != default.language)
+            {
+                setAppLocale(applicationContext, language)
+            }
+
+            setContentView(binding.root)
+        }
 
         supportActionBar?.hide()
-
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
         sleepTimeBeginTemp = dataStoreRepository.getSleepTimeBeginJob();
 
@@ -295,18 +313,6 @@ class MainActivity : AppCompatActivity() {
                         AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
             }
 
-
-            val language = when(settings.designLanguage){
-            0 -> Locale.GERMAN
-            else -> Locale.ENGLISH
-            }
-
-            val default = Locale.getDefault()
-            if(language.language != default.language)
-            {
-                setAppLocale(this, language)
-                recreate()
-            }
         }
 
         // check permission
