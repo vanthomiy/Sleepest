@@ -246,6 +246,17 @@
     <string name="sleep_sleeptimes_autoOff">Benutzerdefiniert</string>
     <string name="sleep_sleep_header">Schlaf</string>
 
+    <!--new_TimAlarminstance-->
+    <string name="alarm_monday_dayname">Monday</string>
+    <string name="alarm_tuesday_dayname">Tuesday</string>
+    <string name="alarm_wednesday_dayname">Wednesday</string>
+    <string name="alarm_thursday_dayname">Thursday</string>
+    <string name="alarm_friday_dayname">Friday</string>
+    <string name="alarm_saturday_dayname">Saturday</string>
+    <string name="alarm_sunday_dayname">Sunday</string>
+    <string name="alarm_alarmdays_activeAlarmdaysWeek">Alarmdays</string>
+    <string name="alarm_save_activeAlarmDaysWeek">Save</string>
+    <string name="alarm_saveSuccessful_activeAlarmDaysWeek">Save successful</string>
     <!--endregion-->
 
 

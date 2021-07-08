@@ -202,7 +202,15 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
      * Opens a dialogue which lets the user decide, on which weekdays the alarm should be active.
      */
     private fun selectActiveDaysOfWeek() {
-        val items = arrayOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+        val items = arrayOf(
+            getString(R.string.alarm_monday_dayname),
+            getString(R.string.alarm_tuesday_dayname),
+            getString(R.string.alarm_wednesday_dayname),
+            getString(R.string.alarm_thursday_dayname),
+            getString(R.string.alarm_friday_dayname),
+            getString(R.string.alarm_saturday_dayname),
+            getString(R.string.alarm_sunday_dayname))
+
         val daysOfWeek = DayOfWeek.values()
         val selectedList = ArrayList<Int>()
         val builder = AlertDialog.Builder(this.context, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
@@ -210,23 +218,23 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
 
         for (i in activeDays.indices) { if (activeDays[i]) { selectedList.add(i) } } // Make sure we dont lose pre-selected information
 
-        builder.setTitle("Alarmdays")
+        builder.setTitle(getString(R.string.alarm_alarmdays_activeAlarmdaysWeek))
                 .setMultiChoiceItems(items, activeDays) {
                     _, which, isChecked ->
                     if (isChecked) { selectedList.add(which) }
                     else if (selectedList.contains(which)) { selectedList.remove(Integer.valueOf(which)) }
                 }
-                .setPositiveButton("Save") {
+                .setPositiveButton(getString(R.string.alarm_save_activeAlarmDaysWeek)) {
                     _, _ ->
                     val selectedDays = ArrayList<DayOfWeek>()
                     for (j in selectedList.indices) { selectedDays.add(daysOfWeek[selectedList[j]]) }
                     if (selectedDays.isNotEmpty()) {
                         saveAlarmDaysWeek(selectedDays)
                         tViewActiveWeekdays.text = convertActiveAlarmDays(selectedDays)
-                        Toast.makeText(applicationContext, "Speichern erfolgreich", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext, getString(R.string.alarm_saveSuccessful_activeAlarmDaysWeek), Toast.LENGTH_SHORT).show()
                     }
                     else {
-                        Toast.makeText(applicationContext, "Speichern fehlgeschlagen\nMindestens einen Tag auswählen! ", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext, "Save unsuccessful\nSelect one day minimum!", Toast.LENGTH_SHORT).show()
                     }
                 }
                 .setNegativeButton("Cancel") {
