@@ -188,6 +188,7 @@
                             android:text="@string/profile_language"/>
 
                         <androidx.appcompat.widget.AppCompatSpinner
+                            android:id="@+id/btnLanguageSlector"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
                             android:background="@drawable/bgroundedchoosen"
@@ -196,7 +197,6 @@
                             android:layout_marginVertical="10dp"
                             android:entries="@{profileViewModel.languageSelections}"
                             android:selectedItemPosition="@={profileViewModel.selectedLanguage}"
-                            android:onItemSelected = "@{profileViewModel::onLanguageChanged}"
                             android:theme="@style/Spinner">
 
                         </androidx.appcompat.widget.AppCompatSpinner>

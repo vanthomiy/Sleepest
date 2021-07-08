@@ -19,6 +19,7 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import com.doitstudio.sleepest_master.MainActivity
 import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import kotlinx.coroutines.CoroutineScope
@@ -85,16 +86,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     val languageSelections = ObservableArrayList<String>()
     val selectedLanguage = ObservableField(0)
-    fun onLanguageChanged(
-        parent: AdapterView<*>?,
-        selectedItemView: View,
-        language: Int,
-        id: Long
-    ) {
-        scope.launch {
-            dataStoreRepository.updateLanguage(language)
-        }
-    }
+
 
     // endregion
 

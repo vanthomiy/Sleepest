@@ -158,6 +158,8 @@ class MainActivity : AppCompatActivity() {
         context.resources.updateConfiguration(config, context.resources.displayMetrics)
     }
 
+    public  switchLanguage
+
     // endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
