@@ -499,9 +499,12 @@ public class ForegroundService extends LifecycleService {
     }
 
     private void sendUserInformation() {
+
         if (checkSleeptimeReachingPossibility()) {
+
+            Notification notification = AlarmReceiver.createInformationNotification(getApplicationContext(), getString(R.string.information_notification_text_sleeptime_problem));
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.notify(2, createInformationNotification());
+            notificationManager.notify(3, notification);
 
         }
     }
@@ -580,10 +583,13 @@ public class ForegroundService extends LifecycleService {
             contentText = getString(R.string.alarm_status_false);
         }
 
+        String sleeptime = minuteToTimeFormat(userSleepTime)[0] + "h " + minuteToTimeFormat(userSleepTime)[1] + "min";
+        String alarmtime = millisToTimeFormat(alarmTimeInSeconds)[0] + ":" + millisToTimeFormat(alarmTimeInSeconds)[1] + " o'Clock";
+
         //Set the text in textview of the expanded notification view
         String notificationText = "AlarmActive: " + isAlarmActive + " Value: " + sleepValueAmount
-                + "\nIsSubscribed: " + isSubscribed + " SleepTime: " + userSleepTime
-                + "\nIsSleeping: " + isSleeping + " Wakeup: " + alarmTimeInSeconds;
+                + "\nIsSubscribed: " + isSubscribed + "\nSleepTime: " + sleeptime
+                + "\nIsSleeping: " + isSleeping + " Wakeup: " + alarmtime;
         remoteViews.setTextViewText(R.id.tvTextAlarm, notificationText);
 
         //Set the Intent for tap on the notification, it will launch MainActivity
@@ -621,7 +627,7 @@ public class ForegroundService extends LifecycleService {
      * Create the notification to inform the user about sleep time problems
      * @return
      */
-    private Notification createInformationNotification() {
+   /** private Notification createInformationNotification() {
         //Get Channel id
         String notificationChannelId = getString(R.string.foregroundservice_channel);
 
@@ -656,12 +662,12 @@ public class ForegroundService extends LifecycleService {
                 .setContentIntent(pendingIntent)
                 .setOnlyAlertOnce(true)
                 .build();
-    }
+    }**/
 
     /**
      * Starts or stops the foreground service. This function must be called to start or stop service
      * @param action Enum Action (START or STOP)
-     * @param //context Application context
+     * @param context Application context
      */
     public static void startOrStopForegroundService(Actions action, Context context) {
 
@@ -669,8 +675,26 @@ public class ForegroundService extends LifecycleService {
         intent.setAction(action.name());
 
         context.startForegroundService(intent);
-        return;
     }
+
+    private int[] minuteToTimeFormat(int minute) {
+        int[] time = new int[2];
+        int rest = minute % 60;
+        time[0] = minute / 60;
+        time[1] = rest;
+
+        return time;
+    }
+
+    private int[] millisToTimeFormat(int milliseconds) {
+        int[] time = new int[2];
+        int rest = milliseconds % 3600;
+        time[0] = milliseconds / 3600;
+        time[1] = rest / 60;
+
+        return time;
+    }
+
 
     //endregion
 

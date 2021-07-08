@@ -21,6 +21,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.asLiveData
+import com.doitstudio.sleepest_master.background.BackgroundAlarmTimeHandler
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog
 
@@ -39,6 +41,7 @@ class AlarmsFragment() : Fragment() {
     private val dataStoreRepository by lazy { (actualContext as MainApplication).dataStoreRepository }
     private val scope: CoroutineScope = MainScope()
     private val actualContext: Context by lazy { requireActivity().applicationContext }
+    private val activeAlarmsLiveData by lazy {  repository.activeAlarmsFlow().asLiveData() }
 
     private lateinit var btnAddAlarmEntity: Button
     private var lLContainerAlarmEntities: LinearLayout? = null
@@ -94,6 +97,8 @@ class AlarmsFragment() : Fragment() {
         usedIds.remove(alarmId)
     }
 
+
+
     private fun onAlarmSoundChange(view: View) {
         //check if audio volume is 0
 
@@ -147,6 +152,21 @@ class AlarmsFragment() : Fragment() {
         transactions = mutableMapOf()
         fragments = mutableMapOf()
 
+        activeAlarmsLiveData.observe(requireActivity()){
+            scope.launch {
+                if (repository.getNextActiveAlarm() != null) {
+                    if (repository.getNextActiveAlarm()!!.tempDisabled) {
+                        btnTemporaryDisableAlarm.text = getString(R.string.alarm_fragment_btn_disable_alarm_disable)
+                    } else {
+                        btnTemporaryDisableAlarm.text = getString(R.string.alarm_fragment_btn_disable_alarm_reactivate)
+                    }
+                } else {
+                    btnTemporaryDisableAlarm.isVisible = false
+                }
+
+            }
+        }
+
 
         btnAddAlarmEntity.setOnClickListener {
             //view ->  onAddAlarm(view)
@@ -162,9 +182,9 @@ class AlarmsFragment() : Fragment() {
         scope.launch {
             if (repository.getNextActiveAlarm() != null) {
                 if (repository.getNextActiveAlarm()!!.tempDisabled) {
-                    btnTemporaryDisableAlarm.text = "Reactivate next alarm"
+                    BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(true, false)
                 } else {
-                    btnTemporaryDisableAlarm.text = "Disable next alarm"
+                    BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(true, true)
                 }
             } else {
                 btnTemporaryDisableAlarm.isVisible = false

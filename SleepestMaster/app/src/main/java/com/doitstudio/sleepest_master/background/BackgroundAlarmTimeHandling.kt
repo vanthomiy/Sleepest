@@ -87,7 +87,14 @@ class BackgroundAlarmTimeHandler(val context: Context) {
         }
     }
 
-    fun deviceBoot() {
+    fun changeOfAlarmEntity(listEmpty : Boolean) {
+        scope.launch {
+            if (checkInSleepTime() && checkAlarmActive() && !checkForegroundStatus() && !checkAlarmFired() && !checkAlarmTempDisabled() && !listEmpty) {
+                startForegroundService(false)
+            } else if (listEmpty) {
+                stopForegroundService(false)
+            }
+        }
 
     }
 
@@ -137,26 +144,26 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
     }
 
-    private fun stopForegroundService(inActivity : Boolean) {
-        scope.launch {
-            if (checkForegroundStatus()) {
+    private suspend fun stopForegroundService(inActivity : Boolean) {
 
-                if (inActivity) {
-                    val startForegroundIntent = Intent(context, ForegroundActivity::class.java)
-                    startForegroundIntent.flags =
-                        Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                    startForegroundIntent.putExtra("intent", 2)
-                    context.startActivity(startForegroundIntent)
-                } else {
-                    ForegroundService.startOrStopForegroundService(Actions.STOP, context)
-                }
+        if (checkForegroundStatus()) {
 
-                WorkManager.getInstance(context.applicationContext).cancelAllWorkByTag(context.getString(R.string.workmanager2_tag))
-
-                //Cancel Alarm for starting Workmanager
-                AlarmReceiver.cancelAlarm(context, AlarmReceiverUsage.START_WORKMANAGER_CALCULATION)
+            if (inActivity) {
+                val startForegroundIntent = Intent(context, ForegroundActivity::class.java)
+                startForegroundIntent.flags =
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                startForegroundIntent.putExtra("intent", 2)
+                context.startActivity(startForegroundIntent)
+            } else {
+                ForegroundService.startOrStopForegroundService(Actions.STOP, context)
             }
+
+            WorkManager.getInstance(context.applicationContext).cancelAllWorkByTag(context.getString(R.string.workmanager2_tag))
+
+            //Cancel Alarm for starting Workmanager
+            AlarmReceiver.cancelAlarm(context, AlarmReceiverUsage.START_WORKMANAGER_CALCULATION)
         }
+
     }
 
     private suspend fun startForegroundService(inActivity : Boolean) {
@@ -309,26 +316,78 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
     }
 
-    fun changeOfAlarmEntity(listEmpty : Boolean) {
+    fun disableAlarmTemporaryInApp(fromApp : Boolean, reactivate : Boolean) {
+
         scope.launch {
-            if (checkInSleepTime() && checkAlarmActive() && !checkForegroundStatus() && !checkAlarmFired() && !checkAlarmTempDisabled() && !listEmpty) {
-                startForegroundService(false)
-            } else if (listEmpty) {
-                stopForegroundService(false)
+            if (fromApp && !reactivate) {
+
+            } else if (!fromApp && !reactivate) {
+                if (checkAlarmActive() && !checkAlarmTempDisabled()) {
+                    dataBaseRepository.updateAlarmTempDisabled(true, dataBaseRepository.getNextActiveAlarm()!!.id)
+                    val calendarStopForeground = Calendar.getInstance()
+                    AlarmReceiver.startAlarmManager(
+                        calendarStopForeground.get(Calendar.DAY_OF_WEEK),
+                        calendarStopForeground.get(
+                            Calendar.HOUR_OF_DAY),
+                        calendarStopForeground.get(Calendar.MINUTE) + 5,
+                        context.applicationContext,
+                        AlarmReceiverUsage.STOP_FOREGROUND)
+                    Toast.makeText(
+                        context.applicationContext,
+                        context.applicationContext.getString(R.string.disable_alarm_message),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            } else if (!fromApp && reactivate) {
+
+                if (checkAlarmActive() && checkAlarmTempDisabled()) {
+                    dataBaseRepository.updateAlarmTempDisabled(false, dataBaseRepository.getNextActiveAlarm()!!.id)
+                }
+
+            } else if (fromApp && reactivate) {
+
             }
         }
 
     }
 
-    fun disableAlarmTemporaryInApp() {
-
-    }
-
-    fun disableAlarmTemporaryOnNotification() {
-
-    }
-
-    fun reactivateAlarmTemporary() {
+    fun deviceBoot() {
+        scope.launch {
+            if (checkForegroundStatus() && checkAlarmActive()) {
+                if (!checkAlarmFired() && !checkAlarmTempDisabled() && checkInSleepTime()) {
+                    startForegroundService(true)
+                } else {
+                    val calendar = AlarmReceiver.getAlarmDate(getSleepTimeBeginValue())
+                    AlarmReceiver.startAlarmManager(calendar[Calendar.DAY_OF_WEEK],
+                        calendar[Calendar.HOUR_OF_DAY], calendar[Calendar.MINUTE],
+                        context.applicationContext,
+                        AlarmReceiverUsage.START_FOREGROUND)
+                    dataStoreRepository.backgroundUpdateIsActive(false)
+                }
+            } else if (!checkForegroundStatus() && checkAlarmActive()) {
+                if (!checkAlarmFired() && !checkAlarmTempDisabled() && checkInSleepTime()) {
+                    startForegroundService(true)
+                } else {
+                    if (!checkInSleepTime()) {
+                        val calendar = AlarmReceiver.getAlarmDate(getSleepTimeBeginValue())
+                        AlarmReceiver.startAlarmManager(calendar[Calendar.DAY_OF_WEEK],
+                            calendar[Calendar.HOUR_OF_DAY], calendar[Calendar.MINUTE],
+                            context.applicationContext,
+                            AlarmReceiverUsage.START_FOREGROUND)
+                    }
+                }
+            } else {
+                if (!checkInSleepTime()) {
+                    val calendar = AlarmReceiver.getAlarmDate(getSleepTimeBeginValue())
+                    AlarmReceiver.startAlarmManager(
+                        calendar[Calendar.DAY_OF_WEEK],
+                        calendar[Calendar.HOUR_OF_DAY], calendar[Calendar.MINUTE],
+                        context.applicationContext,
+                        AlarmReceiverUsage.START_FOREGROUND
+                    )
+                }
+            }
+        }
 
     }
 

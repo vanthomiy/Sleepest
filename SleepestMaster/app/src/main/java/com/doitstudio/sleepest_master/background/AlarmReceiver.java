@@ -4,6 +4,7 @@ package com.doitstudio.sleepest_master.background;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -91,15 +92,18 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case DISABLE_ALARM:
                 if((databaseRepository.getNextActiveAlarmJob() != null) && !databaseRepository.getNextActiveAlarmJob().getTempDisabled()) {
-                    databaseRepository.updateAlarmTempDisabledJob(true, databaseRepository.getNextActiveAlarmJob().getId());
+                    /**databaseRepository.updateAlarmTempDisabledJob(true, databaseRepository.getNextActiveAlarmJob().getId());
                     Calendar calendarStopForeground = Calendar.getInstance();
                     AlarmReceiver.startAlarmManager(calendarStopForeground.get(Calendar.DAY_OF_WEEK), calendarStopForeground.get(Calendar.HOUR_OF_DAY),
                             calendarStopForeground.get(Calendar.MINUTE) + 5, context.getApplicationContext(), AlarmReceiverUsage.STOP_FOREGROUND);
-                    Toast.makeText(context.getApplicationContext(), context.getApplicationContext().getString(R.string.disable_alarm_message), Toast.LENGTH_LONG).show();
+                    Toast.makeText(context.getApplicationContext(), context.getApplicationContext().getString(R.string.disable_alarm_message), Toast.LENGTH_LONG).show();**/
+                    BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, false);
                 } else if ((databaseRepository.getNextActiveAlarmJob() != null) && databaseRepository.getNextActiveAlarmJob().getTempDisabled()) {
-                    databaseRepository.updateAlarmTempDisabledJob(false, databaseRepository.getNextActiveAlarmJob().getId());
-                    AlarmReceiver.cancelAlarm(context.getApplicationContext(), AlarmReceiverUsage.STOP_FOREGROUND);
+                    /**databaseRepository.updateAlarmTempDisabledJob(false, databaseRepository.getNextActiveAlarmJob().getId());
+                    AlarmReceiver.cancelAlarm(context.getApplicationContext(), AlarmReceiverUsage.STOP_FOREGROUND);**/
+                    BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, true);
                 }
+
                 break;
             case NOT_SLEEPING:
                 //Button not Sleeping
@@ -282,4 +286,46 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         return calendar;
     }
+
+    /**
+     * Create the notification to inform the user about problems
+     * @return
+     */
+    public static Notification createInformationNotification(Context context, String information) {
+        //Get Channel id
+        String notificationChannelId = context.getApplicationContext().getString(R.string.information_notification_channel);
+
+        //Create intent if user tap on notification
+        Intent intent = new Intent(context.getApplicationContext(), MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        //Create manager and channel
+        NotificationManager notificationManager = (NotificationManager) context.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationChannel channel = new NotificationChannel(
+                notificationChannelId,
+                context.getApplicationContext().getString(R.string.information_notification_channel_name),
+                NotificationManager.IMPORTANCE_HIGH
+        );
+
+        //Set channel description
+        channel.setDescription(context.getApplicationContext().getString(R.string.information_notification_channel_description));
+        if (notificationManager != null) {
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        //Build the notification and return it
+        Notification.Builder builder;
+        builder = new Notification.Builder(context.getApplicationContext(), notificationChannelId);
+
+        return builder
+                .setContentTitle(context.getApplicationContext().getString(R.string.information_notification_title))
+                .setContentText(information) /**TODO: Textauswahl**/
+                .setStyle(new Notification.DecoratedCustomViewStyle())
+                .setSmallIcon(R.drawable.logo_notification)
+                .setContentIntent(pendingIntent)
+                .setOnlyAlertOnce(true)
+                .build();
+    }
+
 }
