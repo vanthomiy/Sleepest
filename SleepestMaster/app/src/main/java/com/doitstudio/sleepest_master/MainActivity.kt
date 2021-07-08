@@ -2,6 +2,7 @@ package com.doitstudio.sleepest_master
 
 import android.Manifest
 import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -13,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.asLiveData
+import com.afollestad.materialdialogs.utils.MDUtil.isLandscape
 import com.doitstudio.sleepest_master.background.AlarmReceiver
 import com.doitstudio.sleepest_master.background.ForegroundService
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
@@ -66,10 +68,17 @@ class MainActivity : AppCompatActivity() {
     lateinit var sleepFragment : SleepFragment
     lateinit var profileFragment : ProfileFragment
 
-    fun setupFragments(isStart:Boolean){
+    private fun setupFragments(isStart:Boolean){
         scope.launch {
 
             val settings = dataStoreRepository.settingsDataFlow.first()
+            val language = when(settings.designLanguage){
+                0 -> Locale.GERMAN
+                else -> Locale.ENGLISH
+            }
+
+            if(language.language != Locale.getDefault().language)
+                return@launch
 
             bottomBar = binding.bottomBar
             alarmsFragment = AlarmsFragment()
@@ -87,11 +96,9 @@ class MainActivity : AppCompatActivity() {
                     dataStoreRepository.updateAfterRestartApp(false)
                 }
                 else{
-                    profileFragment.caseOfEntrie = if(isStart) 0 else 1
+                    profileFragment.caseOfEntrie = 1
                 }
             }
-
-
 
             bottomBar.setOnNavigationItemSelectedListener { item->
 
@@ -140,54 +147,27 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-
-
     }
 
-    fun changeFragment() {
-        val ft = supportFragmentManager.beginTransaction()
+    private fun setAppLocale(context: Context, locale: Locale) {
 
-
-
-        if(profileFragment.isAdded){
-            ft.show(profileFragment)
-        }else{
-            ft.add(R.id.navigationFrame, profileFragment)
-        }
-
-        ft.commit()
-
+        Locale.setDefault(locale)
+        val config = context.resources.configuration
+        config.setLocale(locale)
+        context.createConfigurationContext(config)
+        context.resources.updateConfiguration(config, context.resources.displayMetrics)
     }
 
     // endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(null)
-        setContentView(R.layout.activity_main)
+        setupFragments(savedInstanceState == null)
 
         supportActionBar?.hide()
 
-        scope.launch {
-            // check system dark mode if necessary and safe in
-            val settings = dataStoreRepository.settingsDataFlow.first()
-            if(settings.designAutoDarkMode){
-                AppCompatDelegate
-                        .setDefaultNightMode(
-                                AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-            }
-            /*else {
-                AppCompatDelegate
-                        .setDefaultNightMode(if(settings.designDarkMode)
-                            AppCompatDelegate.MODE_NIGHT_YES else
-                            AppCompatDelegate.MODE_NIGHT_NO);
-            }*/
-        }
-
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        setupFragments(savedInstanceState == null)
 
         sleepTimeBeginTemp = dataStoreRepository.getSleepTimeBeginJob();
 
@@ -198,10 +178,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 earliestWakeupTemp = 0
             }
-
-
         }
-
 
         // observe alarm changes
         activeAlarmsLiveData.observe(this){ list ->
@@ -300,15 +277,33 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        settingsLiveData.observe(this) { settings ->
 
-        settingsLiveData.observe(this) { livedata ->
-
-            if(livedata.restartApp && livedata.afterRestartApp)
+            if(settings.restartApp && settings.afterRestartApp)
             {
                 scope.launch {
                     dataStoreRepository.updateRestartApp(false)
                     recreate()
                 }
+            }
+
+            if(settings.designAutoDarkMode){
+                AppCompatDelegate
+                    .setDefaultNightMode(
+                        AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+            }
+
+
+            val language = when(settings.designLanguage){
+            0 -> Locale.GERMAN
+            else -> Locale.ENGLISH
+            }
+
+            val default = Locale.getDefault()
+            if(language.language != default.language)
+            {
+                setAppLocale(this, language)
+                recreate()
             }
         }
 
@@ -319,6 +314,7 @@ class MainActivity : AppCompatActivity() {
 
         checkDrawOverlayPermission()
         checkDoNotDisturbPermission()
+
     }
 
     override fun onResume() {

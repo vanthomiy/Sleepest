@@ -13,12 +13,30 @@ import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
 data class UserSleepRating (
 
         /**
-         * User can define
+         * User can define if he slept to much or to less in his opinion
          */
-        var sleepDurationAdjustment	: SleepDurationAdjustment = SleepDurationAdjustment.NONE,//	Zu wenig oder zu viel schlaf für den nutzer
-        var moodAfterSleep	: MoodType = MoodType.NONE,//	Gefühl nach dem Schlaf
-        var moodOnNextDay	:MoodType = MoodType.NONE,//	Gefühl am kompletten nächsten Tag
-        var wakeTimes	:Int = 0,//	evtl. vorausgefüllt, und man kann es ändern
-        var activityOnDay	: ActivityOnDay = ActivityOnDay.NONE,//	War man aktiv am vortag? (Vorausgefüllt)
+        var sleepDurationAdjustment	: SleepDurationAdjustment = SleepDurationAdjustment.NONE,
+
+        /**
+         * User can set the mood on the next day direct after a sleep
+         */
+        var moodAfterSleep	: MoodType = MoodType.NONE,
+
+        /**
+         * User can set the mood on the complete next day after a sleep
+         */
+        var moodOnNextDay	:MoodType = MoodType.NONE,
+
+        /**
+         * TODO(What is this var for???)
+         */
+        var wakeTimes	:Int = 0,
+
+        /**
+         * Is set by the activity transition api data
+         * Default is [ActivityOnDay.NONE]
+         * Values from [ActivityOnDay.NOACTIVITY] to [ActivityOnDay.EXTREMACTIVITY]
+         */
+        var activityOnDay	: ActivityOnDay = ActivityOnDay.NONE,
 
 )

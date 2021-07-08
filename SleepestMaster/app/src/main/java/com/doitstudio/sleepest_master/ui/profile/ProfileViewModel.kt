@@ -2,6 +2,8 @@ package com.doitstudio.sleepest_master.ui.profile
 
 import android.Manifest
 import android.app.Application
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.provider.Settings
 import android.transition.TransitionManager
@@ -11,10 +13,11 @@ import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
-import com.doitstudio.sleepest_master.DontKillMyAppFragment
+import com.doitstudio.sleepest_master.MainActivity
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
@@ -22,6 +25,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.util.*
 
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -45,9 +49,11 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             darkMode.get()?.let {
                 dataStoreRepository.updateDarkMode(it)
                 AppCompatDelegate
-                        .setDefaultNightMode(if(it)
-                            AppCompatDelegate.MODE_NIGHT_YES else
-                            AppCompatDelegate.MODE_NIGHT_NO);
+                        .setDefaultNightMode(
+                            if (it)
+                                AppCompatDelegate.MODE_NIGHT_YES else
+                                AppCompatDelegate.MODE_NIGHT_NO
+                        );
             }
         }
     }
@@ -66,13 +72,13 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         autoDarkMode.get()?.let { auto ->
             showDarkModeSetting.set(if (auto) View.GONE else View.VISIBLE)
             AppCompatDelegate
-                    .setDefaultNightMode(if(auto)
+                    .setDefaultNightMode(if (auto)
                         AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM else
                         darkMode.get().let { mode ->
-                                if(mode == true)
+                            if (mode == true)
                                 AppCompatDelegate.MODE_NIGHT_YES else
                                 AppCompatDelegate.MODE_NIGHT_NO
-                            })
+                        })
 
         }
     }
@@ -80,15 +86,14 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     val languageSelections = ObservableArrayList<String>()
     val selectedLanguage = ObservableField(0)
     fun onLanguageChanged(
-            parent: AdapterView<*>?,
-            selectedItemView: View,
-            language: Int,
-            id: Long
+        parent: AdapterView<*>?,
+        selectedItemView: View,
+        language: Int,
+        id: Long
     ) {
         scope.launch {
             dataStoreRepository.updateLanguage(language)
         }
-
     }
 
     // endregion
@@ -141,20 +146,26 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     fun checkPermissions(){
 
-        activityPermission.set(PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
+        activityPermission.set(
+            PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACTIVITY_RECOGNITION
-        ))
+            )
+        )
 
-        dailyPermission.set(PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
+        dailyPermission.set(
+            PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACTIVITY_RECOGNITION
-        ))
+            )
+        )
 
-        storagePermission.set(PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
+        storagePermission.set(
+            PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ANSWER_PHONE_CALLS
-        ))
+            )
+        )
 
         overlayPermission.set(Settings.canDrawOverlays(context))
 
@@ -213,10 +224,11 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
         TransitionManager.beginDelayedTransition(transitionsContainer);
 
-        actualExpand.set(if(actualExpand.get() == value.toIntOrNull()) -1 else value.toIntOrNull() )
+        actualExpand.set(if (actualExpand.get() == value.toIntOrNull()) -1 else value.toIntOrNull())
         removeExpand.set(if (actualExpand.get() == 4) removeExpand.get() else false)
 
     }
+
 
 
     //endregion

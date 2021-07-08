@@ -2,10 +2,7 @@ package com.doitstudio.sleepest_master
 
 import android.app.Dialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
@@ -27,7 +24,7 @@ class DontKillMyAppFragment : DialogFragment() {
 
 
         val tvDescriptionDontKillMyApp : TextView = dokiCustomView.findViewById(R.id.tvDescriptionDontKillMyApp)
-        tvDescriptionDontKillMyApp.setText(getString(R.string.description_dont_kill_my_app))
+        tvDescriptionDontKillMyApp.setText(getString(R.string.nameverkackt))
 
         return MaterialDialog(requireContext()).show {
             customView(view = dokiCustomView)

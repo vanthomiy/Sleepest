@@ -85,22 +85,4 @@ object ActivityTransitionUtil {
                 context,
                 Manifest.permission.ACTIVITY_RECOGNITION
             )
-
-    fun toActivityString(activity: Int): String {
-        return when (activity) {
-            DetectedActivity.STILL -> "STILL"
-            DetectedActivity.WALKING -> "WALKING"
-            DetectedActivity.IN_VEHICLE -> "IN VEHICLE"
-            DetectedActivity.RUNNING -> "RUNNING"
-            else -> "UNKNOWN"
-        }
-    }
-
-    fun toTransitionType(transitionType: Int): String  {
-        return when (transitionType) {
-            ActivityTransition.ACTIVITY_TRANSITION_ENTER -> "ENTER"
-            ActivityTransition.ACTIVITY_TRANSITION_EXIT -> "EXIT"
-            else -> "UNKNOWN"
-        }
-    }
 }
