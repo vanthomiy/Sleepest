@@ -27,10 +27,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.lang.Math.round
 import java.time.*
 import java.time.Instant.ofEpochMilli
 import java.time.format.DateTimeFormatter
 import kotlin.collections.ArrayList
+import kotlin.math.roundToInt
 
 /**
  * Fragment which handles the sleep analysis for previous captured sleep sessions.
@@ -99,7 +101,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
     private lateinit var sleepSessionData : MutableMap<Int, UserSleepSessionEntity>
 
     /** Analysis date */
-    private var dateOfDiagram  = LocalDate.now() //of(2021, 3, 30) //now()
+    private var dateOfDiagram  = LocalDate.of(2021, 3, 24) //now()
 
     /** Analysis range */
     private var currentAnalysisRange = 0 // Day = 0, Week = 1, Month = 2
@@ -322,13 +324,24 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         val entries = ArrayList<Entry>()
         var xValue = 0
         val values: Pair<List<SleepApiRawDataEntity>, Int>
+        var previousTimestamp = 0
+        var sleptSeconds = 1
 
         if (sleepSessionsRawData.containsKey(UserSleepSessionEntity.getIdByDateTime(dateOfDiagram))) {
             values = sleepSessionsRawData[UserSleepSessionEntity.getIdByDateTime(dateOfDiagram)]!!
 
-            for (i in values.first) {
-                entries.add(Entry(xValue.toFloat(), i.sleepState.ordinal.toFloat()))
-                xValue += 1
+            for (rawData in values.first) {
+                if (previousTimestamp != 0) {
+                    sleptSeconds += rawData.timestampSeconds - previousTimestamp
+                }
+                previousTimestamp = rawData.timestampSeconds
+
+                for (min in 0..(sleptSeconds/60).toInt()) {
+                    entries.add(Entry(xValue.toFloat(), rawData.sleepState.ordinal.toFloat()))
+                    xValue += 1
+                }
+
+                sleptSeconds = 0
             }
             diagramVisibility = true //Check if all daily diagrams should be visible
         }
@@ -348,15 +361,31 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         vl.setDrawValues(false)
         vl.setDrawFilled(true)
         vl.setDrawCircles(false)
-        vl.lineWidth = 0f
-        vl.fillColor = R.color.gray
-        vl.fillAlpha = R.color.red
+        vl.lineWidth = 2f
+        vl.fillColor = R.color.tertiary_text_color
+        vl.fillAlpha = 255
+        vl.color = R.color.colorPrimary
+
+        val yAxisValues = ArrayList<String>()
+        yAxisValues.add("Awake")
+        yAxisValues.add("Light")
+        yAxisValues.add("Deep")
+        yAxisValues.add("REM")
+        yAxisValues.add("Zero")
+
+        lineChart.axisLeft.valueFormatter = IndexAxisValueFormatter(yAxisValues)
+        lineChart.axisLeft.labelCount = 4
+        lineChart.axisLeft.axisMinimum = 0f
+        lineChart.axisLeft.axisMaximum = 4f
+
+        lineChart.axisRight.setDrawLabels(false)
+        lineChart.axisRight.setDrawGridLines(false)
+
+        lineChart.description.isEnabled = false
 
         lineChart.data = LineData(vl)
-        lineChart.axisLeft.setStartAtZero(true)
-        lineChart.axisLeft.setAxisMaxValue(5f)
 
-        lineChart.animateX(500)
+        lineChart.animateX(1000)
     }
 
     /**
@@ -368,7 +397,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         if (sleepSessionData.containsKey(UserSleepSessionEntity.getIdByDateTime(dateOfDiagram))) {
             val values = sleepSessionData[UserSleepSessionEntity.getIdByDateTime(dateOfDiagram)]!!
 
-            val awake = values.sleepTimes.awakeTime
+            //val awake = values.sleepTimes.awakeTime
             val sleep = values.sleepTimes.sleepDuration
             val lightSleep = values.sleepTimes.lightSleepDuration
             val deepSleep = values.sleepTimes.deepSleepDuration
@@ -382,7 +411,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
                 entries.add(PieEntry(deepSleep.toFloat(), "deep"))
                 entries.add(PieEntry(remSleep.toFloat(), "rem"))
             }
-            entries.add(PieEntry(awake.toFloat(), "awake"))
+            //entries.add(PieEntry(awake.toFloat(), "awake"))
         }
 
         return entries
@@ -396,8 +425,8 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         listColors.add(resources.getColor(R.color.black))
         listColors.add(resources.getColor(R.color.green))
         listColors.add(resources.getColor(R.color.red))
-        listColors.add(resources.getColor(R.color.blue))
-        listColors.add(resources.getColor(R.color.dark_green))
+        //listColors.add(resources.getColor(R.color.blue))
+        //listColors.add(resources.getColor(R.color.dark_green))
 
         val pieDataSet = PieDataSet(generateDataPieChart(), "Sleep states")
         pieDataSet.colors = listColors
