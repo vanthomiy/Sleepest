@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.asLiveData
 import com.doitstudio.sleepest_master.background.AlarmReceiver
+import com.doitstudio.sleepest_master.background.BackgroundAlarmTimeHandler
 import com.doitstudio.sleepest_master.background.ForegroundService
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
 import com.doitstudio.sleepest_master.model.data.Actions
@@ -206,8 +207,8 @@ class MainActivity : AppCompatActivity() {
         // observe alarm changes
         activeAlarmsLiveData.observe(this){ list ->
             // check the list if empty or not
-
-            scope.launch {
+            BackgroundAlarmTimeHandler.getHandler(applicationContext).changeOfAlarmEntity(list.isEmpty())
+            /**scope.launch {
                 // is in sleep time ?
                 if (dataStoreRepository.isInSleepTime() && dataBaseRepository.getNextActiveAlarm() != null) {
                     if(list.isEmpty())
@@ -234,13 +235,13 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-            }
+            }**/
         }
 
         // observe sleeptime changes
         sleepParametersLiveData.observe(this) { livedata ->
-
-            scope.launch {
+            BackgroundAlarmTimeHandler.getHandler(applicationContext).changeSleepTime()
+            /**scope.launch {
 
                 // in sleep time
                 if (dataStoreRepository.isInSleepTime() && (dataBaseRepository.getNextActiveAlarm() != null)) {
@@ -297,7 +298,7 @@ class MainActivity : AppCompatActivity() {
 
 
                 }
-            }
+            }**/
         }
 
 
@@ -387,23 +388,23 @@ class MainActivity : AppCompatActivity() {
                 scope.launch {
                     val calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeBegin())
                     //AlarmReceiver.cancelAlarm(applicationContext, 6)
-                    AlarmReceiver.startAlarmManager(
+                    /**AlarmReceiver.startAlarmManager(
                         calendar.get(Calendar.DAY_OF_WEEK), calendar.get(
                             Calendar.HOUR_OF_DAY
                         ), calendar.get(Calendar.MINUTE), applicationContext, AlarmReceiverUsage.START_WORKMANAGER
-                    )
+                    )**/
 
-                    val calendarAlarm = Calendar.getInstance()
+                    /**val calendarAlarm = Calendar.getInstance()
                     calendarAlarm[Calendar.HOUR_OF_DAY] = 0
                     calendarAlarm[Calendar.MINUTE] = 0
                     calendarAlarm[Calendar.SECOND] = 0
-                    calendarAlarm.add(Calendar.SECOND, dataStoreRepository.getSleepTimeBegin())
+                    calendarAlarm.add(Calendar.SECOND, dataStoreRepository.getSleepTimeBegin())**/
 
                     //Start a alarm for the new foregroundservice start time
                     AlarmReceiver.startAlarmManager(
-                        calendarAlarm[Calendar.DAY_OF_WEEK],
-                        calendarAlarm[Calendar.HOUR_OF_DAY],
-                        calendarAlarm[Calendar.MINUTE],
+                        calendar[Calendar.DAY_OF_WEEK],
+                        calendar[Calendar.HOUR_OF_DAY],
+                        calendar[Calendar.MINUTE],
                         applicationContext, AlarmReceiverUsage.START_FOREGROUND
                     )
 

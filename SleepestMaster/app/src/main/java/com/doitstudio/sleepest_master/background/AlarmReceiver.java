@@ -76,17 +76,18 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case START_FOREGROUND:
                 //Start foregroundservice with an activity
-                Intent startForegroundIntent = new Intent(context, ForegroundActivity.class);
+                /**Intent startForegroundIntent = new Intent(context, ForegroundActivity.class);
                 startForegroundIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startForegroundIntent.putExtra("intent", 1);
-                context.startActivity(startForegroundIntent);
+                context.startActivity(startForegroundIntent);**/
+                BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).beginOfSleepTime(true);
                 break;
             case STOP_FOREGROUND:
                 //Stop foregorundservice with an activity
-                Intent stopForegroundIntent = new Intent(context, ForegroundActivity.class);
+                /*Intent stopForegroundIntent = new Intent(context, ForegroundActivity.class);
                 stopForegroundIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 stopForegroundIntent.putExtra("intent", 2);
-                context.startActivity(stopForegroundIntent);
+                context.startActivity(stopForegroundIntent);*/
                 break;
             case DISABLE_ALARM:
                 if((databaseRepository.getNextActiveAlarmJob() != null) && !databaseRepository.getNextActiveAlarmJob().getTempDisabled()) {
@@ -109,9 +110,9 @@ public class AlarmReceiver extends BroadcastReceiver {
                 //Start the workmanager for the calculation of the sleep
                 WorkmanagerCalculation.startPeriodicWorkmanager(Constants.WORKMANAGER_CALCULATION_DURATION, context.getApplicationContext());
                 break;
-            case START_WORKMANAGER:
+            case START_WORKMANAGER: /**Übertragen**/
                 //Start Workmanager at sleeptime and subscribe to SleepApi
-                PeriodicWorkRequest periodicDataWork =
+                /**PeriodicWorkRequest periodicDataWork =
                         new PeriodicWorkRequest.Builder(Workmanager.class, Constants.WORKMANAGER_DURATION, TimeUnit.MINUTES)
                                 .addTag(context.getString(R.string.workmanager1_tag)) //Tag is needed for canceling the periodic work
                                 .build();
@@ -129,9 +130,12 @@ public class AlarmReceiver extends BroadcastReceiver {
                     AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context,AlarmReceiverUsage.STOP_FOREGROUND);
                 } else {
                     AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK) + 1, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context, AlarmReceiverUsage.STOP_FOREGROUND);
-                }
+                }**/
                 break;
             case STOP_WORKMANAGER:
+
+                BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).endOfSleepTime();
+                /**
                 //Stop Workmanager at end of sleeptime and unsubscribe to SleepApi
                 //TODO: Überprüfen, ob der Workmanager noch richtig abgebrochen wird
                 WorkManager.getInstance(context.getApplicationContext()).cancelAllWorkByTag(context.getApplicationContext().getString(R.string.workmanager1_tag));
@@ -143,7 +147,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                 //Set AlarmManager to start Workmanager at begin of sleeptime
                 calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeBeginJob());
                 AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context,AlarmReceiverUsage.START_WORKMANAGER_CALCULATION);
-                break;
+                **/
+                 break;
             case CURRENTLY_NOT_SLEEPING:
                 sleepCalculationHandler.userCurrentlyNotSleepingJob();
                 Toast.makeText(context.getApplicationContext(), context.getApplicationContext().getString(R.string.currently_not_sleeping_message), Toast.LENGTH_LONG).show();

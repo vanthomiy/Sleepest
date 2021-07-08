@@ -68,7 +68,7 @@ class Workmanager(appcontext: Context, workerParams: WorkerParameters) : Worker(
 
         /**
          * Start the workmanager with a specific duration
-         * @param duration Number <=15 stands for duration in minutes
+         * @param duration Number >= 15 stands for duration in minutes
          */
         fun startPeriodicWorkmanager(duration: Int, context1: Context) {
 
