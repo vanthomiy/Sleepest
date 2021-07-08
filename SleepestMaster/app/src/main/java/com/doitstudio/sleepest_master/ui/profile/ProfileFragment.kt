@@ -2,6 +2,7 @@ package com.doitstudio.sleepest_master.ui.profile
 
 
 import android.Manifest
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -52,13 +53,13 @@ class ProfileFragment : Fragment() {
         (actualContext as MainApplication).dataStoreRepository
     }
 
-    var caseOfEntrie = 0
+    private var caseOfEntrie = 0
 
-
-    companion object {
-        fun newInstance() = SleepFragment()
+    fun setCaseOfEntrie(case:Int){
+        caseOfEntrie = case
+        if(this::binding.isInitialized)
+            viewModel.actualExpand.set(caseOfEntrie)
     }
-
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -113,9 +114,7 @@ class ProfileFragment : Fragment() {
             }
         }
 
-        viewModel.actualExpand.set(if (caseOfEntrie == 1) 0 else -1)
-        viewModel.actualExpand.set(if (caseOfEntrie == 2) 4 else -1)
-
+        viewModel.actualExpand.set(caseOfEntrie)
 
         //region Test
 
@@ -204,10 +203,6 @@ class ProfileFragment : Fragment() {
 
     }
 
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
 
     fun onDataClicked(view: View) {
         when (view.tag.toString()) {
@@ -363,7 +358,7 @@ class ProfileFragment : Fragment() {
     }
 
 
-    val contentResolver by lazy {actualContext.contentResolver}
+    val contentResolver: ContentResolver by lazy {actualContext.contentResolver}
 
     private fun readTextFromUri(uri: Uri): String {
         val stringBuilder = StringBuilder()

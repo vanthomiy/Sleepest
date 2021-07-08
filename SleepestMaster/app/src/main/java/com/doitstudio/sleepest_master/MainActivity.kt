@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.view.MenuItem
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -89,9 +90,12 @@ class MainActivity : AppCompatActivity() {
                 supportFragmentManager.beginTransaction().add(R.id.navigationFrame, alarmsFragment).commit()
             }
             else{
-                supportFragmentManager.beginTransaction().replace(R.id.navigationFrame, profileFragment).commit()
+                supportFragmentManager.beginTransaction().replace(
+                    R.id.navigationFrame,
+                    profileFragment
+                ).commit()
                 if(settings.afterRestartApp){
-                    profileFragment.caseOfEntrie = 2
+                    profileFragment.setCaseOfEntrie(4)
                     dataStoreRepository.updateAfterRestartApp(false)
                 }
                 else{
@@ -126,19 +130,26 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                     else -> {
-                        if(profileFragment.isAdded){
+                        if (profileFragment.isAdded) {
                             ft.show(profileFragment)
-                        }else{
+                        } else {
                             ft.add(R.id.navigationFrame, profileFragment)
                         }
                     }
                 }
 
-                // Hide fragment B
-                if (item.title != "home" && alarmsFragment.isAdded) { ft.hide(alarmsFragment) }
-                if (item.title != "history" && historyFragment.isAdded) { ft.hide(historyFragment) }
-                if (item.title != "sleep" && sleepFragment.isAdded) { ft.hide(sleepFragment) }
-                if (item.title != "profile" && profileFragment.isAdded) { ft.hide(profileFragment) }
+                if (item.itemId != R.id.home && alarmsFragment.isAdded) {
+                    ft.hide(alarmsFragment)
+                }
+                if (item.itemId != R.id.history && historyFragment.isAdded) {
+                    ft.hide(historyFragment)
+                }
+                if (item.itemId != R.id.sleep && sleepFragment.isAdded) {
+                    ft.hide(sleepFragment)
+                }
+                if (item.itemId != R.id.profile && profileFragment.isAdded) {
+                    ft.hide(profileFragment)
+                }
 
                 ft.commit()
 
@@ -161,21 +172,29 @@ class MainActivity : AppCompatActivity() {
         setAppLocale(this,locale)
 
         recreate()
+    fun switchToMenu(itemId: Int, changeType:Int = -1) {
+        profileFragment.setCaseOfEntrie(changeType)
+        bottomBar.selectedItemId = itemId;
     }
 
     // endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // null workaround... else pass the [savedInstanceState]
         super.onCreate(null)
         setupFragments(savedInstanceState == null)
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         scope.launch {
             val settings = dataStoreRepository.settingsDataFlow.first()
-
             val language = when(settings.designLanguage){
                 0 -> Locale.GERMAN
                 else -> Locale.ENGLISH
+            if(settings.designAutoDarkMode){
+                AppCompatDelegate
+                        .setDefaultNightMode(
+                            AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                        );
             }
 
             val default = Locale.getDefault()
@@ -258,7 +277,13 @@ class MainActivity : AppCompatActivity() {
                         earliestWakeupTemp = dataBaseRepository.getNextActiveAlarm()!!.wakeupEarly
 
                         val calendarFirstCalc = AlarmReceiver.getAlarmDate(dataBaseRepository.getNextActiveAlarm()!!.wakeupEarly - 1800)
-                        AlarmReceiver.startAlarmManager(calendarFirstCalc[Calendar.DAY_OF_WEEK], calendarFirstCalc[Calendar.HOUR_OF_DAY], calendarFirstCalc[Calendar.MINUTE], applicationContext,AlarmReceiverUsage.START_WORKMANAGER_CALCULATION)
+                        AlarmReceiver.startAlarmManager(
+                            calendarFirstCalc[Calendar.DAY_OF_WEEK],
+                            calendarFirstCalc[Calendar.HOUR_OF_DAY],
+                            calendarFirstCalc[Calendar.MINUTE],
+                            applicationContext,
+                            AlarmReceiverUsage.START_WORKMANAGER_CALCULATION
+                        )
                     }
                 } else // not in sleep time
                 {
@@ -280,7 +305,13 @@ class MainActivity : AppCompatActivity() {
                         calendarAlarm.add(Calendar.SECOND, livedata.sleepTimeStart)
 
                         //Start a alarm for the new foregroundservice start time
-                        AlarmReceiver.startAlarmManager(calendarAlarm[Calendar.DAY_OF_WEEK], calendarAlarm[Calendar.HOUR_OF_DAY], calendarAlarm[Calendar.MINUTE], applicationContext, AlarmReceiverUsage.START_FOREGROUND)
+                        AlarmReceiver.startAlarmManager(
+                            calendarAlarm[Calendar.DAY_OF_WEEK],
+                            calendarAlarm[Calendar.HOUR_OF_DAY],
+                            calendarAlarm[Calendar.MINUTE],
+                            applicationContext,
+                            AlarmReceiverUsage.START_FOREGROUND
+                        )
 
                         val pref = getSharedPreferences("AlarmReceiver1", 0)
                         val ed = pref.edit()
@@ -297,9 +328,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        settingsLiveData.observe(this) { settings ->
+        settingsLiveData.observe(this) { livedata ->
 
-            if(settings.restartApp && settings.afterRestartApp)
+            if(livedata.restartApp && livedata.afterRestartApp)
             {
                 scope.launch {
                     dataStoreRepository.updateRestartApp(false)
@@ -332,14 +363,26 @@ class MainActivity : AppCompatActivity() {
 
         if (!notificationManager.isNotificationPolicyAccessGranted){
             //Toast.makeText(this,"Alarm could be silence without this permission", Toast.LENGTH_SHORT).show()
-            val snack = Snackbar.make(findViewById(android.R.id.content),"This is a simple Snackbar",Snackbar.LENGTH_INDEFINITE)
+            val snack = Snackbar.make(
+                findViewById(android.R.id.content),
+                "This is a simple Snackbar",
+                Snackbar.LENGTH_INDEFINITE
+            )
             //snack.show()
         } else if(!Settings.canDrawOverlays(this)) {
             //Toast.makeText(this,"Sorry. Can't draw overlays without permission...", Toast.LENGTH_SHORT).show()
-            val snack = Snackbar.make(findViewById(android.R.id.content),"This is a simple Snackbar",Snackbar.LENGTH_INDEFINITE)
+            val snack = Snackbar.make(
+                findViewById(android.R.id.content),
+                "This is a simple Snackbar",
+                Snackbar.LENGTH_INDEFINITE
+            )
             //snack.show()
         } else if(!activityRecognitionPermissionApproved()) {
-            val snack = Snackbar.make(findViewById(android.R.id.content),"This is a simple Snackbar",Snackbar.LENGTH_INDEFINITE)
+            val snack = Snackbar.make(
+                findViewById(android.R.id.content),
+                "This is a simple Snackbar",
+                Snackbar.LENGTH_INDEFINITE
+            )
             //snack.show()
         }
 
@@ -360,7 +403,10 @@ class MainActivity : AppCompatActivity() {
         if (!Settings.canDrawOverlays(this)) {
 
             // If not, start Intent to launch the permission request
-            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
+            val intent = Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:$packageName")
+            )
             startActivity(intent)
         }
     }
@@ -392,9 +438,13 @@ class MainActivity : AppCompatActivity() {
                     val calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeBegin())
                     //AlarmReceiver.cancelAlarm(applicationContext, 6)
                     AlarmReceiver.startAlarmManager(
-                        calendar.get(Calendar.DAY_OF_WEEK), calendar.get(
+                        calendar.get(Calendar.DAY_OF_WEEK),
+                        calendar.get(
                             Calendar.HOUR_OF_DAY
-                        ), calendar.get(Calendar.MINUTE), applicationContext, AlarmReceiverUsage.START_WORKMANAGER
+                        ),
+                        calendar.get(Calendar.MINUTE),
+                        applicationContext,
+                        AlarmReceiverUsage.START_WORKMANAGER
                     )
 
                     val calendarAlarm = Calendar.getInstance()

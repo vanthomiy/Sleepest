@@ -151,12 +151,16 @@ class AlarmsFragment() : Fragment() {
 
         btnAddAlarmEntity.setOnClickListener {
             //view ->  onAddAlarm(view)
+
+
             if (checkPermissions()) {
                 onAddAlarm(view)
             } else {
+
+                (activity as MainActivity).switchToMenu(R.id.profile, changeType = 3)
+
                 Toast.makeText(actualContext, "Please grant all permissions", Toast.LENGTH_LONG)
                     .show()
-
             }
         }
 
