@@ -12,15 +12,19 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.DontKillMyAppFragment
+import com.doitstudio.sleepest_master.MainActivity
 import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.databinding.FragmentProfileBinding
 import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage
 import com.doitstudio.sleepest_master.model.data.export.UserSleepExportData
+import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
@@ -44,6 +48,9 @@ class ProfileFragment : Fragment() {
     private val scope: CoroutineScope = MainScope()
     private val dataBaseRepository: DatabaseRepository by lazy {
         (actualContext as MainApplication).dataBaseRepository
+    }
+    private val dataStoreRepository: DataStoreRepository by lazy {
+        (actualContext as MainApplication).dataStoreRepository
     }
 
     private var caseOfEntrie = 0
@@ -86,6 +93,25 @@ class ProfileFragment : Fragment() {
             //DontKillMyAppFragment.show(parentFragment.activity)
             //val calendar = Calendar.getInstance()
             //AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)+2, actualContext, AlarmReceiverUsage.DISABLE_ALARM)
+        }
+        binding.btnLanguageSlector.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, selectedLanguage: Int, id: Long) {
+
+                scope.launch {
+                    dataStoreRepository.updateLanguage(selectedLanguage)
+                }
+
+                val language = when(selectedLanguage){
+                    0 -> Locale.GERMAN
+                    else -> Locale.ENGLISH
+                }
+
+                (activity as MainActivity).switchLanguage(language, R.id.profile, changeType = 1)
+            }
         }
 
         viewModel.actualExpand.set(caseOfEntrie)
@@ -177,6 +203,7 @@ class ProfileFragment : Fragment() {
 
     }
 
+
     fun onDataClicked(view: View) {
         when (view.tag.toString()) {
             "export" -> {
@@ -225,7 +252,6 @@ class ProfileFragment : Fragment() {
             } else viewModel.showPermissionInfo("overlay")
         }
     }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

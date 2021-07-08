@@ -80,6 +80,9 @@ enum class MobilePosition{
     UNIDENTIFIED;
 
     companion object {
+        /**
+         * Takes an [Int] and will return the associated [MobilePosition] (0 to 2)
+         */
         fun getCount(type: Int): MobilePosition {
             return when (type) {
                 0 -> INBED
@@ -99,6 +102,9 @@ enum class LightConditions{
     UNIDENTIFIED;
 
     companion object {
+        /**
+         * Takes an [Int] and will return the associated [LightConditions] (0 to 2)
+         */
         fun getCount(type: Int): LightConditions {
             return when (type) {
                 0 -> DARK
@@ -120,6 +126,9 @@ enum class MobileUseFrequency{
     VERYOFTEN;
 
     companion object {
+        /**
+         * Takes an [Int] and will return the associated [MobileUseFrequency] (0 to 5)
+         */
         fun getCount(type: Int): MobileUseFrequency {
             return when (type) {
                 0 -> MobileUseFrequency.VERYLESS
@@ -130,6 +139,9 @@ enum class MobileUseFrequency{
             }
         }
 
+        /**
+         * Takes an [MobileUseFrequency] and will return the associated [Int] value (0 to 4)
+         */
         fun getValue(type: MobileUseFrequency): Int {
             return when (type) {
                MobileUseFrequency.VERYLESS -> 0
@@ -168,6 +180,9 @@ enum class ActivityOnDay{
     EXTREMACTIVITY;
 
     companion object {
+        /**
+         * Takes an [ActivityOnDay] and will return the associated [Float] value for the sleep calculation factor
+         */
         fun getFactor(type: ActivityOnDay): Float {
             return when (type) {
                 NOACTIVITY -> 0.9f
@@ -183,7 +198,7 @@ enum class ActivityOnDay{
 }
 
 /**
- * Defines the sleep time pattern of a user sleep session
+ * Defines the sleep time adjustment of a user sleep session
  */
 enum class SleepTimeAdjustment{
     NONE,
@@ -194,7 +209,7 @@ enum class SleepTimeAdjustment{
 }
 
 /**
- * Defines the sleep time pattern of a user sleep session
+ * Defines the sleep time duration adjustment of a user sleep session
  */
 enum class SleepDurationAdjustment{
     NONE,
@@ -207,6 +222,7 @@ enum class SleepDurationAdjustment{
 
 /**
  * Defines how often the sleep api data is available
+ * It is used for the algorithms only
  */
 enum class SleepDataFrequency{
     FIVE,
@@ -215,6 +231,9 @@ enum class SleepDataFrequency{
     NONE;
 
     companion object {
+        /**
+         * Takes an [SleepDataFrequency] and will return the associated [Int] value for the sleep calculation
+         */
         fun getValue(type:SleepDataFrequency) : Int {
             return when (type) {
                 SleepDataFrequency.FIVE -> 5
@@ -224,6 +243,9 @@ enum class SleepDataFrequency{
             }
         }
 
+        /**
+         * Takes an [SleepDataFrequency] and will return the associated [Int] value for the sleep calculation input patterns for the machine learning model
+         */
         fun getCount(type:SleepDataFrequency) : Int {
             return when (type) {
                 SleepDataFrequency.FIVE -> 24
@@ -236,7 +258,7 @@ enum class SleepDataFrequency{
 }
 
 /**
- * Defines the actual process that is to be done
+ * Defines the actual model that is used in the process
  */
 enum class ModelProcess{
     SLEEP04,
@@ -245,6 +267,9 @@ enum class ModelProcess{
     TABLEBED;
 
     companion object {
+        /**
+         * Takes an [ModelProcess] and will return the associated [String] value for the sleep calculation
+         */
         fun getString(type: ModelProcess): String {
             return type.toString().toLowerCase().capitalize()
         }

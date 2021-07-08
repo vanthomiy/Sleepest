@@ -23,8 +23,6 @@ class ActivityTransitionHandler(private val context: Context) {
 
     private val scope: CoroutineScope = MainScope()
 
-    private val client: ActivityRecognitionClient by lazy { ActivityRecognition.getClient(context) }
-
     private val dataStoreRepository by lazy { (context.applicationContext as MainApplication).dataStoreRepository }
 
     companion object {
@@ -41,7 +39,6 @@ class ActivityTransitionHandler(private val context: Context) {
             }
         }
 
-        const val REQUEST_CODE_ACTIVITY_TRANSITION = 123
         const val REQUEST_CODE_INTENT_ACTIVITY_TRANSITION = 122
     }
 
@@ -89,41 +86,9 @@ class ActivityTransitionHandler(private val context: Context) {
     }
 
     /**
-     * Unsubscribes to Activity data.
+     * Unsubscribe to Activity data.
      */
     private fun unsubscribeToActivitySegmentUpdates() {
-        /*val task = ActivityRecognition.getClient(context).removeActivityTransitionUpdates(pendingIntent)
-
-        task.addOnSuccessListener {
-            scope.launch {
-                dataStoreRepository.updateActivityIsSubscribed(false)
-                dataStoreRepository.updateActivityUnsubscribeFailed(false)
-            }
-        }
-        task.addOnFailureListener { exception ->
-            scope.launch {
-                dataStoreRepository.updateActivityUnsubscribeFailed(true)
-            }
-        }*/
-        /*
-        client
-                .removeActivityTransitionUpdates(getPendingIntent())
-                .addOnSuccessListener {
-                    getPendingIntent().cancel()
-                    scope.launch {
-                        dataStoreRepository.updateActivityIsSubscribed(false)
-                        dataStoreRepository.updateActivityUnsubscribeFailed(false)
-                    }
-                }
-                .addOnFailureListener { e: Exception ->
-                    scope.launch {
-                        dataStoreRepository.updateActivityUnsubscribeFailed(true)
-
-                    }
-                }
-*/
-        // myPendingIntent is the instance of PendingIntent where the app receives callbacks.
-
         val request = ActivityTransitionUtil.getActivityTransitionRequest()
 
         val task = ActivityRecognition.getClient(context)

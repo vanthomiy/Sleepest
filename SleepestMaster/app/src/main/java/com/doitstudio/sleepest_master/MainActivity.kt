@@ -2,6 +2,7 @@ package com.doitstudio.sleepest_master
 
 import android.Manifest
 import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -67,10 +68,17 @@ class MainActivity : AppCompatActivity() {
     lateinit var sleepFragment : SleepFragment
     lateinit var profileFragment : ProfileFragment
 
-    private fun setupFragments(isStart: Boolean){
+    private fun setupFragments(isStart:Boolean){
         scope.launch {
 
             val settings = dataStoreRepository.settingsDataFlow.first()
+            val language = when(settings.designLanguage){
+                0 -> Locale.GERMAN
+                else -> Locale.ENGLISH
+            }
+
+            if(language.language != Locale.getDefault().language)
+                return@launch
 
             bottomBar = binding.bottomBar
             alarmsFragment = AlarmsFragment()
@@ -91,7 +99,7 @@ class MainActivity : AppCompatActivity() {
                     dataStoreRepository.updateAfterRestartApp(false)
                 }
                 else{
-                    profileFragment.setCaseOfEntrie(if(isStart) -1 else 0)
+                    profileFragment.caseOfEntrie = 1
                 }
             }
 
@@ -149,10 +157,21 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-
-
     }
 
+    private fun setAppLocale(context: Context, locale: Locale) {
+
+        Locale.setDefault(locale)
+        val config = context.resources.configuration
+        config.setLocale(locale)
+        context.createConfigurationContext(config)
+        context.resources.updateConfiguration(config, context.resources.displayMetrics)
+    }
+
+    fun switchLanguage(locale:Locale, itemId: Int, changeType:Int = -1) {
+        setAppLocale(this,locale)
+
+        recreate()
     fun switchToMenu(itemId: Int, changeType:Int = -1) {
         profileFragment.setCaseOfEntrie(changeType)
         bottomBar.selectedItemId = itemId;
@@ -163,32 +182,31 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         // null workaround... else pass the [savedInstanceState]
         super.onCreate(null)
-        setContentView(R.layout.activity_main)
-
-        supportActionBar?.hide()
+        setupFragments(savedInstanceState == null)
+        binding = ActivityMainBinding.inflate(layoutInflater)
 
         scope.launch {
-            // check system dark mode if necessary and safe in
             val settings = dataStoreRepository.settingsDataFlow.first()
+            val language = when(settings.designLanguage){
+                0 -> Locale.GERMAN
+                else -> Locale.ENGLISH
             if(settings.designAutoDarkMode){
                 AppCompatDelegate
                         .setDefaultNightMode(
                             AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
                         );
             }
-            /*else {
-                AppCompatDelegate
-                        .setDefaultNightMode(if(settings.designDarkMode)
-                            AppCompatDelegate.MODE_NIGHT_YES else
-                            AppCompatDelegate.MODE_NIGHT_NO);
-            }*/
+
+            val default = Locale.getDefault()
+            if(language.language != default.language)
+            {
+                setAppLocale(applicationContext, language)
+            }
+
+            setContentView(binding.root)
         }
 
-
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        setupFragments(savedInstanceState == null)
+        supportActionBar?.hide()
 
         sleepTimeBeginTemp = dataStoreRepository.getSleepTimeBeginJob();
 
@@ -200,7 +218,6 @@ class MainActivity : AppCompatActivity() {
                 earliestWakeupTemp = 0
             }
         }
-
 
         // observe alarm changes
         activeAlarmsLiveData.observe(this){ list ->
@@ -320,6 +337,13 @@ class MainActivity : AppCompatActivity() {
                     recreate()
                 }
             }
+
+            if(settings.designAutoDarkMode){
+                AppCompatDelegate
+                    .setDefaultNightMode(
+                        AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+            }
+
         }
 
         // check permission
@@ -329,6 +353,7 @@ class MainActivity : AppCompatActivity() {
 
         checkDrawOverlayPermission()
         checkDoNotDisturbPermission()
+
     }
 
     override fun onResume() {

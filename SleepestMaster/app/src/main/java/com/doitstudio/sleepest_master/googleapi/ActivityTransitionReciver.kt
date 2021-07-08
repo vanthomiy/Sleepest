@@ -3,7 +3,6 @@ package com.doitstudio.sleepest_master.googleapi
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.widget.Toast
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.storage.db.ActivityApiRawDataEntity
 import com.google.android.gms.location.ActivityTransitionResult
@@ -35,7 +34,7 @@ class ActivityTransitionReciver : BroadcastReceiver() {
                             ActivityApiRawDataEntity(
                                 LocalDateTime.now().toEpochSecond(ZoneOffset.UTC).toInt(),
                                 transition.activityType,
-                                (transition.elapsedRealTimeNanos / 60000000000).toInt()
+                                transition.transitionType
                             )
                         )
 
@@ -43,9 +42,7 @@ class ActivityTransitionReciver : BroadcastReceiver() {
 
                     // Update the raw Activity api data
                     repository.insertActivityApiRawData(convertedToEntityVersion)
-                    Toast.makeText(context, "Neue Transition gefunden: " + it.transitionEvents.count(), Toast.LENGTH_LONG
 
-                    ).show()
                     // update the amount of data that is beeing recived
                     dataStoreRepository.updateActivityApiValuesAmount(
                         it.transitionEvents.count()
