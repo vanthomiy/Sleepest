@@ -2,6 +2,7 @@ package com.doitstudio.sleepest_master.ui.history
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Color.green
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -401,19 +402,23 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         if (sleepSessionData.containsKey(UserSleepSessionEntity.getIdByDateTime(dateOfDiagram))) {
             val values = sleepSessionData[UserSleepSessionEntity.getIdByDateTime(dateOfDiagram)]!!
 
-            //val awake = values.sleepTimes.awakeTime
+            val awake = values.sleepTimes.awakeTime
             val sleep = values.sleepTimes.sleepDuration
             val lightSleep = values.sleepTimes.lightSleepDuration
             val deepSleep = values.sleepTimes.deepSleepDuration
-            val remSleep = values.sleepTimes.remSleepDuration
+            //val remSleep = values.sleepTimes.remSleepDuration
 
-            if (sleep == 0) {
-                entries.add(PieEntry(sleep.toFloat(), "sleep", R.color.dark_green))
+            if (lightSleep == 0 && deepSleep == 0) {
+                entries.add(PieEntry(awake.toFloat(), "Awake"))
+                entries.add(PieEntry(sleep.toFloat(), "Sleep"))
+                entries.add(PieEntry(0.toFloat(), "Light"))
+                entries.add(PieEntry(0.toFloat(), "Deep"))
             }
             else {
-                entries.add(PieEntry(lightSleep.toFloat(), "light"))
-                entries.add(PieEntry(deepSleep.toFloat(), "deep"))
-                entries.add(PieEntry(remSleep.toFloat(), "rem"))
+                entries.add(PieEntry(awake.toFloat(), "Awake"))
+                entries.add(PieEntry(0.toFloat(), "Sleep"))
+                entries.add(PieEntry(lightSleep.toFloat(), "Light"))
+                entries.add(PieEntry(deepSleep.toFloat(), "Deep"))
             }
             //entries.add(PieEntry(awake.toFloat(), "awake"))
         }
@@ -426,10 +431,10 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
      */
     private fun setPieChart() {
         val listColors = ArrayList<Int>()
-        listColors.add(resources.getColor(R.color.black))
-        listColors.add(resources.getColor(R.color.green))
-        listColors.add(resources.getColor(R.color.red))
-        //listColors.add(resources.getColor(R.color.blue))
+        listColors.add(resources.getColor(R.color.light_sleep_color))
+        listColors.add(resources.getColor(R.color.deep_sleep_color))
+        listColors.add(resources.getColor(R.color.awake_sleep_color))
+        listColors.add(resources.getColor(R.color.sleep_sleep_color))
         //listColors.add(resources.getColor(R.color.dark_green))
 
         val pieDataSet = PieDataSet(generateDataPieChart(), "Sleep states")
@@ -441,7 +446,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         pieChart.setUsePercentValues(true)
         pieChart.isDrawHoleEnabled = false
         pieChart.description.isEnabled = false
-        pieChart.setEntryLabelColor(R.color.black)
+        //pieChart.setEntryLabelColor(R.color.black)
         pieChart.animateY(1000, Easing.EaseInOutQuad)
     }
 
@@ -489,6 +494,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
                             )
                         )
                     )
+
                 } else {
                     entries.add(
                         BarEntry(
@@ -519,7 +525,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
 
         val barDataSet1 = BarDataSet(diagramData.first, "")
         //barDataSet1.setColors(Color.YELLOW, Color.MAGENTA, Color.BLUE, Color.BLACK, Color.RED)
-        barDataSet1.setColors(Color.MAGENTA, Color.BLUE, Color.BLACK, Color.YELLOW)
+        barDataSet1.setColors(R.color.light_sleep_color, R.color.deep_sleep_color, R.color.awake_sleep_color, R.color.sleep_sleep_color)
         //barDataSet1.label = "States"
         //barDataSet1.setDrawIcons(false)
         barDataSet1.setDrawValues(false)
@@ -568,11 +574,11 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         legend.setDrawInside(false)
 
         val legendEntries = arrayListOf<LegendEntry>()
-        //legendEntries.add((LegendEntry("Awake", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.YELLOW)))
-        legendEntries.add((LegendEntry("Light", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.MAGENTA)))
-        legendEntries.add((LegendEntry("Deep", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.BLUE)))
-        legendEntries.add((LegendEntry("Awake", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.BLACK)))
-        legendEntries.add((LegendEntry("Sleep", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.YELLOW)))
+        //legendEntries.add((LegendEntry("Awake", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.YELLOW))
+        legendEntries.add((LegendEntry("Light", Legend.LegendForm.SQUARE, 8f, 8f, null ,R.color.light_sleep_color)))
+        legendEntries.add((LegendEntry("Deep", Legend.LegendForm.SQUARE, 8f, 8f, null ,R.color.deep_sleep_color)))
+        legendEntries.add((LegendEntry("Awake", Legend.LegendForm.SQUARE, 8f, 8f, null ,R.color.awake_sleep_color)))
+        legendEntries.add((LegendEntry("Sleep", Legend.LegendForm.SQUARE, 8f, 8f, null ,R.color.sleep_sleep_color)))
         legend.setCustom(legendEntries)
 
         //legend.yOffset = 2f
@@ -664,7 +670,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
             if (sleepSessionData.containsKey(id)) {
                 val values = sleepSessionData[id]!!
 
-                //val awake = values.sleepTimes.awakeTime
+                val awake = values.sleepTimes.awakeTime
                 val sleep = values.sleepTimes.sleepDuration
                 val lightSleep = values.sleepTimes.lightSleepDuration
                 val deepSleep = values.sleepTimes.deepSleepDuration
@@ -676,9 +682,9 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
                 entries.add(
                     BarEntry(
                         xIndex, floatArrayOf(
-                            //awake.toFloat(),
                             lightSleep.toFloat(),
                             deepSleep.toFloat(),
+                            awake.toFloat(),
                             remSleep.toFloat(),
                             //sleep.toFloat()
                         )
@@ -700,7 +706,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
 
         val barDataSet1 = BarDataSet(diagramData.first, "")
         //barDataSet1.setColors(Color.YELLOW, Color.MAGENTA, Color.BLUE, Color.BLACK, Color.RED)
-        barDataSet1.setColors(Color.MAGENTA, Color.BLUE, Color.BLACK)
+        barDataSet1.setColors(R.color.light_sleep_color, R.color.deep_sleep_color, R.color.awake_sleep_color, R.color.sleep_sleep_color)
         //barDataSet1.label = "States"
         //barDataSet1.setDrawIcons(false)
         barDataSet1.setDrawValues(false)
@@ -749,11 +755,10 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         legend.setDrawInside(false)
 
         val legendEntries = arrayListOf<LegendEntry>()
-        //legendEntries.add((LegendEntry("Awake", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.YELLOW)))
-        legendEntries.add((LegendEntry("Light", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.MAGENTA)))
-        legendEntries.add((LegendEntry("Deep", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.BLUE)))
-        legendEntries.add((LegendEntry("REM", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.BLACK)))
-        //legendEntries.add((LegendEntry("Sleep", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.RED)))
+        legendEntries.add((LegendEntry("Light", Legend.LegendForm.SQUARE, 8f, 8f, null ,R.color.light_sleep_color)))
+        legendEntries.add((LegendEntry("Deep", Legend.LegendForm.SQUARE, 8f, 8f, null ,R.color.deep_sleep_color)))
+        legendEntries.add((LegendEntry("Awake", Legend.LegendForm.SQUARE, 8f, 8f, null ,R.color.awake_sleep_color)))
+        legendEntries.add((LegendEntry("Sleep", Legend.LegendForm.SQUARE, 8f, 8f, null ,R.color.sleep_sleep_color)))
         legend.setCustom(legendEntries)
 
         //legend.yOffset = 2f
