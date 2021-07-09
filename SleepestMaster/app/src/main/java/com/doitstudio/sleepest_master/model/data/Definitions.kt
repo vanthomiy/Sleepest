@@ -182,6 +182,7 @@ enum class ActivityOnDay{
     companion object {
         /**
          * Takes an [ActivityOnDay] and will return the associated [Float] value for the sleep calculation factor
+         * TODO(Define factors for the activity)
          */
         fun getFactor(type: ActivityOnDay): Float {
             return when (type) {

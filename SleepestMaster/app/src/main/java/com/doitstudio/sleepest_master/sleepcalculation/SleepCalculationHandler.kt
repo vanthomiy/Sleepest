@@ -113,8 +113,9 @@ class SleepCalculationHandler(val context: Context) {
 
     /**
      * Gets the user activity and classifies what type of activity was done
+     * TODO(We have to define how much activity is what state)
      */
-    suspend fun getUserActivityOnDay(time:LocalDateTime) : ActivityOnDay{
+    private suspend fun getUserActivityOnDay(time:LocalDateTime) : ActivityOnDay{
 
         val userActivity =
             dataBaseRepository.getActivityApiRawDataFromDate(time.minusDays(1)).first()
@@ -136,11 +137,6 @@ class SleepCalculationHandler(val context: Context) {
                 activityCount += 3 * (userActivity[i+1].timestampSeconds - userActivity[i].timestampSeconds) / 60
             }
         }
-
-        // lets say > 1 Stunde schwer und 3 Stunden leicht ist viel
-        // 60 * 3 + 60 * 3
-        // 360
-
 
         return when {
             activityCount > 360 -> ActivityOnDay.EXTREMACTIVITY
