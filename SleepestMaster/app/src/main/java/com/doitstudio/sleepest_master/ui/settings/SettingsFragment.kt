@@ -1,4 +1,4 @@
-package com.doitstudio.sleepest_master.ui.profile
+package com.doitstudio.sleepest_master.ui.settings
 
 
 import android.Manifest
@@ -12,15 +12,12 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.DontKillMyAppFragment
-import com.doitstudio.sleepest_master.MainActivity
 import com.doitstudio.sleepest_master.MainApplication
-import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.databinding.FragmentProfileBinding
 import com.doitstudio.sleepest_master.model.data.export.UserSleepExportData
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
@@ -35,9 +32,9 @@ import kotlinx.coroutines.launch
 import java.io.*
 import java.util.*
 
-class ProfileFragment : Fragment() {
+class SettingsFragment : Fragment() {
 
-    private val viewModel by lazy { ViewModelProvider(this).get(ProfileViewModel::class.java) }
+    private val viewModel by lazy { ViewModelProvider(this).get(SettingsViewModel::class.java) }
     private lateinit var binding: FragmentProfileBinding
     private val actualContext: Context by lazy { requireActivity().applicationContext }
     private val scope: CoroutineScope = MainScope()

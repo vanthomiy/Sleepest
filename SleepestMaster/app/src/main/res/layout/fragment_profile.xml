@@ -2,12 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.profile.ProfileFragment">
+    tools:context=".ui.settings.SettingsFragment">
 
     <data>
         <variable
             name="profileViewModel"
-            type="com.doitstudio.sleepest_master.ui.profile.ProfileViewModel" />
+            type="com.doitstudio.sleepest_master.ui.settings.SettingsViewModel" />
     </data>
 
     <LinearLayout

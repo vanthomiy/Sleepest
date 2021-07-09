@@ -2,13 +2,11 @@ package com.doitstudio.sleepest_master
 
 import android.Manifest
 import android.app.NotificationManager
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.view.MenuItem
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -22,7 +20,7 @@ import com.doitstudio.sleepest_master.model.data.Actions
 import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
-import com.doitstudio.sleepest_master.ui.profile.ProfileFragment
+import com.doitstudio.sleepest_master.ui.settings.SettingsFragment
 import com.doitstudio.sleepest_master.ui.sleep.SleepFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
@@ -66,7 +64,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var alarmsFragment : AlarmsFragment
     lateinit var historyFragment : HistoryFragment
     lateinit var sleepFragment : SleepFragment
-    lateinit var profileFragment : ProfileFragment
+    lateinit var settingsFragment : SettingsFragment
 
     private fun setupFragments(isStart:Boolean){
         scope.launch {
@@ -77,7 +75,7 @@ class MainActivity : AppCompatActivity() {
             alarmsFragment = AlarmsFragment()
             historyFragment = HistoryFragment(applicationContext)
             sleepFragment = SleepFragment()
-            profileFragment = ProfileFragment()
+            settingsFragment = SettingsFragment()
 
             if(isStart || !settings.designDarkModeAckn){
                 supportFragmentManager.beginTransaction().add(R.id.navigationFrame, alarmsFragment).commit()
@@ -88,18 +86,18 @@ class MainActivity : AppCompatActivity() {
 
                 supportFragmentManager.beginTransaction().replace(
                     R.id.navigationFrame,
-                    profileFragment
+                    settingsFragment
                 ).commit()
 
                 bottomBar.selectedItemId = R.id.profile
 
                 if(settings.afterRestartApp){
-                    profileFragment.setCaseOfEntrie(4)
+                    settingsFragment.setCaseOfEntrie(4)
                     dataStoreRepository.updateAfterRestartApp(false)
                 }
                 else{
 
-                    profileFragment.setCaseOfEntrie(0)
+                    settingsFragment.setCaseOfEntrie(0)
                 }
             }
 
@@ -130,10 +128,10 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                     else -> {
-                        if (profileFragment.isAdded) {
-                            ft.show(profileFragment)
+                        if (settingsFragment.isAdded) {
+                            ft.show(settingsFragment)
                         } else {
-                            ft.add(R.id.navigationFrame, profileFragment)
+                            ft.add(R.id.navigationFrame, settingsFragment)
                         }
                     }
                 }
@@ -147,8 +145,8 @@ class MainActivity : AppCompatActivity() {
                 if (item.itemId != R.id.sleep && sleepFragment.isAdded) {
                     ft.hide(sleepFragment)
                 }
-                if (item.itemId != R.id.profile && profileFragment.isAdded) {
-                    ft.hide(profileFragment)
+                if (item.itemId != R.id.profile && settingsFragment.isAdded) {
+                    ft.hide(settingsFragment)
                 }
 
                 ft.commit()
@@ -160,7 +158,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun switchToMenu(itemId: Int, changeType:Int = -1) {
-        profileFragment.setCaseOfEntrie(changeType)
+        settingsFragment.setCaseOfEntrie(changeType)
         bottomBar.selectedItemId = itemId;
     }
 

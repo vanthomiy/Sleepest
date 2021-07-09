@@ -1,4 +1,4 @@
-package com.doitstudio.sleepest_master.ui.profile
+package com.doitstudio.sleepest_master.ui.settings
 
 import android.Manifest
 import android.app.Application
@@ -7,14 +7,11 @@ import android.provider.Settings
 import android.transition.TransitionManager
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.ContextCompat
-import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
@@ -22,9 +19,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.util.*
 
-class ProfileViewModel(application: Application) : AndroidViewModel(application) {
+class SettingsViewModel(application: Application) : AndroidViewModel(application) {
 
     //region binding values
 
