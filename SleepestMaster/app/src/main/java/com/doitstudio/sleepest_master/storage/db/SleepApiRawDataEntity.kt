@@ -98,7 +98,6 @@ data class SleepApiRawDataEntity(
                                         awakeTime += awakeTimePuffer
                                         awakeTimePuffer = 0
                                 }
-
                         }
 
                         return awakeTime / 60

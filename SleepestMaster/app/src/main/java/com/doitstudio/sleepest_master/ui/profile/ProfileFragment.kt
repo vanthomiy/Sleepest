@@ -88,28 +88,6 @@ class ProfileFragment : Fragment() {
             DontKillMyAppFragment.show(requireActivity())
         }
 
-        binding.btnLanguageSlector.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View,
-                position: Int,
-                id: Long
-            ) {
-                scope.launch {
-                    dataStoreRepository.updateLanguage(position)
-                }
-
-                val language = when(position){
-                    0 -> Locale.GERMAN
-                    else -> Locale.ENGLISH
-                }
-
-                (activity as MainActivity).switchLanguage(language, R.id.profile, changeType = 1)            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        })
-
-
         viewModel.actualExpand.set(caseOfEntrie)
 
         //region Test
@@ -198,6 +176,7 @@ class ProfileFragment : Fragment() {
         return binding.root
 
     }
+
 
 
     fun onDataClicked(view: View) {

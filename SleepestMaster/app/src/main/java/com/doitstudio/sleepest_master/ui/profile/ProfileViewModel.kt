@@ -2,8 +2,6 @@ package com.doitstudio.sleepest_master.ui.profile
 
 import android.Manifest
 import android.app.Application
-import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.provider.Settings
 import android.transition.TransitionManager
@@ -13,13 +11,11 @@ import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
-import com.doitstudio.sleepest_master.MainActivity
+import androidx.lifecycle.MutableLiveData
 import com.doitstudio.sleepest_master.MainApplication
-import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import kotlinx.coroutines.CoroutineScope
@@ -85,9 +81,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
         }
     }
-
-    val languageSelections = ObservableArrayList<String>()
-    val selectedLanguage = ObservableField(0)
 
     // endregion
 
@@ -231,11 +224,9 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         scope.launch {
 
             var settingsParams = dataStoreRepository.settingsDataFlow.first()
-            languageSelections.addAll(arrayListOf<String>("Deutsch", "Englisch"))
             darkMode.set(settingsParams.designDarkMode)
             autoDarkMode.set(settingsParams.designAutoDarkMode)
             showDarkModeSetting.set(if (settingsParams.designAutoDarkMode) View.GONE else View.VISIBLE)
-            selectedLanguage.set(settingsParams.designLanguage)
         }
 
         checkPermissions()

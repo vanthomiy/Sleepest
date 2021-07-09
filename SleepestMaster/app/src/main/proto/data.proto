@@ -206,13 +206,6 @@ message SettingsData{
   bool designAutoDarkMode = 2;
 
   /**
-   * Defines if the user currently sleeping
-   * 0 German
-   * 1 English
-   */
-  int32 designLanguage = 3;
-
-  /**
  * Defines if the user currently sleeping
  */
   bool permissionSleepActivity = 4;

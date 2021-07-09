@@ -72,13 +72,6 @@ class MainActivity : AppCompatActivity() {
         scope.launch {
 
             val settings = dataStoreRepository.settingsDataFlow.first()
-            val language = when(settings.designLanguage){
-                0 -> Locale.GERMAN
-                else -> Locale.ENGLISH
-            }
-
-            if(language.language != Locale.getDefault().language)
-                return@launch
 
             bottomBar = binding.bottomBar
             alarmsFragment = AlarmsFragment()
@@ -166,20 +159,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setAppLocale(context: Context, locale: Locale) {
-        Locale.setDefault(locale)
-        val config = context.resources.configuration
-        config.setLocale(locale)
-        context.createConfigurationContext(config)
-        context.resources.updateConfiguration(config, context.resources.displayMetrics)
-    }
-
-    fun switchLanguage(locale:Locale, itemId: Int, changeType:Int = -1) {
-        setAppLocale(this, locale)
-
-        recreate()
-    }
-
     fun switchToMenu(itemId: Int, changeType:Int = -1) {
         profileFragment.setCaseOfEntrie(changeType)
         bottomBar.selectedItemId = itemId;
@@ -194,15 +173,6 @@ class MainActivity : AppCompatActivity() {
 
         scope.launch {
             val settings = dataStoreRepository.settingsDataFlow.first()
-            val language = when (settings.designLanguage) {
-                0 -> Locale.GERMAN
-                else -> Locale.ENGLISH
-            }
-
-            val default = Locale.getDefault()
-            if (language.language != default.language) {
-                setAppLocale(applicationContext, language)
-            }
 
             if (!settings.designAutoDarkMode && (AppCompatDelegate.getDefaultNightMode() != if (settings.designDarkMode) AppCompatDelegate.MODE_NIGHT_YES
                 else AppCompatDelegate.MODE_NIGHT_NO)

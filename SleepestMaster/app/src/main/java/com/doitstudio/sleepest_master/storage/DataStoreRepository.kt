@@ -185,9 +185,6 @@ class DataStoreRepository(context: Context) {
     suspend fun updateDarkMode(isActive:Boolean) =
             settingsDataStatus.updateDarkMode(isActive)
 
-    suspend fun updateLanguage(isActive:Int) =
-            settingsDataStatus.updateLanguage(isActive)
-
     suspend fun updateRestartApp(isActive:Boolean) =
             settingsDataStatus.updateRestartApp(isActive)
 

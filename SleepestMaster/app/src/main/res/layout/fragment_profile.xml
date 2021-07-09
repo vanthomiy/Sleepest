@@ -175,29 +175,8 @@
                             android:textColor="@color/tertiary_text_color"
                             android:layout_marginBottom="10dp"
                             android:checked="@={profileViewModel.darkMode}"
-                            android:onClick="@{profileViewModel::darkModeToggled}"
-                            />
+                            android:onClick="@{profileViewModel::darkModeToggled}"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="0dp"
-                            android:textSize="@dimen/headerSize"
-                            android:layout_gravity="start"
-                            android:textColor="@color/primary_text_color"
-                            android:text="@string/profile_language"/>
-
-                        <androidx.appcompat.widget.AppCompatSpinner
-                            android:id="@+id/btnLanguageSlector"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgroundedchoosen"
-                            android:layout_gravity="start"
-                            android:layout_marginLeft="0dp"
-                            android:layout_marginVertical="10dp"
-                            android:entries="@{profileViewModel.languageSelections}"
-                            android:selectedItemPosition="@={profileViewModel.selectedLanguage}"
-                            android:theme="@style/Spinner"/>
 
                     </LinearLayout>
                 </LinearLayout>
@@ -259,7 +238,6 @@
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_tutorial"
                             android:textColor="@color/tertiary_text_color"
-
                             android:tag="tutorial"
                             android:onClick="@{profileViewModel::onHelpClicked}">
                         </androidx.appcompat.widget.AppCompatButton>
@@ -272,7 +250,6 @@
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_neccessary_settings"
                             android:textColor="@color/tertiary_text_color"
-
                             android:tag="importantSettings"
                             android:id="@+id/btnImportantSettings">
                         </androidx.appcompat.widget.AppCompatButton>
