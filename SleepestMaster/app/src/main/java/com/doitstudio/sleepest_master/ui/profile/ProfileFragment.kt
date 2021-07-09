@@ -22,13 +22,11 @@ import com.doitstudio.sleepest_master.MainActivity
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.databinding.FragmentProfileBinding
-import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage
 import com.doitstudio.sleepest_master.model.data.export.UserSleepExportData
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
-import com.doitstudio.sleepest_master.ui.sleep.SleepFragment
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -50,17 +48,17 @@ class ProfileFragment : Fragment() {
         (actualContext as MainApplication).dataStoreRepository
     }
 
-    private var caseOfEntrie = 0
+    private var caseOfEntrie = -1
 
-    fun setCaseOfEntrie(case:Int){
+    fun setCaseOfEntrie(case: Int){
         caseOfEntrie = case
         if(this::binding.isInitialized)
             viewModel.actualExpand.set(caseOfEntrie)
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
 
         binding = FragmentProfileBinding.inflate(inflater, container, false)
@@ -89,26 +87,28 @@ class ProfileFragment : Fragment() {
         binding.btnImportantSettings.setOnClickListener() {
             DontKillMyAppFragment.show(requireActivity())
         }
-        binding.btnLanguageSlector.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-
-            }
-
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, selectedLanguage: Int, id: Long) {
-
+        binding.btnLanguageSlector.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
                 scope.launch {
-                    dataStoreRepository.updateLanguage(selectedLanguage)
+                    dataStoreRepository.updateLanguage(position)
                 }
 
-                val language = when(selectedLanguage){
+                val language = when(position){
                     0 -> Locale.GERMAN
                     else -> Locale.ENGLISH
                 }
 
-                (activity as MainActivity).switchLanguage(language, R.id.profile, changeType = 1)
-            }
-        }
+                (activity as MainActivity).switchLanguage(language, R.id.profile, changeType = 1)            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        })
+
 
         viewModel.actualExpand.set(caseOfEntrie)
 
@@ -117,8 +117,8 @@ class ProfileFragment : Fragment() {
         var pref = actualContext.getSharedPreferences("AlarmChanged", 0)
         val textAlarm = """
             Last Alarm changed: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt(
-                "actualWakeup",
-                0
+            "actualWakeup",
+            0
         )},${pref.getInt("alarmUse", 0)}
             
             """.trimIndent()
@@ -150,8 +150,8 @@ class ProfileFragment : Fragment() {
         pref = actualContext.getSharedPreferences("AlarmSet", 0)
         val textCalc2 = """
             AlarmSet: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt(
-                "hour1",
-                0
+            "hour1",
+            0
         )}:${pref.getInt("minute1", 0)},${
             pref.getInt("actualWakeup", 0)}
             
@@ -160,8 +160,8 @@ class ProfileFragment : Fragment() {
         val textAlarmReceiver = """
             AlarmReceiver: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getString(
 
-                "intent",
-                "XX"
+            "intent",
+            "XX"
         )}
             
             """.trimIndent()
@@ -178,14 +178,14 @@ class ProfileFragment : Fragment() {
         pref = actualContext.getSharedPreferences("AlarmReceiver1", 0)
         val textAlarmReceiver1 = """
             AlarmReceiver1: ${pref.getString("usage", "XX")},${pref.getInt("day", 0)},${pref.getInt(
-                "hour",
-                0
+            "hour",
+            0
         )},${pref.getInt("minute", 0)}
             
             """.trimIndent()
         pref = actualContext.getSharedPreferences("BootTime1", 0)
         val textBooReceiver1= """
-            Last Boot: ${pref.getInt("hour",0 )},${pref.getInt("minute", 0)}
+            Last Boot: ${pref.getInt("hour", 0)},${pref.getInt("minute", 0)}
             
             """.trimIndent()
 
@@ -213,7 +213,6 @@ class ProfileFragment : Fragment() {
                 startActivityForResult(intent, 1010)
 
 
-
             }
             "import" -> {
 
@@ -231,15 +230,21 @@ class ProfileFragment : Fragment() {
 
     fun onPermissionClicked(view: View) {
         when (view.tag.toString()) {
-            "dailyActivity" -> if (viewModel.dailyPermission.get() != true) requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION) else viewModel.showPermissionInfo("dailyActivity")
-            "sleepActivity" -> if (viewModel.activityPermission.get() != true) requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION) else viewModel.showPermissionInfo("sleepActivity")
-            "storage" -> if (viewModel.storagePermission.get() != true) requestPermissionLauncher.launch(Manifest.permission.ANSWER_PHONE_CALLS) else viewModel.showPermissionInfo("storage")
+            "dailyActivity" -> if (viewModel.dailyPermission.get() != true) requestPermissionLauncher.launch(
+                Manifest.permission.ACTIVITY_RECOGNITION
+            ) else viewModel.showPermissionInfo("dailyActivity")
+            "sleepActivity" -> if (viewModel.activityPermission.get() != true) requestPermissionLauncher.launch(
+                Manifest.permission.ACTIVITY_RECOGNITION
+            ) else viewModel.showPermissionInfo("sleepActivity")
+            "storage" -> if (viewModel.storagePermission.get() != true) requestPermissionLauncher.launch(
+                Manifest.permission.ANSWER_PHONE_CALLS
+            ) else viewModel.showPermissionInfo("storage")
             "overlay" -> if (viewModel.overlayPermission.get() != true) {
                 // If not, form up an Intent to launch the permission request
                 val intent = Intent(
-                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse(
+                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse(
                         "package:${actualContext.packageName}"
-                )
+                    )
                 )
 
                 // Launch Intent, with the supplied request code
@@ -280,7 +285,9 @@ class ProfileFragment : Fragment() {
                 try {
                     var gson = Gson()
 
-                    data.addAll(gson.fromJson(importJson, Array<UserSleepExportData>::class.java).asList())
+                    data.addAll(
+                        gson.fromJson(importJson, Array<UserSleepExportData>::class.java).asList()
+                    )
                 } catch (ex: Exception) {
                     Toast.makeText(actualContext, "Wrong data format", Toast.LENGTH_SHORT).show()
                     return@let
@@ -293,13 +300,15 @@ class ProfileFragment : Fragment() {
 
                     data.forEach { session ->
 
-                        sessions.add(UserSleepSessionEntity(
+                        sessions.add(
+                            UserSleepSessionEntity(
                                 session.id,
                                 session.mobilePosition,
                                 session.sleepTimes,
                                 session.userSleepRating,
                                 session.userCalculationRating
-                        ))
+                            )
+                        )
 
                         sleepApiRawDataEntity.addAll(session.sleepApiRawData)
                     }
@@ -328,15 +337,18 @@ class ProfileFragment : Fragment() {
 
                     userSessions.forEach { session ->
 
-                        val sessionSleepData = dataBaseRepository.getSleepApiRawDataBetweenTimestamps(session.sleepTimes.sleepTimeStart, session.sleepTimes.sleepTimeEnd).first()
+                        val sessionSleepData = dataBaseRepository.getSleepApiRawDataBetweenTimestamps(
+                            session.sleepTimes.sleepTimeStart,
+                            session.sleepTimes.sleepTimeEnd
+                        ).first()
 
                         val userExporSession = UserSleepExportData(
-                                session.id,
-                                session.mobilePosition,
-                                session.sleepTimes,
-                                session.userSleepRating,
-                                session.userCalculationRating,
-                                sessionSleepData
+                            session.id,
+                            session.mobilePosition,
+                            session.sleepTimes,
+                            session.userSleepRating,
+                            session.userCalculationRating,
+                            sessionSleepData
                         )
 
                         userExporSessions.add(userExporSession)
@@ -375,8 +387,8 @@ class ProfileFragment : Fragment() {
             contentResolver.openFileDescriptor(uri, "w")?.use {
                 FileOutputStream(it.fileDescriptor).use {
                     it.write(
-                            text
-                                    .toByteArray()
+                        text
+                            .toByteArray()
                     )
                 }
             }
@@ -392,14 +404,17 @@ class ProfileFragment : Fragment() {
 
         intentShareFile.type = "text/json"
         intentShareFile.putExtra(Intent.EXTRA_STREAM, uri)
-        intentShareFile.putExtra(Intent.EXTRA_SUBJECT,
-                "Sharing File...")
+        intentShareFile.putExtra(
+            Intent.EXTRA_SUBJECT,
+            "Sharing File..."
+        )
         intentShareFile.putExtra(Intent.EXTRA_TEXT, "Sharing File...")
         startActivity(Intent.createChooser(intentShareFile, "Share File"))
     }
 
     private val requestPermissionLauncher =
-            registerForActivityResult(ActivityResultContracts.RequestPermission()
+            registerForActivityResult(
+                ActivityResultContracts.RequestPermission()
             ) { isGranted: Boolean ->
                 if (isGranted) {
                     // Permission is granted. Continue the action or workflow in your

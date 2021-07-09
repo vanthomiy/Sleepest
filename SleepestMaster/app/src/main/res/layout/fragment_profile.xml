@@ -197,10 +197,7 @@
                             android:layout_marginVertical="10dp"
                             android:entries="@{profileViewModel.languageSelections}"
                             android:selectedItemPosition="@={profileViewModel.selectedLanguage}"
-                            android:theme="@style/Spinner">
-
-                        </androidx.appcompat.widget.AppCompatSpinner>
-
+                            android:theme="@style/Spinner"/>
 
                     </LinearLayout>
                 </LinearLayout>
