@@ -35,7 +35,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/white"
         tools:layout_editor_absoluteX="64dp"
         tools:layout_editor_absoluteY="16dp" />
 
@@ -59,8 +58,7 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_gravity="start"
-                android:src="@drawable/ic_baseline_timer_24"
-                app:tint="@color/white" />
+                android:src="@drawable/ic_baseline_timer_24"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -68,7 +66,7 @@
                 android:layout_gravity="start"
                 android:layout_marginLeft="40dp"
                 android:text="@string/sleep_alarm_header"
-                android:textColor="@color/white"
+                android:textColor="@color/primary_text_color"
                 android:textSize="@dimen/headerSize" />
 
             <ImageButton
@@ -78,8 +76,7 @@
                 android:layout_gravity="end"
                 android:background="@drawable/ic_baseline_info_24"
                 android:src="@drawable/ic_baseline_info_24"
-                android:tag="5"
-                app:tint="@color/white" />
+                android:tag="5"/>
         </FrameLayout>
 
         <FrameLayout
@@ -97,7 +94,7 @@
                 android:layout_margin="10dp"
                 android:gravity="center"
                 android:text="@string/sleep_alarm_info"
-                android:textColor="@color/white" />
+                android:textColor="@color/primary_text_color" />
         </FrameLayout>
 
         <LinearLayout
@@ -118,7 +115,7 @@
                     android:layout_marginStart="10dp"
                     android:gravity="center_vertical"
                     android:text="@string/sleep_alarm_auto_cancel_alarm"
-                    android:textColor="@color/secondTextColor"
+                    android:textColor="@color/secondary_text_color"
                     android:textSize="@dimen/valueSize"
                     android:textStyle="bold" />
 
@@ -135,7 +132,7 @@
                 android:id="@+id/view1"
                 android:layout_width="fill_parent"
                 android:layout_height="2dp"
-                android:background="@color/gray" />
+                android:background="@color/secondary_button_color" />
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -148,7 +145,7 @@
                     android:layout_marginStart="10dp"
                     android:gravity="center_vertical"
                     android:text="@string/sleep_alarm_sound"
-                    android:textColor="@color/secondTextColor"
+                    android:textColor="@color/secondary_text_color"
                     android:textSize="@dimen/valueSize"
                     android:textStyle="bold" />
 

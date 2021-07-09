@@ -11,16 +11,15 @@
 
     <color name="primary_button_color">#a1a1a1</color>
     <color name="secondary_button_color">#1a1a1a</color>
-    <color name="tertiary_button_color">#00BCD4</color>
 
-    <color name="warning_color">#FF5722</color>
     <color name="error_color">#E91E63</color>
-    <color name="positive_color">#2196F3</color>
-    <color name="negative_color">#9C27B0</color>
 
     <color name="awake_sleep_color">#16AAC5</color>
     <color name="light_sleep_color">#911BAC</color>
     <color name="deep_sleep_color">#272EB0</color>
-    <color name="rem_sleep_color">#27B049</color>
     <color name="sleep_sleep_color">#074E4E</color>
+
+    <color name="transparent">#00FFFFFF</color>
+
+
 </resources>

@@ -53,7 +53,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:text="@string/sleep_sleep_header"
-                        android:textColor="@color/white"
+                        android:textColor="@color/primary_text_color"
                         android:textSize="@dimen/headerSize"
                         android:textStyle="bold"
                         android:visibility="gone"
@@ -69,7 +69,7 @@
                         android:onClick="@{sleepViewModel::onInfoClicked}"
                         android:tag="7"
                         android:text="@string/show_tips"
-                        android:textColor="@color/secondTextColor"
+                        android:textColor="@color/accent_text_color"
                         android:textSize="@dimen/valueSize"
                         android:textStyle="bold" />
 
@@ -90,7 +90,7 @@
                         android:layout_gravity="center"
                         android:width="100dp"
                         android:text="@{sleepViewModel.sleepScoreValue}"
-                        android:textColor="@color/white"
+                        android:textColor="@color/primary_text_color"
                         android:textSize="25sp"
                         android:textStyle="bold" />
 
@@ -100,7 +100,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="@{sleepViewModel.sleepScoreText}"
-                        android:textColor="@color/gray"
+                        android:textColor="@color/secondary_text_color"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         />
@@ -122,8 +122,8 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:layout_margin="10dp"
-                        android:textColor="@color/white"
-                        android:text="@string/sleep_general_info"/>
+                        android:textColor="@color/primary_text_color"
+                    android:text="@string/sleep_general_info"/>
 
                 </FrameLayout>
 
@@ -143,16 +143,15 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_gravity="start"
-                            android:src="@drawable/ic_baseline_bedtime_24"
-                            app:tint="@color/white" />
+                            android:src="@drawable/ic_baseline_bedtime_24"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="40dp"
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
-                            android:textColor="@color/white"
-                            android:text="@string/sleep_sleeptimes_header"/>
+                            android:textColor="@color/primary_text_color"
+                        android:text="@string/sleep_sleeptimes_header"/>
 
                         <ImageView
                             android:layout_width="25dp"
@@ -160,8 +159,7 @@
                             android:layout_gravity="end"
                             android:src="@drawable/ic_baseline_info_24"
                             android:onClick="@{sleepViewModel::onInfoClicked}"
-                            android:tag="0"
-                            app:tint="@color/white" />
+                            android:tag="0"/>
 
                     </FrameLayout>
 
@@ -179,8 +177,8 @@
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:layout_margin="10dp"
-                            android:textColor="@color/white"
-                            android:text="@string/sleep_sleeptimes_info"/>
+                            android:textColor="@color/primary_text_color"
+                        android:text="@string/sleep_sleeptimes_info"/>
 
                     </FrameLayout>
 
@@ -203,10 +201,10 @@
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginStart="10dp"
                                 android:textSize="@dimen/valueSize"
-                                android:textColor="@color/secondTextColor"
-                                android:textStyle="bold"
-                                android:text="@string/sleep_sleeptime_start"
-                                />
+                                android:textColor="@color/secondary_text_color"
+                            android:textStyle="bold"
+                            android:text="@string/sleep_sleeptime_start"
+                            />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
@@ -233,10 +231,10 @@
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginStart="10dp"
                                 android:textSize="@dimen/valueSize"
-                                android:textColor="@color/secondTextColor"
-                                android:textStyle="bold"
-                                android:text="@string/sleep_sleeptime_end"
-                                />
+                                android:textColor="@color/secondary_text_color"
+                            android:textStyle="bold"
+                            android:text="@string/sleep_sleeptime_end"
+                            />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
@@ -283,16 +281,15 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_gravity="start"
-                            android:src="@drawable/ic_baseline_night_shelter_24"
-                            app:tint="@color/white" />
+                            android:src="@drawable/ic_baseline_night_shelter_24"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="40dp"
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
-                            android:textColor="@color/white"
-                            android:text="@string/sleep_sleepduration_header"/>
+                            android:textColor="@color/primary_text_color"
+                        android:text="@string/sleep_sleepduration_header"/>
 
                         <ImageView
                             android:layout_width="25dp"
@@ -300,8 +297,7 @@
                             android:layout_gravity="end"
                             android:src="@drawable/ic_baseline_info_24"
                             android:onClick="@{sleepViewModel::onInfoClicked}"
-                            android:tag="1"
-                            app:tint="@color/white" />
+                            android:tag="1"/>
 
                     </FrameLayout>
 
@@ -319,8 +315,8 @@
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:layout_margin="10dp"
-                            android:textColor="@color/white"
-                            android:text="@string/sleep_sleepduration_info"/>
+                            android:textColor="@color/primary_text_color"
+                        android:text="@string/sleep_sleepduration_info"/>
 
                     </FrameLayout>
 
@@ -335,10 +331,10 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginStart="10dp"
                             android:textSize="@dimen/valueSize"
-                            android:textColor="@color/secondTextColor"
-                            android:textStyle="bold"
-                            android:text="@{sleepViewModel.sleepDurationString}"
-                            />
+                            android:textColor="@color/secondary_text_color"
+                        android:textStyle="bold"
+                        android:text="@{sleepViewModel.sleepDurationString}"
+                        />
 
                         <SeekBar
                             android:layout_height="wrap_content"
@@ -371,16 +367,15 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_gravity="start"
-                            android:src="@drawable/ic_baseline_phone_android_24"
-                            app:tint="@color/white" />
+                            android:src="@drawable/ic_baseline_phone_android_24"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="40dp"
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
-                            android:textColor="@color/white"
-                            android:text="@string/sleep_lightcondition_header"/>
+                            android:textColor="@color/primary_text_color"
+                        android:text="@string/sleep_lightcondition_header"/>
 
                         <ImageView
                             android:layout_width="25dp"
@@ -388,8 +383,7 @@
                             android:layout_gravity="end"
                             android:src="@drawable/ic_baseline_info_24"
                             android:onClick="@{sleepViewModel::onInfoClicked}"
-                            android:tag="6"
-                            app:tint="@color/white" />
+                            android:tag="6"/>
 
                     </FrameLayout>
 
@@ -407,8 +401,8 @@
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:layout_margin="10dp"
-                            android:textColor="@color/white"
-                            android:text="@string/sleep_lightcondition_info"/>
+                            android:textColor="@color/primary_text_color"
+                        android:text="@string/sleep_lightcondition_info"/>
 
                     </FrameLayout>
 
@@ -444,16 +438,15 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_gravity="start"
-                            android:src="@drawable/ic_baseline_phone_android_24"
-                            app:tint="@color/white" />
+                            android:src="@drawable/ic_baseline_phone_android_24"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="40dp"
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
-                            android:textColor="@color/white"
-                            android:text="@string/sleep_phoneposition_header"/>
+                            android:textColor="@color/primary_text_color"
+                        android:text="@string/sleep_phoneposition_header"/>
 
                         <ImageView
                             android:layout_width="25dp"
@@ -461,8 +454,7 @@
                             android:layout_gravity="end"
                             android:src="@drawable/ic_baseline_info_24"
                             android:onClick="@{sleepViewModel::onInfoClicked}"
-                            android:tag="2"
-                            app:tint="@color/white" />
+                            android:tag="2"/>
 
                     </FrameLayout>
 
@@ -480,8 +472,8 @@
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:layout_margin="10dp"
-                            android:textColor="@color/white"
-                            android:text="@string/sleep_phoneposition_info"/>
+                            android:textColor="@color/primary_text_color"
+                        android:text="@string/sleep_phoneposition_info"/>
 
                     </FrameLayout>
 
@@ -516,16 +508,15 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_gravity="start"
-                            android:src="@drawable/ic_baseline_data_usage_24"
-                            app:tint="@color/white" />
+                            android:src="@drawable/ic_baseline_data_usage_24"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="40dp"
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
-                            android:textColor="@color/white"
-                            android:text="@string/sleep_phoneusage_header"/>
+                            android:textColor="@color/primary_text_color"
+                        android:text="@string/sleep_phoneusage_header"/>
 
                         <ImageView
                             android:layout_width="25dp"
@@ -533,8 +524,7 @@
                             android:layout_gravity="end"
                             android:src="@drawable/ic_baseline_info_24"
                             android:onClick="@{sleepViewModel::onInfoClicked}"
-                            android:tag="3"
-                            app:tint="@color/white" />
+                            android:tag="3"/>
 
                     </FrameLayout>
 
@@ -552,8 +542,8 @@
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:layout_margin="10dp"
-                            android:textColor="@color/white"
-                            android:text="@string/sleep_phoneusage_info"/>
+                            android:textColor="@color/primary_text_color"
+                        android:text="@string/sleep_phoneusage_info"/>
 
                     </FrameLayout>
 
@@ -570,10 +560,10 @@
                             android:gravity="center_vertical"
                             android:layout_marginStart="10dp"
                             android:textSize="@dimen/valueSize"
-                            android:textColor="@color/secondTextColor"
-                            android:textStyle="bold"
-                            android:text="@string/sleep_phoneusage_less"
-                            />
+                            android:textColor="@color/secondary_text_color"
+                        android:textStyle="bold"
+                        android:text="@string/sleep_phoneusage_less"
+                        />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -582,16 +572,11 @@
                             android:gravity="center_vertical"
                             android:layout_marginEnd="10dp"
                             android:textSize="@dimen/valueSize"
-                            android:textColor="@color/secondTextColor"
-                            android:textStyle="bold"
-                            android:text="@string/sleep_phoneusage_often"
-                            />
+                            android:textColor="@color/secondary_text_color"
+                        android:textStyle="bold"
+                        android:text="@string/sleep_phoneusage_often"
+                        />
 
-                        <!--androidx.appcompat.widget.AppCompatSeekBar
-                            android:layout_height="wrap_content"
-                            android:layout_width="match_parent"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginHorizontal="75dp"/-->
 
                         <SeekBar
                             android:id="@+id/seekBar"
@@ -628,16 +613,15 @@
                             android:layout_gravity="start"
                             android:src="@drawable/ic_baseline_pending_actions_24"
                             android:onClick="@{sleepViewModel::onInfoClicked}"
-                            android:tag="4"
-                            app:tint="@color/white" />
+                            android:tag="4"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="40dp"
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
-                            android:textColor="@color/white"
-                            android:text="@string/sleep_activitytracking_header"/>
+                            android:textColor="@color/primary_text_color"
+                        android:text="@string/sleep_activitytracking_header"/>
 
                         <ImageView
                             android:layout_width="25dp"
@@ -645,8 +629,7 @@
                             android:layout_gravity="end"
                             android:onClick="@{sleepViewModel::onInfoClicked}"
                             android:tag="4"
-                            android:src="@drawable/ic_baseline_info_24"
-                            app:tint="@color/white" />
+                            android:src="@drawable/ic_baseline_info_24"/>
 
                     </FrameLayout>
 
@@ -664,8 +647,8 @@
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:layout_margin="10dp"
-                            android:textColor="@color/white"
-                            android:text="@string/sleep_activitytracking_info"/>
+                            android:textColor="@color/primary_text_color"
+                        android:text="@string/sleep_activitytracking_info"/>
 
                     </FrameLayout>
 
@@ -688,10 +671,10 @@
                                 android:gravity="center_vertical"
                                 android:layout_marginStart="10dp"
                                 android:textSize="@dimen/valueSize"
-                                android:textColor="@color/secondTextColor"
-                                android:textStyle="bold"
-                                android:text="@string/sleep_trackactivity_header"
-                                />
+                                android:textColor="@color/secondary_text_color"
+                            android:textStyle="bold"
+                            android:text="@string/sleep_trackactivity_header"
+                            />
 
                             <Switch
                                 android:layout_width="wrap_content"
@@ -708,7 +691,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="2dp"
                             android:visibility="@{sleepViewModel.activityTrackingView}"
-                            android:background="@color/gray" />
+                            android:background="@color/secondary_text_color" />
 
                         <FrameLayout
                             android:layout_width="match_parent"
@@ -721,10 +704,10 @@
                                 android:gravity="center_vertical"
                                 android:layout_marginStart="10dp"
                                 android:textSize="@dimen/valueSize"
-                                android:textColor="@color/secondTextColor"
-                                android:textStyle="bold"
-                                android:text="@string/sleep_trackactivity_include_in_wakeup"
-                                />
+                                android:textColor="@color/secondary_text_color"
+                            android:textStyle="bold"
+                            android:text="@string/sleep_trackactivity_include_in_wakeup"
+                            />
 
                             <Switch
                                 android:layout_width="wrap_content"
@@ -750,7 +733,7 @@
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="10dp"
-                    android:background="@color/gray"
+                    android:background="@color/secondary_text_color"
                     android:layout_marginHorizontal="10dp"
                     android:layout_marginTop="10dp"
                     />
@@ -771,16 +754,15 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_gravity="start"
-                            android:src="@drawable/ic_baseline_timer_24"
-                            app:tint="@color/white" />
+                            android:src="@drawable/ic_baseline_timer_24" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="40dp"
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
-                            android:textColor="@color/white"
-                            android:text="@string/sleep_alarm_header"/>
+                            android:textColor="@color/primary_text_color"
+                        android:text="@string/sleep_alarm_header"/>
 
                         <ImageView
                             android:layout_width="25dp"
@@ -788,8 +770,7 @@
                             android:layout_gravity="end"
                             android:src="@drawable/ic_baseline_info_24"
                             android:onClick="@{sleepViewModel::onInfoClicked}"
-                            android:tag="5"
-                            app:tint="@color/white" />
+                            android:tag="5"/>
 
                     </FrameLayout>
 
@@ -807,8 +788,8 @@
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:layout_margin="10dp"
-                            android:textColor="@color/white"
-                            android:text="@string/sleep_alarm_info"/>
+                            android:textColor="@color/primary_text_color"
+                        android:text="@string/sleep_alarm_info"/>
 
                     </FrameLayout>
 
@@ -830,10 +811,10 @@
                                 android:gravity="center_vertical"
                                 android:layout_marginStart="10dp"
                                 android:textSize="@dimen/valueSize"
-                                android:textColor="@color/secondTextColor"
-                                android:textStyle="bold"
-                                android:text="@string/sleep_alarm_auto_cancel_alarm"
-                                />
+                                android:textColor="@color/secondary_text_color"
+                            android:textStyle="bold"
+                            android:text="@string/sleep_alarm_auto_cancel_alarm"
+                            />
 
                             <Switch
                                 android:layout_width="wrap_content"
@@ -852,7 +833,7 @@
                             android:id="@+id/view1"
                             android:layout_width="fill_parent"
                             android:layout_height="2dp"
-                            android:background="@color/gray" />
+                            android:background="@color/secondary_text_color" />
 
                         <FrameLayout
                             android:layout_width="match_parent"
@@ -864,9 +845,9 @@
                                 android:layout_marginStart="10dp"
                                 android:gravity="center_vertical"
                                 android:text="@string/sleep_alarm_sound"
-                                android:textColor="@color/secondTextColor"
-                                android:textSize="@dimen/valueSize"
-                                android:textStyle="bold" />
+                                android:textColor="@color/secondary_text_color"
+                            android:textSize="@dimen/valueSize"
+                            android:textStyle="bold" />
 
                             <Button
                                 android:id="@+id/soundChange"
