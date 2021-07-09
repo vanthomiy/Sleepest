@@ -49,6 +49,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         scope.launch {
             darkMode.get()?.let {
                 dataStoreRepository.updateDarkMode(it)
+                dataStoreRepository.updateAutoDarkModeAckn(true)
                 AppCompatDelegate
                         .setDefaultNightMode(
                             if (it)
@@ -67,6 +68,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         scope.launch {
             autoDarkMode.get()?.let {
                 dataStoreRepository.updateAutoDarkMode(it)
+                dataStoreRepository.updateAutoDarkModeAckn(true)
             }
         }
 
@@ -86,7 +88,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     val languageSelections = ObservableArrayList<String>()
     val selectedLanguage = ObservableField(0)
-
 
     // endregion
 
@@ -231,7 +232,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
             var settingsParams = dataStoreRepository.settingsDataFlow.first()
             languageSelections.addAll(arrayListOf<String>("Deutsch", "Englisch"))
-
             darkMode.set(settingsParams.designDarkMode)
             autoDarkMode.set(settingsParams.designAutoDarkMode)
             showDarkModeSetting.set(if (settingsParams.designAutoDarkMode) View.GONE else View.VISIBLE)

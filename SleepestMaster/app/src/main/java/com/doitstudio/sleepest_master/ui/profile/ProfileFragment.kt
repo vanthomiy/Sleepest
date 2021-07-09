@@ -36,9 +36,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.*
 import java.util.*
-import java.io.File
-
-
 
 class ProfileFragment : Fragment() {
 
@@ -90,11 +87,10 @@ class ProfileFragment : Fragment() {
             onDataClicked(it)
         }
         binding.btnImportantSettings.setOnClickListener() {
-            //DontKillMyAppFragment.show(parentFragment.activity)
-            //val calendar = Calendar.getInstance()
-            //AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)+2, actualContext, AlarmReceiverUsage.DISABLE_ALARM)
+            DontKillMyAppFragment.show(requireActivity())
         }
         binding.btnLanguageSlector.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+
             override fun onNothingSelected(parent: AdapterView<*>?) {
 
             }

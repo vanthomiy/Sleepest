@@ -196,6 +196,11 @@ message SettingsData{
   bool designDarkMode = 1;
 
   /**
+   * Defines if the user currently sleeping
+   */
+  bool designDarkModeAckn = 8;
+
+  /**
  * Defines if the user currently sleeping
  */
   bool designAutoDarkMode = 2;

@@ -180,7 +180,8 @@ class DataStoreRepository(context: Context) {
 
     suspend fun updateAutoDarkMode(isActive:Boolean) =
             settingsDataStatus.updateAutoDarkMode(isActive)
-
+    suspend fun updateAutoDarkModeAckn(isActive:Boolean) =
+        settingsDataStatus.updateAutoDarkModeAckn(isActive)
     suspend fun updateDarkMode(isActive:Boolean) =
             settingsDataStatus.updateDarkMode(isActive)
 

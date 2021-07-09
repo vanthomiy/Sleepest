@@ -37,6 +37,12 @@ class SettingsStatus(private val dataStore: DataStore<SettingsData>) {
         }
     }
 
+    suspend fun updateAutoDarkModeAckn(isActive:Boolean){
+        dataStore.updateData{preference->
+            preference.toBuilder().setDesignDarkModeAckn(isActive).build()
+        }
+    }
+
     suspend fun updateDarkMode(isActive:Boolean){
         dataStore.updateData{preference->
             preference.toBuilder().setDesignDarkMode(isActive).build()

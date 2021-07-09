@@ -86,20 +86,27 @@ class MainActivity : AppCompatActivity() {
             sleepFragment = SleepFragment()
             profileFragment = ProfileFragment()
 
-            if(isStart){
+            if(isStart || !settings.designDarkModeAckn){
                 supportFragmentManager.beginTransaction().add(R.id.navigationFrame, alarmsFragment).commit()
             }
             else{
+                if(settings.designDarkModeAckn)
+                    dataStoreRepository.updateAutoDarkModeAckn(false)
+
                 supportFragmentManager.beginTransaction().replace(
                     R.id.navigationFrame,
                     profileFragment
                 ).commit()
+
+                bottomBar.selectedItemId = R.id.profile
+
                 if(settings.afterRestartApp){
                     profileFragment.setCaseOfEntrie(4)
                     dataStoreRepository.updateAfterRestartApp(false)
                 }
                 else{
-                    profileFragment.caseOfEntrie = 1
+
+                    profileFragment.setCaseOfEntrie(0)
                 }
             }
 
@@ -160,7 +167,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setAppLocale(context: Context, locale: Locale) {
-
         Locale.setDefault(locale)
         val config = context.resources.configuration
         config.setLocale(locale)
@@ -169,9 +175,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun switchLanguage(locale:Locale, itemId: Int, changeType:Int = -1) {
-        setAppLocale(this,locale)
+        setAppLocale(this, locale)
 
         recreate()
+    }
+
     fun switchToMenu(itemId: Int, changeType:Int = -1) {
         profileFragment.setCaseOfEntrie(changeType)
         bottomBar.selectedItemId = itemId;
@@ -182,28 +190,34 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         // null workaround... else pass the [savedInstanceState]
         super.onCreate(null)
-        setupFragments(savedInstanceState == null)
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         scope.launch {
             val settings = dataStoreRepository.settingsDataFlow.first()
-            val language = when(settings.designLanguage){
+            val language = when (settings.designLanguage) {
                 0 -> Locale.GERMAN
                 else -> Locale.ENGLISH
-            if(settings.designAutoDarkMode){
-                AppCompatDelegate
-                        .setDefaultNightMode(
-                            AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-                        );
             }
 
             val default = Locale.getDefault()
-            if(language.language != default.language)
-            {
+            if (language.language != default.language) {
                 setAppLocale(applicationContext, language)
             }
 
-            setContentView(binding.root)
+            if (!settings.designAutoDarkMode && (AppCompatDelegate.getDefaultNightMode() != if (settings.designDarkMode) AppCompatDelegate.MODE_NIGHT_YES
+                else AppCompatDelegate.MODE_NIGHT_NO)
+            ) {
+                AppCompatDelegate
+                    .setDefaultNightMode(
+                        if (settings.designDarkMode) AppCompatDelegate.MODE_NIGHT_YES
+                        else AppCompatDelegate.MODE_NIGHT_NO
+                    )
+                recreate()
+            }
+            else {
+                setupFragments(savedInstanceState == null)
+                setContentView(binding.root)
+            }
         }
 
         supportActionBar?.hide()
@@ -328,22 +342,15 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        settingsLiveData.observe(this) { livedata ->
+        settingsLiveData.observe(this) { settings ->
 
-            if(livedata.restartApp && livedata.afterRestartApp)
+            if(settings.restartApp && settings.afterRestartApp)
             {
                 scope.launch {
                     dataStoreRepository.updateRestartApp(false)
                     recreate()
                 }
             }
-
-            if(settings.designAutoDarkMode){
-                AppCompatDelegate
-                    .setDefaultNightMode(
-                        AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-            }
-
         }
 
         // check permission
