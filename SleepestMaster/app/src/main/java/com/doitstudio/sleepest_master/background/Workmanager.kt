@@ -50,12 +50,27 @@ class Workmanager(appcontext: Context, workerParams: WorkerParameters) : Worker(
                 }
             }*/
 
-            if (dataStoreRepository.liveUserSleepActivityFlow.first().userSleepTime > 60 && (dataStoreRepository.sleepApiDataFlow.first().sleepApiValuesAmount <= 3)) {
+            if (LocalTime.now().toSecondOfDay() >= dataStoreRepository.getSleepTimeBegin() &&
+                ((LocalTime.now().toSecondOfDay() - dataStoreRepository.getSleepTimeBegin()) >= 60) && (dataStoreRepository.sleepApiDataFlow.first().sleepApiValuesAmount <= 3)) {
+                val notification: Notification = AlarmReceiver.createInformationNotification(applicationContext,
+                    applicationContext.getString(R.string.information_notification_text_sleep_api_problem))
+                val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.notify(2, notification)
+            } else if (LocalTime.now().toSecondOfDay() > dataStoreRepository.getSleepTimeBegin() &&
+                ((dataStoreRepository.getSleepTimeBegin() - LocalTime.now().toSecondOfDay()) >= 60) && (dataStoreRepository.sleepApiDataFlow.first().sleepApiValuesAmount <= 3)) {
                 val notification: Notification = AlarmReceiver.createInformationNotification(applicationContext,
                     applicationContext.getString(R.string.information_notification_text_sleep_api_problem))
                 val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.notify(2, notification)
             }
+            /**
+                /**TODO:Sleeptime ist nicht richtig**/
+            if (dataStoreRepository.liveUserSleepActivityFlow.first().userSleepTime > 60 && (dataStoreRepository.sleepApiDataFlow.first().sleepApiValuesAmount <= 3)) {
+                val notification: Notification = AlarmReceiver.createInformationNotification(applicationContext,
+                    applicationContext.getString(R.string.information_notification_text_sleep_api_problem))
+                val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.notify(2, notification)
+            }**/
         }
 
         sleepCalculationHandler.checkIsUserSleeping(null)

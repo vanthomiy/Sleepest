@@ -137,6 +137,11 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
             if (checkAlarmActive()) {
                 dataBaseRepository.updateAlarmWasFired(true, dataBaseRepository.getNextActiveAlarm()!!.id)
+            }
+
+
+            if (checkAlarmActive()) {
+                dataBaseRepository.updateAlarmWasFired(true, dataBaseRepository.getNextActiveAlarm()!!.id)
                 dataBaseRepository.updateAlarmTempDisabled(true, dataBaseRepository.getNextActiveAlarm()!!.id)
             }
 
@@ -387,6 +392,13 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                     )
                 }
             }
+
+            val calendar = Calendar.getInstance()
+            var pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
+            var ed = pref.edit()
+            ed.putInt("hour", calendar[Calendar.HOUR_OF_DAY])
+            ed.putInt("minute", calendar[Calendar.MINUTE])
+            ed.apply()
         }
 
     }

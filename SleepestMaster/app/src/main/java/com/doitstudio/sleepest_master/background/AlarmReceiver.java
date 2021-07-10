@@ -91,18 +91,18 @@ public class AlarmReceiver extends BroadcastReceiver {
                 context.startActivity(stopForegroundIntent);*/
                 break;
             case DISABLE_ALARM:
-                if((databaseRepository.getNextActiveAlarmJob() != null) && !databaseRepository.getNextActiveAlarmJob().getTempDisabled()) {
+                //if((databaseRepository.getNextActiveAlarmJob() != null) && !databaseRepository.getNextActiveAlarmJob().getTempDisabled()) {
                     /**databaseRepository.updateAlarmTempDisabledJob(true, databaseRepository.getNextActiveAlarmJob().getId());
                     Calendar calendarStopForeground = Calendar.getInstance();
                     AlarmReceiver.startAlarmManager(calendarStopForeground.get(Calendar.DAY_OF_WEEK), calendarStopForeground.get(Calendar.HOUR_OF_DAY),
                             calendarStopForeground.get(Calendar.MINUTE) + 5, context.getApplicationContext(), AlarmReceiverUsage.STOP_FOREGROUND);
                     Toast.makeText(context.getApplicationContext(), context.getApplicationContext().getString(R.string.disable_alarm_message), Toast.LENGTH_LONG).show();**/
-                    BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, false);
-                } else if ((databaseRepository.getNextActiveAlarmJob() != null) && databaseRepository.getNextActiveAlarmJob().getTempDisabled()) {
+                   // BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, false);
+            //    } else if ((databaseRepository.getNextActiveAlarmJob() != null) && databaseRepository.getNextActiveAlarmJob().getTempDisabled()) {
                     /**databaseRepository.updateAlarmTempDisabledJob(false, databaseRepository.getNextActiveAlarmJob().getId());
                     AlarmReceiver.cancelAlarm(context.getApplicationContext(), AlarmReceiverUsage.STOP_FOREGROUND);**/
-                    BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, true);
-                }
+                 //   BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, true);
+               // }
 
                 break;
             case NOT_SLEEPING:

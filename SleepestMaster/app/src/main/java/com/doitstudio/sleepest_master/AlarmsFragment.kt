@@ -157,8 +157,10 @@ class AlarmsFragment() : Fragment() {
                 if (repository.getNextActiveAlarm() != null) {
                     if (repository.getNextActiveAlarm()!!.tempDisabled) {
                         btnTemporaryDisableAlarm.text = getString(R.string.alarm_fragment_btn_disable_alarm_disable)
+                        /**TODO: Change color**/
                     } else {
                         btnTemporaryDisableAlarm.text = getString(R.string.alarm_fragment_btn_disable_alarm_reactivate)
+                        /**TODO: Change color**/
                     }
                 } else {
                     btnTemporaryDisableAlarm.isVisible = false
@@ -182,9 +184,9 @@ class AlarmsFragment() : Fragment() {
         scope.launch {
             if (repository.getNextActiveAlarm() != null) {
                 if (repository.getNextActiveAlarm()!!.tempDisabled) {
-                    BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(true, false)
+                    //BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(true, false)
                 } else {
-                    BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(true, true)
+                    //BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(true, true)
                 }
             } else {
                 btnTemporaryDisableAlarm.isVisible = false
