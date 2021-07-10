@@ -208,6 +208,31 @@ message SettingsData{
   /**
  * Defines if the user currently sleeping
  */
+  bool bannerShowAlarmActiv = 9;
+
+  /**
+* Defines if the user currently sleeping
+*/
+  bool bannerShowActualWakeUpPoint = 10;
+
+  /**
+* Defines if the user currently sleeping
+*/
+  bool bannerShowActualSleepTime = 11;
+
+  /**
+* Defines if the user currently sleeping
+*/
+  bool bannerShowDetailedSleepTime = 12;
+
+  /**
+* Defines if the user currently sleeping
+*/
+  bool bannerShowSleepState = 13;
+
+  /**
+ * Defines if the user currently sleeping
+ */
   bool permissionSleepActivity = 4;
 
   /**
@@ -226,3 +251,4 @@ message SettingsData{
   bool afterRestartApp = 7;
 
 }
+
