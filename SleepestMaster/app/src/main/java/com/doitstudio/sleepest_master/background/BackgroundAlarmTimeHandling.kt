@@ -13,7 +13,7 @@ import com.doitstudio.sleepest_master.alarmclock.AlarmClockAudio
 import com.doitstudio.sleepest_master.model.data.Actions
 import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage
 import com.doitstudio.sleepest_master.model.data.Constants
-import com.doitstudio.sleepest_master.sleepapi.SleepHandler
+import com.doitstudio.sleepest_master.googleapi.SleepHandler
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
@@ -140,10 +140,10 @@ class BackgroundAlarmTimeHandler(val context: Context) {
             }
 
 
-            if (checkAlarmActive()) {
+            /*if (checkAlarmActive()) {
                 dataBaseRepository.updateAlarmWasFired(true, dataBaseRepository.getNextActiveAlarm()!!.id)
                 dataBaseRepository.updateAlarmTempDisabled(true, dataBaseRepository.getNextActiveAlarm()!!.id)
-            }
+            }*/
 
         }
 
@@ -246,6 +246,8 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                     startForegroundService(true)
                 }
 
+                sleepCalculationHandler.checkIsUserSleeping(null)
+
             }
 
             startWorkmanager()
@@ -317,6 +319,10 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                 calendar.get(Calendar.HOUR_OF_DAY),
                 calendar.get(Calendar.MINUTE), context,
                 AlarmReceiverUsage.START_FOREGROUND)
+
+            if (checkAlarmActive()) {
+                dataBaseRepository.updateAlarmWasFired(false, dataBaseRepository.getNextActiveAlarm()!!.id)
+            }
         }
 
     }
