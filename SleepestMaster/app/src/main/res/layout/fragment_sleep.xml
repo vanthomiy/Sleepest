@@ -100,7 +100,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="@{sleepViewModel.sleepScoreText}"
-                        android:textColor="@color/secondary_text_color"
+                        android:textColor="@color/primary_text_color"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         />
@@ -201,7 +201,7 @@
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginStart="10dp"
                                 android:textSize="@dimen/valueSize"
-                                android:textColor="@color/secondary_text_color"
+                                android:textColor="@color/primary_text_color"
                             android:textStyle="bold"
                             android:text="@string/sleep_sleeptime_start"
                             />
@@ -212,7 +212,7 @@
                                 android:gravity="center_vertical"
                                 android:layout_marginRight="10dp"
                                 android:textSize="@dimen/valueSize"
-                                android:textColor="@color/tertiary_text_color"
+                                android:textColor="@color/primary_text_color"
 
                                 android:text="@{sleepViewModel.sleepStartValue}"
                                 />
@@ -233,7 +233,7 @@
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginStart="10dp"
                                 android:textSize="@dimen/valueSize"
-                                android:textColor="@color/secondary_text_color"
+                                android:textColor="@color/primary_text_color"
                             android:textStyle="bold"
                             android:text="@string/sleep_sleeptime_end"
                             />
@@ -244,7 +244,7 @@
                                 android:gravity="center_vertical"
                                 android:layout_marginRight="10dp"
                                 android:textSize="@dimen/valueSize"
-                                android:textColor="@color/tertiary_text_color"
+                                android:textColor="@color/primary_text_color"
                                 android:text="@{sleepViewModel.sleepEndValue}"
                                 />
 
@@ -263,7 +263,7 @@
                         android:onClick="@{sleepViewModel::SleepTimeToogled}"
                         android:checked="@={sleepViewModel.autoSleepTime}"
                         android:textOn="@string/sleep_sleeptimes_autoOn"
-                        android:textColor="@color/tertiary_text_color"
+                        android:textColor="@color/primary_text_color"
                         android:textOff="@string/sleep_sleeptimes_autoOff">
 
                     </ToggleButton>
@@ -335,7 +335,7 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginStart="10dp"
                             android:textSize="@dimen/valueSize"
-                            android:textColor="@color/secondary_text_color"
+                            android:textColor="@color/primary_text_color"
                         android:textStyle="bold"
                         android:text="@{sleepViewModel.sleepDurationString}"
                         />
@@ -562,7 +562,7 @@
                             android:gravity="center_vertical"
                             android:layout_marginStart="10dp"
                             android:textSize="@dimen/valueSize"
-                            android:textColor="@color/secondary_text_color"
+                            android:textColor="@color/primary_text_color"
                         android:textStyle="bold"
                         android:text="@string/sleep_phoneusage_less"
                         />
@@ -574,7 +574,7 @@
                             android:gravity="center_vertical"
                             android:layout_marginEnd="10dp"
                             android:textSize="@dimen/valueSize"
-                            android:textColor="@color/secondary_text_color"
+                            android:textColor="@color/primary_text_color"
                         android:textStyle="bold"
                         android:text="@string/sleep_phoneusage_often"
                         />
@@ -673,7 +673,7 @@
                                 android:gravity="center_vertical"
                                 android:layout_marginStart="10dp"
                                 android:textSize="@dimen/valueSize"
-                                android:textColor="@color/secondary_text_color"
+                                android:textColor="@color/primary_text_color"
                             android:textStyle="bold"
                             android:text="@string/sleep_trackactivity_header"
                             />
@@ -706,7 +706,7 @@
                                 android:gravity="center_vertical"
                                 android:layout_marginStart="10dp"
                                 android:textSize="@dimen/valueSize"
-                                android:textColor="@color/secondary_text_color"
+                                android:textColor="@color/primary_text_color"
                             android:textStyle="bold"
                             android:text="@string/sleep_trackactivity_include_in_wakeup"
                             />
@@ -813,7 +813,7 @@
                                 android:gravity="center_vertical"
                                 android:layout_marginStart="10dp"
                                 android:textSize="@dimen/valueSize"
-                                android:textColor="@color/secondary_text_color"
+                                android:textColor="@color/primary_text_color"
                             android:textStyle="bold"
                             android:text="@string/sleep_alarm_auto_cancel_alarm"
                             />
@@ -847,7 +847,7 @@
                                 android:layout_marginStart="10dp"
                                 android:gravity="center_vertical"
                                 android:text="@string/sleep_alarm_sound"
-                                android:textColor="@color/secondary_text_color"
+                                android:textColor="@color/primary_text_color"
                             android:textSize="@dimen/valueSize"
                             android:textStyle="bold" />
 

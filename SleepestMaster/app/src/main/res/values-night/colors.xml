@@ -2,8 +2,8 @@
 <resources>
     // This is for all the dark/light mode colors
     <color name="primary_app_background">#1a1a1a</color>
-    <color name="primary_text_color">#a1a1a1</color>
-    <color name="primary_button_color">#FFFFFF</color>
+    <color name="primary_text_color">#FFFFFF</color> //a1a1a1 previously
+    <color name="primary_button_color">#a1a1a1</color> //FFFFFF previously
 
     <color name="secondary_app_background">#FFFFFF</color>
     <color name="secondary_text_color">#1a1a1a</color>
