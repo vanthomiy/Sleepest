@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">Sleepest-Master</string>
     <string name="description_dont_kill_my_app">To ensure that the app stays active in the background
+    <string name="alarm_active">Alarm Active</string>
+    <string name="alarm_disabled">Alarm Disabled</string>
+    <string name="insert_data">Alarm Disabled</string>
+    <string name="sleep_segments">Alarm Disabled</string>
+    <string name="nameverkackt">To ensure that the app stays active in the background
         and wakes you up safely, follow the instructions below for your device model and Android version.</string>
     <string name="notice_dont_kill_my_app">Please notice</string>
 
@@ -22,6 +27,13 @@
     <string name="information_notification_channel_name">Information Notification Channel</string>
     <string name="information_notification_text">You should go to sleep now or change your latest wake-up time as you will no longer be able to reach your sleep time</string>
     <string name="foregroundservice_notification_title">Sleepest - The best sleep you ever had</string>
+    <string name="foregroundservice_notification_title">Sleepest - The best sleep you ever had</string>
+    <string name="information_notification_channel">Information Notification Channel</string>
+    <string name="information_notification_channel_name">Information Notification Channel</string>
+    <string name="information_notification_channel_description">This channel is for the notification to show the user that it is time to sleep</string>
+    <string name="information_notification_text_sleeptime_problem">You should go to sleep now or change your latest wake-up time as you will no longer be able to reach your sleep time</string>
+    <string name="information_notification_text_sleep_api_problem">There is something wrong with receiving sleep data. Please restart your alarm.</string>
+    <string name="information_notification_title">Attention</string>
     <string name="workmanager1_tag">Workmanager 1</string>
     <string name="workmanager2_tag">Workmanager 2</string>
     <string name="alarmmanager_key">com.doitstudio.sleepest_master.background.AlarmIntentKey</string>
@@ -50,6 +62,10 @@
     <string name="einstellungen">Sleepest</string>
     <string name="schlafdauer">Schlafdauer:</string>
     <string name="aufwachzeitpunkt">Aufweckzeitpunkt:</string>
+    <string name="alarm_TextView">Wecker</string>
+    <string name="title_activity_navigation">MainActivity</string>
+    <string name="alarm_fragment_btn_disable_alarm_disable">Disable next alarm</string>
+    <string name="alarm_fragment_btn_disable_alarm_reactivate">Reactivate next alarm</string>
     <!-- Preference Titles -->
 
     <!-- Messages Preferences -->
@@ -133,6 +149,42 @@
     <string name="alarm_alarmdays_activeAlarmdaysWeek">Alarmdays</string>
     <string name="alarm_save_activeAlarmDaysWeek">Save</string>
     <string name="alarm_saveSuccessful_activeAlarmDaysWeek">Save successful</string>
+    <!--endregion-->
+
+    <!--region Profile Fragment texts -->
+    <string name="profile_remove_button_text_normal">Delete data</string>
+    <string name="profile_remove_button_text_choosen">Abbrechen</string>
+    <string name="profile_language_german">German</string>
+    <string name="profile_language_english">English</string>
+    <string name="profile_header">Settings</string>
+    <string name="profile_app_function">Wie funktioniert die App?</string>
+    <string name="profile_design">Design</string>
+    <string name="profile_dark_mode">Dark Mode</string>
+    <string name="profile_auto_dark_mode">Use system settings</string>
+    <string name="profile_language">Sprache</string>
+    <string name="profile_help">Hilfe</string>
+    <string name="profile_tutorial">Tutorial</string>
+    <string name="profile_neccessary_settings">Wichtige Einstellungen</string>
+    <string name="profile_app_info">Die App</string>
+    <string name="profile_suggestions">Verbesserungen vorschlagen</string>
+    <string name="profile_rate">App Bewerten</string>
+    <string name="profile_report_error">Fehler melden</string>
+    <string name="profile_permissions">Berechtigungen</string>
+    <string name="profile_sleepdata">Schlafdaten</string>
+    <string name="profile_permission_sleepdata">ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk</string>
+    <string name="profile_daily_activity">Tägliche Aktivität</string>
+    <string name="profile_permission_daily_activity">ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk</string>
+    <string name="profile_storage">Speicherzugriff</string>
+    <string name="profile_permission_storage">ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk</string>
+    <string name="profile_overlapp_app">App Überlappen</string>
+    <string name="profile_permission_overlapp_app">ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk</string>
+    <string name="profile_data">Daten</string>
+    <string name="profile_export_data">Daten Exportieren</string>
+    <string name="profile_import_data">Daten Importieren</string>
+    <string name="profile_remove_data_warning">Ohje, alle daten werden gelöscht ok?</string>
+    <string name="profile_remove_data_ackn">Verstanden und löschen</string>
+    <string name="profile_about_us">Sleepest - App\nMade with LOVE in Bavaria\n\n This app was created by 3 students as a students project and will be improved and maintained in the future</string>
+
     <!--endregion-->
 
 

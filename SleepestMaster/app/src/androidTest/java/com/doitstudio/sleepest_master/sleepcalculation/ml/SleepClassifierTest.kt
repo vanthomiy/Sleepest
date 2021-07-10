@@ -31,35 +31,35 @@ class SleepClassifierTest{
         val sleepClassifier = SleepClassifier.getHandler(context)
 
 
-        var assigments = sleepClassifier.loadInputAssigmentFile(ModelProcess.SLEEP04, sleepDataFrequency = SleepDataFrequency.FIVE)
+        var assigments = sleepClassifier.loadInputAssignmentFile(ModelProcess.SLEEP04, sleepDataFrequency = SleepDataFrequency.FIVE)
         assertThat(assigments.count() != 0, equalTo(true))
 
 
-        assigments = sleepClassifier.loadInputAssigmentFile(ModelProcess.SLEEP04, sleepDataFrequency = SleepDataFrequency.TEN)
+        assigments = sleepClassifier.loadInputAssignmentFile(ModelProcess.SLEEP04, sleepDataFrequency = SleepDataFrequency.TEN)
         assertThat(assigments.count() != 0, equalTo(true))
 
-        assigments = sleepClassifier.loadInputAssigmentFile(ModelProcess.SLEEP04, sleepDataFrequency = SleepDataFrequency.THIRTY)
+        assigments = sleepClassifier.loadInputAssignmentFile(ModelProcess.SLEEP04, sleepDataFrequency = SleepDataFrequency.THIRTY)
         assertThat(assigments.count() != 0, equalTo(true))
 
-        assigments = sleepClassifier.loadInputAssigmentFile(ModelProcess.SLEEP12, sleepDataFrequency = SleepDataFrequency.FIVE)
+        assigments = sleepClassifier.loadInputAssignmentFile(ModelProcess.SLEEP12, sleepDataFrequency = SleepDataFrequency.FIVE)
         assertThat(assigments.count() != 0, equalTo(true))
 
-        assigments = sleepClassifier.loadInputAssigmentFile(ModelProcess.SLEEP12, sleepDataFrequency = SleepDataFrequency.TEN)
+        assigments = sleepClassifier.loadInputAssignmentFile(ModelProcess.SLEEP12, sleepDataFrequency = SleepDataFrequency.TEN)
         assertThat(assigments.count() != 0, equalTo(true))
 
-        assigments = sleepClassifier.loadInputAssigmentFile(ModelProcess.SLEEP12, sleepDataFrequency = SleepDataFrequency.THIRTY)
+        assigments = sleepClassifier.loadInputAssignmentFile(ModelProcess.SLEEP12, sleepDataFrequency = SleepDataFrequency.THIRTY)
         assertThat(assigments.count() != 0, equalTo(true))
 
-        assigments = sleepClassifier.loadInputAssigmentFile(ModelProcess.LIGHTAWAKE, sleepDataFrequency = SleepDataFrequency.FIVE)
+        assigments = sleepClassifier.loadInputAssignmentFile(ModelProcess.LIGHTAWAKE, sleepDataFrequency = SleepDataFrequency.FIVE)
         assertThat(assigments.count() != 0, equalTo(true))
 
-        assigments = sleepClassifier.loadInputAssigmentFile(ModelProcess.LIGHTAWAKE, sleepDataFrequency = SleepDataFrequency.TEN)
+        assigments = sleepClassifier.loadInputAssignmentFile(ModelProcess.LIGHTAWAKE, sleepDataFrequency = SleepDataFrequency.TEN)
         assertThat(assigments.count() != 0, equalTo(true))
 
-        assigments = sleepClassifier.loadInputAssigmentFile(ModelProcess.LIGHTAWAKE, sleepDataFrequency = SleepDataFrequency.THIRTY)
+        assigments = sleepClassifier.loadInputAssignmentFile(ModelProcess.LIGHTAWAKE, sleepDataFrequency = SleepDataFrequency.THIRTY)
         assertThat(assigments.count() != 0, equalTo(true))
 
-        assigments = sleepClassifier.loadInputAssigmentFile(ModelProcess.TABLEBED, sleepDataFrequency = SleepDataFrequency.NONE)
+        assigments = sleepClassifier.loadInputAssignmentFile(ModelProcess.TABLEBED, sleepDataFrequency = SleepDataFrequency.NONE)
         assertThat(assigments.count() != 0, equalTo(true))
     }
 

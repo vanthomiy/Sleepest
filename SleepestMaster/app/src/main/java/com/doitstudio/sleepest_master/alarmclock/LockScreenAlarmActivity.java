@@ -31,6 +31,7 @@ import android.widget.TextView;
 
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.background.AlarmReceiver;
+import com.doitstudio.sleepest_master.background.BackgroundAlarmTimeHandler;
 import com.doitstudio.sleepest_master.background.ForegroundService;
 import com.doitstudio.sleepest_master.model.data.Actions;
 import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage;
@@ -220,7 +221,9 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
                                     //Swipe down
                                 } else {
 
-                                    AlarmClockAudio.getInstance().stopAlarm(false);
+                                    BackgroundAlarmTimeHandler.Companion.getHandler(getApplicationContext()).alarmClockRang(false);
+
+                                    /**AlarmClockAudio.getInstance().stopAlarm(false);
 
                                     Calendar calendarAlarm = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeBeginJob());
                                     AlarmReceiver.startAlarmManager(calendarAlarm.get(Calendar.DAY_OF_WEEK), calendarAlarm.get(Calendar.HOUR_OF_DAY), calendarAlarm.get(Calendar.MINUTE), getApplicationContext(), AlarmReceiverUsage.START_FOREGROUND);
@@ -239,7 +242,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
                                     ed.putInt("day", calendarAlarm.get(Calendar.DAY_OF_WEEK));
                                     ed.putInt("hour", calendarAlarm.get(Calendar.HOUR_OF_DAY));
                                     ed.putInt("minute", calendarAlarm.get(Calendar.MINUTE));
-                                    ed.apply();
+                                    ed.apply();**/
 
                                     finish();
                                 }

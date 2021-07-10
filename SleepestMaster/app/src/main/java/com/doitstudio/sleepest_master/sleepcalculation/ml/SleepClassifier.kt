@@ -13,23 +13,39 @@ import org.tensorflow.lite.support.label.TensorLabel
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import java.io.BufferedReader
 
-
+/**
+ * This class is used to use the functionality of the imported ml models.
+ * In the app are used different types of ml models for specific use-cases.
+ * With this we can
+ *  - load input assignments [loadInputAssignmentFile]
+ *  - create features of an actual sleep api raw data list [createFeatures]
+ *  - create features for indicating table/bed of an actual sleep api raw data list [createTableFeatures]
+ *  - defining if user is sleeping [isUserSleeping]
+ *  - defining if phone is in bed [defineTableBed]
+ *  - defining the actual state of sleeping [defineUserSleep]
+ */
 class SleepClassifier constructor(private val context: Context) {
 
-    private val inputSleep045 = lazy { loadInputAssigmentFile(ModelProcess.SLEEP04, SleepDataFrequency.FIVE)  }
-    private val inputSleep0410 = lazy { loadInputAssigmentFile(ModelProcess.SLEEP04, SleepDataFrequency.TEN)  }
-    private val inputSleep0430 = lazy { loadInputAssigmentFile(ModelProcess.SLEEP04, SleepDataFrequency.THIRTY)  }
+    //region The input assignments for the models
 
-    private val inputSleep125 = lazy { loadInputAssigmentFile(ModelProcess.SLEEP12, SleepDataFrequency.FIVE)  }
-    private val inputSleep1210 = lazy { loadInputAssigmentFile(ModelProcess.SLEEP12, SleepDataFrequency.TEN)  }
-    private val inputSleep1230 = lazy { loadInputAssigmentFile(ModelProcess.SLEEP12, SleepDataFrequency.THIRTY)  }
+    private val inputSleep045 = lazy { loadInputAssignmentFile(ModelProcess.SLEEP04, SleepDataFrequency.FIVE)  }
+    private val inputSleep0410 = lazy { loadInputAssignmentFile(ModelProcess.SLEEP04, SleepDataFrequency.TEN)  }
+    private val inputSleep0430 = lazy { loadInputAssignmentFile(ModelProcess.SLEEP04, SleepDataFrequency.THIRTY)  }
 
-    private val inputTableBed = lazy { loadInputAssigmentFile(ModelProcess.TABLEBED)  }
+    private val inputSleep125 = lazy { loadInputAssignmentFile(ModelProcess.SLEEP12, SleepDataFrequency.FIVE)  }
+    private val inputSleep1210 = lazy { loadInputAssignmentFile(ModelProcess.SLEEP12, SleepDataFrequency.TEN)  }
+    private val inputSleep1230 = lazy { loadInputAssignmentFile(ModelProcess.SLEEP12, SleepDataFrequency.THIRTY)  }
+
+    private val inputTableBed = lazy { loadInputAssignmentFile(ModelProcess.TABLEBED)  }
+
+    //endregion
+
+    //region Loading assignments and creating features
 
     /**
      * loading the model inputs indexes for preparing model input
      */
-    fun loadInputAssigmentFile(process:ModelProcess, sleepDataFrequency: SleepDataFrequency = SleepDataFrequency.NONE): List<ModelInputAssignment> {
+    fun loadInputAssignmentFile(process:ModelProcess, sleepDataFrequency: SleepDataFrequency = SleepDataFrequency.NONE): List<ModelInputAssignment> {
 
         val file = ModelProcess.getString(process)
         val frequency = SleepDataFrequency.getValue(sleepDataFrequency)
@@ -125,6 +141,10 @@ class SleepClassifier constructor(private val context: Context) {
 
         return preparedInput
     }
+
+    //endregion
+
+    //region Using the ml model for predictions
 
     /**
      * Pass the with [createFeatures] created array of int to predict if the user is sleeping or not
@@ -254,70 +274,6 @@ class SleepClassifier constructor(private val context: Context) {
     }
 
     /**
-     * Pass the with [createFeatures] created array of int to predict if the user sleep state for the future ( next ) [sleepDataFrequency]
-     * Returns [SleepState] [SleepState.LIGHT] or [SleepState.DEEP] and [SleepState.NONE] if no data or an error occures
-     */
-    fun defineFutureUserSleep(data: FloatArray, sleepDataFrequency: SleepDataFrequency) : SleepState {
-
-        try{
-
-            val inputCount = SleepDataFrequency.getCount(sleepDataFrequency)
-
-            // region assignments
-            val inputs = Array<TensorBuffer>(inputCount*3) { TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.FLOAT32)  }
-            for(i in 0 until inputs.count()) {
-                // Creates inputs for reference.
-                inputs[i].loadArray(floatArrayOf(data[i]))
-            }
-
-            val model = when (sleepDataFrequency) {
-                SleepDataFrequency.FIVE ->  Wakeuplight5.newInstance(context)
-                SleepDataFrequency.TEN -> Wakeuplight10.newInstance(context)
-                else -> Wakeuplight30.newInstance(context)
-            }
-
-            val outputs = when(model){
-                is Wakeuplight5 -> model.process(inputs[0],inputs[1],inputs[2],inputs[3],inputs[4],inputs[5],inputs[6],inputs[7],inputs[8],inputs[9],inputs[10],inputs[11],inputs[12],inputs[13],inputs[14],inputs[15],inputs[16],inputs[17],inputs[18],inputs[19],inputs[20],inputs[21],inputs[22],inputs[23],inputs[24],inputs[25],inputs[26],inputs[27],inputs[28],inputs[29],inputs[30],inputs[31],inputs[32],inputs[33],inputs[34],inputs[35],inputs[36],inputs[37],inputs[38],inputs[39],inputs[40],inputs[41],inputs[42],inputs[43],inputs[44],inputs[45],inputs[46],inputs[47],inputs[48],inputs[49],inputs[50],inputs[51],inputs[52],inputs[53],inputs[54],inputs[55],inputs[56],inputs[57],inputs[58],inputs[59],inputs[60],inputs[61],inputs[62],inputs[63],inputs[64],inputs[65],inputs[66],inputs[67],inputs[68],inputs[69],inputs[70],inputs[71])
-                is Wakeuplight10 -> model.process(inputs[0],inputs[1],inputs[2],inputs[3],inputs[4],inputs[5],inputs[6],inputs[7],inputs[8],inputs[9],inputs[10],inputs[11],inputs[12],inputs[13],inputs[14],inputs[15],inputs[16],inputs[17],inputs[18],inputs[19],inputs[20],inputs[21],inputs[22],inputs[23],inputs[24],inputs[25],inputs[26],inputs[27],inputs[28],inputs[29],inputs[30],inputs[31],inputs[32],inputs[33],inputs[34],inputs[35])
-                else -> (model as Wakeuplight30).process(inputs[0],inputs[1],inputs[2],inputs[3],inputs[4],inputs[5],inputs[6],inputs[7],inputs[8],inputs[9],inputs[10],inputs[11])
-            }
-
-            val outputFeature = when(outputs){
-                is Wakeuplight5.Outputs -> outputs.outputFeature0AsTensorBuffer
-                is Wakeuplight10.Outputs -> outputs.outputFeature0AsTensorBuffer
-                else -> (model as Wakeuplight30.Outputs).outputFeature0AsTensorBuffer
-            }
-
-            // Map of labels and their corresponding probability
-            val associatedAxisLabels: List<String> = listOf("LIGHT", "DEEP")
-
-            // Map of labels and their corresponding probability
-            val labels = TensorLabel(associatedAxisLabels, outputFeature)
-
-            // Create a map to access the result based on label
-            val floatMap: Map<String, Float> = labels.mapWithFloatValue
-
-            // classificate the data
-            val classification = floatMap.maxByOrNull { it.value }
-
-            // Releases model resources if no longer used.
-            when(model){
-                is Wakeuplight5 -> model.close()
-                is Wakeuplight5 -> model.close()
-                else -> (model as Wakeuplight30).close()
-            }
-
-            return SleepState.valueOf(classification?.key ?: "NONE")
-
-        } catch (e: Exception)
-        {
-            return SleepState.NONE
-        }
-
-        return SleepState.NONE
-    }
-
-    /**
      * Pass the [data] created array of int to predict if the user sleep state
      * Returns [MobilePosition] [MobilePosition.INBED] or [MobilePosition.ONTABLE] and [MobilePosition.UNIDENTIFIED] if no data or an error occures
      */
@@ -364,11 +320,19 @@ class SleepClassifier constructor(private val context: Context) {
         return MobilePosition.UNIDENTIFIED
     }
 
+    //endregion
+
+    /**
+     * Companion object is used for static fields in kotlin
+     */
     companion object {
         // For Singleton instantiation
         @Volatile
         private var INSTANCE: SleepClassifier? = null
 
+        /**
+         * This should be used to create or get the actual instance of the [SleepClassifier] class
+         */
         fun getHandler(context: Context): SleepClassifier {
             return INSTANCE ?: synchronized(this) {
                 val instance = SleepClassifier(context)

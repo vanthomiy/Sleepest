@@ -1,4 +1,4 @@
-package com.doitstudio.sleepest_master.ui.profile
+package com.doitstudio.sleepest_master.ui.settings
 
 import android.Manifest
 import android.app.Application
@@ -7,14 +7,11 @@ import android.provider.Settings
 import android.transition.TransitionManager
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.ContextCompat
-import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
-import com.doitstudio.sleepest_master.DontKillMyAppFragment
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
@@ -23,7 +20,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class ProfileViewModel(application: Application) : AndroidViewModel(application) {
+class SettingsViewModel(application: Application) : AndroidViewModel(application) {
 
     //region binding values
 
@@ -44,10 +41,13 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         scope.launch {
             darkMode.get()?.let {
                 dataStoreRepository.updateDarkMode(it)
+                dataStoreRepository.updateAutoDarkModeAckn(true)
                 AppCompatDelegate
-                        .setDefaultNightMode(if(it)
-                            AppCompatDelegate.MODE_NIGHT_YES else
-                            AppCompatDelegate.MODE_NIGHT_NO);
+                        .setDefaultNightMode(
+                            if (it)
+                                AppCompatDelegate.MODE_NIGHT_YES else
+                                AppCompatDelegate.MODE_NIGHT_NO
+                        );
             }
         }
     }
@@ -60,35 +60,22 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         scope.launch {
             autoDarkMode.get()?.let {
                 dataStoreRepository.updateAutoDarkMode(it)
+                dataStoreRepository.updateAutoDarkModeAckn(true)
             }
         }
 
         autoDarkMode.get()?.let { auto ->
             showDarkModeSetting.set(if (auto) View.GONE else View.VISIBLE)
             AppCompatDelegate
-                    .setDefaultNightMode(if(auto)
+                    .setDefaultNightMode(if (auto)
                         AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM else
                         darkMode.get().let { mode ->
-                                if(mode == true)
+                            if (mode == true)
                                 AppCompatDelegate.MODE_NIGHT_YES else
                                 AppCompatDelegate.MODE_NIGHT_NO
-                            })
+                        })
 
         }
-    }
-
-    val languageSelections = ObservableArrayList<String>()
-    val selectedLanguage = ObservableField(0)
-    fun onLanguageChanged(
-            parent: AdapterView<*>?,
-            selectedItemView: View,
-            language: Int,
-            id: Long
-    ) {
-        scope.launch {
-            dataStoreRepository.updateLanguage(language)
-        }
-
     }
 
     // endregion
@@ -141,20 +128,26 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     fun checkPermissions(){
 
-        activityPermission.set(PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
+        activityPermission.set(
+            PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACTIVITY_RECOGNITION
-        ))
+            )
+        )
 
-        dailyPermission.set(PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
+        dailyPermission.set(
+            PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACTIVITY_RECOGNITION
-        ))
+            )
+        )
 
-        storagePermission.set(PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
+        storagePermission.set(
+            PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ANSWER_PHONE_CALLS
-        ))
+            )
+        )
 
         overlayPermission.set(Settings.canDrawOverlays(context))
 
@@ -175,8 +168,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             "remove" -> {
                 TransitionManager.beginDelayedTransition(transitionsContainer);
 
-                removeExpand.set(if (removeExpand.get() == View.GONE) View.VISIBLE else View.GONE)
-                removeButtonText.set(if (removeExpand.get() == View.GONE) "delete all data" else "return")
+                removeExpand.set(removeExpand.get() != true)
+                removeButtonText.set(if (removeExpand.get() == true) "delete all data" else "return")
             }
             "removeAckn" -> {
 
@@ -196,18 +189,13 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     // endregion
 
-    val designExpand = ObservableField(View.GONE)
-    val helpExpand = ObservableField(View.GONE)
-    val aboutUsExpand = ObservableField(View.GONE)
-    val permissionsExpand = ObservableField(View.GONE)
-    val dataExpand = ObservableField(View.GONE)
-    val removeExpand = ObservableField(View.GONE)
+    val actualExpand = ObservableField(-1)
+    val goneState = ObservableField(View.GONE)
+    val visibleState = ObservableField(View.VISIBLE)
+    val removeExpand = ObservableField(false)
 
-    val designRotation = ObservableField(0)
-    val helpRotation = ObservableField(0)
-    val aboutUsRotation = ObservableField(0)
-    val permissionsRotation = ObservableField(0)
-    val dataRotation = ObservableField(0)
+    val normalRotationState = ObservableField(0)
+    val rotatedState = ObservableField(180)
 
 
     fun onExpandClicked(view: View) {
@@ -218,20 +206,11 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
         TransitionManager.beginDelayedTransition(transitionsContainer);
 
-        designExpand.set(if (value == "0" && designExpand.get() == View.GONE) View.VISIBLE else View.GONE)
-        helpExpand.set(if (value == "1" && helpExpand.get() == View.GONE) View.VISIBLE else View.GONE)
-        aboutUsExpand.set(if (value == "2" && aboutUsExpand.get() == View.GONE) View.VISIBLE else View.GONE)
-        permissionsExpand.set(if (value == "3" && permissionsExpand.get() == View.GONE) View.VISIBLE else View.GONE)
-        dataExpand.set(if (value == "4" && dataExpand.get() == View.GONE) View.VISIBLE else View.GONE)
-        removeExpand.set(if (dataExpand.get() == View.GONE) View.GONE else removeExpand.get())
-
-        designRotation.set(if (designExpand.get() == View.GONE) 0 else 180)
-        helpRotation.set(if (helpExpand.get() == View.GONE) 0 else 180)
-        aboutUsRotation.set(if (aboutUsExpand.get() == View.GONE) 0 else 180)
-        permissionsRotation.set(if (permissionsExpand.get() == View.GONE) 0 else 180)
-        dataRotation.set(if (dataExpand.get() == View.GONE) 0 else 180)
+        actualExpand.set(if (actualExpand.get() == value.toIntOrNull()) -1 else value.toIntOrNull())
+        removeExpand.set(if (actualExpand.get() == 4) removeExpand.get() else false)
 
     }
+
 
 
     //endregion
@@ -239,14 +218,11 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     init {
 
         scope.launch {
-            var settingsParams = dataStoreRepository.settingsDataFlow.first()
-            languageSelections.addAll(arrayListOf<String>("Deutsch", "Englisch"))
 
+            var settingsParams = dataStoreRepository.settingsDataFlow.first()
             darkMode.set(settingsParams.designDarkMode)
             autoDarkMode.set(settingsParams.designAutoDarkMode)
             showDarkModeSetting.set(if (settingsParams.designAutoDarkMode) View.GONE else View.VISIBLE)
-            selectedLanguage.set(settingsParams.designLanguage)
-
         }
 
         checkPermissions()

@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     // This is for all the dark/light mode colors
-    <color name="primary_app_background">#FFFFFF</color>
+    <color name="primary_app_background">#1a1a1a</color>
     <color name="secondary_app_background">#7D7D7D</color>
-    <color name="tertiary_app_background">#1a1a1a</color>
-    <color name="primary_text_color">#1a1a1a</color>
+    <color name="tertiary_app_background">#FFFFFF</color>
+    <color name="primary_text_color">#FFFFFF</color>
     <color name="secondary_text_color">#7D7D7D</color>
-    <color name="tertiary_text_color">#FFFFFF</color>
+    <color name="tertiary_text_color">#1a1a1a</color>
     <color name="accent_text_color">#009688</color>
 
-    <color name="primary_button_color">#1a1a1a</color>
-    <color name="secondary_button_color">#a1a1a1</color>
+    <color name="primary_button_color">#a1a1a1</color>
+    <color name="secondary_button_color">#1a1a1a</color>
+    <color name="tertiary_button_color">#00BCD4</color>
 
     <color name="error_color">#E91E63</color>
 

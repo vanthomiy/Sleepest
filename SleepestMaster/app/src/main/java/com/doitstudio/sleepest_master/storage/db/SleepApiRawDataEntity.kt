@@ -75,6 +75,7 @@ data class SleepApiRawDataEntity(
                 fun getAwakeTime(sleepApiRawDataEntity:List<SleepApiRawDataEntity>) : Int {
                         val sortedList = sleepApiRawDataEntity.sortedBy { x-> x.timestampSeconds }
                         var isSleeping = false
+                        var awakeTimePuffer = 0
                         var awakeTime = 0
 
                         for (i  in 1 until sortedList.count()){
@@ -85,10 +86,18 @@ data class SleepApiRawDataEntity(
                                                 sortedList[i].sleepState == SleepState.LIGHT ||
                                                 sortedList[i].sleepState == SleepState.REM)
 
-                                awakeTime +=
+                                awakeTimePuffer +=
                                         if(isSleeping && (sortedList[i].sleepState == SleepState.NONE || sortedList[i].sleepState == SleepState.AWAKE))
                                                 sortedList[i].timestampSeconds - sortedList[i-1].timestampSeconds
                                         else 0
+
+                                if(sortedList[i].sleepState == SleepState.SLEEPING ||
+                                        sortedList[i].sleepState == SleepState.DEEP ||
+                                        sortedList[i].sleepState == SleepState.LIGHT ||
+                                        sortedList[i].sleepState == SleepState.REM) {
+                                        awakeTime += awakeTimePuffer
+                                        awakeTimePuffer = 0
+                                }
                         }
 
                         return awakeTime / 60
