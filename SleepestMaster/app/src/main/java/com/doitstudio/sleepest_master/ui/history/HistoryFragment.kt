@@ -1,8 +1,6 @@
 package com.doitstudio.sleepest_master.ui.history
 
 import android.content.Context
-import android.graphics.Color
-import android.graphics.Color.green
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +10,6 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.navigation.navDeepLink
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.storage.db.*
@@ -53,7 +50,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
     /** Weekly sleep analysis (Sleep phases) */
     private lateinit var barChartWeek: BarChart
 
-    /** Monthly sleep anaysis (Sleep phases) */
+    /** Monthly sleep analysis (Sleep phases) */
     private lateinit var barChartMonth: BarChart
 
     /** Daily sleep analysis (Sleep phases) */
@@ -341,7 +338,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
                 }
                 previousTimestamp = rawData.timestampSeconds
 
-                for (min in 0..(sleptSeconds/60).toInt()) {
+                for (min in 0..(sleptSeconds/60)) {
                     entries.add(Entry(xValue.toFloat(), rawData.sleepState.ordinal.toFloat()))
                     xValue += 1
                 }
@@ -431,10 +428,10 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
      */
     private fun setPieChart() {
         val listColors = ArrayList<Int>()
-        listColors.add(resources.getColor(R.color.light_sleep_color))
-        listColors.add(resources.getColor(R.color.deep_sleep_color))
-        listColors.add(resources.getColor(R.color.awake_sleep_color))
-        listColors.add(resources.getColor(R.color.sleep_sleep_color))
+        listColors.add(R.color.light_sleep_color)
+        listColors.add(R.color.deep_sleep_color)
+        listColors.add(R.color.awake_sleep_color)
+        listColors.add(R.color.sleep_sleep_color)
         //listColors.add(resources.getColor(R.color.dark_green))
 
         val pieDataSet = PieDataSet(generateDataPieChart(), "Sleep states")
