@@ -9,16 +9,25 @@ import com.doitstudio.sleepest_master.sleepcalculation.model.UserCalculationRati
 import com.doitstudio.sleepest_master.sleepcalculation.model.UserSleepRating
 import java.time.*
 
-
+/**
+ * This is the basic data class for storing the combined user sleep data for each day.
+ * It contains a unique [id] with which the associated [SleepApiRawDataEntity] can be retrieved from the sql database.
+ */
 @Entity(tableName = "user_sleep_session_entity")
 data class UserSleepSessionEntity(
 
 
-
+        /**
+         * Unique key of the data which is created of the first timestamp of the [SleepApiRawDataEntity]
+         */
         @PrimaryKey
         val id:Int,
 
+        /**
+         * The actual [MobilePosition] for the sleep which was detected by the algorithm or set by the user.
+         */
         var mobilePosition: MobilePosition = MobilePosition.UNIDENTIFIED,
+
 
         @Embedded(prefix = "sleepTimes") val sleepTimes: SleepTimes = SleepTimes(),
         @Embedded(prefix = "sleepRating") val userSleepRating: UserSleepRating = UserSleepRating(),

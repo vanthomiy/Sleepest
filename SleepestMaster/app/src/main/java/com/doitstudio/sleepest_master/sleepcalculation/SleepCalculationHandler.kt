@@ -17,19 +17,38 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneOffset
 
+/**
+ * This class provides all functionality that is necessary for predicting the users sleep
+ * This class is called from the background an analyzes the [SleepApiRawDataEntity] from the database and stores the predicted values in the database
+ * With this we can
+ *  -(TODO(define funcitons)
+ */
 class SleepCalculationHandler(val context: Context) {
 
+    //region Database instantiation
+
+    /**
+     * Scope is used to write to the database async without affecting the normal process
+     */
     private val scope: CoroutineScope = MainScope()
 
+    /**
+     * With [dataBaseRepository] we can access all the data from the database
+     */
     private val dataBaseRepository: DatabaseRepository by lazy {
         (context.applicationContext as MainApplication).dataBaseRepository
     }
 
+    /**
+     * With [dataStoreRepository] we can access all the data from the proto store
+     */
     private val dataStoreRepository: DataStoreRepository by lazy {
         (context.applicationContext as MainApplication).dataStoreRepository
     }
 
-    // region private helpers
+    //endregion
+
+    //region private helpers
 
     /**
      * Gets seconds of day with local time
@@ -113,8 +132,9 @@ class SleepCalculationHandler(val context: Context) {
 
     /**
      * Gets the user activity and classifies what type of activity was done
+     * TODO(We have to define how much activity is what state)
      */
-    suspend fun getUserActivityOnDay(time:LocalDateTime) : ActivityOnDay{
+    private suspend fun getUserActivityOnDay(time:LocalDateTime) : ActivityOnDay{
 
         val userActivity =
             dataBaseRepository.getActivityApiRawDataFromDate(time.minusDays(1)).first()
@@ -125,23 +145,17 @@ class SleepCalculationHandler(val context: Context) {
         if(userActivity.isEmpty())
             return ActivityOnDay.NONE
 
-        userActivity.forEach{
-            if(it.activity == DetectedActivity.WALKING || it.activity == DetectedActivity.ON_FOOT){
+        for (i in userActivity.indices-1){
+            if(userActivity[i].activity == DetectedActivity.WALKING || userActivity[i].activity == DetectedActivity.ON_FOOT){
 
-                activityCount += 1 * it.duration
+                activityCount += (userActivity[i+1].timestampSeconds - userActivity[i].timestampSeconds) / 60
 
             }
-            else if(it.activity == DetectedActivity.ON_BICYCLE || it.activity == DetectedActivity.RUNNING){
+            else if(userActivity[i].activity == DetectedActivity.ON_BICYCLE || userActivity[i].activity == DetectedActivity.RUNNING){
 
-                activityCount += 3 * it.duration
-
+                activityCount += 3 * (userActivity[i+1].timestampSeconds - userActivity[i].timestampSeconds) / 60
             }
         }
-
-        // lets say > 1 Stunde schwer und 3 Stunden leicht ist viel
-        // 60 * 3 + 60 * 3
-        // 360
-
 
         return when {
             activityCount > 360 -> ActivityOnDay.EXTREMACTIVITY
@@ -150,7 +164,6 @@ class SleepCalculationHandler(val context: Context) {
             activityCount > 45 -> ActivityOnDay.SMALLACTIVITY
             else -> ActivityOnDay.NOACTIVITY
         }
-
     }
 
     /**
@@ -183,7 +196,7 @@ class SleepCalculationHandler(val context: Context) {
 
 
     /**
-     * Checks wheter the phone is on bed or on table. Error returns [MobilePosition.UNIDENTIFIED]
+     * Checks whether the phone is on bed or on table. Error returns [MobilePosition.UNIDENTIFIED]
      */
     fun checkPhonePosition(sleepApiRawDataEntity:List<SleepApiRawDataEntity>) : MobilePosition {
 
@@ -221,60 +234,9 @@ class SleepCalculationHandler(val context: Context) {
         return sleepClassifier.defineTableBed(features)
     }
 
-    /**
-     * Searches a light user wakeup in the next times...
-     * Experimental.. should be first tested and later used...
-     * Its not really easy to be defined...
-
-     * Now we are passing the actual [sleepApiRawDataEntity] with the actual [frequency] (FIVE/TEN or THIRTY)
-     * Also we are providing a [timeSpan] of time where we are allowed to wakeup and the user around the defined [wakeUpTime]
-
-     * WHAT IT IS DOING:
-
-     * CASE 1: Wakeuppont is to far away
-     * We do nothing much and just returning the provided [wakeUpTime]
-     *
-     * CASE 2: Wakeuppoint is in the past
-     * Should not happen but if, we check if the [frequency] * 2 includes the [wakeUpTime]
-     * Yes ? -> We calculate the model and check if next time is a [SleepState.LIGHT] and set it to waekup point
-     * No ? -> We set the wakeuppont to now
-     *
-     * CASE 3: Wakeuppoint in near future ( 2 times the [frequency] of the data)
-     * So now we are calculating the [SleepState] of the actual data for the next step.
-     * If its a [SleepState.LIGHT] we set the wakeuppoint to it.. otherwise we pass back to old wakeup point
-
-     */
-    fun findLightUserWakeup(sleepApiRawDataEntity:List<SleepApiRawDataEntity>, wakeUpTime:Int) : Int{
-
-
-        // get normed list
-        val (normedSleepApiData, frequency) = createTimeNormedData(2, false , sleepApiRawDataEntity.maxOf { x->x.timestampSeconds } , sleepApiRawDataEntity)
-
-        // get actual time
-        val actualTimeSeconds =  getSecondsOfDay()
-        val frequencySeconds = SleepDataFrequency.getValue(frequency) * 60
-
-
-        // If we are in allowed timeSpace
-        if (((actualTimeSeconds < wakeUpTime) && actualTimeSeconds > wakeUpTime - (frequencySeconds * 2)) ||
-            ((actualTimeSeconds > wakeUpTime) && actualTimeSeconds < wakeUpTime + (frequencySeconds * 2)))
-        {
-            // check user light sleep future
-            // create features for ml model
-            val sleepClassifier = SleepClassifier.getHandler(context)
-            val features = sleepClassifier.createFeatures(normedSleepApiData, ModelProcess.LIGHTAWAKE, frequency)
-
-            // call the ml model
-            val result = sleepClassifier.defineFutureUserSleep(features, frequency)
-
-            return if(result == SleepState.LIGHT)  (actualTimeSeconds + frequencySeconds) else wakeUpTime
-        }
-        else{
-            return wakeUpTime
-        }
-    }
-
     // endregion
+
+    //region Sleep calculation functions
 
     /**
      * Checks if the user is Sleeping or not at the moment.
@@ -438,13 +400,6 @@ class SleepCalculationHandler(val context: Context) {
                     wakeUpTime -= 86400
                 }
 
-                //var wakeUpTimeNew = 0
-                // if in bed then check the single states of the sleep
-                // TODO check how good light user wakeup is working... for testing it will be deactivated first
-                if (sleepSessionEntity.mobilePosition == MobilePosition.INBED) {
-                    //wakeUpTime = findLightUserWakeup(sleepApiRawDataEntity, wakeUpTime)
-                }
-
                 // store in the alarm...!!!
                 dataBaseRepository.updateWakeupTime(wakeupTime = wakeUpTime, alarm.id)
 
@@ -552,11 +507,19 @@ class SleepCalculationHandler(val context: Context) {
 
     }
 
+    //endregion
+
+    /**
+     * Companion object is used for static fields in kotlin
+     */
     companion object {
         // For Singleton instantiation
         @Volatile
         private var INSTANCE: SleepCalculationHandler? = null
 
+        /**
+         * This should be used to create or get the actual instance of the [SleepCalculationHandler] class
+         */
         fun getHandler(context: Context): SleepCalculationHandler {
             return INSTANCE ?: synchronized(this) {
                 val instance = SleepCalculationHandler(context)

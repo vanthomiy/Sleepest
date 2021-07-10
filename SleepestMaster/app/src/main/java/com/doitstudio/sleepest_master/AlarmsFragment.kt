@@ -36,6 +36,7 @@ import kotlinx.coroutines.launch
  */
 class AlarmsFragment() : Fragment() {
 
+
     //private lateinit var binding: FragmentAlarmsBinding
     private val repository by lazy { (actualContext as MainApplication).dataBaseRepository }
     private val dataStoreRepository by lazy { (actualContext as MainApplication).dataStoreRepository }
@@ -172,12 +173,16 @@ class AlarmsFragment() : Fragment() {
 
         btnAddAlarmEntity.setOnClickListener {
             //view ->  onAddAlarm(view)
+
+
             if (checkPermissions()) {
                 onAddAlarm(view)
             } else {
+
+                (activity as MainActivity).switchToMenu(R.id.profile, changeType = 3)
+
                 Toast.makeText(actualContext, "Please grant all permissions", Toast.LENGTH_LONG)
                     .show()
-
             }
         }
 

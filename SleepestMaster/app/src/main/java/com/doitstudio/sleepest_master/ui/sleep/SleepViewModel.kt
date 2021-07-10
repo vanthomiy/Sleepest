@@ -2,9 +2,6 @@ package com.doitstudio.sleepest_master.ui.sleep
 
 import android.app.Application
 import android.app.TimePickerDialog
-import android.content.res.ColorStateList
-import android.graphics.Color
-import android.net.Uri
 import android.transition.TransitionManager
 import android.view.MotionEvent
 import android.view.View
@@ -13,19 +10,16 @@ import android.widget.*
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.widget.NestedScrollView
-import androidx.databinding.Observable
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
-import com.doitstudio.Activityest_master.sleepapi.ActivityHandler
-import com.doitstudio.Activityest_master.sleepapi.ActivityTransitionHandler
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.model.data.LightConditions
 import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.MobileUseFrequency
+import com.doitstudio.sleepest_master.googleapi.ActivityTransitionHandler
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
-import com.kevalpatel.ringtonepicker.RingtonePickerDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -148,9 +142,14 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         autoSleepTime.get()?.let {
             manualSleepTimeVisibility.set(if (it) View.GONE else View.VISIBLE)
         }
-
     }
 
+
+    val actualExpand = ObservableField(-1)
+    val goneState = ObservableField(View.GONE)
+    val visibleState = ObservableField(View.VISIBLE)
+
+    /*
     val sleepTimeInfoExpand = ObservableField(View.GONE)
     val phonePositionExpand = ObservableField(View.GONE)
     val phoneUsageExpand = ObservableField(View.GONE)
@@ -159,6 +158,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     val sleepDurationExpand = ObservableField(View.GONE)
     val lightConditionExpand = ObservableField(View.GONE)
     val sleepHeaderExpand = ObservableField(View.GONE)
+    */
 
     fun onInfoClicked(view: View){
         updateInfoChanged(view.tag.toString(), true)
@@ -170,14 +170,17 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
         TransitionManager.beginDelayedTransition(transitionsContainer);
 
-        sleepTimeInfoExpand.set(if (value == "0" && sleepTimeInfoExpand.get() == View.GONE) View.VISIBLE else View.GONE)
+
+        actualExpand.set(if(actualExpand.get() == value.toIntOrNull()) -1 else value.toIntOrNull() )
+
+        /*sleepTimeInfoExpand.set(if (value == "0" && sleepTimeInfoExpand.get() == View.GONE) View.VISIBLE else View.GONE)
         sleepHeaderExpand.set(if (value == "7" && sleepHeaderExpand.get() == View.GONE) View.VISIBLE else View.GONE)
         lightConditionExpand.set(if (value == "6" && lightConditionExpand.get() == View.GONE) View.VISIBLE else View.GONE)
         sleepDurationExpand.set(if (value == "1" && sleepDurationExpand.get() == View.GONE) View.VISIBLE else View.GONE)
         phonePositionExpand.set(if (value == "2" && phonePositionExpand.get() == View.GONE) View.VISIBLE else View.GONE)
         phoneUsageExpand.set(if (value == "3" && phoneUsageExpand.get() == View.GONE) View.VISIBLE else View.GONE)
         activityTrackingExpand.set(if (value == "4" && activityTrackingExpand.get() == View.GONE) View.VISIBLE else View.GONE)
-        alarmExpand.set(if (value == "5" && alarmExpand.get() == View.GONE) View.VISIBLE else View.GONE)
+        alarmExpand.set(if (value == "5" && alarmExpand.get() == View.GONE) View.VISIBLE else View.GONE)*/
     }
 
     val phoneUsageValueString = ObservableField("Normal")
@@ -255,12 +258,10 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
             activityTrackingView.set(if (it) View.VISIBLE else View.GONE)
 
             if(it)
-                ActivityHandler.getHandler(getApplication()).startActivityHandler()
+                ActivityTransitionHandler.getHandler(getApplication()).startActivityHandler()
             else
-                ActivityHandler.getHandler(getApplication()).stopActivityHandler()
+                ActivityTransitionHandler.getHandler(getApplication()).stopActivityHandler()
         }
-
-
     }
 
     fun onActivityInCalcChanged(buttonView: View) {
@@ -411,6 +412,10 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
             alarmArt.set(sleepParams.alarmArt)
 
             sleepCalculateFactorCalculation()
+
+            //var activity = dataStoreRepository.activityApiDataFlow.first()
+            //val amount =  activity.activityApiValuesAmount
+            //sleepScoreValue.set(amount.toString())
 
 
         }

@@ -57,6 +57,10 @@
             </intent-filter>
         </activity>
 
+        <!--service
+            android:name=".DetectedActivitiesIntentService"
+            android:enabled="true"
+            android:exported="false" /!-->
         <service
             android:name=".background.ForegroundService"
             android:enabled="true"
@@ -89,7 +93,11 @@
             android:enabled="true"
             android:exported="true" />
         <receiver
-            android:name=".sleepapi.SleepReceiver"
+            android:name=".googleapi.SleepReceiver"
+            android:enabled="true"
+            android:exported="true" />
+        <receiver
+            android:name=".googleapi.ActivityTransitionReciver"
             android:enabled="true"
             android:exported="true" />
 

@@ -1,4 +1,4 @@
-package com.doitstudio.Activityest_master.sleepapi
+package com.doitstudio.sleepest_master.googleapi
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -6,13 +6,9 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import androidx.core.content.ContextCompat
-import com.doitstudio.Activityest_master.Activityapi.ActivityReciver.Companion.createActivityReceiverPendingIntent
-import com.doitstudio.Activityest_master.Activityapi.ActivityTransitionReciver
-import com.doitstudio.Activityest_master.sleepapi.ActivityTransitionHandler.Companion.getHandler
+import com.doitstudio.sleepest_master.googleapi.ActivityTransitionHandler.Companion.getHandler
 import com.doitstudio.sleepest_master.MainApplication
-import com.doitstudio.sleepest_master.sleepapi.ActivityTransitionUtil
 import com.google.android.gms.location.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -26,8 +22,6 @@ import kotlinx.coroutines.launch
 class ActivityTransitionHandler(private val context: Context) {
 
     private val scope: CoroutineScope = MainScope()
-
-    private val client: ActivityRecognitionClient by lazy { ActivityRecognition.getClient(context) }
 
     private val dataStoreRepository by lazy { (context.applicationContext as MainApplication).dataStoreRepository }
 
@@ -45,7 +39,6 @@ class ActivityTransitionHandler(private val context: Context) {
             }
         }
 
-        const val REQUEST_CODE_ACTIVITY_TRANSITION = 123
         const val REQUEST_CODE_INTENT_ACTIVITY_TRANSITION = 122
     }
 
@@ -69,60 +62,6 @@ class ActivityTransitionHandler(private val context: Context) {
      */
     @SuppressLint("MissingPermission")
     private fun subscribeToActivitySegmentUpdates() {
-        /*if (activityRecognitionPermissionApproved(context)) {
-
-            val request = ActivityTransitionRequest(createActivites())
-
-            val task =
-                    ActivityRecognition.getClient(context).requestActivityTransitionUpdates(
-                            //1800000, // 1/2 stunden
-                            request,
-                            pendingIntent
-                    )
-
-            task.addOnSuccessListener {
-                scope.launch {
-                    dataStoreRepository.updateActivityIsSubscribed(true)
-                    dataStoreRepository.updateActivitySubscribeFailed(false)
-                }            }
-            task.addOnFailureListener { exception ->
-                scope.launch {
-                    dataStoreRepository.updateActivityIsSubscribed(false)
-                    dataStoreRepository.updateActivitySubscribeFailed(true)
-                }
-            }
-        } else {
-            scope.launch {
-                dataStoreRepository.updateActivityPermissionRemovedError(true)
-                dataStoreRepository.updateActivityPermissionActive(false)
-            }
-        }*/
-
-        /*
-        if (activityRecognitionPermissionApproved(context)) {
-            client
-                    .requestActivityTransitionUpdates(
-                            ActivityTransitionUtil.getActivityTransitionRequest(),
-                            getPendingIntent()
-                    )
-                    .addOnSuccessListener {
-                        scope.launch {
-                            dataStoreRepository.updateActivityIsSubscribed(true)
-                            dataStoreRepository.updateActivitySubscribeFailed(false)
-                        }                   }
-                    .addOnFailureListener { e: Exception ->
-                        scope.launch {
-                            dataStoreRepository.updateActivityIsSubscribed(false)
-                            dataStoreRepository.updateActivitySubscribeFailed(true)
-                        }                   }
-
-        } else {
-            scope.launch {
-                dataStoreRepository.updateActivityPermissionRemovedError(true)
-                dataStoreRepository.updateActivityPermissionActive(false)
-            }
-        }*/
-
         if(activityRecognitionPermissionApproved(context)){
 
             val request = ActivityTransitionUtil.getActivityTransitionRequest()
@@ -147,41 +86,9 @@ class ActivityTransitionHandler(private val context: Context) {
     }
 
     /**
-     * Unsubscribes to Activity data.
+     * Unsubscribe to Activity data.
      */
     private fun unsubscribeToActivitySegmentUpdates() {
-        /*val task = ActivityRecognition.getClient(context).removeActivityTransitionUpdates(pendingIntent)
-
-        task.addOnSuccessListener {
-            scope.launch {
-                dataStoreRepository.updateActivityIsSubscribed(false)
-                dataStoreRepository.updateActivityUnsubscribeFailed(false)
-            }
-        }
-        task.addOnFailureListener { exception ->
-            scope.launch {
-                dataStoreRepository.updateActivityUnsubscribeFailed(true)
-            }
-        }*/
-        /*
-        client
-                .removeActivityTransitionUpdates(getPendingIntent())
-                .addOnSuccessListener {
-                    getPendingIntent().cancel()
-                    scope.launch {
-                        dataStoreRepository.updateActivityIsSubscribed(false)
-                        dataStoreRepository.updateActivityUnsubscribeFailed(false)
-                    }
-                }
-                .addOnFailureListener { e: Exception ->
-                    scope.launch {
-                        dataStoreRepository.updateActivityUnsubscribeFailed(true)
-
-                    }
-                }
-*/
-        // myPendingIntent is the instance of PendingIntent where the app receives callbacks.
-
         val request = ActivityTransitionUtil.getActivityTransitionRequest()
 
         val task = ActivityRecognition.getClient(context)
