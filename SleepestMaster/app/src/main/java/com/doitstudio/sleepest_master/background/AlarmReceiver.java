@@ -3,6 +3,10 @@ package com.doitstudio.sleepest_master.background;
 /**This class inherits from Broadcastreceiver and starts an alarm at a specific time and date*/
 
 import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -62,29 +66,33 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case START_FOREGROUND:
                 //Start foregroundservice with an activity
-                Intent startForegroundIntent = new Intent(context, ForegroundActivity.class);
+                /**Intent startForegroundIntent = new Intent(context, ForegroundActivity.class);
                 startForegroundIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startForegroundIntent.putExtra("intent", 1);
-                context.startActivity(startForegroundIntent);
+                context.startActivity(startForegroundIntent);**/
+                BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).beginOfSleepTime(true);
                 break;
             case STOP_FOREGROUND:
                 //Stop foregorundservice with an activity
-                Intent stopForegroundIntent = new Intent(context, ForegroundActivity.class);
+                /*Intent stopForegroundIntent = new Intent(context, ForegroundActivity.class);
                 stopForegroundIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 stopForegroundIntent.putExtra("intent", 2);
-                context.startActivity(stopForegroundIntent);
+                context.startActivity(stopForegroundIntent);*/
                 break;
             case DISABLE_ALARM:
-                if((databaseRepository.getNextActiveAlarmJob() != null) && !databaseRepository.getNextActiveAlarmJob().getTempDisabled()) {
-                    databaseRepository.updateAlarmTempDisabledJob(true, databaseRepository.getNextActiveAlarmJob().getId());
+                //if((databaseRepository.getNextActiveAlarmJob() != null) && !databaseRepository.getNextActiveAlarmJob().getTempDisabled()) {
+                    /**databaseRepository.updateAlarmTempDisabledJob(true, databaseRepository.getNextActiveAlarmJob().getId());
                     Calendar calendarStopForeground = Calendar.getInstance();
                     AlarmReceiver.startAlarmManager(calendarStopForeground.get(Calendar.DAY_OF_WEEK), calendarStopForeground.get(Calendar.HOUR_OF_DAY),
                             calendarStopForeground.get(Calendar.MINUTE) + 5, context.getApplicationContext(), AlarmReceiverUsage.STOP_FOREGROUND);
-                    Toast.makeText(context.getApplicationContext(), context.getApplicationContext().getString(R.string.disable_alarm_message), Toast.LENGTH_LONG).show();
-                } else if ((databaseRepository.getNextActiveAlarmJob() != null) && databaseRepository.getNextActiveAlarmJob().getTempDisabled()) {
-                    databaseRepository.updateAlarmTempDisabledJob(false, databaseRepository.getNextActiveAlarmJob().getId());
-                    AlarmReceiver.cancelAlarm(context.getApplicationContext(), AlarmReceiverUsage.STOP_FOREGROUND);
-                }
+                    Toast.makeText(context.getApplicationContext(), context.getApplicationContext().getString(R.string.disable_alarm_message), Toast.LENGTH_LONG).show();**/
+                   // BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, false);
+            //    } else if ((databaseRepository.getNextActiveAlarmJob() != null) && databaseRepository.getNextActiveAlarmJob().getTempDisabled()) {
+                    /**databaseRepository.updateAlarmTempDisabledJob(false, databaseRepository.getNextActiveAlarmJob().getId());
+                    AlarmReceiver.cancelAlarm(context.getApplicationContext(), AlarmReceiverUsage.STOP_FOREGROUND);**/
+                 //   BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, true);
+               // }
+
                 break;
             case NOT_SLEEPING:
                 //Button not Sleeping
@@ -95,9 +103,9 @@ public class AlarmReceiver extends BroadcastReceiver {
                 //Start the workmanager for the calculation of the sleep
                 WorkmanagerCalculation.startPeriodicWorkmanager(Constants.WORKMANAGER_CALCULATION_DURATION, context.getApplicationContext());
                 break;
-            case START_WORKMANAGER:
+            case START_WORKMANAGER: /**Übertragen**/
                 //Start Workmanager at sleeptime and subscribe to SleepApi
-                PeriodicWorkRequest periodicDataWork =
+                /**PeriodicWorkRequest periodicDataWork =
                         new PeriodicWorkRequest.Builder(Workmanager.class, Constants.WORKMANAGER_DURATION, TimeUnit.MINUTES)
                                 .addTag(context.getString(R.string.workmanager1_tag)) //Tag is needed for canceling the periodic work
                                 .build();
@@ -115,9 +123,12 @@ public class AlarmReceiver extends BroadcastReceiver {
                     AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context,AlarmReceiverUsage.STOP_FOREGROUND);
                 } else {
                     AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK) + 1, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context, AlarmReceiverUsage.STOP_FOREGROUND);
-                }
+                }**/
                 break;
             case STOP_WORKMANAGER:
+
+                BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).endOfSleepTime();
+                /**
                 //Stop Workmanager at end of sleeptime and unsubscribe to SleepApi
                 //TODO: Überprüfen, ob der Workmanager noch richtig abgebrochen wird
                 WorkManager.getInstance(context.getApplicationContext()).cancelAllWorkByTag(context.getApplicationContext().getString(R.string.workmanager1_tag));
@@ -129,7 +140,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                 //Set AlarmManager to start Workmanager at begin of sleeptime
                 calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeBeginJob());
                 AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context,AlarmReceiverUsage.START_WORKMANAGER_CALCULATION);
-                break;
+                **/
+                 break;
             case CURRENTLY_NOT_SLEEPING:
                 sleepCalculationHandler.userCurrentlyNotSleepingJob();
                 Toast.makeText(context.getApplicationContext(), context.getApplicationContext().getString(R.string.currently_not_sleeping_message), Toast.LENGTH_LONG).show();
@@ -263,4 +275,46 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         return calendar;
     }
+
+    /**
+     * Create the notification to inform the user about problems
+     * @return
+     */
+    public static Notification createInformationNotification(Context context, String information) {
+        //Get Channel id
+        String notificationChannelId = context.getApplicationContext().getString(R.string.information_notification_channel);
+
+        //Create intent if user tap on notification
+        Intent intent = new Intent(context.getApplicationContext(), MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        //Create manager and channel
+        NotificationManager notificationManager = (NotificationManager) context.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationChannel channel = new NotificationChannel(
+                notificationChannelId,
+                context.getApplicationContext().getString(R.string.information_notification_channel_name),
+                NotificationManager.IMPORTANCE_HIGH
+        );
+
+        //Set channel description
+        channel.setDescription(context.getApplicationContext().getString(R.string.information_notification_channel_description));
+        if (notificationManager != null) {
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        //Build the notification and return it
+        Notification.Builder builder;
+        builder = new Notification.Builder(context.getApplicationContext(), notificationChannelId);
+
+        return builder
+                .setContentTitle(context.getApplicationContext().getString(R.string.information_notification_title))
+                .setContentText(information) /**TODO: Textauswahl**/
+                .setStyle(new Notification.DecoratedCustomViewStyle())
+                .setSmallIcon(R.drawable.logo_notification)
+                .setContentIntent(pendingIntent)
+                .setOnlyAlertOnce(true)
+                .build();
+    }
+
 }

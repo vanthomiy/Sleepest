@@ -1,11 +1,13 @@
 package com.doitstudio.sleepest_master.background
 
+import android.app.Notification
+import android.app.NotificationManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.widget.Toast
 import androidx.work.*
 import com.doitstudio.sleepest_master.MainApplication
-import com.doitstudio.sleepest_master.model.data.Actions
+import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler.Companion.getHandler
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
@@ -36,7 +38,7 @@ class Workmanager(appcontext: Context, workerParams: WorkerParameters) : Worker(
         }
 
         scope.launch {
-            if (dataStoreRepository.isInSleepTime() && (dataBaseRepository.getNextActiveAlarm() != null)) {
+           /* if (dataStoreRepository.isInSleepTime() && (dataBaseRepository.getNextActiveAlarm() != null)) {
                 // alarm should be active else set active
                 if(!dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
 
@@ -46,10 +48,30 @@ class Workmanager(appcontext: Context, workerParams: WorkerParameters) : Worker(
                         ForegroundService.startOrStopForegroundService(Actions.START, applicationContext);
                     }
                 }
+            }*/
+
+            if (LocalTime.now().toSecondOfDay() >= dataStoreRepository.getSleepTimeBegin() &&
+                ((LocalTime.now().toSecondOfDay() - dataStoreRepository.getSleepTimeBegin()) >= 60) && (dataStoreRepository.sleepApiDataFlow.first().sleepApiValuesAmount <= 3)) {
+                val notification: Notification = AlarmReceiver.createInformationNotification(applicationContext,
+                    applicationContext.getString(R.string.information_notification_text_sleep_api_problem))
+                val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.notify(2, notification)
+            } else if (LocalTime.now().toSecondOfDay() > dataStoreRepository.getSleepTimeBegin() &&
+                ((dataStoreRepository.getSleepTimeBegin() - LocalTime.now().toSecondOfDay()) >= 60) && (dataStoreRepository.sleepApiDataFlow.first().sleepApiValuesAmount <= 3)) {
+                val notification: Notification = AlarmReceiver.createInformationNotification(applicationContext,
+                    applicationContext.getString(R.string.information_notification_text_sleep_api_problem))
+                val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.notify(2, notification)
             }
+            /**
+                /**TODO:Sleeptime ist nicht richtig**/
+            if (dataStoreRepository.liveUserSleepActivityFlow.first().userSleepTime > 60 && (dataStoreRepository.sleepApiDataFlow.first().sleepApiValuesAmount <= 3)) {
+                val notification: Notification = AlarmReceiver.createInformationNotification(applicationContext,
+                    applicationContext.getString(R.string.information_notification_text_sleep_api_problem))
+                val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.notify(2, notification)
+            }**/
         }
-
-
 
         sleepCalculationHandler.checkIsUserSleeping(null)
 
@@ -64,11 +86,13 @@ class Workmanager(appcontext: Context, workerParams: WorkerParameters) : Worker(
         return Result.success()
     }
 
+
+
     companion object {
 
         /**
          * Start the workmanager with a specific duration
-         * @param duration Number <=15 stands for duration in minutes
+         * @param duration Number >= 15 stands for duration in minutes
          */
         fun startPeriodicWorkmanager(duration: Int, context1: Context) {
 
