@@ -157,8 +157,8 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
 
     private void fadeColor(TextView textView) {
 
-        int colorFrom = getResources().getColor(R.color.cyan_aqua, getTheme());
-        int colorTo = getResources().getColor(R.color.blue_chill, getTheme());
+        int colorFrom = getResources().getColor(R.color.accent_text_color, getTheme());
+        int colorTo = getResources().getColor(R.color.primary_app_background, getTheme());
 
         ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
 

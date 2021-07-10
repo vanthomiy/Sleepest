@@ -89,9 +89,11 @@
     <ScrollView
         android:id="@+id/sV_sleepAnalysisChartsDays"
         android:layout_width="375dp"
-        android:layout_height="400dp"
+        android:layout_height="0dp"
         android:layout_marginTop="24dp"
+        android:layout_marginBottom="60dp"
         android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cL_SelectDayWeekMonth"
@@ -132,7 +134,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cL_SelectDayWeekMonth"
-        tools:visibility="visible" >
+        tools:visibility="gone" >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cL_sleepAnalysisChartsWeek"
@@ -156,11 +158,11 @@
         android:layout_width="375dp"
         android:layout_height="400dp"
         android:layout_marginTop="24dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cL_SelectDayWeekMonth"
-        tools:visibility="gone" >
+        tools:visibility="visible" >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cL_sleepAnalysisChartsMonth"
@@ -168,6 +170,14 @@
             android:layout_height="wrap_content"
             android:visibility="visible"
             app:layout_constraintTop_toTopOf="@+id/sV_sleepAnalysisChartsMonth">
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/barChart_sleepAnalysisMonth"
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
