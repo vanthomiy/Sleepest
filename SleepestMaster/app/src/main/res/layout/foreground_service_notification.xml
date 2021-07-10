@@ -60,7 +60,7 @@
                 android:background="@drawable/rounded_button_green"
                 style="@style/Theme.AppCompat.DayNight"
                 android:layout_gravity="bottom"
-                android:textSize="16sp"/>
+                android:textSize="15sp"/>
         </LinearLayout>
 
     </LinearLayout>

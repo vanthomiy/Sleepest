@@ -23,6 +23,7 @@ import androidx.core.app.NotificationManagerCompat;
 import com.doitstudio.sleepest_master.MainActivity;
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.background.AlarmReceiver;
+import com.doitstudio.sleepest_master.background.BackgroundAlarmTimeHandler;
 import com.doitstudio.sleepest_master.background.ForegroundActivity;
 import com.doitstudio.sleepest_master.model.data.AlarmClockReceiverUsage;
 import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage;
@@ -63,7 +64,9 @@ public class AlarmClockReceiver extends BroadcastReceiver {
                 }
                 break;
             case STOP_ALARMCLOCK: //Stop button of ScreenOn notification
-                AlarmClockAudio.getInstance().stopAlarm(false);
+                /**Übertragen**/
+                BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).alarmClockRang(true);
+                /**AlarmClockAudio.getInstance().stopAlarm(false);
 
                 Calendar calendarAlarm = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeBeginJob());
                 AlarmReceiver.startAlarmManager(calendarAlarm.get(Calendar.DAY_OF_WEEK), calendarAlarm.get(Calendar.HOUR_OF_DAY), calendarAlarm.get(Calendar.MINUTE), context, AlarmReceiverUsage.START_FOREGROUND);
@@ -86,7 +89,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
                 ed = pref.edit();
                 ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
                 ed.putInt("minute", calendar.get(Calendar.MINUTE));
-                ed.apply();
+                ed.apply();**/
 
                 break;
             case SNOOZE_ALARMCLOCK: //Snooze button of ScreenOn notification
