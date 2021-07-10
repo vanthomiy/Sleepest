@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Sleepest-Master</string>
-    <string name="description_dont_kill_my_app">To ensure that the app stays active in the background
+    <string name="description_dont_kill_my_app">To ensure that the app stays active in the background</string>
     <string name="alarm_active">Alarm Active</string>
     <string name="alarm_disabled">Alarm Disabled</string>
     <string name="insert_data">Alarm Disabled</string>
@@ -27,9 +27,7 @@
     <string name="information_notification_channel_name">Information Notification Channel</string>
     <string name="information_notification_text">You should go to sleep now or change your latest wake-up time as you will no longer be able to reach your sleep time</string>
     <string name="foregroundservice_notification_title">Sleepest - The best sleep you ever had</string>
-    <string name="foregroundservice_notification_title">Sleepest - The best sleep you ever had</string>
     <string name="information_notification_channel">Information Notification Channel</string>
-    <string name="information_notification_channel_name">Information Notification Channel</string>
     <string name="information_notification_channel_description">This channel is for the notification to show the user that it is time to sleep</string>
     <string name="information_notification_text_sleeptime_problem">You should go to sleep now or change your latest wake-up time as you will no longer be able to reach your sleep time</string>
     <string name="information_notification_text_sleep_api_problem">There is something wrong with receiving sleep data. Please restart your alarm.</string>
@@ -184,6 +182,26 @@
     <string name="profile_remove_data_warning">Ohje, alle daten werden gelöscht ok?</string>
     <string name="profile_remove_data_ackn">Verstanden und löschen</string>
     <string name="profile_about_us">Sleepest - App\nMade with LOVE in Bavaria\n\n This app was created by 3 students as a students project and will be improved and maintained in the future</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_activity_test">Test activity</string>
+    <string name="alarm_lockscreen_Button_1">Cancel Alarm</string>
+    <string name="alarm_lockscreen_Button_2">Snooze Alarm</string>
+    <string name="reactivate_alarm_message">Reactivated alarm</string>
+    <string name="hello_world">Hello Square World!</string>
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="attachment_summary_on">Aur.</string>
+    <string name="sleeptimedescription">Setup your usual sleep times. Beetween the start and end-time we will check if you are sleeping</string>
+    <string name="target_sleep_time">target time</string>
+    <string name="hello_blank_fragment">Hello</string>
+    <string name="large_text">dfff</string>
 
     <!--endregion-->
 
