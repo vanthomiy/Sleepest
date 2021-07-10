@@ -104,7 +104,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
     private lateinit var sleepSessionData : MutableMap<Int, UserSleepSessionEntity>
 
     /** Analysis date */
-    private var dateOfDiagram  = LocalDate.of(2021, 3, 24) //now()
+    private var dateOfDiagram  = LocalDate.now() //of(2021, 3, 24) //
 
     /** Analysis range */
     private var currentAnalysisRange = 0 // Day = 0, Week = 1, Month = 2
