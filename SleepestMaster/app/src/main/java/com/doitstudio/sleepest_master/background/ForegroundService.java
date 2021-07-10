@@ -27,6 +27,7 @@ import com.doitstudio.sleepest_master.LiveUserSleepActivity;
 import com.doitstudio.sleepest_master.MainActivity;
 import com.doitstudio.sleepest_master.MainApplication;
 import com.doitstudio.sleepest_master.R;
+import com.doitstudio.sleepest_master.SettingsData;
 import com.doitstudio.sleepest_master.SleepApiData;
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver;
 import com.doitstudio.sleepest_master.model.data.Actions;
@@ -38,6 +39,7 @@ import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 import com.doitstudio.sleepest_master.storage.DatabaseRepository;
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity;
+import com.doitstudio.sleepest_master.util.TimeConverterUtil;
 
 import java.time.LocalTime;
 import java.util.Calendar;
@@ -55,6 +57,7 @@ public class ForegroundService extends LifecycleService {
     private int alarmTimeInSeconds = 0; //Shows the calculated alarm time
     private int actualWakeUp = 0; //Shows the set alarm clock time
     private boolean userInformed = false; //Detects if the user is already informed about problems with reaching sleep time
+    boolean[] bannerConfig = new boolean[5];
 
     private DataStoreRepository dataStoreRepository; //Instance of DataStoreRepo
     private DatabaseRepository databaseRepository; //Instance of DatabaseRepo
@@ -450,6 +453,16 @@ public class ForegroundService extends LifecycleService {
 
     }
 
+    public void OnBannerConfigChanged(SettingsData settingsData) {
+        bannerConfig[0] = settingsData.getBannerShowAlarmActiv();
+        bannerConfig[1] = settingsData.getBannerShowActualWakeUpPoint();
+        bannerConfig[2] = settingsData.getBannerShowActualSleepTime();
+        bannerConfig[3] = settingsData.getBannerShowDetailedSleepTime();
+        bannerConfig[4] = settingsData.getBannerShowSleepState();
+
+        updateNotification();
+    }
+
     /**
      * Check if time from now to last wakeup is less than the sleep time set
      * @return
@@ -572,21 +585,64 @@ public class ForegroundService extends LifecycleService {
         }
 
         String contentText;
-
         if (isAlarmActive) {
             contentText = getString(R.string.alarm_status_true);
         } else {
             contentText = getString(R.string.alarm_status_false);
         }
 
-        String sleeptime = minuteToTimeFormat(userSleepTime)[0] + "h " + minuteToTimeFormat(userSleepTime)[1] + "min";
-        String alarmtime = millisToTimeFormat(alarmTimeInSeconds)[0] + ":" + millisToTimeFormat(alarmTimeInSeconds)[1] + " o'Clock";
+        String sleepStateText;
+        if (isSleeping) {
+            sleepStateText = getString(R.string.sleep_status_true);
+        } else {
+            sleepStateText = getString(R.string.sleep_status_false);
+        }
+
+        String sleeptimeText = "Sleep time: " + TimeConverterUtil.minuteToTimeFormat(userSleepTime)[0] + "h " + TimeConverterUtil.minuteToTimeFormat(userSleepTime)[1] + "min";
+        String alarmtimeText = "Alarm time: " + TimeConverterUtil.millisToTimeFormat(alarmTimeInSeconds)[0] + ":" + TimeConverterUtil.millisToTimeFormat(alarmTimeInSeconds)[1];
 
         //Set the text in textview of the expanded notification view
-        String notificationText = "AlarmActive: " + isAlarmActive + " Value: " + sleepValueAmount
+        /**String notificationText = "AlarmActive: " + isAlarmActive + " Value: " + sleepValueAmount
                 + "\nIsSubscribed: " + isSubscribed + "\nSleepTime: " + sleeptime
                 + "\nIsSleeping: " + isSleeping + " Wakeup: " + alarmtime;
-        remoteViews.setTextViewText(R.id.tvTextAlarm, notificationText);
+        remoteViews.setTextViewText(R.id.tvTextAlarm, notificationText);**/
+
+        if (bannerConfig[0]) {
+            remoteViews.setTextViewText(R.id.tvBannerAlarmActive, contentText + " sub:" + isSubscribed);
+            remoteViews.setViewVisibility(R.id.tvBannerAlarmActive, View.VISIBLE);
+        } else {
+            remoteViews.setViewVisibility(R.id.tvBannerAlarmActive, View.INVISIBLE);
+        }
+
+        if (bannerConfig[1]) {
+            remoteViews.setTextViewText(R.id.tvBannerActualWakeup, alarmtimeText);
+            remoteViews.setViewVisibility(R.id.tvBannerActualWakeup, View.VISIBLE);
+        } else {
+            remoteViews.setViewVisibility(R.id.tvBannerActualWakeup, View.INVISIBLE);
+        }
+
+        if (bannerConfig[2]) {
+            remoteViews.setTextViewText(R.id.tvBannerActualSleeptime, sleeptimeText);
+            remoteViews.setViewVisibility(R.id.tvBannerActualSleeptime, View.VISIBLE);
+        } else {
+            remoteViews.setViewVisibility(R.id.tvBannerActualSleeptime, View.INVISIBLE);
+        }
+
+        if (bannerConfig[3]) {
+            //remoteViews.setTextViewText(R.id.tvBannerDetailedSleeptime, notificationText);
+            remoteViews.setViewVisibility(R.id.tvBannerDetailedSleeptime, View.VISIBLE);
+        } else {
+            remoteViews.setViewVisibility(R.id.tvBannerAlarmActive, View.INVISIBLE);
+        }
+
+        if (bannerConfig[4]) {
+            remoteViews.setTextViewText(R.id.tvBannerIsSleeping, sleepStateText);
+            remoteViews.setViewVisibility(R.id.tvBannerIsSleeping, View.VISIBLE);
+        } else {
+            remoteViews.setViewVisibility(R.id.tvBannerIsSleeping, View.INVISIBLE);
+        }
+
+
 
         //Set the Intent for tap on the notification, it will launch MainActivity
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -618,6 +674,8 @@ public class ForegroundService extends LifecycleService {
                 .setOnlyAlertOnce(true)
                 .build();
     }
+
+
 
     /**
      * Create the notification to inform the user about sleep time problems
@@ -673,23 +731,7 @@ public class ForegroundService extends LifecycleService {
         context.startForegroundService(intent);
     }
 
-    private int[] minuteToTimeFormat(int minute) {
-        int[] time = new int[2];
-        int rest = minute % 60;
-        time[0] = minute / 60;
-        time[1] = rest;
 
-        return time;
-    }
-
-    private int[] millisToTimeFormat(int milliseconds) {
-        int[] time = new int[2];
-        int rest = milliseconds % 3600;
-        time[0] = milliseconds / 3600;
-        time[1] = rest / 60;
-
-        return time;
-    }
 
 
     //endregion

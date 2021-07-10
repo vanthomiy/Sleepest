@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="120dp"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
     style="@style/Theme.AppCompat.DayNight">
 
@@ -22,20 +22,66 @@
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/logo_notification" />
 
-            <TextView
-                android:id="@+id/tvTextAlarm"
-                android:layout_gravity="center"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:textSize="13sp"
-                style="@style/Theme.AppCompat.DayNight"/>
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvBannerAlarmActive"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:textSize="13sp"
+                    android:text="testtesttesttest"
+                    style="@style/Theme.AppCompat.DayNight"/>
+
+                <TextView
+                    android:id="@+id/tvBannerActualWakeup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:textSize="13sp"
+                    android:text="testtesttesttest"
+                    style="@style/Theme.AppCompat.DayNight"/>
+
+                <TextView
+                    android:id="@+id/tvBannerActualSleeptime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:textSize="13sp"
+                    android:text="testtesttesttest"
+                    style="@style/Theme.AppCompat.DayNight"/>
+
+                <TextView
+                    android:id="@+id/tvBannerDetailedSleeptime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:textSize="13sp"
+                    android:text="testtesttesttest"
+                    style="@style/Theme.AppCompat.DayNight"/>
+
+                <TextView
+                    android:id="@+id/tvBannerIsSleeping"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:textSize="13sp"
+                    android:text="Rem: 1h 2min, Light: 3h 20min, Deep: 4h, 22min"
+                    style="@style/Theme.AppCompat.DayNight"/>
+
+            </LinearLayout>
+
+
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_marginTop="4dp"
             style="@style/Theme.AppCompat.DayNight">
 
             <Button
