@@ -4,6 +4,7 @@
     <color name="primary_app_background">#1a1a1a</color>
     <color name="secondary_app_background">#7D7D7D</color>
     <color name="tertiary_app_background">#FFFFFF</color>
+
     <color name="primary_text_color">#FFFFFF</color>
     <color name="secondary_text_color">#7D7D7D</color>
     <color name="tertiary_text_color">#1a1a1a</color>
@@ -21,5 +22,4 @@
     <color name="sleep_sleep_color">#074E4E</color>
 
     <color name="transparent">#00FFFFFF</color>
-
 </resources>

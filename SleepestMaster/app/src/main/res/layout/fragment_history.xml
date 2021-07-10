@@ -56,8 +56,9 @@
             android:id="@+id/btn_SleepAnalysisDay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Day"
             android:backgroundTint="@color/primary_button_color"
+            android:text="Day"
+            android:textColor="@color/primary_text_color"
             app:layout_constraintBottom_toBottomOf="@+id/btn_SleepAnalysisWeek"
             app:layout_constraintEnd_toStartOf="@+id/btn_SleepAnalysisWeek"
             app:layout_constraintTop_toTopOf="@+id/btn_SleepAnalysisWeek" />

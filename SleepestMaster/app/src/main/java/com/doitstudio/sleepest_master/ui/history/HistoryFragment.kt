@@ -403,7 +403,6 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
             val sleep = values.sleepTimes.sleepDuration
             val lightSleep = values.sleepTimes.lightSleepDuration
             val deepSleep = values.sleepTimes.deepSleepDuration
-            //val remSleep = values.sleepTimes.remSleepDuration
 
             if (lightSleep == 0 && deepSleep == 0) {
                 entries.add(PieEntry(awake.toFloat(), "Awake"))
@@ -417,7 +416,6 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
                 entries.add(PieEntry(lightSleep.toFloat(), "Light"))
                 entries.add(PieEntry(deepSleep.toFloat(), "Deep"))
             }
-            //entries.add(PieEntry(awake.toFloat(), "awake"))
         }
 
         return entries
@@ -432,7 +430,6 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         listColors.add(R.color.deep_sleep_color)
         listColors.add(R.color.awake_sleep_color)
         listColors.add(R.color.sleep_sleep_color)
-        //listColors.add(resources.getColor(R.color.dark_green))
 
         val pieDataSet = PieDataSet(generateDataPieChart(), "Sleep states")
         pieDataSet.colors = listColors
@@ -474,10 +471,8 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
                 val sleep = values.sleepTimes.sleepDuration
                 val lightSleep = values.sleepTimes.lightSleepDuration
                 val deepSleep = values.sleepTimes.deepSleepDuration
-                //val remSleep = values.sleepTimes.remSleepDuration
 
                 if ((sleep + awake) > maxSleepTime) { maxSleepTime = (sleep + awake) }  //Later delete awake from here
-                //if (sleep > maxSleepTime) { maxSleepTime = sleep }
 
                 if (lightSleep != 0 && deepSleep != 0) {
                     entries.add(
@@ -485,7 +480,6 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
                             xIndex, floatArrayOf(
                                 lightSleep.toFloat(),
                                 deepSleep.toFloat(),
-                                //remSleep.toFloat(),
                                 awake.toFloat(),
                                 0.toFloat()
                             )
@@ -498,7 +492,6 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
                             xIndex, floatArrayOf(
                                 lightSleep.toFloat(),
                                 deepSleep.toFloat(),
-                                //remSleep.toFloat(),
                                 awake.toFloat(),
                                 0.toFloat()
                             )
@@ -571,7 +564,6 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         legend.setDrawInside(false)
 
         val legendEntries = arrayListOf<LegendEntry>()
-        //legendEntries.add((LegendEntry("Awake", Legend.LegendForm.SQUARE, 8f, 8f, null ,Color.YELLOW))
         legendEntries.add((LegendEntry("Light", Legend.LegendForm.SQUARE, 8f, 8f, null ,R.color.light_sleep_color)))
         legendEntries.add((LegendEntry("Deep", Legend.LegendForm.SQUARE, 8f, 8f, null ,R.color.deep_sleep_color)))
         legendEntries.add((LegendEntry("Awake", Legend.LegendForm.SQUARE, 8f, 8f, null ,R.color.awake_sleep_color)))
@@ -673,7 +665,6 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
                 val deepSleep = values.sleepTimes.deepSleepDuration
                 val remSleep = values.sleepTimes.remSleepDuration
 
-                //if ((sleep + awake) > maxSleepTime) { maxSleepTime = (sleep + awake) }  //Later delete awake from here
                 if (sleep > maxSleepTime) { maxSleepTime = sleep }
 
                 entries.add(
@@ -683,7 +674,6 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
                             deepSleep.toFloat(),
                             awake.toFloat(),
                             remSleep.toFloat(),
-                            //sleep.toFloat()
                         )
                     )
                 )
