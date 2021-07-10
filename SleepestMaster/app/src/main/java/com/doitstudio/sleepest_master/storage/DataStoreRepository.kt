@@ -3,6 +3,7 @@ package com.doitstudio.sleepest_master.storage
 import android.content.Context
 import androidx.datastore.createDataStore
 import com.doitstudio.sleepest_master.*
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 
 import com.doitstudio.sleepest_master.storage.datastorage.*
 import kotlinx.coroutines.CoroutineScope
@@ -14,11 +15,17 @@ import java.time.LocalTime
 
 class DataStoreRepository(context: Context) {
 
+    /**
+     * Companion object is used for static fields in kotlin
+     */
     companion object {
         // For Singleton instantiation
         @Volatile
         private var INSTANCE: DataStoreRepository? = null
 
+        /**
+         * This should be used to create or get the actual instance of the [DataStoreRepository] class
+         */
         fun getRepo(context: Context): DataStoreRepository {
             return INSTANCE ?: synchronized(this) {
                 val instance = DataStoreRepository(context)
@@ -29,10 +36,8 @@ class DataStoreRepository(context: Context) {
         }
     }
 
-    private val scope: CoroutineScope = MainScope()
-
     /**
-     *  Sets all data to default values
+     *  Sets all data to default values. Its triggered by the "Delete Data" button in the settings fragment
      */
     suspend fun deleteAllData(){
         activityApiDataStatus.loadDefault()
@@ -95,10 +100,10 @@ class DataStoreRepository(context: Context) {
     suspend fun getSleepTimeEnd() : Int {
         return sleepParameterFlow.first().sleepTimeEnd
     }
-    suspend fun getAlarmArt() : Int {
+    private suspend fun getAlarmArt() : Int {
         return sleepParameterFlow.first().alarmArt
     }
-    suspend fun getAlarmTone() : String {
+    private suspend fun getAlarmTone() : String {
         return sleepParameterFlow.first().alarmtone
     }
     suspend fun updateActivityTracking(value:Boolean) =
@@ -259,12 +264,13 @@ class DataStoreRepository(context: Context) {
         liveUserSleepActivityStatus.updateUserSleepTime(sleepTime)
     //endregion
 
+    //region Background Status
+
     private val backgroundServiceStatus by lazy{ BackgroundServiceStatus(context.createDataStore(
         BACKGROUND_SERVICE_STATUS,
         serializer = BackgroundServiceSerializer())
     )
     }
-
 
     val backgroundServiceFlow: Flow<BackgroundService> = backgroundServiceStatus.backgroundService
     suspend fun backgroundUpdateIsActive(value:Boolean) =
@@ -272,5 +278,6 @@ class DataStoreRepository(context: Context) {
     suspend fun backgroundUpdateShouldBeActive(value:Boolean) =
         backgroundServiceStatus.updateShouldBeActive(value)
 
+    //endregion
 
 }
