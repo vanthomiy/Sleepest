@@ -78,6 +78,30 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+
+    val showAlarmActiv = ObservableField(true)
+    val showActualWakeUpPoint = ObservableField(true)
+    val showActualSleepTime = ObservableField(true)
+    val showDetailedSleepTime = ObservableField(true)
+    val showSleepState = ObservableField(true)
+    fun bannerSettingsToggled(view: View) {
+
+        scope.launch {
+            when (view.tag.toString()) {
+                "show_alarm_active" -> showAlarmActiv.get()
+                    ?.let { dataStoreRepository.updateBannerShowAlarmActiv(it) }
+                "show_actual_wakeup" -> showActualWakeUpPoint.get()
+                    ?.let { dataStoreRepository.updateBannerShowActualWakeUpPoint(it) }
+                "show_actual_sleep_time" -> showActualSleepTime.get()
+                    ?.let { dataStoreRepository.updateBannerShowActualSleepTime(it) }
+                "show_detailed_sleep_states" -> showDetailedSleepTime.get()
+                    ?.let { dataStoreRepository.updateBannerShowDetailedSleepTime(it) }
+                "show_actual_sleep_state" -> showSleepState.get()
+                    ?.let { dataStoreRepository.updateBannerShowSleepState(it) }
+            }
+        }
+    }
+
     // endregion
 
     // region Help
@@ -223,6 +247,13 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             darkMode.set(settingsParams.designDarkMode)
             autoDarkMode.set(settingsParams.designAutoDarkMode)
             showDarkModeSetting.set(if (settingsParams.designAutoDarkMode) View.GONE else View.VISIBLE)
+
+            showAlarmActiv.set(settingsParams.bannerShowAlarmActiv)
+            showActualWakeUpPoint.set(settingsParams.bannerShowActualWakeUpPoint)
+            showActualSleepTime.set(settingsParams.bannerShowActualSleepTime)
+            showDetailedSleepTime.set(settingsParams.bannerShowDetailedSleepTime)
+            showSleepState.set(settingsParams.bannerShowSleepState)
+
         }
 
         checkPermissions()

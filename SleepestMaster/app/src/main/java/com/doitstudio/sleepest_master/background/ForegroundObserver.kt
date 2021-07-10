@@ -24,6 +24,7 @@ class ForegroundObserver(private val fs: ForegroundService) {
     private val alarmLivedata by lazy{databaseRepository.activeAlarmsFlow().asLiveData()}
     private val userSleepTime by lazy{sleepCalculationStoreRepository.sleepApiDataFlow.asLiveData()}
     private val liveUserSleepActivityData by lazy{sleepCalculationStoreRepository.liveUserSleepActivityFlow.asLiveData()}
+    private val bannerConfigLivedata by lazy{dataStoreRepository.settingsDataFlow.asLiveData()}
 
     fun resetSleepTime(){
         scope.launch {
@@ -81,6 +82,11 @@ class ForegroundObserver(private val fs: ForegroundService) {
 
         liveUserSleepActivityData.observe(fs){ la->
             fs.OnSleepTimeChanged(la)
+        }
+
+        bannerConfigLivedata.observe(fs) { bcl->
+            fs.OnBannerConfigChanged(bcl)
+
         }
     }
 }

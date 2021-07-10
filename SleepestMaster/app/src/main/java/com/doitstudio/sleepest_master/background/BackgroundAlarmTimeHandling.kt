@@ -9,11 +9,12 @@ import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
+import com.doitstudio.sleepest_master.SettingsData
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockAudio
+import com.doitstudio.sleepest_master.googleapi.SleepHandler
 import com.doitstudio.sleepest_master.model.data.Actions
 import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage
 import com.doitstudio.sleepest_master.model.data.Constants
-import com.doitstudio.sleepest_master.googleapi.SleepHandler
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
@@ -322,6 +323,10 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
             if (checkAlarmActive()) {
                 dataBaseRepository.updateAlarmWasFired(false, dataBaseRepository.getNextActiveAlarm()!!.id)
+            }
+
+            if (checkForegroundStatus()) {
+                stopForegroundService(false)
             }
         }
 

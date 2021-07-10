@@ -45,6 +45,8 @@
     <string name="btn_reactivate_alarm">Reactivate alarm</string>
     <string name="alarm_status_false">Alarm not active</string>
     <string name="alarm_status_true">Alarm active</string>
+    <string name="sleep_status_false">You are currently not sleeping</string>
+    <string name="sleep_status_true">You are currently sleeping</string>
     <string name="wakelock_tag">Foregroundservice_lock</string>
     <!--
     This string is used for square devices and overridden by hello_world in
