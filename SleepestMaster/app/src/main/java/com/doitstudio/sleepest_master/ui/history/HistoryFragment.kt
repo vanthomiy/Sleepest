@@ -5,9 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ScrollView
-import android.widget.TextView
+import android.widget.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.doitstudio.sleepest_master.R
@@ -64,6 +62,9 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
 
     /** Pops up if no sleep analysis data is available */
     private lateinit var tVNoDataAvailable: TextView
+
+    /** Pops up if no sleep analysis data is available */
+    private lateinit var iVNoDataAvailable: ImageView
 
     /** Switch to day analysis */
     private lateinit var btnSleepAnalysisDay : Button
@@ -128,6 +129,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
         pieChart = view.findViewById(R.id.pieChart_sleepAnalysisDay)
         tVDisplayedDay = view.findViewById(R.id.tV_ActualDay)
         tVNoDataAvailable = view.findViewById(R.id.tV_noDataAvailable)
+        iVNoDataAvailable = view.findViewById(R.id.iV_noDataAvailable)
         btnSleepAnalysisDay = view.findViewById(R.id.btn_SleepAnalysisDay)
         btnSleepAnalysisWeek = view.findViewById(R.id.btn_SleepAnalysisWeek)
         btnSleepAnalysisMonth = view.findViewById(R.id.btn_SleepAnalysisMonth)
@@ -283,11 +285,13 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
                     sVSleepAnalysisWeek.isVisible = false
                     sVSleepAnalysisMonth.isVisible = false
                     tVNoDataAvailable.isVisible = false
+                    iVNoDataAvailable.isVisible = false
                 } else {
                     sVSleepAnalysisDay.isVisible = false
                     sVSleepAnalysisWeek.isVisible = false
                     sVSleepAnalysisMonth.isVisible = false
-                    tVNoDataAvailable.isVisible = true
+                    tVNoDataAvailable.isVisible = false // true is no picture is available
+                    iVNoDataAvailable.isVisible = true
                 }
             }
             1 -> {
@@ -296,11 +300,13 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
                     sVSleepAnalysisWeek.isVisible = true
                     sVSleepAnalysisMonth.isVisible = false
                     tVNoDataAvailable.isVisible = false
+                    iVNoDataAvailable.isVisible = false
                 } else {
                     sVSleepAnalysisDay.isVisible = false
                     sVSleepAnalysisWeek.isVisible = true
                     sVSleepAnalysisMonth.isVisible = false
                     tVNoDataAvailable.isVisible = false
+                    iVNoDataAvailable.isVisible = false
                 }
             }
             2 -> {
@@ -309,11 +315,13 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
                     sVSleepAnalysisWeek.isVisible = false
                     sVSleepAnalysisMonth.isVisible = true
                     tVNoDataAvailable.isVisible = false
+                    iVNoDataAvailable.isVisible = false
                 } else {
                     sVSleepAnalysisDay.isVisible = false
                     sVSleepAnalysisWeek.isVisible = false
                     sVSleepAnalysisMonth.isVisible = true
                     tVNoDataAvailable.isVisible = false
+                    iVNoDataAvailable.isVisible = false
                 }
             }
         }
@@ -509,6 +517,7 @@ class HistoryFragment(val applicationContext: Context) : Fragment() {
 
     /**
      * Sets the bar chart. Calls generateDataBarChart for diagram data.
+     * TODO Combine weekly and monthly charts
      */
     private fun setBarChartWeekly() { //http://developine.com/android-grouped-stacked-bar-chart-using-mpchart-kotlin/
         val diagramData = generateDataBarChartWeekly()

@@ -182,9 +182,11 @@
                 android:id="@+id/barChart_sleepAnalysisMonth"
                 android:layout_width="match_parent"
                 android:layout_height="350dp"
+                android:layout_marginTop="12dp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"></com.github.mikephil.charting.charts.BarChart>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
@@ -196,8 +198,19 @@
         android:text="No data available for this day"
         android:textColor="@color/primary_text_color"
         android:textSize="24sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cL_SelectDayWeekMonth" />
+
+    <ImageView
+        android:id="@+id/iV_noDataAvailable"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/sV_sleepAnalysisChartsMonth"
+        app:srcCompat="@drawable/flashlight_by_freepik" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
