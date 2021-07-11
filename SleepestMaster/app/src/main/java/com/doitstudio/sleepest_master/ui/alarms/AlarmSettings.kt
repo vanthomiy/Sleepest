@@ -1,11 +1,14 @@
-package com.doitstudio.sleepest_master
+package com.doitstudio.sleepest_master.ui.alarms
 
 import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import androidx.activity.viewModels
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
+import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -51,6 +54,7 @@ class AlarmSettings : FragmentActivity() {
         }
     }
 
+
     fun onAddAlarm(view: View) {
         var newId = 0
         for (id in usedIds.indices) {
@@ -90,6 +94,10 @@ class AlarmSettings : FragmentActivity() {
         transactions = mutableMapOf()
         fragments = mutableMapOf()
 
+
+
+
         setupAlarms()
     }
+
 }

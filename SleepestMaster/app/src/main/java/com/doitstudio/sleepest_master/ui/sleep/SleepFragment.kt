@@ -49,12 +49,6 @@ class SleepFragment : Fragment() {
         viewModel.animatedTopView = binding.animatedTopView
         binding.sleepViewModel = viewModel
 
-
-        binding.soundChange.setOnClickListener {
-            onAlarmSoundChange(it)
-        }
-
-
         return binding.root
 
     }

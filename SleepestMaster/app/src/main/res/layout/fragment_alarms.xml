@@ -1,220 +1,236 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/cL_parent"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/primary_app_background"
-    android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.alarms.AlarmsFragment">
 
-    <TextView
-        android:id="@+id/tV_appName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="16dp"
-        android:text="@string/einstellungen"
-        android:textAlignment="center"
-        android:textColor="@color/primary_text_color"
-        android:textSize="34sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
-        android:id="@+id/btn_expandSoundSettings"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_gravity="start"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/ic_baseline_timer_24"
-        android:src="@drawable/ic_baseline_timer_24"
-        app:layout_constraintEnd_toStartOf="@+id/tV_appName"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/white"
-        tools:layout_editor_absoluteX="64dp"
-        tools:layout_editor_absoluteY="16dp" />
-
-    <LinearLayout
-        android:id="@+id/lL_alarmSoundSettings"
+    <data>
+        <variable
+            name="alarmsViewModel"
+            type="com.doitstudio.sleepest_master.ui.alarms.AlarmsViewModel"/>
+    </data>
+    <FrameLayout
+        android:id="@+id/cL_parent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:orientation="vertical"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/tV_appName"
-        tools:layout_editor_absoluteX="10dp">
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginVertical="5dp">
-
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_gravity="start"
-                android:src="@drawable/ic_baseline_timer_24"
-                app:tint="@color/white" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginLeft="40dp"
-                android:text="@string/sleep_alarm_header"
-                android:textColor="@color/white"
-                android:textSize="@dimen/headerSize" />
-
-            <ImageButton
-                android:id="@+id/btn_expandAlarmSoundInformation"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_gravity="end"
-                android:background="@drawable/ic_baseline_info_24"
-                android:src="@drawable/ic_baseline_info_24"
-                android:tag="5"
-                app:tint="@color/white" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/fL_alarmSoundInformation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="10dp"
-            android:visibility="gone"
-            android:background="@drawable/bgroundedchoosen">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:gravity="center"
-                android:text="@string/sleep_alarm_info"
-                android:textColor="@color/white" />
-        </FrameLayout>
+        android:layout_height="match_parent"
+        android:background="@color/primary_app_background"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:background="@drawable/bgroundedchoosen"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <FrameLayout
+            <LinearLayout
+                android:id="@+id/lL_alarmSoundSettings"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/valuesHeight">
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:orientation="vertical"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="10dp">
 
                 <TextView
+                    android:id="@+id/animTextSleep"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="start"
-                    android:layout_marginStart="10dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/sleep_alarm_auto_cancel_alarm"
-                    android:textColor="@color/secondTextColor"
-                    android:textSize="@dimen/valueSize"
-                    android:textStyle="bold" />
-
-                <Switch
-                    android:id="@+id/sw_autoCancelAlarm"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="end"
-                    android:layout_marginEnd="10dp"
-                    android:gravity="center_vertical" />
-            </FrameLayout>
-
-            <View
-                android:id="@+id/view1"
-                android:layout_width="fill_parent"
-                android:layout_height="2dp"
-                android:background="@color/gray" />
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/valuesHeight">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="start"
-                    android:layout_marginStart="10dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/sleep_alarm_sound"
-                    android:textColor="@color/secondTextColor"
-                    android:textSize="@dimen/valueSize"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="20dp"
+                    android:text="Alarme"
+                    android:textColor="@color/primary_text_color"
+                    android:textSize="@dimen/headerSize"
                     android:textStyle="bold" />
 
                 <Button
-                    android:id="@+id/btn_changeAlarmSound"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/btn_temporaryDisableAlarm"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginEnd="20dp"
-                    android:background="@drawable/transparent"
-                    android:text="Good morning little looser" />
-            </FrameLayout>
+                    android:background="@drawable/bgroundedchoosen"
+                    android:text=""
+                    android:textColor="@color/secondary_button_color" />
 
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="10dp"
+                    android:onClick="@{alarmsViewModel::onExpandClicked}"
+                    android:tag="0">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="start"
+                        android:src="@drawable/ic_baseline_build_24"
+                        app:tint="@color/primary_text_color" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginLeft="40dp"
+                        android:text="Alarm Einstellungen"
+                        android:textColor="@color/primary_text_color"
+                        android:textSize="@dimen/headerSize" />
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="end"
+                        android:onClick="@{alarmsViewModel::onExpandClicked}"
+                        android:rotation="@{alarmsViewModel.rotateState}"
+                        android:src="@drawable/ic_baseline_expand_more_24"
+                        android:tag="0"
+                        app:tint="@color/primary_text_color" />
+
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:orientation="vertical"
+                    android:visibility="@{alarmsViewModel.actualExpand}">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/valuesHeight"
+                        android:layout_marginVertical="5dp"
+                        android:background="@drawable/bgroundedchoosen"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="start"
+                            android:layout_marginStart="10dp"
+                            android:gravity="center_vertical"
+                            android:text="@string/sleep_alarm_auto_cancel_alarm"
+                            android:textColor="@color/accent_text_color"
+                            android:textSize="@dimen/valueSize"
+                            android:textStyle="bold" />
+
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end"
+                            android:layout_marginEnd="10dp"
+                            android:checked="@={alarmsViewModel.cancelAlarmWhenAwake}"
+                            android:gravity="center_vertical"
+                            android:onClick="@{alarmsViewModel::onEndAlarmAfterFiredChanged}" />
+
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/valuesHeight"
+                        android:layout_marginVertical="5dp"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="start"
+                            android:layout_marginStart="10dp"
+                            android:gravity="center_vertical"
+                            android:text="@string/sleep_alarm_sound"
+                            android:textColor="@color/accent_text_color"
+                            android:textSize="@dimen/valueSize"
+                            android:textStyle="bold" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/soundChange"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end"
+                            android:background="@drawable/bgroundedchoosen"
+                            android:layout_marginStart="100dp"
+                            android:text="@{alarmsViewModel.alarmSoundName}"
+                            android:textColor="@color/tertiary_text_color"
+                            android:textSize="@dimen/valueSize"></androidx.appcompat.widget.AppCompatButton>
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/valuesHeight"
+                        android:layout_marginVertical="5dp"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="start"
+                            android:layout_marginStart="10dp"
+                            android:gravity="center_vertical"
+                            android:text="Klingeln"
+                            android:textColor="@color/accent_text_color"
+                            android:textSize="@dimen/valueSize"
+                            android:textStyle="bold" />
+
+                        <androidx.appcompat.widget.AppCompatSpinner
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="start"
+                            android:background="@drawable/bgroundedchoosen"
+                            android:layout_marginStart="100dp"
+                            android:entries="@{alarmsViewModel.alarmArtSelections}"
+                            android:onItemSelected="@{alarmsViewModel::onAlarmArtChanged}"
+                            android:selectedItemPosition="@={alarmsViewModel.alarmArt}"
+                            android:theme="@style/Spinner"/>
+                    </FrameLayout>
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <ScrollView
+                android:id="@+id/sV_alarmEntities"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/primary_app_background">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginHorizontal="10dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/lL_containerAlarmEntities"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <androidx.fragment.app.FragmentContainerView
+                            android:id="@+id/fragment_one"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            tools:layout="@layout/alarm_entity" />
+
+                    </LinearLayout>
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"></FrameLayout>
+                </LinearLayout>
+
+            </ScrollView>
         </LinearLayout>
 
-    </LinearLayout>
+        <Button
+            android:id="@+id/btn_addAlarmEntity"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_marginBottom="75dp"
+            android:background="@drawable/roundedbutton"
+            app:icon="@drawable/ic_baseline_add_24"
+            android:layout_gravity="bottom|center"
+             />
 
-    <ScrollView
-        android:id="@+id/sV_alarmEntities"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_addAlarmEntity"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lL_alarmSoundSettings"
-        app:layout_constraintVertical_bias="0.0">
-
-        <LinearLayout
-            android:id="@+id/lL_containerAlarmEntities"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/fragment_one"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                tools:layout="@layout/alarm_entity"
-                tools:layout_editor_absoluteX="0dp" />
-        </LinearLayout>
-    </ScrollView>
-
-    <Button
-        android:id="@+id/btn_addAlarmEntity"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
-        android:layout_marginBottom="75dp"
-        android:background="@drawable/roundedbutton"
-        app:icon="@drawable/ic_baseline_add_24"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/btn_temporaryDisableAlarm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="@color/primary_button_color"
-        android:text=""
-        android:textColor="@color/secondary_button_color"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+</layout>

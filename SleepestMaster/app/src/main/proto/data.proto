@@ -138,8 +138,11 @@ message  SleepParameters{
   /**
 * implement the user activity tracking in the sleep time
 */
-  string alarmtone = 12;
-
+  string alarmTone = 12;
+  /**
+* implement the user activity tracking in the sleep time
+*/
+  string alarmName = 13;
 
 }
 

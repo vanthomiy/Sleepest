@@ -1,9 +1,10 @@
-package com.doitstudio.sleepest_master
+package com.doitstudio.sleepest_master.ui.alarms
 
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.text.InputType
+import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,8 +13,9 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.asLiveData
 import com.appyvet.rangebar.RangeBar
+import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity
-import com.github.mikephil.charting.charts.BarChart
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -35,6 +37,7 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
     private lateinit var tViewSleepAmountHint: TextView //Shows the selected sleep amount as hint
     private lateinit var tViewWakeupTimeHint: TextView //Shows the selected wake up range as hint
     private lateinit var viewExtendedAlarmSettings : View //Display extended alarm settings
+    private lateinit var cLAlarmEntityInnerLayer : ViewGroup //Display extended alarm settings
     private lateinit var btnSelectActiveWeekday : Button //Popup window for selecting the weekdays for alarm
     private lateinit var btnDeleteAlarmInstance: Button //Delete current alarm entity
     private lateinit var swAlarmActive : Switch //Select whether alarm is on or off
@@ -194,7 +197,9 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
     }
 
     private fun deleteAlarmEntity() {
+        TransitionManager.beginDelayedTransition(cLAlarmEntityInnerLayer);
         AlarmsFragment.getAlarmFragment().removeAlarmEntity(alarmId)
+
         scope.launch {
             repository.deleteAlarm(alarmSettings)
         }
@@ -217,6 +222,7 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
         viewExtendedAlarmSettings = view.findViewById(R.id.cL_extendedAlarmEntity)
         btnSelectActiveWeekday = view.findViewById(R.id.btn_selectActiveWeekday)
         swAlarmActive = view.findViewById(R.id.sw_alarmIsActive)
+        cLAlarmEntityInnerLayer = view.findViewById(R.id.cL_alarmEntityInnerLayer)
         btnDeleteAlarmInstance = view.findViewById(R.id.btn_deleteAlarm)
         usedIds = mutableSetOf()
 

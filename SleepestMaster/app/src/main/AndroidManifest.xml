@@ -36,7 +36,7 @@
             android:excludeFromRecents="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".AlarmSettings"
+            android:name=".ui.alarms.AlarmSettings"
             android:configChanges="orientation"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" />

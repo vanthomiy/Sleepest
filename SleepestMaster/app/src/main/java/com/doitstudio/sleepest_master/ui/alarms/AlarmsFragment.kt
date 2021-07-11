@@ -1,8 +1,7 @@
-package com.doitstudio.sleepest_master
+package com.doitstudio.sleepest_master.ui.alarms
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
@@ -11,6 +10,7 @@ import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.transition.TransitionManager
 
 import android.view.LayoutInflater
 import android.view.View
@@ -21,15 +21,22 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
-import com.doitstudio.sleepest_master.background.BackgroundAlarmTimeHandler
+import com.doitstudio.sleepest_master.MainActivity
+import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.R
+import com.doitstudio.sleepest_master.databinding.FragmentAlarmsBinding
+import com.doitstudio.sleepest_master.databinding.FragmentProfileBinding
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity
+import com.doitstudio.sleepest_master.ui.settings.SettingsViewModel
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.io.File
 
 /**
  * A fragment representing a list of Items.
@@ -44,15 +51,8 @@ class AlarmsFragment() : Fragment() {
     private val actualContext: Context by lazy { requireActivity().applicationContext }
     private val activeAlarmsLiveData by lazy {  repository.activeAlarmsFlow().asLiveData() }
 
-    private lateinit var btnAddAlarmEntity: Button
-    private var lLContainerAlarmEntities: LinearLayout? = null
-    lateinit var lLAlarmSoundSettings: LinearLayout
-    lateinit var btnExpandAlarmSoundSettings: ImageButton
-    lateinit var btnExpandAlarmSoundInformation: ImageButton
-    lateinit var fLAlarmSoundInformation: FrameLayout
-    lateinit var swAutoCancelAlarm: Switch
-    lateinit var btnChangeAlarmSound: Button
-    lateinit var btnTemporaryDisableAlarm: Button
+    private lateinit var binding: FragmentAlarmsBinding
+    private val viewModel by lazy { ViewModelProvider(this).get(AlarmsViewModel::class.java) }
 
     lateinit var allAlarms: MutableList<AlarmEntity>
     lateinit var usedIds: MutableSet<Int>
@@ -86,12 +86,21 @@ class AlarmsFragment() : Fragment() {
     }
 
     private fun addAlarmEntity(context: Context, alarmId: Int) {
+        TransitionManager.beginDelayedTransition(viewModel.transitionsContainer);
+
         transactions[alarmId] = childFragmentManager.beginTransaction()
         fragments[alarmId] = AlarmInstance(context, alarmId)
         transactions[alarmId]?.add(R.id.lL_containerAlarmEntities, fragments[alarmId]!!)?.commit()
     }
 
+    fun openCloseAlarm(){
+        TransitionManager.beginDelayedTransition(viewModel.transitionsContainer)
+    }
+
     fun removeAlarmEntity(alarmId: Int) {
+
+        TransitionManager.beginDelayedTransition(viewModel.transitionsContainer);
+
         childFragmentManager.beginTransaction().remove(fragments[alarmId]!!).commit()
         transactions.remove(alarmId)
         fragments.remove(alarmId)
@@ -100,7 +109,7 @@ class AlarmsFragment() : Fragment() {
 
 
 
-    private fun onAlarmSoundChange(view: View) {
+    private fun onAlarmSoundChange() {
         //check if audio volume is 0
 
         val audioManager = actualContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
@@ -128,7 +137,13 @@ class AlarmsFragment() : Fragment() {
                         dataStoreRepository.updateAlarmTone(
                             ringtoneUri.toString()
                         )
+                        dataStoreRepository.updateAlarmName(
+                            ringtoneName
+                        )
                     }
+
+                    viewModel.alarmSoundName.set(ringtoneName)
+
                 }
 
         ringtonePickerBuilder.addRingtoneType(RingtonePickerDialog.Builder.TYPE_ALARM)
@@ -138,16 +153,20 @@ class AlarmsFragment() : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentAlarmsBinding.inflate(inflater, container, false)
+        viewModel.transitionsContainer = (binding.cLParent)
+        binding.alarmsViewModel = viewModel
+
         INSTANCE = this
-        lLAlarmSoundSettings = view.findViewById(R.id.lL_alarmSoundSettings)
-        btnExpandAlarmSoundSettings = view.findViewById(R.id.btn_expandSoundSettings)
-        btnAddAlarmEntity = view.findViewById(R.id.btn_addAlarmEntity)
-        lLContainerAlarmEntities = view.findViewById(R.id.lL_containerAlarmEntities)
-        btnExpandAlarmSoundInformation = view.findViewById(R.id.btn_expandAlarmSoundInformation)
-        fLAlarmSoundInformation = view.findViewById(R.id.fL_alarmSoundInformation)
-        swAutoCancelAlarm = view.findViewById(R.id.sw_autoCancelAlarm)
-        btnChangeAlarmSound = view.findViewById(R.id.btn_changeAlarmSound)
-        btnTemporaryDisableAlarm = view.findViewById(R.id.btn_temporaryDisableAlarm)
 
         usedIds = mutableSetOf()
         transactions = mutableMapOf()
@@ -157,26 +176,23 @@ class AlarmsFragment() : Fragment() {
             scope.launch {
                 if (repository.getNextActiveAlarm() != null) {
                     if (repository.getNextActiveAlarm()!!.tempDisabled) {
-                        btnTemporaryDisableAlarm.text = getString(R.string.alarm_fragment_btn_disable_alarm_disable)
+                        binding.btnTemporaryDisableAlarm.text = getString(R.string.alarm_fragment_btn_disable_alarm_disable)
                         /**TODO: Change color**/
                     } else {
-                        btnTemporaryDisableAlarm.text = getString(R.string.alarm_fragment_btn_disable_alarm_reactivate)
+                        binding.btnTemporaryDisableAlarm.text = getString(R.string.alarm_fragment_btn_disable_alarm_reactivate)
                         /**TODO: Change color**/
                     }
                 } else {
-                    btnTemporaryDisableAlarm.isVisible = false
+                    binding.btnTemporaryDisableAlarm.isVisible = false
                 }
 
             }
         }
 
-
-        btnAddAlarmEntity.setOnClickListener {
-            //view ->  onAddAlarm(view)
-
+        binding.btnAddAlarmEntity.setOnClickListener {
 
             if (checkPermissions()) {
-                onAddAlarm(view)
+                onAddAlarm(it)
             } else {
 
                 (activity as MainActivity).switchToMenu(R.id.profile, changeType = 3)
@@ -186,6 +202,11 @@ class AlarmsFragment() : Fragment() {
             }
         }
 
+        binding.sVAlarmEntities.setOnClickListener {
+            viewModel.actualExpand.set(View.GONE)
+        }
+
+
         scope.launch {
             if (repository.getNextActiveAlarm() != null) {
                 if (repository.getNextActiveAlarm()!!.tempDisabled) {
@@ -194,42 +215,25 @@ class AlarmsFragment() : Fragment() {
                     //BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(true, true)
                 }
             } else {
-                btnTemporaryDisableAlarm.isVisible = false
+                binding.btnTemporaryDisableAlarm.isVisible = false
             }
         }
 
+        binding.soundChange.setOnClickListener{
+            onAlarmSoundChange()
+        }
 
 
-
-            btnExpandAlarmSoundSettings.setOnClickListener {
-                lLAlarmSoundSettings.isVisible = !lLAlarmSoundSettings.isVisible
-            }
-
-            btnExpandAlarmSoundInformation.setOnClickListener {
-                fLAlarmSoundInformation.isVisible = !fLAlarmSoundInformation.isVisible
-            }
-
-            swAutoCancelAlarm.setOnClickListener {
-                scope.launch {
-                    dataStoreRepository.updateEndAlarmAfterFired(swAutoCancelAlarm.isChecked)
-                }
-            }
-
-            btnChangeAlarmSound.setOnClickListener {
-                onAlarmSoundChange(view)
-            }
-
-
-        btnTemporaryDisableAlarm.setOnClickListener {
+        binding.btnTemporaryDisableAlarm.setOnClickListener {
             scope.launch {
                 if (repository.getNextActiveAlarm() != null) {
                     if (repository.getNextActiveAlarm()!!.tempDisabled) {
                         repository.updateAlarmTempDisabled(false, repository.getNextActiveAlarm()!!.id)
-                        btnTemporaryDisableAlarm.text = "Reactivate next alarm"
+                        binding.btnTemporaryDisableAlarm.text = "Reactivate next alarm"
                     }
                     else  {
                         repository.updateAlarmTempDisabled(true ,repository.getNextActiveAlarm()!!.id)
-                        btnTemporaryDisableAlarm.text = "Disable next alarm"
+                        binding.btnTemporaryDisableAlarm.text = "Disable next alarm"
                     }
                 }
 
@@ -237,48 +241,42 @@ class AlarmsFragment() : Fragment() {
         }
 
 
-            setupAlarms()
+        setupAlarms()
+
+        return binding.root
+    }
+
+    fun checkPermissions(): Boolean {
+        val notificationManager =
+            actualContext.getSystemService(AppCompatActivity.NOTIFICATION_SERVICE) as NotificationManager
+        if (!notificationManager.isNotificationPolicyAccessGranted) {
+            return false
+        } else if (!Settings.canDrawOverlays(actualContext)) {
+            return false
+        } else if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(
+                actualContext,
+                Manifest.permission.ACTIVITY_RECOGNITION
+            )
+        ) {
+            return false
         }
 
-        override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-        ): View? {
-            return inflater.inflate(R.layout.fragment_alarms, container, false)
-        }
+        return true
+    }
 
-        fun checkPermissions(): Boolean {
-            val notificationManager =
-                actualContext.getSystemService(AppCompatActivity.NOTIFICATION_SERVICE) as NotificationManager
-            if (!notificationManager.isNotificationPolicyAccessGranted) {
-                return false
-            } else if (!Settings.canDrawOverlays(actualContext)) {
-                return false
-            } else if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(
-                    actualContext,
-                    Manifest.permission.ACTIVITY_RECOGNITION
-                )
-            ) {
-                return false
-            }
+    companion object {
+        // For Singleton instantiation
+        @SuppressLint("StaticFieldLeak")
+        @Volatile
+        private var INSTANCE: AlarmsFragment? = null
 
-            return true
-        }
-
-        companion object {
-            // For Singleton instantiation
-            @SuppressLint("StaticFieldLeak")
-            @Volatile
-            private var INSTANCE: AlarmsFragment? = null
-
-            fun getAlarmFragment(): AlarmsFragment {
-                return INSTANCE ?: synchronized(this) {
-                    val instance = AlarmsFragment()
-                    INSTANCE = instance
-                    instance
-                }
+        fun getAlarmFragment(): AlarmsFragment {
+            return INSTANCE ?: synchronized(this) {
+                val instance = AlarmsFragment()
+                INSTANCE = instance
+                instance
             }
         }
     }
+}
 

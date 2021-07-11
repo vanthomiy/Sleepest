@@ -104,7 +104,7 @@ class DataStoreRepository(context: Context) {
         return sleepParameterFlow.first().alarmArt
     }
     private suspend fun getAlarmTone() : String {
-        return sleepParameterFlow.first().alarmtone
+        return sleepParameterFlow.first().alarmTone
     }
     suspend fun updateActivityTracking(value:Boolean) =
             sleepParameterStatus.updateActivityTracking(value)
@@ -116,6 +116,8 @@ class DataStoreRepository(context: Context) {
         sleepParameterStatus.updateAlarmArt(value)
     suspend fun updateAlarmTone(value:String) =
         sleepParameterStatus.updateAlarmTone(value)
+    suspend fun updateAlarmName(value:String) =
+        sleepParameterStatus.updateAlarmName(value)
     suspend fun updateAutoSleepTime(time:Boolean) =
             sleepParameterStatus.updateAutoSleepTime(time)
     suspend fun updateSleepTimeEnd(time:Int) =
