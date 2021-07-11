@@ -69,7 +69,7 @@
                         android:onClick="@{sleepViewModel::onInfoClicked}"
                         android:tag="7"
                         android:text="@string/show_tips"
-                        android:textColor="@color/accent_text_color"
+                        android:textColor="@color/primary_text_color"
                         android:textSize="@dimen/valueSize"
                         android:textStyle="bold" />
 
@@ -102,8 +102,7 @@
                         android:text="@{sleepViewModel.sleepScoreText}"
                         android:textColor="@color/primary_text_color"
                         android:textSize="12sp"
-                        android:textStyle="bold"
-                        />
+                        android:textStyle="bold" />
 
                 </androidx.constraintlayout.motion.widget.MotionLayout>
 
@@ -348,7 +347,9 @@
                             android:layout_marginLeft="75dp"
                             android:max="50"
                             android:min="0"
-
+                            android:progressBackgroundTint="@color/primary_text_color"
+                            android:progressTint="@color/primary_text_color"
+                            android:thumbTint="@color/primary_text_color"
                             android:progress="@{sleepViewModel.sleepDurationValue}"
                             android:onProgressChanged="@{sleepViewModel::onSleepDurationChanged}"
                             />
@@ -417,6 +418,7 @@
                         android:background="@drawable/bgroundedchoosen"
                         android:layout_gravity="start"
                         android:theme="@style/Spinner"
+                        android:textColor="@color/primary_text_color"
                         android:entries="@{sleepViewModel.lightConditionSelections}"
                         android:selectedItemPosition="@={sleepViewModel.lightCondition}"
                         android:onItemSelected = "@{sleepViewModel::onLightConditionChanged}"
@@ -486,6 +488,7 @@
                         android:layout_height="@dimen/valuesHeight"
                         android:layout_gravity="start"
                         android:theme="@style/Spinner"
+                        android:textColor="@color/primary_text_color"
                         android:background="@drawable/bgroundedchoosen"
                         android:entries="@{sleepViewModel.phonePositionSelections}"
                         android:selectedItemPosition="@={sleepViewModel.mobilePosition}"
@@ -590,6 +593,9 @@
                             android:progress="@{sleepViewModel.phoneUsageValue}"
                             android:onProgressChanged="@{sleepViewModel::onPhoneUsageChanged}"
                             android:max="4"
+                            android:progressBackgroundTint="@color/primary_text_color"
+                            android:progressTint="@color/primary_text_color"
+                            android:thumbTint="@color/primary_text_color"
                             />
 
                     </FrameLayout>

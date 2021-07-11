@@ -115,7 +115,7 @@
                     android:layout_marginStart="10dp"
                     android:gravity="center_vertical"
                     android:text="@string/sleep_alarm_auto_cancel_alarm"
-                    android:textColor="@color/secondary_text_color"
+                    android:textColor="@color/primary_text_color"
                     android:textSize="@dimen/valueSize"
                     android:textStyle="bold" />
 
@@ -125,6 +125,8 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
                     android:layout_marginEnd="10dp"
+                    android:thumbTint="@color/primary_text_color"
+                    android:trackTint="@color/primary_text_color"
                     android:gravity="center_vertical" />
             </FrameLayout>
 
@@ -145,7 +147,7 @@
                     android:layout_marginStart="10dp"
                     android:gravity="center_vertical"
                     android:text="@string/sleep_alarm_sound"
-                    android:textColor="@color/secondary_text_color"
+                    android:textColor="@color/primary_text_color"
                     android:textSize="@dimen/valueSize"
                     android:textStyle="bold" />
 
