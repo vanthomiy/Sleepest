@@ -11,7 +11,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.transition.TransitionManager
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,16 +26,13 @@ import com.doitstudio.sleepest_master.MainActivity
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.databinding.FragmentAlarmsBinding
-import com.doitstudio.sleepest_master.databinding.FragmentProfileBinding
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity
-import com.doitstudio.sleepest_master.ui.settings.SettingsViewModel
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog
-
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.io.File
+
 
 /**
  * A fragment representing a list of Items.
@@ -206,6 +202,14 @@ class AlarmsFragment() : Fragment() {
             viewModel.actualExpand.set(View.GONE)
         }
 
+        binding.lLAlarmSoundSettings.onFocusChangeListener =
+            View.OnFocusChangeListener { v, hasFocus ->
+                if (!hasFocus) {
+                    viewModel.actualExpand.set(View.GONE)
+                    viewModel.rotateState.set(0)
+                } else {
+                }
+            }
 
         scope.launch {
             if (repository.getNextActiveAlarm() != null) {
@@ -228,11 +232,17 @@ class AlarmsFragment() : Fragment() {
             scope.launch {
                 if (repository.getNextActiveAlarm() != null) {
                     if (repository.getNextActiveAlarm()!!.tempDisabled) {
-                        repository.updateAlarmTempDisabled(false, repository.getNextActiveAlarm()!!.id)
+                        repository.updateAlarmTempDisabled(
+                            false,
+                            repository.getNextActiveAlarm()!!.id
+                        )
                         binding.btnTemporaryDisableAlarm.text = "Reactivate next alarm"
                     }
                     else  {
-                        repository.updateAlarmTempDisabled(true ,repository.getNextActiveAlarm()!!.id)
+                        repository.updateAlarmTempDisabled(
+                            true,
+                            repository.getNextActiveAlarm()!!.id
+                        )
                         binding.btnTemporaryDisableAlarm.text = "Disable next alarm"
                     }
                 }

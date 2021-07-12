@@ -25,9 +25,11 @@
                 android:id="@+id/lL_alarmSoundSettings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusableInTouchMode="true"
                 android:layout_margin="10dp"
                 android:orientation="vertical"
                 app:layout_constraintTop_toTopOf="parent"
+
                 tools:layout_editor_absoluteX="10dp">
 
                 <TextView
@@ -41,13 +43,7 @@
                     android:textSize="@dimen/headerSize"
                     android:textStyle="bold" />
 
-                <Button
-                    android:id="@+id/btn_temporaryDisableAlarm"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bgroundedchoosen"
-                    android:text=""
-                    android:textColor="@color/secondary_button_color" />
+
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -84,6 +80,8 @@
                         app:tint="@color/primary_text_color" />
 
                 </FrameLayout>
+
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -184,12 +182,22 @@
 
                 </LinearLayout>
 
+                <Button
+                    android:id="@+id/btn_temporaryDisableAlarm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bgroundedchoosen"
+                    android:text=""
+                    android:layout_marginVertical="10dp"
+                    android:textColor="@color/secondary_button_color" />
+
             </LinearLayout>
 
             <ScrollView
                 android:id="@+id/sV_alarmEntities"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:focusableInTouchMode="true"
                 android:background="@color/primary_app_background">
 
                 <LinearLayout
