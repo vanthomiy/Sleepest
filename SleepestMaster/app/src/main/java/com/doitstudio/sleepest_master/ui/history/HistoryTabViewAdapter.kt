@@ -17,7 +17,6 @@ class HistoryTabViewAdapter(fragment: Fragment) : FragmentStateAdapter(fragment)
             1 -> {
                 val fragment = HistoryDayFragment()
                 fragment.arguments = Bundle().apply {
-                    // Our object is just an integer :-P
                     putInt(ARG_OBJECT, position + 1)
                 }
                 COUNT += 1
@@ -26,7 +25,6 @@ class HistoryTabViewAdapter(fragment: Fragment) : FragmentStateAdapter(fragment)
             2 -> {
                 val fragment = HistoryWeekFragment()
                 fragment.arguments = Bundle().apply {
-                    // Our object is just an integer :-P
                     putInt(ARG_OBJECT, position + 1)
                 }
                 COUNT += 1
@@ -35,7 +33,6 @@ class HistoryTabViewAdapter(fragment: Fragment) : FragmentStateAdapter(fragment)
             else -> {
                 val fragment = HistoryMonthFragment()
                 fragment.arguments = Bundle().apply {
-                    // Our object is just an integer :-P
                     putInt(ARG_OBJECT, position + 1)
                 }
                 return fragment

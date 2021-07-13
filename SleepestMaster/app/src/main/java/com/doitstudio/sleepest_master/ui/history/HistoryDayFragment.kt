@@ -24,6 +24,5 @@ class HistoryDayFragment : Fragment() {
         //viewModel.activityPermissionDescription
 
         return binding.root
-        //return inflater.inflate(R.layout.fragment_history_day, container, false)
     }
 }
