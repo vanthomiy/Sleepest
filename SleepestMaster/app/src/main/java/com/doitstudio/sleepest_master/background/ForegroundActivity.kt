@@ -9,6 +9,7 @@ import com.doitstudio.sleepest_master.model.data.Actions
 import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
+import com.doitstudio.sleepest_master.util.TimeConverterUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -86,8 +87,7 @@ class ForegroundActivity : Activity() {
 
                 2 -> {
                     ForegroundService.startOrStopForegroundService(Actions.STOP, applicationContext)
-                    val calendarAlarm =
-                        AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeBeginJob())
+                    val calendarAlarm = TimeConverterUtil.getAlarmDate(dataStoreRepository.getSleepTimeBeginJob())
                     AlarmReceiver.startAlarmManager(
                         calendarAlarm[Calendar.DAY_OF_WEEK],
                         calendarAlarm[Calendar.HOUR_OF_DAY],

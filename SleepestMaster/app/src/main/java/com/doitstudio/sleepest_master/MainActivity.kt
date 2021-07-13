@@ -23,6 +23,7 @@ import com.doitstudio.sleepest_master.ui.alarm.AlarmsFragment
 import com.doitstudio.sleepest_master.ui.history.HistoryFragment
 import com.doitstudio.sleepest_master.ui.settings.SettingsFragment
 import com.doitstudio.sleepest_master.ui.sleep.SleepFragment
+import com.doitstudio.sleepest_master.util.TimeConverterUtil
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
@@ -410,7 +411,7 @@ class MainActivity : AppCompatActivity() {
                 DontKillMyAppFragment.show(this@MainActivity)
 
                 scope.launch {
-                    val calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeBegin())
+                    val calendar = TimeConverterUtil.getAlarmDate(dataStoreRepository.getSleepTimeBegin())
                     //AlarmReceiver.cancelAlarm(applicationContext, 6)
 
                     /**AlarmReceiver.startAlarmManager(

@@ -39,6 +39,7 @@ import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 import com.doitstudio.sleepest_master.storage.DatabaseRepository;
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity;
+import com.doitstudio.sleepest_master.util.SleepUtil;
 import com.doitstudio.sleepest_master.util.TimeConverterUtil;
 
 import java.time.LocalTime;
@@ -167,7 +168,7 @@ public class ForegroundService extends LifecycleService {
         //Set Alarm to start calculation
         /**Calendar calenderCalculation = AlarmReceiver.getAlarmDate(alarmEntity.getWakeupEarly() - 1800);
         AlarmReceiver.startAlarmManager(calenderCalculation.get(Calendar.DAY_OF_WEEK), calenderCalculation.get(Calendar.HOUR_OF_DAY), calenderCalculation.get(Calendar.MINUTE), getApplicationContext(), AlarmReceiverUsage.START_WORKMANAGER_CALCULATION);
-**/
+        **/
         //Call function with null to transfer actual(local) time for correct calculation
         sleepCalculationHandler.checkIsUserSleeping(null);
 
@@ -284,7 +285,7 @@ public class ForegroundService extends LifecycleService {
         if ((secondsOfDay > time.getActualWakeup()) && checkPossibleAlarm() && (secondsOfDay > time.getWakeupEarly())) {
             calendar.add(Calendar.SECOND, 60);
 
-            actualWakeUp = calendarToSecondsOfDay(calendar);
+            actualWakeUp = TimeConverterUtil.calendarToSecondsOfDay(calendar);
 
             AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
 
@@ -293,9 +294,9 @@ public class ForegroundService extends LifecycleService {
             return;
             
         } else if((secondsOfDay > time.getActualWakeup()) && checkPossibleAlarm() && (secondsOfDay < time.getWakeupEarly())) {
-            Calendar earliestWakeup = AlarmReceiver.getAlarmDate(time.getWakeupEarly());
+            Calendar earliestWakeup = TimeConverterUtil.getAlarmDate(time.getWakeupEarly());
 
-            actualWakeUp = calendarToSecondsOfDay(earliestWakeup);
+            actualWakeUp = TimeConverterUtil.calendarToSecondsOfDay(earliestWakeup);
 
             AlarmClockReceiver.startAlarmManager(earliestWakeup.get(Calendar.DAY_OF_WEEK), earliestWakeup.get(Calendar.HOUR_OF_DAY), earliestWakeup.get(Calendar.MINUTE), getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
 
@@ -312,7 +313,7 @@ public class ForegroundService extends LifecycleService {
             latestWakeup.set(Calendar.SECOND, 0);
             latestWakeup.add(Calendar.SECOND, time.getWakeupLate());
 
-            actualWakeUp = calendarToSecondsOfDay(latestWakeup);
+            actualWakeUp = TimeConverterUtil.calendarToSecondsOfDay(latestWakeup);
 
             AlarmClockReceiver.startAlarmManager(latestWakeup.get(Calendar.DAY_OF_WEEK), latestWakeup.get(Calendar.HOUR_OF_DAY), latestWakeup.get(Calendar.MINUTE), getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
 
@@ -326,9 +327,9 @@ public class ForegroundService extends LifecycleService {
 
             //Check if the actual wakeup is earlier than the earliest wakeup and set the alarm to earliest wakeup
             if (time.getActualWakeup() < time.getWakeupEarly() && !(time.getWakeupEarly() < secondsOfDay) && !(time.getActualWakeup() < secondsOfDay)) {
-                Calendar earliestWakeup = AlarmReceiver.getAlarmDate(time.getWakeupEarly());
+                Calendar earliestWakeup = TimeConverterUtil.getAlarmDate(time.getWakeupEarly());
 
-                actualWakeUp = calendarToSecondsOfDay(earliestWakeup);
+                actualWakeUp = TimeConverterUtil.calendarToSecondsOfDay(earliestWakeup);
 
                 AlarmClockReceiver.startAlarmManager(earliestWakeup.get(Calendar.DAY_OF_WEEK), earliestWakeup.get(Calendar.HOUR_OF_DAY), earliestWakeup.get(Calendar.MINUTE), getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
 
@@ -339,9 +340,9 @@ public class ForegroundService extends LifecycleService {
 
             //Check if the actual wakeup is later than the latest wakeup and set the alarm to latest wakeup
             if (time.getActualWakeup() > time.getWakeupLate()) {
-                Calendar latestWakeup = AlarmReceiver.getAlarmDate(time.getWakeupLate());
+                Calendar latestWakeup = TimeConverterUtil.getAlarmDate(time.getWakeupLate());
 
-                actualWakeUp = calendarToSecondsOfDay(latestWakeup);
+                actualWakeUp = TimeConverterUtil.calendarToSecondsOfDay(latestWakeup);
 
                 AlarmClockReceiver.startAlarmManager(latestWakeup.get(Calendar.DAY_OF_WEEK), latestWakeup.get(Calendar.HOUR_OF_DAY), latestWakeup.get(Calendar.MINUTE), getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
 
@@ -354,7 +355,7 @@ public class ForegroundService extends LifecycleService {
             if (secondsOfDay <= time.getActualWakeup()){
                 calendar.add(Calendar.SECOND, timeDifference);
 
-                actualWakeUp = calendarToSecondsOfDay(calendar);
+                actualWakeUp = TimeConverterUtil.calendarToSecondsOfDay(calendar);
 
                 AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 1, getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
 
@@ -396,25 +397,14 @@ public class ForegroundService extends LifecycleService {
      */
     private void checkAlarmSet() {
         if ((actualWakeUp != 0) && !AlarmClockReceiver.isAlarmClockActive(getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK)) {
-            Calendar calendar = AlarmReceiver.getAlarmDate(actualWakeUp);
+            Calendar calendar = TimeConverterUtil.getAlarmDate(actualWakeUp);
             AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK) ,calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
 
             setPreferences(calendar, actualWakeUp, 9);
         }
     }
 
-    /**
-     * Convert the date to secondsOfDay
-     * @param calendar date
-     * @return secondsOfDay
-     */
-    private int calendarToSecondsOfDay(Calendar calendar) {
-        int day = calendar.get(Calendar.HOUR_OF_DAY) * 3600;
-        int minute = calendar.get(Calendar.MINUTE) * 60;
-        int second = calendar.get(Calendar.SECOND);
 
-        return day + minute + second;
-    }
 
     /**
      * Will be called if sleep API data change
@@ -453,6 +443,10 @@ public class ForegroundService extends LifecycleService {
 
     }
 
+    /**
+     * Check if banner configuration was changed
+     * @param settingsData
+     */
     public void OnBannerConfigChanged(SettingsData settingsData) {
         bannerConfig[0] = settingsData.getBannerShowAlarmActiv();
         bannerConfig[1] = settingsData.getBannerShowActualWakeUpPoint();
@@ -461,36 +455,6 @@ public class ForegroundService extends LifecycleService {
         bannerConfig[4] = settingsData.getBannerShowSleepState();
 
         updateNotification();
-    }
-
-    /**
-     * Check if time from now to last wakeup is less than the sleep time set
-     * @return
-     */
-    private boolean checkSleeptimeReachingPossibility() {
-        PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        int difference;
-
-        //Check if AlarmEntity is not null and the user is interacting on device
-        if ((databaseRepository.getNextActiveAlarmJob() != null) && !powerManager.isInteractive()) {
-
-            //Check if midnight was reached or not for calculating time difference
-            if (databaseRepository.getNextActiveAlarmJob().getWakeupEarly() >= dataStoreRepository.getSleepTimeBeginJob()) {
-                difference = dataStoreRepository.getSleepTimeEndJob() - LocalTime.now().toSecondOfDay();
-            } else {
-                difference = 86400 - LocalTime.now().toSecondOfDay() + dataStoreRepository.getSleepTimeEndJob();
-            }
-        } else {
-            return false;
-        }
-
-        //Check if difference is less then sleep time
-        if((difference <= databaseRepository.getNextActiveAlarmJob().getSleepDuration()) && !userInformed) {
-            userInformed = true;
-            return true;
-        }
-
-        return false;
     }
 
     //endregion
@@ -509,7 +473,9 @@ public class ForegroundService extends LifecycleService {
 
     private void sendUserInformation() {
 
-        if (checkSleeptimeReachingPossibility()) {
+        if (SleepUtil.checkSleeptimeReachingPossibility(getApplicationContext()) && !userInformed) {
+
+            userInformed = true;
 
             Notification notification = AlarmReceiver.createInformationNotification(getApplicationContext(), getString(R.string.information_notification_text_sleeptime_problem));
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
