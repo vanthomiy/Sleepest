@@ -20,6 +20,7 @@ import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.MobileUseFrequency
 import com.doitstudio.sleepest_master.googleapi.ActivityTransitionHandler
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
+import com.doitstudio.sleepest_master.util.SleepTimeValidationUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -44,6 +45,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
     val sleepDurationString = ObservableField("7h")
     val sleepDurationValue = ObservableField<Int>(7)
+    private var enoughTimeToSleep = true
     fun onSleepDurationChanged(seekBar: SeekBar, progresValue: Int, fromUser: Boolean) {
 
         val time = getSleepCountFromProgress(progresValue)
@@ -51,6 +53,20 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         sleepDurationString.set(time.toString())
         scope.launch {
             dataStoreRepository.updateUserWantedSleepTime(time.toSecondOfDay())
+
+            if(autoSleepTime.get() == false){
+                enoughTimeToSleep = SleepTimeValidationUtil.checkIfSleepTimeMatchesSleepDuration(context, time.toSecondOfDay(), sleepEndTime.toSecondOfDay(), sleepStartTime.toSecondOfDay(), enoughTimeToSleep)
+            }
+            else{
+                val times = SleepTimeValidationUtil.checkIfSleepTimeMatchesSleepDurationAuto(dataStoreRepository, time.toSecondOfDay(), sleepEndTime.toSecondOfDay(), sleepStartTime.toSecondOfDay(), enoughTimeToSleep)
+                sleepEndTime = LocalTime.ofSecondOfDay(times.first.toLong())
+                sleepStartTime = LocalTime.ofSecondOfDay(times.second.toLong())
+
+                sleepEndValue.set((if (sleepEndTime.hour < 10) "0" else "") + sleepEndTime.hour.toString() + ":" + (if (sleepEndTime.minute < 10) "0" else "") + sleepEndTime.minute.toString())
+                sleepStartValue.set((if (sleepStartTime.hour < 10) "0" else "") + sleepStartTime.hour.toString() + ":" + (if (sleepStartTime.minute < 10) "0" else "") + sleepStartTime.minute.toString())
+
+            }
+
         }
     }
 
@@ -85,8 +101,10 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
                     sleepStartTime = LocalTime.of(h, m)
 
                     sleepCompleteValue.set(sleepStartValue.get() +  getStringXml(R.string.sleep_sleeptimes_timecombine)  + sleepEndValue.get())
+                    enoughTimeToSleep = SleepTimeValidationUtil.checkIfSleepTimeMatchesSleepDuration(view.context, getSleepCountFromProgress(sleepDurationValue.get()!!).toSecondOfDay(), sleepEndTime.toSecondOfDay(), sleepStartTime.toSecondOfDay(), enoughTimeToSleep)
 
                     scope.launch {
+
                         dataStoreRepository.updateSleepTimeStart(sleepStartTime.toSecondOfDay())
                     }
                 },
@@ -111,8 +129,10 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
                     sleepCompleteValue.set(sleepStartValue.get() +   getStringXml(R.string.sleep_sleeptimes_timecombine)   + sleepEndValue.get())
 
                     sleepEndTime = LocalTime.of(h, m)
+                    enoughTimeToSleep = SleepTimeValidationUtil.checkIfSleepTimeMatchesSleepDuration(view.context, getSleepCountFromProgress(sleepDurationValue.get()!!).toSecondOfDay(), sleepEndTime.toSecondOfDay(), sleepStartTime.toSecondOfDay(), enoughTimeToSleep)
 
                     scope.launch {
+
                         dataStoreRepository.updateSleepTimeEnd(sleepEndTime.toSecondOfDay())
                     }
                 }),
