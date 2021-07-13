@@ -1,38 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/primary_app_background">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.history.HistoryMonthFragment">
 
-    <ScrollView
-        android:id="@+id/sV_sleepAnalysisChartsMonth"
+    <data>
+        <variable
+            name="historyMonthViewModel"
+            type="com.doitstudio.sleepest_master.ui.history.HistoryViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible">
+        android:background="@color/primary_app_background">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cL_sleepAnalysisChartsMonth"
+        <ScrollView
+            android:id="@+id/sV_sleepAnalysisChartsMonth"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:visibility="visible"
-            app:layout_constraintTop_toTopOf="@+id/sV_sleepAnalysisChartsMonth">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible">
 
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/barChart_sleepAnalysisMonth"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cL_sleepAnalysisChartsMonth"
                 android:layout_width="match_parent"
-                android:layout_height="350dp"
-                android:layout_marginTop="12dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"></com.github.mikephil.charting.charts.BarChart>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                app:layout_constraintTop_toTopOf="@+id/sV_sleepAnalysisChartsMonth">
+
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/barChart_sleepAnalysisMonth"
+                    android:layout_width="match_parent"
+                    android:layout_height="350dp"
+                    android:layout_marginTop="12dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"></com.github.mikephil.charting.charts.BarChart>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
