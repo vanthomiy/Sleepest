@@ -30,12 +30,11 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         (context as MainApplication).dataBaseRepository
     }
 
-    val analysisDate = LocalDate.now()
+    val analysisDate: LocalDate = LocalDate.now()
 
     /** <Int: Sleep session id, Triple<List<[SleepApiRawDataEntity]>, Int: Sleep duration, [UserSleepSessionEntity]>> */
     val sleepSessionData = mutableMapOf<Int, Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>>()
 
-    val activityPermissionDescription = ObservableField("View.GONE")
 
     init {
         getSleepData()
