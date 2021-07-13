@@ -23,6 +23,7 @@ import com.doitstudio.sleepest_master.ui.alarm.AlarmsFragment
 import com.doitstudio.sleepest_master.ui.history.HistoryFragment
 import com.doitstudio.sleepest_master.ui.settings.SettingsFragment
 import com.doitstudio.sleepest_master.ui.sleep.SleepFragment
+import com.doitstudio.sleepest_master.util.PermissionsUtil
 import com.doitstudio.sleepest_master.util.TimeConverterUtil
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
@@ -323,12 +324,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         // check permission
-        if (!activityRecognitionPermissionApproved()) {
+        if (!PermissionsUtil.isActivityRecognitionPermissionGranted(applicationContext)) {
             requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
         }
 
-        checkDrawOverlayPermission()
-        checkDoNotDisturbPermission()
+        if(!PermissionsUtil.isOverlayPermissionGranted(applicationContext)) {
+            val intent = Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
+            startActivity(intent)
+        }
+
+        if (!PermissionsUtil.isNotificationPolicyAccessGranted(applicationContext)) {
+            val intent = Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
+            startActivity(intent)
+        }
 
     }
 
