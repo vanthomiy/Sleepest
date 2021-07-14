@@ -7,18 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.databinding.FragmentHistoryWeekBinding
-import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
-import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
-import com.github.mikephil.charting.charts.BarChart
-import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.components.LegendEntry
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import java.time.*
 
 class HistoryWeekFragment : Fragment() {
@@ -35,15 +24,27 @@ class HistoryWeekFragment : Fragment() {
         binding = FragmentHistoryWeekBinding.inflate(inflater, container, false)
         binding.historyWeekViewModel = viewModel
 
-        val dayOfWeek = LocalDate.of(2021, 3, 12).dayOfWeek
-
-        val barChart = viewModel.setBarChart(7)
-        binding.cLSleepAnalysisChartsWeek.addView(barChart)
+        val barChart = viewModel.setBarChart(7, getSundayOfWeek())
+        binding.lLSleepAnalysisChartsWeek.addView(barChart)
         val height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 350F, resources.displayMetrics)
         barChart.layoutParams.height = height.toInt()
         barChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
         barChart.invalidate()
 
         return binding.root
+    }
+
+    private fun getSundayOfWeek(): LocalDate {
+        val dayOfWeek = viewModel.analysisDate.dayOfWeek
+
+        return when (dayOfWeek.value) {
+            1 -> viewModel.analysisDate.plusDays(6L) // Monday
+            2 -> viewModel.analysisDate.plusDays(5L) // Tuesday
+            3 -> viewModel.analysisDate.plusDays(4L) // Wednesday
+            4 -> viewModel.analysisDate.plusDays(3L) // Thursday
+            5 -> viewModel.analysisDate.plusDays(2L) // Friday
+            6 -> viewModel.analysisDate.plusDays(1L) // Saturday
+            else -> viewModel.analysisDate.plusDays(0L) // Sunday
+        }
     }
 }

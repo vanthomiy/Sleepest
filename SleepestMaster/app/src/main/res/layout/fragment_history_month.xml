@@ -26,23 +26,14 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:visibility="visible">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cL_sleepAnalysisChartsMonth"
+            <LinearLayout
+                android:id="@+id/lL_sleepAnalysisChartsMonth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="visible"
-                app:layout_constraintTop_toTopOf="@+id/sV_sleepAnalysisChartsMonth">
-
-                <com.github.mikephil.charting.charts.BarChart
-                    android:id="@+id/barChart_sleepAnalysisMonth"
-                    android:layout_width="match_parent"
-                    android:layout_height="350dp"
-                    android:layout_marginTop="12dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"></com.github.mikephil.charting.charts.BarChart>
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                app:layout_constraintTop_toTopOf="@+id/sV_sleepAnalysisChartsMonth"
+                android:orientation="vertical">
+            </LinearLayout>
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -86,28 +86,24 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return sleepSessionData.containsKey(UserSleepSessionEntity.getIdByDateTime(time))
     }
 
-    fun generateDataBarChart(range: Int): Triple<ArrayList<BarEntry>, List<Int>, Int> { //ArrayList<BarEntry> {
+    fun generateDataBarChart(range: Int, endDateOfDiagram: LocalDate): Triple<ArrayList<BarEntry>, List<Int>, Int> { //ArrayList<BarEntry> {
         val entries = ArrayList<BarEntry>()
         val xAxisLabels = mutableListOf<Int>()
         var xIndex = 0.5f
         var maxSleepTime = 0
 
         val ids = mutableSetOf<Int>()
-        for (i in -(range - 1)..0) {
+        for (i in -(range-2)..1) {
             ids.add(
                 UserSleepSessionEntity.getIdByDateTime(
-                    LocalDate.of(
-                        analysisDate.plusDays(i.toLong()).year,
-                        analysisDate.plusDays(i.toLong()).month,
-                        analysisDate.plusDays(i.toLong()).dayOfMonth
-                    )
+                    LocalDate.ofEpochDay(endDateOfDiagram.toEpochDay().plus(i.toLong()))
                 )
             )
         }
 
         ids.reversed()
         for (id in ids) {
-            if (checkId(analysisDate)) {
+            if (sleepSessionData.containsKey(id)) {
                 val values = sleepSessionData[id]!!
 
                 val awake = values.third.sleepTimes.awakeTime
@@ -150,10 +146,10 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return Triple(entries, xAxisLabels, maxSleepTime)
     }
 
-    fun setBarChart(range: Int) : BarChart {
+    fun setBarChart(range: Int, endDateOfDiagram: LocalDate) : BarChart {
         //http://developine.com/android-grouped-stacked-bar-chart-using-mpchart-kotlin/
         val barChart = BarChart(context)
-        val diagramData = generateDataBarChart(range)
+        val diagramData = generateDataBarChart(range, endDateOfDiagram)
 
         val barDataSet1 = BarDataSet(diagramData.first, "")
         barDataSet1.setColors(R.color.light_sleep_color, R.color.deep_sleep_color, R.color.awake_sleep_color, R.color.sleep_sleep_color)
