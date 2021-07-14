@@ -40,6 +40,7 @@ import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 import com.doitstudio.sleepest_master.storage.DatabaseRepository;
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity;
 import com.doitstudio.sleepest_master.util.SleepUtil;
+import com.doitstudio.sleepest_master.util.SmileySelectorUtil;
 import com.doitstudio.sleepest_master.util.TimeConverterUtil;
 
 import java.time.LocalTime;
@@ -550,22 +551,24 @@ public class ForegroundService extends LifecycleService {
             isAlarmActive = false;
         }
 
+        SmileySelectorUtil smileySelectorUtil = new SmileySelectorUtil();
+
         String contentText;
         if (isAlarmActive) {
-            contentText = getString(R.string.alarm_status_true);
+            contentText = smileySelectorUtil.getSmileyAlarmActive() + getString(R.string.alarm_status_true);
         } else {
-            contentText = getString(R.string.alarm_status_false);
+            contentText = smileySelectorUtil.getSmileyAlarmNotActive() + getString(R.string.alarm_status_false);
         }
 
         String sleepStateText;
         if (isSleeping) {
-            sleepStateText = getString(R.string.sleep_status_true);
+            sleepStateText = smileySelectorUtil.getSmileySleep() + getString(R.string.sleep_status_true);
         } else {
-            sleepStateText = getString(R.string.sleep_status_false);
+            sleepStateText = smileySelectorUtil.getSmileySleep() + getString(R.string.sleep_status_false);
         }
 
-        String sleeptimeText = "Sleep time: " + TimeConverterUtil.minuteToTimeFormat(userSleepTime)[0] + "h " + TimeConverterUtil.minuteToTimeFormat(userSleepTime)[1] + "min";
-        String alarmtimeText = "Alarm time: " + TimeConverterUtil.millisToTimeFormat(alarmTimeInSeconds)[0] + ":" + TimeConverterUtil.millisToTimeFormat(alarmTimeInSeconds)[1];
+        String sleeptimeText = smileySelectorUtil.getSmileyTime() + "Sleep time: " + TimeConverterUtil.minuteToTimeFormat(userSleepTime)[0] + "h " + TimeConverterUtil.minuteToTimeFormat(userSleepTime)[1] + "min";
+        String alarmtimeText = smileySelectorUtil.getSmileyAlarmClock() + "Alarm time: " + TimeConverterUtil.millisToTimeFormat(alarmTimeInSeconds)[0] + ":" + TimeConverterUtil.millisToTimeFormat(alarmTimeInSeconds)[1];
 
         //Set the text in textview of the expanded notification view
         /**String notificationText = "AlarmActive: " + isAlarmActive + " Value: " + sleepValueAmount

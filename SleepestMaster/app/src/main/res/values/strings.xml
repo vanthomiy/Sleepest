@@ -29,7 +29,7 @@
     <string name="foregroundservice_notification_title">Sleepest - The best sleep you ever had</string>
     <string name="information_notification_channel">Information Notification Channel</string>
     <string name="information_notification_channel_description">This channel is for the notification to show the user that it is time to sleep</string>
-    <string name="information_notification_text_sleeptime_problem">You should go to sleep now or change your latest wake-up time as you will no longer be able to reach your sleep time</string>
+    <string name="information_notification_text_sleeptime_problem">You cannot reach your sleep time anymore</string>
     <string name="information_notification_text_sleep_api_problem">There is something wrong with receiving sleep data. Please restart your alarm.</string>
     <string name="information_notification_title">Attention</string>
     <string name="workmanager1_tag">Workmanager 1</string>
