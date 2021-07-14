@@ -1,10 +1,15 @@
 package com.doitstudio.sleepest_master.ui.history
 
+import android.net.sip.SipSession
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.Observable
+import androidx.databinding.ObservableArrayMap
+import androidx.databinding.ObservableInt
+import androidx.databinding.ObservableMap
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.R
@@ -16,6 +21,8 @@ import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import java.util.*
+import kotlin.collections.ArrayList
 
 class HistoryDayFragment : Fragment() {
 
@@ -32,21 +39,42 @@ class HistoryDayFragment : Fragment() {
         binding = FragmentHistoryDayBinding.inflate(inflater, container, false)
         binding.historyDayViewModel = viewModel
 
-        getDataValues()
+        /*
+        viewModel.sleepSessionData.addOnMapChangedCallback(
+            object: ObservableMap.OnMapChangedCallback<ObservableMap<Int, Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>>, Int, Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>>() {
 
-        val lineChart = setLineChart()
-        binding.lLSleepAnalysisChartsDay.addView(lineChart)
-        val heightLineChart = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 350F, resources.displayMetrics)
-        lineChart.layoutParams.height = heightLineChart.toInt()
-        lineChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-        lineChart.invalidate()
+                override fun onMapChanged(
+                sender: ObservableMap<Int, Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>>?,
+                key: Int?
+                ) {
+                    getDataValues()
+                }
+            }
+        )
+         */
 
-        val pieChart = setPieChart()
-        binding.lLSleepAnalysisChartsDay.addView(pieChart)
-        val heightPieChart = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 350F, resources.displayMetrics)
-        pieChart.layoutParams.height = heightPieChart.toInt()
-        pieChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-        pieChart.invalidate()
+        viewModel.idsListener.addOnPropertyChangedCallback(
+            object: Observable.OnPropertyChangedCallback() {
+
+                override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                    getDataValues()
+
+                    val lineChart = setLineChart()
+                    binding.lLSleepAnalysisChartsDay.addView(lineChart)
+                    val heightLineChart = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 350F, resources.displayMetrics)
+                    lineChart.layoutParams.height = heightLineChart.toInt()
+                    lineChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+                    lineChart.invalidate()
+
+                    val pieChart = setPieChart()
+                    binding.lLSleepAnalysisChartsDay.addView(pieChart)
+                    val heightPieChart = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 350F, resources.displayMetrics)
+                    pieChart.layoutParams.height = heightPieChart.toInt()
+                    pieChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+                    pieChart.invalidate()
+                }
+
+            })
 
         return binding.root
     }
@@ -166,3 +194,4 @@ class HistoryDayFragment : Fragment() {
         return chart
     }
 }
+

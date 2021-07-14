@@ -3,13 +3,11 @@ package com.doitstudio.sleepest_master.ui.history
 import android.app.Application
 import android.app.ApplicationErrorReport
 import android.view.View
-import androidx.databinding.BindingAdapter
-import androidx.databinding.ObservableField
+import androidx.databinding.*
 import androidx.lifecycle.AndroidViewModel
 import androidx.room.Database
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
-import com.doitstudio.sleepest_master.databinding.FragmentHistoryWeekBinding
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.SleepDatabase
@@ -39,6 +37,11 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
     }
 
     val analysisDate: LocalDate = LocalDate.now()
+
+    /** <Int: Sleep session id, Triple<List<[SleepApiRawDataEntity]>, Int: Sleep duration, [UserSleepSessionEntity]>> */
+    //val sleepSessionData = ObservableArrayMap<Int, Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>>()
+
+    val idsListener = ObservableInt()
 
     /** <Int: Sleep session id, Triple<List<[SleepApiRawDataEntity]>, Int: Sleep duration, [UserSleepSessionEntity]>> */
     val sleepSessionData = mutableMapOf<Int, Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>>()
@@ -78,6 +81,8 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                         session
                     )
                 }
+
+                idsListener.set(id)
             }
         }
     }
