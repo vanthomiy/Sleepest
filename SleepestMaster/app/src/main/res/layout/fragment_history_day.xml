@@ -24,29 +24,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cL_sleepAnalysisChartsDay"
+            <LinearLayout
+                android:id="@+id/lL_sleepAnalysisChartsDay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="@+id/sV_sleepAnalysisChartsDays">
-
-                <com.github.mikephil.charting.charts.LineChart
-                    android:id="@+id/lineChart_sleepAnalysisDay"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.github.mikephil.charting.charts.PieChart
-                    android:id="@+id/pieChart_sleepAnalysisDay"
-                    android:layout_width="250dp"
-                    android:layout_height="250dp"
-                    android:layout_marginTop="10dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/lineChart_sleepAnalysisDay" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                app:layout_constraintTop_toTopOf="@+id/sV_sleepAnalysisChartsDays"
+                android:orientation="vertical">
+            </LinearLayout>
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

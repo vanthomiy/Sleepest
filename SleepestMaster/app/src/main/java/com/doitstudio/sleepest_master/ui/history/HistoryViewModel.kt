@@ -155,41 +155,78 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         barDataSet1.setColors(R.color.light_sleep_color, R.color.deep_sleep_color, R.color.awake_sleep_color, R.color.sleep_sleep_color)
         barDataSet1.setDrawValues(false)
 
-        val xAxisValues = ArrayList<String>()
-        for (i in diagramData.second.indices) {
-            val date = LocalDateTime.ofInstant(
-                Instant.ofEpochMilli(diagramData.second[i].toLong() * 1000),
-                ZoneOffset.systemDefault())
+        val barData = BarData(barDataSet1)
+        barChart.data = barData
+        barChart.description.isEnabled = false
+        barChart.data.isHighlightEnabled = false
 
-            val month = when (date.month) {
-                Month.JANUARY -> "Jan"
-                Month.FEBRUARY -> "Feb"
-                Month.MARCH -> "Mar"
-                Month.APRIL -> "Apr"
-                Month.MAY -> "May"
-                Month.JUNE -> "Jun"
-                Month.JULY -> "Jul"
-                Month.AUGUST -> "Aug"
-                Month.SEPTEMBER -> "Sep"
-                Month.OCTOBER -> "Oct"
-                Month.NOVEMBER -> "Nov"
-                Month.DECEMBER -> "Dec"
-                else -> "Fail"
+        val xAxisValues = ArrayList<String>()
+        val xAxis = barChart.xAxis
+        xAxis.setDrawGridLines(false)
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+
+        if (range > 21) {
+            for (i in diagramData.second.indices) {
+                val date = LocalDateTime.ofInstant(
+                    Instant.ofEpochMilli(diagramData.second[i].toLong() * 1000),
+                    ZoneOffset.systemDefault())
+                if (i == 0 || i == 10 || i == 20  || i == (diagramData.second.size - 1)) {
+                    xAxisValues.add(date.dayOfMonth.toString())
+                }
+                else { xAxisValues.add("") }
             }
-            xAxisValues.add(date.dayOfMonth.toString() + ". " + month)
+
+            barChart.barData.barWidth = 0.5f
+            barChart.xAxis.axisMinimum = 0f
+            barChart.xAxis.axisMaximum = endDateOfDiagram.lengthOfMonth().toFloat()
+            xAxis.setCenterAxisLabels(false)
+        }
+        else {
+            for (i in diagramData.second.indices) {
+                /*
+                val date = LocalDateTime.ofInstant(
+                    Instant.ofEpochMilli(diagramData.second[i].toLong() * 1000),
+                    ZoneOffset.systemDefault())
+
+                val month = when (date.month) {
+                    Month.JANUARY -> "Jan"
+                    Month.FEBRUARY -> "Feb"
+                    Month.MARCH -> "Mar"
+                    Month.APRIL -> "Apr"
+                    Month.MAY -> "May"
+                    Month.JUNE -> "Jun"
+                    Month.JULY -> "Jul"
+                    Month.AUGUST -> "Aug"
+                    Month.SEPTEMBER -> "Sep"
+                    Month.OCTOBER -> "Oct"
+                    Month.NOVEMBER -> "Nov"
+                    Month.DECEMBER -> "Dec"
+                    else -> "Fail"
+                }
+
+                xAxisValues.add(date.dayOfMonth.toString() + ". " + month)
+                 */
+
+                xAxisValues.add("Mo")
+                xAxisValues.add("Tu")
+                xAxisValues.add("We")
+                xAxisValues.add("Th")
+                xAxisValues.add("Fr")
+                xAxisValues.add("Sa")
+                xAxisValues.add("Su")
+            }
+
+            barChart.barData.barWidth = 0.75f
+            barChart.xAxis.axisMinimum = 0f
+            barChart.xAxis.axisMaximum = 7f
+            xAxis.setCenterAxisLabels(true)
         }
 
-        val barData = BarData(barDataSet1)
-        barChart.description.isEnabled = false
-        barChart.data = barData
-        barChart.barData.barWidth = 0.75f
-        barChart.xAxis.axisMinimum = 0f
-        barChart.xAxis.axisMaximum = 7f
-        barChart.data.isHighlightEnabled = false
+        xAxis.valueFormatter = IndexAxisValueFormatter(xAxisValues)
         barChart.invalidate()
 
         // set bar label
-        val legend =         barChart.legend
+        val legend = barChart.legend
         legend.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
         legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
         legend.orientation = Legend.LegendOrientation.HORIZONTAL
@@ -207,15 +244,6 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         legend.setCustom(legendEntries)
         legend.textSize = 12f
 
-
-        val xAxis = barChart.xAxis
-        xAxis.setDrawGridLines(true)
-
-        xAxis.position = XAxis.XAxisPosition.BOTTOM
-        xAxis.valueFormatter = IndexAxisValueFormatter(xAxisValues)
-        xAxis.setCenterAxisLabels(true)
-
-
         barChart.isDragEnabled = true
 
         //Y-axis
@@ -227,19 +255,19 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         barChart.axisLeft.axisMinimum = 0f
         barChart.axisLeft.labelCount = 20
 
-        if ((diagramData.third > 600) && (diagramData.third < 720)) {
+        if ((diagramData.third > 540) && (diagramData.third < 660)) {
             barChart.axisRight.axisMaximum = 12f
             barChart.axisLeft.axisMaximum = 720f
         }
-        else if ((diagramData.third > 720) && (diagramData.third < 840)) {
+        else if ((diagramData.third > 660) && (diagramData.third < 780)) {
             barChart.axisRight.axisMaximum = 14f
             barChart.axisLeft.axisMaximum = 840f
         }
-        else if ((diagramData.third > 840) && (diagramData.third < 960)) {
+        else if ((diagramData.third > 780) && (diagramData.third < 900)) {
             barChart.axisRight.axisMaximum = 16f
             barChart.axisLeft.axisMaximum = 960f
         }
-        else if (diagramData.third > 960) { // between 12h and 14h
+        else if (diagramData.third > 900) { // between 12h and 14h
             barChart.axisRight.axisMaximum = 24f
             barChart.axisLeft.axisMaximum = 1440f
         }

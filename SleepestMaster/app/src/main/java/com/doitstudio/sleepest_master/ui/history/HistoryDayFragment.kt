@@ -1,6 +1,7 @@
 package com.doitstudio.sleepest_master.ui.history
 
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,8 @@ import com.doitstudio.sleepest_master.databinding.FragmentHistoryDayBinding
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
 import com.github.mikephil.charting.animation.Easing
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 
@@ -30,8 +33,20 @@ class HistoryDayFragment : Fragment() {
         binding.historyDayViewModel = viewModel
 
         getDataValues()
-        setLineChart()
-        setPieChart()
+
+        val lineChart = setLineChart()
+        binding.lLSleepAnalysisChartsDay.addView(lineChart)
+        val heightLineChart = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 350F, resources.displayMetrics)
+        lineChart.layoutParams.height = heightLineChart.toInt()
+        lineChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+        lineChart.invalidate()
+
+        val pieChart = setPieChart()
+        binding.lLSleepAnalysisChartsDay.addView(pieChart)
+        val heightPieChart = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 350F, resources.displayMetrics)
+        pieChart.layoutParams.height = heightPieChart.toInt()
+        pieChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+        pieChart.invalidate()
 
         return binding.root
     }
@@ -64,7 +79,8 @@ class HistoryDayFragment : Fragment() {
     /**
      * Sets the line chart. Calls generateDataLineChart for diagram data.
      */
-    private fun setLineChart() {
+    private fun setLineChart() : LineChart {
+        val chart = LineChart(context)
         val vl = LineDataSet(generateDataLineChart(), "Sleep state")
         vl.setDrawValues(false)
         vl.setDrawFilled(true)
@@ -81,19 +97,21 @@ class HistoryDayFragment : Fragment() {
         yAxisValues.add("REM")
         yAxisValues.add("Zero")
 
-        binding.lineChartSleepAnalysisDay.axisLeft.valueFormatter = IndexAxisValueFormatter(yAxisValues)
-        binding.lineChartSleepAnalysisDay.axisLeft.labelCount = 4
-        binding.lineChartSleepAnalysisDay.axisLeft.axisMinimum = 0f
-        binding.lineChartSleepAnalysisDay.axisLeft.axisMaximum = 4f
+        chart.axisLeft.valueFormatter = IndexAxisValueFormatter(yAxisValues)
+        chart.axisLeft.labelCount = 4
+        chart.axisLeft.axisMinimum = 0f
+        chart.axisLeft.axisMaximum = 4f
 
-        binding.lineChartSleepAnalysisDay.axisRight.setDrawLabels(false)
-        binding.lineChartSleepAnalysisDay.axisRight.setDrawGridLines(false)
+        chart.axisRight.setDrawLabels(false)
+        chart.axisRight.setDrawGridLines(false)
 
-        binding.lineChartSleepAnalysisDay.description.isEnabled = false
+        chart.description.isEnabled = false
 
-        binding.lineChartSleepAnalysisDay.data = LineData(vl)
+        chart.data = LineData(vl)
 
-        binding.lineChartSleepAnalysisDay.animateX(1000)
+        chart.animateX(1000)
+
+        return chart
     }
 
     private fun generateDataPieChart() : ArrayList<PieEntry> {
@@ -125,7 +143,8 @@ class HistoryDayFragment : Fragment() {
     /**
      * Sets the pie chart. Calls generateDataPieChart for diagram data.
      */
-    private fun setPieChart() {
+    private fun setPieChart() : PieChart {
+        val chart = PieChart(context)
         val listColors = ArrayList<Int>()
         listColors.add(R.color.light_sleep_color)
         listColors.add(R.color.deep_sleep_color)
@@ -136,12 +155,14 @@ class HistoryDayFragment : Fragment() {
         pieDataSet.colors = listColors
 
         val pieData = PieData(pieDataSet)
-        binding.pieChartSleepAnalysisDay.data = pieData
+        chart.data = pieData
 
-        binding.pieChartSleepAnalysisDay.setUsePercentValues(true)
-        binding.pieChartSleepAnalysisDay.isDrawHoleEnabled = false
-        binding.pieChartSleepAnalysisDay.description.isEnabled = false
-        //binding.pieChartSleepAnalysisDay.setEntryLabelColor(R.color.black)
-        binding.pieChartSleepAnalysisDay.animateY(1000, Easing.EaseInOutQuad)
+        chart.setUsePercentValues(true)
+        chart.isDrawHoleEnabled = false
+        chart.description.isEnabled = false
+        //chart.setEntryLabelColor(R.color.black)
+        chart.animateY(1000, Easing.EaseInOutQuad)
+
+        return chart
     }
 }

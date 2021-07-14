@@ -107,7 +107,7 @@
         tools:visibility="gone">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cL_sleepAnalysisChartsDay"
+            android:id="@+id/lL_sleepAnalysisChartsDay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="visible"
