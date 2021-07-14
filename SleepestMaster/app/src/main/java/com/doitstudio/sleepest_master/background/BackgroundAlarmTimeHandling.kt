@@ -18,6 +18,7 @@ import com.doitstudio.sleepest_master.model.data.Constants
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
+import com.doitstudio.sleepest_master.util.TimeConverterUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -42,6 +43,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
     private val scope: CoroutineScope = MainScope()
 
     private var sleepTimeBeginTemp = 0
+    private var sleepTimeEndTemp = 0
 
 
     fun changeSleepTime() {
@@ -64,7 +66,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                 }
 
                 if (getSleepTimeBeginValue() != sleepTimeBeginTemp) {
-                    val calendarAlarm = AlarmReceiver.getAlarmDate(getSleepTimeBeginValue())
+                    val calendarAlarm = TimeConverterUtil.getAlarmDate(getSleepTimeBeginValue())
                     AlarmReceiver.startAlarmManager(
                         calendarAlarm[Calendar.DAY_OF_WEEK],
                         calendarAlarm[Calendar.HOUR_OF_DAY],
@@ -116,7 +118,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
             } else {
                 AlarmClockAudio.getInstance().stopAlarm(false)
 
-                val calendarAlarm = AlarmReceiver.getAlarmDate(getSleepTimeBeginValue())
+                val calendarAlarm = TimeConverterUtil.getAlarmDate(getSleepTimeBeginValue())
 
                 stopForegroundService(false)
 
@@ -189,7 +191,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
                 //Set Alarm to start calculation
                 if (checkAlarmActive()) {
-                    val calenderCalculation = AlarmReceiver.getAlarmDate(getFirstWakeup() - 1800)
+                    val calenderCalculation = TimeConverterUtil.getAlarmDate(getFirstWakeup() - 1800)
                     AlarmReceiver.startAlarmManager(
                         calenderCalculation[Calendar.DAY_OF_WEEK],
                         calenderCalculation[Calendar.HOUR_OF_DAY],
@@ -226,7 +228,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
         sleepHandler.startSleepHandler()
 
         //Set AlarmManager to stop Workmanager at end of sleeptime
-        val calendar = AlarmReceiver.getAlarmDate(getSleepTimeEndValue())
+        val calendar = TimeConverterUtil.getAlarmDate(getSleepTimeEndValue())
         AlarmReceiver.startAlarmManager(
             calendar.get(Calendar.DAY_OF_WEEK),
             calendar.get(Calendar.HOUR_OF_DAY),
@@ -236,11 +238,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
     fun beginOfSleepTime(inActivity: Boolean) {
         scope.launch {
             if (!checkAlarmFired() && checkAlarmActive() && !checkAlarmTempDisabled() && !checkForegroundStatus()) {
-                //Start foregroundservice with an activity
-                /*val startForegroundIntent = Intent(context, ForegroundActivity::class.java)
-                startForegroundIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                startForegroundIntent.putExtra("intent", 1)
-                context.startActivity(startForegroundIntent)*/
+
                 if (!inActivity) {
                     startForegroundService(false)
                 } else {
@@ -249,55 +247,9 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
                 sleepCalculationHandler.checkIsUserSleeping(null)
 
-            }
-
-            startWorkmanager()
-
-            /**AlarmReceiver.cancelAlarm(context, AlarmReceiverUsage.START_WORKMANAGER)
-
-            //Start Workmanager at sleeptime and subscribe to SleepApi
-            val periodicDataWork: PeriodicWorkRequest = PeriodicWorkRequest.Builder(Workmanager::class.java,
-                Constants.WORKMANAGER_DURATION.toLong(),
-                TimeUnit.MINUTES
-            )
-                .addTag(context.getString(R.string.workmanager1_tag)) //Tag is needed for canceling the periodic work
-                .build()
-
-            val workManager = WorkManager.getInstance(context)
-            workManager.enqueueUniquePeriodicWork(context.getString(R.string.workmanager1_tag), ExistingPeriodicWorkPolicy.KEEP, periodicDataWork)
-
-            Toast.makeText(context, "Workmanager started", Toast.LENGTH_LONG).show()
-
-            sleepHandler.startSleepHandler()
-
-            //Set AlarmManager to stop Workmanager at end of sleeptime
-            val calendar = AlarmReceiver.getAlarmDate(getSleepTimeEndValue())
-            AlarmReceiver.startAlarmManager(
-                calendar.get(Calendar.DAY_OF_WEEK),
-                calendar.get(Calendar.HOUR_OF_DAY),
-                calendar.get(Calendar.MINUTE), context, AlarmReceiverUsage.STOP_WORKMANAGER)**/
-
-            /*if (LocalTime.now().toSecondOfDay() < getSleepTimeEndValue()) {
-                AlarmReceiver.startAlarmManager(
-                    calendar.get(Calendar.DAY_OF_WEEK),
-                    calendar.get(Calendar.HOUR_OF_DAY),
-                    calendar.get(
-                        Calendar.MINUTE
-                    ),
-                    context,
-                    AlarmReceiverUsage.STOP_FOREGROUND
-                )
             } else {
-                AlarmReceiver.startAlarmManager(
-                    calendar.get(Calendar.DAY_OF_WEEK) + 1,
-                    calendar.get(Calendar.HOUR_OF_DAY),
-                    calendar.get(
-                        Calendar.MINUTE
-                    ),
-                    context,
-                    AlarmReceiverUsage.STOP_FOREGROUND
-                )
-            }*/
+                startWorkmanager()
+            }
         }
     }
 
@@ -306,15 +258,13 @@ class BackgroundAlarmTimeHandler(val context: Context) {
         scope.launch {
 
             //Stop Workmanager at end of sleeptime and unsubscribe to SleepApi
-            //TODO: Überprüfen, ob der Workmanager noch richtig abgebrochen wird
             WorkManager.getInstance(context.applicationContext).cancelAllWorkByTag(context.getString(R.string.workmanager1_tag))
-
 
             sleepHandler.stopSleepHandler()
             sleepCalculationHandler.defineUserWakeup(null, false)
 
             //Set AlarmManager to start Workmanager at begin of sleeptime
-            val calendar = AlarmReceiver.getAlarmDate(getSleepTimeBeginValue())
+            val calendar = TimeConverterUtil.getAlarmDate(getSleepTimeBeginValue())
             AlarmReceiver.startAlarmManager(
                 calendar.get(Calendar.DAY_OF_WEEK),
                 calendar.get(Calendar.HOUR_OF_DAY),
@@ -329,7 +279,6 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                 stopForegroundService(false)
             }
         }
-
     }
 
     fun disableAlarmTemporaryInApp(fromApp : Boolean, reactivate : Boolean) {
@@ -373,7 +322,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                 if (!checkAlarmFired() && !checkAlarmTempDisabled() && checkInSleepTime()) {
                     startForegroundService(true)
                 } else {
-                    val calendar = AlarmReceiver.getAlarmDate(getSleepTimeBeginValue())
+                    val calendar = TimeConverterUtil.getAlarmDate(getSleepTimeBeginValue())
                     AlarmReceiver.startAlarmManager(calendar[Calendar.DAY_OF_WEEK],
                         calendar[Calendar.HOUR_OF_DAY], calendar[Calendar.MINUTE],
                         context.applicationContext,
@@ -385,7 +334,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                     startForegroundService(true)
                 } else {
                     if (!checkInSleepTime()) {
-                        val calendar = AlarmReceiver.getAlarmDate(getSleepTimeBeginValue())
+                        val calendar = TimeConverterUtil.getAlarmDate(getSleepTimeBeginValue())
                         AlarmReceiver.startAlarmManager(calendar[Calendar.DAY_OF_WEEK],
                             calendar[Calendar.HOUR_OF_DAY], calendar[Calendar.MINUTE],
                             context.applicationContext,
@@ -394,7 +343,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                 }
             } else {
                 if (!checkInSleepTime()) {
-                    val calendar = AlarmReceiver.getAlarmDate(getSleepTimeBeginValue())
+                    val calendar = TimeConverterUtil.getAlarmDate(getSleepTimeBeginValue())
                     AlarmReceiver.startAlarmManager(
                         calendar[Calendar.DAY_OF_WEEK],
                         calendar[Calendar.HOUR_OF_DAY], calendar[Calendar.MINUTE],

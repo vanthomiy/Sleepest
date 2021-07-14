@@ -29,6 +29,7 @@ import com.doitstudio.sleepest_master.model.data.AlarmClockReceiverUsage;
 import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage;
 import com.doitstudio.sleepest_master.model.data.Constants;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
+import com.doitstudio.sleepest_master.util.TimeConverterUtil;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -107,7 +108,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
      */
     public static void startAlarmManager(int day, int hour, int min, Context alarmClockContext, AlarmClockReceiverUsage alarmClockReceiverUsage) {
 
-        Calendar calendar = AlarmReceiver.getAlarmDate(day, hour, min);
+        Calendar calendar = TimeConverterUtil.getAlarmDate(day, hour, min);
 
         Intent intent = new Intent(alarmClockContext, AlarmClockReceiver.class);
         intent.putExtra(alarmClockContext.getString(R.string.alarm_clock_intent_key), alarmClockReceiverUsage.name());
