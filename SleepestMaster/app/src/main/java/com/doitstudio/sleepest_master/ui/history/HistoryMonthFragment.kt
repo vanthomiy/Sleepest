@@ -21,9 +21,7 @@ class HistoryMonthFragment : Fragment() {
 
         binding = FragmentHistoryMonthBinding.inflate(inflater, container, false)
         binding.historyMonthViewModel = viewModel
-        //viewModel.activityPermissionDescription
 
         return binding.root
-        //return inflater.inflate(R.layout.fragment_history_day, container, false)
     }
 }

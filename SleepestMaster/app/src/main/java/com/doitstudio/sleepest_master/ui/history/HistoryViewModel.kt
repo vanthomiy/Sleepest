@@ -8,19 +8,27 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import androidx.room.Database
 import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.R
+import com.doitstudio.sleepest_master.databinding.FragmentHistoryWeekBinding
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.SleepDatabase
 import com.doitstudio.sleepest_master.storage.db.SleepDatabase_Impl
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.LegendEntry
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.Month
+import java.time.*
 
 class HistoryViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -76,5 +84,174 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
     fun checkId(time: LocalDate) : Boolean {
         return sleepSessionData.containsKey(UserSleepSessionEntity.getIdByDateTime(time))
+    }
+
+    fun generateDataBarChart(range: Int): Triple<ArrayList<BarEntry>, List<Int>, Int> { //ArrayList<BarEntry> {
+        val entries = ArrayList<BarEntry>()
+        val xAxisLabels = mutableListOf<Int>()
+        var xIndex = 0.5f
+        var maxSleepTime = 0
+
+        val ids = mutableSetOf<Int>()
+        for (i in -(range - 1)..0) {
+            ids.add(
+                UserSleepSessionEntity.getIdByDateTime(
+                    LocalDate.of(
+                        analysisDate.plusDays(i.toLong()).year,
+                        analysisDate.plusDays(i.toLong()).month,
+                        analysisDate.plusDays(i.toLong()).dayOfMonth
+                    )
+                )
+            )
+        }
+
+        ids.reversed()
+        for (id in ids) {
+            if (checkId(analysisDate)) {
+                val values = sleepSessionData[id]!!
+
+                val awake = values.third.sleepTimes.awakeTime
+                val sleep = values.third.sleepTimes.sleepDuration
+                val lightSleep = values.third.sleepTimes.lightSleepDuration
+                val deepSleep = values.third.sleepTimes.deepSleepDuration
+
+                if ((sleep + awake) > maxSleepTime) { maxSleepTime = (sleep + awake) }  //Later delete awake from here
+
+                if (lightSleep != 0 && deepSleep != 0) {
+                    entries.add(
+                        BarEntry(
+                            xIndex, floatArrayOf(
+                                lightSleep.toFloat(),
+                                deepSleep.toFloat(),
+                                awake.toFloat(),
+                                0.toFloat()
+                            )
+                        )
+                    )
+
+                } else {
+                    entries.add(
+                        BarEntry(
+                            xIndex, floatArrayOf(
+                                lightSleep.toFloat(),
+                                deepSleep.toFloat(),
+                                awake.toFloat(),
+                                0.toFloat()
+                            )
+                        )
+                    )
+                }
+
+            } else { entries.add(BarEntry(xIndex, floatArrayOf(0F, 0F, 0F, 0F))) }
+            xAxisLabels.add(id)
+            xIndex += 1
+        }
+
+        return Triple(entries, xAxisLabels, maxSleepTime)
+    }
+
+    fun setBarChart(range: Int) : BarChart {
+        //http://developine.com/android-grouped-stacked-bar-chart-using-mpchart-kotlin/
+        val barChart = BarChart(context)
+        val diagramData = generateDataBarChart(range)
+
+        val barDataSet1 = BarDataSet(diagramData.first, "")
+        barDataSet1.setColors(R.color.light_sleep_color, R.color.deep_sleep_color, R.color.awake_sleep_color, R.color.sleep_sleep_color)
+        barDataSet1.setDrawValues(false)
+
+        val xAxisValues = ArrayList<String>()
+        for (i in diagramData.second.indices) {
+            val date = LocalDateTime.ofInstant(
+                Instant.ofEpochMilli(diagramData.second[i].toLong() * 1000),
+                ZoneOffset.systemDefault())
+
+            val month = when (date.month) {
+                Month.JANUARY -> "Jan"
+                Month.FEBRUARY -> "Feb"
+                Month.MARCH -> "Mar"
+                Month.APRIL -> "Apr"
+                Month.MAY -> "May"
+                Month.JUNE -> "Jun"
+                Month.JULY -> "Jul"
+                Month.AUGUST -> "Aug"
+                Month.SEPTEMBER -> "Sep"
+                Month.OCTOBER -> "Oct"
+                Month.NOVEMBER -> "Nov"
+                Month.DECEMBER -> "Dec"
+                else -> "Fail"
+            }
+            xAxisValues.add(date.dayOfMonth.toString() + ". " + month)
+        }
+
+        val barData = BarData(barDataSet1)
+        barChart.description.isEnabled = false
+        barChart.data = barData
+        barChart.barData.barWidth = 0.75f
+        barChart.xAxis.axisMinimum = 0f
+        barChart.xAxis.axisMaximum = 7f
+        barChart.data.isHighlightEnabled = false
+        barChart.invalidate()
+
+        // set bar label
+        val legend =         barChart.legend
+        legend.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+        legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
+        legend.orientation = Legend.LegendOrientation.HORIZONTAL
+        legend.setDrawInside(false)
+
+        val legendEntries = arrayListOf<LegendEntry>()
+        legendEntries.add((LegendEntry("Light", Legend.LegendForm.SQUARE, 8f, 8f, null ,
+            R.color.light_sleep_color)))
+        legendEntries.add((LegendEntry("Deep", Legend.LegendForm.SQUARE, 8f, 8f, null ,
+            R.color.deep_sleep_color)))
+        legendEntries.add((LegendEntry("Awake", Legend.LegendForm.SQUARE, 8f, 8f, null ,
+            R.color.awake_sleep_color)))
+        legendEntries.add((LegendEntry("Sleep", Legend.LegendForm.SQUARE, 8f, 8f, null ,
+            R.color.sleep_sleep_color)))
+        legend.setCustom(legendEntries)
+        legend.textSize = 12f
+
+
+        val xAxis = barChart.xAxis
+        xAxis.setDrawGridLines(true)
+
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+        xAxis.valueFormatter = IndexAxisValueFormatter(xAxisValues)
+        xAxis.setCenterAxisLabels(true)
+
+
+        barChart.isDragEnabled = true
+
+        //Y-axis
+        barChart.axisRight.isEnabled = true
+        barChart.axisRight.axisMinimum = 0f
+        barChart.axisRight.labelCount = 10
+
+        barChart.axisLeft.spaceTop = 60f
+        barChart.axisLeft.axisMinimum = 0f
+        barChart.axisLeft.labelCount = 20
+
+        if ((diagramData.third > 600) && (diagramData.third < 720)) {
+            barChart.axisRight.axisMaximum = 12f
+            barChart.axisLeft.axisMaximum = 720f
+        }
+        else if ((diagramData.third > 720) && (diagramData.third < 840)) {
+            barChart.axisRight.axisMaximum = 14f
+            barChart.axisLeft.axisMaximum = 840f
+        }
+        else if ((diagramData.third > 840) && (diagramData.third < 960)) {
+            barChart.axisRight.axisMaximum = 16f
+            barChart.axisLeft.axisMaximum = 960f
+        }
+        else if (diagramData.third > 960) { // between 12h and 14h
+            barChart.axisRight.axisMaximum = 24f
+            barChart.axisLeft.axisMaximum = 1440f
+        }
+        else {
+            barChart.axisRight.axisMaximum = 10f
+            barChart.axisLeft.axisMaximum = 600f
+        }
+
+        return barChart
     }
 }
