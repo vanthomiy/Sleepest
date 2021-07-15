@@ -24,6 +24,8 @@ class HistoryDayFragment : Fragment() {
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(HistoryViewModel::class.java) }
     private lateinit var binding: FragmentHistoryDayBinding
     private lateinit var sleepValues : Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>
+    private lateinit var lineChart: LineChart
+    private lateinit var pieChart: PieChart
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,38 +36,34 @@ class HistoryDayFragment : Fragment() {
         binding = FragmentHistoryDayBinding.inflate(inflater, container, false)
         binding.historyDayViewModel = viewModel
 
-        /*
-        viewModel.sleepSessionData.addOnMapChangedCallback(
-            object: ObservableMap.OnMapChangedCallback<ObservableMap<Int, Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>>, Int, Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>>() {
 
-                override fun onMapChanged(
-                sender: ObservableMap<Int, Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>>?,
-                key: Int?
-                ) {
-                    getDataValues()
-                }
-            }
-        )
-         */
+        lineChart = setLineChart()
+        binding.lLSleepAnalysisChartsDay.addView(lineChart)
 
-        viewModel.idsListener.addOnPropertyChangedCallback(
+        val heightLineChart = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 350F, resources.displayMetrics)
+        lineChart.layoutParams.height = heightLineChart.toInt()
+        lineChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+        lineChart.invalidate()
+
+        pieChart = setPieChart()
+        binding.lLSleepAnalysisChartsDay.addView(pieChart)
+
+        val heightPieChart = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 350F, resources.displayMetrics)
+        pieChart.layoutParams.height = heightPieChart.toInt()
+        pieChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+        pieChart.invalidate()
+
+
+        viewModel.analysisDate.addOnPropertyChangedCallback(
             object: Observable.OnPropertyChangedCallback() {
 
                 override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
                     if (getDataValues()) {
 
-                        val lineChart = setLineChart()
-                        binding.lLSleepAnalysisChartsDay.addView(lineChart)
-                        val heightLineChart = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 350F, resources.displayMetrics)
-                        lineChart.layoutParams.height = heightLineChart.toInt()
-                        lineChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+                        updateLineChart(lineChart)
                         lineChart.invalidate()
 
-                        val pieChart = setPieChart()
-                        binding.lLSleepAnalysisChartsDay.addView(pieChart)
-                        val heightPieChart = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 350F, resources.displayMetrics)
-                        pieChart.layoutParams.height = heightPieChart.toInt()
-                        pieChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+                        updatePieChart(pieChart)
                         pieChart.invalidate()
                     }
                 }
@@ -144,6 +142,38 @@ class HistoryDayFragment : Fragment() {
         return chart
     }
 
+    fun updateLineChart(chart: LineChart) {
+        val vl = LineDataSet(generateDataLineChart(), "Sleep state")
+        vl.setDrawValues(false)
+        vl.setDrawFilled(true)
+        vl.setDrawCircles(false)
+        vl.lineWidth = 2f
+        vl.fillColor = R.color.tertiary_text_color
+        vl.fillAlpha = 255
+        vl.color = R.color.colorPrimary
+
+        val yAxisValues = ArrayList<String>()
+        yAxisValues.add("Awake")
+        yAxisValues.add("Light")
+        yAxisValues.add("Deep")
+        yAxisValues.add("REM")
+        yAxisValues.add("Zero")
+
+        chart.axisLeft.valueFormatter = IndexAxisValueFormatter(yAxisValues)
+        chart.axisLeft.labelCount = 4
+        chart.axisLeft.axisMinimum = 0f
+        chart.axisLeft.axisMaximum = 4f
+
+        chart.axisRight.setDrawLabels(false)
+        chart.axisRight.setDrawGridLines(false)
+
+        chart.description.isEnabled = false
+
+        chart.data = LineData(vl)
+
+        chart.animateX(1000)
+    }
+
     private fun generateDataPieChart() : ArrayList<PieEntry> {
         val entries = ArrayList<PieEntry>()
 
@@ -196,6 +226,26 @@ class HistoryDayFragment : Fragment() {
         chart.animateY(1000, Easing.EaseInOutQuad)
 
         return chart
+    }
+
+    private fun updatePieChart(chart: PieChart) {
+        val listColors = ArrayList<Int>()
+        listColors.add(R.color.light_sleep_color)
+        listColors.add(R.color.deep_sleep_color)
+        listColors.add(R.color.awake_sleep_color)
+        listColors.add(R.color.sleep_sleep_color)
+
+        val pieDataSet = PieDataSet(generateDataPieChart(), "Sleep states")
+        pieDataSet.colors = listColors
+
+        val pieData = PieData(pieDataSet)
+        chart.data = pieData
+
+        chart.setUsePercentValues(true)
+        chart.isDrawHoleEnabled = false
+        chart.description.isEnabled = false
+        //chart.setEntryLabelColor(R.color.black)
+        chart.animateY(1000, Easing.EaseInOutQuad)
     }
 }
 
