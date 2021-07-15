@@ -1,15 +1,11 @@
 package com.doitstudio.sleepest_master.ui.history
 
-import android.net.sip.SipSession
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.Observable
-import androidx.databinding.ObservableArrayMap
-import androidx.databinding.ObservableInt
-import androidx.databinding.ObservableMap
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.R
@@ -21,7 +17,6 @@ import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import java.util.*
 import kotlin.collections.ArrayList
 
 class HistoryDayFragment : Fragment() {
@@ -57,48 +52,55 @@ class HistoryDayFragment : Fragment() {
             object: Observable.OnPropertyChangedCallback() {
 
                 override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                    getDataValues()
+                    if (getDataValues()) {
 
-                    val lineChart = setLineChart()
-                    binding.lLSleepAnalysisChartsDay.addView(lineChart)
-                    val heightLineChart = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 350F, resources.displayMetrics)
-                    lineChart.layoutParams.height = heightLineChart.toInt()
-                    lineChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-                    lineChart.invalidate()
+                        val lineChart = setLineChart()
+                        binding.lLSleepAnalysisChartsDay.addView(lineChart)
+                        val heightLineChart = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 350F, resources.displayMetrics)
+                        lineChart.layoutParams.height = heightLineChart.toInt()
+                        lineChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+                        lineChart.invalidate()
 
-                    val pieChart = setPieChart()
-                    binding.lLSleepAnalysisChartsDay.addView(pieChart)
-                    val heightPieChart = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 350F, resources.displayMetrics)
-                    pieChart.layoutParams.height = heightPieChart.toInt()
-                    pieChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-                    pieChart.invalidate()
+                        val pieChart = setPieChart()
+                        binding.lLSleepAnalysisChartsDay.addView(pieChart)
+                        val heightPieChart = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 350F, resources.displayMetrics)
+                        pieChart.layoutParams.height = heightPieChart.toInt()
+                        pieChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+                        pieChart.invalidate()
+                    }
                 }
-
             })
 
         return binding.root
     }
 
-    private fun getDataValues() {
-        if (viewModel.checkId(viewModel.analysisDate)) {
-            sleepValues = viewModel.sleepSessionData[UserSleepSessionEntity.getIdByDateTime(viewModel.analysisDate)]!!
+    private fun getDataValues() : Boolean {
+        viewModel.analysisDate.get()?.let {
+            if (viewModel.checkId(it)) {
+                sleepValues = viewModel.sleepSessionData[UserSleepSessionEntity.getIdByDateTime(it)]!!
+                return true
+            }
         }
+
+        return false
     }
 
     private fun generateDataLineChart() : ArrayList<Entry> {
         val entries = ArrayList<Entry>()
 
-        if (viewModel.checkId(viewModel.analysisDate)) {
-            var xValue = 0
+        viewModel.analysisDate.get()?.let {
+            if (viewModel.checkId(it)) {
+                var xValue = 0
 
-            for (rawData in sleepValues.first) {
-                for (minute in 0..sleepValues.second) {
-                    entries.add(Entry(xValue.toFloat(), rawData.sleepState.ordinal.toFloat()))
-                    xValue += 1
+                for (rawData in sleepValues.first) {
+                    for (minute in 0..sleepValues.second) {
+                        entries.add(Entry(xValue.toFloat(), rawData.sleepState.ordinal.toFloat()))
+                        xValue += 1
+                    }
                 }
+            } else {
+                entries.add(Entry(1F,1F))
             }
-        } else {
-            entries.add(Entry(1F,1F))
         }
 
         return entries
@@ -145,23 +147,25 @@ class HistoryDayFragment : Fragment() {
     private fun generateDataPieChart() : ArrayList<PieEntry> {
         val entries = ArrayList<PieEntry>()
 
-        if (viewModel.checkId(viewModel.analysisDate)) {
-            val awake = sleepValues.third.sleepTimes.awakeTime
-            val sleep = sleepValues.third.sleepTimes.sleepDuration
-            val lightSleep = sleepValues.third.sleepTimes.lightSleepDuration
-            val deepSleep = sleepValues.third.sleepTimes.deepSleepDuration
+        viewModel.analysisDate.get()?.let {
+            if (viewModel.checkId(it)) {
+                val awake = sleepValues.third.sleepTimes.awakeTime
+                val sleep = sleepValues.third.sleepTimes.sleepDuration
+                val lightSleep = sleepValues.third.sleepTimes.lightSleepDuration
+                val deepSleep = sleepValues.third.sleepTimes.deepSleepDuration
 
-            if (lightSleep == 0 && deepSleep == 0) {
-                entries.add(PieEntry(awake.toFloat(), "Awake"))
-                entries.add(PieEntry(sleep.toFloat(), "Sleep"))
-                entries.add(PieEntry(0.toFloat(), "Light"))
-                entries.add(PieEntry(0.toFloat(), "Deep"))
-            }
-            else {
-                entries.add(PieEntry(awake.toFloat(), "Awake"))
-                entries.add(PieEntry(0.toFloat(), "Sleep"))
-                entries.add(PieEntry(lightSleep.toFloat(), "Light"))
-                entries.add(PieEntry(deepSleep.toFloat(), "Deep"))
+                if (lightSleep == 0 && deepSleep == 0) {
+                    entries.add(PieEntry(awake.toFloat(), "Awake"))
+                    entries.add(PieEntry(sleep.toFloat(), "Sleep"))
+                    entries.add(PieEntry(0.toFloat(), "Light"))
+                    entries.add(PieEntry(0.toFloat(), "Deep"))
+                }
+                else {
+                    entries.add(PieEntry(awake.toFloat(), "Awake"))
+                    entries.add(PieEntry(0.toFloat(), "Sleep"))
+                    entries.add(PieEntry(lightSleep.toFloat(), "Light"))
+                    entries.add(PieEntry(deepSleep.toFloat(), "Deep"))
+                }
             }
         }
 

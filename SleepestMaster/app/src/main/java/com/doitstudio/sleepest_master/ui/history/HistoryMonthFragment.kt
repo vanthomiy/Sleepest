@@ -36,10 +36,14 @@ class HistoryMonthFragment : Fragment() {
     }
 
     private fun getEndOfMonth(): Pair<Int, LocalDate> {
-        val date = viewModel.analysisDate
-        return Pair(
-            date.lengthOfMonth(),
-            date.withDayOfMonth(date.lengthOfMonth())
-        )
+        viewModel.analysisDate.get()?.let {
+            val date = it
+            return Pair(
+                date.lengthOfMonth(),
+                date.withDayOfMonth(date.lengthOfMonth())
+            )
+        }
+
+        return Pair(10, LocalDate.of(2000, 1, 1))
     }
 }

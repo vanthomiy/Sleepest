@@ -36,7 +36,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         (context as MainApplication).dataBaseRepository
     }
 
-    val analysisDate: LocalDate = LocalDate.now()
+    var analysisDate = ObservableField(LocalDate.now())
 
     /** <Int: Sleep session id, Triple<List<[SleepApiRawDataEntity]>, Int: Sleep duration, [UserSleepSessionEntity]>> */
     //val sleepSessionData = ObservableArrayMap<Int, Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>>()
@@ -46,27 +46,44 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
     /** <Int: Sleep session id, Triple<List<[SleepApiRawDataEntity]>, Int: Sleep duration, [UserSleepSessionEntity]>> */
     val sleepSessionData = mutableMapOf<Int, Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>>()
 
-
     init {
         getSleepData()
     }
 
-    private fun getSleepData() {
-        val ids = mutableSetOf<Int>()
-        val startDayToGet = analysisDate.minusMonths(1L).withDayOfMonth(1)
-        val endDayToGet = analysisDate.withDayOfMonth(analysisDate.lengthOfMonth())
-        val dayDifference = (endDayToGet.toEpochDay() - startDayToGet.toEpochDay()).toInt()
+    fun onPreviousDateClick(range: Int) {
+        when (range) {
+            0 -> analysisDate.set(analysisDate.get()?.minusDays(1L))
+            1 -> analysisDate.set(analysisDate.get()?.minusWeeks(1L))
+            2 -> analysisDate.set(analysisDate.get()?.minusMonths(1L))
+        }
+    }
 
-        for (day in 0..dayDifference) {
-            ids.add(
-                UserSleepSessionEntity.getIdByDateTime(
-                    LocalDate.of(
-                        startDayToGet.plusDays(day.toLong()).year,
-                        startDayToGet.plusDays(day.toLong()).month,
-                        startDayToGet.plusDays(day.toLong()).dayOfMonth,
+    fun onNextDateClick(range: Int) {
+        when (range) {
+            0 -> analysisDate.set(analysisDate.get()?.plusDays(1L))
+            1 -> analysisDate.set(analysisDate.get()?.plusWeeks(1L))
+            2 -> analysisDate.set(analysisDate.get()?.plusMonths(1L))
+        }
+    }
+
+    fun getSleepData() {
+        val ids = mutableSetOf<Int>()
+        analysisDate.get()?.let {
+            val startDayToGet = it.minusMonths(1L).withDayOfMonth(1)
+            val endDayToGet = it.withDayOfMonth(it.lengthOfMonth())
+            val dayDifference = (endDayToGet.toEpochDay() - startDayToGet.toEpochDay()).toInt()
+
+            for (day in 0..dayDifference) {
+                ids.add(
+                    UserSleepSessionEntity.getIdByDateTime(
+                        LocalDate.of(
+                            startDayToGet.plusDays(day.toLong()).year,
+                            startDayToGet.plusDays(day.toLong()).month,
+                            startDayToGet.plusDays(day.toLong()).dayOfMonth,
+                        )
                     )
                 )
-            )
+            }
         }
 
         scope.launch {

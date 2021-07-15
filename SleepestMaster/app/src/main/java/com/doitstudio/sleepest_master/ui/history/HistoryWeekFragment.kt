@@ -35,16 +35,20 @@ class HistoryWeekFragment : Fragment() {
     }
 
     private fun getSundayOfWeek(): LocalDate {
-        val dayOfWeek = viewModel.analysisDate.dayOfWeek
+        viewModel.analysisDate.get()?.let {
+            val dayOfWeek = it.dayOfWeek
 
-        return when (dayOfWeek.value) {
-            1 -> viewModel.analysisDate.plusDays(6L) // Monday
-            2 -> viewModel.analysisDate.plusDays(5L) // Tuesday
-            3 -> viewModel.analysisDate.plusDays(4L) // Wednesday
-            4 -> viewModel.analysisDate.plusDays(3L) // Thursday
-            5 -> viewModel.analysisDate.plusDays(2L) // Friday
-            6 -> viewModel.analysisDate.plusDays(1L) // Saturday
-            else -> viewModel.analysisDate.plusDays(0L) // Sunday
+            return when (dayOfWeek.value) {
+                1 -> it.plusDays(6L) // Monday
+                2 -> it.plusDays(5L) // Tuesday
+                3 -> it.plusDays(4L) // Wednesday
+                4 -> it.plusDays(3L) // Thursday
+                5 -> it.plusDays(2L) // Friday
+                6 -> it.plusDays(1L) // Saturday
+                else -> it.plusDays(0L) // Sunday
+            }
         }
+        
+        return LocalDate.of(2000, 1, 1)
     }
 }
