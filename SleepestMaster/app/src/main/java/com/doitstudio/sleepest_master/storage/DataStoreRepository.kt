@@ -120,10 +120,27 @@ class DataStoreRepository(context: Context) {
         sleepParameterStatus.updateAlarmName(value)
     suspend fun updateAutoSleepTime(time:Boolean) =
             sleepParameterStatus.updateAutoSleepTime(time)
-    suspend fun updateSleepTimeEnd(time:Int) =
-        sleepParameterStatus.updateSleepTimeEnd(time)
-    suspend fun updateSleepTimeStart(time:Int) =
-        sleepParameterStatus.updateSleepTimeStart(time)
+    suspend fun updateSleepTimeEnd(time:Int){
+        val day = 24*60*60
+        var newTime = time
+        if(time > day)
+            newTime -= day
+
+        if(time < 0)
+            newTime += day
+        sleepParameterStatus.updateSleepTimeEnd(newTime)
+
+    }
+    suspend fun updateSleepTimeStart(time:Int){
+        val day = 24*60*60
+        var newTime = time
+        if(time > day)
+            newTime -= day
+
+        if(time < 0)
+            newTime += day
+        sleepParameterStatus.updateSleepTimeStart(newTime)
+    }
     suspend fun updateUserWantedSleepTime(time:Int) =
         sleepParameterStatus.updateUserWantedSleepTime(time)
     suspend fun updateStandardMobilePosition(time:Int) =

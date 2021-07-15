@@ -328,11 +328,25 @@ class DatabaseRepository(
     }
 
     suspend fun updateWakeupLate(wakeupLate: Int, alarmId: Int) {
-        alarmDao.updateWakeupLate(wakeupLate, alarmId)
+        val day = 24*60*60
+        var newTime = wakeupLate
+        if(wakeupLate > day)
+            newTime -= day
+
+        if(wakeupLate < 0)
+            newTime += day
+        alarmDao.updateWakeupLate(newTime, alarmId)
     }
 
     suspend fun updateWakeupTime(wakeupTime: Int, alarmId: Int) {
-        alarmDao.updateWakeupTime(wakeupTime, alarmId)
+        val day = 24*60*60
+        var newTime = wakeupTime
+        if(wakeupTime > day)
+            newTime -= day
+
+        if(wakeupTime < 0)
+            newTime += day
+        alarmDao.updateWakeupTime(newTime, alarmId)
     }
 
     suspend fun updateIsActive(isActive: Boolean, alarmId: Int) {

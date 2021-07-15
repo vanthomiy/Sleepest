@@ -75,6 +75,9 @@ dependencies {
 
     def room_version = "2.3.0"
 
+    // Number picker
+    implementation 'io.github.ShawnLin013:number-picker:2.4.13'
+
     //implementation 'com.google.firebase:firebase-ml-model-interpreter:22.0.4'
     implementation 'org.tensorflow:tensorflow-lite:2.4.0@aar'
     implementation 'org.tensorflow:tensorflow-lite-select-tf-ops:0.0.0-nightly'

@@ -221,7 +221,7 @@
                         <FrameLayout
                             android:layout_width="150dp"
                             android:layout_height="50dp"
-                            android:onClick="@{alarmsViewModel::onAlarmStartClicked}"
+                            android:onClick="@{alarmsViewModel::onWakeUpEarlyClicked}"
                             android:background="@drawable/transparent"
                             android:backgroundTint="@color/secondary_button_color">
                             <TextView
@@ -232,7 +232,7 @@
                                 android:textSize="@dimen/bigSize"
                                 android:textAlignment="center"
                                 android:textColor="@color/tertiary_text_color"
-                                android:text="@{alarmsViewModel.sleepStartValue}"
+                                android:text="@{alarmsViewModel.wakeUpEarlyValue}"
                                 tools:ignore="RtlCompat" />
 
                         </FrameLayout>
@@ -256,7 +256,7 @@
                         <FrameLayout
                             android:layout_width="150dp"
                             android:layout_height="50dp"
-                            android:onClick="@{alarmsViewModel::onAlarmEndClicked}"
+                            android:onClick="@{alarmsViewModel::onWakeUpLateClicked}"
                             android:background="@drawable/transparent"
                             android:backgroundTint="@color/secondary_button_color">
                             <TextView
@@ -267,7 +267,7 @@
                                 android:textSize="@dimen/bigSize"
                                 android:textAlignment="center"
                                 android:textColor="@color/tertiary_text_color"
-                                android:text="@{alarmsViewModel.sleepEndValue}"
+                                android:text="@{alarmsViewModel.wakeUpLateValue}"
                                 tools:ignore="RtlCompat" />
 
                         </FrameLayout>

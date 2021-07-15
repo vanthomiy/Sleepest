@@ -2,16 +2,19 @@ package com.doitstudio.sleepest_master.util
 
 import android.content.Context
 import android.widget.Toast
+import com.doitstudio.sleepest_master.model.data.AlarmSleepChangeFrom
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import kotlinx.coroutines.flow.first
+import java.lang.Math.abs
+import java.time.LocalTime
 
 object SleepTimeValidationUtil {
 
     /**
      * Returns the seconds between two seconds of day
      */
-    fun getTimeBetweenSecondsOfDay(endTime: Int, startTime:Int) : Int{
+    private fun getTimeBetweenSecondsOfDay(endTime: Int, startTime:Int) : Int{
 
         val secondsOfDay = 60 * 60 * 24
 
@@ -85,74 +88,108 @@ object SleepTimeValidationUtil {
     }
 
     /**
-     * Checks if the wakeup time of an alarm is in the sleep time
+     * This is used to check if the alarm settings that are made are in relation to the sleep settings.
+     * If we can find any problems we return the new values if necessary that will notify the user
      */
-    suspend fun checkIfWakeUpTimeIsInSleepTime(dataStoreRepository: DataStoreRepository, context: Context, endTime: Int, startTime:Int) : Pair<Int, Int> {
+    suspend fun checkAlarmActionIsAllowedAndDoAction(alarmId:Int,dataBaseRepository:DatabaseRepository, dataStoreRepository: DataStoreRepository, context: Context, wakeUpEarly: Int, wakeUpLate: Int, sleepDuration: Int, changeFrom: AlarmSleepChangeFrom) : Int {
 
-        var endTimeNew =endTime
-        var startTimeNew =startTime
 
-        if(dataStoreRepository.getSleepTimeEnd() < endTime){
-            Toast.makeText(context, "Sleep end time is not in Sleep Time", Toast.LENGTH_SHORT)
-                .show()
+        val minTimeBuffer = 7200 // 2 hours
 
-            endTimeNew = dataStoreRepository.getSleepTimeEnd()
+        var newWakeUpEarly = wakeUpEarly
+        var newWakeUpLate = wakeUpLate
+        var newSleepDuration = sleepDuration
+
+        // Check if Wakeup Early and Wakeup Late matches, else change one of it
+        if(wakeUpEarly > wakeUpLate) {
+            newWakeUpLate = when (changeFrom) {
+                AlarmSleepChangeFrom.WAKEUPEARLYLY -> wakeUpEarly
+                else -> wakeUpLate
+            }
+            newWakeUpEarly = when (changeFrom) {
+                AlarmSleepChangeFrom.WAKEUPLATE -> wakeUpLate
+                else -> wakeUpEarly
+            }
         }
 
-        if(dataStoreRepository.getSleepTimeEnd() < startTime){
-            Toast.makeText(context, "Sleep start time is not in Sleep Time", Toast.LENGTH_SHORT)
-                .show()
-            startTimeNew = dataStoreRepository.getSleepTimeEnd()
-        }
+        // now we need to get the sleep data
+        val sleepSettings = dataStoreRepository.sleepParameterFlow.first()
 
-        return Pair(startTimeNew, endTimeNew)
-    }
+        // Check if Wakeup Early is in sleep time
+        if(wakeUpEarly > sleepSettings.sleepTimeEnd) {
+            // differ between auto sleep time and user defined sleep time
+            if(sleepSettings.autoSleepTime){
+                val restTime = kotlin.math.abs(wakeUpEarly -  sleepSettings.sleepTimeEnd) + (minTimeBuffer / 2)
 
-    /**
-     * Checks if sleep time can be reached
-     * We need last alarm wakeup point and sleep time
-     * Sleep time start
-     */
-    suspend fun checkIfSleepTimeCanBeReached(dataStoreRepository: DataStoreRepository, context: Context, alarmEnd:Int, requiredSleepTime:Int) {
+                // Adjust the sleep time automatically
+                val newSleepTimeEnd = sleepSettings.sleepTimeEnd + restTime
 
-        val sleep = dataStoreRepository.sleepParameterFlow.first()
-
-        var sleepTime = getTimeBetweenSecondsOfDay(alarmEnd, sleep.sleepTimeStart)
-
-        if(requiredSleepTime > sleepTime){
-            if(sleep.autoSleepTime){
-
-                val day = 24*60*60
-
-                val restTime = (sleepTime - (requiredSleepTime + day/12))
-
-                var newStartTime = sleep.sleepTimeStart + restTime
-
-                if(newStartTime < 0)
-                    newStartTime += day
-
-                if(newStartTime > day)
-                    newStartTime -= day
-
-                dataStoreRepository.updateSleepTimeStart(newStartTime)
-
+                dataStoreRepository.updateSleepTimeEnd(newSleepTimeEnd)
             }
             else{
-                Toast.makeText(context, "You cant reach your required sleep time", Toast.LENGTH_SHORT)
+                newWakeUpEarly = sleepSettings.sleepTimeEnd
+                Toast.makeText(context, "Out of sleep time! Change the sleep time end", Toast.LENGTH_SHORT)
                     .show()
             }
         }
 
+        // Check if Wakeup Late is in sleep time
+        if(wakeUpLate > sleepSettings.sleepTimeEnd) {
+            // differ between auto sleep time and user defined sleep time
+            if(sleepSettings.autoSleepTime){
+                val restTime = kotlin.math.abs(wakeUpLate -  sleepSettings.sleepTimeEnd) + (minTimeBuffer / 2)
 
+                // Adjust the sleep time automatically
+                val newSleepTimeEnd = sleepSettings.sleepTimeEnd + restTime
 
-    }
+                dataStoreRepository.updateSleepTimeEnd(newSleepTimeEnd)
+            }
+            else{
+                newWakeUpLate = sleepSettings.sleepTimeEnd
+                Toast.makeText(context, "Out of sleep time! Change the sleep time end", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
 
-    /**
-     * This is used to check if the alarm settings that are made are in relation to the sleep settings.
-     * If we can find any problems we return the new values if necessary that will notify the user
-     */
-    suspend fun checkAlarmActionIsAllowedAndDoAction(dataStoreRepository: DataStoreRepository) {
+        //check if the possible sleep time is big enough for the sleep time
+        val possibleSleepTime =
+            getTimeBetweenSecondsOfDay(newWakeUpLate, sleepSettings.sleepTimeStart)
+        if(possibleSleepTime < (sleepDuration + minTimeBuffer)){
+            // differ between auto sleep time and user defined sleep time
+            if(sleepSettings.autoSleepTime){
+                val restTime =
+                    kotlin.math.abs(possibleSleepTime - sleepDuration) + minTimeBuffer
 
+                // Adjust the sleep time automatically
+                val newSleepTimeStart = sleepSettings.sleepTimeStart - restTime
+
+                dataStoreRepository.updateSleepTimeStart(newSleepTimeStart)
+            }
+            else{
+                Toast.makeText(context,
+                    "Not possible! Change the sleep time window or the latest wakeup point",
+                    Toast.LENGTH_SHORT)
+                    .show()
+
+                if(changeFrom == AlarmSleepChangeFrom.DURATION){
+                    return (possibleSleepTime - minTimeBuffer)
+                }
+                else if(changeFrom == AlarmSleepChangeFrom.WAKEUPLATE){
+                    val result =
+                        kotlin.math.abs(possibleSleepTime - (sleepDuration + minTimeBuffer))
+                    newWakeUpLate += result
+                }
+            }
+        }
+
+        if(wakeUpEarly != newWakeUpEarly || changeFrom == AlarmSleepChangeFrom.WAKEUPEARLYLY )
+            dataBaseRepository.updateWakeupEarly(newWakeUpEarly, alarmId)
+        if(wakeUpLate != newWakeUpLate || changeFrom == AlarmSleepChangeFrom.WAKEUPLATE)
+            dataBaseRepository.updateWakeupLate(newWakeUpLate, alarmId)
+        if(sleepDuration != newSleepDuration || changeFrom == AlarmSleepChangeFrom.DURATION)
+            dataBaseRepository.updateSleepDuration(newSleepDuration, alarmId)
+
+        return 0
     }
 
     /**

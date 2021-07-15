@@ -4,22 +4,15 @@ import android.app.AlertDialog
 import android.app.Application
 import android.app.TimePickerDialog
 import android.text.InputType
-import android.transition.TransitionManager
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.view.isVisible
-import androidx.databinding.ObservableArrayList
-import androidx.databinding.ObservableArrayMap
 import androidx.databinding.ObservableField
-import androidx.databinding.ObservableMap
 import androidx.lifecycle.AndroidViewModel
 import com.doitstudio.sleepest_master.MainApplication
-import com.doitstudio.sleepest_master.R
+import com.doitstudio.sleepest_master.model.data.AlarmSleepChangeFrom
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.util.SleepTimeValidationUtil
@@ -27,7 +20,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.serialization.PrimitiveKind
+import java.time.DateTimeException
+import java.time.LocalDate
 import java.time.LocalTime
 
 class AlarmInstanceViewModel(application: Application) : AndroidViewModel(application) {
@@ -92,72 +86,60 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
 
     var enoughTimeToSleep = true
 
-    val sleepStartValue = ObservableField("07:30")
-    val sleepEndValue = ObservableField("07:30")
-    var sleepStartTime = LocalTime.now()
-    var sleepEndTime = LocalTime.now()
+    val wakeUpEarlyValue = ObservableField("07:30")
+    val wakeUpLateValue = ObservableField("07:30")
+    var wakeUpEarly: LocalTime = LocalTime.now()
+    var wakeUpLate: LocalTime = LocalTime.now()
 
-    fun onAlarmStartClicked(view: View){
+    fun onWakeUpEarlyClicked(view: View){
 
-        val hour = (sleepStartTime.hour)
-        val minute = (sleepStartTime.minute)
+        val hour = (wakeUpEarly.hour)
+        val minute = (wakeUpEarly.minute)
 
         val tpd = TimePickerDialog(
             view.context,
             { view, h, m ->
 
-                sleepStartTime = LocalTime.of(h, m)
-
+                val tempWakeup = LocalTime.of(h, m)
 
                 scope.launch {
 
-                    var times = SleepTimeValidationUtil.checkIfWakeUpTimeIsInSleepTime(dataStoreRepository, view.context, sleepEndTime.toSecondOfDay(), sleepStartTime.toSecondOfDay())
-                    sleepStartTime = LocalTime.ofSecondOfDay(times.first.toLong())
+                    val progressTemp = sleepDurationValue.get()!!*0.5 + 5
+                    var minutes = 0
+                    if (progressTemp % 1 == 0.5) { minutes = 30 }
+                    val sleepDuration = (LocalTime.of(progressTemp.toInt(), minutes)).toSecondOfDay()
 
-                    sleepStartValue.set((if (sleepStartTime.hour < 10) "0" else "") + sleepStartTime.hour.toString() + ":" + (if (sleepStartTime.minute < 10) "0" else "") + sleepStartTime.minute.toString())
-
-                    dataBaseRepository.updateWakeupEarly(times.first, alarmId)
-
-                    if(times.second < times.first){
-                        sleepEndValue.set(sleepStartValue.get())
-                        sleepEndTime = sleepStartTime
-                        dataBaseRepository.updateWakeupLate(times.first, alarmId)
-                    }
+                    SleepTimeValidationUtil.checkAlarmActionIsAllowedAndDoAction(alarmId, dataBaseRepository,
+                        dataStoreRepository, view.context, tempWakeup.toSecondOfDay(), wakeUpLate.toSecondOfDay(), sleepDuration, AlarmSleepChangeFrom.WAKEUPEARLYLY)
                 }
             },
             hour,
             minute,
             false
         )
-
         tpd.show()
     }
 
-    fun onAlarmEndClicked(view: View){
-        val hour = (sleepEndTime.hour)
-        val minute = (sleepEndTime.minute)
+    fun onWakeUpLateClicked(view: View){
+        val hour = (wakeUpLate.hour)
+        val minute = (wakeUpLate.minute)
 
         val tpd = TimePickerDialog(
             view.context,
             TimePickerDialog.OnTimeSetListener(function = { view, h, m ->
 
-                sleepEndTime = LocalTime.of(h, m)
+                val tempWakeup = LocalTime.of(h, m)
 
                 scope.launch {
-                    var times = SleepTimeValidationUtil.checkIfWakeUpTimeIsInSleepTime(dataStoreRepository, view.context, sleepEndTime.toSecondOfDay(), sleepStartTime.toSecondOfDay())
-                    sleepEndTime = LocalTime.ofSecondOfDay(times.second.toLong())
 
-                    sleepEndValue.set((if (sleepEndTime.hour < 10) "0" else "") + sleepEndTime.hour.toString() + ":" + (if (sleepEndTime.minute < 10) "0" else "") + sleepEndTime.minute.toString())
+                    val progressTemp = sleepDurationValue.get()!!*0.5 + 5
+                    var minutes = 0
+                    if (progressTemp % 1 == 0.5) { minutes = 30 }
+                    val sleepDuration = (LocalTime.of(progressTemp.toInt(), minutes)).toSecondOfDay()
 
-                    dataBaseRepository.updateWakeupLate(times.second, alarmId)
 
-                    if(times.first > times.second){
-                        sleepStartValue.set(sleepEndValue.get())
-                        sleepStartTime = sleepEndTime
-                        dataBaseRepository.updateWakeupEarly(times.second, alarmId)
-                    }
-
-                    SleepTimeValidationUtil.checkIfSleepTimeCanBeReached(dataStoreRepository, context, sleepEndTime.toSecondOfDay(), sleepDurationValue.get()!!)
+                    SleepTimeValidationUtil.checkAlarmActionIsAllowedAndDoAction(alarmId, dataBaseRepository,
+                        dataStoreRepository, view.context, wakeUpEarly.toSecondOfDay(), tempWakeup.toSecondOfDay(), sleepDuration, AlarmSleepChangeFrom.WAKEUPLATE)
                 }
             }),
             hour,
@@ -177,23 +159,19 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
         if (progressTemp % 1 == 0.5) { minutes = 30 }
 
         val time = (LocalTime.of(progressTemp.toInt(), minutes))
-        sleepDurationString.set(time.hour.toString() + "h " + time.minute.toString() + "m")
-        sleepDurationValue.set(time.toSecondOfDay())
 
         scope.launch {
-            dataBaseRepository.updateSleepDuration(time.toSecondOfDay(), alarmId)
+            val result = SleepTimeValidationUtil.checkAlarmActionIsAllowedAndDoAction(alarmId, dataBaseRepository,
+                dataStoreRepository, context, wakeUpEarly.toSecondOfDay(), wakeUpLate.toSecondOfDay(), time.toSecondOfDay(), AlarmSleepChangeFrom.DURATION)
 
-            val sleepSettings = dataStoreRepository.sleepParameterFlow.first()
+            if(result != 0){
+                val sleepDuration = LocalTime.ofSecondOfDay(result.toLong())
+                // Setup the sleepAmount bar
+                if (sleepDuration.minute == 30) { sleepDurationValue.set((sleepDuration.hour - 5) * 2 + 1) }
+                else { sleepDurationValue.set((sleepDuration.hour - 5) * 2) }
+                sleepDurationString.set(sleepDuration.hour.toString() + "h " + sleepDuration.minute.toString() + "m")            }
 
-            if(!sleepSettings.autoSleepTime){
-                enoughTimeToSleep = SleepTimeValidationUtil.checkIfSleepTimeMatchesSleepDuration(context, time.toSecondOfDay(), sleepSettings.sleepTimeEnd, sleepSettings.sleepTimeStart, enoughTimeToSleep)
-            }
-            else{
-                SleepTimeValidationUtil.checkIfSleepTimeMatchesSleepDurationAuto(dataStoreRepository, time.toSecondOfDay(), sleepSettings.sleepTimeEnd, sleepSettings.sleepTimeStart, enoughTimeToSleep)
 
-            }
-
-            SleepTimeValidationUtil.checkIfSleepTimeCanBeReached(dataStoreRepository, context, sleepEndTime.toSecondOfDay(), time.toSecondOfDay())
         }
     }
 
@@ -217,10 +195,10 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
 
             sleepDurationString.set(sleepDuration.hour.toString() + "h " + sleepDuration.minute.toString() + "m")
 
-            sleepStartTime = wakeupEarly
-            sleepEndTime = wakeupLate
-            sleepStartValue.set((if (sleepStartTime.hour < 10) "0" else "") + sleepStartTime.hour.toString() + ":" + (if (sleepStartTime.minute < 10) "0" else "") + (sleepStartTime.minute.toString()))
-            sleepEndValue.set((if (sleepEndTime.hour < 10) "0" else "") + sleepEndTime.hour.toString() + ":" + (if (sleepEndTime.minute < 10) "0" else "") + (sleepEndTime.minute.toString()))
+            wakeUpEarly = wakeupEarly
+            wakeUpLate = wakeupLate
+            wakeUpEarlyValue.set((if (wakeUpEarly.hour < 10) "0" else "") + wakeUpEarly.hour.toString() + ":" + (if (wakeUpEarly.minute < 10) "0" else "") + (wakeUpEarly.minute.toString()))
+            wakeUpLateValue.set((if (wakeUpLate.hour < 10) "0" else "") + wakeUpLate.hour.toString() + ":" + (if (wakeUpLate.minute < 10) "0" else "") + (wakeUpLate.minute.toString()))
 
         }
     }
