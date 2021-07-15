@@ -11,10 +11,13 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import com.appyvet.rangebar.RangeBar
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
+import com.doitstudio.sleepest_master.databinding.AlarmEntityBinding
+import com.doitstudio.sleepest_master.databinding.FragmentAlarmsBinding
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -23,57 +26,31 @@ import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalTime
 
-class AlarmInstance(val applicationContext: Context, private var alarmId: Int) : Fragment() {
+class AlarmInstanceFragment(val applicationContext: Context, private var alarmId: Int) : Fragment() {
 
     private val repository by lazy { (applicationContext as MainApplication).dataBaseRepository }
     private val scope: CoroutineScope = MainScope()
 
+    private lateinit var binding: AlarmEntityBinding
+    private val viewModel by lazy { ViewModelProvider(this).get(AlarmInstanceViewModel::class.java) }
+    private val basicViewModel by lazy { ViewModelProvider(requireActivity()).get(AlarmsViewModel::class.java) }
+
+
     private lateinit var seekBar : SeekBar //Selecting the sleep amount
-    private lateinit var rangeBar : RangeBar //Selecting the wake up range https://github.com/Fedorkz/material-range-bar
     private lateinit var tViewSleepAmount: TextView //Display the selected sleep amount
-    private lateinit var tViewWakeupTime: TextView  //Display the selected wake up range
-    private lateinit var tViewAlarmName : TextView //Topic of the alarm
     private lateinit var tViewActiveWeekdays: TextView //Shows the active weekdays
     private lateinit var tViewSleepAmountHint: TextView //Shows the selected sleep amount as hint
-    private lateinit var tViewWakeupTimeHint: TextView //Shows the selected wake up range as hint
     private lateinit var viewExtendedAlarmSettings : View //Display extended alarm settings
     private lateinit var cLAlarmEntityInnerLayer : ViewGroup //Display extended alarm settings
     private lateinit var btnSelectActiveWeekday : Button //Popup window for selecting the weekdays for alarm
     private lateinit var btnDeleteAlarmInstance: Button //Delete current alarm entity
-    private lateinit var swAlarmActive : Switch //Select whether alarm is on or off
     private lateinit var alarmSettings : AlarmEntity
     private lateinit var usedIds : MutableSet<Int>
     private val alarmEntityLiveData by lazy { repository.alarmFlow.asLiveData()}
 
-    private fun saveAlarmIsActive(isActive: Boolean) {
-        scope.launch {
-            repository.updateIsActive(isActive, alarmId) }
-    }
-
-    fun saveSleepAmount(time: LocalTime) {
-        tViewSleepAmount.text = " " + time.toString() + " Stunden"
-        tViewSleepAmountHint.text = time.toString() + " h"
-        scope.launch {
-            repository.updateSleepDuration(time.toSecondOfDay(), alarmId) }
-    }
-
-    private fun saveWakeupRange(wakeupEarly: LocalTime, wakeupLate: LocalTime) {
-        tViewWakeupTime.text = " " + wakeupEarly.toString() + " - " + wakeupLate.toString() + " Uhr"
-        tViewWakeupTimeHint.text = wakeupEarly.toString() + " - " + wakeupLate.toString()
-        scope.launch {
-            repository.updateWakeupEarly(wakeupEarly.toSecondOfDay(), alarmId)
-            repository.updateWakeupLate(wakeupLate.toSecondOfDay(), alarmId) }
-    }
-
     private fun saveAlarmDaysWeek(daysOfWeek: ArrayList<DayOfWeek>) {
         scope.launch {
             repository.updateActiveDayOfWeek(daysOfWeek, alarmId)
-        }
-    }
-
-    private fun saveAlarmName(alarmName: String) {
-        scope.launch {
-            repository.updateAlarmName(alarmName, alarmId)
         }
     }
 
@@ -107,8 +84,6 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
         val wakeupTime = LocalTime.ofSecondOfDay(alarmSettings.sleepDuration.toLong())
         val wakeupEarly = LocalTime.ofSecondOfDay(alarmSettings.wakeupEarly.toLong())
         val wakeupLate = LocalTime.ofSecondOfDay(alarmSettings.wakeupLate.toLong())
-        val alarmName = alarmSettings.alarmName
-        val isActive = alarmSettings.isActive
 
         // Setup the sleepAmount bar
         if (wakeupTime.minute == 30) { seekBar.progress = (wakeupTime.hour - 5) * 2 + 1 }
@@ -124,16 +99,10 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
         if (wakeupLate.minute == 30) { rBarRight = wakeupLate.hour.toDouble() + 0.5 }
         else { rBarRight = wakeupLate.hour.toDouble() }
 
-        rangeBar.setRangePinsByValue(rBarLeft.toFloat(), rBarRight.toFloat())
-        swAlarmActive.isChecked = isActive
-
         //UpdateViews
         tViewSleepAmount.text = " " + wakeupTime.toString() + " Stunden"
-        tViewWakeupTime.text = " " + wakeupEarly.toString() + " - " + wakeupLate.toString() + " Uhr"
-        tViewAlarmName.text = alarmName
         tViewActiveWeekdays.text = convertActiveAlarmDays(alarmSettings.activeDayOfWeek)
         tViewSleepAmountHint.text = wakeupTime.toString() + " h"
-        tViewWakeupTimeHint.text = wakeupEarly.toString() + " - " + wakeupLate.toString()
     }
 
     private fun selectActiveDaysOfWeek() {
@@ -171,30 +140,6 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
                 .show()
     }
 
-    private fun getAlarmName(){
-        val input = EditText(context)
-        input.inputType = InputType.TYPE_CLASS_TEXT
-
-        val builder = AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
-        builder.setTitle("Set alarmname")
-            .setView(input)
-            .setPositiveButton("Save") {
-                    _, _ ->
-                val alarmName = input.text.toString()
-                if (alarmName.isEmpty()) {
-                    Toast.makeText(applicationContext, "Speichern fehlgeschlagen\nMindestens einen Char eingeben! ", Toast.LENGTH_SHORT).show()
-                }
-                else {
-                    tViewAlarmName.text = alarmName
-                    saveAlarmName(alarmName)
-                }
-            }
-            .setNegativeButton("Cancel") {
-                dialog, _ ->
-                dialog.cancel()
-            }
-            .show()
-    }
 
     private fun deleteAlarmEntity() {
         TransitionManager.beginDelayedTransition(cLAlarmEntityInnerLayer);
@@ -206,45 +151,31 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.alarm_entity, container, false)
+
+        binding = AlarmEntityBinding.inflate(inflater, container, false)
+        binding.alarmsViewModel = viewModel
+        viewModel.alarmId =
+
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         seekBar = view.findViewById(R.id.sBar_sleepAmount)
-        rangeBar = view.findViewById(R.id.rBar_wakeupRange)
         tViewSleepAmount = view.findViewById(R.id.tV_sleepAmountSelection)
-        tViewWakeupTime = view.findViewById(R.id.tV_wakeupRangeSelection)
-        tViewAlarmName = view.findViewById(R.id.tV_alarmName)
         tViewActiveWeekdays = view.findViewById(R.id.tV_activeWeekdays)
         tViewSleepAmountHint = view.findViewById(R.id.tV_wakeupRangeHint)
-        tViewWakeupTimeHint = view.findViewById(R.id.tV_sleepAmountHint)
         viewExtendedAlarmSettings = view.findViewById(R.id.cL_extendedAlarmEntity)
         btnSelectActiveWeekday = view.findViewById(R.id.btn_selectActiveWeekday)
-        swAlarmActive = view.findViewById(R.id.sw_alarmIsActive)
         cLAlarmEntityInnerLayer = view.findViewById(R.id.cL_alarmEntityInnerLayer)
         btnDeleteAlarmInstance = view.findViewById(R.id.btn_deleteAlarm)
         usedIds = mutableSetOf()
 
-        tViewAlarmName.setOnClickListener {
-            viewExtendedAlarmSettings.isVisible = !viewExtendedAlarmSettings.isVisible
-            tViewActiveWeekdays.isVisible = !tViewActiveWeekdays.isVisible
-            tViewSleepAmountHint.isVisible = !tViewSleepAmountHint.isVisible
-            tViewWakeupTimeHint.isVisible = !tViewWakeupTimeHint.isVisible
-        }
 
-        tViewAlarmName.setOnLongClickListener {
-            getAlarmName()
-            true
-        }
 
-        alarmEntityLiveData.observe(viewLifecycleOwner) {
-            alarmList ->
+        alarmEntityLiveData.observe(viewLifecycleOwner) { alarmList ->
             alarmSettings = alarmList.first { x -> x.id == alarmId }
-        }
-
-        swAlarmActive.setOnClickListener {
-            saveAlarmIsActive(swAlarmActive.isChecked)
         }
 
         btnSelectActiveWeekday.setOnClickListener {
@@ -259,46 +190,5 @@ class AlarmInstance(val applicationContext: Context, private var alarmId: Int) :
             setupAlarmSettings()
         }
 
-        seekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(sBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                val progressTemp = progress*0.5 + 5
-                var minutes = 0
-                if (progressTemp % 1 == 0.5) { minutes = 30 }
-
-                saveSleepAmount(LocalTime.of(progressTemp.toInt(), minutes))
-            }
-
-            override fun onStartTrackingTouch(sBar: SeekBar) {
-                val progressTemp = sBar.progress*0.5 + 5
-                var minutes = 0
-                if (progressTemp % 1 == 0.5) { minutes = 30 }
-
-                saveSleepAmount(LocalTime.of(progressTemp.toInt(), minutes))
-            }
-
-            override fun onStopTrackingTouch(sBar: SeekBar) {
-                val progressTemp = sBar.progress*0.5 + 5
-                var minutes = 0
-                if (progressTemp % 1 == 0.5) { minutes = 30 }
-
-                saveSleepAmount(LocalTime.of(progressTemp.toInt(), minutes))
-            }
-        })
-
-        rangeBar.setOnRangeBarChangeListener { _, _, _, _, _ ->
-            var minutesLeft = 0
-            var minutesRight = 0
-            if (rangeBar.leftPinValue.contains(".5")) {
-                minutesLeft = 30
-            }
-            if (rangeBar.rightPinValue.contains(".5")) {
-                minutesRight = 30
-            }
-
-            saveWakeupRange(
-                LocalTime.of(rangeBar.leftPinValue.toFloat().toInt(), minutesLeft),
-                LocalTime.of(rangeBar.rightPinValue.toFloat().toInt(), minutesRight)
-            )
-        }
     }
 }

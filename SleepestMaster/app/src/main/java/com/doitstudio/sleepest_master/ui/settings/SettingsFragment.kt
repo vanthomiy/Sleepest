@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import com.doitstudio.sleepest_master.DontKillMyAppFragment
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.databinding.FragmentProfileBinding
@@ -86,6 +87,8 @@ class SettingsFragment : Fragment() {
         }
 
         viewModel.actualExpand.set(caseOfEntrie)
+
+
 
         //region Test
 

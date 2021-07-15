@@ -48,12 +48,12 @@ class AlarmsFragment() : Fragment() {
     private val activeAlarmsLiveData by lazy {  repository.activeAlarmsFlow().asLiveData() }
 
     private lateinit var binding: FragmentAlarmsBinding
-    private val viewModel by lazy { ViewModelProvider(this).get(AlarmsViewModel::class.java) }
+    private val viewModel by lazy { ViewModelProvider(requireActivity()).get(AlarmsViewModel::class.java) }
 
     lateinit var allAlarms: MutableList<AlarmEntity>
     lateinit var usedIds: MutableSet<Int>
     lateinit var transactions: MutableMap<Int, FragmentTransaction>
-    lateinit var fragments: MutableMap<Int, AlarmInstance>
+    lateinit var fragments: MutableMap<Int, AlarmInstanceFragment>
 
     private fun setupAlarms() {
         allAlarms = mutableListOf()
@@ -85,12 +85,8 @@ class AlarmsFragment() : Fragment() {
         TransitionManager.beginDelayedTransition(viewModel.transitionsContainer);
 
         transactions[alarmId] = childFragmentManager.beginTransaction()
-        fragments[alarmId] = AlarmInstance(context, alarmId)
+        fragments[alarmId] = AlarmInstanceFragment(context, alarmId)
         transactions[alarmId]?.add(R.id.lL_containerAlarmEntities, fragments[alarmId]!!)?.commit()
-    }
-
-    fun openCloseAlarm(){
-        TransitionManager.beginDelayedTransition(viewModel.transitionsContainer)
     }
 
     fun removeAlarmEntity(alarmId: Int) {
@@ -102,8 +98,6 @@ class AlarmsFragment() : Fragment() {
         fragments.remove(alarmId)
         usedIds.remove(alarmId)
     }
-
-
 
     private fun onAlarmSoundChange() {
         //check if audio volume is 0

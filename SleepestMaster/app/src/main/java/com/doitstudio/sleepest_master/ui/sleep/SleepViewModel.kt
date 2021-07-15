@@ -66,7 +66,6 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
                 sleepStartValue.set((if (sleepStartTime.hour < 10) "0" else "") + sleepStartTime.hour.toString() + ":" + (if (sleepStartTime.minute < 10) "0" else "") + sleepStartTime.minute.toString())
 
             }
-
         }
     }
 
@@ -75,6 +74,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         var minute = (count % 4) * 15
         return LocalTime.of(hour, minute)
     }
+
     private fun getProgressFromSleepCount(time: LocalTime) : Int{
         var count = (time.hour-2) * 4
         count += time.minute / 15
@@ -82,7 +82,6 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     val sleepStartValue = ObservableField("07:30")
-    val sleepCompleteValue = ObservableField("07:30" + getStringXml(R.string.sleep_sleeptimes_timecombine) +  "7:30")
     val sleepEndValue = ObservableField("07:30")
     var sleepStartTime = LocalTime.now()
     var sleepEndTime = LocalTime.now()
@@ -100,7 +99,6 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
                     sleepStartValue.set((if (h < 10) "0" else "") + h.toString() + ":" + (if (m < 10) "0" else "") + m.toString())
                     sleepStartTime = LocalTime.of(h, m)
 
-                    sleepCompleteValue.set(sleepStartValue.get() +  getStringXml(R.string.sleep_sleeptimes_timecombine)  + sleepEndValue.get())
                     enoughTimeToSleep = SleepTimeValidationUtil.checkIfSleepTimeMatchesSleepDuration(view.context, getSleepCountFromProgress(sleepDurationValue.get()!!).toSecondOfDay(), sleepEndTime.toSecondOfDay(), sleepStartTime.toSecondOfDay(), enoughTimeToSleep)
 
                     scope.launch {
@@ -125,8 +123,6 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
                 TimePickerDialog.OnTimeSetListener(function = { view, h, m ->
 
                     sleepEndValue.set((if (h < 10) "0" else "") + h.toString() + ":" + (if (m < 10) "0" else "") + m.toString())
-
-                    sleepCompleteValue.set(sleepStartValue.get() +   getStringXml(R.string.sleep_sleeptimes_timecombine)   + sleepEndValue.get())
 
                     sleepEndTime = LocalTime.of(h, m)
                     enoughTimeToSleep = SleepTimeValidationUtil.checkIfSleepTimeMatchesSleepDuration(view.context, getSleepCountFromProgress(sleepDurationValue.get()!!).toSecondOfDay(), sleepEndTime.toSecondOfDay(), sleepStartTime.toSecondOfDay(), enoughTimeToSleep)

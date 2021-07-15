@@ -1,6 +1,7 @@
 package com.doitstudio.sleepest_master.ui.alarms
 
 import android.app.Application
+import android.app.TimePickerDialog
 import android.net.Uri
 import android.transition.TransitionManager
 import android.view.View
@@ -10,12 +11,15 @@ import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
+import com.doitstudio.sleepest_master.util.SleepTimeValidationUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.File
+import java.time.LocalTime
 
 class AlarmsViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -24,6 +28,8 @@ class AlarmsViewModel(application: Application) : AndroidViewModel(application) 
     private val dataStoreRepository: DataStoreRepository by lazy {
         (context as MainApplication).dataStoreRepository
     }
+
+    //region Alarms Settings
 
     val actualExpand = ObservableField(View.GONE)
     val rotateState = ObservableField(0)
@@ -61,8 +67,9 @@ class AlarmsViewModel(application: Application) : AndroidViewModel(application) 
             cancelAlarmWhenAwake.get()?.let { dataStoreRepository.updateEndAlarmAfterFired(it) }
         }
     }
-
     val alarmSoundName = ObservableField("")
+
+    //endregion
 
 
     init {
