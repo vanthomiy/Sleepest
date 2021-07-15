@@ -5,15 +5,18 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.Observable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.databinding.FragmentHistoryWeekBinding
+import com.github.mikephil.charting.charts.BarChart
 import java.time.*
 
 class HistoryWeekFragment : Fragment() {
 
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(HistoryViewModel::class.java) }
     private lateinit var binding: FragmentHistoryWeekBinding
+    private lateinit var barChart: BarChart
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -24,12 +27,25 @@ class HistoryWeekFragment : Fragment() {
         binding = FragmentHistoryWeekBinding.inflate(inflater, container, false)
         binding.historyWeekViewModel = viewModel
 
-        val barChart = viewModel.setBarChart(7, getSundayOfWeek())
+        barChart = viewModel.setBarChart(7, getSundayOfWeek())
+
         binding.lLSleepAnalysisChartsWeek.addView(barChart)
+
         val height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 350F, resources.displayMetrics)
         barChart.layoutParams.height = height.toInt()
         barChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
         barChart.invalidate()
+
+        viewModel.analysisDate.addOnPropertyChangedCallback(
+            object: Observable.OnPropertyChangedCallback() {
+
+                override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+
+                    viewModel.updateBarChart(barChart, 7, getSundayOfWeek())
+                    barChart.invalidate()
+                }
+            }
+        )
 
         return binding.root
     }
@@ -48,7 +64,7 @@ class HistoryWeekFragment : Fragment() {
                 else -> it.plusDays(0L) // Sunday
             }
         }
-        
+
         return LocalDate.of(2000, 1, 1)
     }
 }

@@ -55,6 +55,7 @@ class HistoryTabView : Fragment() {
         btnPrevious = view.findViewById(R.id.btn_Previous)
         btnNext = view.findViewById(R.id.btn_Next)
         tVActualDayTabView = view.findViewById(R.id.tV_actualDayTabView)
+        previousMonthAnalysisDate = LocalDate.now().month
 
         val tabLayout = binding.tabLayout
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
@@ -77,11 +78,12 @@ class HistoryTabView : Fragment() {
             object: Observable.OnPropertyChangedCallback() {
 
                 override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                    previousMonthAnalysisDate = viewModel.analysisDate.get()?.month!!
 
                     if (viewModel.analysisDate.get()?.month != previousMonthAnalysisDate) {
                         viewModel.getSleepData()
                     }
+
+                    previousMonthAnalysisDate = viewModel.analysisDate.get()?.month!!
 
                     tVActualDayTabView.text = viewModel.analysisDate.get().toString()
                 }

@@ -300,4 +300,135 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
         return barChart
     }
+
+    fun updateBarChart(barChart: BarChart, range: Int, endDateOfDiagram: LocalDate) {
+        //http://developine.com/android-grouped-stacked-bar-chart-using-mpchart-kotlin/
+        val diagramData = generateDataBarChart(range, endDateOfDiagram)
+
+        val barDataSet1 = BarDataSet(diagramData.first, "")
+        barDataSet1.setColors(R.color.light_sleep_color, R.color.deep_sleep_color, R.color.awake_sleep_color, R.color.sleep_sleep_color)
+        barDataSet1.setDrawValues(false)
+
+        val barData = BarData(barDataSet1)
+        barChart.data = barData
+        barChart.description.isEnabled = false
+        barChart.data.isHighlightEnabled = false
+
+        val xAxisValues = ArrayList<String>()
+        val xAxis = barChart.xAxis
+        xAxis.setDrawGridLines(false)
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+
+        if (range > 21) {
+            for (i in diagramData.second.indices) {
+                val date = LocalDateTime.ofInstant(
+                    Instant.ofEpochMilli(diagramData.second[i].toLong() * 1000),
+                    ZoneOffset.systemDefault())
+                if (i == 0 || i == 10 || i == 20  || i == (diagramData.second.size - 1)) {
+                    xAxisValues.add(date.dayOfMonth.toString())
+                }
+                else { xAxisValues.add("") }
+            }
+
+            barChart.barData.barWidth = 0.5f
+            barChart.xAxis.axisMinimum = 0f
+            barChart.xAxis.axisMaximum = endDateOfDiagram.lengthOfMonth().toFloat()
+            xAxis.setCenterAxisLabels(false)
+        }
+        else {
+            for (i in diagramData.second.indices) {
+                /*
+                val date = LocalDateTime.ofInstant(
+                    Instant.ofEpochMilli(diagramData.second[i].toLong() * 1000),
+                    ZoneOffset.systemDefault())
+
+                val month = when (date.month) {
+                    Month.JANUARY -> "Jan"
+                    Month.FEBRUARY -> "Feb"
+                    Month.MARCH -> "Mar"
+                    Month.APRIL -> "Apr"
+                    Month.MAY -> "May"
+                    Month.JUNE -> "Jun"
+                    Month.JULY -> "Jul"
+                    Month.AUGUST -> "Aug"
+                    Month.SEPTEMBER -> "Sep"
+                    Month.OCTOBER -> "Oct"
+                    Month.NOVEMBER -> "Nov"
+                    Month.DECEMBER -> "Dec"
+                    else -> "Fail"
+                }
+
+                xAxisValues.add(date.dayOfMonth.toString() + ". " + month)
+                 */
+
+                xAxisValues.add("Mo")
+                xAxisValues.add("Tu")
+                xAxisValues.add("We")
+                xAxisValues.add("Th")
+                xAxisValues.add("Fr")
+                xAxisValues.add("Sa")
+                xAxisValues.add("Su")
+            }
+
+            barChart.barData.barWidth = 0.75f
+            barChart.xAxis.axisMinimum = 0f
+            barChart.xAxis.axisMaximum = 7f
+            xAxis.setCenterAxisLabels(true)
+        }
+
+        xAxis.valueFormatter = IndexAxisValueFormatter(xAxisValues)
+        barChart.invalidate()
+
+        // set bar label
+        val legend = barChart.legend
+        legend.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+        legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
+        legend.orientation = Legend.LegendOrientation.HORIZONTAL
+        legend.setDrawInside(false)
+
+        val legendEntries = arrayListOf<LegendEntry>()
+        legendEntries.add((LegendEntry("Light", Legend.LegendForm.SQUARE, 8f, 8f, null ,
+            R.color.light_sleep_color)))
+        legendEntries.add((LegendEntry("Deep", Legend.LegendForm.SQUARE, 8f, 8f, null ,
+            R.color.deep_sleep_color)))
+        legendEntries.add((LegendEntry("Awake", Legend.LegendForm.SQUARE, 8f, 8f, null ,
+            R.color.awake_sleep_color)))
+        legendEntries.add((LegendEntry("Sleep", Legend.LegendForm.SQUARE, 8f, 8f, null ,
+            R.color.sleep_sleep_color)))
+        legend.setCustom(legendEntries)
+        legend.textSize = 12f
+
+        barChart.isDragEnabled = true
+
+        //Y-axis
+        barChart.axisRight.isEnabled = true
+        barChart.axisRight.axisMinimum = 0f
+        barChart.axisRight.labelCount = 10
+
+        barChart.axisLeft.spaceTop = 60f
+        barChart.axisLeft.axisMinimum = 0f
+        barChart.axisLeft.labelCount = 20
+
+        if ((diagramData.third > 540) && (diagramData.third < 660)) {
+            barChart.axisRight.axisMaximum = 12f
+            barChart.axisLeft.axisMaximum = 720f
+        }
+        else if ((diagramData.third > 660) && (diagramData.third < 780)) {
+            barChart.axisRight.axisMaximum = 14f
+            barChart.axisLeft.axisMaximum = 840f
+        }
+        else if ((diagramData.third > 780) && (diagramData.third < 900)) {
+            barChart.axisRight.axisMaximum = 16f
+            barChart.axisLeft.axisMaximum = 960f
+        }
+        else if (diagramData.third > 900) { // between 12h and 14h
+            barChart.axisRight.axisMaximum = 24f
+            barChart.axisLeft.axisMaximum = 1440f
+        }
+        else {
+            barChart.axisRight.axisMaximum = 10f
+            barChart.axisLeft.axisMaximum = 600f
+        }
+    }
+
 }
