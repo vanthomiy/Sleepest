@@ -183,7 +183,7 @@
     <string name="profile_import_data">Daten Importieren</string>
     <string name="profile_remove_data_warning">Ohje, alle daten werden gelöscht ok?</string>
     <string name="profile_remove_data_ackn">Verstanden und löschen</string>
-    <string name="profile_about_us">Sleepest - App\nMade with LOVE in Bavaria\n\n This app was created by 3 students as a students project and will be improved and maintained in the future</string>
+    <string name="profile_about_us">Sleepest - App\nMade with &#10084; in Bavaria\n\n This app was created by 3 students as a students project and will be improved and maintained in the future</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>

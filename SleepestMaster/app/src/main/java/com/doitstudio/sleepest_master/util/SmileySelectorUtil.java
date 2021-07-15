@@ -8,6 +8,7 @@ public class SmileySelectorUtil {
     private final int smileyTime = 0x231B;
     private final int smileySleepState = 0x1F4CA;
     private final int smileyAlarmClock = 0x23F0;
+    private final int smileyHeart = 0x2764;
 
     public String getSmileyAttention() { return new String(Character.toChars(smileyAttention)); }
 
@@ -29,5 +30,9 @@ public class SmileySelectorUtil {
 
     public String getSmileyAlarmClock() {
         return new String(Character.toChars(smileyAlarmClock));
+    }
+
+    public String getSmileyHeart() {
+        return new String(Character.toChars(smileyHeart));
     }
 }

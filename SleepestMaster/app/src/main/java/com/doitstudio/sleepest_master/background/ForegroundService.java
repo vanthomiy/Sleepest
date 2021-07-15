@@ -534,7 +534,7 @@ public class ForegroundService extends LifecycleService {
             btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), AlarmReceiverUsage.NOT_SLEEPING.getAlarmReceiverUsageValue(), btnClickIntent, 0);
             remoteViews.setOnClickPendingIntent(R.id.btnNotSleepingNotification, btnClickPendingIntent);
 
-            remoteViews.setViewVisibility(R.id.btnNotSleepingNotification, View.INVISIBLE);
+            remoteViews.setViewVisibility(R.id.btnNotSleepingNotification, View.GONE);
         } else {
             //Set button for currently not sleeping
             btnClickIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
@@ -580,28 +580,21 @@ public class ForegroundService extends LifecycleService {
             remoteViews.setTextViewText(R.id.tvBannerAlarmActive, contentText + " sub:" + isSubscribed);
             remoteViews.setViewVisibility(R.id.tvBannerAlarmActive, View.VISIBLE);
         } else {
-            remoteViews.setViewVisibility(R.id.tvBannerAlarmActive, View.INVISIBLE);
+            remoteViews.setViewVisibility(R.id.tvBannerAlarmActive, View.GONE);
         }
 
         if (bannerConfig[1]) {
             remoteViews.setTextViewText(R.id.tvBannerActualWakeup, alarmtimeText);
             remoteViews.setViewVisibility(R.id.tvBannerActualWakeup, View.VISIBLE);
         } else {
-            remoteViews.setViewVisibility(R.id.tvBannerActualWakeup, View.INVISIBLE);
+            remoteViews.setViewVisibility(R.id.tvBannerActualWakeup, View.GONE);
         }
 
         if (bannerConfig[2]) {
             remoteViews.setTextViewText(R.id.tvBannerActualSleeptime, sleeptimeText);
             remoteViews.setViewVisibility(R.id.tvBannerActualSleeptime, View.VISIBLE);
         } else {
-            remoteViews.setViewVisibility(R.id.tvBannerActualSleeptime, View.INVISIBLE);
-        }
-
-        if (bannerConfig[3]) {
-            //remoteViews.setTextViewText(R.id.tvBannerDetailedSleeptime, notificationText);
-            remoteViews.setViewVisibility(R.id.tvBannerDetailedSleeptime, View.VISIBLE);
-        } else {
-            remoteViews.setViewVisibility(R.id.tvBannerAlarmActive, View.INVISIBLE);
+            remoteViews.setViewVisibility(R.id.tvBannerActualSleeptime, View.GONE);
         }
 
         if (bannerConfig[4]) {
