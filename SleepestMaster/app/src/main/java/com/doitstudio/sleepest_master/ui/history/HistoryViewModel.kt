@@ -22,6 +22,7 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -183,15 +184,15 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         barChart.data.isHighlightEnabled = false
 
         val xAxisValues = ArrayList<String>()
-        val xAxis = barChart.xAxis
-        xAxis.setDrawGridLines(false)
-        xAxis.position = XAxis.XAxisPosition.BOTTOM
+        barChart.xAxis.setDrawGridLines(false)
+        barChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
 
         if (range > 21) {
             for (i in diagramData.second.indices) {
                 val date = LocalDateTime.ofInstant(
                     Instant.ofEpochMilli(diagramData.second[i].toLong() * 1000),
                     ZoneOffset.systemDefault())
+
                 if (i == 0 || i == 10 || i == 20  || i == (diagramData.second.size - 1)) {
                     xAxisValues.add(date.dayOfMonth.toString())
                 }
@@ -200,35 +201,12 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
             barChart.barData.barWidth = 0.5f
             barChart.xAxis.axisMinimum = 0f
-            barChart.xAxis.axisMaximum = endDateOfDiagram.lengthOfMonth().toFloat()
-            xAxis.setCenterAxisLabels(false)
+            barChart.xAxis.axisMaximum = (diagramData.second.size).toFloat()
+            barChart.xAxis.labelCount = (diagramData.second.size)
+            barChart.xAxis.setCenterAxisLabels(true)
         }
         else {
             for (i in diagramData.second.indices) {
-                /*
-                val date = LocalDateTime.ofInstant(
-                    Instant.ofEpochMilli(diagramData.second[i].toLong() * 1000),
-                    ZoneOffset.systemDefault())
-
-                val month = when (date.month) {
-                    Month.JANUARY -> "Jan"
-                    Month.FEBRUARY -> "Feb"
-                    Month.MARCH -> "Mar"
-                    Month.APRIL -> "Apr"
-                    Month.MAY -> "May"
-                    Month.JUNE -> "Jun"
-                    Month.JULY -> "Jul"
-                    Month.AUGUST -> "Aug"
-                    Month.SEPTEMBER -> "Sep"
-                    Month.OCTOBER -> "Oct"
-                    Month.NOVEMBER -> "Nov"
-                    Month.DECEMBER -> "Dec"
-                    else -> "Fail"
-                }
-
-                xAxisValues.add(date.dayOfMonth.toString() + ". " + month)
-                 */
-
                 xAxisValues.add("Mo")
                 xAxisValues.add("Tu")
                 xAxisValues.add("We")
@@ -241,11 +219,12 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
             barChart.barData.barWidth = 0.75f
             barChart.xAxis.axisMinimum = 0f
             barChart.xAxis.axisMaximum = 7f
-            xAxis.setCenterAxisLabels(true)
+            barChart.xAxis.labelCount = 7
+            barChart.xAxis.setCenterAxisLabels(true)
         }
 
-        xAxis.valueFormatter = IndexAxisValueFormatter(xAxisValues)
-        barChart.invalidate()
+        barChart.xAxis.valueFormatter = IndexAxisValueFormatter(xAxisValues)
+        barChart.setFitBars(true)
 
         // set bar label
         val legend = barChart.legend
@@ -315,15 +294,15 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         barChart.data.isHighlightEnabled = false
 
         val xAxisValues = ArrayList<String>()
-        val xAxis = barChart.xAxis
-        xAxis.setDrawGridLines(false)
-        xAxis.position = XAxis.XAxisPosition.BOTTOM
+        barChart.xAxis.setDrawGridLines(false)
+        barChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
 
         if (range > 21) {
             for (i in diagramData.second.indices) {
                 val date = LocalDateTime.ofInstant(
                     Instant.ofEpochMilli(diagramData.second[i].toLong() * 1000),
                     ZoneOffset.systemDefault())
+
                 if (i == 0 || i == 10 || i == 20  || i == (diagramData.second.size - 1)) {
                     xAxisValues.add(date.dayOfMonth.toString())
                 }
@@ -332,35 +311,12 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
             barChart.barData.barWidth = 0.5f
             barChart.xAxis.axisMinimum = 0f
-            barChart.xAxis.axisMaximum = endDateOfDiagram.lengthOfMonth().toFloat()
-            xAxis.setCenterAxisLabels(false)
+            barChart.xAxis.axisMaximum = (diagramData.second.size).toFloat()
+            barChart.xAxis.labelCount = (diagramData.second.size)
+            barChart.xAxis.setCenterAxisLabels(true)
         }
         else {
             for (i in diagramData.second.indices) {
-                /*
-                val date = LocalDateTime.ofInstant(
-                    Instant.ofEpochMilli(diagramData.second[i].toLong() * 1000),
-                    ZoneOffset.systemDefault())
-
-                val month = when (date.month) {
-                    Month.JANUARY -> "Jan"
-                    Month.FEBRUARY -> "Feb"
-                    Month.MARCH -> "Mar"
-                    Month.APRIL -> "Apr"
-                    Month.MAY -> "May"
-                    Month.JUNE -> "Jun"
-                    Month.JULY -> "Jul"
-                    Month.AUGUST -> "Aug"
-                    Month.SEPTEMBER -> "Sep"
-                    Month.OCTOBER -> "Oct"
-                    Month.NOVEMBER -> "Nov"
-                    Month.DECEMBER -> "Dec"
-                    else -> "Fail"
-                }
-
-                xAxisValues.add(date.dayOfMonth.toString() + ". " + month)
-                 */
-
                 xAxisValues.add("Mo")
                 xAxisValues.add("Tu")
                 xAxisValues.add("We")
@@ -373,11 +329,12 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
             barChart.barData.barWidth = 0.75f
             barChart.xAxis.axisMinimum = 0f
             barChart.xAxis.axisMaximum = 7f
-            xAxis.setCenterAxisLabels(true)
+            barChart.xAxis.labelCount = 7
+            barChart.xAxis.setCenterAxisLabels(true)
         }
 
-        xAxis.valueFormatter = IndexAxisValueFormatter(xAxisValues)
-        barChart.invalidate()
+        barChart.xAxis.valueFormatter = IndexAxisValueFormatter(xAxisValues)
+        barChart.setFitBars(true)
 
         // set bar label
         val legend = barChart.legend
@@ -429,6 +386,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
             barChart.axisRight.axisMaximum = 10f
             barChart.axisLeft.axisMaximum = 600f
         }
-    }
 
+        barChart.invalidate()
+    }
 }
