@@ -129,12 +129,12 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
             if (sleepSessionData.containsKey(id)) {
                 val values = sleepSessionData[id]!!
 
-                val awake = values.third.sleepTimes.awakeTime
-                val sleep = values.third.sleepTimes.sleepDuration
-                val lightSleep = values.third.sleepTimes.lightSleepDuration
-                val deepSleep = values.third.sleepTimes.deepSleepDuration
+                val awake = values.third.sleepTimes.awakeTime / 60
+                val sleep = values.third.sleepTimes.sleepDuration / 60
+                val lightSleep = values.third.sleepTimes.lightSleepDuration / 60
+                val deepSleep = values.third.sleepTimes.deepSleepDuration / 60
 
-                if ((sleep + awake) > maxSleepTime) { maxSleepTime = (sleep + awake) }  //Later delete awake from here
+                if ((sleep + awake) > maxSleepTime) { maxSleepTime = (sleep + awake) }
 
                 if (lightSleep != 0 && deepSleep != 0) {
                     entries.add(
@@ -248,33 +248,42 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         barChart.isDragEnabled = true
 
         //Y-axis
+        //Y-axis
         barChart.axisRight.isEnabled = true
         barChart.axisRight.axisMinimum = 0f
-        barChart.axisRight.labelCount = 10
+        barChart.axisRight.labelCount = 0
+        barChart.axisRight.setDrawGridLines(false)
+        barChart.axisRight.setDrawLabels(false)
 
         barChart.axisLeft.spaceTop = 60f
         barChart.axisLeft.axisMinimum = 0f
-        barChart.axisLeft.labelCount = 20
+        barChart.axisLeft.labelCount = 10
+        barChart.axisLeft.setDrawGridLines(false)
 
         if ((diagramData.third > 540) && (diagramData.third < 660)) {
             barChart.axisRight.axisMaximum = 12f
-            barChart.axisLeft.axisMaximum = 720f
+            barChart.axisLeft.axisMaximum = 12f
+            barChart.axisLeft.labelCount = 12
         }
         else if ((diagramData.third > 660) && (diagramData.third < 780)) {
             barChart.axisRight.axisMaximum = 14f
-            barChart.axisLeft.axisMaximum = 840f
+            barChart.axisLeft.axisMaximum = 14f
+            barChart.axisLeft.labelCount = 14
         }
         else if ((diagramData.third > 780) && (diagramData.third < 900)) {
             barChart.axisRight.axisMaximum = 16f
-            barChart.axisLeft.axisMaximum = 960f
+            barChart.axisLeft.axisMaximum = 16f
+            barChart.axisLeft.labelCount = 14
         }
         else if (diagramData.third > 900) { // between 12h and 14h
             barChart.axisRight.axisMaximum = 24f
-            barChart.axisLeft.axisMaximum = 1440f
+            barChart.axisLeft.axisMaximum = 24f
+            barChart.axisLeft.labelCount = 24
         }
         else {
             barChart.axisRight.axisMaximum = 10f
-            barChart.axisLeft.axisMaximum = 600f
+            barChart.axisLeft.axisMaximum = 10f
+            barChart.axisLeft.labelCount = 10
         }
 
         return barChart
@@ -360,31 +369,39 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         //Y-axis
         barChart.axisRight.isEnabled = true
         barChart.axisRight.axisMinimum = 0f
-        barChart.axisRight.labelCount = 10
+        barChart.axisRight.labelCount = 0
+        barChart.axisRight.setDrawGridLines(false)
+        barChart.axisRight.setDrawLabels(false)
 
         barChart.axisLeft.spaceTop = 60f
         barChart.axisLeft.axisMinimum = 0f
-        barChart.axisLeft.labelCount = 20
+        barChart.axisLeft.labelCount = 10
+        barChart.axisLeft.setDrawGridLines(false)
 
         if ((diagramData.third > 540) && (diagramData.third < 660)) {
             barChart.axisRight.axisMaximum = 12f
-            barChart.axisLeft.axisMaximum = 720f
+            barChart.axisLeft.axisMaximum = 12f
+            barChart.axisLeft.labelCount = 12
         }
         else if ((diagramData.third > 660) && (diagramData.third < 780)) {
             barChart.axisRight.axisMaximum = 14f
-            barChart.axisLeft.axisMaximum = 840f
+            barChart.axisLeft.axisMaximum = 14f
+            barChart.axisLeft.labelCount = 14
         }
         else if ((diagramData.third > 780) && (diagramData.third < 900)) {
             barChart.axisRight.axisMaximum = 16f
-            barChart.axisLeft.axisMaximum = 960f
+            barChart.axisLeft.axisMaximum = 16f
+            barChart.axisLeft.labelCount = 14
         }
         else if (diagramData.third > 900) { // between 12h and 14h
             barChart.axisRight.axisMaximum = 24f
-            barChart.axisLeft.axisMaximum = 1440f
+            barChart.axisLeft.axisMaximum = 24f
+            barChart.axisLeft.labelCount = 24
         }
         else {
             barChart.axisRight.axisMaximum = 10f
-            barChart.axisLeft.axisMaximum = 600f
+            barChart.axisLeft.axisMaximum = 10f
+            barChart.axisLeft.labelCount = 10
         }
 
         barChart.invalidate()

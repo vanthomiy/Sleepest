@@ -40,7 +40,7 @@ class HistoryDayFragment : Fragment() {
         lineChart = setLineChart()
         binding.lLSleepAnalysisChartsDay.addView(lineChart)
 
-        val heightLineChart = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 350F, resources.displayMetrics)
+        val heightLineChart = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics)
         lineChart.layoutParams.height = heightLineChart.toInt()
         lineChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
         lineChart.invalidate()
@@ -48,7 +48,7 @@ class HistoryDayFragment : Fragment() {
         pieChart = setPieChart()
         binding.lLSleepAnalysisChartsDay.addView(pieChart)
 
-        val heightPieChart = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 350F, resources.displayMetrics)
+        val heightPieChart = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics)
         pieChart.layoutParams.height = heightPieChart.toInt()
         pieChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
         pieChart.invalidate()
@@ -123,12 +123,14 @@ class HistoryDayFragment : Fragment() {
         yAxisValues.add("Light")
         yAxisValues.add("Deep")
         yAxisValues.add("REM")
-        yAxisValues.add("Zero")
+        //yAxisValues.add("Zero")
 
         chart.axisLeft.valueFormatter = IndexAxisValueFormatter(yAxisValues)
-        chart.axisLeft.labelCount = 4
+        //chart.axisLeft.labelCount = 4
+        chart.axisLeft.labelCount = 3
         chart.axisLeft.axisMinimum = 0f
-        chart.axisLeft.axisMaximum = 4f
+        //chart.axisLeft.axisMaximum = 4f
+        chart.axisLeft.axisMaximum = 3f
         chart.axisLeft.setDrawGridLines(false)
 
         chart.axisRight.setDrawLabels(false)
@@ -161,12 +163,14 @@ class HistoryDayFragment : Fragment() {
         yAxisValues.add("Light")
         yAxisValues.add("Deep")
         yAxisValues.add("REM")
-        yAxisValues.add("Zero")
+        //yAxisValues.add("Zero")
 
         chart.axisLeft.valueFormatter = IndexAxisValueFormatter(yAxisValues)
-        chart.axisLeft.labelCount = 4
+        //chart.axisLeft.labelCount = 4
+        chart.axisLeft.labelCount = 3
         chart.axisLeft.axisMinimum = 0f
-        chart.axisLeft.axisMaximum = 4f
+        //chart.axisLeft.axisMaximum = 4f
+        chart.axisLeft.axisMaximum = 3f
 
         chart.axisRight.setDrawLabels(false)
         chart.axisRight.setDrawGridLines(false)
