@@ -285,6 +285,11 @@
     <string name="profile_remove_data_warning">Ohje, alle daten werden gelöscht ok?</string>
     <string name="profile_remove_data_ackn">Verstanden und löschen</string>
     <string name="profile_about_us">Sleepest - App\nMade with LOVE in Bavaria\n\n This app was created by 3 students as a students project and will be improved and maintained in the future</string>
+    <string name="alarm_wakeup_early">Frühestens</string>
+    <string name="alarm_wakeup_late">Spätestens</string>
+    <string name="alarm_hours">Stunden</string>
+    <string name="alarm_minutes">Minuten</string>
+
 
     <!--endregion-->
 

@@ -9,7 +9,11 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.databinding.Observable
+import androidx.databinding.Observable.OnPropertyChangedCallback
+import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
+import androidx.databinding.ObservableInt
 import androidx.lifecycle.AndroidViewModel
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.model.data.AlarmSleepChangeFrom
@@ -20,9 +24,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.time.DateTimeException
-import java.time.LocalDate
+import java.time.DayOfWeek
 import java.time.LocalTime
+
 
 class AlarmInstanceViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -51,7 +55,7 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
 
     }
 
-    val extendedAlarmEntity = ObservableField(true)
+    private val extendedAlarmEntity = ObservableField(true)
     val visibleState = ObservableField(View.VISIBLE)
     val goneState = ObservableField(View.GONE)
 
@@ -66,25 +70,25 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
         val builder = AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
         builder.setTitle("Set alarmname")
             .setView(input)
-            .setPositiveButton("Save") {
-                    _, _ ->
+            .setPositiveButton("Save") { _, _ ->
                 val alarmName = input.text.toString()
                 if (alarmName.isEmpty()) {
-                    Toast.makeText(context, "Speichern fehlgeschlagen\nMindestens einen Char eingeben! ", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        "Speichern fehlgeschlagen\nMindestens einen Char eingeben! ",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 else {
                     scope.launch {
                         dataBaseRepository.updateAlarmName(alarmName, alarmId)
                     }                }
             }
-            .setNegativeButton("Cancel") {
-                    dialog, _ ->
+            .setNegativeButton("Cancel") { dialog, _ ->
                 dialog.cancel()
             }
             .show()
     }
-
-    var enoughTimeToSleep = true
 
     val wakeUpEarlyValue = ObservableField("07:30")
     val wakeUpLateValue = ObservableField("07:30")
@@ -104,13 +108,16 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
 
                 scope.launch {
 
-                    val progressTemp = sleepDurationValue.get()!!*0.5 + 5
-                    var minutes = 0
-                    if (progressTemp % 1 == 0.5) { minutes = 30 }
-                    val sleepDuration = (LocalTime.of(progressTemp.toInt(), minutes)).toSecondOfDay()
-
-                    SleepTimeValidationUtil.checkAlarmActionIsAllowedAndDoAction(alarmId, dataBaseRepository,
-                        dataStoreRepository, view.context, tempWakeup.toSecondOfDay(), wakeUpLate.toSecondOfDay(), sleepDuration, AlarmSleepChangeFrom.WAKEUPEARLYLY)
+                    SleepTimeValidationUtil.checkAlarmActionIsAllowedAndDoAction(
+                        alarmId,
+                        dataBaseRepository,
+                        dataStoreRepository,
+                        view.context,
+                        tempWakeup.toSecondOfDay(),
+                        wakeUpLate.toSecondOfDay(),
+                        sleepDuration,
+                        AlarmSleepChangeFrom.WAKEUPEARLYLY
+                    )
                 }
             },
             hour,
@@ -132,14 +139,16 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
 
                 scope.launch {
 
-                    val progressTemp = sleepDurationValue.get()!!*0.5 + 5
-                    var minutes = 0
-                    if (progressTemp % 1 == 0.5) { minutes = 30 }
-                    val sleepDuration = (LocalTime.of(progressTemp.toInt(), minutes)).toSecondOfDay()
-
-
-                    SleepTimeValidationUtil.checkAlarmActionIsAllowedAndDoAction(alarmId, dataBaseRepository,
-                        dataStoreRepository, view.context, wakeUpEarly.toSecondOfDay(), tempWakeup.toSecondOfDay(), sleepDuration, AlarmSleepChangeFrom.WAKEUPLATE)
+                    SleepTimeValidationUtil.checkAlarmActionIsAllowedAndDoAction(
+                        alarmId,
+                        dataBaseRepository,
+                        dataStoreRepository,
+                        view.context,
+                        wakeUpEarly.toSecondOfDay(),
+                        tempWakeup.toSecondOfDay(),
+                        sleepDuration,
+                        AlarmSleepChangeFrom.WAKEUPLATE
+                    )
                 }
             }),
             hour,
@@ -150,34 +159,52 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
         tpd.show()
     }
 
-    val sleepDurationString = ObservableField("7h")
-    val sleepDurationValue = ObservableField(0)
+    var sleepDuration : Int = 0
 
-    fun onProgressChanged(sBar: SeekBar?, progress: Int, fromUser: Boolean) {
-        val progressTemp = progress*0.5 + 5
-        var minutes = 0
-        if (progressTemp % 1 == 0.5) { minutes = 30 }
+    fun onDurationChange(hour: Int, minute: Int) {
 
-        val time = (LocalTime.of(progressTemp.toInt(), minutes))
+        val time = LocalTime.of(hour, minute)
 
         scope.launch {
-            val result = SleepTimeValidationUtil.checkAlarmActionIsAllowedAndDoAction(alarmId, dataBaseRepository,
-                dataStoreRepository, context, wakeUpEarly.toSecondOfDay(), wakeUpLate.toSecondOfDay(), time.toSecondOfDay(), AlarmSleepChangeFrom.DURATION)
+            SleepTimeValidationUtil.checkAlarmActionIsAllowedAndDoAction(
+                alarmId,
+                dataBaseRepository,
+                dataStoreRepository,
+                context,
+                wakeUpEarly.toSecondOfDay(),
+                wakeUpLate.toSecondOfDay(),
+                time.toSecondOfDay(),
+                AlarmSleepChangeFrom.DURATION
+            )
+        }
+    }
 
-            if(result != 0){
-                val sleepDuration = LocalTime.ofSecondOfDay(result.toLong())
-                // Setup the sleepAmount bar
-                if (sleepDuration.minute == 30) { sleepDurationValue.set((sleepDuration.hour - 5) * 2 + 1) }
-                else { sleepDurationValue.set((sleepDuration.hour - 5) * 2) }
-                sleepDurationString.set(sleepDuration.hour.toString() + "h " + sleepDuration.minute.toString() + "m")            }
 
+    val selectedDays = ObservableArrayList<Int>()
 
+    fun onDayChanged(view: View){
+
+        val day = view.tag.toString().toInt()
+        if(selectedDays.contains(day)){
+            selectedDays.remove(day)
+        }
+        else{
+            selectedDays.add(day)
+        }
+
+        val dayOfWeekValues = DayOfWeek.values()
+        val daysOfWeek = ArrayList<DayOfWeek>()
+        selectedDays.forEach{
+            daysOfWeek.add(dayOfWeekValues[it])
+        }
+
+        scope.launch {
+            dataBaseRepository.updateActiveDayOfWeek(daysOfWeek, alarmId)
         }
     }
 
 
     //endregion
-
 
     init {
         scope.launch {
@@ -189,19 +216,18 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
             isAlarmActive.set(alarmSettings.isActive)
             alarmName.set(alarmSettings.alarmName)
 
-            // Setup the sleepAmount bar
-            if (sleepDuration.minute == 30) { sleepDurationValue.set((sleepDuration.hour - 5) * 2 + 1) }
-            else { sleepDurationValue.set((sleepDuration.hour - 5) * 2) }
-
-            sleepDurationString.set(sleepDuration.hour.toString() + "h " + sleepDuration.minute.toString() + "m")
-
             wakeUpEarly = wakeupEarly
             wakeUpLate = wakeupLate
             wakeUpEarlyValue.set((if (wakeUpEarly.hour < 10) "0" else "") + wakeUpEarly.hour.toString() + ":" + (if (wakeUpEarly.minute < 10) "0" else "") + (wakeUpEarly.minute.toString()))
             wakeUpLateValue.set((if (wakeUpLate.hour < 10) "0" else "") + wakeUpLate.hour.toString() + ":" + (if (wakeUpLate.minute < 10) "0" else "") + (wakeUpLate.minute.toString()))
 
+            alarmSettings.activeDayOfWeek.forEach{
+                selectedDays.add(it.ordinal)
+            }
+
         }
     }
+
 
     //region animation
 
