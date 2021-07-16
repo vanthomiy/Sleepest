@@ -1,5 +1,6 @@
 package com.doitstudio.sleepest_master.ui.history
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -193,16 +194,16 @@ class HistoryDayFragment : Fragment() {
                 val deepSleep = sleepValues.third.sleepTimes.deepSleepDuration
 
                 if (lightSleep == 0 && deepSleep == 0) {
-                    entries.add(PieEntry(awake.toFloat(), "Awake"))
-                    entries.add(PieEntry(sleep.toFloat(), "Sleep"))
                     entries.add(PieEntry(0.toFloat(), "Light"))
                     entries.add(PieEntry(0.toFloat(), "Deep"))
+                    entries.add(PieEntry(awake.toFloat(), "Awake"))
+                    entries.add(PieEntry(sleep.toFloat(), "Sleep"))
                 }
                 else {
-                    entries.add(PieEntry(awake.toFloat(), "Awake"))
-                    entries.add(PieEntry(0.toFloat(), "Sleep"))
                     entries.add(PieEntry(lightSleep.toFloat(), "Light"))
                     entries.add(PieEntry(deepSleep.toFloat(), "Deep"))
+                    entries.add(PieEntry(awake.toFloat(), "Awake"))
+                    entries.add(PieEntry(0.toFloat(), "Sleep"))
                 }
             }
         }
@@ -216,10 +217,10 @@ class HistoryDayFragment : Fragment() {
     private fun setPieChart() : PieChart {
         val chart = PieChart(context)
         val listColors = ArrayList<Int>()
-        listColors.add(R.color.light_sleep_color)
-        listColors.add(R.color.deep_sleep_color)
-        listColors.add(R.color.awake_sleep_color)
-        listColors.add(R.color.sleep_sleep_color)
+        listColors.add(Color.RED)
+        listColors.add(Color.BLUE)
+        listColors.add(Color.CYAN)
+        listColors.add(Color.MAGENTA)
 
         val pieDataSet = PieDataSet(generateDataPieChart(), "Sleep states")
         pieDataSet.colors = listColors
@@ -238,10 +239,10 @@ class HistoryDayFragment : Fragment() {
 
     private fun updatePieChart(chart: PieChart) {
         val listColors = ArrayList<Int>()
-        listColors.add(R.color.light_sleep_color)
-        listColors.add(R.color.deep_sleep_color)
-        listColors.add(R.color.awake_sleep_color)
-        listColors.add(R.color.sleep_sleep_color)
+        listColors.add(Color.RED)
+        listColors.add(Color.BLUE)
+        listColors.add(Color.CYAN)
+        listColors.add(Color.MAGENTA)
 
         val pieDataSet = PieDataSet(generateDataPieChart(), "Sleep states")
         pieDataSet.colors = listColors

@@ -2,6 +2,7 @@ package com.doitstudio.sleepest_master.ui.history
 
 import android.app.Application
 import android.app.ApplicationErrorReport
+import android.graphics.Color
 import android.view.View
 import androidx.databinding.*
 import androidx.lifecycle.AndroidViewModel
@@ -235,17 +236,17 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
         val legendEntries = arrayListOf<LegendEntry>()
         legendEntries.add((LegendEntry("Light", Legend.LegendForm.SQUARE, 8f, 8f, null ,
-            R.color.light_sleep_color)))
+            Color.RED)))
         legendEntries.add((LegendEntry("Deep", Legend.LegendForm.SQUARE, 8f, 8f, null ,
-            R.color.deep_sleep_color)))
+            Color.BLUE))) //R.color.deep_sleep_color
         legendEntries.add((LegendEntry("Awake", Legend.LegendForm.SQUARE, 8f, 8f, null ,
-            R.color.awake_sleep_color)))
+            Color.CYAN)))
         legendEntries.add((LegendEntry("Sleep", Legend.LegendForm.SQUARE, 8f, 8f, null ,
-            R.color.sleep_sleep_color)))
+            Color.MAGENTA)))
         legend.setCustom(legendEntries)
         legend.textSize = 12f
 
-        barChart.isDragEnabled = true
+        barChart.isDragEnabled = false
 
         //Y-axis
         //Y-axis
@@ -294,7 +295,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         val diagramData = generateDataBarChart(range, endDateOfDiagram)
 
         val barDataSet1 = BarDataSet(diagramData.first, "")
-        barDataSet1.setColors(R.color.light_sleep_color, R.color.deep_sleep_color, R.color.awake_sleep_color, R.color.sleep_sleep_color)
+        barDataSet1.setColors(Color.RED, Color.BLUE, Color.CYAN, Color.MAGENTA)
         barDataSet1.setDrawValues(false)
 
         val barData = BarData(barDataSet1)
@@ -354,13 +355,13 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
         val legendEntries = arrayListOf<LegendEntry>()
         legendEntries.add((LegendEntry("Light", Legend.LegendForm.SQUARE, 8f, 8f, null ,
-            R.color.light_sleep_color)))
+            Color.RED)))
         legendEntries.add((LegendEntry("Deep", Legend.LegendForm.SQUARE, 8f, 8f, null ,
-            R.color.deep_sleep_color)))
+            Color.BLUE))) //R.color.deep_sleep_color
         legendEntries.add((LegendEntry("Awake", Legend.LegendForm.SQUARE, 8f, 8f, null ,
-            R.color.awake_sleep_color)))
+            Color.CYAN)))
         legendEntries.add((LegendEntry("Sleep", Legend.LegendForm.SQUARE, 8f, 8f, null ,
-            R.color.sleep_sleep_color)))
+            Color.MAGENTA)))
         legend.setCustom(legendEntries)
         legend.textSize = 12f
 
