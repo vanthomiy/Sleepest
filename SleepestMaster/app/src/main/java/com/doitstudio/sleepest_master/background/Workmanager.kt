@@ -55,13 +55,13 @@ class Workmanager(appcontext: Context, workerParams: WorkerParameters) : Worker(
             val smileySelectorUtil = SmileySelectorUtil()
 
             if (LocalTime.now().toSecondOfDay() >= dataStoreRepository.getSleepTimeBegin() &&
-                ((LocalTime.now().toSecondOfDay() - dataStoreRepository.getSleepTimeBegin()) >= 60) && (dataStoreRepository.sleepApiDataFlow.first().sleepApiValuesAmount <= 3)) {
+                ((LocalTime.now().toSecondOfDay() - ForegroundService.getForegroundServiceStartTime()) >= 60) && (dataStoreRepository.sleepApiDataFlow.first().sleepApiValuesAmount <= 3)) {
                 val notification: Notification = AlarmReceiver.createInformationNotification(applicationContext,
                     smileySelectorUtil.smileyAttention + applicationContext.getString(R.string.information_notification_text_sleep_api_problem))
                 val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.notify(2, notification)
-            } else if (LocalTime.now().toSecondOfDay() > dataStoreRepository.getSleepTimeBegin() &&
-                ((dataStoreRepository.getSleepTimeBegin() - LocalTime.now().toSecondOfDay()) >= 60) && (dataStoreRepository.sleepApiDataFlow.first().sleepApiValuesAmount <= 3)) {
+            } else if (LocalTime.now().toSecondOfDay() > ForegroundService.getForegroundServiceStartTime() &&
+                ((ForegroundService.getForegroundServiceStartTime() - LocalTime.now().toSecondOfDay()) >= 60) && (dataStoreRepository.sleepApiDataFlow.first().sleepApiValuesAmount <= 3)) {
                 val notification: Notification = AlarmReceiver.createInformationNotification(applicationContext,
                     smileySelectorUtil.smileyAttention + applicationContext.getString(R.string.information_notification_text_sleep_api_problem))
                 val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

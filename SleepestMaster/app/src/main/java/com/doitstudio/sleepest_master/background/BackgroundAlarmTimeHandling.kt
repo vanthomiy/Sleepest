@@ -11,8 +11,10 @@ import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.SettingsData
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockAudio
+import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
 import com.doitstudio.sleepest_master.googleapi.SleepHandler
 import com.doitstudio.sleepest_master.model.data.Actions
+import com.doitstudio.sleepest_master.model.data.AlarmClockReceiverUsage
 import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage
 import com.doitstudio.sleepest_master.model.data.Constants
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
@@ -54,15 +56,23 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                 AlarmReceiver.cancelAlarm(context, AlarmReceiverUsage.START_FOREGROUND)
             } else {
                 if (checkForegroundStatus() && !checkInSleepTime()) {
-                    val jsjs = checkInSleepTime()
-                    val sdjsj = checkAlarmFired()
-                    val sjhshs = checkAlarmTempDisabled()
-                    val snoaspo = checkAlarmActive()
+
                     endOfSleepTime()
-                    val a = jsjs
-                    val b = sdjsj
-                    val c = sjhshs
-                    val d = snoaspo
+                } else if (checkForegroundStatus() && checkInSleepTime()) {
+                    if (checkAlarmActive()) {
+                        val calenderCalculation = TimeConverterUtil.getAlarmDate(getFirstWakeup() - 1800)
+                        AlarmReceiver.startAlarmManager(
+                            calenderCalculation[Calendar.DAY_OF_WEEK],
+                            calenderCalculation[Calendar.HOUR_OF_DAY],
+                            calenderCalculation[Calendar.MINUTE],
+                            context,
+                            AlarmReceiverUsage.START_WORKMANAGER_CALCULATION
+                        )
+                        var calendar = TimeConverterUtil.getAlarmDate(getLastWakeup())
+                        AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context.applicationContext, AlarmClockReceiverUsage.START_ALARMCLOCK);
+                        calendar = TimeConverterUtil.getAlarmDate(getSleepTimeEndValue())
+                        AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context.applicationContext, AlarmReceiverUsage.STOP_WORKMANAGER);
+                    }
                 }
 
                 if (getSleepTimeBeginValue() != sleepTimeBeginTemp) {
@@ -167,6 +177,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
             }
 
             WorkManager.getInstance(context.applicationContext).cancelAllWorkByTag(context.getString(R.string.workmanager2_tag))
+            AlarmClockReceiver.cancelAlarm(context.applicationContext, AlarmClockReceiverUsage.START_ALARMCLOCK);
 
             //Cancel Alarm for starting Workmanager
             AlarmReceiver.cancelAlarm(context, AlarmReceiverUsage.START_WORKMANAGER_CALCULATION)
@@ -199,6 +210,8 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                         context,
                         AlarmReceiverUsage.START_WORKMANAGER_CALCULATION
                     )
+                    val calendar = TimeConverterUtil.getAlarmDate(getLastWakeup())
+                    AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context.applicationContext, AlarmClockReceiverUsage.START_ALARMCLOCK);
                 }
 
 
@@ -371,6 +384,9 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
     private suspend fun getFirstWakeup() =
         (dataBaseRepository.getNextActiveAlarm()!!.wakeupEarly)
+
+    private suspend fun getLastWakeup() =
+        (dataBaseRepository.getNextActiveAlarm()!!.wakeupLate)
 
     private suspend fun checkForegroundStatus() =
         dataStoreRepository.backgroundServiceFlow.first().isForegroundActive

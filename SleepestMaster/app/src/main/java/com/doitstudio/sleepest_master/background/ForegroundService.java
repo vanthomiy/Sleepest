@@ -59,7 +59,8 @@ public class ForegroundService extends LifecycleService {
     private int alarmTimeInSeconds = 0; //Shows the calculated alarm time
     private int actualWakeUp = 0; //Shows the set alarm clock time
     private boolean userInformed = false; //Detects if the user is already informed about problems with reaching sleep time
-    boolean[] bannerConfig = new boolean[5];
+    private boolean[] bannerConfig = new boolean[5];
+    private static int foregroundServiceStartTime = 0;
 
     private DataStoreRepository dataStoreRepository; //Instance of DataStoreRepo
     private DatabaseRepository databaseRepository; //Instance of DatabaseRepo
@@ -116,6 +117,7 @@ public class ForegroundService extends LifecycleService {
             foregroundObserver.updateAlarmWasFired(false, alarmEntity.getId());
         }
 
+        setForegroundServiceStartTime();
 
         /**WEG
         //Subscribe to sleep API
@@ -239,6 +241,14 @@ public class ForegroundService extends LifecycleService {
 
         }
 
+    }
+
+    private static void setForegroundServiceStartTime() {
+        foregroundServiceStartTime = LocalTime.now().toSecondOfDay();
+    }
+
+    public static int getForegroundServiceStartTime() {
+        return foregroundServiceStartTime;
     }
 
     //endregion
