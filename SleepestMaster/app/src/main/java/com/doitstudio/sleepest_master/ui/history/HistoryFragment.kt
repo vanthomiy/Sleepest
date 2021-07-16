@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.storage.db.*
@@ -20,6 +22,8 @@ import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
