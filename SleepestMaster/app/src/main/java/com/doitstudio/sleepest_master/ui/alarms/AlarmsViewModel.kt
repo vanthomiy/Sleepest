@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
+import androidx.databinding.ObservableInt
 import androidx.lifecycle.AndroidViewModel
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
@@ -31,20 +32,29 @@ class AlarmsViewModel(application: Application) : AndroidViewModel(application) 
 
     //region Alarms Settings
 
+    val alarmExpandId = ObservableInt(0)
+
     val actualExpand = ObservableField(View.GONE)
     val rotateState = ObservableField(0)
 
     fun onExpandClicked(view: View) {
-        updateExpandChanged(view.tag.toString(), true)
-    }
-
-    private fun updateExpandChanged(value: String, toggle: Boolean = false) {
-
         TransitionManager.beginDelayedTransition(transitionsContainer);
 
         actualExpand.set(if (actualExpand.get() == View.GONE) View.VISIBLE else View.GONE)
         rotateState.set(if (actualExpand.get() == View.GONE) 0 else 180)
 
+        alarmExpandId.set(-1)
+    }
+
+    fun updateExpandChanged(isExpaned : Boolean) {
+
+        TransitionManager.beginDelayedTransition(transitionsContainer);
+
+        if(isExpaned)
+        {
+            actualExpand.set(View.GONE)
+            rotateState.set(0)
+        }
     }
 
     val cancelAlarmWhenAwake = ObservableField(false)

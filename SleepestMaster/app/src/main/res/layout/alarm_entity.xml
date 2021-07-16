@@ -6,8 +6,12 @@
 
     <data>
         <variable
-            name="alarmsViewModel"
+            name="alarmInstanceViewModel"
             type="com.doitstudio.sleepest_master.ui.alarms.AlarmInstanceViewModel"/>
+        <variable
+            name="alarmsViewModel"
+            type="com.doitstudio.sleepest_master.ui.alarms.AlarmsViewModel"/>
+
     </data>
 
     <LinearLayout
@@ -23,27 +27,15 @@
             android:layout_width="match_parent"
             android:layout_height="50dp">
 
-            <Button
-                android:id="@+id/btn_deleteAlarm"
-                android:layout_width="45dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="8dp"
-                android:layout_gravity="center"
-                android:text="@string/x"
-                android:textColor="@color/primary_text_color"
-                android:backgroundTint="@color/error_color"
-                android:layout_weight="0"/>
-
             <TextView
                 android:id="@+id/tV_alarmName"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:text="@{alarmsViewModel.alarmName}"
-                android:textAlignment="center"
+                android:layout_marginStart="25dp"
+                android:text="@{alarmInstanceViewModel.sleepDurationString}"
                 android:layout_gravity="center"
                 android:textColor="@color/tertiary_text_color"
                 android:textSize="28sp"
-                android:onClick="@{alarmsViewModel::onAlarmNameClick}"
                 android:layout_weight="1"/>
 
             <androidx.appcompat.widget.SwitchCompat
@@ -54,8 +46,8 @@
                 android:layout_gravity="center"
                 android:thumbTint="@color/secondary_button_color"
                 android:trackTint="@color/secondary_button_color"
-                android:checked="@={alarmsViewModel.isAlarmActive}"
-                android:onClick="@{alarmsViewModel::onAlarmActiveToggled}"
+                android:checked="@={alarmInstanceViewModel.isAlarmActive}"
+                android:onClick="@{alarmInstanceViewModel::onAlarmActiveToggled}"
                 android:layout_weight="0"/>
 
 
@@ -65,7 +57,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginHorizontal="15dp"
+            android:layout_margin="15dp"
+            android:visibility="@{alarmInstanceViewModel.extendedAlarmEntity == true ? alarmInstanceViewModel.visibleState:alarmInstanceViewModel.goneState, default=gone}"
             android:orientation="vertical">
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
@@ -100,7 +93,7 @@
                     <FrameLayout
                         android:layout_width="150dp"
                         android:layout_height="50dp"
-                        android:onClick="@{alarmsViewModel::onWakeUpEarlyClicked}"
+                        android:onClick="@{alarmInstanceViewModel::onWakeUpEarlyClicked}"
                         android:background="@drawable/transparentrounded"
                         android:backgroundTint="@color/secondary_button_color">
                         <com.shawnlin.numberpicker.NumberPicker
@@ -139,7 +132,7 @@
                     <FrameLayout
                         android:layout_width="150dp"
                         android:layout_height="50dp"
-                        android:onClick="@{alarmsViewModel::onWakeUpEarlyClicked}"
+                        android:onClick="@{alarmInstanceViewModel::onWakeUpEarlyClicked}"
                         android:background="@drawable/transparentrounded"
                         android:backgroundTint="@color/secondary_button_color">
                         <com.shawnlin.numberpicker.NumberPicker
@@ -191,7 +184,7 @@
                     <FrameLayout
                         android:layout_width="150dp"
                         android:layout_height="50dp"
-                        android:onClick="@{alarmsViewModel::onWakeUpEarlyClicked}"
+                        android:onClick="@{alarmInstanceViewModel::onWakeUpEarlyClicked}"
                         android:background="@drawable/transparentrounded"
                         android:backgroundTint="@color/secondary_button_color">
                         <TextView
@@ -202,7 +195,7 @@
                             android:textSize="@dimen/bigSize"
                             android:textAlignment="center"
                             android:textColor="@color/tertiary_text_color"
-                            android:text="@{alarmsViewModel.wakeUpEarlyValue}"
+                            android:text="@{alarmInstanceViewModel.wakeUpEarlyValue}"
                             tools:ignore="RtlCompat" />
 
                     </FrameLayout>
@@ -228,7 +221,7 @@
                     <FrameLayout
                         android:layout_width="150dp"
                         android:layout_height="50dp"
-                        android:onClick="@{alarmsViewModel::onWakeUpLateClicked}"
+                        android:onClick="@{alarmInstanceViewModel::onWakeUpLateClicked}"
                         android:background="@drawable/transparentrounded"
                         android:backgroundTint="@color/secondary_button_color">
                         <TextView
@@ -239,7 +232,7 @@
                             android:textSize="@dimen/bigSize"
                             android:textAlignment="center"
                             android:textColor="@color/tertiary_text_color"
-                            android:text="@{alarmsViewModel.wakeUpLateValue}"
+                            android:text="@{alarmInstanceViewModel.wakeUpLateValue}"
                             tools:ignore="RtlCompat" />
 
                     </FrameLayout>
@@ -275,8 +268,8 @@
                         android:layout_margin="5dp"
                         android:background="@drawable/day_selection"
                         android:tag="0"
-                        android:onClick="@{alarmsViewModel::onDayChanged}"
-                        android:checked="@{alarmsViewModel.selectedDays.contains(0), default=false}"
+                        android:onClick="@{alarmInstanceViewModel::onDayChanged}"
+                        android:checked="@{alarmInstanceViewModel.selectedDays.contains(0), default=false}"
                         android:textOn="Mo"
                         android:textOff="Mo"
                         android:textSize="10sp" />
@@ -287,8 +280,8 @@
                         android:layout_margin="5dp"
                         android:background="@drawable/day_selection"
                         android:tag="1"
-                        android:onClick="@{alarmsViewModel::onDayChanged}"
-                        android:checked="@{alarmsViewModel.selectedDays.contains(1), default=false}"
+                        android:onClick="@{alarmInstanceViewModel::onDayChanged}"
+                        android:checked="@{alarmInstanceViewModel.selectedDays.contains(1), default=false}"
                         android:textOn="Di"
                         android:textOff="Di"
                         android:textSize="10sp" />
@@ -299,8 +292,8 @@
                         android:layout_margin="5dp"
                         android:background="@drawable/day_selection"
                         android:tag="2"
-                        android:onClick="@{alarmsViewModel::onDayChanged}"
-                        android:checked="@{alarmsViewModel.selectedDays.contains(2), default=false}"
+                        android:onClick="@{alarmInstanceViewModel::onDayChanged}"
+                        android:checked="@{alarmInstanceViewModel.selectedDays.contains(2), default=false}"
                         android:textOn="Mi"
                         android:textOff="Mi"
                         android:textSize="10sp" />
@@ -311,8 +304,8 @@
                         android:layout_margin="5dp"
                         android:background="@drawable/day_selection"
                         android:tag="3"
-                        android:onClick="@{alarmsViewModel::onDayChanged}"
-                        android:checked="@{alarmsViewModel.selectedDays.contains(3), default=false}"
+                        android:onClick="@{alarmInstanceViewModel::onDayChanged}"
+                        android:checked="@{alarmInstanceViewModel.selectedDays.contains(3), default=false}"
                         android:textOn="Do"
                         android:textOff="Do"
                         android:textSize="10sp" />
@@ -323,8 +316,8 @@
                         android:layout_margin="5dp"
                         android:background="@drawable/day_selection"
                         android:tag="4"
-                        android:onClick="@{alarmsViewModel::onDayChanged}"
-                        android:checked="@{alarmsViewModel.selectedDays.contains(4), default=false}"
+                        android:onClick="@{alarmInstanceViewModel::onDayChanged}"
+                        android:checked="@{alarmInstanceViewModel.selectedDays.contains(4), default=false}"
                         android:textOn="Fr"
                         android:textOff="Fr"
                         android:textSize="10sp" />
@@ -335,8 +328,8 @@
                         android:layout_margin="5dp"
                         android:background="@drawable/day_selection"
                         android:tag="5"
-                        android:onClick="@{alarmsViewModel::onDayChanged}"
-                        android:checked="@{alarmsViewModel.selectedDays.contains(5), default=false}"
+                        android:onClick="@{alarmInstanceViewModel::onDayChanged}"
+                        android:checked="@{alarmInstanceViewModel.selectedDays.contains(5), default=false}"
                         android:textOn="Sa"
                         android:textOff="Sa"
                         android:textSize="10sp" />
@@ -347,8 +340,8 @@
                         android:layout_margin="5dp"
                         android:background="@drawable/day_selection"
                         android:tag="6"
-                        android:onClick="@{alarmsViewModel::onDayChanged}"
-                        android:checked="@{alarmsViewModel.selectedDays.contains(6), default=false}"
+                        android:onClick="@{alarmInstanceViewModel::onDayChanged}"
+                        android:checked="@{alarmInstanceViewModel.selectedDays.contains(6), default=false}"
                         android:textOn="So"
                         android:textOff="So"
                         android:textSize="10sp" />
@@ -356,7 +349,84 @@
                 </LinearLayout>
 
             </HorizontalScrollView>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_deleteAlarm"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:text="Alarm Entfernen"
+                android:background="@drawable/bgrounded"
+                android:textColor="@color/primary_text_color"
+                android:backgroundTint="@color/error_color"/>
+
         </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="15dp"
+            android:visibility="@{alarmInstanceViewModel.extendedAlarmEntity == false ? alarmInstanceViewModel.visibleState:alarmInstanceViewModel.goneState, default=visible}"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@{alarmInstanceViewModel.selectedDaysInfo}"
+                android:textColor="@color/tertiary_text_color"
+                android:textStyle="bold"
+                android:layout_weight="0"/>
+
+            <LinearLayout
+                android:layout_gravity="end"
+                android:layout_marginEnd="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:textAlignment="viewEnd"
+                    android:text="zwischen"
+                    android:textColor="@color/tertiary_text_color"
+                    android:layout_weight="0"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:textAlignment="viewEnd"
+                    android:text="@{alarmInstanceViewModel.wakeUpEarlyValue}"
+                    android:textColor="@color/accent_text_color"
+                    android:textStyle="bold"
+                    android:layout_weight="0"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:textAlignment="viewEnd"
+                    android:text="und"
+                    android:textColor="@color/tertiary_text_color"
+                    android:layout_weight="0"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:textAlignment="viewEnd"
+                    android:text="@{alarmInstanceViewModel.wakeUpLateValue}"
+                    android:textColor="@color/accent_text_color"
+                    android:textStyle="bold"
+                    android:layout_weight="0"/>
+
+            </LinearLayout>
+
+
+        </FrameLayout>
+
 
     </LinearLayout>
 </layout>

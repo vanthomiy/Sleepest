@@ -361,6 +361,10 @@ class DatabaseRepository(
         alarmDao.delete(alarm)
     }
 
+    suspend fun deleteAlarmById(alarmId: Int) {
+        alarmDao.deleteById(alarmId)
+    }
+
     suspend fun deleteAllAlarms() {
         alarmDao.deleteAll()
     }

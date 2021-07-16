@@ -20,6 +20,7 @@ import com.doitstudio.sleepest_master.model.data.AlarmSleepChangeFrom
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.util.SleepTimeValidationUtil
+import com.doitstudio.sleepest_master.util.WeekDaysUtil.getWeekDayByNumber
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -55,39 +56,12 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
 
     }
 
-    private val extendedAlarmEntity = ObservableField(true)
+    val extendedAlarmEntity = ObservableField(false)
     val visibleState = ObservableField(View.VISIBLE)
     val goneState = ObservableField(View.GONE)
 
     fun onAlarmNameClick(view: View) {
         extendedAlarmEntity.set(extendedAlarmEntity.get() == false)
-    }
-
-    fun onLongAlarmNameClick(view: View) {
-        val input = EditText(context)
-        input.inputType = InputType.TYPE_CLASS_TEXT
-
-        val builder = AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
-        builder.setTitle("Set alarmname")
-            .setView(input)
-            .setPositiveButton("Save") { _, _ ->
-                val alarmName = input.text.toString()
-                if (alarmName.isEmpty()) {
-                    Toast.makeText(
-                        context,
-                        "Speichern fehlgeschlagen\nMindestens einen Char eingeben! ",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                else {
-                    scope.launch {
-                        dataBaseRepository.updateAlarmName(alarmName, alarmId)
-                    }                }
-            }
-            .setNegativeButton("Cancel") { dialog, _ ->
-                dialog.cancel()
-            }
-            .show()
     }
 
     val wakeUpEarlyValue = ObservableField("07:30")
@@ -160,6 +134,7 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
     }
 
     var sleepDuration : Int = 0
+    val sleepDurationString = ObservableField("07:00")
 
     fun onDurationChange(hour: Int, minute: Int) {
 
@@ -179,9 +154,8 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
         }
     }
 
-
     val selectedDays = ObservableArrayList<Int>()
-
+    val selectedDaysInfo = ObservableField("")
     fun onDayChanged(view: View){
 
         val day = view.tag.toString().toInt()
@@ -198,9 +172,39 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
             daysOfWeek.add(dayOfWeekValues[it])
         }
 
+        setDaysSelectedString()
+
         scope.launch {
             dataBaseRepository.updateActiveDayOfWeek(daysOfWeek, alarmId)
         }
+    }
+
+    private fun setDaysSelectedString(){
+        var info = ""
+
+        if(selectedDays.isEmpty()){
+            info = "Kein Tag ausgewählt"
+        }
+        else if(selectedDays.count() >= 7)
+        {
+            info = "Täglich"
+        }
+        else{
+
+
+
+            selectedDays.toList().sorted().forEach{
+                if(info == ""){
+                    info = getWeekDayByNumber(it)
+                }
+                else{
+                    info +=  ", "+ getWeekDayByNumber(it)
+                }
+            }
+        }
+
+        selectedDaysInfo.set(info)
+
     }
 
 
@@ -225,9 +229,10 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
                 selectedDays.add(it.ordinal)
             }
 
+            setDaysSelectedString()
+
         }
     }
-
 
     //region animation
 

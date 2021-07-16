@@ -172,7 +172,7 @@ object SleepTimeValidationUtil {
                     .show()
 
                 if(changeFrom == AlarmSleepChangeFrom.DURATION){
-                    return (possibleSleepTime - minTimeBuffer)
+                    newSleepDuration = (possibleSleepTime - minTimeBuffer)
                 }
                 else if(changeFrom == AlarmSleepChangeFrom.WAKEUPLATE){
                     val result =

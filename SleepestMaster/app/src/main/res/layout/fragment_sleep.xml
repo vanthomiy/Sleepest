@@ -352,7 +352,6 @@
                             android:layout_marginLeft="75dp"
                             android:max="50"
                             android:min="0"
-
                             android:progress="@{sleepViewModel.sleepDurationValue}"
                             android:onProgressChanged="@{sleepViewModel::onSleepDurationChanged}"
                             />
