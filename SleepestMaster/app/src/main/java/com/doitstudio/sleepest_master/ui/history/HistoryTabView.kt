@@ -7,26 +7,20 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.databinding.Observable
+import androidx.databinding.ObservableInt
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTabHost
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.doitstudio.sleepest_master.R
-import com.doitstudio.sleepest_master.databinding.FragmentHistoryDayBinding
 import com.doitstudio.sleepest_master.databinding.FragmentHistoryTabviewBinding
-import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
-import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import java.time.LocalDate
 import java.time.Month
-import java.time.temporal.WeekFields
 import java.util.*
 
 class HistoryTabView : Fragment() {
-    // When requested, this adapter returns a DemoObjectFragment,
-    // representing an object in the collection.
-    private lateinit var demoCollectionAdapter: HistoryTabViewAdapter
+    private lateinit var adapter: HistoryTabViewAdapter
     private lateinit var viewPager: ViewPager2
 
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(HistoryViewModel::class.java) }
@@ -45,14 +39,13 @@ class HistoryTabView : Fragment() {
         binding = FragmentHistoryTabviewBinding.inflate(inflater, container, false)
         binding.historyTabView = viewModel
 
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        demoCollectionAdapter = HistoryTabViewAdapter(this)
+        adapter = HistoryTabViewAdapter(this)
         viewPager = binding.pager
-        viewPager.adapter = demoCollectionAdapter
+        viewPager.adapter = adapter
 
         btnPrevious = view.findViewById(R.id.btn_Previous)
         btnNext = view.findViewById(R.id.btn_Next)
@@ -65,6 +58,23 @@ class HistoryTabView : Fragment() {
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = tabs[position]
         }.attach()
+
+        binding.tabLayout.addOnTabSelectedListener(
+            object: TabLayout.OnTabSelectedListener {
+
+                override fun onTabSelected(tab: TabLayout.Tab?) {
+                    updateDateInformation(tabLayout.selectedTabPosition)
+                }
+
+                override fun onTabUnselected(tab: TabLayout.Tab?) {
+                    updateDateInformation(tabLayout.selectedTabPosition)
+                }
+
+                override fun onTabReselected(tab: TabLayout.Tab?) {
+                    updateDateInformation(tabLayout.selectedTabPosition)
+                }
+            }
+        )
 
         btnPrevious.setOnClickListener {
             viewModel.onPreviousDateClick(tabLayout.selectedTabPosition)
@@ -107,7 +117,7 @@ class HistoryTabView : Fragment() {
 
     private fun createCalendarDayInformation(): String {
         val actualDay = LocalDate.now()
-        var information : String
+        var information = "none"
 
         viewModel.analysisDate.get()?.let {
 
@@ -131,7 +141,7 @@ class HistoryTabView : Fragment() {
         var analysisWeekOfYear: Int
         val actualDate = LocalDate.now()
         val actualWeekOfYear: Int
-        var information : String
+        var information = "none"
 
         val actualCalendar = Calendar.getInstance()
         actualCalendar.set(actualDate.year, actualDate.monthValue, actualDate.dayOfMonth)
