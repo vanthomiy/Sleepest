@@ -97,7 +97,7 @@ class HistoryDayFragment : Fragment() {
                     }
                 }
             } else {
-                entries.add(Entry(1F,1F))
+                entries.add(Entry(0F,0F))
             }
         }
 
@@ -129,9 +129,13 @@ class HistoryDayFragment : Fragment() {
         chart.axisLeft.labelCount = 4
         chart.axisLeft.axisMinimum = 0f
         chart.axisLeft.axisMaximum = 4f
+        chart.axisLeft.setDrawGridLines(false)
 
         chart.axisRight.setDrawLabels(false)
         chart.axisRight.setDrawGridLines(false)
+
+        chart.xAxis.setDrawGridLines(false)
+        chart.xAxis.setDrawLabels(false)
 
         chart.description.isEnabled = false
 
