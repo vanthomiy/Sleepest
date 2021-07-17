@@ -40,17 +40,17 @@ class HistoryDayFragment : Fragment() {
 
         lineChart = setLineChart()
         binding.lLSleepAnalysisChartsDay.addView(lineChart)
-
-        val heightLineChart = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics)
-        lineChart.layoutParams.height = heightLineChart.toInt()
+        lineChart.layoutParams.height = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics
+        ).toInt()
         lineChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
         lineChart.invalidate()
 
         pieChart = setPieChart()
         binding.lLSleepAnalysisChartsDay.addView(pieChart)
-
-        val heightPieChart = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics)
-        pieChart.layoutParams.height = heightPieChart.toInt()
+        pieChart.layoutParams.height = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics
+        ).toInt()
         pieChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
         pieChart.invalidate()
 
@@ -59,29 +59,26 @@ class HistoryDayFragment : Fragment() {
             object: Observable.OnPropertyChangedCallback() {
 
                 override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                    if (getDataValues()) {
+                    getDataValues()
+                    updateLineChart(lineChart)
+                    lineChart.invalidate()
 
-                        updateLineChart(lineChart)
-                        lineChart.invalidate()
-
-                        updatePieChart(pieChart)
-                        pieChart.invalidate()
-                    }
+                    updatePieChart(pieChart)
+                    pieChart.invalidate()
                 }
             })
+
+        getDataValues()
 
         return binding.root
     }
 
-    private fun getDataValues() : Boolean {
+    private fun getDataValues() {
         viewModel.analysisDate.get()?.let {
             if (viewModel.checkId(it)) {
                 sleepValues = viewModel.sleepSessionData[UserSleepSessionEntity.getIdByDateTime(it)]!!
-                return true
             }
         }
-
-        return false
     }
 
     private fun generateDataLineChart() : ArrayList<Entry> {
@@ -95,6 +92,7 @@ class HistoryDayFragment : Fragment() {
                     for (minute in 0..sleepValues.second) {
                         entries.add(Entry(xValue.toFloat(), rawData.sleepState.ordinal.toFloat()))
                         xValue += 1
+                        // TODO How many entries are getting created? Check if this could be improved.
                     }
                 }
             } else {
@@ -187,9 +185,6 @@ class HistoryDayFragment : Fragment() {
         return entries
     }
 
-    /**
-     * Sets the pie chart. Calls generateDataPieChart for diagram data.
-     */
     private fun setPieChart() : PieChart {
         val chart = PieChart(context)
         val pieDataSet = PieDataSet(generateDataPieChart(), "Sleep states")
