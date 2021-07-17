@@ -28,9 +28,7 @@ import com.doitstudio.sleepest_master.background.ForegroundActivity;
 import com.doitstudio.sleepest_master.model.data.AlarmClockReceiverUsage;
 import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage;
 import com.doitstudio.sleepest_master.model.data.Constants;
-import com.doitstudio.sleepest_master.model.data.NotificationUsage;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
-import com.doitstudio.sleepest_master.util.NotificationsUtil;
 import com.doitstudio.sleepest_master.util.TimeConverterUtil;
 
 import java.io.IOException;
@@ -61,8 +59,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
 
                 PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
                 if (powerManager.isInteractive()) {
-                    NotificationsUtil notificationsUtil = new NotificationsUtil(context.getApplicationContext(), NotificationUsage.NOTIFICATION_ALARM_CLOCK, null);
-                    notificationsUtil.chooseNotification();
+                    showFullscreenNotification();
                 } else {
                     showNotificationOnLockScreen();
                 }
@@ -99,15 +96,6 @@ public class AlarmClockReceiver extends BroadcastReceiver {
             case SNOOZE_ALARMCLOCK: //Snooze button of ScreenOn notification
                 AlarmClockAudio.getInstance().stopAlarm(true);
                 break;
-            case LATEST_WAKEUP_ALARMCLOCK:
-                PowerManager powerManagerLate = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-                if (powerManagerLate.isInteractive()) {
-                    NotificationsUtil notificationsUtil = new NotificationsUtil(context.getApplicationContext(), NotificationUsage.NOTIFICATION_ALARM_CLOCK, null);
-                    notificationsUtil.chooseNotification();
-                } else {
-                    showNotificationOnLockScreen();
-                }
-                break;
         }
     }
 
@@ -119,10 +107,6 @@ public class AlarmClockReceiver extends BroadcastReceiver {
      * @param alarmClockContext Context
      */
     public static void startAlarmManager(int day, int hour, int min, Context alarmClockContext, AlarmClockReceiverUsage alarmClockReceiverUsage) {
-
-        if (AlarmClockReceiver.isAlarmClockActive(context.getApplicationContext(), AlarmClockReceiverUsage.LATEST_WAKEUP_ALARMCLOCK) && (alarmClockReceiverUsage == AlarmClockReceiverUsage.START_ALARMCLOCK)) {
-            AlarmClockReceiver.cancelAlarm(context.getApplicationContext(), AlarmClockReceiverUsage.LATEST_WAKEUP_ALARMCLOCK);
-        }
 
         Calendar calendar = TimeConverterUtil.getAlarmDate(day, hour, min);
 
@@ -244,7 +228,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
     }
 
     public static void cancelNotification() {
-        NotificationManagerCompat.from(context).cancel(NotificationUsage.NOTIFICATION_ALARM_CLOCK.getNotificationUsageValue());
+        NotificationManagerCompat.from(context).cancel(Constants.ALARM_CLOCK_NOTIFICATION_ID);
     }
 
 }

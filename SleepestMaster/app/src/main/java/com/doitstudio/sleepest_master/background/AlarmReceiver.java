@@ -199,7 +199,7 @@ public class AlarmReceiver extends BroadcastReceiver {
      * Create the notification to inform the user about problems
      * @return
      */
-    /**public static Notification createInformationNotification(Context context, String information) {
+    public static Notification createInformationNotification(Context context, String information) {
         //Get Channel id
         String notificationChannelId = context.getApplicationContext().getString(R.string.information_notification_channel);
 
@@ -228,12 +228,12 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         return builder
                 .setContentTitle(context.getApplicationContext().getString(R.string.information_notification_title))
-                .setContentText(information)
+                .setContentText(information) /**TODO: Textauswahl**/
                 .setStyle(new Notification.DecoratedCustomViewStyle())
                 .setSmallIcon(R.drawable.logo_notification)
                 .setContentIntent(pendingIntent)
                 .setOnlyAlertOnce(true)
                 .build();
-    }**/
+    }
 
 }
