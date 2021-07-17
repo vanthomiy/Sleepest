@@ -111,10 +111,8 @@ class HistoryDayFragment : Fragment() {
     private fun setLineChart() : LineChart {
         val chart = LineChart(context)
         val lineDataSet = LineDataSet(generateDataLineChart(), "Sleep state")
-
         visualSetUpLineChart(chart, lineDataSet)
         chart.data = LineData(lineDataSet)
-
         return chart
     }
 
@@ -195,10 +193,8 @@ class HistoryDayFragment : Fragment() {
     private fun setPieChart() : PieChart {
         val chart = PieChart(context)
         val pieDataSet = PieDataSet(generateDataPieChart(), "Sleep states")
-
         visualSetUpPieChart(chart, pieDataSet)
         chart.data = PieData(pieDataSet)
-
         return chart
     }
 

@@ -231,21 +231,17 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         //http://developine.com/android-grouped-stacked-bar-chart-using-mpchart-kotlin/
         val barChart = BarChart(context)
         val diagramData = generateDataBarChart(range, endDateOfDiagram)
-
         val barData = BarData(generateBarDataSet(diagramData.first))
         barChart.data = barData
         visualSetUpBarChart(barChart, diagramData, range)
-
         return barChart
     }
 
     fun updateBarChart(barChart: BarChart, range: Int, endDateOfDiagram: LocalDate) {
         val diagramData = generateDataBarChart(range, endDateOfDiagram)
-
         val barData = BarData(generateBarDataSet(diagramData.first))
         barChart.data = barData
         visualSetUpBarChart(barChart, diagramData, range)
-
         barChart.invalidate()
     }
 
@@ -276,15 +272,13 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
             barChart.xAxis.labelCount = (diagramData.second.size)
         }
         else {
-            for (i in diagramData.second.indices) {
-                xAxisValues.add("Mo")
-                xAxisValues.add("Tu")
-                xAxisValues.add("We")
-                xAxisValues.add("Th")
-                xAxisValues.add("Fr")
-                xAxisValues.add("Sa")
-                xAxisValues.add("Su")
-            }
+            xAxisValues.add("Mo")
+            xAxisValues.add("Tu")
+            xAxisValues.add("We")
+            xAxisValues.add("Th")
+            xAxisValues.add("Fr")
+            xAxisValues.add("Sa")
+            xAxisValues.add("Su")
 
             barChart.barData.barWidth = 0.75f
             barChart.xAxis.axisMaximum = 7f
