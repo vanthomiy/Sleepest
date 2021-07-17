@@ -1,11 +1,14 @@
 package com.doitstudio.sleepest_master.ui.history
 
+import android.app.Application
 import android.graphics.Color
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.red
 import androidx.databinding.Observable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -133,12 +136,14 @@ class HistoryDayFragment : Fragment() {
         //chart.axisLeft.axisMaximum = 4f
         chart.axisLeft.axisMaximum = 3f
         chart.axisLeft.setDrawGridLines(false)
+        chart.axisLeft.textColor = viewModel.checkDarkMode()
 
         chart.axisRight.setDrawLabels(false)
         chart.axisRight.setDrawGridLines(false)
 
         chart.xAxis.setDrawGridLines(false)
         chart.xAxis.setDrawLabels(false)
+        chart.xAxis.textColor = viewModel.checkDarkMode()
 
         chart.description.isEnabled = false
 
@@ -172,9 +177,12 @@ class HistoryDayFragment : Fragment() {
         chart.axisLeft.axisMinimum = 0f
         //chart.axisLeft.axisMaximum = 4f
         chart.axisLeft.axisMaximum = 3f
+        chart.axisLeft.textColor = viewModel.checkDarkMode()
 
         chart.axisRight.setDrawLabels(false)
         chart.axisRight.setDrawGridLines(false)
+
+        chart.xAxis.textColor = viewModel.checkDarkMode()
 
         chart.description.isEnabled = false
 
@@ -217,16 +225,18 @@ class HistoryDayFragment : Fragment() {
     private fun setPieChart() : PieChart {
         val chart = PieChart(context)
         val listColors = ArrayList<Int>()
-        listColors.add(Color.RED)
-        listColors.add(Color.BLUE)
-        listColors.add(Color.CYAN)
-        listColors.add(Color.MAGENTA)
+        listColors.add(ContextCompat.getColor(viewModel.context, R.color.light_sleep_color))
+        listColors.add(ContextCompat.getColor(viewModel.context, R.color.deep_sleep_color))
+        listColors.add(ContextCompat.getColor(viewModel.context, R.color.awake_sleep_color))
+        listColors.add(ContextCompat.getColor(viewModel.context, R.color.sleep_sleep_color))
 
         val pieDataSet = PieDataSet(generateDataPieChart(), "Sleep states")
         pieDataSet.colors = listColors
 
         val pieData = PieData(pieDataSet)
         chart.data = pieData
+        chart.setCenterTextColor(viewModel.checkDarkMode())
+        chart.setEntryLabelColor(viewModel.checkDarkMode())
 
         chart.setUsePercentValues(true)
         chart.isDrawHoleEnabled = false
@@ -239,16 +249,19 @@ class HistoryDayFragment : Fragment() {
 
     private fun updatePieChart(chart: PieChart) {
         val listColors = ArrayList<Int>()
-        listColors.add(Color.RED)
-        listColors.add(Color.BLUE)
-        listColors.add(Color.CYAN)
-        listColors.add(Color.MAGENTA)
+        listColors.add(ContextCompat.getColor(viewModel.context, R.color.light_sleep_color))
+        listColors.add(ContextCompat.getColor(viewModel.context, R.color.deep_sleep_color))
+        listColors.add(ContextCompat.getColor(viewModel.context, R.color.awake_sleep_color))
+        listColors.add(ContextCompat.getColor(viewModel.context, R.color.sleep_sleep_color))
 
         val pieDataSet = PieDataSet(generateDataPieChart(), "Sleep states")
         pieDataSet.colors = listColors
 
         val pieData = PieData(pieDataSet)
         chart.data = pieData
+
+        chart.setCenterTextColor(viewModel.checkDarkMode())
+        chart.setEntryLabelColor(viewModel.checkDarkMode())
 
         chart.setUsePercentValues(true)
         chart.isDrawHoleEnabled = false
