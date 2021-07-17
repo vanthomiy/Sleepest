@@ -13,12 +13,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/primary_app_background"
         android:orientation="vertical">
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            app:tabIndicatorColor="@color/accent_button_color"
+            app:tabTextColor="@color/primary_text_color" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/pager"
@@ -34,24 +37,29 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_Previous"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:backgroundTint="@color/primary_button_color"
+                android:textColor="@color/primary_text_color"
                 android:text="Previous"/>
 
             <TextView
                 android:id="@+id/tV_actualDayTabView"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:layout_weight="10"
                 android:gravity="center"
+                android:textColor="@color/primary_text_color"
                 android:textSize="25dp" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_Next"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:backgroundTint="@color/primary_button_color"
+                android:textColor="@color/primary_text_color"
                 android:text="Next"/>
         </LinearLayout>
     </LinearLayout>

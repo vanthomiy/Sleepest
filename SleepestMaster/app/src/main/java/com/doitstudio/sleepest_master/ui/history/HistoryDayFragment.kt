@@ -18,7 +18,9 @@ import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import java.lang.Math.round
 import kotlin.collections.ArrayList
+import kotlin.math.roundToInt
 
 class HistoryDayFragment : Fragment() {
 
@@ -89,10 +91,9 @@ class HistoryDayFragment : Fragment() {
                 var xValue = 0
 
                 for (rawData in sleepValues.first) {
-                    for (minute in 0..sleepValues.second) {
+                    for (minute in 0..((sleepValues.second / 60).toDouble()).roundToInt()) {
                         entries.add(Entry(xValue.toFloat(), rawData.sleepState.ordinal.toFloat()))
                         xValue += 1
-                        // TODO How many entries are getting created? Check if this could be improved.
                     }
                 }
             } else {
@@ -103,9 +104,6 @@ class HistoryDayFragment : Fragment() {
         return entries
     }
 
-    /**
-     * Sets the line chart. Calls generateDataLineChart for diagram data.
-     */
     private fun setLineChart() : LineChart {
         val chart = LineChart(context)
         val lineDataSet = LineDataSet(generateDataLineChart(), "Sleep state")
