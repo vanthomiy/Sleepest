@@ -1,18 +1,20 @@
 package com.doitstudio.sleepest_master.background
 
-import android.app.Notification
 import android.app.NotificationManager
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.work.*
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
+import com.doitstudio.sleepest_master.model.data.NotificationUsage
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler.Companion.getHandler
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
-import com.doitstudio.sleepest_master.util.SleepUtil
+import com.doitstudio.sleepest_master.util.NotificationsUtil
 import com.doitstudio.sleepest_master.util.SmileySelectorUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -27,6 +29,7 @@ class Workmanager(appcontext: Context, workerParams: WorkerParameters) : Worker(
 
     private val sleepCalculationHandler: SleepCalculationHandler by lazy { getHandler(applicationContext) }
 
+    @RequiresApi(Build.VERSION_CODES.P)
     override fun doWork(): Result {
 
         val scope: CoroutineScope = MainScope()
@@ -52,20 +55,14 @@ class Workmanager(appcontext: Context, workerParams: WorkerParameters) : Worker(
                 }
             }*/
 
-            val smileySelectorUtil = SmileySelectorUtil()
-
             if (LocalTime.now().toSecondOfDay() >= dataStoreRepository.getSleepTimeBegin() &&
                 ((LocalTime.now().toSecondOfDay() - ForegroundService.getForegroundServiceStartTime()) >= 60) && (dataStoreRepository.sleepApiDataFlow.first().sleepApiValuesAmount <= 3)) {
-                val notification: Notification = AlarmReceiver.createInformationNotification(applicationContext,
-                    smileySelectorUtil.smileyAttention + applicationContext.getString(R.string.information_notification_text_sleep_api_problem))
-                val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                notificationManager.notify(2, notification)
+              //  val notificationsUtil = NotificationsUtil(applicationContext, NotificationUsage.NOTIFICATION_NO_API_DATA,null)
+               // notificationsUtil.chooseNotification()
             } else if (LocalTime.now().toSecondOfDay() > ForegroundService.getForegroundServiceStartTime() &&
                 ((ForegroundService.getForegroundServiceStartTime() - LocalTime.now().toSecondOfDay()) >= 60) && (dataStoreRepository.sleepApiDataFlow.first().sleepApiValuesAmount <= 3)) {
-                val notification: Notification = AlarmReceiver.createInformationNotification(applicationContext,
-                    smileySelectorUtil.smileyAttention + applicationContext.getString(R.string.information_notification_text_sleep_api_problem))
-                val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                notificationManager.notify(2, notification)
+               // val notificationsUtil = NotificationsUtil(applicationContext, NotificationUsage.NOTIFICATION_NO_API_DATA,null)
+               // notificationsUtil.chooseNotification()
             }
         }
 

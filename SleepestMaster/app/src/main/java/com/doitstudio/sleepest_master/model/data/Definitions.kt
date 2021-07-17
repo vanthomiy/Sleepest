@@ -55,6 +55,28 @@ enum class AlarmClockReceiverUsage : IAlarmClockReceiverUsage{
     },
     SNOOZE_ALARMCLOCK {
         override fun getAlarmClockReceiverUsageValue(): Int = 3
+    },
+    LATEST_WAKEUP_ALARMCLOCK {
+        override fun getAlarmClockReceiverUsageValue(): Int = 4
+    }
+}
+
+interface  INotificationUsage {
+    fun getNotificationUsageValue() : Int
+}
+
+enum class NotificationUsage : INotificationUsage {
+    NOTIFICATION_FOREGROUND_SERVICE {
+        override fun getNotificationUsageValue(): Int = 0
+    },
+    NOTIFICATION_USER_SHOULD_SLEEP {
+        override fun getNotificationUsageValue(): Int = 1
+    },
+    NOTIFICATION_NO_API_DATA {
+        override fun getNotificationUsageValue(): Int = 2
+    },
+    NOTIFICATION_ALARM_CLOCK {
+        override fun getNotificationUsageValue(): Int = 3
     }
 }
 
