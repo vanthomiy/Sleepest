@@ -2,6 +2,7 @@ package com.doitstudio.sleepest_master.ui.history
 
 import android.app.Application
 import android.app.ApplicationErrorReport
+import android.content.Context
 import android.graphics.Color
 import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
@@ -39,7 +40,7 @@ import java.time.*
 class HistoryViewModel(application: Application) : AndroidViewModel(application) {
 
     private val scope: CoroutineScope = MainScope()
-    val context by lazy { getApplication<Application>().applicationContext }
+    val context: Context by lazy { getApplication<Application>().applicationContext }
     private val dataBaseRepository: DatabaseRepository by lazy {
         (context as MainApplication).dataBaseRepository
     }
@@ -162,7 +163,9 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                 val lightSleep = values.third.sleepTimes.lightSleepDuration / 60
                 val deepSleep = values.third.sleepTimes.deepSleepDuration / 60
 
-                if ((sleep + awake) > maxSleepTime) { maxSleepTime = (sleep + awake) }
+                if ((sleep + awake) > maxSleepTime) {
+                    maxSleepTime = (sleep + awake)
+                }
 
                 if (lightSleep != 0 && deepSleep != 0) {
                     entries.add(
@@ -208,6 +211,20 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         barDataSet.setDrawValues(false)
 
         return barDataSet
+    }
+
+    private fun getBarChartYAxisProportion(sleepAmount: Int) : Float {
+        return if ((sleepAmount > 540) && (sleepAmount < 660)) {
+            12F
+        } else if ((sleepAmount > 660) && (sleepAmount < 780)) {
+            14F
+        } else if ((sleepAmount > 780) && (sleepAmount < 900)) {
+            16F
+        } else if (sleepAmount > 900) {
+            24F
+        } else {
+            10F
+        }
     }
 
     fun setBarChart(range: Int, endDateOfDiagram: LocalDate) : BarChart {
@@ -282,23 +299,24 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         barChart.xAxis.textColor = checkDarkMode()
 
         // set bar label
-        val legend = barChart.legend
-        legend.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
-        legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
-        legend.orientation = Legend.LegendOrientation.HORIZONTAL
-        legend.setDrawInside(false)
+        barChart.legend.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+        barChart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
+        barChart.legend.orientation = Legend.LegendOrientation.HORIZONTAL
+        barChart.legend.setDrawInside(false)
+        barChart.legend.textSize = 12f
 
-        val legendEntries = arrayListOf<LegendEntry>()
-        legendEntries.add((LegendEntry("Light", Legend.LegendForm.SQUARE, 8f, 8f, null ,
-            ContextCompat.getColor(context, R.color.light_sleep_color))))
-        legendEntries.add((LegendEntry("Deep", Legend.LegendForm.SQUARE, 8f, 8f, null ,
-            ContextCompat.getColor(context, R.color.deep_sleep_color)))) //R.color.deep_sleep_color
-        legendEntries.add((LegendEntry("Awake", Legend.LegendForm.SQUARE, 8f, 8f, null ,
-            ContextCompat.getColor(context, R.color.awake_sleep_color))))
-        legendEntries.add((LegendEntry("Sleep", Legend.LegendForm.SQUARE, 8f, 8f, null ,
-            ContextCompat.getColor(context, R.color.sleep_sleep_color))))
-        legend.setCustom(legendEntries)
-        legend.textSize = 12f
+        barChart.legend.setCustom(
+            listOf(
+                LegendEntry("Light", Legend.LegendForm.SQUARE, 8f, 8f, null ,
+                    ContextCompat.getColor(context, R.color.light_sleep_color)),
+                LegendEntry("Deep", Legend.LegendForm.SQUARE, 8f, 8f, null ,
+                    ContextCompat.getColor(context, R.color.deep_sleep_color)),
+                LegendEntry("Awake", Legend.LegendForm.SQUARE, 8f, 8f, null ,
+                    ContextCompat.getColor(context, R.color.awake_sleep_color)),
+                LegendEntry("Sleep", Legend.LegendForm.SQUARE, 8f, 8f, null ,
+                    ContextCompat.getColor(context, R.color.sleep_sleep_color))
+            )
+        )
 
         barChart.isDragEnabled = false
 
@@ -315,30 +333,9 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         barChart.axisLeft.setDrawGridLines(false)
         barChart.axisLeft.textColor = checkDarkMode()
 
-        if ((diagramData.third > 540) && (diagramData.third < 660)) {
-            barChart.axisRight.axisMaximum = 12f
-            barChart.axisLeft.axisMaximum = 12f
-            barChart.axisLeft.labelCount = 12
-        }
-        else if ((diagramData.third > 660) && (diagramData.third < 780)) {
-            barChart.axisRight.axisMaximum = 14f
-            barChart.axisLeft.axisMaximum = 14f
-            barChart.axisLeft.labelCount = 14
-        }
-        else if ((diagramData.third > 780) && (diagramData.third < 900)) {
-            barChart.axisRight.axisMaximum = 16f
-            barChart.axisLeft.axisMaximum = 16f
-            barChart.axisLeft.labelCount = 14
-        }
-        else if (diagramData.third > 900) { // between 12h and 14h
-            barChart.axisRight.axisMaximum = 24f
-            barChart.axisLeft.axisMaximum = 24f
-            barChart.axisLeft.labelCount = 24
-        }
-        else {
-            barChart.axisRight.axisMaximum = 10f
-            barChart.axisLeft.axisMaximum = 10f
-            barChart.axisLeft.labelCount = 10
-        }
+        val proportion = getBarChartYAxisProportion(diagramData.third)
+        barChart.axisRight.axisMaximum = proportion
+        barChart.axisLeft.axisMaximum = proportion
+        barChart.axisLeft.labelCount = proportion.toInt()
     }
 }
