@@ -13,11 +13,14 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LifecycleService;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.PeriodicWorkRequest;
@@ -35,15 +38,18 @@ import com.doitstudio.sleepest_master.model.data.AlarmClockReceiverUsage;
 import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage;
 import com.doitstudio.sleepest_master.model.data.Constants;
 import com.doitstudio.sleepest_master.googleapi.SleepHandler;
+import com.doitstudio.sleepest_master.model.data.NotificationUsage;
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 import com.doitstudio.sleepest_master.storage.DatabaseRepository;
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity;
+import com.doitstudio.sleepest_master.util.NotificationUtil;
 import com.doitstudio.sleepest_master.util.SleepUtil;
 import com.doitstudio.sleepest_master.util.SmileySelectorUtil;
 import com.doitstudio.sleepest_master.util.TimeConverterUtil;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
@@ -68,6 +74,7 @@ public class ForegroundService extends LifecycleService {
     private SleepCalculationHandler sleepCalculationHandler; //Instance of SleepCalculationHandler
     private SleepHandler sleepHandler; //Instance of SleepHandler
     public ForegroundObserver foregroundObserver; //Instance of the ForegroundObserver for live data
+    private NotificationUtil notificationUtil;
 
     //region service functions
 
@@ -100,6 +107,7 @@ public class ForegroundService extends LifecycleService {
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     public void onCreate() {
         super.onCreate();
@@ -141,8 +149,12 @@ public class ForegroundService extends LifecycleService {
 
         Bis Hier**/
 
+        notificationUtil = new NotificationUtil(getApplicationContext(), NotificationUsage.NOTIFICATION_FOREGROUND_SERVICE, fillList());
+
         //Start the Foregroundservice
-        startForeground(Constants.FOREGROUND_SERVICE_ID, createNotification());
+        //startForeground(Constants.FOREGROUND_SERVICE_ID, createNotification());
+        startForeground(Constants.FOREGROUND_SERVICE_ID, notificationUtil.createForegroundNotification());
+        sendUserInformation();
     }
 
     @Override
@@ -255,6 +267,7 @@ public class ForegroundService extends LifecycleService {
 
     //region changing values
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     public void OnAlarmChanged(AlarmEntity time) {
 
         //Recheck, if alarm already set but AlarmClockReceiver is not active because of an error
@@ -421,6 +434,7 @@ public class ForegroundService extends LifecycleService {
      * Will be called if sleep API data change
      * @param sleepApiData sleepApiData from ForegroundObserver
      */
+    @RequiresApi(api = Build.VERSION_CODES.P)
     public void OnSleepApiDataChanged(SleepApiData sleepApiData) {
 
         checkAlarmSet();
@@ -437,6 +451,7 @@ public class ForegroundService extends LifecycleService {
      * Will be called if sleepstate or time change
      * @param liveUserSleepActivity sleep time data
      */
+    @RequiresApi(api = Build.VERSION_CODES.P)
     public void OnSleepTimeChanged(LiveUserSleepActivity liveUserSleepActivity) {
 
         checkAlarmSet();
@@ -458,6 +473,7 @@ public class ForegroundService extends LifecycleService {
      * Check if banner configuration was changed
      * @param settingsData
      */
+    @RequiresApi(api = Build.VERSION_CODES.P)
     public void OnBannerConfigChanged(SettingsData settingsData) {
         bannerConfig[0] = settingsData.getBannerShowAlarmActiv();
         bannerConfig[1] = settingsData.getBannerShowActualWakeUpPoint();
@@ -474,25 +490,52 @@ public class ForegroundService extends LifecycleService {
     /**
      * Updates the notification banner with a new text
      */
+    @RequiresApi(api = Build.VERSION_CODES.P)
     public void updateNotification() {
 
-        Notification notification = createNotification();
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(1, notification);
+        //Notification notification = createNotification();
+        //NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        //notificationManager.notify(1, notification);
+
+        showForegroundNotification();
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     private void sendUserInformation() {
 
         if (SleepUtil.checkSleeptimeReachingPossibility(getApplicationContext()) && !userInformed) {
 
             userInformed = true;
 
-            Notification notification = AlarmReceiver.createInformationNotification(getApplicationContext(), getString(R.string.information_notification_text_sleeptime_problem));
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.notify(3, notification);
+            NotificationUtil notificationUtilSleepProblem = new NotificationUtil(getApplicationContext(), NotificationUsage.NOTIFICATION_USER_SHOULD_SLEEP, null);
+            notificationUtilSleepProblem.chooseNotification();
+
+            //Notification notification = AlarmReceiver.createInformationNotification(getApplicationContext(), getString(R.string.information_notification_text_sleeptime_problem));
+            //NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            //notificationManager.notify(3, notification);
 
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    private void showForegroundNotification() {
+        ArrayList<Object> arrayList = fillList();
+        notificationUtil = new NotificationUtil(getApplicationContext(), NotificationUsage.NOTIFICATION_FOREGROUND_SERVICE, arrayList);
+        notificationUtil.chooseNotification();
+    }
+
+    private ArrayList<Object> fillList() {
+        ArrayList<Object> arrayList = new ArrayList<>();
+        arrayList.add(alarmEntity);
+        arrayList.add(userSleepTime);
+        arrayList.add(isAlarmActive);
+        arrayList.add(isSleeping);
+        arrayList.add(alarmTimeInSeconds);
+        arrayList.add(bannerConfig);
+        arrayList.add(isSubscribed);
+
+        return arrayList;
     }
 
     /**

@@ -60,16 +60,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                     endOfSleepTime()
                 } else if (checkForegroundStatus() && checkInSleepTime()) {
                     if (checkAlarmActive()) {
-                        val calenderCalculation = TimeConverterUtil.getAlarmDate(getFirstWakeup() - 1800)
-                        AlarmReceiver.startAlarmManager(
-                            calenderCalculation[Calendar.DAY_OF_WEEK],
-                            calenderCalculation[Calendar.HOUR_OF_DAY],
-                            calenderCalculation[Calendar.MINUTE],
-                            context,
-                            AlarmReceiverUsage.START_WORKMANAGER_CALCULATION
-                        )
                         var calendar = TimeConverterUtil.getAlarmDate(getLastWakeup())
-                        AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context.applicationContext, AlarmClockReceiverUsage.START_ALARMCLOCK);
                         calendar = TimeConverterUtil.getAlarmDate(getSleepTimeEndValue())
                         AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context.applicationContext, AlarmReceiverUsage.STOP_WORKMANAGER);
                     }
@@ -106,6 +97,18 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                 startForegroundService(false)
             } else if (listEmpty) {
                 stopForegroundService(false)
+            }
+
+            if (checkInSleepTime() && checkAlarmActive() && checkForegroundStatus() && !checkAlarmFired() && !checkAlarmTempDisabled() && !listEmpty) {
+                val calenderCalculation = TimeConverterUtil.getAlarmDate(getFirstWakeup() - 1800)
+                AlarmReceiver.startAlarmManager(
+                    calenderCalculation[Calendar.DAY_OF_WEEK],
+                    calenderCalculation[Calendar.HOUR_OF_DAY],
+                    calenderCalculation[Calendar.MINUTE],
+                    context,
+                    AlarmReceiverUsage.START_WORKMANAGER_CALCULATION)
+                val calendar = TimeConverterUtil.getAlarmDate(getLastWakeup())
+                AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context.applicationContext, AlarmClockReceiverUsage.LATEST_WAKEUP_ALARMCLOCK);
             }
         }
 
@@ -178,6 +181,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
             WorkManager.getInstance(context.applicationContext).cancelAllWorkByTag(context.getString(R.string.workmanager2_tag))
             AlarmClockReceiver.cancelAlarm(context.applicationContext, AlarmClockReceiverUsage.START_ALARMCLOCK);
+            AlarmClockReceiver.cancelAlarm(context.applicationContext, AlarmClockReceiverUsage.LATEST_WAKEUP_ALARMCLOCK);
 
             //Cancel Alarm for starting Workmanager
             AlarmReceiver.cancelAlarm(context, AlarmReceiverUsage.START_WORKMANAGER_CALCULATION)
@@ -211,7 +215,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                         AlarmReceiverUsage.START_WORKMANAGER_CALCULATION
                     )
                     val calendar = TimeConverterUtil.getAlarmDate(getLastWakeup())
-                    AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context.applicationContext, AlarmClockReceiverUsage.START_ALARMCLOCK);
+                    AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context.applicationContext, AlarmClockReceiverUsage.LATEST_WAKEUP_ALARMCLOCK);
                 }
 
 
