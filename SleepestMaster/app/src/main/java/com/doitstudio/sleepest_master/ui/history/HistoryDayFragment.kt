@@ -1,5 +1,6 @@
 package com.doitstudio.sleepest_master.ui.history
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -41,6 +42,7 @@ class HistoryDayFragment : Fragment() {
 
 
         lineChart = setLineChart()
+        updateLineChart(lineChart)
         binding.lLSleepAnalysisChartsDay.addView(lineChart)
         lineChart.layoutParams.height = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics
@@ -123,9 +125,9 @@ class HistoryDayFragment : Fragment() {
         lineDataSet.setDrawFilled(true)
         lineDataSet.setDrawCircles(false)
         lineDataSet.lineWidth = 2f
-        lineDataSet.fillColor = R.color.tertiary_text_color
+        lineDataSet.fillColor = ContextCompat.getColor(viewModel.context, R.color.sleep_sleep_color)
         lineDataSet.fillAlpha = 255
-        lineDataSet.color = R.color.colorPrimary
+        lineDataSet.color = ContextCompat.getColor(viewModel.context, R.color.awake_sleep_color)
 
         val yAxisValues = ArrayList<String>()
         yAxisValues.add("Awake")
@@ -142,6 +144,7 @@ class HistoryDayFragment : Fragment() {
         chart.axisLeft.axisMaximum = 3f
         chart.axisLeft.setDrawGridLines(false)
         chart.axisLeft.textColor = viewModel.checkDarkMode()
+        chart.legend.textColor = viewModel.checkDarkMode()
 
         chart.axisRight.setDrawLabels(false)
         chart.axisRight.setDrawGridLines(false)
@@ -166,8 +169,6 @@ class HistoryDayFragment : Fragment() {
                 val deepSleep = sleepValues.third.sleepTimes.deepSleepDuration
 
                 if (lightSleep == 0 && deepSleep == 0) {
-                    entries.add(PieEntry(0.toFloat(), "Light"))
-                    entries.add(PieEntry(0.toFloat(), "Deep"))
                     entries.add(PieEntry(awake.toFloat(), "Awake"))
                     entries.add(PieEntry(sleep.toFloat(), "Sleep"))
                 }
@@ -175,7 +176,6 @@ class HistoryDayFragment : Fragment() {
                     entries.add(PieEntry(lightSleep.toFloat(), "Light"))
                     entries.add(PieEntry(deepSleep.toFloat(), "Deep"))
                     entries.add(PieEntry(awake.toFloat(), "Awake"))
-                    entries.add(PieEntry(0.toFloat(), "Sleep"))
                 }
             }
         }
@@ -185,32 +185,41 @@ class HistoryDayFragment : Fragment() {
 
     private fun setPieChart() : PieChart {
         val chart = PieChart(context)
-        val pieDataSet = PieDataSet(generateDataPieChart(), "Sleep states")
+        val pieDataSet = PieDataSet(generateDataPieChart(), "")
         visualSetUpPieChart(chart, pieDataSet)
         chart.data = PieData(pieDataSet)
         return chart
     }
 
     private fun updatePieChart(chart: PieChart) {
-        val pieDataSet = PieDataSet(generateDataPieChart(), "Sleep states")
+        val pieDataSet = PieDataSet(generateDataPieChart(), "")
         visualSetUpPieChart(chart, pieDataSet)
         chart.data = PieData(pieDataSet)
     }
 
     private fun visualSetUpPieChart(chart: PieChart, pieDataSet: PieDataSet) {
         val listColors = ArrayList<Int>()
-        listColors.add(ContextCompat.getColor(viewModel.context, R.color.light_sleep_color))
-        listColors.add(ContextCompat.getColor(viewModel.context, R.color.deep_sleep_color))
-        listColors.add(ContextCompat.getColor(viewModel.context, R.color.awake_sleep_color))
-        listColors.add(ContextCompat.getColor(viewModel.context, R.color.sleep_sleep_color))
+        if (pieDataSet.entryCount == 2) {
+            listColors.add(ContextCompat.getColor(viewModel.context, R.color.awake_sleep_color))
+            listColors.add(ContextCompat.getColor(viewModel.context, R.color.sleep_sleep_color))
+        }
+        else {
+            listColors.add(ContextCompat.getColor(viewModel.context, R.color.light_sleep_color))
+            listColors.add(ContextCompat.getColor(viewModel.context, R.color.deep_sleep_color))
+            listColors.add(ContextCompat.getColor(viewModel.context, R.color.awake_sleep_color))
+        }
+
         pieDataSet.colors = listColors
+        pieDataSet.setDrawValues(false)
+        pieDataSet.label
 
-        chart.setCenterTextColor(viewModel.checkDarkMode())
-        chart.setEntryLabelColor(viewModel.checkDarkMode())
+        chart.setCenterTextColor(Color.WHITE)
+        chart.setHoleColor(Color.BLACK)
+        chart.setEntryLabelColor(Color.WHITE)
 
-        chart.setUsePercentValues(true)
-        chart.isDrawHoleEnabled = false
+        chart.isDrawHoleEnabled = true
         chart.description.isEnabled = false
+        chart.legend.textColor = viewModel.checkDarkMode()
         chart.animateY(1000, Easing.EaseInOutQuad)
     }
 }

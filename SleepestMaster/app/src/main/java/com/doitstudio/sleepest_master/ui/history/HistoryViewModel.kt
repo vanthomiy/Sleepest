@@ -298,17 +298,18 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         barChart.legend.orientation = Legend.LegendOrientation.HORIZONTAL
         barChart.legend.setDrawInside(false)
         barChart.legend.textSize = 12f
+        barChart.legend.textColor = checkDarkMode()
 
         barChart.legend.setCustom(
             listOf(
-                LegendEntry("Light", Legend.LegendForm.SQUARE, 8f, 8f, null ,
+                LegendEntry("Light", Legend.LegendForm.SQUARE, 8f, 8f, null,
                     ContextCompat.getColor(context, R.color.light_sleep_color)),
-                LegendEntry("Deep", Legend.LegendForm.SQUARE, 8f, 8f, null ,
+                LegendEntry("Deep", Legend.LegendForm.SQUARE, 8f, 8f, null,
                     ContextCompat.getColor(context, R.color.deep_sleep_color)),
-                LegendEntry("Awake", Legend.LegendForm.SQUARE, 8f, 8f, null ,
+                LegendEntry("Awake", Legend.LegendForm.SQUARE, 8f, 8f, null,
                     ContextCompat.getColor(context, R.color.awake_sleep_color)),
-                LegendEntry("Sleep", Legend.LegendForm.SQUARE, 8f, 8f, null ,
-                    ContextCompat.getColor(context, R.color.sleep_sleep_color))
+                LegendEntry("Sleep", Legend.LegendForm.SQUARE, 8f, 8f, null,
+                    ContextCompat.getColor(context, R.color.sleep_sleep_color),)
             )
         )
 
