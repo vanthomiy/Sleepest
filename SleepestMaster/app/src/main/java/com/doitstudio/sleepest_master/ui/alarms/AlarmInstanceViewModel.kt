@@ -214,7 +214,6 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
         scope.launch {
             var alarmSettings = dataBaseRepository.getAlarmById(alarmId).first()
 
-            val sleepDuration = LocalTime.ofSecondOfDay(alarmSettings.sleepDuration.toLong())
             val wakeupEarly = LocalTime.ofSecondOfDay(alarmSettings.wakeupEarly.toLong())
             val wakeupLate = LocalTime.ofSecondOfDay(alarmSettings.wakeupLate.toLong())
             isAlarmActive.set(alarmSettings.isActive)
@@ -230,7 +229,6 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
             }
 
             setDaysSelectedString()
-
         }
     }
 

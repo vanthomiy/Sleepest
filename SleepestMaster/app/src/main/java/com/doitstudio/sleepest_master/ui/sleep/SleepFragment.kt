@@ -61,6 +61,32 @@ class SleepFragment : Fragment() {
 
         }
 
+        binding.npHours.setOnValueChangedListener { picker, oldVal, newVal -> viewModel.onDurationChange(
+            newVal,
+            binding.npMinutes.value
+        ) }
+
+        binding.npMinutes.setOnValueChangedListener { picker, oldVal, newVal -> viewModel.onDurationChange(
+            binding.npHours.value,
+            newVal
+        )  }
+
+        // Used to update the sleep end and start time if it changes from the alarms fragments
+        dataStoreRepository.sleepParameterFlow.asLiveData().observe(viewLifecycleOwner){
+            
+            viewModel.sleepStartTime = LocalTime.ofSecondOfDay(it.sleepTimeStart.toLong())
+            viewModel.sleepEndTime = LocalTime.ofSecondOfDay(it.sleepTimeEnd.toLong())
+
+            val sleepDuration = LocalTime.ofSecondOfDay(it.normalSleepTime.toLong())
+
+            binding.npHours.value = sleepDuration.hour
+            binding.npMinutes.value = sleepDuration.minute
+            viewModel.sleepDuration = sleepDuration.toSecondOfDay()
+
+            viewModel.sleepStartValue.set((if (viewModel.sleepStartTime.hour < 10) "0" else "") + viewModel.sleepStartTime.hour.toString() + ":" + (if (viewModel.sleepStartTime.minute < 10) "0" else "") + viewModel.sleepStartTime.minute.toString())
+            viewModel.sleepEndValue.set((if (viewModel.sleepEndTime.hour < 10) "0" else "") + viewModel.sleepEndTime.hour.toString() + ":" + (if (viewModel.sleepEndTime.minute < 10) "0" else "") + viewModel.sleepEndTime.minute.toString())
+        }
+
         return binding.root
     }
 
@@ -69,48 +95,9 @@ class SleepFragment : Fragment() {
 
     }
 
-    // Function to check and request permission.
-    private fun checkPermission(permission: String, requestCode: Int) {
-        if (ContextCompat.checkSelfPermission(actualContext, permission) == PackageManager.PERMISSION_DENIED) {
-            // Requesting the permission
-            ActivityCompat.requestPermissions(requireActivity(), arrayOf(permission), requestCode)
-        } else {
-            Toast.makeText(actualContext, "Permission already granted", Toast.LENGTH_SHORT).show()
-        }
-    }
-
     private val scope: CoroutineScope = MainScope()
     private val dataStoreRepository: DataStoreRepository by lazy {
         (actualContext as MainApplication).dataStoreRepository
     }
 
-    private fun onAlarmSoundChange(view: View){
-        //check if audio volume is 0
-
-            val audioManager = actualContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-            if (audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) <= 0) {
-                Toast.makeText(actualContext, "Increase volume to hear sounds", Toast.LENGTH_LONG).show()
-            }
-
-            var savedRingtoneUri = Uri.parse(dataStoreRepository.getAlarmToneJob())
-
-            if(dataStoreRepository.getAlarmToneJob() == "null") {
-                savedRingtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
-            }
-
-
-            val ringtonePickerBuilder = RingtonePickerDialog.Builder(actualContext, parentFragmentManager)
-                .setTitle("Select your ringtone")
-                .displayDefaultRingtone(true)
-                .setCurrentRingtoneUri(savedRingtoneUri)
-                .setPositiveButtonText("Set")
-                .setCancelButtonText("Cancel")
-                .setPlaySampleWhileSelection(true)
-                .setListener { ringtoneName, ringtoneUri ->  scope.launch{ dataStoreRepository.updateAlarmTone(ringtoneUri.toString()) }}
-
-            ringtonePickerBuilder.addRingtoneType(RingtonePickerDialog.Builder.TYPE_ALARM)
-            ringtonePickerBuilder.show()
-
-    }
-    
 }

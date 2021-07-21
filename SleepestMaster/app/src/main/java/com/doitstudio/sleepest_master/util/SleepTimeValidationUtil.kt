@@ -2,7 +2,9 @@ package com.doitstudio.sleepest_master.util
 
 import android.content.Context
 import android.widget.Toast
+import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.model.data.AlarmSleepChangeFrom
+import com.doitstudio.sleepest_master.model.data.SleepSleepChangeFrom
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import kotlinx.coroutines.flow.first
@@ -91,7 +93,7 @@ object SleepTimeValidationUtil {
      * This is used to check if the alarm settings that are made are in relation to the sleep settings.
      * If we can find any problems we return the new values if necessary that will notify the user
      */
-    suspend fun checkAlarmActionIsAllowedAndDoAction(alarmId:Int,dataBaseRepository:DatabaseRepository, dataStoreRepository: DataStoreRepository, context: Context, wakeUpEarly: Int, wakeUpLate: Int, sleepDuration: Int, changeFrom: AlarmSleepChangeFrom) : Int {
+    suspend fun checkAlarmActionIsAllowedAndDoAction(alarmId:Int,dataBaseRepository:DatabaseRepository, dataStoreRepository: DataStoreRepository, context: Context, wakeUpEarly: Int, wakeUpLate: Int, sleepDuration: Int, changeFrom: AlarmSleepChangeFrom) {
 
 
         val minTimeBuffer = 7200 // 2 hours
@@ -188,16 +190,97 @@ object SleepTimeValidationUtil {
             dataBaseRepository.updateWakeupLate(newWakeUpLate, alarmId)
         if(sleepDuration != newSleepDuration || changeFrom == AlarmSleepChangeFrom.DURATION)
             dataBaseRepository.updateSleepDuration(newSleepDuration, alarmId)
-
-        return 0
     }
 
     /**
      * This is used to check if the sleep settings that are made are in relation to the alarms.
      * If we can find any problems we set the values in the database (they will be the setup by the observer) and make a toast if necessary that will notify the user
      */
-    suspend fun checkSleepActionIsAllowedAndDoAction(databaseRepository: DatabaseRepository){
+    suspend fun checkSleepActionIsAllowedAndDoAction(dataStoreRepository: DataStoreRepository, context: Context, sleepTimeStart : Int, sleepTimeEnd : Int, sleepDuration : Int, autoSleepTime : Boolean, changeFrom: SleepSleepChangeFrom){
 
+        val minTimeBuffer = 7200 // 2 hours
+        val dataBaseRepository:DatabaseRepository = (context as MainApplication).dataBaseRepository
+
+        var newSleepTimeStart = sleepTimeStart
+        var newSleepTimeEnd = sleepTimeEnd
+        var newSleepDuration = sleepDuration
+
+        // Check if Wakeup Early and Wakeup Late matches, else change one of it
+        /*
+        if(sleepTimeStart > sleepTimeEnd) {
+            newSleepTimeEnd = when (changeFrom) {
+                SleepSleepChangeFrom.SLEEPTIMESTART -> sleepTimeStart
+                else -> sleepTimeEnd
+            }
+            newSleepTimeStart = when (changeFrom) {
+                SleepSleepChangeFrom.SLEEPTIMEEND -> sleepTimeEnd
+                else -> sleepTimeStart
+            }
+        }
+        */
+
+        //check if the possible sleep time is big enough for the sleep time
+        val possibleSleepTime =
+            getTimeBetweenSecondsOfDay(newSleepTimeEnd, newSleepTimeStart)
+
+
+        // Check sleep params itself
+        if(possibleSleepTime < (newSleepDuration + minTimeBuffer)){
+            val timeDiff = kotlin.math.abs(possibleSleepTime - (newSleepDuration + minTimeBuffer))
+
+            if(changeFrom == SleepSleepChangeFrom.DURATION){
+                if(autoSleepTime){
+                    newSleepTimeStart = (newSleepTimeStart - timeDiff/2)
+                    newSleepTimeEnd = (newSleepTimeEnd - timeDiff/2)
+                }
+                else{
+                    newSleepDuration = possibleSleepTime - timeDiff
+                }
+            }
+            else{
+
+                newSleepTimeStart = when (changeFrom) {
+                    SleepSleepChangeFrom.SLEEPTIMESTART -> (newSleepTimeStart - timeDiff)
+                    else -> newSleepTimeStart
+                }
+                newSleepTimeEnd = when (changeFrom) {
+                    SleepSleepChangeFrom.SLEEPTIMEEND -> (newSleepTimeEnd - timeDiff)
+                    else -> newSleepTimeEnd
+                }
+            }
+        }
+
+        // Check params for every alarm entity...
+
+        val allAlarms = dataBaseRepository.alarmFlow.first()
+
+        allAlarms.forEach{ alarm ->
+            if(alarm.wakeupLate > (newSleepTimeEnd - minTimeBuffer/2))
+                newSleepTimeEnd = alarm.wakeupLate - minTimeBuffer/2
+
+            //check if the possible sleep time is big enough for the sleep time
+            val possibleSleepTime =
+                getTimeBetweenSecondsOfDay(newSleepTimeStart, alarm.wakeupLate)
+
+            val timeDiff = kotlin.math.abs(possibleSleepTime - (alarm.sleepDuration + minTimeBuffer))
+
+            if(possibleSleepTime < (alarm.sleepDuration + minTimeBuffer))
+            {
+                newSleepTimeStart = when (changeFrom) {
+                    SleepSleepChangeFrom.SLEEPTIMESTART -> newSleepTimeEnd + timeDiff
+                    else -> sleepTimeStart
+                }
+            }
+        }
+
+
+
+        if(sleepTimeStart != newSleepTimeStart || changeFrom == SleepSleepChangeFrom.SLEEPTIMESTART)
+            dataStoreRepository.updateSleepTimeStart(newSleepTimeStart)
+        if(sleepTimeEnd != newSleepTimeEnd || changeFrom == SleepSleepChangeFrom.SLEEPTIMEEND)
+            dataStoreRepository.updateSleepTimeEnd(newSleepTimeEnd)
+        if(sleepDuration != newSleepDuration || changeFrom == SleepSleepChangeFrom.DURATION)
+            dataStoreRepository.updateUserWantedSleepTime(newSleepDuration)
     }
 
 

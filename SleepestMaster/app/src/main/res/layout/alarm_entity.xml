@@ -69,7 +69,6 @@
                 android:textStyle="bold" />
 
             <FrameLayout
-                android:id="@+id/fL_wakeupRange1"
                 android:layout_height="70dp"
                 android:layout_width="match_parent"
                 android:layout_margin="10dp"
@@ -93,7 +92,6 @@
                     <FrameLayout
                         android:layout_width="150dp"
                         android:layout_height="50dp"
-                        android:onClick="@{alarmInstanceViewModel::onWakeUpEarlyClicked}"
                         android:background="@drawable/transparentrounded"
                         android:backgroundTint="@color/secondary_button_color">
                         <com.shawnlin.numberpicker.NumberPicker
@@ -132,7 +130,6 @@
                     <FrameLayout
                         android:layout_width="150dp"
                         android:layout_height="50dp"
-                        android:onClick="@{alarmInstanceViewModel::onWakeUpEarlyClicked}"
                         android:background="@drawable/transparentrounded"
                         android:backgroundTint="@color/secondary_button_color">
                         <com.shawnlin.numberpicker.NumberPicker
