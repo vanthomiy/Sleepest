@@ -24,6 +24,7 @@ import androidx.annotation.RequiresApi;
 
 import com.doitstudio.sleepest_master.MainApplication;
 import com.doitstudio.sleepest_master.R;
+import com.doitstudio.sleepest_master.model.data.NotificationUsage;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog;
 import com.kevalpatel.ringtonepicker.RingtonePickerListener;
@@ -322,7 +323,7 @@ public class AlarmClockAudio {
 
         //cancel countdown and notification
         countDownTimer.cancel();
-        AlarmClockReceiver.cancelNotification();
+        AlarmClockReceiver.cancelNotification(NotificationUsage.NOTIFICATION_ALARM_CLOCK);
 
 
     }

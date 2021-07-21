@@ -33,7 +33,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="1dp"
                     android:textSize="13sp"
-                    android:text="testtesttesttest"
+                    android:text=" "
                     style="@style/Theme.AppCompat.DayNight"/>
 
                 <TextView
@@ -42,7 +42,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="1dp"
                     android:textSize="13sp"
-                    android:text="testtesttesttest"
+                    android:text=" "
                     style="@style/Theme.AppCompat.DayNight"/>
 
                 <TextView
@@ -51,16 +51,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="1dp"
                     android:textSize="13sp"
-                    android:text="testtesttesttest"
-                    style="@style/Theme.AppCompat.DayNight"/>
-
-                <TextView
-                    android:id="@+id/tvBannerDetailedSleeptime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
-                    android:textSize="13sp"
-                    android:text="testtesttesttest"
+                    android:text=" "
                     style="@style/Theme.AppCompat.DayNight"/>
 
                 <TextView
@@ -69,7 +60,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="1dp"
                     android:textSize="13sp"
-                    android:text="Rem: 1h 2min, Light: 3h 20min, Deep: 4h, 22min"
+                    android:text=" "
                     style="@style/Theme.AppCompat.DayNight"/>
 
             </LinearLayout>
@@ -93,8 +84,8 @@
                 android:layout_marginRight="2dp"
                 android:background="@drawable/rounded_button_green"
                 style="@style/Theme.AppCompat.DayNight"
-                android:layout_gravity="bottom"
-                android:textSize="16sp"/>
+                android:layout_gravity="bottom|center_horizontal"
+                android:textSize="15sp"/>
 
             <Button
                 android:id="@+id/btnNotSleepingNotification"
@@ -105,7 +96,7 @@
                 android:layout_marginLeft="2dp"
                 android:background="@drawable/rounded_button_green"
                 style="@style/Theme.AppCompat.DayNight"
-                android:layout_gravity="bottom"
+                android:layout_gravity="bottom|center_horizontal"
                 android:textSize="15sp"/>
         </LinearLayout>
 

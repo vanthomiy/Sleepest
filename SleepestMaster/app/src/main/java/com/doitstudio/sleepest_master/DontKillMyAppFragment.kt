@@ -24,7 +24,7 @@ class DontKillMyAppFragment : DialogFragment() {
 
 
         val tvDescriptionDontKillMyApp : TextView = dokiCustomView.findViewById(R.id.tvDescriptionDontKillMyApp)
-        tvDescriptionDontKillMyApp.setText(getString(R.string.nameverkackt))
+        tvDescriptionDontKillMyApp.setText(getString(R.string.description_dont_kill_my_app))
 
         return MaterialDialog(requireContext()).show {
             customView(view = dokiCustomView)

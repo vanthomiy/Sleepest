@@ -13,11 +13,14 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LifecycleService;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.PeriodicWorkRequest;
@@ -35,15 +38,18 @@ import com.doitstudio.sleepest_master.model.data.AlarmClockReceiverUsage;
 import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage;
 import com.doitstudio.sleepest_master.model.data.Constants;
 import com.doitstudio.sleepest_master.googleapi.SleepHandler;
+import com.doitstudio.sleepest_master.model.data.NotificationUsage;
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 import com.doitstudio.sleepest_master.storage.DatabaseRepository;
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity;
+import com.doitstudio.sleepest_master.util.NotificationUtil;
 import com.doitstudio.sleepest_master.util.SleepUtil;
 import com.doitstudio.sleepest_master.util.SmileySelectorUtil;
 import com.doitstudio.sleepest_master.util.TimeConverterUtil;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
@@ -59,7 +65,8 @@ public class ForegroundService extends LifecycleService {
     private int alarmTimeInSeconds = 0; //Shows the calculated alarm time
     private int actualWakeUp = 0; //Shows the set alarm clock time
     private boolean userInformed = false; //Detects if the user is already informed about problems with reaching sleep time
-    boolean[] bannerConfig = new boolean[5];
+    private boolean[] bannerConfig = new boolean[5];
+    private static int foregroundServiceStartTime = 0;
 
     private DataStoreRepository dataStoreRepository; //Instance of DataStoreRepo
     private DatabaseRepository databaseRepository; //Instance of DatabaseRepo
@@ -67,6 +74,7 @@ public class ForegroundService extends LifecycleService {
     private SleepCalculationHandler sleepCalculationHandler; //Instance of SleepCalculationHandler
     private SleepHandler sleepHandler; //Instance of SleepHandler
     public ForegroundObserver foregroundObserver; //Instance of the ForegroundObserver for live data
+    private NotificationUtil notificationUtil;
 
     //region service functions
 
@@ -99,6 +107,7 @@ public class ForegroundService extends LifecycleService {
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     public void onCreate() {
         super.onCreate();
@@ -116,6 +125,7 @@ public class ForegroundService extends LifecycleService {
             foregroundObserver.updateAlarmWasFired(false, alarmEntity.getId());
         }
 
+        setForegroundServiceStartTime();
 
         /**WEG
         //Subscribe to sleep API
@@ -139,8 +149,12 @@ public class ForegroundService extends LifecycleService {
 
         Bis Hier**/
 
+        notificationUtil = new NotificationUtil(getApplicationContext(), NotificationUsage.NOTIFICATION_FOREGROUND_SERVICE, fillList());
+
         //Start the Foregroundservice
-        startForeground(Constants.FOREGROUND_SERVICE_ID, createNotification());
+        //startForeground(Constants.FOREGROUND_SERVICE_ID, createNotification());
+        startForeground(Constants.FOREGROUND_SERVICE_ID, notificationUtil.createForegroundNotification());
+        sendUserInformation();
     }
 
     @Override
@@ -241,10 +255,19 @@ public class ForegroundService extends LifecycleService {
 
     }
 
+    private static void setForegroundServiceStartTime() {
+        foregroundServiceStartTime = LocalTime.now().toSecondOfDay();
+    }
+
+    public static int getForegroundServiceStartTime() {
+        return foregroundServiceStartTime;
+    }
+
     //endregion
 
     //region changing values
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     public void OnAlarmChanged(AlarmEntity time) {
 
         //Recheck, if alarm already set but AlarmClockReceiver is not active because of an error
@@ -411,6 +434,7 @@ public class ForegroundService extends LifecycleService {
      * Will be called if sleep API data change
      * @param sleepApiData sleepApiData from ForegroundObserver
      */
+    @RequiresApi(api = Build.VERSION_CODES.P)
     public void OnSleepApiDataChanged(SleepApiData sleepApiData) {
 
         checkAlarmSet();
@@ -427,6 +451,7 @@ public class ForegroundService extends LifecycleService {
      * Will be called if sleepstate or time change
      * @param liveUserSleepActivity sleep time data
      */
+    @RequiresApi(api = Build.VERSION_CODES.P)
     public void OnSleepTimeChanged(LiveUserSleepActivity liveUserSleepActivity) {
 
         checkAlarmSet();
@@ -448,6 +473,7 @@ public class ForegroundService extends LifecycleService {
      * Check if banner configuration was changed
      * @param settingsData
      */
+    @RequiresApi(api = Build.VERSION_CODES.P)
     public void OnBannerConfigChanged(SettingsData settingsData) {
         bannerConfig[0] = settingsData.getBannerShowAlarmActiv();
         bannerConfig[1] = settingsData.getBannerShowActualWakeUpPoint();
@@ -464,25 +490,52 @@ public class ForegroundService extends LifecycleService {
     /**
      * Updates the notification banner with a new text
      */
+    @RequiresApi(api = Build.VERSION_CODES.P)
     public void updateNotification() {
 
-        Notification notification = createNotification();
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(1, notification);
+        //Notification notification = createNotification();
+        //NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        //notificationManager.notify(1, notification);
+
+        showForegroundNotification();
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     private void sendUserInformation() {
 
         if (SleepUtil.checkSleeptimeReachingPossibility(getApplicationContext()) && !userInformed) {
 
             userInformed = true;
 
-            Notification notification = AlarmReceiver.createInformationNotification(getApplicationContext(), getString(R.string.information_notification_text_sleeptime_problem));
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.notify(3, notification);
+            NotificationUtil notificationUtilSleepProblem = new NotificationUtil(getApplicationContext(), NotificationUsage.NOTIFICATION_USER_SHOULD_SLEEP, null);
+            notificationUtilSleepProblem.chooseNotification();
+
+            //Notification notification = AlarmReceiver.createInformationNotification(getApplicationContext(), getString(R.string.information_notification_text_sleeptime_problem));
+            //NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            //notificationManager.notify(3, notification);
 
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    private void showForegroundNotification() {
+        ArrayList<Object> arrayList = fillList();
+        notificationUtil = new NotificationUtil(getApplicationContext(), NotificationUsage.NOTIFICATION_FOREGROUND_SERVICE, arrayList);
+        notificationUtil.chooseNotification();
+    }
+
+    private ArrayList<Object> fillList() {
+        ArrayList<Object> arrayList = new ArrayList<>();
+        arrayList.add(alarmEntity);
+        arrayList.add(userSleepTime);
+        arrayList.add(isAlarmActive);
+        arrayList.add(isSleeping);
+        arrayList.add(alarmTimeInSeconds);
+        arrayList.add(bannerConfig);
+        arrayList.add(isSubscribed);
+
+        return arrayList;
     }
 
     /**
@@ -534,7 +587,7 @@ public class ForegroundService extends LifecycleService {
             btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), AlarmReceiverUsage.NOT_SLEEPING.getAlarmReceiverUsageValue(), btnClickIntent, 0);
             remoteViews.setOnClickPendingIntent(R.id.btnNotSleepingNotification, btnClickPendingIntent);
 
-            remoteViews.setViewVisibility(R.id.btnNotSleepingNotification, View.INVISIBLE);
+            remoteViews.setViewVisibility(R.id.btnNotSleepingNotification, View.GONE);
         } else {
             //Set button for currently not sleeping
             btnClickIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
@@ -580,28 +633,21 @@ public class ForegroundService extends LifecycleService {
             remoteViews.setTextViewText(R.id.tvBannerAlarmActive, contentText + " sub:" + isSubscribed);
             remoteViews.setViewVisibility(R.id.tvBannerAlarmActive, View.VISIBLE);
         } else {
-            remoteViews.setViewVisibility(R.id.tvBannerAlarmActive, View.INVISIBLE);
+            remoteViews.setViewVisibility(R.id.tvBannerAlarmActive, View.GONE);
         }
 
         if (bannerConfig[1]) {
             remoteViews.setTextViewText(R.id.tvBannerActualWakeup, alarmtimeText);
             remoteViews.setViewVisibility(R.id.tvBannerActualWakeup, View.VISIBLE);
         } else {
-            remoteViews.setViewVisibility(R.id.tvBannerActualWakeup, View.INVISIBLE);
+            remoteViews.setViewVisibility(R.id.tvBannerActualWakeup, View.GONE);
         }
 
         if (bannerConfig[2]) {
             remoteViews.setTextViewText(R.id.tvBannerActualSleeptime, sleeptimeText);
             remoteViews.setViewVisibility(R.id.tvBannerActualSleeptime, View.VISIBLE);
         } else {
-            remoteViews.setViewVisibility(R.id.tvBannerActualSleeptime, View.INVISIBLE);
-        }
-
-        if (bannerConfig[3]) {
-            //remoteViews.setTextViewText(R.id.tvBannerDetailedSleeptime, notificationText);
-            remoteViews.setViewVisibility(R.id.tvBannerDetailedSleeptime, View.VISIBLE);
-        } else {
-            remoteViews.setViewVisibility(R.id.tvBannerAlarmActive, View.INVISIBLE);
+            remoteViews.setViewVisibility(R.id.tvBannerActualSleeptime, View.GONE);
         }
 
         if (bannerConfig[4]) {
