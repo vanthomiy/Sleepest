@@ -20,7 +20,7 @@ import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.ui.alarm.AlarmsFragment
-import com.doitstudio.sleepest_master.ui.history.HistoryFragment
+import com.doitstudio.sleepest_master.ui.history.HistoryTabView
 import com.doitstudio.sleepest_master.ui.settings.SettingsFragment
 import com.doitstudio.sleepest_master.ui.sleep.SleepFragment
 import com.doitstudio.sleepest_master.util.PermissionsUtil
@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
     // region fragments
 
     lateinit var alarmsFragment : AlarmsFragment
-    lateinit var historyFragment : HistoryFragment
+    lateinit var historyFragment : HistoryTabView
     lateinit var sleepFragment : SleepFragment
     lateinit var settingsFragment : SettingsFragment
 
@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
 
             bottomBar = binding.bottomBar
             alarmsFragment = AlarmsFragment()
-            historyFragment = HistoryFragment(applicationContext)
+            historyFragment = HistoryTabView()
             sleepFragment = SleepFragment()
             settingsFragment = SettingsFragment()
 
