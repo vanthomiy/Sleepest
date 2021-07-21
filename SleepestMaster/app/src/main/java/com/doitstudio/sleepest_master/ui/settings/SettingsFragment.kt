@@ -160,7 +160,7 @@ class SettingsFragment : Fragment() {
             """.trimIndent()
         pref = actualContext.getSharedPreferences("BootTime1", 0)
         val textBooReceiver1= """
-            Last Boot: ${pref.getInt("hour", 0)},${pref.getInt("minute", 0)}
+            Last Boot: ${pref.getInt("hour", 0)},${pref.getInt("minute", 0)},${pref.getInt("usage", 0)}
             
             """.trimIndent()
 

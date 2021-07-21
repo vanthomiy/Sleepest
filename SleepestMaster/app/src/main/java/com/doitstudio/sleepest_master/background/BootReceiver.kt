@@ -32,9 +32,11 @@ class BootReceiver : BroadcastReceiver() {
         if (action != null) {
             if (action == Intent.ACTION_BOOT_COMPLETED) {
 
-                scope.launch {
 
-                    BackgroundAlarmTimeHandler.getHandler(context).deviceBoot()
+
+                    BackgroundAlarmTimeHandler.getHandler(context).chooseStateBeforeReboot()
+
+
                     /*if(dataStoreRepository.backgroundServiceFlow.first().isForegroundActive && dataBaseRepository.getNextActiveAlarm() != null) {
                         if (!dataBaseRepository.getNextActiveAlarm()!!.wasFired && !dataBaseRepository.getNextActiveAlarm()!!.tempDisabled && ((LocalTime.now().toSecondOfDay() < dataBaseRepository.getNextActiveAlarm()!!.actualWakeup) ||
                                     (dataStoreRepository.getSleepTimeBegin() < LocalTime.now().toSecondOfDay())) && dataStoreRepository.isInSleepTime() && (dataBaseRepository.getNextActiveAlarm() != null)) {
@@ -89,7 +91,7 @@ class BootReceiver : BroadcastReceiver() {
                         dataStoreRepository.backgroundUpdateIsActive(false)
                     }*/
                 }
-            }
+
         }
     }
 }
