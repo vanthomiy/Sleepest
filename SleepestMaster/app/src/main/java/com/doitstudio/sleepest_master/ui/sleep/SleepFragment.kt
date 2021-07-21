@@ -33,6 +33,9 @@ class SleepFragment : Fragment() {
     private lateinit var binding: FragmentSleepBinding
     private val actualContext: Context by lazy {requireActivity().applicationContext}
 
+    private val dataStoreRepository: DataStoreRepository by lazy {
+        (actualContext as MainApplication).dataStoreRepository
+    }
 
     companion object {
         fun newInstance() = SleepFragment()
@@ -51,34 +54,34 @@ class SleepFragment : Fragment() {
         viewModel.animatedTopView = binding.animatedTopView
         binding.sleepViewModel = viewModel
 
-        // Used to update the sleep end and start time if it changes from the alarms fragments
-        dataStoreRepository.sleepParameterFlow.asLiveData().observe(requireActivity()){
-            viewModel.sleepStartTime = LocalTime.ofSecondOfDay(it.sleepTimeStart.toLong())
-            viewModel.sleepEndTime = LocalTime.ofSecondOfDay(it.sleepTimeEnd.toLong())
 
-            viewModel.sleepStartValue.set((if (viewModel.sleepStartTime.hour < 10) "0" else "") + viewModel.sleepStartTime.hour.toString() + ":" + (if (viewModel.sleepStartTime.minute < 10) "0" else "") + viewModel.sleepStartTime.minute.toString())
-            viewModel.sleepEndValue.set((if (viewModel.sleepEndTime.hour < 10) "0" else "") + viewModel.sleepEndTime.hour.toString() + ":" + (if (viewModel.sleepEndTime.minute < 10) "0" else "") + viewModel.sleepEndTime.minute.toString())
 
-        }
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.npHours.setOnValueChangedListener { picker, oldVal, newVal -> viewModel.onDurationChange(
             newVal,
             binding.npMinutes.value
-        ) }
+        )
+        }
 
         binding.npMinutes.setOnValueChangedListener { picker, oldVal, newVal -> viewModel.onDurationChange(
             binding.npHours.value,
             newVal
-        )  }
+        )
+        }
 
         // Used to update the sleep end and start time if it changes from the alarms fragments
         dataStoreRepository.sleepParameterFlow.asLiveData().observe(viewLifecycleOwner){
-            
+
             viewModel.sleepStartTime = LocalTime.ofSecondOfDay(it.sleepTimeStart.toLong())
             viewModel.sleepEndTime = LocalTime.ofSecondOfDay(it.sleepTimeEnd.toLong())
 
             val sleepDuration = LocalTime.ofSecondOfDay(it.normalSleepTime.toLong())
-
             binding.npHours.value = sleepDuration.hour
             binding.npMinutes.value = sleepDuration.minute
             viewModel.sleepDuration = sleepDuration.toSecondOfDay()
@@ -87,17 +90,7 @@ class SleepFragment : Fragment() {
             viewModel.sleepEndValue.set((if (viewModel.sleepEndTime.hour < 10) "0" else "") + viewModel.sleepEndTime.hour.toString() + ":" + (if (viewModel.sleepEndTime.minute < 10) "0" else "") + viewModel.sleepEndTime.minute.toString())
         }
 
-        return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-    }
-
-    private val scope: CoroutineScope = MainScope()
-    private val dataStoreRepository: DataStoreRepository by lazy {
-        (actualContext as MainApplication).dataStoreRepository
-    }
 
 }

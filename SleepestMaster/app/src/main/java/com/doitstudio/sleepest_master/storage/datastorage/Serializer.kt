@@ -99,6 +99,24 @@ class SleepParameterSerializer() : Serializer<SleepParameters> {
         .setNormalSleepTime(32400)
         .setSleepTimeStart(72000)
         .setSleepTimeEnd(36000)
+        .build()
+}
+
+class AlarmParameterSerializer() : Serializer<AlarmParameters> {
+
+    override fun readFrom(input: InputStream): AlarmParameters {
+        try {
+            return AlarmParameters.parseFrom(input)
+        } catch (exception: InvalidProtocolBufferException) {
+            throw CorruptionException("Cannot read proto.", exception)
+        }
+    }
+
+    override fun writeTo(t: AlarmParameters, output: OutputStream) {
+        t.writeTo(output)
+    }
+
+    override val defaultValue: AlarmParameters = AlarmParameters.newBuilder()
         .setAlarmTone("null")
         .setAlarmArt(0)
         .build()

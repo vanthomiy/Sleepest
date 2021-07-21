@@ -18,6 +18,7 @@ import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.googleapi.ActivityTransitionHandler
 import com.doitstudio.sleepest_master.model.data.*
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
+import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.util.SleepTimeValidationUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -40,34 +41,9 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     private val dataStoreRepository: DataStoreRepository by lazy {
         (context as MainApplication).dataStoreRepository
     }
-
-    /*
-    val sleepDurationString = ObservableField("7h")
-    val sleepDurationValue = ObservableField<Int>(7)
-    private var enoughTimeToSleep = true
-    fun onSleepDurationChanged(seekBar: SeekBar, progresValue: Int, fromUser: Boolean) {
-
-        val time = getSleepCountFromProgress(progresValue)
-
-        sleepDurationString.set(time.toString())
-        scope.launch {
-            dataStoreRepository.updateUserWantedSleepTime(time.toSecondOfDay())
-
-            if(autoSleepTime.get() == false){
-                enoughTimeToSleep = SleepTimeValidationUtil.checkIfSleepTimeMatchesSleepDuration(context, time.toSecondOfDay(), sleepEndTime.toSecondOfDay(), sleepStartTime.toSecondOfDay(), enoughTimeToSleep)
-            }
-            else{
-                val times = SleepTimeValidationUtil.checkIfSleepTimeMatchesSleepDurationAuto(dataStoreRepository, time.toSecondOfDay(), sleepEndTime.toSecondOfDay(), sleepStartTime.toSecondOfDay(), enoughTimeToSleep)
-                sleepEndTime = LocalTime.ofSecondOfDay(times.first.toLong())
-                sleepStartTime = LocalTime.ofSecondOfDay(times.second.toLong())
-
-                sleepEndValue.set((if (sleepEndTime.hour < 10) "0" else "") + sleepEndTime.hour.toString() + ":" + (if (sleepEndTime.minute < 10) "0" else "") + sleepEndTime.minute.toString())
-                sleepStartValue.set((if (sleepStartTime.hour < 10) "0" else "") + sleepStartTime.hour.toString() + ":" + (if (sleepStartTime.minute < 10) "0" else "") + sleepStartTime.minute.toString())
-
-            }
-        }
+    private val dataBaseRepository: DatabaseRepository by lazy {
+        (context as MainApplication).dataBaseRepository
     }
-    */
 
     var sleepDuration : Int = 0
 
@@ -78,6 +54,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         scope.launch {
             SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
                 dataStoreRepository,
+                dataBaseRepository,
                 context,
                 sleepStartTime.toSecondOfDay(),
                 sleepEndTime.toSecondOfDay(),
@@ -109,12 +86,13 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
                         SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
                             dataStoreRepository,
+                            dataBaseRepository,
                             context,
                             tempWakeup.toSecondOfDay(),
                             sleepEndTime.toSecondOfDay(),
                             sleepDuration,
                             autoSleepTime.get() == true,
-                            SleepSleepChangeFrom.DURATION
+                            SleepSleepChangeFrom.SLEEPTIMESTART
                         )
                     }
                 },
@@ -140,12 +118,13 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
                     SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
                         dataStoreRepository,
+                        dataBaseRepository,
                         context,
                         sleepStartTime.toSecondOfDay(),
                         tempWakeup.toSecondOfDay(),
                         sleepDuration,
                         autoSleepTime.get() == true,
-                        SleepSleepChangeFrom.DURATION
+                        SleepSleepChangeFrom.SLEEPTIMEEND
                     )
                 }
             },

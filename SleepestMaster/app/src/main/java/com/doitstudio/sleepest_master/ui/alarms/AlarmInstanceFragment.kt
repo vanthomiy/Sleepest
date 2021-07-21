@@ -22,14 +22,11 @@ import java.time.LocalTime
 class AlarmInstanceFragment(val applicationContext: Context, private var alarmId: Int) : Fragment() {
 
     private val databaseRepository by lazy { (applicationContext as MainApplication).dataBaseRepository }
-    private val scope: CoroutineScope = MainScope()
 
     private lateinit var binding: AlarmEntityBinding
     private val viewModel by lazy { ViewModelProvider(this).get(AlarmInstanceViewModel::class.java) }
     private val alarmsViewModel by lazy { ViewModelProvider(requireActivity()).get(AlarmsViewModel::class.java) }
 
-    private lateinit var cLAlarmEntityInnerLayer : ViewGroup //Display extended alarm settings
-    private lateinit var btnDeleteAlarmInstance: Button //Delete current alarm entity
     private lateinit var usedIds : MutableSet<Int>
 
     private fun deleteAlarmEntity() {
@@ -54,11 +51,9 @@ class AlarmInstanceFragment(val applicationContext: Context, private var alarmId
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        cLAlarmEntityInnerLayer = view.findViewById(R.id.cL_alarmEntityInnerLayer)
-        btnDeleteAlarmInstance = view.findViewById(R.id.btn_deleteAlarm)
         usedIds = mutableSetOf()
 
-        btnDeleteAlarmInstance.setOnClickListener {
+        binding.btnDeleteAlarm.setOnClickListener {
             deleteAlarmEntity()
         }
 

@@ -2,6 +2,7 @@ package com.doitstudio.sleepest_master.util
 
 import android.content.Context
 import android.widget.Toast
+import androidx.lifecycle.asLiveData
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.model.data.AlarmSleepChangeFrom
 import com.doitstudio.sleepest_master.model.data.SleepSleepChangeFrom
@@ -196,10 +197,9 @@ object SleepTimeValidationUtil {
      * This is used to check if the sleep settings that are made are in relation to the alarms.
      * If we can find any problems we set the values in the database (they will be the setup by the observer) and make a toast if necessary that will notify the user
      */
-    suspend fun checkSleepActionIsAllowedAndDoAction(dataStoreRepository: DataStoreRepository, context: Context, sleepTimeStart : Int, sleepTimeEnd : Int, sleepDuration : Int, autoSleepTime : Boolean, changeFrom: SleepSleepChangeFrom){
+    suspend fun checkSleepActionIsAllowedAndDoAction(dataStoreRepository: DataStoreRepository, dataBaseRepository:DatabaseRepository, context: Context, sleepTimeStart : Int, sleepTimeEnd : Int, sleepDuration : Int, autoSleepTime : Boolean, changeFrom: SleepSleepChangeFrom){
 
         val minTimeBuffer = 7200 // 2 hours
-        val dataBaseRepository:DatabaseRepository = (context as MainApplication).dataBaseRepository
 
         var newSleepTimeStart = sleepTimeStart
         var newSleepTimeEnd = sleepTimeEnd
@@ -231,10 +231,10 @@ object SleepTimeValidationUtil {
             if(changeFrom == SleepSleepChangeFrom.DURATION){
                 if(autoSleepTime){
                     newSleepTimeStart = (newSleepTimeStart - timeDiff/2)
-                    newSleepTimeEnd = (newSleepTimeEnd - timeDiff/2)
+                    newSleepTimeEnd = (newSleepTimeEnd + timeDiff/2)
                 }
                 else{
-                    newSleepDuration = possibleSleepTime - timeDiff
+                    newSleepDuration = possibleSleepTime - minTimeBuffer
                 }
             }
             else{
@@ -244,14 +244,13 @@ object SleepTimeValidationUtil {
                     else -> newSleepTimeStart
                 }
                 newSleepTimeEnd = when (changeFrom) {
-                    SleepSleepChangeFrom.SLEEPTIMEEND -> (newSleepTimeEnd - timeDiff)
+                    SleepSleepChangeFrom.SLEEPTIMEEND -> (newSleepTimeEnd + timeDiff)
                     else -> newSleepTimeEnd
                 }
             }
         }
 
         // Check params for every alarm entity...
-
         val allAlarms = dataBaseRepository.alarmFlow.first()
 
         allAlarms.forEach{ alarm ->
@@ -273,15 +272,13 @@ object SleepTimeValidationUtil {
             }
         }
 
-
-
         if(sleepTimeStart != newSleepTimeStart || changeFrom == SleepSleepChangeFrom.SLEEPTIMESTART)
             dataStoreRepository.updateSleepTimeStart(newSleepTimeStart)
         if(sleepTimeEnd != newSleepTimeEnd || changeFrom == SleepSleepChangeFrom.SLEEPTIMEEND)
             dataStoreRepository.updateSleepTimeEnd(newSleepTimeEnd)
         if(sleepDuration != newSleepDuration || changeFrom == SleepSleepChangeFrom.DURATION)
             dataStoreRepository.updateUserWantedSleepTime(newSleepDuration)
+            dataStoreRepository.triggerObserver()
+
     }
-
-
 }

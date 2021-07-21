@@ -84,7 +84,7 @@ class AlarmsViewModel(application: Application) : AndroidViewModel(application) 
 
     init {
         scope.launch {
-            var settings = dataStoreRepository.sleepParameterFlow.first()
+            var settings = dataStoreRepository.alarmParameterFlow.first()
 
             cancelAlarmWhenAwake.set(settings.endAlarmAfterFired)
             alarmArtSelections.addAll(arrayListOf<String>(("Nur Alarm"), ("Alarm und Vibration"), ("Nur Vibration")))

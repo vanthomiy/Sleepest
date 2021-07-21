@@ -85,13 +85,7 @@ class DataStoreRepository(context: Context) {
         return@runBlocking getSleepTimeEnd()
     }
 
-    fun getAlarmArtJob() : Int = runBlocking{
-        return@runBlocking getAlarmArt()
-    }
 
-    fun getAlarmToneJob() : String = runBlocking{
-        return@runBlocking getAlarmTone()
-    }
 
     suspend fun getSleepTimeBegin() : Int {
         return sleepParameterFlow.first().sleepTimeStart
@@ -100,24 +94,12 @@ class DataStoreRepository(context: Context) {
     suspend fun getSleepTimeEnd() : Int {
         return sleepParameterFlow.first().sleepTimeEnd
     }
-    private suspend fun getAlarmArt() : Int {
-        return sleepParameterFlow.first().alarmArt
-    }
-    private suspend fun getAlarmTone() : String {
-        return sleepParameterFlow.first().alarmTone
-    }
+
     suspend fun updateActivityTracking(value:Boolean) =
             sleepParameterStatus.updateActivityTracking(value)
     suspend fun updateActivityInCalculation(value:Boolean) =
             sleepParameterStatus.updateActivityInCalculation(value)
-    suspend fun updateEndAlarmAfterFired(value:Boolean) =
-            sleepParameterStatus.updateEndAlarmAfterFired(value)
-    suspend fun updateAlarmArt(value:Int) =
-        sleepParameterStatus.updateAlarmArt(value)
-    suspend fun updateAlarmTone(value:String) =
-        sleepParameterStatus.updateAlarmTone(value)
-    suspend fun updateAlarmName(value:String) =
-        sleepParameterStatus.updateAlarmName(value)
+
     suspend fun updateAutoSleepTime(time:Boolean) =
             sleepParameterStatus.updateAutoSleepTime(time)
     suspend fun updateSleepTimeEnd(time:Int){
@@ -149,6 +131,45 @@ class DataStoreRepository(context: Context) {
         sleepParameterStatus.updateLigthCondition(time)
     suspend fun updateUserMobileFequency(time:Int) =
         sleepParameterStatus.updateUserMobileFequency(time)
+    suspend fun triggerObserver() =
+        sleepParameterStatus.triggerObserver()
+
+    //endregion
+
+
+    //region Alarm Status
+
+    private val alarmParameterStatus by lazy{ AlarmParameterStatus(context.createDataStore(
+        ALARM_PARAMETER_STATUS,
+        serializer = AlarmParameterSerializer())
+    )
+    }
+
+    val alarmParameterFlow: Flow<AlarmParameters> = alarmParameterStatus.alarmParameters
+
+    fun getAlarmArtJob() : Int = runBlocking{
+        return@runBlocking getAlarmArt()
+    }
+
+    fun getAlarmToneJob() : String = runBlocking{
+        return@runBlocking getAlarmTone()
+    }
+
+    private suspend fun getAlarmArt() : Int {
+        return alarmParameterFlow.first().alarmArt
+    }
+    private suspend fun getAlarmTone() : String {
+        return alarmParameterFlow.first().alarmTone
+    }
+
+    suspend fun updateEndAlarmAfterFired(value:Boolean) =
+        alarmParameterStatus.updateEndAlarmAfterFired(value)
+    suspend fun updateAlarmArt(value:Int) =
+        alarmParameterStatus.updateAlarmArt(value)
+    suspend fun updateAlarmTone(value:String) =
+        alarmParameterStatus.updateAlarmTone(value)
+    suspend fun updateAlarmName(value:String) =
+        alarmParameterStatus.updateAlarmName(value)
 
     //endregion
 

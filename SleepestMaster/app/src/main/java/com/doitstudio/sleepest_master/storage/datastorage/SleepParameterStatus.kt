@@ -2,14 +2,11 @@ package com.doitstudio.sleepest_master.storage.datastorage
 
 import android.util.Log
 import androidx.datastore.core.DataStore
-import com.doitstudio.sleepest_master.LiveUserSleepActivity
 import com.doitstudio.sleepest_master.SleepParameters
-import com.doitstudio.sleepest_master.model.data.LightConditions
 import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.MobileUseFrequency
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.first
 import java.io.IOException
 
 const val SLEEP_PARAMETER_STATUS = "sleep_parameter_repo"
@@ -48,28 +45,6 @@ class SleepParameterStatus(private val dataStore: DataStore<SleepParameters>) {
             preference.toBuilder().setImplementUserActivityInSleepTime(duration).build()
         }
     }
-    suspend fun updateEndAlarmAfterFired(duration:Boolean){
-        dataStore.updateData{preference->
-            preference.toBuilder().setEndAlarmAfterFired(duration).build()
-        }
-    }
-    suspend fun updateAlarmArt(art:Int){
-        dataStore.updateData{preference->
-            preference.toBuilder().setAlarmArt(art).build()
-        }
-    }
-
-    suspend fun updateAlarmTone(tone:String){
-        dataStore.updateData{preference->
-            preference.toBuilder().setAlarmTone(tone).build()
-        }
-    }
-
-    suspend fun updateAlarmName(tone:String){
-        dataStore.updateData{preference->
-            preference.toBuilder().setAlarmName(tone).build()
-        }
-    }
 
     suspend fun updateAutoSleepTime(duration:Boolean){
         dataStore.updateData{preference->
@@ -95,6 +70,12 @@ class SleepParameterStatus(private val dataStore: DataStore<SleepParameters>) {
         }
     }
 
+    suspend fun triggerObserver(){
+        dataStore.updateData{preference->
+            preference.toBuilder().setTriggerObservable(!preference.triggerObservable).build()
+        }
+    }
+
     suspend fun updateUserMobileFequency(frequency: Int){
         dataStore.updateData{preference->
             preference.toBuilder().setMobileUseFrequency(frequency).build()
@@ -106,6 +87,7 @@ class SleepParameterStatus(private val dataStore: DataStore<SleepParameters>) {
             preference.toBuilder().setStandardMobilePosition(position).build()
         }
     }
+
     suspend fun updateLigthCondition(position: Int){
         dataStore.updateData{preference->
             preference.toBuilder().setStandardLightCondition(position).build()
