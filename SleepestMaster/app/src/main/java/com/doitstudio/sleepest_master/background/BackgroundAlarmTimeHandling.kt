@@ -318,7 +318,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                 if (checkAlarmActive() && !checkAlarmTempDisabled()) {
                     dataBaseRepository.updateAlarmTempDisabled(true, dataBaseRepository.getNextActiveAlarm()!!.id)
                     val calendarStopForeground = Calendar.getInstance()
-                    calendarStopForeground.add(Calendar.MINUTE, 5)
+                    calendarStopForeground.add(Calendar.MINUTE, 2)
                     AlarmReceiver.startAlarmManager(calendarStopForeground.get(Calendar.DAY_OF_WEEK), calendarStopForeground.get(Calendar.HOUR_OF_DAY), calendarStopForeground.get(Calendar.MINUTE), context.applicationContext, AlarmReceiverUsage.STOP_FOREGROUND)
                     Toast.makeText(context.applicationContext,context.applicationContext.getString(R.string.disable_alarm_message), Toast.LENGTH_LONG).show()
                 }
