@@ -10,8 +10,12 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.ContextCompat
+import androidx.databinding.Observable
+import androidx.databinding.ObservableArrayMap
 import androidx.databinding.ObservableField
+import androidx.databinding.ObservableMap
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.asLiveData
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
@@ -234,7 +238,6 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         removeExpand.set(if (actualExpand.get() == 4) removeExpand.get() else false)
 
     }
-
 
 
     //endregion

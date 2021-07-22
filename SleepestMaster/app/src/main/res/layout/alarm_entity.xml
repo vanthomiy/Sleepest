@@ -1,215 +1,434 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/cL_alarmEntity"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    tools:ignore="MissingConstraints">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.alarms.AlarmsInstanceFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <data>
+        <variable
+            name="alarmInstanceViewModel"
+            type="com.doitstudio.sleepest_master.ui.alarms.AlarmInstanceViewModel"/>
+        <variable
+            name="alarmsViewModel"
+            type="com.doitstudio.sleepest_master.ui.alarms.AlarmsViewModel"/>
+
+    </data>
+
+    <LinearLayout
         android:id="@+id/cL_alarmEntityInnerLayer"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:background="@drawable/background_alarmentity"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:orientation="vertical"
+        >
 
-        <TextView
-            android:id="@+id/tV_alarmName"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textAlignment="center"
-            android:textColor="@color/primary_text_color"
-            android:textSize="28sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints" />
-
-        <Switch
-            android:id="@+id/sw_alarmIsActive"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:thumbTint="@color/primary_text_color"
-            android:trackTint="@color/primary_text_color"
-            app:layout_constraintBottom_toBottomOf="@+id/tV_alarmName"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/tV_alarmName"
-            app:layout_constraintTop_toTopOf="@+id/tV_alarmName"
-            tools:ignore="MissingConstraints,UseSwitchCompatOrMaterialXml" />
-
-        <Button
-            android:id="@+id/btn_deleteAlarm"
-            android:layout_width="45dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="8dp"
-            android:text="@string/x"
-            android:textColor="@color/primary_text_color"
-            android:backgroundTint="@color/error_color"
-            app:layout_constraintBottom_toBottomOf="@+id/tV_alarmName"
-            app:layout_constraintEnd_toStartOf="@+id/tV_alarmName"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tV_alarmName" />
-
-        <TextView
-            android:id="@+id/tV_activeWeekdays"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:text=""
-            android:textAlignment="viewStart"
-            android:textColor="@color/primary_text_color"
-            android:textSize="12sp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tV_alarmName"
-            tools:visibility="visible"/>
-
-        <TextView
-            android:id="@+id/tV_wakeupRangeHint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:textAlignment="viewStart"
-            android:textColor="@color/primary_text_color"
-            android:textSize="12sp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tV_alarmName"
-            tools:visibility="visible" />
-
-        <TextView
-            android:id="@+id/tV_sleepAmountHint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:textAlignment="viewStart"
-            android:textColor="@color/primary_text_color"
-            android:textSize="12sp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/tV_wakeupRangeHint"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/tV_activeWeekdays"
-            app:layout_constraintTop_toBottomOf="@+id/tV_alarmName"
-            tools:visibility="visible" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cL_extendedAlarmEntity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tV_alarmName"
-            tools:visibility="visible">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
 
             <TextView
-                android:id="@+id/tV_sleepAmountTopic"
+                android:id="@+id/tV_alarmName"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:text="@{alarmInstanceViewModel.sleepDurationString}"
+                android:layout_gravity="center"
+                android:textColor="@color/tertiary_text_color"
+                android:textSize="28sp"
+                android:layout_weight="1"/>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/sw_alarmIsActive"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:text="@string/schlafdauer"
-                android:textColor="@color/primary_text_color"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_marginEnd="8dp"
+                android:layout_gravity="center"
+                android:checked="@={alarmInstanceViewModel.isAlarmActive}"
+                android:onClick="@{alarmInstanceViewModel::onAlarmActiveToggled}"
+                android:layout_weight="0"/>
 
-            <TextView
-                android:id="@+id/tV_sleepAmountSelection"
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="15dp"
+            android:visibility="@{alarmInstanceViewModel.extendedAlarmEntity == true ? alarmInstanceViewModel.visibleState:alarmInstanceViewModel.goneState, default=gone}"
+            android:orientation="vertical">
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/primary_text_color"
-                android:textSize="18sp"
-                app:layout_constraintStart_toEndOf="@+id/tV_sleepAmountTopic"
-                app:layout_constraintTop_toTopOf="@+id/tV_sleepAmountTopic" />
+                android:layout_marginStart="10dp"
+                android:text="@string/alarm_instance_sleep_duration"
+                android:textColor="@color/tertiary_text_color"
+                android:textStyle="bold" />
 
-            <SeekBar
-                android:id="@+id/sBar_sleepAmount"
-                style="@android:style/Widget.DeviceDefault.Light.SeekBar"
-                android:layout_width="338dp"
-                android:layout_height="28dp"
-                android:max="10"
-                android:min="0"
-                android:progressBackgroundTint="@color/primary_text_color"
-                android:progressTint="@color/primary_text_color"
-                android:thumbTint="@color/primary_text_color"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tV_sleepAmountTopic" />
+            <LinearLayout
+                android:layout_height="70dp"
+                android:layout_width="match_parent"
+                android:layout_margin="10dp"
+                android:orientation="horizontal"
+                >
 
-            <TextView
-                android:id="@+id/tV_wakeupRangeTopic"
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:layout_gravity="left|top"
+                        android:textSize="@dimen/valueSize"
+                        android:textColor="@color/accent_text_color"
+                        android:textStyle="bold"
+                        android:text="@string/alarm_hours"
+                        />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="@drawable/transparentrounded">
+                        <com.shawnlin.numberpicker.NumberPicker
+                            android:id="@+id/np_hours"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            app:np_dividerColor="@color/colorPrimary"
+                            app:np_height="50dp"
+                            app:np_max="24"
+                            app:np_min="0"
+                            app:np_orientation="horizontal"
+                            app:np_selectedTextColor="@color/tertiary_text_color"
+                            app:np_textColor="@color/secondary_button_color"
+                            app:np_value="7"
+                            app:np_width="150dp" />
+                    </FrameLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:layout_weight="1"
+                    android:layout_marginStart="10dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:layout_gravity="left|top"
+                        android:textSize="@dimen/valueSize"
+                        android:textColor="@color/accent_text_color"
+                        android:textStyle="bold"
+                        android:text="@string/alarm_minutes"
+                        />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="@drawable/transparentrounded">
+                        <com.shawnlin.numberpicker.NumberPicker
+                            android:id="@+id/np_minutes"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            app:np_dividerColor="@color/colorPrimary"
+                            app:np_height="50dp"
+                            app:np_max="45"
+                            app:np_min="0"
+                            app:np_orientation="horizontal"
+                            app:np_selectedTextColor="@color/tertiary_text_color"
+                            app:np_textColor="@color/secondary_button_color"
+                            app:np_width="150dp" />
+                    </FrameLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="20dp"
-                android:text="@string/aufwachzeitpunkt"
-                android:textColor="@color/primary_text_color"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sBar_sleepAmount" />
+                android:layout_marginStart="10dp"
+                android:text="@string/alarm_instance_wake_up_range"
+                android:textColor="@color/tertiary_text_color"
+                android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tV_wakeupRangeSelection"
+            <LinearLayout
+                android:layout_height="70dp"
+                android:layout_width="match_parent"
+                android:layout_margin="10dp"
+                >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:layout_gravity="left|top"
+                        android:textSize="@dimen/valueSize"
+                        android:textColor="@color/accent_text_color"
+                        android:textStyle="bold"
+                        android:text="@string/alarm_wakeup_early"
+                        />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:onClick="@{alarmInstanceViewModel::onWakeUpEarlyClicked}"
+                        android:background="@drawable/transparentrounded">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical"
+                            android:textSize="@dimen/bigSize"
+                            android:textAlignment="center"
+                            android:textColor="@color/tertiary_text_color"
+                            android:text="@{alarmInstanceViewModel.wakeUpEarlyValue}"
+                            tools:ignore="RtlCompat" />
+
+                    </FrameLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:layout_weight="1"
+                    android:layout_marginStart="10dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:layout_gravity="left|top"
+                        android:textSize="@dimen/valueSize"
+                        android:textColor="@color/accent_text_color"
+                        android:textStyle="bold"
+                        android:text="@string/alarm_wakeup_late"
+                        />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:onClick="@{alarmInstanceViewModel::onWakeUpLateClicked}"
+                        android:background="@drawable/transparentrounded">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical"
+                            android:textSize="@dimen/bigSize"
+                            android:textAlignment="center"
+                            android:textColor="@color/tertiary_text_color"
+                            android:text="@{alarmInstanceViewModel.wakeUpLateValue}"
+                            tools:ignore="RtlCompat" />
+
+                    </FrameLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/primary_text_color"
-                android:textSize="18sp"
-                app:layout_constraintStart_toEndOf="@+id/tV_wakeupRangeTopic"
-                app:layout_constraintTop_toTopOf="@+id/tV_wakeupRangeTopic" />
+                android:layout_marginStart="10dp"
+                android:text="@string/alarm_instance_days_a_week"
+                android:textColor="@color/tertiary_text_color"
+                android:textStyle="bold" />
 
-            <com.appyvet.rangebar.RangeBar
-                android:id="@+id/rBar_wakeupRange"
-                android:layout_width="320dp"
+            <HorizontalScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:scrollbars="none"
+                android:fillViewport="true"
+                android:fadeScrollbars="false">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatToggleButton
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/day_selection"
+                        android:tag="0"
+                        android:onClick="@{alarmInstanceViewModel::onDayChanged}"
+                        android:checked="@{alarmInstanceViewModel.selectedDays.contains(0), default=false}"
+                        android:textOn="@string/alarm_entity_day_mo"
+                        android:textOff="@string/alarm_entity_day_mo"
+                        android:textSize="10sp" />
+
+                    <androidx.appcompat.widget.AppCompatToggleButton
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/day_selection"
+                        android:tag="1"
+                        android:onClick="@{alarmInstanceViewModel::onDayChanged}"
+                        android:checked="@{alarmInstanceViewModel.selectedDays.contains(1), default=false}"
+                        android:textOn="@string/alarm_entity_day_di"
+                        android:textOff="@string/alarm_entity_day_di"
+                        android:textSize="10sp" />
+
+                    <androidx.appcompat.widget.AppCompatToggleButton
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/day_selection"
+                        android:tag="2"
+                        android:onClick="@{alarmInstanceViewModel::onDayChanged}"
+                        android:checked="@{alarmInstanceViewModel.selectedDays.contains(2), default=false}"
+                        android:textOn="@string/alarm_entity_day_mi"
+                        android:textOff="@string/alarm_entity_day_mi"
+                        android:textSize="10sp" />
+
+                    <androidx.appcompat.widget.AppCompatToggleButton
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/day_selection"
+                        android:tag="3"
+                        android:onClick="@{alarmInstanceViewModel::onDayChanged}"
+                        android:checked="@{alarmInstanceViewModel.selectedDays.contains(3), default=false}"
+                        android:textOn="@string/alarm_entity_day_do"
+                        android:textOff="@string/alarm_entity_day_do"
+                        android:textSize="10sp" />
+
+                    <androidx.appcompat.widget.AppCompatToggleButton
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/day_selection"
+                        android:tag="4"
+                        android:onClick="@{alarmInstanceViewModel::onDayChanged}"
+                        android:checked="@{alarmInstanceViewModel.selectedDays.contains(4), default=false}"
+                        android:textOn="@string/alarm_entity_day_fr"
+                        android:textOff="@string/alarm_entity_day_fr"
+                        android:textSize="10sp" />
+
+                    <androidx.appcompat.widget.AppCompatToggleButton
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/day_selection"
+                        android:tag="5"
+                        android:onClick="@{alarmInstanceViewModel::onDayChanged}"
+                        android:checked="@{alarmInstanceViewModel.selectedDays.contains(5), default=false}"
+                        android:textOn="@string/alarm_entity_day_sa"
+                        android:textOff="@string/alarm_entity_day_sa"
+                        android:textSize="10sp" />
+
+                    <androidx.appcompat.widget.AppCompatToggleButton
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/day_selection"
+                        android:tag="6"
+                        android:onClick="@{alarmInstanceViewModel::onDayChanged}"
+                        android:checked="@{alarmInstanceViewModel.selectedDays.contains(6), default=false}"
+                        android:textOn="@string/alarm_entity_day_so"
+                        android:textOff="@string/alarm_entity_day_so"
+                        android:textSize="10sp" />
+
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_deleteAlarm"
+                android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:backgroundTint="@color/primary_text_color"
-                app:connectingLineColor="@color/primary_text_color"
-                app:connectingLineWeight="1dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tV_wakeupRangeTopic"
-                app:pinRadius="0dp"
-                app:rangeBarColor="@color/primary_text_color"
-                app:selectorColor="@color/primary_text_color"
-                app:selectorSize="6dp"
-                app:tickColor="#00FFFFFF"
-                app:tickEnd="10"
-                app:tickInterval="0.5"
-                app:tickStart="5"
-                tools:ignore="MissingConstraints" />
-
-            <Button
-                android:id="@+id/btn_selectActiveWeekday"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:text="@string/active_Weekdays"
+                android:layout_gravity="center"
+                android:text="@string/alarm_instance_alarm_remove"
+                android:background="@drawable/bgroundedchoosen"
                 android:textColor="@color/primary_text_color"
-                android:backgroundTint="@color/tertiary_button_color"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rBar_wakeupRange"
-                tools:layout_constraintStart_toEndOf="@+id" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+                android:backgroundTint="@color/error_color"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginBottom="10dp"
+            android:visibility="@{alarmInstanceViewModel.extendedAlarmEntity == false ? alarmInstanceViewModel.visibleState:alarmInstanceViewModel.goneState, default=visible}"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_gravity="start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:textAlignment="viewEnd"
+                    android:text="@string/alarm_instance_inbetween"
+                    android:textColor="@color/tertiary_text_color"
+                    android:layout_weight="0"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:textAlignment="viewEnd"
+                    android:text="@{alarmInstanceViewModel.wakeUpEarlyValue}"
+                    android:textColor="@color/accent_text_color"
+                    android:textStyle="bold"
+                    android:layout_weight="0"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:textAlignment="viewEnd"
+                    android:text="@string/alarm_instance_and"
+                    android:textColor="@color/tertiary_text_color"
+                    android:layout_weight="0"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:textAlignment="viewEnd"
+                    android:text="@{alarmInstanceViewModel.wakeUpLateValue}"
+                    android:textColor="@color/accent_text_color"
+                    android:textStyle="bold"
+                    android:layout_weight="0"/>
+
+            </LinearLayout>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@{alarmInstanceViewModel.selectedDaysInfo}"
+                android:textColor="@color/tertiary_text_color"
+                android:textStyle="bold"
+                android:layout_weight="0"/>
+
+
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</layout>
+

@@ -4,8 +4,6 @@
     <string name="alarm_disabled">Alarm Disabled</string>
     <string name="insert_data">Alarm Disabled</string>
     <string name="sleep_segments">Alarm Disabled</string>
-    <string name="nameverkackt">To ensure that the app stays active in the background
-        and wakes you up safely, follow the instructions below for your device model and Android version.</string>
     <string name="notice_dont_kill_my_app">Beachten</string>
 
     <!--region AlarmClock-->
@@ -46,6 +44,8 @@
     <string name="alarm_status_false">Alarm not active</string>
     <string name="alarm_status_true">Alarm active</string>
     <string name="wakelock_tag">Foregroundservice_lock</string>
+    <string name="sleep_status_false">You are currently not sleeping</string>
+    <string name="sleep_status_true">You are currently sleeping</string>
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
@@ -297,7 +297,23 @@
     <string name="alarm_fragment_btn_disable_alarm_disable">Nächsten Alarm ausschalten.</string>
     <string name="alarm_fragment_btn_disable_alarm_reactivate">Reaktiviere nächsten Alarm.</string>
 
+    <string name="alarm_instance_alarm">Alarm</string>
+    <string name="alarm_instance_no_day_choosen">Kein Tag ausgewählt</string>
+    <string name="alarm_instance_alarm_remove">Alarm Entfernen</string>
+    <string name="alarm_instance_wake_up_range">Aufweckzeitraum:</string>
+    <string name="alarm_wakeup_early">Frühestens</string>
+    <string name="alarm_wakeup_late">Spätestens</string>
+    <string name="alarm_hours">Stunden</string>
+    <string name="alarm_minutes">Minuten</string>
+    <string name="alarm_instance_daily">Täglich</string>
+    <string name="alarm_instance_alarm_header">Schlaf</string>
+    <string name="alarm_instance_inbetween">zwischen</string>
+    <string name="alarm_instance_and">und</string>
+    <string name="alarm_instance_days_a_week">Wochentage:</string>
+    <string name="alarm_instance_sleep_duration">Schlafdauer:</string>
+    <string name="alarms_alarme">Alarme</string>
     <!--endregion-->
+
 
 
 </resources>

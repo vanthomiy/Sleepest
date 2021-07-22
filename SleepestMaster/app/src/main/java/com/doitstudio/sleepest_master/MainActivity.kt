@@ -19,7 +19,7 @@ import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
 import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
-import com.doitstudio.sleepest_master.ui.alarm.AlarmsFragment
+import com.doitstudio.sleepest_master.ui.alarms.AlarmsFragment
 import com.doitstudio.sleepest_master.ui.history.HistoryTabView
 import com.doitstudio.sleepest_master.ui.settings.SettingsFragment
 import com.doitstudio.sleepest_master.ui.sleep.SleepFragment

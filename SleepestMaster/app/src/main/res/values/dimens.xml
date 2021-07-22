@@ -12,6 +12,7 @@
     -->
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="headerSize">16sp</dimen>
+    <dimen name="bigSize">20sp</dimen>
     <dimen name="valueSize">13sp</dimen>
     <dimen name="valuesHeight">40dp</dimen>
 </resources>

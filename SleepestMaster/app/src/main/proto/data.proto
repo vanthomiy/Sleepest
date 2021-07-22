@@ -101,8 +101,8 @@ message  SleepParameters{
   int32 standardMobilePosition = 4;
 
   /**
-* standard light condition
-*/
+  * standard light condition
+  */
   int32 standardLightCondition = 10;
 
   /**
@@ -126,20 +126,34 @@ message  SleepParameters{
   bool implementUserActivityInSleepTime = 8;
 
   /**
-* implement the user activity tracking in the sleep time
-*/
+  * handle observable if necessary
+  */
+  bool triggerObservable = 14;
+}
+
+/**
+ * This is  Alarm Settings
+ * It stores information/status about general alarm settings
+ */
+message  AlarmParameters{
+  /**
+  * implement the user activity tracking in the sleep time
+  */
   bool endAlarmAfterFired = 9;
 
   /**
-* implement the user activity tracking in the sleep time
-*/
+  * implement the user activity tracking in the sleep time
+  */
   int32 alarmArt = 11;
 
   /**
-* implement the user activity tracking in the sleep time
-*/
-  string alarmtone = 12;
-
+  * implement the user activity tracking in the sleep time
+  */
+  string alarmTone = 12;
+  /**
+  * implement the user activity tracking in the sleep time
+  */
+  string alarmName = 13;
 
 }
 

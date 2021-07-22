@@ -57,6 +57,9 @@ interface AlarmDao {
     @Query("UPDATE alarm_properties_table SET alarmName =:alarmName WHERE id LIKE :alarmId")
     suspend fun updateAlarmName(alarmName: String, alarmId: Int)
 
+    @Query("DELETE FROM alarm_properties_table WHERE id LIKE :alarmId")
+    suspend fun deleteById(alarmId: Int)
+
     @Delete
     suspend fun delete(alarmEntity: AlarmEntity)
 

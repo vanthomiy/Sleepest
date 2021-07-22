@@ -56,9 +56,7 @@
                         android:textColor="@color/primary_text_color"
                         android:textSize="@dimen/headerSize"
                         android:textStyle="bold"
-                        android:visibility="gone"
-                        tools:layout_editor_absoluteX="281dp"
-                        tools:layout_editor_absoluteY="110dp" />
+                        android:visibility="gone"/>
 
                     <TextView
                         android:id="@+id/animTextTipp"
@@ -323,7 +321,7 @@
 
                     </FrameLayout>
 
-                    <FrameLayout
+                    <!--FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/valuesHeight"
                         android:layout_gravity="start"
@@ -347,14 +345,95 @@
                             android:layout_marginLeft="75dp"
                             android:max="50"
                             android:min="0"
-                            android:progressBackgroundTint="@color/primary_text_color"
-                            android:progressTint="@color/primary_text_color"
-                            android:thumbTint="@color/primary_text_color"
                             android:progress="@{sleepViewModel.sleepDurationValue}"
                             android:onProgressChanged="@{sleepViewModel::onSleepDurationChanged}"
                             />
 
+                    </FrameLayout-->
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:background="@drawable/bgroundedchoosen">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="start"
+                            android:layout_margin="10dp"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="20dp"
+                                android:layout_gravity="left|top"
+                                android:textSize="@dimen/valueSize"
+                                android:textColor="@color/accent_text_color"
+                                android:textStyle="bold"
+                                android:text="@string/alarm_hours"
+                                />
+
+                            <FrameLayout
+                                android:layout_width="150dp"
+                                android:layout_height="50dp"
+                                android:background="@drawable/transparentrounded"
+                                android:backgroundTint="@color/secondary_button_color">
+                                <com.shawnlin.numberpicker.NumberPicker
+                                    android:id="@+id/np_hours"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    app:np_dividerColor="@color/colorPrimary"
+                                    app:np_height="50dp"
+                                    app:np_max="24"
+                                    app:np_min="0"
+                                    app:np_orientation="horizontal"
+                                    app:np_selectedTextColor="@color/tertiary_text_color"
+                                    app:np_textColor="@color/secondary_button_color"
+                                    app:np_value="7"
+                                    app:np_width="150dp" />
+                            </FrameLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:layout_gravity="end"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="20dp"
+                                android:layout_gravity="left|top"
+                                android:textSize="@dimen/valueSize"
+                                android:textColor="@color/accent_text_color"
+                                android:textStyle="bold"
+                                android:text="@string/alarm_minutes"
+                                />
+
+                            <FrameLayout
+                                android:layout_width="150dp"
+                                android:layout_height="50dp"
+                                android:background="@drawable/transparentrounded"
+                                android:backgroundTint="@color/secondary_button_color">
+                                <com.shawnlin.numberpicker.NumberPicker
+                                    android:id="@+id/np_minutes"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    app:np_dividerColor="@color/colorPrimary"
+                                    app:np_height="50dp"
+                                    app:np_max="59"
+                                    app:np_min="0"
+                                    app:np_orientation="horizontal"
+                                    app:np_selectedTextColor="@color/tertiary_text_color"
+                                    app:np_textColor="@color/secondary_button_color"
+                                    app:np_width="150dp" />
+                            </FrameLayout>
+                        </LinearLayout>
                     </FrameLayout>
+
 
                 </LinearLayout>
                 <LinearLayout
@@ -661,16 +740,11 @@
                     </FrameLayout>
 
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="start"
-                        android:orientation="vertical"
-                        android:background="@drawable/bgroundedchoosen">
 
 
                         <FrameLayout
                             android:layout_width="match_parent"
+                            android:background="@drawable/bgroundedchoosen"
                             android:layout_height="@dimen/valuesHeight">
                             <TextView
                                 android:layout_width="wrap_content"
@@ -695,16 +769,13 @@
                                 />
                         </FrameLayout>
 
-                        <View
-                            android:layout_width="fill_parent"
-                            android:layout_height="2dp"
-                            android:visibility="@{sleepViewModel.activityTrackingView}"
-                            android:background="@color/secondary_text_color" />
 
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:visibility="@{sleepViewModel.activityTrackingView}"
-                            android:layout_height="@dimen/valuesHeight">
+                            android:layout_height="@dimen/valuesHeight"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/bgroundedchoosen">
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
@@ -729,161 +800,6 @@
                                 />
 
                         </FrameLayout>
-
-                    </LinearLayout>
-
-
-
-
-                </LinearLayout>
-
-
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="10dp"
-                    android:background="@color/secondary_text_color"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_marginTop="10dp"
-                    />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_margin="10dp"
-                    >
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="5dp"
-                        android:layout_marginHorizontal="10dp"
-                        >
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_gravity="start"
-                            android:src="@drawable/ic_baseline_timer_24" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="40dp"
-                            android:textSize="@dimen/headerSize"
-                            android:layout_gravity="start"
-                            android:textColor="@color/primary_text_color"
-                        android:text="@string/sleep_alarm_header"/>
-
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_gravity="end"
-                            android:src="@drawable/ic_baseline_info_24"
-                            android:onClick="@{sleepViewModel::onInfoClicked}"
-                            android:tag="5"/>
-
-                    </FrameLayout>
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="10dp"
-                        android:visibility="@{sleepViewModel.actualExpand == 5 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}"
-                        android:background="@drawable/bgroundedchoosen"
-                        >
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:layout_margin="10dp"
-                            android:textColor="@color/primary_text_color"
-                        android:text="@string/sleep_alarm_info"/>
-
-                    </FrameLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="start"
-                        android:orientation="vertical"
-                        android:background="@drawable/bgroundedchoosen">
-
-                        <FrameLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/valuesHeight">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_gravity="start"
-                                android:gravity="center_vertical"
-                                android:layout_marginStart="10dp"
-                                android:textSize="@dimen/valueSize"
-                                android:textColor="@color/primary_text_color"
-                            android:textStyle="bold"
-                            android:text="@string/sleep_alarm_auto_cancel_alarm"
-                            />
-
-                            <androidx.appcompat.widget.SwitchCompat
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_gravity="end"
-                                android:gravity="center_vertical"
-                                android:layout_marginEnd="10dp"
-                                android:checked="@={sleepViewModel.cancelAlarmWhenAwake}"
-                                android:onClick="@{sleepViewModel::onEndAlarmAfterFiredChanged}"
-                                />
-
-
-                        </FrameLayout>
-
-                        <View
-                            android:id="@+id/view1"
-                            android:layout_width="fill_parent"
-                            android:layout_height="2dp"
-                            android:background="@color/secondary_text_color" />
-
-                        <FrameLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/valuesHeight">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_gravity="start"
-                                android:layout_marginStart="10dp"
-                                android:gravity="center_vertical"
-                                android:text="@string/sleep_alarm_sound"
-                                android:textColor="@color/primary_text_color"
-                            android:textSize="@dimen/valueSize"
-                            android:textStyle="bold" />
-
-                            <Button
-                                android:id="@+id/soundChange"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="end"
-                                android:layout_marginEnd="20dp"
-                                android:background="@drawable/transparent"
-                                android:textColor="@color/primary_text_color"
-                                android:text="Good morning little looser" />
-                        </FrameLayout>
-
-                    </LinearLayout>
-
-                    <androidx.appcompat.widget.AppCompatSpinner
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/valuesHeight"
-                        android:background="@drawable/bgroundedchoosen"
-                        android:layout_gravity="start"
-                        android:layout_marginVertical="5dp"
-                        android:entries="@{sleepViewModel.alarmArtSelections}"
-                        android:selectedItemPosition="@={sleepViewModel.alarmArt}"
-                        android:onItemSelected = "@{sleepViewModel::onAlarmArtChanged}"
-                        android:textAlignment="center"
-                        android:textSize="@dimen/valueSize"
-                        android:textColor="@color/tertiary_text_color"
-                        tools:ignore="RtlCompat"/>
-
                 </LinearLayout>
 
                 <FrameLayout

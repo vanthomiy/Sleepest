@@ -55,6 +55,12 @@
 
     <!--region SleepSettings-->
 
+    <string-array name="phonePosition">
+        <item>Im Bett</item>
+        <item>Neben dem Bett</item>
+        <item>Auto erkennung</item>
+    </string-array>
+
     <!--endregion-->
 
     <!--region AlarmSettings-->
@@ -182,6 +188,22 @@
     <string name="profile_import_data">Daten Importieren</string>
     <string name="profile_remove_data_warning">Ohje, alle daten werden gelöscht ok?</string>
     <string name="profile_remove_data_ackn">Verstanden und löschen</string>
+    <string name="alarm_wakeup_early">Earliest</string>
+    <string name="alarm_wakeup_late">Latest</string>
+    <string name="alarm_hours">Hours</string>
+    <string name="alarm_minutes">Minutes</string>
+    <string name="alarm_instance_alarm">Alarm</string>
+    <string name="alarm_instance_no_day_choosen">No day choosen</string>
+    <string name="alarm_instance_daily">Daily</string>
+    <string name="alarm_instance_alarm_header">Sleep</string>
+    <string name="alarm_instance_inbetween">between</string>
+    <string name="alarm_instance_and">and</string>
+    <string name="alarm_instance_alarm_remove">Remove alarm</string>
+    <string name="alarm_instance_days_a_week">Week days:</string>
+    <string name="alarm_instance_wake_up_range">Wake-Up window:</string>
+    <string name="alarm_instance_sleep_duration">Sleep duration:</string>
+    <string name="alarms_alarme">Alarme</string>
+
     <string name="profile_about_us">Sleepest - App\nMade with &#10084; in Bavaria\n\n This app was created by 3 students as a students project and will be improved and maintained in the future</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_home">Home</string>
@@ -203,6 +225,13 @@
     <string name="target_sleep_time">target time</string>
     <string name="hello_blank_fragment">Hello</string>
     <string name="large_text">dfff</string>
+    <string name="alarm_entity_day_fr">Fr</string>
+    <string name="alarm_entity_day_sa">Sa</string>
+    <string name="alarm_entity_day_so">So</string>
+    <string name="alarm_entity_day_do">Do</string>
+    <string name="alarm_entity_day_mi">Mi</string>
+    <string name="alarm_entity_day_di">Di</string>
+    <string name="alarm_entity_day_mo">Mo</string>
 
     <!--endregion-->
 

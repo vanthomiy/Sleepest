@@ -15,11 +15,11 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
-import com.doitstudio.sleepest_master.model.data.LightConditions
-import com.doitstudio.sleepest_master.model.data.MobilePosition
-import com.doitstudio.sleepest_master.model.data.MobileUseFrequency
 import com.doitstudio.sleepest_master.googleapi.ActivityTransitionHandler
+import com.doitstudio.sleepest_master.model.data.*
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
+import com.doitstudio.sleepest_master.storage.DatabaseRepository
+import com.doitstudio.sleepest_master.util.SleepTimeValidationUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -41,32 +41,31 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     private val dataStoreRepository: DataStoreRepository by lazy {
         (context as MainApplication).dataStoreRepository
     }
+    private val dataBaseRepository: DatabaseRepository by lazy {
+        (context as MainApplication).dataBaseRepository
+    }
 
-    val sleepDurationString = ObservableField("7h")
-    val sleepDurationValue = ObservableField<Int>(7)
-    fun onSleepDurationChanged(seekBar: SeekBar, progresValue: Int, fromUser: Boolean) {
+    var sleepDuration : Int = 0
 
-        val time = getSleepCountFromProgress(progresValue)
+    fun onDurationChange(hour: Int, minute: Int) {
 
-        sleepDurationString.set(time.toString())
+        val time = LocalTime.of(hour, (minute-1) * 15)
+
         scope.launch {
-            dataStoreRepository.updateUserWantedSleepTime(time.toSecondOfDay())
+            SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
+                dataStoreRepository,
+                dataBaseRepository,
+                context,
+                sleepStartTime.toSecondOfDay(),
+                sleepEndTime.toSecondOfDay(),
+                time.toSecondOfDay(),
+                autoSleepTime.get() == true,
+                SleepSleepChangeFrom.DURATION
+            )
         }
     }
 
-    private fun getSleepCountFromProgress(count: Int) : LocalTime{
-        var hour = 2 + count / 4
-        var minute = (count % 4) * 15
-        return LocalTime.of(hour, minute)
-    }
-    private fun getProgressFromSleepCount(time: LocalTime) : Int{
-        var count = (time.hour-2) * 4
-        count += time.minute / 15
-        return count
-    }
-
     val sleepStartValue = ObservableField("07:30")
-    val sleepCompleteValue = ObservableField("07:30" + getStringXml(R.string.sleep_sleeptimes_timecombine) +  "7:30")
     val sleepEndValue = ObservableField("07:30")
     var sleepStartTime = LocalTime.now()
     var sleepEndTime = LocalTime.now()
@@ -81,13 +80,20 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
                 view.context,
                 { view, h, m ->
 
-                    sleepStartValue.set((if (h < 10) "0" else "") + h.toString() + ":" + (if (m < 10) "0" else "") + m.toString())
-                    sleepStartTime = LocalTime.of(h, m)
-
-                    sleepCompleteValue.set(sleepStartValue.get() +  getStringXml(R.string.sleep_sleeptimes_timecombine)  + sleepEndValue.get())
+                    val tempWakeup = LocalTime.of(h, m)
 
                     scope.launch {
-                        dataStoreRepository.updateSleepTimeStart(sleepStartTime.toSecondOfDay())
+
+                        SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
+                            dataStoreRepository,
+                            dataBaseRepository,
+                            view.context,
+                            tempWakeup.toSecondOfDay(),
+                            sleepEndTime.toSecondOfDay(),
+                            sleepDuration,
+                            autoSleepTime.get() == true,
+                            SleepSleepChangeFrom.SLEEPTIMESTART
+                        )
                     }
                 },
                 hour,
@@ -103,19 +109,25 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         val minute = (sleepEndTime.minute)
 
         val tpd = TimePickerDialog(
-                view.context,
-                TimePickerDialog.OnTimeSetListener(function = { view, h, m ->
+            view.context,
+            { view, h, m ->
 
-                    sleepEndValue.set((if (h < 10) "0" else "") + h.toString() + ":" + (if (m < 10) "0" else "") + m.toString())
+                val tempWakeup = LocalTime.of(h, m)
 
-                    sleepCompleteValue.set(sleepStartValue.get() +   getStringXml(R.string.sleep_sleeptimes_timecombine)   + sleepEndValue.get())
+                scope.launch {
 
-                    sleepEndTime = LocalTime.of(h, m)
-
-                    scope.launch {
-                        dataStoreRepository.updateSleepTimeEnd(sleepEndTime.toSecondOfDay())
-                    }
-                }),
+                    SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
+                        dataStoreRepository,
+                        dataBaseRepository,
+                        view.context,
+                        sleepStartTime.toSecondOfDay(),
+                        tempWakeup.toSecondOfDay(),
+                        sleepDuration,
+                        autoSleepTime.get() == true,
+                        SleepSleepChangeFrom.SLEEPTIMEEND
+                    )
+                }
+            },
                 hour,
                 minute,
                 false
@@ -149,22 +161,9 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     val goneState = ObservableField(View.GONE)
     val visibleState = ObservableField(View.VISIBLE)
 
-    /*
-    val sleepTimeInfoExpand = ObservableField(View.GONE)
-    val phonePositionExpand = ObservableField(View.GONE)
-    val phoneUsageExpand = ObservableField(View.GONE)
-    val activityTrackingExpand = ObservableField(View.GONE)
-    val alarmExpand = ObservableField(View.GONE)
-    val sleepDurationExpand = ObservableField(View.GONE)
-    val lightConditionExpand = ObservableField(View.GONE)
-    val sleepHeaderExpand = ObservableField(View.GONE)
-    */
-
     fun onInfoClicked(view: View){
         updateInfoChanged(view.tag.toString(), true)
     }
-
-
 
     private fun updateInfoChanged(value: String, toggle: Boolean = false) {
 
@@ -173,14 +172,6 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
         actualExpand.set(if(actualExpand.get() == value.toIntOrNull()) -1 else value.toIntOrNull() )
 
-        /*sleepTimeInfoExpand.set(if (value == "0" && sleepTimeInfoExpand.get() == View.GONE) View.VISIBLE else View.GONE)
-        sleepHeaderExpand.set(if (value == "7" && sleepHeaderExpand.get() == View.GONE) View.VISIBLE else View.GONE)
-        lightConditionExpand.set(if (value == "6" && lightConditionExpand.get() == View.GONE) View.VISIBLE else View.GONE)
-        sleepDurationExpand.set(if (value == "1" && sleepDurationExpand.get() == View.GONE) View.VISIBLE else View.GONE)
-        phonePositionExpand.set(if (value == "2" && phonePositionExpand.get() == View.GONE) View.VISIBLE else View.GONE)
-        phoneUsageExpand.set(if (value == "3" && phoneUsageExpand.get() == View.GONE) View.VISIBLE else View.GONE)
-        activityTrackingExpand.set(if (value == "4" && activityTrackingExpand.get() == View.GONE) View.VISIBLE else View.GONE)
-        alarmExpand.set(if (value == "5" && alarmExpand.get() == View.GONE) View.VISIBLE else View.GONE)*/
     }
 
     val phoneUsageValueString = ObservableField("Normal")
@@ -277,35 +268,6 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
     }
 
-    // region Alarm
-
-    val cancelAlarmWhenAwake = ObservableField(false)
-
-
-    val alarmArtSelections = ObservableArrayList<String>()
-    val alarmArt = ObservableField(0)
-
-    fun onAlarmArtChanged(
-        parent: AdapterView<*>?,
-        selectedItemView: View,
-        art: Int,
-        id: Long
-    ){
-        scope.launch {
-            dataStoreRepository.updateAlarmArt(art)
-        }
-    }
-
-
-
-    fun onEndAlarmAfterFiredChanged(buttonView: View) {
-        scope.launch {
-            cancelAlarmWhenAwake.get()?.let { dataStoreRepository.updateEndAlarmAfterFired(it) }
-        }
-    }
-
-    //endregion
-
     val sleepScoreValue = ObservableField("50")
     val sleepScoreText = ObservableField("50")
 
@@ -381,8 +343,8 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         scope.launch {
             var sleepParams = dataStoreRepository.sleepParameterFlow.first()
             val time = LocalTime.ofSecondOfDay(sleepParams.normalSleepTime.toLong())
-            sleepDurationValue.set(getProgressFromSleepCount(time))
-            sleepDurationString.set(time.toString())
+
+            //sleepDurationString.set(time.toString())
 
             sleepStartTime = LocalTime.ofSecondOfDay(sleepParams.sleepTimeStart.toLong())
             sleepEndTime = LocalTime.ofSecondOfDay(sleepParams.sleepTimeEnd.toLong())
@@ -406,17 +368,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
             includeActivityInCalculation.set(sleepParams.implementUserActivityInSleepTime)
             activityTrackingView.set(if (sleepParams.userActivityTracking) View.VISIBLE else View.GONE)
 
-
-            cancelAlarmWhenAwake.set(sleepParams.endAlarmAfterFired)
-            alarmArtSelections.addAll(arrayListOf<String>(("Nur Alarm"), ("Alarm und Vibration"), ("Nur Vibration")))
-            alarmArt.set(sleepParams.alarmArt)
-
             sleepCalculateFactorCalculation()
-
-            //var activity = dataStoreRepository.activityApiDataFlow.first()
-            //val amount =  activity.activityApiValuesAmount
-            //sleepScoreValue.set(amount.toString())
-
 
         }
     }
@@ -428,12 +380,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     lateinit var animatedTopView : MotionLayout
     lateinit var imageMoonView : AppCompatImageView
 
-    fun onShowTips(view: View){
-        animateTop(true)
-    }
-
     var lastScroll = 0
-    var lastScrollDelta = 0
     var progress = 0f
     var newProgress = 0f
     fun onScrollChanged(v: NestedScrollView, l: Int, t: Int, oldl: Int, oldt: Int) {
@@ -453,9 +400,6 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
         lastScroll = scrollY
     }
-
-    var lastMotionEvent : Int = MotionEvent.ACTION_UP
-
 
     val pictureScale = ObservableField(1.0f)
 

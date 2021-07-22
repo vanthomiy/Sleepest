@@ -2,7 +2,6 @@ package com.doitstudio.sleepest_master.storage.db
 
 import androidx.room.TypeConverter
 import com.doitstudio.sleepest_master.model.data.*
-import com.google.android.gms.location.DetectedActivity
 import java.time.DayOfWeek
 
 /**
@@ -79,6 +78,14 @@ class Converters {
 
     @TypeConverter
     fun toDayOfWeekList(string: String?) : ArrayList<DayOfWeek> {
-        return ArrayList(string?.split(";")?.mapNotNull { DayOfWeek.valueOf(it) } ?: emptyList())
+        if(string != null && string != "")
+        {
+            val split = string?.split(";")
+            val map = split?.mapNotNull { DayOfWeek.valueOf(it) }
+            return ArrayList(map ?: emptyList())
+
+        }
+
+        return ArrayList()
     }
 }

@@ -103,7 +103,7 @@
                             android:rotation="@{profileViewModel.actualExpand == 0 ? profileViewModel.rotatedState:profileViewModel.normalRotationState}"
                             android:onClick="@{profileViewModel::onExpandClicked}"
                             android:tag="0"
-                            app:tint="@color/primary_text_color" />
+                            app:tint="@color/primary_text_color"/>
 
                     </FrameLayout>
 

@@ -299,4 +299,22 @@ enum class ModelProcess{
     }
 }
 
+/**
+ * Helper for checking sleep times for alarms
+ */
+enum class AlarmSleepChangeFrom {
+    DURATION,
+    WAKEUPEARLYLY,
+    WAKEUPLATE
+}
+
+/**
+ * Helper for checking sleep times for alarms
+ */
+enum class SleepSleepChangeFrom {
+    DURATION,
+    SLEEPTIMESTART,
+    SLEEPTIMEEND
+}
+
 
