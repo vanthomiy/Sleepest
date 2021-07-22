@@ -218,7 +218,7 @@
     </string>
     <string name="sleep_trackactivity_header">Tägliche aktivitäten aufzeichnen</string>
     <string name="sleep_trackactivity_include_in_wakeup">In Schlafzeit einbeziehen</string>
-    <string name="sleep_alarm_header">Alarm</string>
+    <string name="sleep_alarm_header">&#9200; Wecker</string>
     <string name="sleep_alarm_info">
         Du kannst den Alarmton für die Alarme einstellen. Zudem kannst du ein experimentelles feature aktivieren in dem sich der Wecker automatisch ausschaltet wenn die App erkennt dass du bereits Wach bist.
     </string>
@@ -243,7 +243,7 @@
 
     <string name="sleep_sleeptimes_autoOn">Auto erkennung</string>
     <string name="sleep_sleeptimes_autoOff">Benutzerdefiniert</string>
-    <string name="sleep_sleep_header">Schlaf</string>
+    <string name="sleep_sleep_header">&#128564; Schlaf</string>
 
     <!--endregion-->
 
@@ -252,7 +252,7 @@
     <string name="profile_remove_button_text_choosen">Abbrechen</string>
     <string name="profile_language_german">Deutsch</string>
     <string name="profile_language_english">Englisch</string>
-    <string name="profile_header">Einstellungen</string>
+    <string name="profile_header">&#128241; Einstellungen</string>
     <string name="profile_app_function">Wie funktioniert die App?</string>
     <string name="profile_design">Design</string>
     <string name="profile_dark_mode">Dark Mode</string>
@@ -311,10 +311,13 @@
     <string name="alarm_instance_and">und</string>
     <string name="alarm_instance_days_a_week">Wochentage:</string>
     <string name="alarm_instance_sleep_duration">Schlafdauer:</string>
-    <string name="alarms_alarme">Alarme</string>
+    <string name="alarms_alarme">&#9200; Wecker</string>
     <string name="alarms_no_alarms">Keine Alarme. Füge über den + Buttonen einen neuen Alarm hinzu!</string>
     <string name="settings_return">return</string>
     <string name="settings_delete_all_data">delete all data</string>
+    <string name="profile_credits">Credits</string>
+    <string name="profile_flaticon_introduction">Wir haben Bilder von der Seite Flaticon verwendet. Im folgenden sind die einzelnen Authoren der Bilder aufgelistet.</string>
+    <string name="prfofile_author">Autor: </string>
     <!--endregion-->
 
 

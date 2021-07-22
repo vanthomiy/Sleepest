@@ -20,6 +20,7 @@ import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
+import com.doitstudio.sleepest_master.util.SmileySelectorUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -185,6 +186,19 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     // endregion
 
+    // region Credits
+
+    fun onCreditsClicked(view: View) {
+        when (view.tag.toString()) {
+            "flaticon" -> "asd"
+
+        }
+    }
+
+    val authorsText = ObservableField("")
+    val authors = listOf("Author1", "Author2", "Author3")
+    // endregion
+
     // region Data
 
     val removeButtonText = ObservableField(context.getString(R.string.settings_delete_all_data))
@@ -259,6 +273,10 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             showDetailedSleepTime.set(settingsParams.bannerShowDetailedSleepTime)
             showSleepState.set(settingsParams.bannerShowSleepState)
 
+        }
+
+        authors.forEach{
+            authorsText.set(authorsText.get() + "\n\n" + SmileySelectorUtil.getSmileyIteration() + "   "+ context.getString(R.string.prfofile_author) + " " + it)
         }
 
         checkPermissions()

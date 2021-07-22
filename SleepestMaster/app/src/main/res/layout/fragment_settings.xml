@@ -749,6 +749,92 @@
                         android:layout_marginVertical="5dp"
                         android:layout_marginHorizontal="10dp"
                         android:onClick="@{profileViewModel::onExpandClicked}"
+                        android:tag="5"
+                        >
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="start"
+                            android:src="@drawable/ic_baseline_assignment_24"
+                            app:tint="@color/primary_text_color" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="40dp"
+                            android:textSize="@dimen/headerSize"
+                            android:layout_gravity="start"
+                            android:textColor="@color/primary_text_color"
+                            android:text="@string/profile_credits"/>
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="end"
+                            android:src="@drawable/ic_baseline_expand_more_24"
+                            android:rotation="@{profileViewModel.actualExpand == 5 ? profileViewModel.rotatedState:profileViewModel.normalRotationState}"
+                            android:onClick="@{profileViewModel::onExpandClicked}"
+                            android:tag="5"
+                            app:tint="@color/primary_text_color" />
+
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:orientation="vertical"
+                        android:visibility="@{profileViewModel.actualExpand == 5 ? profileViewModel.visibleState:profileViewModel.goneState, default=gone}"
+                        >
+
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="40dp"
+                            android:textSize="@dimen/headerSize"
+                            android:layout_gravity="start"
+                            android:textColor="@color/primary_text_color"
+                            android:text="@string/profile_flaticon_introduction"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="40dp"
+                            android:textSize="@dimen/headerSize"
+                            android:textAlignment="viewStart"
+                            android:layout_gravity="start"
+                            android:textColor="@color/primary_text_color"
+                            android:text="@{profileViewModel.authorsText}"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:background="@drawable/transparentrounded"
+                            android:textSize="@dimen/valueSize"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/profile_credits_flaticon"
+                            android:textColor="@color/accent_text_color"
+                            android:tag="flaticon"
+                            android:onClick="@{profileViewModel.onCreditsClicked}"
+                            />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="10dp"
+                    >
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:onClick="@{profileViewModel::onExpandClicked}"
                         android:tag="4"
                         >
                         <ImageView

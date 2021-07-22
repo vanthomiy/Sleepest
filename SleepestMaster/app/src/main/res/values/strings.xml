@@ -141,7 +141,7 @@
 
     <string name="sleep_sleeptimes_autoOn">Auto erkennung</string>
     <string name="sleep_sleeptimes_autoOff">Benutzerdefiniert</string>
-    <string name="sleep_sleep_header">Schlaf</string>
+    <string name="sleep_sleep_header">&#128564; Sleep</string>
 
     <!--new_TimAlarminstance-->
     <string name="alarm_monday_dayname">Monday</string>
@@ -161,7 +161,7 @@
     <string name="profile_remove_button_text_choosen">Abbrechen</string>
     <string name="profile_language_german">German</string>
     <string name="profile_language_english">English</string>
-    <string name="profile_header">Settings</string>
+    <string name="profile_header">&#128241; Settings</string>
     <string name="profile_app_function">Wie funktioniert die App?</string>
     <string name="profile_design">Design</string>
     <string name="profile_dark_mode">Dark Mode</string>
@@ -202,7 +202,7 @@
     <string name="alarm_instance_days_a_week">Week days:</string>
     <string name="alarm_instance_wake_up_range">Wake-Up window:</string>
     <string name="alarm_instance_sleep_duration">Sleep duration:</string>
-    <string name="alarms_alarme">Alarme</string>
+    <string name="alarms_alarme">&#9200; Alarme</string>
 
     <string name="profile_about_us">Sleepest - App\nMade with &#10084; in Bavaria\n\n This app was created by 3 students as a students project and will be improved and maintained in the future</string>
     <string name="title_notifications">Notifications</string>
@@ -235,6 +235,10 @@
     <string name="alarms_no_alarms">Keine Alarme. Füge über den + Buttonen einen neuen Alarm hinzu!</string>
     <string name="settings_return">return</string>
     <string name="settings_delete_all_data">delete all data</string>
+    <string name="profile_credits">Credits</string>
+    <string name="profile_credits_flaticon">Flaticon Website</string>
+    <string name="profile_flaticon_introduction">Wir haben Bilder von der Seite Flaticon verwendet. Im folgenden sind die einzelnen Authoren der Bilder aufgelistet.</string>
+    <string name="prfofile_author">Autor: </string>
 
     <!--endregion-->
 
