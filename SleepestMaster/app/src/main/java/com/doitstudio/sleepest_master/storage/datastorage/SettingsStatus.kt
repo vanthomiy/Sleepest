@@ -31,6 +31,33 @@ class SettingsStatus(private val dataStore: DataStore<SettingsData>) {
                 }
             }
 
+
+    suspend fun updateBannerShowAlarmActiv(isActive:Boolean){
+        dataStore.updateData{preference->
+            preference.toBuilder().setBannerShowAlarmActiv(isActive).build()
+        }
+    }
+    suspend fun updateBannerShowActualWakeUpPoint(isActive:Boolean){
+        dataStore.updateData{preference->
+            preference.toBuilder().setBannerShowActualWakeUpPoint(isActive).build()
+        }
+    }
+    suspend fun updateBannerShowActualSleepTime(isActive:Boolean){
+        dataStore.updateData{preference->
+            preference.toBuilder().setBannerShowActualSleepTime(isActive).build()
+        }
+    }
+    suspend fun updateBannerShowDetailedSleepTime(isActive:Boolean){
+        dataStore.updateData{preference->
+            preference.toBuilder().setBannerShowDetailedSleepTime(isActive).build()
+        }
+    }
+    suspend fun updateBannerShowSleepState(isActive:Boolean){
+        dataStore.updateData{preference->
+            preference.toBuilder().setBannerShowSleepState(isActive).build()
+        }
+    }
+
     suspend fun updateAutoDarkMode(isActive:Boolean){
         dataStore.updateData{preference->
             preference.toBuilder().setDesignAutoDarkMode(isActive).build()

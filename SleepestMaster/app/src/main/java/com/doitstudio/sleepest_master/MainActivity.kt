@@ -20,8 +20,11 @@ import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.ui.alarms.AlarmsFragment
+import com.doitstudio.sleepest_master.ui.history.HistoryTabView
 import com.doitstudio.sleepest_master.ui.settings.SettingsFragment
 import com.doitstudio.sleepest_master.ui.sleep.SleepFragment
+import com.doitstudio.sleepest_master.util.PermissionsUtil
+import com.doitstudio.sleepest_master.util.TimeConverterUtil
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
@@ -61,7 +64,7 @@ class MainActivity : AppCompatActivity() {
     // region fragments
 
     lateinit var alarmsFragment : AlarmsFragment
-    lateinit var historyFragment : HistoryFragment
+    lateinit var historyFragment : HistoryTabView
     lateinit var sleepFragment : SleepFragment
     lateinit var settingsFragment : SettingsFragment
 
@@ -72,7 +75,7 @@ class MainActivity : AppCompatActivity() {
 
             bottomBar = binding.bottomBar
             alarmsFragment = AlarmsFragment()
-            historyFragment = HistoryFragment(applicationContext)
+            historyFragment = HistoryTabView()
             sleepFragment = SleepFragment()
             settingsFragment = SettingsFragment()
 
@@ -321,12 +324,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         // check permission
-        if (!activityRecognitionPermissionApproved()) {
+        if (!PermissionsUtil.isActivityRecognitionPermissionGranted(applicationContext)) {
             requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
         }
 
-        checkDrawOverlayPermission()
-        checkDoNotDisturbPermission()
+        if(!PermissionsUtil.isOverlayPermissionGranted(applicationContext)) {
+            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
+            startActivity(intent)
+        }
+
+        if (!PermissionsUtil.isNotificationPolicyAccessGranted(applicationContext)) {
+            val intent = Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
+            startActivity(intent)
+        }
 
     }
 
@@ -409,7 +419,7 @@ class MainActivity : AppCompatActivity() {
                 DontKillMyAppFragment.show(this@MainActivity)
 
                 scope.launch {
-                    val calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeBegin())
+                    val calendar = TimeConverterUtil.getAlarmDate(dataStoreRepository.getSleepTimeBegin())
                     //AlarmReceiver.cancelAlarm(applicationContext, 6)
 
                     /**AlarmReceiver.startAlarmManager(

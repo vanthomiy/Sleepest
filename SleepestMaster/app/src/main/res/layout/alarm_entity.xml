@@ -20,28 +20,151 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:background="@drawable/background_alarmentity"
+<<<<<<< HEAD
         android:orientation="vertical"
         >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp">
+=======
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tV_alarmName"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textAlignment="center"
+            android:textColor="@color/primary_text_color"
+            android:textSize="28sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <Switch
+            android:id="@+id/sw_alarmIsActive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:thumbTint="@color/primary_text_color"
+            android:trackTint="@color/primary_text_color"
+            app:layout_constraintBottom_toBottomOf="@+id/tV_alarmName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/tV_alarmName"
+            app:layout_constraintTop_toTopOf="@+id/tV_alarmName"
+            tools:ignore="MissingConstraints,UseSwitchCompatOrMaterialXml" />
+
+        <Button
+            android:id="@+id/btn_deleteAlarm"
+            android:layout_width="45dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="8dp"
+            android:text="@string/x"
+            android:textColor="@color/primary_text_color"
+            android:backgroundTint="@color/error_color"
+            app:layout_constraintBottom_toBottomOf="@+id/tV_alarmName"
+            app:layout_constraintEnd_toStartOf="@+id/tV_alarmName"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tV_alarmName" />
+
+        <TextView
+            android:id="@+id/tV_activeWeekdays"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:text=""
+            android:textAlignment="viewStart"
+            android:textColor="@color/primary_text_color"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tV_alarmName"
+            tools:visibility="visible"/>
+
+        <TextView
+            android:id="@+id/tV_wakeupRangeHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:textAlignment="viewStart"
+            android:textColor="@color/primary_text_color"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tV_alarmName"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/tV_sleepAmountHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:textAlignment="viewStart"
+            android:textColor="@color/primary_text_color"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tV_wakeupRangeHint"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/tV_activeWeekdays"
+            app:layout_constraintTop_toBottomOf="@+id/tV_alarmName"
+            tools:visibility="visible" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cL_extendedAlarmEntity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tV_alarmName"
+            tools:visibility="visible">
+>>>>>>> main
 
             <TextView
                 android:id="@+id/tV_alarmName"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
+<<<<<<< HEAD
                 android:layout_marginStart="25dp"
                 android:text="@{alarmInstanceViewModel.sleepDurationString}"
                 android:layout_gravity="center"
                 android:textColor="@color/tertiary_text_color"
                 android:textSize="28sp"
                 android:layout_weight="1"/>
+=======
+                android:layout_marginStart="4dp"
+                android:text="@string/schlafdauer"
+                android:textColor="@color/primary_text_color"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+>>>>>>> main
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/sw_alarmIsActive"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+<<<<<<< HEAD
                 android:layout_marginEnd="8dp"
                 android:layout_gravity="center"
                 android:thumbTint="@color/secondary_button_color"
@@ -49,6 +172,26 @@
                 android:checked="@={alarmInstanceViewModel.isAlarmActive}"
                 android:onClick="@{alarmInstanceViewModel::onAlarmActiveToggled}"
                 android:layout_weight="0"/>
+=======
+                android:textColor="@color/primary_text_color"
+                android:textSize="18sp"
+                app:layout_constraintStart_toEndOf="@+id/tV_sleepAmountTopic"
+                app:layout_constraintTop_toTopOf="@+id/tV_sleepAmountTopic" />
+
+            <SeekBar
+                android:id="@+id/sBar_sleepAmount"
+                style="@android:style/Widget.DeviceDefault.Light.SeekBar"
+                android:layout_width="338dp"
+                android:layout_height="28dp"
+                android:max="10"
+                android:min="0"
+                android:progressBackgroundTint="@color/primary_text_color"
+                android:progressTint="@color/primary_text_color"
+                android:thumbTint="@color/primary_text_color"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tV_sleepAmountTopic" />
+>>>>>>> main
 
 
 
@@ -63,10 +206,20 @@
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+<<<<<<< HEAD
                 android:layout_marginStart="10dp"
                 android:text="@string/alarm_instance_sleep_duration"
                 android:textColor="@color/tertiary_text_color"
                 android:textStyle="bold" />
+=======
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/aufwachzeitpunkt"
+                android:textColor="@color/primary_text_color"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sBar_sleepAmount" />
+>>>>>>> main
 
             <LinearLayout
                 android:layout_height="70dp"
@@ -158,6 +311,7 @@
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+<<<<<<< HEAD
                 android:layout_marginStart="10dp"
                 android:text="@string/alarm_instance_wake_up_range"
                 android:textColor="@color/tertiary_text_color"
@@ -256,6 +410,35 @@
                 android:textStyle="bold" />
 
             <HorizontalScrollView
+=======
+                android:textColor="@color/primary_text_color"
+                android:textSize="18sp"
+                app:layout_constraintStart_toEndOf="@+id/tV_wakeupRangeTopic"
+                app:layout_constraintTop_toTopOf="@+id/tV_wakeupRangeTopic" />
+
+            <com.appyvet.rangebar.RangeBar
+                android:id="@+id/rBar_wakeupRange"
+                android:layout_width="320dp"
+                android:layout_height="40dp"
+                android:backgroundTint="@color/primary_text_color"
+                app:connectingLineColor="@color/primary_text_color"
+                app:connectingLineWeight="1dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tV_wakeupRangeTopic"
+                app:pinRadius="0dp"
+                app:rangeBarColor="@color/primary_text_color"
+                app:selectorColor="@color/primary_text_color"
+                app:selectorSize="6dp"
+                app:tickColor="#00FFFFFF"
+                app:tickEnd="10"
+                app:tickInterval="0.5"
+                app:tickStart="5"
+                tools:ignore="MissingConstraints" />
+
+            <Button
+                android:id="@+id/btn_selectActiveWeekday"
+>>>>>>> main
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -365,6 +548,7 @@
                 android:text="@string/alarm_instance_alarm_remove"
                 android:background="@drawable/bgrounded"
                 android:textColor="@color/primary_text_color"
+<<<<<<< HEAD
                 android:backgroundTint="@color/error_color"/>
 
         </LinearLayout>
@@ -439,3 +623,13 @@
 
     </LinearLayout>
 </layout>
+=======
+                android:backgroundTint="@color/tertiary_button_color"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rBar_wakeupRange"
+                tools:layout_constraintStart_toEndOf="@+id" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+>>>>>>> main

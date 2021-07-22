@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+<<<<<<< HEAD
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.alarms.AlarmsFragment">
 
@@ -15,6 +16,102 @@
         android:layout_height="match_parent"
         android:background="@color/primary_app_background"
         android:orientation="vertical">
+=======
+    android:id="@+id/cL_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primary_app_background"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tV_appName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:text="@string/einstellungen"
+        android:textAlignment="center"
+        android:textColor="@color/primary_text_color"
+        android:textSize="34sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/btn_expandSoundSettings"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_gravity="start"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/ic_baseline_timer_24"
+        android:src="@drawable/ic_baseline_timer_24"
+        app:layout_constraintEnd_toStartOf="@+id/tV_appName"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="64dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <LinearLayout
+        android:id="@+id/lL_alarmSoundSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/tV_appName"
+        tools:layout_editor_absoluteX="10dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="5dp">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="start"
+                android:src="@drawable/ic_baseline_timer_24"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginLeft="40dp"
+                android:text="@string/sleep_alarm_header"
+                android:textColor="@color/primary_text_color"
+                android:textSize="@dimen/headerSize" />
+
+            <ImageButton
+                android:id="@+id/btn_expandAlarmSoundInformation"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="end"
+                android:background="@drawable/ic_baseline_info_24"
+                android:src="@drawable/ic_baseline_info_24"
+                android:tag="5"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/fL_alarmSoundInformation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
+            android:visibility="gone"
+            android:background="@drawable/bgroundedchoosen">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:text="@string/sleep_alarm_info"
+                android:textColor="@color/primary_text_color" />
+        </FrameLayout>
+>>>>>>> main
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,8 +119,44 @@
             android:focusable="true"
             android:orientation="vertical">
 
+<<<<<<< HEAD
             <LinearLayout
                 android:id="@+id/lL_alarmSoundSettings"
+=======
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/valuesHeight">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/sleep_alarm_auto_cancel_alarm"
+                    android:textColor="@color/primary_text_color"
+                    android:textSize="@dimen/valueSize"
+                    android:textStyle="bold" />
+
+                <Switch
+                    android:id="@+id/sw_autoCancelAlarm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="10dp"
+                    android:thumbTint="@color/primary_text_color"
+                    android:trackTint="@color/primary_text_color"
+                    android:gravity="center_vertical" />
+            </FrameLayout>
+
+            <View
+                android:id="@+id/view1"
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:background="@color/secondary_button_color" />
+
+            <FrameLayout
+>>>>>>> main
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusable="true"
@@ -62,6 +195,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
+<<<<<<< HEAD
                     android:orientation="vertical"
                     android:layout_marginBottom="10dp"
                     android:visibility="@{alarmsViewModel.actualExpand}">
@@ -157,6 +291,14 @@
 
 
                 </LinearLayout>
+=======
+                    android:layout_marginStart="10dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/sleep_alarm_sound"
+                    android:textColor="@color/primary_text_color"
+                    android:textSize="@dimen/valueSize"
+                    android:textStyle="bold" />
+>>>>>>> main
 
                 <Button
                     android:id="@+id/btn_temporaryDisableAlarm"

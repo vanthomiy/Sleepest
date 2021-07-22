@@ -39,7 +39,7 @@ class SparkLineStyle @Inject constructor(private val context: Context) {
             position = XAxis.XAxisPosition.BOTTOM
             valueFormatter = IndexAxisValueFormatter(getWeekXAxisValues())
             //typeface = ResourcesCompat.getFont(context, R.font.barlow_semi_condensed_regular)
-            textColor = ContextCompat.getColor(context, R.color.black)
+            textColor = ContextCompat.getColor(context, R.color.primary_text_color)
         }
 
         setTouchEnabled(true)
@@ -52,8 +52,8 @@ class SparkLineStyle @Inject constructor(private val context: Context) {
     }
 
     fun styleLineDataSet(lineDataSet: LineDataSet) = lineDataSet.apply {
-        color = ContextCompat.getColor(context, R.color.green)
-        valueTextColor = ContextCompat.getColor(context, R.color.gray)
+        color = ContextCompat.getColor(context, R.color.primary_text_color)
+        valueTextColor = ContextCompat.getColor(context, R.color.primary_text_color)
         setDrawValues(false)
         lineWidth = 3f
         isHighlightEnabled = true

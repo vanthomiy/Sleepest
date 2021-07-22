@@ -254,6 +254,7 @@ class SleepCalculationHandlerTest
         assertThat(newSleepList.count(), CoreMatchers.equalTo(sleepList.count()-1))
     }
 
+    /*
     @Test
     fun findLightUserWakeupTest() = runBlocking {
 
@@ -314,6 +315,7 @@ class SleepCalculationHandlerTest
         assertThat((calcTime != wakeuptime), CoreMatchers.equalTo(true))
 
     }
+     */
 
     @Test
     fun checkPhonePositionTest() = runBlocking{

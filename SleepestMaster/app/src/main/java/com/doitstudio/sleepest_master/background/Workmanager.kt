@@ -4,14 +4,20 @@ import android.app.Notification
 import android.app.NotificationManager
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.work.*
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
+import com.doitstudio.sleepest_master.model.data.NotificationUsage
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler.Companion.getHandler
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
+import com.doitstudio.sleepest_master.util.NotificationUtil
+import com.doitstudio.sleepest_master.util.SleepUtil
+import com.doitstudio.sleepest_master.util.SmileySelectorUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -25,13 +31,10 @@ class Workmanager(appcontext: Context, workerParams: WorkerParameters) : Worker(
 
     private val sleepCalculationHandler: SleepCalculationHandler by lazy { getHandler(applicationContext) }
 
+    @RequiresApi(Build.VERSION_CODES.P)
     override fun doWork(): Result {
 
         val scope: CoroutineScope = MainScope()
-
-        val dataBaseRepository: DatabaseRepository by lazy {
-            (applicationContext as MainApplication).dataBaseRepository
-        }
 
         val dataStoreRepository: DataStoreRepository by lazy {
             (applicationContext as MainApplication).dataStoreRepository
@@ -51,26 +54,16 @@ class Workmanager(appcontext: Context, workerParams: WorkerParameters) : Worker(
             }*/
 
             if (LocalTime.now().toSecondOfDay() >= dataStoreRepository.getSleepTimeBegin() &&
-                ((LocalTime.now().toSecondOfDay() - dataStoreRepository.getSleepTimeBegin()) >= 60) && (dataStoreRepository.sleepApiDataFlow.first().sleepApiValuesAmount <= 3)) {
-                val notification: Notification = AlarmReceiver.createInformationNotification(applicationContext,
-                    applicationContext.getString(R.string.information_notification_text_sleep_api_problem))
-                val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                notificationManager.notify(2, notification)
-            } else if (LocalTime.now().toSecondOfDay() > dataStoreRepository.getSleepTimeBegin() &&
-                ((dataStoreRepository.getSleepTimeBegin() - LocalTime.now().toSecondOfDay()) >= 60) && (dataStoreRepository.sleepApiDataFlow.first().sleepApiValuesAmount <= 3)) {
-                val notification: Notification = AlarmReceiver.createInformationNotification(applicationContext,
-                    applicationContext.getString(R.string.information_notification_text_sleep_api_problem))
-                val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                notificationManager.notify(2, notification)
+                ((LocalTime.now().toSecondOfDay() - ForegroundService.getForegroundServiceStartTime()) >= 60) && (dataStoreRepository.sleepApiDataFlow.first().sleepApiValuesAmount <= 3) &&
+                dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
+                val notificationsUtil = NotificationUtil(applicationContext, NotificationUsage.NOTIFICATION_NO_API_DATA,null)
+                notificationsUtil.chooseNotification()
+            } else if (LocalTime.now().toSecondOfDay() > ForegroundService.getForegroundServiceStartTime() &&
+                ((ForegroundService.getForegroundServiceStartTime() - LocalTime.now().toSecondOfDay()) >= 60) && (dataStoreRepository.sleepApiDataFlow.first().sleepApiValuesAmount <= 3) &&
+                dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
+                val notificationsUtil = NotificationUtil(applicationContext, NotificationUsage.NOTIFICATION_NO_API_DATA,null)
+                notificationsUtil.chooseNotification()
             }
-            /**
-                /**TODO:Sleeptime ist nicht richtig**/
-            if (dataStoreRepository.liveUserSleepActivityFlow.first().userSleepTime > 60 && (dataStoreRepository.sleepApiDataFlow.first().sleepApiValuesAmount <= 3)) {
-                val notification: Notification = AlarmReceiver.createInformationNotification(applicationContext,
-                    applicationContext.getString(R.string.information_notification_text_sleep_api_problem))
-                val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                notificationManager.notify(2, notification)
-            }**/
         }
 
         sleepCalculationHandler.checkIsUserSleeping(null)
@@ -88,7 +81,7 @@ class Workmanager(appcontext: Context, workerParams: WorkerParameters) : Worker(
 
 
 
-    companion object {
+    /*companion object {
 
         /**
          * Start the workmanager with a specific duration
@@ -108,13 +101,13 @@ class Workmanager(appcontext: Context, workerParams: WorkerParameters) : Worker(
             Toast.makeText(context1, "Workmanager started", Toast.LENGTH_LONG).show()
         }
 
-        /*fun stopPeriodicWorkmanager() {
+        fun stopPeriodicWorkmanager() {
 
             //Cancel periodic work by tag
             WorkManager.getInstance(applicationContext).cancelAllWorkByTag("Workmanager 1")
-        }*/
+        }
 
 
-    }
+    }*/
 
 }

@@ -54,7 +54,6 @@
                     android:background="@drawable/bgroundedwhite"
                     app:layoutDescription="@xml/fragment_profile_scene">
 
-
                     <TextView
                         android:id="@+id/header"
                         android:layout_width="wrap_content"
@@ -62,10 +61,8 @@
                         android:layout_marginLeft="40dp"
                         android:textSize="@dimen/headerSize"
                         android:layout_gravity="start"
-                        android:textColor="@color/tertiary_text_color"
+                        android:textColor="@color/primary_text_color"
                         android:text="@string/profile_app_function"/>
-
-
 
                 </androidx.constraintlayout.motion.widget.MotionLayout>
 
@@ -146,7 +143,7 @@
                                     android:gravity="center_vertical"
                                     android:layout_marginStart="10dp"
                                     android:textSize="@dimen/valueSize"
-                                    android:textColor="@color/tertiary_text_color"
+                                    android:textColor="@color/primary_text_color"
                                     android:text="@string/profile_auto_dark_mode"
                                     />
 
@@ -162,20 +159,165 @@
                             </FrameLayout>
 
 
+                            <androidx.appcompat.widget.AppCompatToggleButton
+                                android:layout_width="match_parent"
+                                android:visibility="@{profileViewModel.showDarkModeSetting}"
+                                android:layout_height="@dimen/valuesHeight"
+                                android:background="@drawable/transparent"
+                                android:textOn="Dark Mode"
+                                android:textOff="Light Mode"
+                                android:textColor="@color/primary_text_color"
+                                android:layout_marginBottom="10dp"
+                                android:checked="@={profileViewModel.darkMode}"
+                                android:onClick="@{profileViewModel::darkModeToggled}"/>
 
                         </LinearLayout>
 
-                        <androidx.appcompat.widget.AppCompatToggleButton
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="0dp"
+                            android:textSize="@dimen/headerSize"
+                            android:layout_gravity="start"
+                            android:textColor="@color/primary_text_color"
+                            android:text="Sleepest Banner"/>
+
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:visibility="@{profileViewModel.showDarkModeSetting}"
-                            android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgroundedchoosen"
-                            android:textOn="Dark Mode"
-                            android:textOff="Light Mode"
-                            android:textColor="@color/tertiary_text_color"
-                            android:layout_marginBottom="10dp"
-                            android:checked="@={profileViewModel.darkMode}"
-                            android:onClick="@{profileViewModel::darkModeToggled}"/>
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:layout_marginLeft="0dp"
+                            android:orientation="vertical"
+                            android:layout_marginVertical="10dp"
+                            android:background="@drawable/bgroundedchoosen">
+
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/valuesHeight">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="start"
+                                    android:gravity="center_vertical"
+                                    android:layout_marginStart="10dp"
+                                    android:textSize="@dimen/valueSize"
+                                    android:textColor="@color/primary_text_color"
+                                    android:text="Alarm aktive anzeigen"
+                                    />
+
+                                <androidx.appcompat.widget.SwitchCompat
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="end"
+                                    android:gravity="center_vertical"
+                                    android:layout_marginEnd="10dp"
+                                    android:tag="show_alarm_active"
+                                    android:checked="@={profileViewModel.showAlarmActiv}"
+                                    android:onClick="@{profileViewModel::bannerSettingsToggled}"
+                                    />
+                            </FrameLayout>
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/valuesHeight">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="start"
+                                    android:gravity="center_vertical"
+                                    android:layout_marginStart="10dp"
+                                    android:textSize="@dimen/valueSize"
+                                    android:textColor="@color/primary_text_color"
+                                    android:text="Aktueller Aufweckzeitpunkt"
+                                    />
+
+                                <androidx.appcompat.widget.SwitchCompat
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="end"
+                                    android:gravity="center_vertical"
+                                    android:layout_marginEnd="10dp"
+                                    android:tag="show_actual_wakeup"
+                                    android:checked="@={profileViewModel.showActualWakeUpPoint}"
+                                    android:onClick="@{profileViewModel::bannerSettingsToggled}"
+                                    />
+                            </FrameLayout>
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/valuesHeight">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="start"
+                                    android:gravity="center_vertical"
+                                    android:layout_marginStart="10dp"
+                                    android:textSize="@dimen/valueSize"
+                                    android:textColor="@color/primary_text_color"
+                                    android:text="Aktuelle Schlafenszeit"
+                                    />
+
+                                <androidx.appcompat.widget.SwitchCompat
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="end"
+                                    android:gravity="center_vertical"
+                                    android:layout_marginEnd="10dp"
+                                    android:tag="show_actual_sleep_time"
+                                    android:checked="@={profileViewModel.showActualSleepTime}"
+                                    android:onClick="@{profileViewModel::bannerSettingsToggled}"
+                                    />
+                            </FrameLayout>
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/valuesHeight">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="start"
+                                    android:gravity="center_vertical"
+                                    android:layout_marginStart="10dp"
+                                    android:textSize="@dimen/valueSize"
+                                    android:textColor="@color/primary_text_color"
+                                    android:text="Genaue Schlafenszeiten"
+                                    />
+
+                                <androidx.appcompat.widget.SwitchCompat
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="end"
+                                    android:gravity="center_vertical"
+                                    android:layout_marginEnd="10dp"
+                                    android:tag="show_detailed_sleep_states"
+                                    android:checked="@={profileViewModel.showDetailedSleepTime}"
+                                    android:onClick="@{profileViewModel::bannerSettingsToggled}"
+                                    />
+                            </FrameLayout>
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/valuesHeight">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="start"
+                                    android:gravity="center_vertical"
+                                    android:layout_marginStart="10dp"
+                                    android:textSize="@dimen/valueSize"
+                                    android:textColor="@color/primary_text_color"
+                                    android:text="Schlafstatus anzeigen"
+                                    />
+
+                                <androidx.appcompat.widget.SwitchCompat
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="end"
+                                    android:gravity="center_vertical"
+                                    android:layout_marginEnd="10dp"
+                                    android:tag="show_actual_sleep_state"
+                                    android:checked="@={profileViewModel.showSleepState}"
+                                    android:onClick="@{profileViewModel::bannerSettingsToggled}"
+                                    />
+                            </FrameLayout>
+
+                        </LinearLayout>
 
 
                     </LinearLayout>
@@ -237,7 +379,7 @@
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_tutorial"
-                            android:textColor="@color/tertiary_text_color"
+                            android:textColor="@color/primary_text_color"
                             android:tag="tutorial"
                             android:onClick="@{profileViewModel::onHelpClicked}">
                         </androidx.appcompat.widget.AppCompatButton>
@@ -249,7 +391,7 @@
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_neccessary_settings"
-                            android:textColor="@color/tertiary_text_color"
+                            android:textColor="@color/primary_text_color"
                             android:tag="importantSettings"
                             android:id="@+id/btnImportantSettings">
                         </androidx.appcompat.widget.AppCompatButton>
@@ -313,7 +455,7 @@
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_suggestions"
-                            android:textColor="@color/tertiary_text_color"
+                            android:textColor="@color/primary_text_color"
 
                             android:tag="improvement"
                             android:onClick="@{profileViewModel::onAboutUsClicked}">
@@ -326,7 +468,7 @@
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_rate"
-                            android:textColor="@color/tertiary_text_color"
+                            android:textColor="@color/primary_text_color"
 
                             android:tag="rate"
                             android:onClick="@{profileViewModel::onAboutUsClicked}">
@@ -339,7 +481,7 @@
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_report_error"
-                            android:textColor="@color/tertiary_text_color"
+                            android:textColor="@color/primary_text_color"
                             android:tag="error"
                             android:onClick="@{profileViewModel::onAboutUsClicked}">
                         </androidx.appcompat.widget.AppCompatButton>
@@ -408,7 +550,7 @@
                                 android:layout_marginEnd="50dp"
                                 android:background="@drawable/bgroundedchoosen"
                                 android:textSize="@dimen/valueSize"
-                                android:textColor="@color/tertiary_text_color"
+                                android:textColor="@color/primary_text_color"
                                 android:layout_marginVertical="5dp"
                                 android:text="@string/profile_sleepdata"
                                 android:tag="sleepActivity"
@@ -460,7 +602,7 @@
                                 android:tag="dailyActivity"
                                 android:id="@+id/dailyActivityPermission"
                                 android:text="@string/profile_daily_activity"
-                                android:textColor="@color/tertiary_text_color"
+                                android:textColor="@color/primary_text_color"
                                 android:textSize="@dimen/valueSize"></androidx.appcompat.widget.AppCompatButton>
 
                             <androidx.appcompat.widget.AppCompatImageView
@@ -505,7 +647,7 @@
                                 android:textSize="@dimen/valueSize"
                                 android:layout_marginVertical="5dp"
                                 android:text="@string/profile_storage"
-                                android:textColor="@color/tertiary_text_color"
+                                android:textColor="@color/primary_text_color"
 
                                 android:tag="storage"
                                 android:id="@+id/storagePermission"
@@ -555,7 +697,7 @@
                                 android:textSize="@dimen/valueSize"
                                 android:layout_marginVertical="5dp"
                                 android:text="@string/profile_overlapp_app"
-                                android:textColor="@color/tertiary_text_color"
+                                android:textColor="@color/primary_text_color"
 
                                 android:tag="overlay"
                                 android:id="@+id/overlayPermission"
@@ -651,7 +793,7 @@
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_export_data"
-                            android:textColor="@color/tertiary_text_color"
+                            android:textColor="@color/primary_text_color"
                             android:tag="export"
                             android:id="@+id/exportButton"/>
 
@@ -662,7 +804,7 @@
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_import_data"
-                            android:textColor="@color/tertiary_text_color"
+                            android:textColor="@color/primary_text_color"
                             android:tag="import"
                             android:id="@+id/importButton" />
 
@@ -675,7 +817,7 @@
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@{profileViewModel.removeButtonText}"
-                            android:textColor="@color/tertiary_text_color"
+                            android:textColor="@color/primary_text_color"
 
                             android:tag="remove"
                             android:onClick="@{profileViewModel::onDataClicked}">

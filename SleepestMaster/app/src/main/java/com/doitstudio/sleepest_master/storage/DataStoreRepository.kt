@@ -222,6 +222,16 @@ class DataStoreRepository(context: Context) {
 
     val settingsDataFlow: Flow<SettingsData> = settingsDataStatus.settingsData
 
+    suspend fun updateBannerShowAlarmActiv(isActive:Boolean) =
+        settingsDataStatus.updateBannerShowAlarmActiv(isActive)
+    suspend fun updateBannerShowActualWakeUpPoint(isActive:Boolean) =
+        settingsDataStatus.updateBannerShowActualWakeUpPoint(isActive)
+    suspend fun updateBannerShowActualSleepTime(isActive:Boolean) =
+            settingsDataStatus.updateBannerShowActualSleepTime(isActive)
+    suspend fun updateBannerShowDetailedSleepTime(isActive:Boolean) =
+                settingsDataStatus.updateBannerShowDetailedSleepTime(isActive)
+    suspend fun updateBannerShowSleepState(isActive:Boolean) =
+                    settingsDataStatus.updateBannerShowSleepState(isActive)
 
     suspend fun updateAutoDarkMode(isActive:Boolean) =
             settingsDataStatus.updateAutoDarkMode(isActive)

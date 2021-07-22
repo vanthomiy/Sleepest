@@ -19,7 +19,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import com.doitstudio.sleepest_master.DontKillMyAppFragment
 import com.doitstudio.sleepest_master.MainApplication
-import com.doitstudio.sleepest_master.databinding.FragmentProfileBinding
+import com.doitstudio.sleepest_master.databinding.FragmentSettingsBinding
 import com.doitstudio.sleepest_master.model.data.export.UserSleepExportData
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
@@ -36,7 +36,7 @@ import java.util.*
 class SettingsFragment : Fragment() {
 
     private val viewModel by lazy { ViewModelProvider(this).get(SettingsViewModel::class.java) }
-    private lateinit var binding: FragmentProfileBinding
+    private lateinit var binding: FragmentSettingsBinding
     private val actualContext: Context by lazy { requireActivity().applicationContext }
     private val scope: CoroutineScope = MainScope()
     private val dataBaseRepository: DatabaseRepository by lazy {
@@ -59,7 +59,7 @@ class SettingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = FragmentProfileBinding.inflate(inflater, container, false)
+        binding = FragmentSettingsBinding.inflate(inflater, container, false)
         viewModel.transitionsContainer = (binding.linearAnimationlayout)
         viewModel.animatedTopView = binding.animatedTopView
         binding.profileViewModel = viewModel
@@ -163,7 +163,7 @@ class SettingsFragment : Fragment() {
             """.trimIndent()
         pref = actualContext.getSharedPreferences("BootTime1", 0)
         val textBooReceiver1= """
-            Last Boot: ${pref.getInt("hour", 0)},${pref.getInt("minute", 0)}
+            Last Boot: ${pref.getInt("hour", 0)},${pref.getInt("minute", 0)},${pref.getInt("usage", 0)}
             
             """.trimIndent()
 
