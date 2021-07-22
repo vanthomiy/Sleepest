@@ -62,4 +62,11 @@ interface AlarmDao {
 
     @Query("DELETE FROM alarm_properties_table")
     suspend fun deleteAll()
+
+    @Query("UPDATE alarm_properties_table SET tempDisabled =0")
+    suspend fun resetTempDisabled()
+
+    @Query("UPDATE alarm_properties_table SET wasFired =0")
+    suspend fun resetWasFired()
+
 }

@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.googleapi.ActivityTransitionHandler
 import com.doitstudio.sleepest_master.model.data.Actions
 import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
@@ -32,10 +33,13 @@ class BootReceiver : BroadcastReceiver() {
         if (action != null) {
             if (action == Intent.ACTION_BOOT_COMPLETED) {
 
+                BackgroundAlarmTimeHandler.getHandler(context).chooseStateBeforeReboot()
 
-
-                    BackgroundAlarmTimeHandler.getHandler(context).chooseStateBeforeReboot()
-
+                scope.launch {
+                    if (dataStoreRepository.getActivitySubscribeStatus()) {
+                        ActivityTransitionHandler.getHandler(context.applicationContext).startActivityHandler()
+                    }
+                }
 
                     /*if(dataStoreRepository.backgroundServiceFlow.first().isForegroundActive && dataBaseRepository.getNextActiveAlarm() != null) {
                         if (!dataBaseRepository.getNextActiveAlarm()!!.wasFired && !dataBaseRepository.getNextActiveAlarm()!!.tempDisabled && ((LocalTime.now().toSecondOfDay() < dataBaseRepository.getNextActiveAlarm()!!.actualWakeup) ||
