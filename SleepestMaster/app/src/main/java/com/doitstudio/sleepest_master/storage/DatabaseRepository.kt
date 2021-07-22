@@ -373,5 +373,10 @@ class DatabaseRepository(
         alarmDao.updateAlarmName(alarmName, alarmId)
     }
 
+    suspend fun resetAlarmTempDisabledWasFired() {
+        alarmDao.resetTempDisabled()
+        alarmDao.resetWasFired()
+    }
+
     //endregion
 }
