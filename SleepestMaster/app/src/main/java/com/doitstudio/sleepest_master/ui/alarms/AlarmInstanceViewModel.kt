@@ -1,21 +1,14 @@
 package com.doitstudio.sleepest_master.ui.alarms
 
-import android.app.AlertDialog
 import android.app.Application
 import android.app.TimePickerDialog
-import android.text.InputType
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.SeekBar
-import android.widget.Toast
-import androidx.databinding.Observable
-import androidx.databinding.Observable.OnPropertyChangedCallback
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
-import androidx.databinding.ObservableInt
 import androidx.lifecycle.AndroidViewModel
 import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.model.data.AlarmSleepChangeFrom
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
@@ -30,6 +23,10 @@ import java.time.LocalTime
 
 
 class AlarmInstanceViewModel(application: Application) : AndroidViewModel(application) {
+
+    private fun getStringXml(id:Int): String {
+        return getApplication<Application>().resources.getString(id)
+    }
 
     private val scope: CoroutineScope = MainScope()
     private val context by lazy{ getApplication<Application>().applicationContext }
@@ -46,7 +43,7 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
     //region Alarm Instance
 
     val isAlarmActive = ObservableField(false)
-    val alarmName = ObservableField("Alarm")
+    val alarmName = ObservableField(getStringXml(R.string.alarm_instance_alarm))
     fun onAlarmActiveToggled(view: View) {
         scope.launch {
             isAlarmActive.get()?.let {
@@ -138,7 +135,7 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
 
     fun onDurationChange(hour: Int, minute: Int) {
 
-        val time = LocalTime.of(hour, minute)
+        val time = LocalTime.of(hour, (minute-1) * 15)
 
         scope.launch {
             SleepTimeValidationUtil.checkAlarmActionIsAllowedAndDoAction(
@@ -183,11 +180,11 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
         var info = ""
 
         if(selectedDays.isEmpty()){
-            info = "Kein Tag ausgewählt"
+            info = getStringXml(R.string.alarm_instance_no_day_choosen)
         }
         else if(selectedDays.count() >= 7)
         {
-            info = "Täglich"
+            info = getStringXml(R.string.alarm_instance_daily)
         }
         else{
 

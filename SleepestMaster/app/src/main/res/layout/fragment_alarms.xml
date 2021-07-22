@@ -27,68 +27,43 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusable="true"
-                android:layout_margin="10dp"
+                android:layout_marginHorizontal="10dp"
                 android:orientation="vertical"
-                app:layout_constraintTop_toTopOf="parent"
-
-                tools:layout_editor_absoluteX="10dp">
-
-                <TextView
-                    android:id="@+id/animTextSleep"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_margin="20dp"
-                    android:text="Alarme"
-                    android:textColor="@color/primary_text_color"
-                    android:textSize="@dimen/headerSize"
-                    android:textStyle="bold" />
-
-
+                app:layout_constraintTop_toTopOf="parent">
 
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_marginVertical="10dp"
-                    android:onClick="@{alarmsViewModel::onExpandClicked}"
-                    android:tag="0">
-
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="start"
-                        android:src="@drawable/ic_baseline_build_24"
-                        app:tint="@color/primary_text_color" />
-
+                    >
                     <TextView
+                        android:id="@+id/animTextSleep"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="start"
-                        android:layout_marginLeft="40dp"
-                        android:text="Alarm Einstellungen"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="20dp"
+                        android:text="@string/alarms_alarme"
                         android:textColor="@color/primary_text_color"
-                        android:textSize="@dimen/headerSize" />
+                        android:textSize="@dimen/headerSize"
+                        android:textStyle="bold" />
 
                     <ImageView
                         android:layout_width="25dp"
                         android:layout_height="25dp"
-                        android:layout_gravity="end"
+                        android:layout_gravity="end|center"
                         android:onClick="@{alarmsViewModel::onExpandClicked}"
                         android:rotation="@{alarmsViewModel.rotateState}"
-                        android:src="@drawable/ic_baseline_expand_more_24"
+                        android:src="@drawable/ic_settings"
                         android:tag="0"
                         app:tint="@color/primary_text_color" />
 
                 </FrameLayout>
-
-
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:orientation="vertical"
+                    android:layout_marginBottom="10dp"
                     android:visibility="@{alarmsViewModel.actualExpand}">
 
                     <FrameLayout
@@ -105,7 +80,7 @@
                             android:layout_marginStart="10dp"
                             android:gravity="center_vertical"
                             android:text="@string/sleep_alarm_auto_cancel_alarm"
-                            android:textColor="@color/accent_text_color"
+                            android:textColor="@color/tertiary_text_color"
                             android:textSize="@dimen/valueSize"
                             android:textStyle="bold" />
 

@@ -49,7 +49,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
     fun onDurationChange(hour: Int, minute: Int) {
 
-        val time = LocalTime.of(hour, minute)
+        val time = LocalTime.of(hour, (minute-1) * 15)
 
         scope.launch {
             SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
@@ -87,7 +87,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
                         SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
                             dataStoreRepository,
                             dataBaseRepository,
-                            context,
+                            view.context,
                             tempWakeup.toSecondOfDay(),
                             sleepEndTime.toSecondOfDay(),
                             sleepDuration,
@@ -119,7 +119,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
                     SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
                         dataStoreRepository,
                         dataBaseRepository,
-                        context,
+                        view.context,
                         sleepStartTime.toSecondOfDay(),
                         tempWakeup.toSecondOfDay(),
                         sleepDuration,

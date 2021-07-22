@@ -56,9 +56,7 @@
                         android:textColor="@color/primary_text_color"
                         android:textSize="@dimen/headerSize"
                         android:textStyle="bold"
-                        android:visibility="gone"
-                        tools:layout_editor_absoluteX="281dp"
-                        tools:layout_editor_absoluteY="110dp" />
+                        android:visibility="gone"/>
 
                     <TextView
                         android:id="@+id/animTextTipp"

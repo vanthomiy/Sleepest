@@ -15,6 +15,7 @@ import androidx.lifecycle.asLiveData
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.databinding.AlarmEntityBinding
+import com.doitstudio.sleepest_master.util.SleepTimeValidationUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import java.time.LocalTime
@@ -44,6 +45,11 @@ class AlarmInstanceFragment(val applicationContext: Context, private var alarmId
         binding.alarmsViewModel = alarmsViewModel
         viewModel.alarmId = alarmId
         viewModel.transitionsContainer = (binding.cLAlarmEntityInnerLayer)
+
+        val minData = SleepTimeValidationUtil.createMinutePickerHelper()
+        binding.npMinutes.minValue = 1;
+        binding.npMinutes.maxValue = minData.size;
+        binding.npMinutes.displayedValues = minData;
 
         return binding.root
     }
@@ -76,9 +82,9 @@ class AlarmInstanceFragment(val applicationContext: Context, private var alarmId
             val sleepDuration = LocalTime.ofSecondOfDay(it.sleepDuration.toLong())
 
             binding.npHours.value = sleepDuration.hour
-            binding.npMinutes.value = sleepDuration.minute
+            binding.npMinutes.value = (sleepDuration.minute / 15) + 1
             viewModel.sleepDuration = sleepDuration.toSecondOfDay()
-            viewModel.sleepDurationString.set(sleepDuration.toString() + " Schlafdauer")
+            viewModel.sleepDurationString.set(sleepDuration.toString() + " " + getString(R.string.alarm_instance_alarm_header))
 
             viewModel.wakeUpEarlyValue.set((if (viewModel.wakeUpEarly.hour < 10) "0" else "") + viewModel.wakeUpEarly.hour.toString() + ":" + (if (viewModel.wakeUpEarly.minute < 10) "0" else "") + viewModel.wakeUpEarly.minute.toString())
             viewModel.wakeUpLateValue.set((if (viewModel.wakeUpLate.hour < 10) "0" else "") + viewModel.wakeUpLate.hour.toString() + ":" + (if (viewModel.wakeUpLate.minute < 10) "0" else "") + viewModel.wakeUpLate.minute.toString())

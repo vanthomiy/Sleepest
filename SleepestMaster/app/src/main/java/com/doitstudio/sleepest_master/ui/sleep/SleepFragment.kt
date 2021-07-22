@@ -19,6 +19,7 @@ import androidx.lifecycle.asLiveData
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.databinding.FragmentSleepBinding
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
+import com.doitstudio.sleepest_master.util.SleepTimeValidationUtil
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -54,8 +55,10 @@ class SleepFragment : Fragment() {
         viewModel.animatedTopView = binding.animatedTopView
         binding.sleepViewModel = viewModel
 
-
-
+        val minData = SleepTimeValidationUtil.createMinutePickerHelper()
+        binding.npMinutes.minValue = 1;
+        binding.npMinutes.maxValue = minData.size;
+        binding.npMinutes.displayedValues = minData;
 
         return binding.root
     }
@@ -83,7 +86,7 @@ class SleepFragment : Fragment() {
 
             val sleepDuration = LocalTime.ofSecondOfDay(it.normalSleepTime.toLong())
             binding.npHours.value = sleepDuration.hour
-            binding.npMinutes.value = sleepDuration.minute
+            binding.npMinutes.value = (sleepDuration.minute / 15) + 1
             viewModel.sleepDuration = sleepDuration.toSecondOfDay()
 
             viewModel.sleepStartValue.set((if (viewModel.sleepStartTime.hour < 10) "0" else "") + viewModel.sleepStartTime.hour.toString() + ":" + (if (viewModel.sleepStartTime.minute < 10) "0" else "") + viewModel.sleepStartTime.minute.toString())
