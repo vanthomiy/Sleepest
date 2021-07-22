@@ -25,6 +25,7 @@ import androidx.lifecycle.asLiveData
 import com.doitstudio.sleepest_master.MainActivity
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
+import com.doitstudio.sleepest_master.background.BackgroundAlarmTimeHandler
 import com.doitstudio.sleepest_master.databinding.FragmentAlarmsBinding
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog
@@ -235,18 +236,6 @@ class AlarmsFragment() : Fragment() {
                 }
             }
 
-        scope.launch {
-            if (databaseRepository.getNextActiveAlarm() != null) {
-                if (databaseRepository.getNextActiveAlarm()!!.tempDisabled) {
-                    //BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(true, false)
-                } else {
-                    //BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(true, true)
-                }
-            } else {
-                binding.btnTemporaryDisableAlarm.isVisible = false
-            }
-        }
-
         binding.soundChange.setOnClickListener{
             onAlarmSoundChange()
         }
@@ -256,16 +245,10 @@ class AlarmsFragment() : Fragment() {
             scope.launch {
                 if (databaseRepository.getNextActiveAlarm() != null) {
                     if (databaseRepository.getNextActiveAlarm()!!.tempDisabled) {
-                        databaseRepository.updateAlarmTempDisabled(
-                            false,
-                            databaseRepository.getNextActiveAlarm()!!.id
-                        )
+                        BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(true, true)
                     }
                     else  {
-                        databaseRepository.updateAlarmTempDisabled(
-                            true,
-                            databaseRepository.getNextActiveAlarm()!!.id
-                        )
+                        BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(true, false)
                     }
                 }
 

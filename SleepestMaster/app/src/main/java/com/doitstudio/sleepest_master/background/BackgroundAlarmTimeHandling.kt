@@ -313,6 +313,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
         scope.launch {
             if (fromApp && !reactivate) {
                 stopForegroundService(false)
+                dataBaseRepository.updateAlarmTempDisabled(true, dataBaseRepository.getNextActiveAlarm()!!.id)
             } else if (!fromApp && !reactivate) {
                 if (checkAlarmActive() && !checkAlarmTempDisabled()) {
                     dataBaseRepository.updateAlarmTempDisabled(true, dataBaseRepository.getNextActiveAlarm()!!.id)
@@ -327,6 +328,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                     AlarmReceiver.cancelAlarm(context.applicationContext, AlarmReceiverUsage.STOP_FOREGROUND)
                 }
             } else if (fromApp && reactivate) {
+                dataBaseRepository.updateAlarmTempDisabled(false, dataBaseRepository.getNextActiveAlarm()!!.id)
                 startForegroundService(false)
             }
         }
