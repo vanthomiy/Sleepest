@@ -376,8 +376,7 @@
                             <FrameLayout
                                 android:layout_width="150dp"
                                 android:layout_height="50dp"
-                                android:background="@drawable/transparentrounded"
-                                android:backgroundTint="@color/secondary_button_color">
+                                android:background="@drawable/transparentrounded">
                                 <com.shawnlin.numberpicker.NumberPicker
                                     android:id="@+id/np_hours"
                                     android:layout_width="wrap_content"
@@ -415,8 +414,7 @@
                             <FrameLayout
                                 android:layout_width="150dp"
                                 android:layout_height="50dp"
-                                android:background="@drawable/transparentrounded"
-                                android:backgroundTint="@color/secondary_button_color">
+                                android:background="@drawable/transparentrounded">
                                 <com.shawnlin.numberpicker.NumberPicker
                                     android:id="@+id/np_minutes"
                                     android:layout_width="wrap_content"
