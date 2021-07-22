@@ -181,11 +181,13 @@ class AlarmsFragment() : Fragment() {
             if (activeAlarms.isNotEmpty()){
                 val nextAlarm = activeAlarms.minByOrNull { x-> x.wakeupEarly }
                 if(nextAlarm?.tempDisabled == true){
-                    binding.btnTemporaryDisableAlarm.text = getString(R.string.alarm_fragment_btn_disable_alarm_disable)
+                    binding.btnTemporaryDisableAlarm.text = getString(R.string.alarm_fragment_btn_disable_alarm_reactivate)
+                    binding.btnTemporaryDisableAlarm.isVisible = true
                     /**TODO: Change color**/
                 }
                 else{
-                    binding.btnTemporaryDisableAlarm.text = getString(R.string.alarm_fragment_btn_disable_alarm_reactivate)
+                    binding.btnTemporaryDisableAlarm.text = getString(R.string.alarm_fragment_btn_disable_alarm_disable)
+                    binding.btnTemporaryDisableAlarm.isVisible = true
                     /**TODO: Change color**/
                 }
             }
@@ -244,8 +246,11 @@ class AlarmsFragment() : Fragment() {
         binding.btnTemporaryDisableAlarm.setOnClickListener {
             scope.launch {
                 if (databaseRepository.getNextActiveAlarm() != null) {
-                    if (databaseRepository.getNextActiveAlarm()!!.tempDisabled) {
+                    if (databaseRepository.getNextActiveAlarm()!!.tempDisabled && !dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
                         BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(true, true)
+                    }
+                    else if (databaseRepository.getNextActiveAlarm()!!.tempDisabled && dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
+                        BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(false, true)
                     }
                     else  {
                         BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(true, false)
