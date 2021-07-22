@@ -59,11 +59,15 @@ class AlarmsFragment() : Fragment() {
         allAlarms = mutableListOf()
         scope.launch {
             val alarmList = databaseRepository.alarmFlow.first().reversed()
+
             for (i in alarmList.indices) {
                 usedIds.add(alarmList[i].id)
                 allAlarms.add(alarmList[i])
                 addAlarmEntity(actualContext, alarmList[i].id)
             }
+
+            viewModel.noAlarmsView.set(if(usedIds.count() > 0) View.GONE else View.VISIBLE)
+
         }
     }
 
@@ -79,6 +83,8 @@ class AlarmsFragment() : Fragment() {
         }
         addAlarmEntity(actualContext, newId)
         usedIds.add(newId)
+
+        viewModel.noAlarmsView.set(View.GONE)
     }
 
     private fun addAlarmEntity(context: Context, alarmId: Int) {
@@ -102,6 +108,8 @@ class AlarmsFragment() : Fragment() {
         scope.launch {
             databaseRepository.deleteAlarmById(alarmId)
         }
+
+        viewModel.noAlarmsView.set(if(usedIds.count() > 0) View.GONE else View.VISIBLE)
     }
 
     private fun onAlarmSoundChange() {

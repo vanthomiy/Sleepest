@@ -33,6 +33,8 @@ class AlarmsViewModel(application: Application) : AndroidViewModel(application) 
     //region Alarms Settings
 
     val alarmExpandId = ObservableInt(0)
+    val noAlarmsView = ObservableField(View.GONE)
+
 
     val actualExpand = ObservableField(View.GONE)
     val rotateState = ObservableField(0)

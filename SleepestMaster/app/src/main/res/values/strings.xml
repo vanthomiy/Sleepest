@@ -232,6 +232,7 @@
     <string name="alarm_entity_day_mi">Mi</string>
     <string name="alarm_entity_day_di">Di</string>
     <string name="alarm_entity_day_mo">Mo</string>
+    <string name="alarms_no_alarms">Keine Alarme. Füge über den + Buttonen einen neuen Alarm hinzu!</string>
 
     <!--endregion-->
 
