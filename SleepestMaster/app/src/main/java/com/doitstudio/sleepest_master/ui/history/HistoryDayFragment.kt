@@ -17,6 +17,7 @@ import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import java.lang.Math.round
@@ -108,14 +109,14 @@ class HistoryDayFragment : Fragment() {
 
     private fun setLineChart() : LineChart {
         val chart = LineChart(context)
-        val lineDataSet = LineDataSet(generateDataLineChart(), "Sleep state")
+        val lineDataSet = LineDataSet(generateDataLineChart(), "")
         visualSetUpLineChart(chart, lineDataSet)
         chart.data = LineData(lineDataSet)
         return chart
     }
 
     fun updateLineChart(chart: LineChart) {
-        val lineDataSet = LineDataSet(generateDataLineChart(), "Sleep state")
+        val lineDataSet = LineDataSet(generateDataLineChart(), "")
         visualSetUpLineChart(chart, lineDataSet)
         chart.data = LineData(lineDataSet)
     }
@@ -130,18 +131,27 @@ class HistoryDayFragment : Fragment() {
         lineDataSet.color = ContextCompat.getColor(viewModel.context, R.color.awake_sleep_color)
 
         val yAxisValues = ArrayList<String>()
-        yAxisValues.add("Awake")
-        yAxisValues.add("Light")
-        yAxisValues.add("Deep")
-        yAxisValues.add("REM")
-        //yAxisValues.add("Zero")
+
+        if (lineDataSet.yMax == 4f) {
+            // Only sleep and awake is detected
+            yAxisValues.add("Awake")
+            yAxisValues.add("")
+            yAxisValues.add("")
+            yAxisValues.add("")
+            yAxisValues.add("Sleep")
+            yAxisValues.add("")
+            chart.axisLeft.labelCount = 5
+            chart.axisLeft.axisMaximum = 5f
+        } else {
+            yAxisValues.add("Awake")
+            yAxisValues.add("Light")
+            yAxisValues.add("Deep")
+            chart.axisLeft.labelCount = 2
+            chart.axisLeft.axisMaximum = 2f
+        }
 
         chart.axisLeft.valueFormatter = IndexAxisValueFormatter(yAxisValues)
-        //chart.axisLeft.labelCount = 4
-        chart.axisLeft.labelCount = 3
         chart.axisLeft.axisMinimum = 0f
-        //chart.axisLeft.axisMaximum = 4f
-        chart.axisLeft.axisMaximum = 3f
         chart.axisLeft.setDrawGridLines(false)
         chart.axisLeft.textColor = viewModel.checkDarkMode()
         chart.legend.textColor = viewModel.checkDarkMode()
@@ -158,8 +168,9 @@ class HistoryDayFragment : Fragment() {
         chart.animateX(1000)
     }
 
-    private fun generateDataPieChart() : ArrayList<PieEntry> {
+    private fun generateDataPieChart() : Pair<ArrayList<PieEntry>, BooleanArray> {
         val entries = ArrayList<PieEntry>()
+        val sleepTypes = booleanArrayOf(false, false, false, false)
 
         viewModel.analysisDate.get()?.let {
             if (viewModel.checkId(it)) {
@@ -170,38 +181,57 @@ class HistoryDayFragment : Fragment() {
 
                 if (lightSleep == 0 && deepSleep == 0) {
                     entries.add(PieEntry(awake.toFloat(), "Awake"))
+                    sleepTypes[0] = true
                     entries.add(PieEntry(sleep.toFloat(), "Sleep"))
+                    sleepTypes[1] = true
+                }
+                else if (lightSleep != 0 && deepSleep != 0 && awake == 0) {
+                    entries.add(PieEntry(lightSleep.toFloat(), "Light"))
+                    sleepTypes[2] = true
+                    entries.add(PieEntry(deepSleep.toFloat(), "Deep"))
+                    sleepTypes[3] = true
                 }
                 else {
                     entries.add(PieEntry(lightSleep.toFloat(), "Light"))
+                    sleepTypes[2] = true
                     entries.add(PieEntry(deepSleep.toFloat(), "Deep"))
+                    sleepTypes[3] = true
                     entries.add(PieEntry(awake.toFloat(), "Awake"))
+                    sleepTypes[0] = true
                 }
             }
         }
 
-        return entries
+        return Pair(entries, sleepTypes)
     }
 
     private fun setPieChart() : PieChart {
         val chart = PieChart(context)
-        val pieDataSet = PieDataSet(generateDataPieChart(), "")
-        visualSetUpPieChart(chart, pieDataSet)
+        val data = generateDataPieChart()
+        val pieDataSet = PieDataSet(data.first, "")
+        visualSetUpPieChart(chart, pieDataSet, data.second)
         chart.data = PieData(pieDataSet)
         return chart
     }
 
     private fun updatePieChart(chart: PieChart) {
-        val pieDataSet = PieDataSet(generateDataPieChart(), "")
-        visualSetUpPieChart(chart, pieDataSet)
+        val data = generateDataPieChart()
+        val pieDataSet = PieDataSet(data.first, "")
+        visualSetUpPieChart(chart, pieDataSet, data.second)
         chart.data = PieData(pieDataSet)
     }
 
-    private fun visualSetUpPieChart(chart: PieChart, pieDataSet: PieDataSet) {
+    private fun visualSetUpPieChart(chart: PieChart, pieDataSet: PieDataSet, sleepTypes: BooleanArray) {
         val listColors = ArrayList<Int>()
-        if (pieDataSet.entryCount == 2) {
+        //sleepTypes[0] = awake, sleepTypes[1] = sleep, sleepTypes[2] = light, sleepTypes[3] = deep
+
+        if (sleepTypes[0] && sleepTypes[1]) {
             listColors.add(ContextCompat.getColor(viewModel.context, R.color.awake_sleep_color))
             listColors.add(ContextCompat.getColor(viewModel.context, R.color.sleep_sleep_color))
+        }
+        else if (sleepTypes[2] && sleepTypes[3] && !sleepTypes[0]) {
+            listColors.add(ContextCompat.getColor(viewModel.context, R.color.light_sleep_color))
+            listColors.add(ContextCompat.getColor(viewModel.context, R.color.deep_sleep_color))
         }
         else {
             listColors.add(ContextCompat.getColor(viewModel.context, R.color.light_sleep_color))
@@ -216,6 +246,7 @@ class HistoryDayFragment : Fragment() {
         chart.setCenterTextColor(Color.WHITE)
         chart.setHoleColor(Color.BLACK)
         chart.setEntryLabelColor(Color.WHITE)
+        chart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
 
         chart.isDrawHoleEnabled = true
         chart.description.isEnabled = false

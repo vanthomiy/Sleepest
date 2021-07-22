@@ -142,13 +142,15 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         val entries = ArrayList<BarEntry>()
         val xAxisLabels = mutableListOf<Int>()
         var xIndex = 0.5f
-        var maxSleepTime = 0
+        var maxSleepTime = 0f
 
         val ids = mutableSetOf<Int>()
         for (i in -(range-2)..1) {
             ids.add(
                 UserSleepSessionEntity.getIdByDateTime(
-                    LocalDate.ofEpochDay(endDateOfDiagram.toEpochDay().plus(i.toLong()))
+                    LocalDate.ofEpochDay(
+                        endDateOfDiagram.toEpochDay().plus((i - 1).toLong())
+                    )
                 )
             )
         }
@@ -158,22 +160,22 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
             if (sleepSessionData.containsKey(id)) {
                 val values = sleepSessionData[id]!!
 
-                val awake = values.third.sleepTimes.awakeTime / 60
-                val sleep = values.third.sleepTimes.sleepDuration / 60
-                val lightSleep = values.third.sleepTimes.lightSleepDuration / 60
-                val deepSleep = values.third.sleepTimes.deepSleepDuration / 60
+                val awake = values.third.sleepTimes.awakeTime / 60f
+                val sleep = values.third.sleepTimes.sleepDuration / 60f
+                val lightSleep = values.third.sleepTimes.lightSleepDuration / 60f
+                val deepSleep = values.third.sleepTimes.deepSleepDuration / 60f
 
                 if ((sleep + awake) > maxSleepTime) {
                     maxSleepTime = (sleep + awake)
                 }
 
-                if (lightSleep != 0 && deepSleep != 0) {
+                if (lightSleep != 0f && deepSleep != 0f) {
                     entries.add(
                         BarEntry(
                             xIndex, floatArrayOf(
-                                lightSleep.toFloat(),
-                                deepSleep.toFloat(),
-                                awake.toFloat(),
+                                lightSleep,
+                                deepSleep,
+                                awake,
                                 0.toFloat()
                             )
                         )
@@ -183,10 +185,10 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                     entries.add(
                         BarEntry(
                             xIndex, floatArrayOf(
-                                lightSleep.toFloat(),
-                                deepSleep.toFloat(),
-                                awake.toFloat(),
-                                0.toFloat()
+                                0.toFloat(),
+                                0.toFloat(),
+                                awake,
+                                sleep
                             )
                         )
                     )
@@ -197,7 +199,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
             xIndex += 1
         }
 
-        return Triple(entries, xAxisLabels, maxSleepTime)
+        return Triple(entries, xAxisLabels, maxSleepTime.toInt())
     }
 
     private fun generateBarDataSet(barEntries: ArrayList<BarEntry>) : BarDataSet {
