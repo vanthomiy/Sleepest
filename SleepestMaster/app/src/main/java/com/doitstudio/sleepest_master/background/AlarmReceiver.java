@@ -68,18 +68,11 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case START_FOREGROUND:
                 //Start foregroundservice with an activity
-                /**Intent startForegroundIntent = new Intent(context, ForegroundActivity.class);
-                startForegroundIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startForegroundIntent.putExtra("intent", 1);
-                context.startActivity(startForegroundIntent);**/
                 BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).beginOfSleepTime(true);
                 break;
             case STOP_FOREGROUND:
                 //Stop foregorundservice with an activity
-                /*Intent stopForegroundIntent = new Intent(context, ForegroundActivity.class);
-                stopForegroundIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                stopForegroundIntent.putExtra("intent", 2);
-                context.startActivity(stopForegroundIntent);*/
+                BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).stopForegroundService(true);
                 break;
             case DISABLE_ALARM:
                 //if((databaseRepository.getNextActiveAlarmJob() != null) && !databaseRepository.getNextActiveAlarmJob().getTempDisabled()) {
@@ -92,8 +85,14 @@ public class AlarmReceiver extends BroadcastReceiver {
             //    } else if ((databaseRepository.getNextActiveAlarmJob() != null) && databaseRepository.getNextActiveAlarmJob().getTempDisabled()) {
                     /**databaseRepository.updateAlarmTempDisabledJob(false, databaseRepository.getNextActiveAlarmJob().getId());
                     AlarmReceiver.cancelAlarm(context.getApplicationContext(), AlarmReceiverUsage.STOP_FOREGROUND);**/
-                 //   BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, true);
-               // }
+
+                    if ((databaseRepository.getNextActiveAlarmJob() != null) && (!databaseRepository.getNextActiveAlarmJob().getTempDisabled())) {
+                        BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, false);
+                    } else {
+                        BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, true);
+                    }
+
+            // }
 
                 break;
             case NOT_SLEEPING:
@@ -129,7 +128,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case STOP_WORKMANAGER:
 
-                BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).endOfSleepTime();
+                BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).endOfSleepTime(true);
                 /**
                 //Stop Workmanager at end of sleeptime and unsubscribe to SleepApi
                 //TODO: Überprüfen, ob der Workmanager noch richtig abgebrochen wird
