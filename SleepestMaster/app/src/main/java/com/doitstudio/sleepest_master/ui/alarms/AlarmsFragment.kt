@@ -176,6 +176,23 @@ class AlarmsFragment() : Fragment() {
         fragments = mutableMapOf()
 
         activeAlarmsLiveData.observe(requireActivity()){
+            activeAlarms ->
+            if (activeAlarms.isNotEmpty()){
+                val nextAlarm = activeAlarms.minByOrNull { x-> x.wakeupEarly }
+                if(nextAlarm?.tempDisabled == true){
+                    binding.btnTemporaryDisableAlarm.text = getString(R.string.alarm_fragment_btn_disable_alarm_disable)
+                    /**TODO: Change color**/
+                }
+                else{
+                    binding.btnTemporaryDisableAlarm.text = getString(R.string.alarm_fragment_btn_disable_alarm_reactivate)
+                    /**TODO: Change color**/
+                }
+            }
+            else{
+                binding.btnTemporaryDisableAlarm.isVisible = false
+            }
+
+            /*
             scope.launch {
                 if (databaseRepository.getNextActiveAlarm() != null) {
                     if (databaseRepository.getNextActiveAlarm()!!.tempDisabled) {
@@ -189,7 +206,7 @@ class AlarmsFragment() : Fragment() {
                     binding.btnTemporaryDisableAlarm.isVisible = false
                 }
 
-            }
+            }*/
         }
 
         binding.btnAddAlarmEntity.setOnClickListener {
@@ -243,14 +260,12 @@ class AlarmsFragment() : Fragment() {
                             false,
                             databaseRepository.getNextActiveAlarm()!!.id
                         )
-                        binding.btnTemporaryDisableAlarm.text = "Reactivate next alarm"
                     }
                     else  {
                         databaseRepository.updateAlarmTempDisabled(
                             true,
                             databaseRepository.getNextActiveAlarm()!!.id
                         )
-                        binding.btnTemporaryDisableAlarm.text = "Disable next alarm"
                     }
                 }
 
