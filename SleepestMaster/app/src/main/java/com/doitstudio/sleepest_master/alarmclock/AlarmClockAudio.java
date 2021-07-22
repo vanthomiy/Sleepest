@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.speech.tts.TextToSpeech;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,6 +31,7 @@ import com.kevalpatel.ringtonepicker.RingtonePickerDialog;
 import com.kevalpatel.ringtonepicker.RingtonePickerListener;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.stream.Stream;
 
 public class AlarmClockAudio {
@@ -46,6 +48,13 @@ public class AlarmClockAudio {
     private static AlarmClockAudio alarmClockAudioInstance;
     private DataStoreRepository dataStoreRepository;
 
+    private TextToSpeech textToSpeech;
+
+    private final String ttsText = "Guten Morgen Herr Groß. Hier spricht dein Gewissen. Warst du heute Nacht etwa wieder ein Naschköter? Da fehlen definitiv wieder mehrere Riegele.\n" +
+            "Das ist nicht hilfreich in Bezug auf eine ausgewogene Ernährung. Wie wäre es, wenn du nachts lieber mal einen Apfel oder eine Pflaume naschst?\n" +
+            "Außerdem würde ich dir als dein Gewissen empfehlen, morgens ein Bier zu dir zu nehmen, damit du tagsüber mal ein bisschen entspannter bist und deinen Mitbewohnern nicht so sehr auf den Sack gehst.\n" +
+            "Tschüss und bis morgen, dein gutes Gewissen.";
+
 
     /**
      * Initialize the singleton class
@@ -54,7 +63,6 @@ public class AlarmClockAudio {
     public void init(Context context) {
         if(appContext == null) {
             this.appContext = context;
-            //dataStoreRepository = ((MainApplication)getInstanceContext()).getDataStoreRepository();
             dataStoreRepository = DataStoreRepository.Companion.getRepo(appContext);
             int a = 0;
 
@@ -198,13 +206,15 @@ public class AlarmClockAudio {
     private void startVibration() {
 
         //Get instance of audio manager and save the actual ringer mode and set vibration mode
-        audioManager = getAudioManager();
+        /**audioManager = getAudioManager();
         audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
 
         //Init waveform for vibration and start vibration
         long[] waveform = {0, 400, 800, 400, 800, 400, 800};
         vibrator = AlarmClockAudio.getVibrator();
-        vibrator.vibrate(VibrationEffect.createWaveform(waveform, 0));
+        vibrator.vibrate(VibrationEffect.createWaveform(waveform, 0));**/
+
+        tts();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.P)
@@ -269,13 +279,15 @@ public class AlarmClockAudio {
         audioManager = getAudioManager();
 
         //Play sound with mediaplayer
-        mediaPlayer = getMediaPlayer();
+        /**mediaPlayer = getMediaPlayer();
         mediaPlayer.start();
         mediaPlayer.setLooping(true);
 
         //Set audio volume to half of max volume
         audioVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC) / 2), 0);
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC) / 2), 0);**/
+        tts();
+
     }
 
     /**
@@ -326,5 +338,21 @@ public class AlarmClockAudio {
         AlarmClockReceiver.cancelNotification(NotificationUsage.NOTIFICATION_ALARM_CLOCK);
 
 
+    }
+
+    private void tts() {
+
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)), 0);
+
+        textToSpeech.speak(ttsText, TextToSpeech.QUEUE_FLUSH, null, "text");
+
+        textToSpeech = new TextToSpeech(appContext, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status != TextToSpeech.ERROR) {
+                    textToSpeech.setLanguage(Locale.GERMANY);
+                }
+            }
+        });
     }
 }
