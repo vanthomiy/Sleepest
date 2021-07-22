@@ -20,6 +20,7 @@ import androidx.lifecycle.asLiveData
 import com.doitstudio.sleepest_master.DontKillMyAppFragment
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.databinding.FragmentSettingsBinding
+import com.doitstudio.sleepest_master.model.data.export.ImportUtil
 import com.doitstudio.sleepest_master.model.data.export.UserSleepExportData
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
@@ -185,7 +186,7 @@ class SettingsFragment : Fragment() {
 
                 val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
                     addCategory(Intent.CATEGORY_OPENABLE)
-                    type = "text/*"
+                    type = "application/json"
                     putExtra(Intent.EXTRA_TITLE, "Schlafdaten.json")
                 }
 
@@ -248,60 +249,14 @@ class SettingsFragment : Fragment() {
             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
                 addCategory(Intent.CATEGORY_OPENABLE)
                 putExtra(DocumentsContract.EXTRA_INITIAL_URI, uri)
-                type = "text/*"
+                type = "application/json"
             }
 
             startActivityForResult(intent, 1011)
         }
         else if (requestCode == 1011) {
-
-            val uri = data?.data
-
-            uri?.let {
-                val importJson = readTextFromUri(it)
-
-                var data = mutableListOf<UserSleepExportData>()
-                try {
-                    var gson = Gson()
-
-                    data.addAll(
-                        gson.fromJson(importJson, Array<UserSleepExportData>::class.java).asList()
-                    )
-                } catch (ex: Exception) {
-                    Toast.makeText(actualContext, "Wrong data format", Toast.LENGTH_SHORT).show()
-                    return@let
-                }
-
-                try {
-
-                    var sessions = mutableListOf<UserSleepSessionEntity>()
-                    var sleepApiRawDataEntity = mutableListOf<SleepApiRawDataEntity>()
-
-                    data.forEach { session ->
-
-                        sessions.add(
-                            UserSleepSessionEntity(
-                                session.id,
-                                session.mobilePosition,
-                                session.sleepTimes,
-                                session.userSleepRating,
-                                session.userCalculationRating
-                            )
-                        )
-
-                        sleepApiRawDataEntity.addAll(session.sleepApiRawData)
-                    }
-
-                    scope.launch {
-                        dataBaseRepository.insertSleepApiRawData(sleepApiRawDataEntity)
-                        dataBaseRepository.insertUserSleepSessions(sessions)
-                    }
-                } catch (ex: Exception) {
-                    Toast.makeText(actualContext, "Cant write to database", Toast.LENGTH_SHORT).show()
-                    return@let
-                } finally {
-                    Toast.makeText(actualContext, "Successful imported data", Toast.LENGTH_SHORT).show()
-                }
+            scope.launch {
+                ImportUtil.getLoadFileFromUri(data?.data, actualContext, dataBaseRepository)
             }
         }
         else if (requestCode == 1010) {
@@ -345,22 +300,6 @@ class SettingsFragment : Fragment() {
     }
 
 
-    val contentResolver: ContentResolver by lazy {actualContext.contentResolver}
-
-    private fun readTextFromUri(uri: Uri): String {
-        val stringBuilder = StringBuilder()
-        contentResolver.openInputStream(uri)?.use { inputStream ->
-            BufferedReader(InputStreamReader(inputStream)).use { reader ->
-                var line: String? = reader.readLine()
-                while (line != null) {
-                    stringBuilder.append(line)
-                    line = reader.readLine()
-                }
-            }
-        }
-        return stringBuilder.toString()
-    }
-
     private fun writeTextToUri(uri: Uri, text: String) {
         try {
             contentResolver.openFileDescriptor(uri, "w")?.use {
@@ -381,7 +320,7 @@ class SettingsFragment : Fragment() {
 
         val intentShareFile = Intent(Intent.ACTION_SEND)
 
-        intentShareFile.type = "text/json"
+        intentShareFile.type = "application/json"
         intentShareFile.putExtra(Intent.EXTRA_STREAM, uri)
         intentShareFile.putExtra(
             Intent.EXTRA_SUBJECT,
@@ -390,6 +329,9 @@ class SettingsFragment : Fragment() {
         intentShareFile.putExtra(Intent.EXTRA_TEXT, "Sharing File...")
         startActivity(Intent.createChooser(intentShareFile, "Share File"))
     }
+
+    private val contentResolver: ContentResolver by lazy { actualContext.contentResolver}
+
 
     private val requestPermissionLauncher =
             registerForActivityResult(
