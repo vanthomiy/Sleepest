@@ -17,6 +17,7 @@ import com.doitstudio.sleepest_master.background.AlarmReceiver
 import com.doitstudio.sleepest_master.background.BackgroundAlarmTimeHandler
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
 import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage
+import com.doitstudio.sleepest_master.model.data.export.ImportUtil
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.ui.alarms.AlarmsFragment
@@ -336,6 +337,23 @@ class MainActivity : AppCompatActivity() {
         if (!PermissionsUtil.isNotificationPolicyAccessGranted(applicationContext)) {
             val intent = Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
             startActivity(intent)
+        }
+
+        when (intent?.action) {
+            Intent.ACTION_SEND -> {
+                if ("application/json" == intent.type) {
+                    scope.launch {
+                        ImportUtil.getLoadFileFromIntent(intent, applicationContext, dataBaseRepository)
+                    }
+                }
+            }
+            Intent.ACTION_VIEW -> {
+                if ("application/json" == intent.type) {
+                    scope.launch {
+                        ImportUtil.getLoadFileFromIntent(intent, applicationContext, dataBaseRepository)
+                    }
+                }
+            }
         }
 
     }
