@@ -17,6 +17,7 @@ import androidx.databinding.ObservableMap
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.asLiveData
 import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import kotlinx.coroutines.CoroutineScope
@@ -186,7 +187,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     // region Data
 
-    val removeButtonText = ObservableField("delete all data")
+    val removeButtonText = ObservableField(context.getString(R.string.settings_delete_all_data))
 
     fun onDataClicked(view: View) {
         when(view.tag.toString()){
@@ -197,10 +198,11 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                 TransitionManager.beginDelayedTransition(transitionsContainer);
 
                 removeExpand.set(removeExpand.get() != true)
-                removeButtonText.set(if (removeExpand.get() == true) "delete all data" else "return")
+                removeButtonText.set(if (removeExpand.get() == false)
+                    context.getString(R.string.settings_delete_all_data) else context.getString(
+                                    R.string.settings_return))
             }
             "removeAckn" -> {
-
 
                 scope.launch {
 
