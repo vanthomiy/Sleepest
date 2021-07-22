@@ -4,8 +4,6 @@
     <string name="alarm_disabled">Alarm Disabled</string>
     <string name="insert_data">Alarm Disabled</string>
     <string name="sleep_segments">Alarm Disabled</string>
-    <string name="nameverkackt">To ensure that the app stays active in the background
-        and wakes you up safely, follow the instructions below for your device model and Android version.</string>
     <string name="notice_dont_kill_my_app">Beachten</string>
 
     <!--region AlarmClock-->
@@ -46,6 +44,8 @@
     <string name="alarm_status_false">Alarm not active</string>
     <string name="alarm_status_true">Alarm active</string>
     <string name="wakelock_tag">Foregroundservice_lock</string>
+    <string name="sleep_status_false">You are currently not sleeping</string>
+    <string name="sleep_status_true">You are currently sleeping</string>
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.

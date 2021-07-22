@@ -55,6 +55,12 @@
 
     <!--region SleepSettings-->
 
+    <string-array name="phonePosition">
+        <item>Im Bett</item>
+        <item>Neben dem Bett</item>
+        <item>Auto erkennung</item>
+    </string-array>
+
     <!--endregion-->
 
     <!--region AlarmSettings-->
@@ -182,7 +188,6 @@
     <string name="profile_import_data">Daten Importieren</string>
     <string name="profile_remove_data_warning">Ohje, alle daten werden gelöscht ok?</string>
     <string name="profile_remove_data_ackn">Verstanden und löschen</string>
-    <string name="profile_about_us">Sleepest - App\nMade with LOVE in Bavaria\n\n This app was created by 3 students as a students project and will be improved and maintained in the future</string>
     <string name="alarm_wakeup_early">Earliest</string>
     <string name="alarm_wakeup_late">Latest</string>
     <string name="alarm_hours">Hours</string>
@@ -220,6 +225,13 @@
     <string name="target_sleep_time">target time</string>
     <string name="hello_blank_fragment">Hello</string>
     <string name="large_text">dfff</string>
+    <string name="alarm_entity_day_fr">Fr</string>
+    <string name="alarm_entity_day_sa">Sa</string>
+    <string name="alarm_entity_day_so">So</string>
+    <string name="alarm_entity_day_do">Do</string>
+    <string name="alarm_entity_day_mi">Mi</string>
+    <string name="alarm_entity_day_di">Di</string>
+    <string name="alarm_entity_day_mo">Mo</string>
 
     <!--endregion-->
 

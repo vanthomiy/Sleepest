@@ -3,7 +3,7 @@
 
     <item android:id="@+id/home" android:icon="@drawable/home_icon" android:title="home"/>
     <item android:id="@+id/history" android:icon="@drawable/history_icon" android:title="history"/>
-    <item android:id="@+id/sleep" android:icon="@drawable/ic_settings" android:title="sleep"/>
-    <item android:id="@+id/profile" android:icon="@drawable/person_icon" android:title="profile"/>
+    <item android:id="@+id/sleep" android:icon="@drawable/ic_baseline_bedtime_24" android:title="sleep"/>
+    <item android:id="@+id/profile" android:icon="@drawable/ic_baseline_settings_24" android:title="profile"/>
 
 </menu>

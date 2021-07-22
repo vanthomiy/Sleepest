@@ -16,13 +16,10 @@
     <color name="accent_text_color">#009688</color>
     <color name="accent_button_color">#00BCD4</color>
 
-<<<<<<< HEAD
     <color name="transparent_overlay_primary">#77a1a1a1</color>
     <color name="transparent_overlay_tertiary">#771a1a1a</color>
 
     <color name="warning_color">#FF5722</color>
-=======
->>>>>>> main
     <color name="error_color">#E91E63</color>
 
     <color name="awake_sleep_color">#16AAC5</color>
