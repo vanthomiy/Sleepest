@@ -6,6 +6,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.Observable
 import androidx.fragment.app.Fragment
@@ -18,8 +19,11 @@ import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
+import org.w3c.dom.Text
 import java.lang.Math.round
 import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
@@ -31,6 +35,8 @@ class HistoryDayFragment : Fragment() {
     private lateinit var sleepValues : Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>
     private lateinit var lineChart: LineChart
     private lateinit var pieChart: PieChart
+    private lateinit var textViewFallAsleepTime: TextView
+    private lateinit var textViewWakeUpTime: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,6 +47,9 @@ class HistoryDayFragment : Fragment() {
         binding = FragmentHistoryDayBinding.inflate(inflater, container, false)
         binding.historyDayViewModel = viewModel
 
+        textViewFallAsleepTime = TextView(context)
+        textViewFallAsleepTime.text = "Test"
+        binding.lLSleepAnalysisChartsDay.addView(textViewFallAsleepTime)
 
         lineChart = setLineChart()
         updateLineChart(lineChart)
@@ -154,14 +163,25 @@ class HistoryDayFragment : Fragment() {
         chart.axisLeft.axisMinimum = 0f
         chart.axisLeft.setDrawGridLines(false)
         chart.axisLeft.textColor = viewModel.checkDarkMode()
-        chart.legend.textColor = viewModel.checkDarkMode()
+        chart.legend.isEnabled= false
 
         chart.axisRight.setDrawLabels(false)
         chart.axisRight.setDrawGridLines(false)
 
         chart.xAxis.setDrawGridLines(false)
         chart.xAxis.setDrawLabels(false)
+
+        /*
+        chart.xAxis.labelCount = 6
         chart.xAxis.textColor = viewModel.checkDarkMode()
+        chart.xAxis.setCenterAxisLabels(false)
+        chart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+
+        val xAxisValues = ArrayList<String>()
+        xAxisValues.add("23:00")
+        xAxisValues.add("6:00")
+        chart.xAxis.valueFormatter = IndexAxisValueFormatter(xAxisValues)
+         */
 
         chart.description.isEnabled = false
 
