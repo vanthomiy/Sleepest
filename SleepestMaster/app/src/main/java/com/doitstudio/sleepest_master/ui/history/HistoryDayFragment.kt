@@ -1,38 +1,31 @@
 package com.doitstudio.sleepest_master.ui.history
 
 import android.graphics.Color
+import android.opengl.Visibility
 import android.os.Bundle
+import android.text.Layout
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.view.marginLeft
 import androidx.databinding.Observable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.databinding.FragmentHistoryDayBinding
-import com.doitstudio.sleepest_master.model.data.Constants
-import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.github.mikephil.charting.formatter.ValueFormatter
-import org.w3c.dom.Text
-import java.lang.Math.round
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
@@ -56,7 +49,7 @@ class HistoryDayFragment : Fragment() {
 
         lineChart = setLineChart()
         updateLineChart(lineChart)
-        binding.lLSleepAnalysisChartsDay.addView(lineChart)
+        binding.lLSleepAnalysisChartsDaySleepPhases.addView(lineChart)
         lineChart.layoutParams.height = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics
         ).toInt()
@@ -64,11 +57,13 @@ class HistoryDayFragment : Fragment() {
         lineChart.invalidate()
 
         pieChart = setPieChart()
-        binding.lLSleepAnalysisChartsDay.addView(pieChart)
+        binding.lLSleepAnalysisChartsDaySleepPhasesAmount.addView(pieChart)
         pieChart.layoutParams.height = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics
         ).toInt()
-        pieChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+        pieChart.layoutParams.width = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics
+        ).toInt()
         pieChart.invalidate()
 
 
@@ -98,6 +93,13 @@ class HistoryDayFragment : Fragment() {
         }
     }
 
+    private fun generateSleepValueInformation(time: Int): String {
+        return kotlin.math.floor((time.toFloat() / 60f).toDouble()).toInt().toString() +
+                "h " +
+                (time % 60).toString() +
+                "min"
+    }
+
     private fun setTimeStamps() {
         var time = LocalDateTime.ofInstant(
             Instant.ofEpochMilli((sleepValues.third.sleepTimes.sleepTimeStart.toLong()) * 1000),
@@ -112,6 +114,22 @@ class HistoryDayFragment : Fragment() {
         ).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
 
         viewModelDay.endOfSeep.set(time)
+
+        viewModelDay.awakeTime.set(
+            "Awake: " + generateSleepValueInformation(sleepValues.third.sleepTimes.awakeTime)
+        )
+
+        viewModelDay.lightSleepTime.set(
+            "Light: " + generateSleepValueInformation(sleepValues.third.sleepTimes.lightSleepDuration)
+        )
+
+        viewModelDay.deepSleepTime.set(
+            "Deep: " + generateSleepValueInformation(sleepValues.third.sleepTimes.deepSleepDuration)
+        )
+
+        viewModelDay.sleepTime.set(
+            "Sleep: " + generateSleepValueInformation(sleepValues.third.sleepTimes.sleepDuration)
+        )
     }
 
     private fun generateDataLineChart() : ArrayList<Entry> {
@@ -129,8 +147,15 @@ class HistoryDayFragment : Fragment() {
                         xValue += 1
                     }
                 }
-            } else {
-                entries.add(Entry(0F,0F))
+
+                binding.iVNoDataAvailable.visibility = View.GONE
+                binding.tVNoDataAvailable.visibility = View.GONE
+                binding.sVSleepAnalysisChartsDays.visibility = View.VISIBLE
+            }
+            else {
+                binding.sVSleepAnalysisChartsDays.visibility = View.GONE
+                binding.iVNoDataAvailable.visibility = View.VISIBLE
+                binding.tVNoDataAvailable.visibility = View.VISIBLE
             }
         }
 

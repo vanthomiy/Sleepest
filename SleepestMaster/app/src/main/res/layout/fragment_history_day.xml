@@ -15,6 +15,32 @@
         android:layout_height="match_parent"
         android:background="@color/primary_app_background">
 
+        <ImageView
+            android:id="@+id/iV_noDataAvailable"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="96dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/flashlight_by_freepik" />
+
+        <TextView
+            android:id="@id/tV_noDataAvailable"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_margin="10dp"
+            android:maxWidth="300dp"
+            android:text="Nichts zu sehen. \n Geh schlafen um Daten zu generieren!"
+            android:textAlignment="center"
+            android:textColor="@color/accent_text_color"
+            android:textSize="@dimen/valueSize"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/iV_noDataAvailable"
+            app:layout_constraintStart_toStartOf="@+id/iV_noDataAvailable"
+            app:layout_constraintTop_toBottomOf="@+id/iV_noDataAvailable" />
+
         <ScrollView
             android:id="@+id/sV_sleepAnalysisChartsDays"
             android:layout_width="match_parent"
@@ -29,6 +55,15 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Sleep phases:"
+                    android:textColor="@color/primary_text_color"
+                    android:textSize="22dp"/>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -38,7 +73,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
+                        android:layout_marginTop="4dp"
                         android:text="@{historyDayViewModel.beginOfSleep}"
+                        android:textColor="@color/accent_text_color"
                         tools:text="22:00" />
 
                     <View
@@ -50,16 +87,80 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="16dp"
+                        android:layout_marginTop="4dp"
                         android:text="@{historyDayViewModel.endOfSeep}"
+                        android:textColor="@color/accent_text_color"
                         tools:text="06:00" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/lL_sleepAnalysisChartsDay"
+                    android:id="@+id/lL_sleepAnalysisChartsDaySleepPhases"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="@+id/sV_sleepAnalysisChartsDays"
                     android:orientation="vertical">
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="24dp"
+                    android:text="Time in phase:"
+                    android:textColor="@color/primary_text_color"
+                    android:textSize="22dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/lL_sleepAnalysisChartsDaySleepPhasesAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginTop="16dp"
+                            android:text="@{historyDayViewModel.awakeTime}"
+                            android:textColor="@color/primary_text_color"
+                            android:textSize="16dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginTop="4dp"
+                            android:text="@{historyDayViewModel.lightSleepTime}"
+                            android:textColor="@color/primary_text_color"
+                            android:textSize="16dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginTop="4dp"
+                            android:text="@{historyDayViewModel.deepSleepTime}"
+                            android:textColor="@color/primary_text_color"
+                            android:textSize="16dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginTop="4dp"
+                            android:text="@{historyDayViewModel.sleepTime}"
+                            android:textColor="@color/primary_text_color"
+                            android:textSize="16dp"/>
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
