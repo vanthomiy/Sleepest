@@ -15,6 +15,8 @@ import com.doitstudio.sleepest_master.MainActivity
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.model.data.Constants
+import com.doitstudio.sleepest_master.model.data.MobilePosition
+import com.doitstudio.sleepest_master.model.data.SleepState
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
@@ -54,6 +56,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
     var analysisDate = ObservableField(LocalDate.now())
     var darkMode = false
     var autoDarkMode = false
+    var onWork = false
 
     /** <Int: Sleep session id, Triple<List<[SleepApiRawDataEntity]>, Int: Sleep duration, [UserSleepSessionEntity]>> */
     //val sleepSessionData = ObservableArrayMap<Int, Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>>()
@@ -89,7 +92,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    fun getSleepData(sleepSession: List<UserSleepSessionEntity>) {
+    fun getSleepData() {
         val ids = mutableSetOf<Int>()
         analysisDate.get()?.let {
             val startDayToGet = it.minusMonths(1L).withDayOfMonth(1)
@@ -111,7 +114,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
         scope.launch {
             for (id in ids) {
-                val session = sleepSession.firstOrNull { x -> x.id == id } //dataBaseRepository.getSleepSessionById(id).first().firstOrNull()
+                val session = dataBaseRepository.getSleepSessionById(id).first().firstOrNull()
                 session?.let {
                     sleepSessionData[id] = Triple(
                         dataBaseRepository.getSleepApiRawDataBetweenTimestamps(
@@ -128,15 +131,19 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    fun checkSessionIntegrity() {
+    private fun checkSessionIntegrity() {
+        onWork = true
         for (key in sleepSessionData.keys) {
-            val session = sleepSessionData[key]?.third
+            val session = sleepSessionData[key]?.first
             session?.let {
-                val times = it.sleepTimes
-                if ((times.sleepDuration > 0 && times.deepSleepDuration > 0) || times.sleepDuration > 0 && times.lightSleepDuration > 0) {
+                val mobilePosition = sleepSessionData[key]?.third?.mobilePosition
+                val isSleeping = it.any { x -> x.sleepState == SleepState.SLEEPING }
+                val isUnidentified = it.any { x -> x.sleepState == SleepState.NONE }
+
+                if ((mobilePosition == MobilePosition.INBED && isSleeping)) { // || isUnidentified) {
                     SleepCalculationHandler.getHandler(context).defineUserWakeup(
                         LocalDateTime.ofInstant(
-                            Instant.ofEpochMilli((times.sleepTimeStart.toLong()) * 1000),
+                            Instant.ofEpochMilli((sleepSessionData[key]?.third?.sleepTimes?.sleepTimeStart?.toLong())!! * 1000),
                             ZoneOffset.systemDefault()
                         ),
                         false
@@ -144,6 +151,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                 }
             }
         }
+        onWork = false
     }
 
     fun checkId(time: LocalDate) : Boolean {

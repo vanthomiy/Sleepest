@@ -108,7 +108,9 @@ class HistoryTabView : Fragment() {
         updateDateInformation(tabLayout.selectedTabPosition)
 
         viewModel.dataBaseRepository.allUserSleepSessions.asLiveData().observe(viewLifecycleOwner) {
-            viewModel.getSleepData(it)
+            if (!viewModel.onWork) {
+                viewModel.getSleepData()
+            }
         }
     }
 

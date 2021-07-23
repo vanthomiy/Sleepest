@@ -145,18 +145,8 @@ class HistoryDayFragment : Fragment() {
         lineDataSet.color = ContextCompat.getColor(viewModel.context, R.color.awake_sleep_color)
 
         val yAxisValues = ArrayList<String>()
-        val entries = booleanArrayOf(false, false, false, false)
 
-        for (ent in lineDataSet.values) {
-            when (ent.y) {
-                0f -> entries[0] = true  //Awake
-                1f -> entries[1] = true  //Light
-                2f -> entries[2] = true  //Deep
-                4f -> entries[3] = true  //Sleep
-            }
-        }
-
-        if ((entries[3] && !entries[1] && !entries[2])) {
+        if (lineDataSet.yMax == 4f) {
             // Only sleep and awake is detected
             yAxisValues.add("Awake")
             yAxisValues.add("")
@@ -166,15 +156,6 @@ class HistoryDayFragment : Fragment() {
             yAxisValues.add("")
             chart.axisLeft.labelCount = 5
             chart.axisLeft.axisMaximum = 5f
-        }
-        else if ((entries[3] && entries[1]) || (entries[3] && entries[2])) {
-            SleepCalculationHandler.getHandler(viewModel.context).defineUserWakeup(
-                LocalDateTime.ofInstant(
-                    Instant.ofEpochMilli((sleepValues.third.sleepTimes.sleepTimeStart.toLong()) * 1000),
-                    ZoneOffset.systemDefault()
-                ),
-                false
-            )
         }
         else {
             yAxisValues.add("Awake")
