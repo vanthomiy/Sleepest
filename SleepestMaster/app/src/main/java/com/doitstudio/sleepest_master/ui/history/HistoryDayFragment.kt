@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.databinding.FragmentHistoryDayBinding
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
 import com.github.mikephil.charting.animation.Easing
@@ -117,7 +118,7 @@ class HistoryDayFragment : Fragment() {
     }
 
     private fun setLineChart() : LineChart {
-        val chart = LineChart(context)
+        val chart = LineChart(viewModel.context)
         val lineDataSet = LineDataSet(generateDataLineChart(), "")
         visualSetUpLineChart(chart, lineDataSet)
         chart.data = LineData(lineDataSet)
@@ -140,8 +141,18 @@ class HistoryDayFragment : Fragment() {
         lineDataSet.color = ContextCompat.getColor(viewModel.context, R.color.awake_sleep_color)
 
         val yAxisValues = ArrayList<String>()
+        val entries = booleanArrayOf(false, false, false, false)
 
-        if (lineDataSet.yMax == 4f) {
+        for (ent in lineDataSet.values) {
+            when (ent.y) {
+                0f -> entries[0] = true  //Awake
+                1f -> entries[1] = true  //Light
+                2f -> entries[2] = true  //Deep
+                4f -> entries[3] = true  //Sleep
+            }
+        }
+
+        if ((entries[3] && !entries[1] && !entries[2])) {
             // Only sleep and awake is detected
             yAxisValues.add("Awake")
             yAxisValues.add("")
@@ -151,7 +162,11 @@ class HistoryDayFragment : Fragment() {
             yAxisValues.add("")
             chart.axisLeft.labelCount = 5
             chart.axisLeft.axisMaximum = 5f
-        } else {
+        }
+        else if ((entries[3] && entries[1]) || (entries[3] && entries[2])) {
+            SleepCalculationHandler.getHandler(viewModel.context).defineUserWakeup()
+        }
+        else {
             yAxisValues.add("Awake")
             yAxisValues.add("Light")
             yAxisValues.add("Deep")
@@ -226,7 +241,7 @@ class HistoryDayFragment : Fragment() {
     }
 
     private fun setPieChart() : PieChart {
-        val chart = PieChart(context)
+        val chart = PieChart(viewModel.context)
         val data = generateDataPieChart()
         val pieDataSet = PieDataSet(data.first, "")
         visualSetUpPieChart(chart, pieDataSet, data.second)
