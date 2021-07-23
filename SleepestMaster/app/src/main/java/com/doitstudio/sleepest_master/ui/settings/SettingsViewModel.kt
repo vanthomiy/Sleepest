@@ -100,8 +100,6 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                     ?.let { dataStoreRepository.updateBannerShowActualWakeUpPoint(it) }
                 "show_actual_sleep_time" -> showActualSleepTime.get()
                     ?.let { dataStoreRepository.updateBannerShowActualSleepTime(it) }
-                "show_detailed_sleep_states" -> showDetailedSleepTime.get()
-                    ?.let { dataStoreRepository.updateBannerShowDetailedSleepTime(it) }
                 "show_actual_sleep_state" -> showSleepState.get()
                     ?.let { dataStoreRepository.updateBannerShowSleepState(it) }
             }
@@ -270,7 +268,6 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             showAlarmActiv.set(settingsParams.bannerShowAlarmActiv)
             showActualWakeUpPoint.set(settingsParams.bannerShowActualWakeUpPoint)
             showActualSleepTime.set(settingsParams.bannerShowActualSleepTime)
-            showDetailedSleepTime.set(settingsParams.bannerShowDetailedSleepTime)
             showSleepState.set(settingsParams.bannerShowSleepState)
 
         }

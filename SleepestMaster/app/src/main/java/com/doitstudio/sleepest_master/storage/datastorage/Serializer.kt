@@ -59,8 +59,15 @@ class SettingsDataSerializer() : Serializer<SettingsData> {
         t.writeTo(output)
     }
 
-    override val defaultValue: SettingsData = SettingsData.getDefaultInstance()
+    override val defaultValue: SettingsData = SettingsData.newBuilder()
+        .setBannerShowActualSleepTime(true)
+        .setBannerShowActualWakeUpPoint(true)
+        .setBannerShowSleepState(true)
+        .setBannerShowAlarmActiv(true)
+        .build()
 }
+
+
 
 class LiveUserSleepActivitySerializer() : Serializer<LiveUserSleepActivity> {
 

@@ -110,6 +110,7 @@ public class NotificationUtil {
                 .setSmallIcon(R.drawable.logo_notification)
                 .setContentIntent(pendingIntent)
                 .setOnlyAlertOnce(true)
+                .setVisibility(Notification.VISIBILITY_PUBLIC)
                 .build();
     }
 
@@ -245,6 +246,7 @@ public class NotificationUtil {
                 .setSmallIcon(R.drawable.logo_notification)
                 .setContentIntent(pendingIntent)
                 .setOnlyAlertOnce(true)
+                .setVisibility(Notification.VISIBILITY_PUBLIC)
                 .build();
     }
 

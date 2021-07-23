@@ -237,12 +237,7 @@ message SettingsData{
   /**
 * Defines if the user currently sleeping
 */
-  bool bannerShowDetailedSleepTime = 12;
-
-  /**
-* Defines if the user currently sleeping
-*/
-  bool bannerShowSleepState = 13;
+  bool bannerShowSleepState = 12;
 
   /**
  * Defines if the user currently sleeping

@@ -228,11 +228,8 @@ class DataStoreRepository(context: Context) {
         settingsDataStatus.updateBannerShowActualWakeUpPoint(isActive)
     suspend fun updateBannerShowActualSleepTime(isActive:Boolean) =
             settingsDataStatus.updateBannerShowActualSleepTime(isActive)
-    suspend fun updateBannerShowDetailedSleepTime(isActive:Boolean) =
-                settingsDataStatus.updateBannerShowDetailedSleepTime(isActive)
     suspend fun updateBannerShowSleepState(isActive:Boolean) =
                     settingsDataStatus.updateBannerShowSleepState(isActive)
-
     suspend fun updateAutoDarkMode(isActive:Boolean) =
             settingsDataStatus.updateAutoDarkMode(isActive)
     suspend fun updateAutoDarkModeAckn(isActive:Boolean) =

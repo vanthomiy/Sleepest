@@ -478,8 +478,7 @@ public class ForegroundService extends LifecycleService {
         bannerConfig[0] = settingsData.getBannerShowAlarmActiv();
         bannerConfig[1] = settingsData.getBannerShowActualWakeUpPoint();
         bannerConfig[2] = settingsData.getBannerShowActualSleepTime();
-        bannerConfig[3] = settingsData.getBannerShowDetailedSleepTime();
-        bannerConfig[4] = settingsData.getBannerShowSleepState();
+        bannerConfig[3] = settingsData.getBannerShowSleepState();
 
         updateNotification();
     }

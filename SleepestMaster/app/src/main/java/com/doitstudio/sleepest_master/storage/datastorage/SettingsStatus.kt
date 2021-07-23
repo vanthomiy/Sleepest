@@ -47,11 +47,7 @@ class SettingsStatus(private val dataStore: DataStore<SettingsData>) {
             preference.toBuilder().setBannerShowActualSleepTime(isActive).build()
         }
     }
-    suspend fun updateBannerShowDetailedSleepTime(isActive:Boolean){
-        dataStore.updateData{preference->
-            preference.toBuilder().setBannerShowDetailedSleepTime(isActive).build()
-        }
-    }
+
     suspend fun updateBannerShowSleepState(isActive:Boolean){
         dataStore.updateData{preference->
             preference.toBuilder().setBannerShowSleepState(isActive).build()
