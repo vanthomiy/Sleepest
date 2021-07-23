@@ -7,7 +7,7 @@
     <data>
         <variable
             name="historyDayViewModel"
-            type="com.doitstudio.sleepest_master.ui.history.HistoryViewModel" />
+            type="com.doitstudio.sleepest_master.ui.history.HistoryDayViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,11 +25,42 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
-                android:id="@+id/lL_sleepAnalysisChartsDay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="@+id/sV_sleepAnalysisChartsDays"
                 android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="@{historyDayViewModel.beginOfSleep}"
+                        tools:text="22:00" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:text="@{historyDayViewModel.endOfSeep}"
+                        tools:text="06:00" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lL_sleepAnalysisChartsDay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@+id/sV_sleepAnalysisChartsDays"
+                    android:orientation="vertical">
+                </LinearLayout>
             </LinearLayout>
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>

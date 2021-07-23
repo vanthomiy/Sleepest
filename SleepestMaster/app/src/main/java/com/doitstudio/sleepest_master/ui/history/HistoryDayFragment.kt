@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.marginLeft
 import androidx.databinding.Observable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -30,18 +31,19 @@ import java.lang.Math.round
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
 class HistoryDayFragment : Fragment() {
 
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(HistoryViewModel::class.java) }
+    private val viewModelDay by lazy { ViewModelProvider(this).get(HistoryDayViewModel::class.java) }
     private lateinit var binding: FragmentHistoryDayBinding
     private lateinit var sleepValues : Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>
     private lateinit var lineChart: LineChart
     private lateinit var pieChart: PieChart
-    private lateinit var textViewFallAsleepTime: TextView
-    private lateinit var textViewWakeUpTime: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,11 +52,7 @@ class HistoryDayFragment : Fragment() {
     ): View {
 
         binding = FragmentHistoryDayBinding.inflate(inflater, container, false)
-        binding.historyDayViewModel = viewModel
-
-        textViewFallAsleepTime = TextView(context)
-        textViewFallAsleepTime.text = "Test"
-        binding.lLSleepAnalysisChartsDay.addView(textViewFallAsleepTime)
+        binding.historyDayViewModel = viewModelDay
 
         lineChart = setLineChart()
         updateLineChart(lineChart)
@@ -100,12 +98,30 @@ class HistoryDayFragment : Fragment() {
         }
     }
 
+    private fun setTimeStamps() {
+        var time = LocalDateTime.ofInstant(
+            Instant.ofEpochMilli((sleepValues.third.sleepTimes.sleepTimeStart.toLong()) * 1000),
+            ZoneOffset.systemDefault()
+        ).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+
+        viewModelDay.beginOfSleep.set(time)
+
+        time = LocalDateTime.ofInstant(
+            Instant.ofEpochMilli((sleepValues.third.sleepTimes.sleepTimeEnd.toLong()) * 1000),
+            ZoneOffset.systemDefault()
+        ).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+
+        viewModelDay.endOfSeep.set(time)
+    }
+
     private fun generateDataLineChart() : ArrayList<Entry> {
         val entries = ArrayList<Entry>()
 
         viewModel.analysisDate.get()?.let {
             if (viewModel.checkId(it)) {
                 var xValue = 0
+
+                setTimeStamps()
 
                 for (rawData in sleepValues.first) {
                     for (minute in 0..((sleepValues.second / 60).toDouble()).roundToInt()) {
