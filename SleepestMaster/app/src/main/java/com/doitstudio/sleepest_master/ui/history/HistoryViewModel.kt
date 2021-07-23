@@ -15,6 +15,7 @@ import com.doitstudio.sleepest_master.MainActivity
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.model.data.Constants
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
@@ -37,12 +38,13 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.sql.Array
 import java.time.*
+import kotlin.coroutines.CoroutineContext
 
 class HistoryViewModel(application: Application) : AndroidViewModel(application) {
 
     private val scope: CoroutineScope = MainScope()
     val context: Context by lazy { getApplication<Application>().applicationContext }
-    private val dataBaseRepository: DatabaseRepository by lazy {
+    val dataBaseRepository: DatabaseRepository by lazy {
         (context as MainApplication).dataBaseRepository
     }
     private val dataStoreRepository: DataStoreRepository by lazy {
@@ -62,11 +64,13 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
     val sleepSessionData = mutableMapOf<Int, Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>>()
 
     init {
-        getSleepData()
+        //getSleepData()
         scope.launch {
             darkMode = dataStoreRepository.settingsDataFlow.first().designDarkMode
             autoDarkMode = dataStoreRepository.settingsDataFlow.first().designAutoDarkMode
         }
+
+
     }
 
     fun onPreviousDateClick(range: Int) {
@@ -85,7 +89,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    fun getSleepData() {
+    fun getSleepData(sleepSession: List<UserSleepSessionEntity>) {
         val ids = mutableSetOf<Int>()
         analysisDate.get()?.let {
             val startDayToGet = it.minusMonths(1L).withDayOfMonth(1)
@@ -107,7 +111,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
         scope.launch {
             for (id in ids) {
-                val session = dataBaseRepository.getSleepSessionById(id).first().firstOrNull()
+                val session = sleepSession.firstOrNull { x -> x.id == id } //dataBaseRepository.getSleepSessionById(id).first().firstOrNull()
                 session?.let {
                     sleepSessionData[id] = Triple(
                         dataBaseRepository.getSleepApiRawDataBetweenTimestamps(
@@ -119,6 +123,25 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                 }
 
                 idsListener.set(id)
+            }
+            checkSessionIntegrity()
+        }
+    }
+
+    fun checkSessionIntegrity() {
+        for (key in sleepSessionData.keys) {
+            val session = sleepSessionData[key]?.third
+            session?.let {
+                val times = it.sleepTimes
+                if ((times.sleepDuration > 0 && times.deepSleepDuration > 0) || times.sleepDuration > 0 && times.lightSleepDuration > 0) {
+                    SleepCalculationHandler.getHandler(context).defineUserWakeup(
+                        LocalDateTime.ofInstant(
+                            Instant.ofEpochMilli((times.sleepTimeStart.toLong()) * 1000),
+                            ZoneOffset.systemDefault()
+                        ),
+                        false
+                    )
+                }
             }
         }
     }

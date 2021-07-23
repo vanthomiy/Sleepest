@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.databinding.FragmentHistoryDayBinding
+import com.doitstudio.sleepest_master.model.data.Constants
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
@@ -26,6 +27,9 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import org.w3c.dom.Text
 import java.lang.Math.round
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
@@ -164,7 +168,13 @@ class HistoryDayFragment : Fragment() {
             chart.axisLeft.axisMaximum = 5f
         }
         else if ((entries[3] && entries[1]) || (entries[3] && entries[2])) {
-            SleepCalculationHandler.getHandler(viewModel.context).defineUserWakeup()
+            SleepCalculationHandler.getHandler(viewModel.context).defineUserWakeup(
+                LocalDateTime.ofInstant(
+                    Instant.ofEpochMilli((sleepValues.third.sleepTimes.sleepTimeStart.toLong()) * 1000),
+                    ZoneOffset.systemDefault()
+                ),
+                false
+            )
         }
         else {
             yAxisValues.add("Awake")
