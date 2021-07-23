@@ -23,10 +23,12 @@
     <color name="warning_color">#FF5722</color>
     <color name="error_color">#E91E63</color>
 
-    <color name="awake_sleep_color">#16AAC5</color>
-    <color name="light_sleep_color">#911BAC</color>
-    <color name="deep_sleep_color">#272EB0</color>
-    <color name="sleep_sleep_color">#074E4E</color>
+    <color name="awake_sleep_color">#FF16AAC5</color>
+    <color name="light_sleep_color">#FF911BAC</color>
+    <color name="deep_sleep_color">#FF272EB0</color>
+    <color name="sleep_sleep_color">#FF074E4E</color>
+
+    <color name="testfarbe">#FFFF0000</color>
 
     <color name="transparent">#00FFFFFF</color>
 </resources>
