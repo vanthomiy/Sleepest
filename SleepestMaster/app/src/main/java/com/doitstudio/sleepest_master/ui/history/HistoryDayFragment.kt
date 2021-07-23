@@ -1,12 +1,13 @@
 package com.doitstudio.sleepest_master.ui.history
 
 import android.graphics.Color
+import android.opengl.Visibility
 import android.os.Bundle
+import android.text.Layout
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.Observable
 import androidx.fragment.app.Fragment
@@ -19,24 +20,23 @@ import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.github.mikephil.charting.formatter.ValueFormatter
-import org.w3c.dom.Text
-import java.lang.Math.round
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
 class HistoryDayFragment : Fragment() {
 
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(HistoryViewModel::class.java) }
+    private val viewModelDay by lazy { ViewModelProvider(this).get(HistoryDayViewModel::class.java) }
     private lateinit var binding: FragmentHistoryDayBinding
     private lateinit var sleepValues : Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>
     private lateinit var lineChart: LineChart
     private lateinit var pieChart: PieChart
-    private lateinit var textViewFallAsleepTime: TextView
-    private lateinit var textViewWakeUpTime: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,15 +45,11 @@ class HistoryDayFragment : Fragment() {
     ): View {
 
         binding = FragmentHistoryDayBinding.inflate(inflater, container, false)
-        binding.historyDayViewModel = viewModel
-
-        textViewFallAsleepTime = TextView(context)
-        textViewFallAsleepTime.text = "Test"
-        binding.lLSleepAnalysisChartsDay.addView(textViewFallAsleepTime)
+        binding.historyDayViewModel = viewModelDay
 
         lineChart = setLineChart()
         updateLineChart(lineChart)
-        binding.lLSleepAnalysisChartsDay.addView(lineChart)
+        binding.lLSleepAnalysisChartsDaySleepPhases.addView(lineChart)
         lineChart.layoutParams.height = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics
         ).toInt()
@@ -61,11 +57,13 @@ class HistoryDayFragment : Fragment() {
         lineChart.invalidate()
 
         pieChart = setPieChart()
-        binding.lLSleepAnalysisChartsDay.addView(pieChart)
+        binding.lLSleepAnalysisChartsDaySleepPhasesAmount.addView(pieChart)
         pieChart.layoutParams.height = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics
         ).toInt()
-        pieChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+        pieChart.layoutParams.width = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics
+        ).toInt()
         pieChart.invalidate()
 
 
@@ -95,6 +93,45 @@ class HistoryDayFragment : Fragment() {
         }
     }
 
+    private fun generateSleepValueInformation(time: Int): String {
+        return kotlin.math.floor((time.toFloat() / 60f).toDouble()).toInt().toString() +
+                "h " +
+                (time % 60).toString() +
+                "min"
+    }
+
+    private fun setTimeStamps() {
+        var time = LocalDateTime.ofInstant(
+            Instant.ofEpochMilli((sleepValues.third.sleepTimes.sleepTimeStart.toLong()) * 1000),
+            ZoneOffset.systemDefault()
+        ).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+
+        viewModelDay.beginOfSleep.set(time)
+
+        time = LocalDateTime.ofInstant(
+            Instant.ofEpochMilli((sleepValues.third.sleepTimes.sleepTimeEnd.toLong()) * 1000),
+            ZoneOffset.systemDefault()
+        ).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+
+        viewModelDay.endOfSeep.set(time)
+
+        viewModelDay.awakeTime.set(
+            "Awake: " + generateSleepValueInformation(sleepValues.third.sleepTimes.awakeTime)
+        )
+
+        viewModelDay.lightSleepTime.set(
+            "Light: " + generateSleepValueInformation(sleepValues.third.sleepTimes.lightSleepDuration)
+        )
+
+        viewModelDay.deepSleepTime.set(
+            "Deep: " + generateSleepValueInformation(sleepValues.third.sleepTimes.deepSleepDuration)
+        )
+
+        viewModelDay.sleepTime.set(
+            "Sleep: " + generateSleepValueInformation(sleepValues.third.sleepTimes.sleepDuration)
+        )
+    }
+
     private fun generateDataLineChart() : ArrayList<Entry> {
         val entries = ArrayList<Entry>()
 
@@ -102,14 +139,23 @@ class HistoryDayFragment : Fragment() {
             if (viewModel.checkId(it)) {
                 var xValue = 0
 
+                setTimeStamps()
+
                 for (rawData in sleepValues.first) {
                     for (minute in 0..((sleepValues.second / 60).toDouble()).roundToInt()) {
                         entries.add(Entry(xValue.toFloat(), rawData.sleepState.ordinal.toFloat()))
                         xValue += 1
                     }
                 }
-            } else {
-                entries.add(Entry(0F,0F))
+
+                binding.iVNoDataAvailable.visibility = View.GONE
+                binding.tVNoDataAvailable.visibility = View.GONE
+                binding.sVSleepAnalysisChartsDays.visibility = View.VISIBLE
+            }
+            else {
+                binding.sVSleepAnalysisChartsDays.visibility = View.GONE
+                binding.iVNoDataAvailable.visibility = View.VISIBLE
+                binding.tVNoDataAvailable.visibility = View.VISIBLE
             }
         }
 
@@ -117,7 +163,7 @@ class HistoryDayFragment : Fragment() {
     }
 
     private fun setLineChart() : LineChart {
-        val chart = LineChart(context)
+        val chart = LineChart(viewModel.context)
         val lineDataSet = LineDataSet(generateDataLineChart(), "")
         visualSetUpLineChart(chart, lineDataSet)
         chart.data = LineData(lineDataSet)
@@ -151,7 +197,8 @@ class HistoryDayFragment : Fragment() {
             yAxisValues.add("")
             chart.axisLeft.labelCount = 5
             chart.axisLeft.axisMaximum = 5f
-        } else {
+        }
+        else {
             yAxisValues.add("Awake")
             yAxisValues.add("Light")
             yAxisValues.add("Deep")
@@ -226,7 +273,7 @@ class HistoryDayFragment : Fragment() {
     }
 
     private fun setPieChart() : PieChart {
-        val chart = PieChart(context)
+        val chart = PieChart(viewModel.context)
         val data = generateDataPieChart()
         val pieDataSet = PieDataSet(data.first, "")
         visualSetUpPieChart(chart, pieDataSet, data.second)
