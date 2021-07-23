@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.LocalTime
-import java.time.ZoneOffset
 
 /**
  * This class provides all functionality that is necessary for predicting the users sleep
@@ -304,7 +303,7 @@ class SleepCalculationHandler(val context: Context) {
             // for each sleeping time, we have to define the sleep state
             val time = localTime ?: LocalDateTime.now()
             val sleepApiRawDataEntity =
-                dataBaseRepository.getSleepApiRawDataFromDateLive(time).first()
+                dataBaseRepository.getSleepApiRawDataFromDate(time).first()
                     .sortedBy { x -> x.timestampSeconds }
 
             if (sleepApiRawDataEntity == null || sleepApiRawDataEntity.count() == 0) {

@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import java.time.DayOfWeek
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.ZoneOffset
 import java.util.*
 import kotlin.collections.ArrayList
@@ -69,8 +70,8 @@ class DatabaseRepository(
      */
     suspend fun getSleepApiRawDataSince(time:Int): Flow<List<SleepApiRawDataEntity>>
     {
-        val now = LocalDateTime.now(ZoneOffset.UTC)
-        val seconds = now.atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+        val now = LocalDateTime.now(ZoneOffset.systemDefault())
+        val seconds = now.atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
         return sleepApiRawDataDao.getSince(seconds-time)
     }
 
@@ -79,8 +80,8 @@ class DatabaseRepository(
      */
     suspend fun getSleepApiRawDataSinceSeconds(time:Int): Flow<List<SleepApiRawDataEntity>>
     {
-        val now = LocalDateTime.now(ZoneOffset.UTC)
-        val seconds = now.atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+        val now = LocalDateTime.now(ZoneOffset.systemDefault())
+        val seconds = now.atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
         return sleepApiRawDataDao.getSince(time)
     }
 
@@ -92,10 +93,10 @@ class DatabaseRepository(
     fun getSleepApiRawDataFromDateLive(actualTime:LocalDateTime): Flow<List<SleepApiRawDataEntity>>
     {
         val startTime = if (actualTime.hour < 15)
-            actualTime.toLocalDate().minusDays(1).atTime(15,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
-        else actualTime.toLocalDate().atTime(15,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+            actualTime.toLocalDate().minusDays(1).atTime(15,0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+        else actualTime.toLocalDate().atTime(15,0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
 
-        val endTime = actualTime.atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+        val endTime = actualTime.atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
 
         return sleepApiRawDataDao.getBetween(startTime,endTime)
     }
@@ -108,12 +109,12 @@ class DatabaseRepository(
     fun getSleepApiRawDataFromDate(actualTime:LocalDateTime): Flow<List<SleepApiRawDataEntity>>
     {
         val startTime = if (actualTime.hour < 15)
-            actualTime.toLocalDate().minusDays(1).atTime(15,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
-        else actualTime.toLocalDate().atTime(15,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+            actualTime.toLocalDate().minusDays(1).atTime(15,0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+        else actualTime.toLocalDate().atTime(15,0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
 
         val endTime = if (actualTime.hour >= 15)
-            actualTime.toLocalDate().plusDays(1).atTime(15,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
-        else actualTime.toLocalDate().atTime(15,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+            actualTime.toLocalDate().plusDays(1).atTime(15,0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+        else actualTime.toLocalDate().atTime(15,0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
 
         return sleepApiRawDataDao.getBetween(startTime,endTime)
     }
