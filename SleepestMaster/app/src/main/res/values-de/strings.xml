@@ -312,7 +312,7 @@
     <string name="alarm_instance_days_a_week">Wochentage:</string>
     <string name="alarm_instance_sleep_duration">Schlafdauer:</string>
     <string name="alarms_alarme">&#9200; Wecker</string>
-    <string name="alarms_no_alarms">Keine Alarme. Füge über den + Buttonen einen neuen Alarm hinzu!</string>
+    <string name="alarms_no_alarms">Keine Alarme. Füge über den + Button einen neuen Alarm hinzu!</string>
     <string name="settings_return">return</string>
     <string name="settings_delete_all_data">delete all data</string>
     <string name="profile_credits">Credits</string>
