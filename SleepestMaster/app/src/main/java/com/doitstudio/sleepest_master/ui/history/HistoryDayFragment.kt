@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.databinding.FragmentHistoryDayBinding
+import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
 import com.github.mikephil.charting.animation.Easing
@@ -246,25 +247,33 @@ class HistoryDayFragment : Fragment() {
                 val lightSleep = sleepValues.third.sleepTimes.lightSleepDuration
                 val deepSleep = sleepValues.third.sleepTimes.deepSleepDuration
 
-                if (lightSleep == 0 && deepSleep == 0) {
+                if (sleepValues.third.mobilePosition == MobilePosition.ONTABLE) {
                     entries.add(PieEntry(awake.toFloat(), "Awake"))
                     sleepTypes[0] = true
                     entries.add(PieEntry(sleep.toFloat(), "Sleep"))
                     sleepTypes[1] = true
                 }
-                else if (lightSleep != 0 && deepSleep != 0 && awake == 0) {
-                    entries.add(PieEntry(lightSleep.toFloat(), "Light"))
-                    sleepTypes[2] = true
-                    entries.add(PieEntry(deepSleep.toFloat(), "Deep"))
-                    sleepTypes[3] = true
-                }
-                else {
-                    entries.add(PieEntry(lightSleep.toFloat(), "Light"))
-                    sleepTypes[2] = true
-                    entries.add(PieEntry(deepSleep.toFloat(), "Deep"))
-                    sleepTypes[3] = true
-                    entries.add(PieEntry(awake.toFloat(), "Awake"))
-                    sleepTypes[0] = true
+                else if (sleepValues.third.mobilePosition == MobilePosition.INBED) {
+                    if (lightSleep != 0 && deepSleep != 0 && awake == 0) {
+                        entries.add(PieEntry(lightSleep.toFloat(), "Light"))
+                        sleepTypes[2] = true
+                        entries.add(PieEntry(deepSleep.toFloat(), "Deep"))
+                        sleepTypes[3] = true
+                    }
+                    else if (lightSleep != 0 && deepSleep == 0 && awake != 0) {
+                        entries.add(PieEntry(lightSleep.toFloat(), "Light"))
+                        sleepTypes[2] = true
+                        entries.add(PieEntry(awake.toFloat(), "Awake"))
+                        sleepTypes[0] = true
+                    }
+                    else {
+                        entries.add(PieEntry(lightSleep.toFloat(), "Light"))
+                        sleepTypes[2] = true
+                        entries.add(PieEntry(deepSleep.toFloat(), "Deep"))
+                        sleepTypes[3] = true
+                        entries.add(PieEntry(awake.toFloat(), "Awake"))
+                        sleepTypes[0] = true
+                    }
                 }
             }
         }
