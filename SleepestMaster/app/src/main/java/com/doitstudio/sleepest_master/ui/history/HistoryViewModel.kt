@@ -197,8 +197,8 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                 val lightSleep = values.third.sleepTimes.lightSleepDuration / 60f
                 val deepSleep = values.third.sleepTimes.deepSleepDuration / 60f
 
-                if ((sleep + awake) > maxSleepTime) {
-                    maxSleepTime = (sleep + awake)
+                if (((sleep + awake) * 60f) > maxSleepTime) {
+                    maxSleepTime = (sleep + awake) * 60f
                 }
 
                 if (lightSleep != 0f && deepSleep != 0f) {
@@ -248,13 +248,13 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
     }
 
     private fun getBarChartYAxisProportion(sleepAmount: Int) : Float {
-        return if ((sleepAmount > 540) && (sleepAmount < 660)) {
+        return if ((sleepAmount >= 540) && (sleepAmount < 660)) {
             12F
-        } else if ((sleepAmount > 660) && (sleepAmount < 780)) {
+        } else if ((sleepAmount >= 660) && (sleepAmount < 780)) {
             14F
-        } else if ((sleepAmount > 780) && (sleepAmount < 900)) {
+        } else if ((sleepAmount >= 780) && (sleepAmount < 900)) {
             16F
-        } else if (sleepAmount > 900) {
+        } else if (sleepAmount >= 900) {
             24F
         } else {
             10F
