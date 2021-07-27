@@ -1,9 +1,7 @@
 package com.doitstudio.sleepest_master.ui.history
 
 import android.graphics.Color
-import android.opengl.Visibility
 import android.os.Bundle
-import android.text.Layout
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -36,8 +34,9 @@ class HistoryDayFragment : Fragment() {
     private val viewModelDay by lazy { ViewModelProvider(this).get(HistoryDayViewModel::class.java) }
     private lateinit var binding: FragmentHistoryDayBinding
     private lateinit var sleepValues : Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>
-    private lateinit var lineChart: LineChart
-    private lateinit var pieChart: PieChart
+    private lateinit var lineChartSleepAnalysis: LineChart
+    private lateinit var pieChartSleepAnalysis: PieChart
+    private lateinit var lineChartActivityAnalysis: LineChart
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,24 +47,33 @@ class HistoryDayFragment : Fragment() {
         binding = FragmentHistoryDayBinding.inflate(inflater, container, false)
         binding.historyDayViewModel = viewModelDay
 
-        lineChart = setLineChart()
-        updateLineChart(lineChart)
-        binding.lLSleepAnalysisChartsDaySleepPhases.addView(lineChart)
-        lineChart.layoutParams.height = TypedValue.applyDimension(
+        lineChartSleepAnalysis = setLineChart()
+        updateLineChart(lineChartSleepAnalysis)
+        binding.lLSleepAnalysisChartsDaySleepPhases.addView(lineChartSleepAnalysis)
+        lineChartSleepAnalysis.layoutParams.height = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics
         ).toInt()
-        lineChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-        lineChart.invalidate()
+        lineChartSleepAnalysis.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+        lineChartSleepAnalysis.invalidate()
 
-        pieChart = setPieChart()
-        binding.lLSleepAnalysisChartsDaySleepPhasesAmount.addView(pieChart)
-        pieChart.layoutParams.height = TypedValue.applyDimension(
+        pieChartSleepAnalysis = setPieChart()
+        binding.lLSleepAnalysisChartsDaySleepPhasesAmount.addView(pieChartSleepAnalysis)
+        pieChartSleepAnalysis.layoutParams.height = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics
         ).toInt()
-        pieChart.layoutParams.width = TypedValue.applyDimension(
+        pieChartSleepAnalysis.layoutParams.width = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics
         ).toInt()
-        pieChart.invalidate()
+        pieChartSleepAnalysis.invalidate()
+
+        lineChartActivityAnalysis = setLineChart()
+        updateLineChart(lineChartActivityAnalysis)
+        binding.lLActivityAnalysisChartDay.addView(lineChartActivityAnalysis)
+        lineChartActivityAnalysis.layoutParams.height = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics
+        ).toInt()
+        lineChartActivityAnalysis.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+        lineChartActivityAnalysis.invalidate()
 
 
         viewModel.analysisDate.addOnPropertyChangedCallback(
@@ -73,11 +81,11 @@ class HistoryDayFragment : Fragment() {
 
                 override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
                     getDataValues()
-                    updateLineChart(lineChart)
-                    lineChart.invalidate()
+                    updateLineChart(lineChartSleepAnalysis)
+                    lineChartSleepAnalysis.invalidate()
 
-                    updatePieChart(pieChart)
-                    pieChart.invalidate()
+                    updatePieChart(pieChartSleepAnalysis)
+                    pieChartSleepAnalysis.invalidate()
                 }
             })
 
