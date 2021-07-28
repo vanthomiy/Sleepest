@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.databinding.FragmentHistoryWeekBinding
 import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.charts.LineChart
 import java.time.*
 
 class HistoryWeekFragment : Fragment() {
@@ -17,6 +18,7 @@ class HistoryWeekFragment : Fragment() {
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(HistoryViewModel::class.java) }
     private lateinit var binding: FragmentHistoryWeekBinding
     private lateinit var barChart: BarChart
+    private lateinit var activityChart: LineChart
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,13 +30,19 @@ class HistoryWeekFragment : Fragment() {
         binding.historyWeekViewModel = viewModel
 
         barChart = viewModel.setBarChart(7, getSundayOfWeek())
+        activityChart = viewModel.setActivityChart(7, getSundayOfWeek())
 
         binding.lLSleepAnalysisChartsWeek.addView(barChart)
+        binding.lLSleepAnalysisChartsWeek.addView(activityChart)
 
         val height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 350F, resources.displayMetrics)
         barChart.layoutParams.height = height.toInt()
         barChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
         barChart.invalidate()
+
+        activityChart.layoutParams.height = height.toInt()
+        activityChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+        activityChart.invalidate()
 
         viewModel.analysisDate.addOnPropertyChangedCallback(
             object: Observable.OnPropertyChangedCallback() {
@@ -43,6 +51,9 @@ class HistoryWeekFragment : Fragment() {
 
                     viewModel.updateBarChart(barChart, 7, getSundayOfWeek())
                     barChart.invalidate()
+
+                    viewModel.updateActivityChart(activityChart, 7, getSundayOfWeek())
+                    activityChart.invalidate()
                 }
             }
         )

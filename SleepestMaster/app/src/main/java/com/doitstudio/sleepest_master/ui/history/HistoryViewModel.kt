@@ -1,7 +1,6 @@
 package com.doitstudio.sleepest_master.ui.history
 
 import android.app.Application
-import android.app.ApplicationErrorReport
 import android.content.Context
 import android.graphics.Color
 import android.view.View
@@ -9,9 +8,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.databinding.*
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.asLiveData
-import androidx.room.Database
-import com.doitstudio.sleepest_master.MainActivity
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.model.data.Constants
@@ -21,26 +17,19 @@ import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
-import com.doitstudio.sleepest_master.storage.db.SleepDatabase
-import com.doitstudio.sleepest_master.storage.db.SleepDatabase_Impl
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.github.mikephil.charting.formatter.ValueFormatter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.sql.Array
 import java.time.*
-import kotlin.coroutines.CoroutineContext
 
 class HistoryViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -170,7 +159,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return color
     }
 
-    fun generateDataBarChart(range: Int, endDateOfDiagram: LocalDate): Triple<ArrayList<BarEntry>, List<Int>, Int> { //ArrayList<BarEntry> {
+    fun generateDataBarChart(range: Int, endDateOfDiagram: LocalDate): Triple<ArrayList<BarEntry>, List<Int>, Int> {
         val entries = ArrayList<BarEntry>()
         val xAxisLabels = mutableListOf<Int>()
         var xIndex = 0.5f
@@ -366,5 +355,87 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         barChart.axisRight.axisMaximum = proportion
         barChart.axisLeft.axisMaximum = proportion
         barChart.axisLeft.labelCount = proportion.toInt()
+    }
+
+    private fun generateDataActivityChart(range: Int, endDateOfDiagram: LocalDate): ArrayList<Entry> {
+        val entries = ArrayList<Entry>()
+        var xValue = 0
+
+        val ids = mutableSetOf<Int>()
+        for (i in -(range-2)..1) {
+            ids.add(
+                UserSleepSessionEntity.getIdByDateTime(
+                    LocalDate.ofEpochDay(
+                        endDateOfDiagram.toEpochDay().plus((i - 1).toLong())
+                    )
+                )
+            )
+        }
+
+        ids.reversed()
+        for (id in ids) {
+            if (sleepSessionData.containsKey(id)) {
+                val values = sleepSessionData[id]?.third!!
+
+                entries.add(Entry(xValue.toFloat(), values.userSleepRating.activityOnDay.ordinal.toFloat()))
+            }
+            xValue += 1
+        }
+
+        return entries
+    }
+
+    fun setActivityChart(range: Int, endDateOfDiagram: LocalDate) : LineChart {
+        val chart = LineChart(context)
+        val lineDataSet = LineDataSet(generateDataActivityChart(range, endDateOfDiagram), "")
+        visualSetUpActivityChart(chart, lineDataSet)
+        chart.data = LineData(lineDataSet)
+        return chart
+    }
+
+    fun updateActivityChart(chart: LineChart, range: Int, endDateOfDiagram: LocalDate) {
+        val lineDataSet = LineDataSet(generateDataActivityChart(range, endDateOfDiagram), "")
+        visualSetUpActivityChart(chart, lineDataSet)
+        chart.data = LineData(lineDataSet)
+    }
+
+    private fun visualSetUpActivityChart(chart: LineChart, lineDataSet: LineDataSet) {
+        lineDataSet.setDrawValues(false)
+        lineDataSet.setDrawFilled(true)
+        lineDataSet.setDrawCircles(false)
+        lineDataSet.lineWidth = 2f
+        lineDataSet.fillColor = ContextCompat.getColor(context, R.color.sleep_sleep_color)
+        lineDataSet.fillAlpha = 255
+        lineDataSet.color = ContextCompat.getColor(context, R.color.awake_sleep_color)
+        lineDataSet.fillDrawable = ContextCompat.getDrawable(context, R.drawable.bg_spark_line)
+        lineDataSet.mode = LineDataSet.Mode.CUBIC_BEZIER
+
+        val yAxisValues = ArrayList<String>()
+        yAxisValues.add("None")
+        yAxisValues.add("NoActivity")
+        yAxisValues.add("SmallActivity")
+        yAxisValues.add("NormalActivity")
+        yAxisValues.add("MuchActivity")
+        yAxisValues.add("ExtremeActivity")
+        yAxisValues.add("")
+
+        chart.axisLeft.labelCount = 6
+        chart.axisLeft.axisMaximum = 6f
+
+        chart.axisLeft.valueFormatter = IndexAxisValueFormatter(yAxisValues)
+        chart.axisLeft.axisMinimum = 0f
+        chart.axisLeft.setDrawGridLines(false)
+        chart.axisLeft.textColor = checkDarkMode()
+        chart.legend.isEnabled= false
+
+        chart.axisRight.setDrawLabels(false)
+        chart.axisRight.setDrawGridLines(false)
+
+        chart.xAxis.setDrawGridLines(false)
+        chart.xAxis.setDrawLabels(false)
+
+        chart.description.isEnabled = false
+
+        chart.animateX(1000)
     }
 }

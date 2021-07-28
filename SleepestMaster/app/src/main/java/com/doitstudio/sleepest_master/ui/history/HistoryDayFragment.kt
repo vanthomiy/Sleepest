@@ -36,7 +36,6 @@ class HistoryDayFragment : Fragment() {
     private lateinit var sleepValues : Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>
     private lateinit var lineChartSleepAnalysis: LineChart
     private lateinit var pieChartSleepAnalysis: PieChart
-    private lateinit var lineChartActivityAnalysis: LineChart
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,16 +64,6 @@ class HistoryDayFragment : Fragment() {
             TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics
         ).toInt()
         pieChartSleepAnalysis.invalidate()
-
-        lineChartActivityAnalysis = setLineChart()
-        updateLineChart(lineChartActivityAnalysis)
-        binding.lLActivityAnalysisChartDay.addView(lineChartActivityAnalysis)
-        lineChartActivityAnalysis.layoutParams.height = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics
-        ).toInt()
-        lineChartActivityAnalysis.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-        lineChartActivityAnalysis.invalidate()
-
 
         viewModel.analysisDate.addOnPropertyChangedCallback(
             object: Observable.OnPropertyChangedCallback() {
@@ -193,6 +182,7 @@ class HistoryDayFragment : Fragment() {
         lineDataSet.fillColor = ContextCompat.getColor(viewModel.context, R.color.sleep_sleep_color)
         lineDataSet.fillAlpha = 255
         lineDataSet.color = ContextCompat.getColor(viewModel.context, R.color.awake_sleep_color)
+        lineDataSet.fillDrawable = ContextCompat.getDrawable(viewModel.context, R.drawable.bg_spark_line)
 
         val yAxisValues = ArrayList<String>()
 
