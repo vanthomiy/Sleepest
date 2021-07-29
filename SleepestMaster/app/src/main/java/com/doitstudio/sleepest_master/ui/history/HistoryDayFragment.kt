@@ -357,18 +357,18 @@ class HistoryDayFragment : Fragment() {
     }
 
     private fun updateActivitySmiley() {
-        var activityOnDay = 1
+        var activityOnDay = 0
 
         viewModel.analysisDate.get()?.let { it_time ->
             if (viewModel.checkId(it_time)) {
                 sleepValues.let {
                     activityOnDay = when (it.third.userSleepRating.activityOnDay) {
-                        ActivityOnDay.NOACTIVITY -> 1
+                        ActivityOnDay.NOACTIVITY -> 0
                         ActivityOnDay.SMALLACTIVITY -> 1
                         ActivityOnDay.NORMALACTIVITY -> 2
                         ActivityOnDay.MUCHACTIVITY -> 2
                         ActivityOnDay.EXTREMACTIVITY -> 3
-                        else -> 1
+                        else -> 0
                     }
                 }
             }

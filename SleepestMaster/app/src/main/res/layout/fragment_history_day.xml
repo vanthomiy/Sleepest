@@ -206,7 +206,8 @@
                             android:layout_marginTop="16dp"
                             android:text="@{historyDayViewModel.activitySmiley}"
                             android:textColor="@color/primary_text_color"
-                            android:textSize="72sp"/>
+                            android:textSize="72sp"
+                            android:textAlignment="center"/>
 
                         <View
                             android:layout_width="0dp"

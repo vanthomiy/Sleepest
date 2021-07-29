@@ -42,11 +42,12 @@ public class SmileySelectorUtil {
 
     public static String getSmileyActivity(int activity) {
         switch (activity) {
+            case 0: return "";
             case 1: return new String(Character.toChars(smileyLowActivity));
             case 2: return new String(Character.toChars(smileyMediumActivity));
             case 3: return new String(Character.toChars(smileyHighActivity));
         }
-        return new String(Character.toChars(smileyIteration));
+        return "";
     }
 
     public static String getSmileyIteration() {
