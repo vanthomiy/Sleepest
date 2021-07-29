@@ -99,35 +99,57 @@ class HistoryDayFragment : Fragment() {
     }
 
     private fun setTimeStamps() {
-        var time = LocalDateTime.ofInstant(
-            Instant.ofEpochMilli((sleepValues.third.sleepTimes.sleepTimeStart.toLong()) * 1000),
-            ZoneOffset.systemDefault()
-        ).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-
+        var time = LocalDateTime.of(1970, 1, 1, 0, 0, 0).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
         viewModelDay.beginOfSleep.set(time)
-
-        time = LocalDateTime.ofInstant(
-            Instant.ofEpochMilli((sleepValues.third.sleepTimes.sleepTimeEnd.toLong()) * 1000),
-            ZoneOffset.systemDefault()
-        ).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-
         viewModelDay.endOfSeep.set(time)
 
         viewModelDay.awakeTime.set(
-            "Awake: " + generateSleepValueInformation(sleepValues.third.sleepTimes.awakeTime)
+            "Awake: " + generateSleepValueInformation(0)
         )
 
         viewModelDay.lightSleepTime.set(
-            "Light: " + generateSleepValueInformation(sleepValues.third.sleepTimes.lightSleepDuration)
+            "Light: " + generateSleepValueInformation(0)
         )
 
         viewModelDay.deepSleepTime.set(
-            "Deep: " + generateSleepValueInformation(sleepValues.third.sleepTimes.deepSleepDuration)
+            "Deep: " + generateSleepValueInformation(0)
         )
 
         viewModelDay.sleepTime.set(
-            "Sleep: " + generateSleepValueInformation(sleepValues.third.sleepTimes.sleepDuration)
+            "Sleep: " + generateSleepValueInformation(0)
         )
+
+        sleepValues.let {
+            time = LocalDateTime.ofInstant(
+                Instant.ofEpochMilli((it.third.sleepTimes.sleepTimeStart.toLong()) * 1000),
+                ZoneOffset.systemDefault()
+            ).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+
+            viewModelDay.beginOfSleep.set(time)
+
+            time = LocalDateTime.ofInstant(
+                Instant.ofEpochMilli((it.third.sleepTimes.sleepTimeEnd.toLong()) * 1000),
+                ZoneOffset.systemDefault()
+            ).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+
+            viewModelDay.endOfSeep.set(time)
+
+            viewModelDay.awakeTime.set(
+                "Awake: " + generateSleepValueInformation(it.third.sleepTimes.awakeTime)
+            )
+
+            viewModelDay.lightSleepTime.set(
+                "Light: " + generateSleepValueInformation(it.third.sleepTimes.lightSleepDuration)
+            )
+
+            viewModelDay.deepSleepTime.set(
+                "Deep: " + generateSleepValueInformation(it.third.sleepTimes.deepSleepDuration)
+            )
+
+            viewModelDay.sleepTime.set(
+                "Sleep: " + generateSleepValueInformation(it.third.sleepTimes.sleepDuration)
+            )
+        }
     }
 
     private fun generateDataLineChart() : ArrayList<Entry> {
@@ -137,14 +159,14 @@ class HistoryDayFragment : Fragment() {
             if (viewModel.checkId(it)) {
                 var xValue = 0
 
-                setTimeStamps()
-
                 for (rawData in sleepValues.first) {
                     for (minute in 0..((sleepValues.second / 60).toDouble()).roundToInt()) {
                         entries.add(Entry(xValue.toFloat(), rawData.sleepState.ordinal.toFloat()))
                         xValue += 1
                     }
                 }
+
+                setTimeStamps()
 
                 binding.iVNoDataAvailable.visibility = View.GONE
                 binding.tVNoDataAvailable.visibility = View.GONE

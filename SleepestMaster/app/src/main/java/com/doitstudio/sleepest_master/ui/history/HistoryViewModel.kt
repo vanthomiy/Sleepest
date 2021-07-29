@@ -18,6 +18,7 @@ import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
+import com.doitstudio.sleepest_master.util.SmileySelectorUtil
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Legend
@@ -46,6 +47,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
     var darkMode = false
     var autoDarkMode = false
     var onWork = false
+    private val xAxisValues = ArrayList<String>()
 
     /** <Int: Sleep session id, Triple<List<[SleepApiRawDataEntity]>, Int: Sleep duration, [UserSleepSessionEntity]>> */
     //val sleepSessionData = ObservableArrayMap<Int, Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>>()
@@ -274,9 +276,11 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         barChart.description.isEnabled = false
         barChart.data.isHighlightEnabled = false
 
-        val xAxisValues = ArrayList<String>()
+        //val xAxisValues = ArrayList<String>()
         barChart.xAxis.setDrawGridLines(false)
         barChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+
+        xAxisValues.clear()
 
         if (range > 21) {
             for (i in diagramData.second.indices) {
@@ -379,27 +383,29 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
                 entries.add(Entry(xValue.toFloat(), values.userSleepRating.activityOnDay.ordinal.toFloat()))
             }
+            else {
+                entries.add(Entry(xValue.toFloat(), 0f))
+            }
             xValue += 1
         }
-
         return entries
     }
 
     fun setActivityChart(range: Int, endDateOfDiagram: LocalDate) : LineChart {
         val chart = LineChart(context)
         val lineDataSet = LineDataSet(generateDataActivityChart(range, endDateOfDiagram), "")
-        visualSetUpActivityChart(chart, lineDataSet)
+        visualSetUpActivityChart(chart, lineDataSet, range)
         chart.data = LineData(lineDataSet)
         return chart
     }
 
     fun updateActivityChart(chart: LineChart, range: Int, endDateOfDiagram: LocalDate) {
         val lineDataSet = LineDataSet(generateDataActivityChart(range, endDateOfDiagram), "")
-        visualSetUpActivityChart(chart, lineDataSet)
+        visualSetUpActivityChart(chart, lineDataSet, range)
         chart.data = LineData(lineDataSet)
     }
 
-    private fun visualSetUpActivityChart(chart: LineChart, lineDataSet: LineDataSet) {
+    private fun visualSetUpActivityChart(chart: LineChart, lineDataSet: LineDataSet, range: Int) {
         lineDataSet.setDrawValues(false)
         lineDataSet.setDrawFilled(true)
         lineDataSet.setDrawCircles(false)
@@ -408,34 +414,48 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         lineDataSet.fillAlpha = 255
         lineDataSet.color = ContextCompat.getColor(context, R.color.awake_sleep_color)
         lineDataSet.fillDrawable = ContextCompat.getDrawable(context, R.drawable.bg_spark_line)
-        lineDataSet.mode = LineDataSet.Mode.CUBIC_BEZIER
 
         val yAxisValues = ArrayList<String>()
-        yAxisValues.add("None")
-        yAxisValues.add("NoActivity")
-        yAxisValues.add("SmallActivity")
-        yAxisValues.add("NormalActivity")
-        yAxisValues.add("MuchActivity")
-        yAxisValues.add("ExtremeActivity")
         yAxisValues.add("")
+        yAxisValues.add(SmileySelectorUtil.getSmileyActivity(1))
+        yAxisValues.add("")
+        yAxisValues.add(SmileySelectorUtil.getSmileyActivity(2))
+        yAxisValues.add("")
+        yAxisValues.add(SmileySelectorUtil.getSmileyActivity(3))
 
-        chart.axisLeft.labelCount = 6
-        chart.axisLeft.axisMaximum = 6f
+        chart.axisLeft.labelCount = 5
+        chart.axisLeft.axisMaximum = 5.05f
 
         chart.axisLeft.valueFormatter = IndexAxisValueFormatter(yAxisValues)
-        chart.axisLeft.axisMinimum = 0f
+        chart.axisLeft.axisMinimum = -0.05f
         chart.axisLeft.setDrawGridLines(false)
         chart.axisLeft.textColor = checkDarkMode()
+        chart.axisLeft.textSize = 16f
         chart.legend.isEnabled= false
 
         chart.axisRight.setDrawLabels(false)
         chart.axisRight.setDrawGridLines(false)
 
         chart.xAxis.setDrawGridLines(false)
-        chart.xAxis.setDrawLabels(false)
+        chart.xAxis.setDrawLabels(true)
+
+        chart.xAxis.textColor = checkDarkMode()
+        chart.xAxis.setCenterAxisLabels(false)
+        chart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+
+        if (xAxisValues.size > 21) {
+            chart.xAxis.labelCount = xAxisValues.size
+            lineDataSet.mode = LineDataSet.Mode.HORIZONTAL_BEZIER
+        }
+        else {
+            chart.xAxis.labelCount = 6
+            lineDataSet.mode = LineDataSet.Mode.HORIZONTAL_BEZIER
+        }
+
+        chart.xAxis.valueFormatter = IndexAxisValueFormatter(xAxisValues)
 
         chart.description.isEnabled = false
 
-        chart.animateX(1000)
+        chart.animateX(500)
     }
 }

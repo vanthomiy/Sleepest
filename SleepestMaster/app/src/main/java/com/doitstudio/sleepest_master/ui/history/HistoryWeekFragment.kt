@@ -40,7 +40,7 @@ class HistoryWeekFragment : Fragment() {
         barChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
         barChart.invalidate()
 
-        activityChart.layoutParams.height = height.toInt()
+        activityChart.layoutParams.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics).toInt()
         activityChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
         activityChart.invalidate()
 

@@ -5,14 +5,16 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
 private const val ARG_OBJECT = "object"
-private var COUNT = 1
+
 
 class HistoryTabViewAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
+    private var COUNT = 1
 
     override fun getItemCount(): Int = 3
 
     override fun createFragment(position: Int): Fragment {
         // Return a NEW fragment instance in createFragment(int)
+
         when (COUNT) {
             1 -> {
                 val fragment = HistoryDayFragment()
