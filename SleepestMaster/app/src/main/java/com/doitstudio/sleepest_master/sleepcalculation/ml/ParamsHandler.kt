@@ -3,30 +3,37 @@ package com.doitstudio.sleepest_master.sleepcalculation.ml
 import com.doitstudio.sleepest_master.model.data.LightConditions
 import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.MobileUseFrequency
-import com.doitstudio.sleepest_master.storage.db.AlgorithmParams
+import com.doitstudio.sleepest_master.storage.db.SleepStatesParams
+import com.doitstudio.sleepest_master.storage.db.SleepingParams
 
-class ParamsHandler {
-
-    val algorithmParams : AlgorithmParams by lazy {
+object ParamsHandler{
 
 
+    fun createDefaultParams(
+        mobilePosition: MobilePosition,
+        lightConditions: LightConditions,
+        mobileUseFrequency: MobileUseFrequency
+    ): SleepingParams{
+
+        val algorithmParams = SleepingParams.createDefaultParams(mobilePosition)
+        val lightConditionsParams = SleepingParams.createLightConditionParams(lightConditions)
+        val mobileUseFrequencyParams = SleepingParams.createMobileUseFrequencyParams(mobileUseFrequency)
+
+        algorithmParams.mergeParameters(lightConditionsParams)
+        algorithmParams.mergeParameters(mobileUseFrequencyParams)
+
+        return algorithmParams
     }
 
-    /**
-     * With this we are loading the params that are possible best for the calculation
-     * Therefore we use the most used params in the last week
-     */
-    fun LoadDefaultParams() : AlgorithmParams {
+    fun createSleepStateParams(
+        lightConditions: LightConditions,
+    ): SleepStatesParams{
 
-    }
+        val algorithmParams = SleepStatesParams.createDefaultParams()
+        val lightConditionsParams = SleepStatesParams.createLightConditionParams(lightConditions)
 
-    fun initalizeParams(mobilePosition: MobilePosition, lightConditions: LightConditions, mobileUseFrequency: MobileUseFrequency){
+        algorithmParams.mergeParameters(lightConditionsParams)
 
-        val defaultParams = AlgorithmParams.createDefaultParams(mobilePosition)
-        val lightConditionsParams = AlgorithmParams.createLightConditionParams(lightConditions)
-        val mobileUseFrequencyParams = AlgorithmParams.createMobileUseFrequencyParams(mobileUseFrequency)
-
-        defaultParams.mergeParameters(lightConditionsParams)
-        defaultParams.mergeParameters(mobileUseFrequencyParams)
+        return algorithmParams
     }
 }
