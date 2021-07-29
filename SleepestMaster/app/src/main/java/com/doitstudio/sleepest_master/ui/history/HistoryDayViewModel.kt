@@ -12,6 +12,7 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
     var lightSleepTime = ObservableField(" Light: 1 hour 30 minutes")
     var deepSleepTime = ObservableField("Deep: 1 hour 30 minutes")
     var sleepTime = ObservableField("Sleep: 1 hour 30 minutes")
+    var activitySmiley = ObservableField("Activity")
 
     val context: Context by lazy { getApplication<Application>().applicationContext }
 

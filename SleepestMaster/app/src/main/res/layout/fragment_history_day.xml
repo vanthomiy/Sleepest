@@ -41,6 +41,17 @@
             app:layout_constraintStart_toStartOf="@+id/iV_noDataAvailable"
             app:layout_constraintTop_toBottomOf="@+id/iV_noDataAvailable" />
 
+        <TextView
+            android:id="@+id/tV_activitySmileyNoSleepDataAvailable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{historyDayViewModel.activitySmiley}"
+            android:textColor="@color/primary_text_color"
+            android:textSize="72sp"
+            app:layout_constraintEnd_toEndOf="@+id/tV_noDataAvailable"
+            app:layout_constraintStart_toStartOf="@+id/tV_noDataAvailable"
+            app:layout_constraintTop_toBottomOf="@+id/tV_noDataAvailable" />
+
         <ScrollView
             android:id="@+id/sV_sleepAnalysisChartsDays"
             android:layout_width="match_parent"
@@ -181,7 +192,28 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/lL_activityAnalysisChartDay"
-                        android:orientation="vertical"/>
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:layout_marginTop="16dp"
+                            android:text="@{historyDayViewModel.activitySmiley}"
+                            android:textColor="@color/primary_text_color"
+                            android:textSize="72sp"/>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"/>
+
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>

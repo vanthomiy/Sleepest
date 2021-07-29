@@ -12,9 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.databinding.FragmentHistoryDayBinding
+import com.doitstudio.sleepest_master.model.data.ActivityOnDay
 import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
+import com.doitstudio.sleepest_master.util.SmileySelectorUtil
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
@@ -75,6 +77,8 @@ class HistoryDayFragment : Fragment() {
 
                     updatePieChart(pieChartSleepAnalysis)
                     pieChartSleepAnalysis.invalidate()
+
+                    updateActivitySmiley()
                 }
             })
 
@@ -170,12 +174,14 @@ class HistoryDayFragment : Fragment() {
 
                 binding.iVNoDataAvailable.visibility = View.GONE
                 binding.tVNoDataAvailable.visibility = View.GONE
+                binding.tVActivitySmileyNoSleepDataAvailable.visibility = View.GONE
                 binding.sVSleepAnalysisChartsDays.visibility = View.VISIBLE
             }
             else {
                 binding.sVSleepAnalysisChartsDays.visibility = View.GONE
                 binding.iVNoDataAvailable.visibility = View.VISIBLE
                 binding.tVNoDataAvailable.visibility = View.VISIBLE
+                binding.tVActivitySmileyNoSleepDataAvailable.visibility = View.VISIBLE
             }
         }
 
@@ -348,6 +354,26 @@ class HistoryDayFragment : Fragment() {
         chart.description.isEnabled = false
         chart.legend.textColor = viewModel.checkDarkMode()
         chart.animateY(1000, Easing.EaseInOutQuad)
+    }
+
+    private fun updateActivitySmiley() {
+        var activityOnDay = 1
+
+        viewModel.analysisDate.get()?.let { it_time ->
+            if (viewModel.checkId(it_time)) {
+                sleepValues.let {
+                    activityOnDay = when (it.third.userSleepRating.activityOnDay) {
+                        ActivityOnDay.NOACTIVITY -> 1
+                        ActivityOnDay.SMALLACTIVITY -> 1
+                        ActivityOnDay.NORMALACTIVITY -> 2
+                        ActivityOnDay.MUCHACTIVITY -> 2
+                        ActivityOnDay.EXTREMACTIVITY -> 3
+                        else -> 1
+                    }
+                }
+            }
+        }
+        viewModelDay.activitySmiley.set(SmileySelectorUtil.getSmileyActivity(activityOnDay))
     }
 }
 
