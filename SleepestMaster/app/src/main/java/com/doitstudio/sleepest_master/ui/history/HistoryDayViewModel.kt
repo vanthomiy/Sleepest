@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
+import com.doitstudio.sleepest_master.util.SmileySelectorUtil
 
 class HistoryDayViewModel(application: Application) : AndroidViewModel(application) {
     var beginOfSleep = ObservableField("22:00")
@@ -12,6 +13,7 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
     var lightSleepTime = ObservableField(" Light: 1 hour 30 minutes")
     var deepSleepTime = ObservableField("Deep: 1 hour 30 minutes")
     var sleepTime = ObservableField("Sleep: 1 hour 30 minutes")
+    var activitySmiley = ObservableField(SmileySelectorUtil.getSmileyActivity(0))
 
     val context: Context by lazy { getApplication<Application>().applicationContext }
 

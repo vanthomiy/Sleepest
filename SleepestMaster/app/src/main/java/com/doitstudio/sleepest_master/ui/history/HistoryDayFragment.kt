@@ -1,9 +1,7 @@
 package com.doitstudio.sleepest_master.ui.history
 
 import android.graphics.Color
-import android.opengl.Visibility
 import android.os.Bundle
-import android.text.Layout
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -14,8 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.databinding.FragmentHistoryDayBinding
+import com.doitstudio.sleepest_master.model.data.ActivityOnDay
+import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
+import com.doitstudio.sleepest_master.util.SmileySelectorUtil
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
@@ -35,8 +36,8 @@ class HistoryDayFragment : Fragment() {
     private val viewModelDay by lazy { ViewModelProvider(this).get(HistoryDayViewModel::class.java) }
     private lateinit var binding: FragmentHistoryDayBinding
     private lateinit var sleepValues : Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>
-    private lateinit var lineChart: LineChart
-    private lateinit var pieChart: PieChart
+    private lateinit var lineChartSleepAnalysis: LineChart
+    private lateinit var pieChartSleepAnalysis: PieChart
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,36 +48,37 @@ class HistoryDayFragment : Fragment() {
         binding = FragmentHistoryDayBinding.inflate(inflater, container, false)
         binding.historyDayViewModel = viewModelDay
 
-        lineChart = setLineChart()
-        updateLineChart(lineChart)
-        binding.lLSleepAnalysisChartsDaySleepPhases.addView(lineChart)
-        lineChart.layoutParams.height = TypedValue.applyDimension(
+        lineChartSleepAnalysis = setLineChart()
+        updateLineChart(lineChartSleepAnalysis)
+        binding.lLSleepAnalysisChartsDaySleepPhases.addView(lineChartSleepAnalysis)
+        lineChartSleepAnalysis.layoutParams.height = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics
         ).toInt()
-        lineChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-        lineChart.invalidate()
+        lineChartSleepAnalysis.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+        lineChartSleepAnalysis.invalidate()
 
-        pieChart = setPieChart()
-        binding.lLSleepAnalysisChartsDaySleepPhasesAmount.addView(pieChart)
-        pieChart.layoutParams.height = TypedValue.applyDimension(
+        pieChartSleepAnalysis = setPieChart()
+        binding.lLSleepAnalysisChartsDaySleepPhasesAmount.addView(pieChartSleepAnalysis)
+        pieChartSleepAnalysis.layoutParams.height = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics
         ).toInt()
-        pieChart.layoutParams.width = TypedValue.applyDimension(
+        pieChartSleepAnalysis.layoutParams.width = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics
         ).toInt()
-        pieChart.invalidate()
-
+        pieChartSleepAnalysis.invalidate()
 
         viewModel.analysisDate.addOnPropertyChangedCallback(
             object: Observable.OnPropertyChangedCallback() {
 
                 override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
                     getDataValues()
-                    updateLineChart(lineChart)
-                    lineChart.invalidate()
+                    updateLineChart(lineChartSleepAnalysis)
+                    lineChartSleepAnalysis.invalidate()
 
-                    updatePieChart(pieChart)
-                    pieChart.invalidate()
+                    updatePieChart(pieChartSleepAnalysis)
+                    pieChartSleepAnalysis.invalidate()
+
+                    updateActivitySmiley()
                 }
             })
 
@@ -101,35 +103,57 @@ class HistoryDayFragment : Fragment() {
     }
 
     private fun setTimeStamps() {
-        var time = LocalDateTime.ofInstant(
-            Instant.ofEpochMilli((sleepValues.third.sleepTimes.sleepTimeStart.toLong()) * 1000),
-            ZoneOffset.systemDefault()
-        ).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-
+        var time = LocalDateTime.of(1970, 1, 1, 0, 0, 0).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
         viewModelDay.beginOfSleep.set(time)
-
-        time = LocalDateTime.ofInstant(
-            Instant.ofEpochMilli((sleepValues.third.sleepTimes.sleepTimeEnd.toLong()) * 1000),
-            ZoneOffset.systemDefault()
-        ).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-
         viewModelDay.endOfSeep.set(time)
 
         viewModelDay.awakeTime.set(
-            "Awake: " + generateSleepValueInformation(sleepValues.third.sleepTimes.awakeTime)
+            "Awake: " + generateSleepValueInformation(0)
         )
 
         viewModelDay.lightSleepTime.set(
-            "Light: " + generateSleepValueInformation(sleepValues.third.sleepTimes.lightSleepDuration)
+            "Light: " + generateSleepValueInformation(0)
         )
 
         viewModelDay.deepSleepTime.set(
-            "Deep: " + generateSleepValueInformation(sleepValues.third.sleepTimes.deepSleepDuration)
+            "Deep: " + generateSleepValueInformation(0)
         )
 
         viewModelDay.sleepTime.set(
-            "Sleep: " + generateSleepValueInformation(sleepValues.third.sleepTimes.sleepDuration)
+            "Sleep: " + generateSleepValueInformation(0)
         )
+
+        sleepValues.let {
+            time = LocalDateTime.ofInstant(
+                Instant.ofEpochMilli((it.third.sleepTimes.sleepTimeStart.toLong()) * 1000),
+                ZoneOffset.systemDefault()
+            ).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+
+            viewModelDay.beginOfSleep.set(time)
+
+            time = LocalDateTime.ofInstant(
+                Instant.ofEpochMilli((it.third.sleepTimes.sleepTimeEnd.toLong()) * 1000),
+                ZoneOffset.systemDefault()
+            ).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+
+            viewModelDay.endOfSeep.set(time)
+
+            viewModelDay.awakeTime.set(
+                "Awake: " + generateSleepValueInformation(it.third.sleepTimes.awakeTime)
+            )
+
+            viewModelDay.lightSleepTime.set(
+                "Light: " + generateSleepValueInformation(it.third.sleepTimes.lightSleepDuration)
+            )
+
+            viewModelDay.deepSleepTime.set(
+                "Deep: " + generateSleepValueInformation(it.third.sleepTimes.deepSleepDuration)
+            )
+
+            viewModelDay.sleepTime.set(
+                "Sleep: " + generateSleepValueInformation(it.third.sleepTimes.sleepDuration)
+            )
+        }
     }
 
     private fun generateDataLineChart() : ArrayList<Entry> {
@@ -139,8 +163,6 @@ class HistoryDayFragment : Fragment() {
             if (viewModel.checkId(it)) {
                 var xValue = 0
 
-                setTimeStamps()
-
                 for (rawData in sleepValues.first) {
                     for (minute in 0..((sleepValues.second / 60).toDouble()).roundToInt()) {
                         entries.add(Entry(xValue.toFloat(), rawData.sleepState.ordinal.toFloat()))
@@ -148,14 +170,18 @@ class HistoryDayFragment : Fragment() {
                     }
                 }
 
+                setTimeStamps()
+
                 binding.iVNoDataAvailable.visibility = View.GONE
                 binding.tVNoDataAvailable.visibility = View.GONE
+                binding.tVActivitySmileyNoSleepDataAvailable.visibility = View.GONE
                 binding.sVSleepAnalysisChartsDays.visibility = View.VISIBLE
             }
             else {
                 binding.sVSleepAnalysisChartsDays.visibility = View.GONE
                 binding.iVNoDataAvailable.visibility = View.VISIBLE
                 binding.tVNoDataAvailable.visibility = View.VISIBLE
+                binding.tVActivitySmileyNoSleepDataAvailable.visibility = View.VISIBLE
             }
         }
 
@@ -184,6 +210,7 @@ class HistoryDayFragment : Fragment() {
         lineDataSet.fillColor = ContextCompat.getColor(viewModel.context, R.color.sleep_sleep_color)
         lineDataSet.fillAlpha = 255
         lineDataSet.color = ContextCompat.getColor(viewModel.context, R.color.awake_sleep_color)
+        lineDataSet.fillDrawable = ContextCompat.getDrawable(viewModel.context, R.drawable.bg_spark_line)
 
         val yAxisValues = ArrayList<String>()
 
@@ -246,25 +273,33 @@ class HistoryDayFragment : Fragment() {
                 val lightSleep = sleepValues.third.sleepTimes.lightSleepDuration
                 val deepSleep = sleepValues.third.sleepTimes.deepSleepDuration
 
-                if (lightSleep == 0 && deepSleep == 0) {
+                if (sleepValues.third.mobilePosition == MobilePosition.ONTABLE) {
                     entries.add(PieEntry(awake.toFloat(), "Awake"))
                     sleepTypes[0] = true
                     entries.add(PieEntry(sleep.toFloat(), "Sleep"))
                     sleepTypes[1] = true
                 }
-                else if (lightSleep != 0 && deepSleep != 0 && awake == 0) {
-                    entries.add(PieEntry(lightSleep.toFloat(), "Light"))
-                    sleepTypes[2] = true
-                    entries.add(PieEntry(deepSleep.toFloat(), "Deep"))
-                    sleepTypes[3] = true
-                }
-                else {
-                    entries.add(PieEntry(lightSleep.toFloat(), "Light"))
-                    sleepTypes[2] = true
-                    entries.add(PieEntry(deepSleep.toFloat(), "Deep"))
-                    sleepTypes[3] = true
-                    entries.add(PieEntry(awake.toFloat(), "Awake"))
-                    sleepTypes[0] = true
+                else if (sleepValues.third.mobilePosition == MobilePosition.INBED) {
+                    if (lightSleep != 0 && deepSleep != 0 && awake == 0) {
+                        entries.add(PieEntry(lightSleep.toFloat(), "Light"))
+                        sleepTypes[2] = true
+                        entries.add(PieEntry(deepSleep.toFloat(), "Deep"))
+                        sleepTypes[3] = true
+                    }
+                    else if (lightSleep != 0 && deepSleep == 0 && awake != 0) {
+                        entries.add(PieEntry(lightSleep.toFloat(), "Light"))
+                        sleepTypes[2] = true
+                        entries.add(PieEntry(awake.toFloat(), "Awake"))
+                        sleepTypes[0] = true
+                    }
+                    else {
+                        entries.add(PieEntry(lightSleep.toFloat(), "Light"))
+                        sleepTypes[2] = true
+                        entries.add(PieEntry(deepSleep.toFloat(), "Deep"))
+                        sleepTypes[3] = true
+                        entries.add(PieEntry(awake.toFloat(), "Awake"))
+                        sleepTypes[0] = true
+                    }
                 }
             }
         }
@@ -319,6 +354,26 @@ class HistoryDayFragment : Fragment() {
         chart.description.isEnabled = false
         chart.legend.textColor = viewModel.checkDarkMode()
         chart.animateY(1000, Easing.EaseInOutQuad)
+    }
+
+    private fun updateActivitySmiley() {
+        var activityOnDay = 0
+
+        viewModel.analysisDate.get()?.let { it_time ->
+            if (viewModel.checkId(it_time)) {
+                sleepValues.let {
+                    activityOnDay = when (it.third.userSleepRating.activityOnDay) {
+                        ActivityOnDay.NOACTIVITY -> 0
+                        ActivityOnDay.SMALLACTIVITY -> 1
+                        ActivityOnDay.NORMALACTIVITY -> 2
+                        ActivityOnDay.MUCHACTIVITY -> 2
+                        ActivityOnDay.EXTREMACTIVITY -> 3
+                        else -> 0
+                    }
+                }
+            }
+        }
+        viewModelDay.activitySmiley.set(SmileySelectorUtil.getSmileyActivity(activityOnDay))
     }
 }
 
