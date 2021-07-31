@@ -120,12 +120,14 @@ public class ForegroundService extends LifecycleService {
         sleepHandler =  SleepHandler.Companion.getHandler(getApplicationContext());
         sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(MainApplication.Companion.applicationContext());
 
-        //Info: the following getId() can not be null, because alarmEntity can not be null with getNextAlarm()
         if (alarmEntity != null) {
             foregroundObserver.updateAlarmWasFired(false, alarmEntity.getId());
+            alarmTimeInSeconds = alarmEntity.getWakeupEarly();
         }
 
         setForegroundServiceStartTime();
+
+
 
         /**WEG
         //Subscribe to sleep API
@@ -186,6 +188,7 @@ public class ForegroundService extends LifecycleService {
         **/
         //Call function with null to transfer actual(local) time for correct calculation
         sleepCalculationHandler.checkIsUserSleeping(null);
+        userSleepTime = 0;
 
         Calendar calendar = Calendar.getInstance();
         SharedPreferences pref = getSharedPreferences("StartService", 0);
@@ -280,7 +283,9 @@ public class ForegroundService extends LifecycleService {
         Calendar calendar = Calendar.getInstance();
 
         //Update wakeup time
-        alarmTimeInSeconds = time.getActualWakeup();
+        if ((LocalTime.now().toSecondOfDay() - foregroundServiceStartTime) < 3 && (LocalTime.now().toSecondOfDay() - foregroundServiceStartTime) > 0) {
+            alarmTimeInSeconds = time.getActualWakeup();
+        }
 
         //Alarm must be active, if OnAlarmChanged will be called, so set it to true
         isAlarmActive = true;

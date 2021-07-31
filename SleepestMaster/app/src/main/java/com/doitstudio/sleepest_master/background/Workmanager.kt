@@ -15,6 +15,7 @@ import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler.Companion.getHandler
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
+import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.util.NotificationUtil
 import com.doitstudio.sleepest_master.util.SleepUtil
 import com.doitstudio.sleepest_master.util.SmileySelectorUtil
@@ -22,7 +23,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.time.LocalTime
+import java.time.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -36,11 +37,25 @@ class Workmanager(appcontext: Context, workerParams: WorkerParameters) : Worker(
 
         val scope: CoroutineScope = MainScope()
 
+
+
         val dataStoreRepository: DataStoreRepository by lazy {
             (applicationContext as MainApplication).dataStoreRepository
         }
 
+        val dataBaseRepository: DatabaseRepository by lazy {
+            (applicationContext as MainApplication).dataBaseRepository
+        }
+
         scope.launch {
+            val sleepApiRawDataEntity =
+                dataBaseRepository.getSleepApiRawDataFromDateLive(LocalDateTime.now()).first()
+                    .sortedByDescending { x -> x.timestampSeconds }
+            val lastTimestampInSeconds = sleepApiRawDataEntity.last().timestampSeconds
+
+            val dateTime = LocalDateTime.of(LocalDate.now(), LocalTime.now())
+            val actualTimestampSeconds = dateTime.toEpochSecond(ZoneOffset.UTC).toInt()
+
            /* if (dataStoreRepository.isInSleepTime() && (dataBaseRepository.getNextActiveAlarm() != null)) {
                 // alarm should be active else set active
                 if(!dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
@@ -54,6 +69,18 @@ class Workmanager(appcontext: Context, workerParams: WorkerParameters) : Worker(
             }*/
 
             if (LocalTime.now().toSecondOfDay() >= dataStoreRepository.getSleepTimeBegin() &&
+                ((LocalTime.now().toSecondOfDay() - ForegroundService.getForegroundServiceStartTime()) >= 30) && ((lastTimestampInSeconds - actualTimestampSeconds) > 1000) &&
+                dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
+                val notificationsUtil = NotificationUtil(applicationContext, NotificationUsage.NOTIFICATION_NO_API_DATA,null)
+                notificationsUtil.chooseNotification()
+            } else if (LocalTime.now().toSecondOfDay() > ForegroundService.getForegroundServiceStartTime() &&
+                ((ForegroundService.getForegroundServiceStartTime() - LocalTime.now().toSecondOfDay()) >= 30) && ((lastTimestampInSeconds - actualTimestampSeconds) > 1000) &&
+                dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
+                val notificationsUtil = NotificationUtil(applicationContext, NotificationUsage.NOTIFICATION_NO_API_DATA,null)
+                notificationsUtil.chooseNotification()
+            }
+
+            /**if (LocalTime.now().toSecondOfDay() >= dataStoreRepository.getSleepTimeBegin() &&
                 ((LocalTime.now().toSecondOfDay() - ForegroundService.getForegroundServiceStartTime()) >= 60) && (dataStoreRepository.sleepApiDataFlow.first().sleepApiValuesAmount <= 3) &&
                 dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
                 val notificationsUtil = NotificationUtil(applicationContext, NotificationUsage.NOTIFICATION_NO_API_DATA,null)
@@ -63,7 +90,7 @@ class Workmanager(appcontext: Context, workerParams: WorkerParameters) : Worker(
                 dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
                 val notificationsUtil = NotificationUtil(applicationContext, NotificationUsage.NOTIFICATION_NO_API_DATA,null)
                 notificationsUtil.chooseNotification()
-            }
+            }**/
         }
 
         sleepCalculationHandler.checkIsUserSleeping(null)

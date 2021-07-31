@@ -32,6 +32,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZoneOffset
 import java.util.*
 
 
@@ -355,6 +359,10 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        val dateTime = LocalDateTime.of(LocalDate.now(), LocalTime.now())
+        val actualTimestampSeconds = dateTime.toEpochSecond(ZoneOffset.ofTotalSeconds(0)).toInt()
+        val a = actualTimestampSeconds + 1
 
     }
 

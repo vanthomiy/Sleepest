@@ -2,6 +2,7 @@ package com.doitstudio.sleepest_master.sleepcalculation
 
 import android.content.Context
 import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.googleapi.SleepHandler
 import com.doitstudio.sleepest_master.model.data.*
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
 import com.doitstudio.sleepest_master.sleepcalculation.ml.SleepClassifier
@@ -43,6 +44,10 @@ class SleepCalculationHandler(val context: Context) {
      */
     private val dataStoreRepository: DataStoreRepository by lazy {
         (context.applicationContext as MainApplication).dataStoreRepository
+    }
+
+    private val sleepHandler : SleepHandler by lazy {
+        SleepHandler.getHandler(context)
     }
 
     //endregion
@@ -255,7 +260,7 @@ class SleepCalculationHandler(val context: Context) {
 
                 return@launch
             }
-
+                    sleepApiRawDataEntity.last()
             // check for each sleepstate
             sleepApiRawDataEntity.forEach { data ->
 
@@ -472,6 +477,11 @@ class SleepCalculationHandler(val context: Context) {
         // update live user sleep activity to zero and no sleep
         dataStoreRepository.updateIsUserSleeping(false)
         dataStoreRepository.updateUserSleepTime(0)
+
+        sleepHandler.stopSleepHandler()
+        sleepHandler.startSleepHandler()
+
+
     }
 
     fun userCurrentlyNotSleepingJob(){

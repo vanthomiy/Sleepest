@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.AudioManager
 import android.media.RingtoneManager
@@ -189,6 +190,10 @@ class AlarmsFragment() : Fragment() {
                     binding.btnTemporaryDisableAlarm.text = getString(R.string.alarm_fragment_btn_disable_alarm_disable)
                     binding.btnTemporaryDisableAlarm.isVisible = true
                     /**TODO: Change color**/
+                }
+
+                if (nextAlarm?.wasFired == true) {
+                    binding.btnTemporaryDisableAlarm.isVisible = false
                 }
             }
             else{

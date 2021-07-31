@@ -21,6 +21,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.doitstudio.sleepest_master.MainActivity;
+import com.doitstudio.sleepest_master.MainApplication;
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.background.AlarmReceiver;
 import com.doitstudio.sleepest_master.background.BackgroundAlarmTimeHandler;
@@ -30,6 +31,8 @@ import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage;
 import com.doitstudio.sleepest_master.model.data.Constants;
 import com.doitstudio.sleepest_master.model.data.NotificationUsage;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
+import com.doitstudio.sleepest_master.storage.DatabaseRepository;
+import com.doitstudio.sleepest_master.storage.db.AlarmEntity;
 import com.doitstudio.sleepest_master.util.NotificationUtil;
 import com.doitstudio.sleepest_master.util.TimeConverterUtil;
 
@@ -53,18 +56,25 @@ public class AlarmClockReceiver extends BroadcastReceiver {
 
         this.context = context;
         dataStoreRepository = DataStoreRepository.Companion.getRepo(context);
+        DatabaseRepository databaseRepository = ((MainApplication)context.getApplicationContext()).getDataBaseRepository();
+        AlarmEntity alarmEntity = databaseRepository.getNextActiveAlarmJob();
 
         switch (AlarmClockReceiverUsage.valueOf(intent.getStringExtra((context.getString(R.string.alarm_clock_intent_key))))) {
             case DEFAULT: break;
             case START_ALARMCLOCK: //Init Alarmclock
 
-                PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-                if (powerManager.isInteractive()) {
-                    NotificationUtil notificationsUtil = new NotificationUtil(context.getApplicationContext(), NotificationUsage.NOTIFICATION_ALARM_CLOCK,null);
-                    notificationsUtil.chooseNotification();
-                } else {
-                    showNotificationOnLockScreen(NotificationUsage.NOTIFICATION_ALARM_CLOCK);
-                }
+
+
+                //if (alarmEntity != null && !alarmEntity.getTempDisabled()) {
+                    PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+                    if (powerManager.isInteractive()) {
+                        NotificationUtil notificationsUtil = new NotificationUtil(context.getApplicationContext(), NotificationUsage.NOTIFICATION_ALARM_CLOCK,null);
+                        notificationsUtil.chooseNotification();
+                    } else {
+                        showNotificationOnLockScreen(NotificationUsage.NOTIFICATION_ALARM_CLOCK);
+                    }
+               // }
+
                 break;
             case STOP_ALARMCLOCK: //Stop button of ScreenOn notification
                 /**Übertragen**/
@@ -99,12 +109,15 @@ public class AlarmClockReceiver extends BroadcastReceiver {
                 AlarmClockAudio.getInstance().stopAlarm(true);
                 break;
             case LATEST_WAKEUP_ALARMCLOCK:
-                PowerManager powerManagerLate = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-                if (powerManagerLate.isInteractive()) {
-                    NotificationUtil notificationsUtil = new NotificationUtil(context.getApplicationContext(), NotificationUsage.NOTIFICATION_ALARM_CLOCK,null);
-                    notificationsUtil.chooseNotification();
-                } else {
-                    showNotificationOnLockScreen(NotificationUsage.NOTIFICATION_ALARM_CLOCK);
+
+                if (alarmEntity != null && !alarmEntity.getTempDisabled()) {
+                    PowerManager powerManagerLate = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+                    if (powerManagerLate.isInteractive()) {
+                        NotificationUtil notificationsUtil = new NotificationUtil(context.getApplicationContext(), NotificationUsage.NOTIFICATION_ALARM_CLOCK,null);
+                        notificationsUtil.chooseNotification();
+                    } else {
+                        showNotificationOnLockScreen(NotificationUsage.NOTIFICATION_ALARM_CLOCK);
+                    }
                 }
                 break;
         }
