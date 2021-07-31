@@ -65,7 +65,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
 
 
 
-                if (alarmEntity != null && !alarmEntity.getTempDisabled()) {
+                //if (alarmEntity != null && !alarmEntity.getTempDisabled()) {
                     PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
                     if (powerManager.isInteractive()) {
                         NotificationUtil notificationsUtil = new NotificationUtil(context.getApplicationContext(), NotificationUsage.NOTIFICATION_ALARM_CLOCK,null);
@@ -73,7 +73,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
                     } else {
                         showNotificationOnLockScreen(NotificationUsage.NOTIFICATION_ALARM_CLOCK);
                     }
-                }
+               // }
 
                 break;
             case STOP_ALARMCLOCK: //Stop button of ScreenOn notification

@@ -51,6 +51,13 @@ class BackgroundAlarmTimeHandler(val context: Context) {
     private var sleepTimeBeginTemp = 0
     private var sleepTimeEndTemp = 0
 
+    init {
+        scope.launch {
+            sleepTimeBeginTemp = getSleepTimeBeginValue()
+            sleepTimeEndTemp = getSleepTimeEndValue()
+        }
+
+    }
 
     fun changeSleepTime() {
         scope.launch {
@@ -62,12 +69,9 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                 if (checkForegroundStatus() && !checkInSleepTime()) {
 
                     endOfSleepTime(false)
-                } else if (checkForegroundStatus() && checkInSleepTime()) {
-                    if (checkAlarmActive()) {
-                        var calendar = TimeConverterUtil.getAlarmDate(getLastWakeup())
-                        calendar = TimeConverterUtil.getAlarmDate(getSleepTimeEndValue())
-                        AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context.applicationContext, AlarmReceiverUsage.STOP_WORKMANAGER);
-                    }
+                } else if (checkInSleepTime() && (sleepTimeEndTemp != getSleepTimeEndValue())) {
+                    val calendar = TimeConverterUtil.getAlarmDate(getSleepTimeEndValue())
+                    AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context.applicationContext, AlarmReceiverUsage.STOP_WORKMANAGER);
                 }
 
                 if (getSleepTimeBeginValue() != sleepTimeBeginTemp) {
@@ -87,11 +91,10 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
                     sleepTimeBeginTemp = getSleepTimeBeginValue()
                 }
-
-
-
-
             }
+
+            sleepTimeBeginTemp = getSleepTimeBeginValue()
+            sleepTimeEndTemp = getSleepTimeEndValue()
         }
     }
 
@@ -124,8 +127,8 @@ class BackgroundAlarmTimeHandler(val context: Context) {
             if (isScreenOn) {
                 AlarmClockAudio.getInstance().stopAlarm(false)
 
-                stopForegroundService(true)
-
+                //stopForegroundService(true)
+                Toast.makeText(context, "Alarmclock stopped", Toast.LENGTH_LONG).show()
                 val calendar = Calendar.getInstance()
                 var pref: SharedPreferences = context.getSharedPreferences("AlarmClock", 0)
                 var ed = pref.edit()
@@ -304,6 +307,9 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
             if (inTheMorning) {
                 resetTempDisabledAndWasFired()
+                if (checkAlarmActive()) {
+                    resetAlarmTime()
+                }
             }
         }
     }
@@ -557,6 +563,20 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
     private suspend fun setForegroundStatus(status: Boolean) {
         dataStoreRepository.backgroundUpdateIsActive(status)
+    }
+
+    private suspend fun getAlarmId() : Int {
+        if(checkAlarmActive()) {
+            return dataBaseRepository.getNextActiveAlarm()!!.id
+        }
+
+        return -1
+    }
+
+    private suspend fun resetAlarmTime() {
+        if (getAlarmId() >= 0) {
+            dataBaseRepository.updateWakeupTime(getFirstWakeup(), getAlarmId())
+        }
     }
 
 
