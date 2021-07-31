@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.databinding.FragmentHistoryMonthBinding
 import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.charts.LineChart
 import java.time.LocalDate
 
 class HistoryMonthFragment : Fragment() {
@@ -18,6 +19,7 @@ class HistoryMonthFragment : Fragment() {
     private lateinit var binding: FragmentHistoryMonthBinding
     private lateinit var barChart: BarChart
     private lateinit var barChartDates :  Pair<Int, LocalDate>
+    private lateinit var activityChart: LineChart
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,13 +32,19 @@ class HistoryMonthFragment : Fragment() {
 
         barChartDates = getEndOfMonth()
         barChart = viewModel.setBarChart(barChartDates.first, barChartDates.second)
+        activityChart = viewModel.setActivityChart(barChartDates.first, barChartDates.second)
 
         binding.lLSleepAnalysisChartsMonth.addView(barChart)
+        binding.lLSleepAnalysisChartsMonth.addView(activityChart)
 
         val height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 350F, resources.displayMetrics)
         barChart.layoutParams.height = height.toInt()
         barChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
         barChart.invalidate()
+
+        activityChart.layoutParams.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics).toInt()
+        activityChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+        activityChart.invalidate()
 
         viewModel.analysisDate.addOnPropertyChangedCallback(
             object: Observable.OnPropertyChangedCallback() {
@@ -46,6 +54,9 @@ class HistoryMonthFragment : Fragment() {
                     barChartDates = getEndOfMonth()
                     viewModel.updateBarChart(barChart, barChartDates.first, barChartDates.second)
                     barChart.invalidate()
+
+                    viewModel.updateActivityChart(activityChart, barChartDates.first, barChartDates.second)
+                    activityChart.invalidate()
                 }
             }
         )

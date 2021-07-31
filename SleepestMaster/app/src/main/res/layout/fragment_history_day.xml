@@ -7,13 +7,50 @@
     <data>
         <variable
             name="historyDayViewModel"
-            type="com.doitstudio.sleepest_master.ui.history.HistoryViewModel" />
+            type="com.doitstudio.sleepest_master.ui.history.HistoryDayViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/primary_app_background">
+
+        <ImageView
+            android:id="@+id/iV_noDataAvailable"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="96dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/flashlight_by_freepik" />
+
+        <TextView
+            android:id="@id/tV_noDataAvailable"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_margin="10dp"
+            android:maxWidth="300dp"
+            android:text="@string/nichts_zu_sehen_n_geh_schlafen_um_daten_zu_generieren"
+            android:textAlignment="center"
+            android:textColor="@color/accent_text_color"
+            android:textSize="@dimen/valueSize"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/iV_noDataAvailable"
+            app:layout_constraintStart_toStartOf="@+id/iV_noDataAvailable"
+            app:layout_constraintTop_toBottomOf="@+id/iV_noDataAvailable" />
+
+        <TextView
+            android:id="@+id/tV_activitySmileyNoSleepDataAvailable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{historyDayViewModel.activitySmiley}"
+            android:textColor="@color/primary_text_color"
+            android:textSize="72sp"
+            app:layout_constraintEnd_toEndOf="@+id/tV_noDataAvailable"
+            app:layout_constraintStart_toStartOf="@+id/tV_noDataAvailable"
+            app:layout_constraintTop_toBottomOf="@+id/tV_noDataAvailable" />
 
         <ScrollView
             android:id="@+id/sV_sleepAnalysisChartsDays"
@@ -25,11 +62,160 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
-                android:id="@+id/lL_sleepAnalysisChartsDay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="@+id/sV_sleepAnalysisChartsDays"
                 android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/sleep_phases"
+                    android:textColor="@color/primary_text_color"
+                    android:textSize="22sp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="4dp"
+                        android:text="@{historyDayViewModel.beginOfSleep}"
+                        android:textColor="@color/accent_text_color"
+                        tools:text="22:00" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginTop="4dp"
+                        android:text="@{historyDayViewModel.endOfSeep}"
+                        android:textColor="@color/accent_text_color"
+                        tools:text="06:00" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lL_sleepAnalysisChartsDaySleepPhases"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/time_in_phase"
+                    android:textColor="@color/primary_text_color"
+                    android:textSize="22sp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/lL_sleepAnalysisChartsDaySleepPhasesAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginTop="16dp"
+                            android:text="@{historyDayViewModel.awakeTime}"
+                            android:textColor="@color/primary_text_color"
+                            android:textSize="16sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginTop="4dp"
+                            android:text="@{historyDayViewModel.lightSleepTime}"
+                            android:textColor="@color/primary_text_color"
+                            android:textSize="16sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginTop="4dp"
+                            android:text="@{historyDayViewModel.deepSleepTime}"
+                            android:textColor="@color/primary_text_color"
+                            android:textSize="16sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginTop="4dp"
+                            android:text="@{historyDayViewModel.sleepTime}"
+                            android:textColor="@color/primary_text_color"
+                            android:textSize="16sp"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="24dp"
+                    android:text="Activity:"
+                    android:textColor="@color/primary_text_color"
+                    android:textSize="22sp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/lL_activityAnalysisChartDay"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:layout_marginTop="16dp"
+                            android:text="@{historyDayViewModel.activitySmiley}"
+                            android:textColor="@color/primary_text_color"
+                            android:textSize="72sp"
+                            android:textAlignment="center"/>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"/>
+
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>

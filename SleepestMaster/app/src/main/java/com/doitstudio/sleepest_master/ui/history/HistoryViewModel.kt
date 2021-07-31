@@ -1,28 +1,31 @@
 package com.doitstudio.sleepest_master.ui.history
 
 import android.app.Application
-import android.app.ApplicationErrorReport
+import android.content.Context
+import android.graphics.Color
 import android.view.View
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.databinding.*
 import androidx.lifecycle.AndroidViewModel
-import androidx.room.Database
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
+import com.doitstudio.sleepest_master.model.data.Constants
+import com.doitstudio.sleepest_master.model.data.MobilePosition
+import com.doitstudio.sleepest_master.model.data.SleepState
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
+import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
-import com.doitstudio.sleepest_master.storage.db.SleepDatabase
-import com.doitstudio.sleepest_master.storage.db.SleepDatabase_Impl
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
+import com.doitstudio.sleepest_master.util.SmileySelectorUtil
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.github.mikephil.charting.formatter.ValueFormatter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -32,23 +35,36 @@ import java.time.*
 class HistoryViewModel(application: Application) : AndroidViewModel(application) {
 
     private val scope: CoroutineScope = MainScope()
-    private val context by lazy { getApplication<Application>().applicationContext }
-    private val dataBaseRepository: DatabaseRepository by lazy {
+    val context: Context by lazy { getApplication<Application>().applicationContext }
+    val dataBaseRepository: DatabaseRepository by lazy {
         (context as MainApplication).dataBaseRepository
+    }
+    private val dataStoreRepository: DataStoreRepository by lazy {
+        (context as MainApplication).dataStoreRepository
     }
 
     var analysisDate = ObservableField(LocalDate.now())
+    var darkMode = false
+    var autoDarkMode = false
+    var onWork = false
+    private val xAxisValues = ArrayList<String>()
 
     /** <Int: Sleep session id, Triple<List<[SleepApiRawDataEntity]>, Int: Sleep duration, [UserSleepSessionEntity]>> */
     //val sleepSessionData = ObservableArrayMap<Int, Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>>()
 
-    val idsListener = ObservableInt()
+    private val idsListener = ObservableInt()
 
     /** <Int: Sleep session id, Triple<List<[SleepApiRawDataEntity]>, Int: Sleep duration, [UserSleepSessionEntity]>> */
     val sleepSessionData = mutableMapOf<Int, Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>>()
 
     init {
-        getSleepData()
+        //getSleepData()
+        scope.launch {
+            darkMode = dataStoreRepository.settingsDataFlow.first().designDarkMode
+            autoDarkMode = dataStoreRepository.settingsDataFlow.first().designAutoDarkMode
+        }
+
+
     }
 
     fun onPreviousDateClick(range: Int) {
@@ -102,24 +118,62 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
                 idsListener.set(id)
             }
+            checkSessionIntegrity()
         }
+    }
+
+    private fun checkSessionIntegrity() {
+        onWork = true
+        for (key in sleepSessionData.keys) {
+            val session = sleepSessionData[key]?.first
+            session?.let {
+                val mobilePosition = sleepSessionData[key]?.third?.mobilePosition
+                val isSleeping = it.any { x -> x.sleepState == SleepState.SLEEPING }
+                val isUnidentified = it.any { x -> x.sleepState == SleepState.NONE }
+
+                if ((mobilePosition == MobilePosition.INBED && isSleeping)) { // || isUnidentified) {
+                    SleepCalculationHandler.getHandler(context).defineUserWakeup(
+                        LocalDateTime.ofInstant(
+                            Instant.ofEpochMilli((sleepSessionData[key]?.third?.sleepTimes?.sleepTimeStart?.toLong())!! * 1000),
+                            ZoneOffset.systemDefault()
+                        ),
+                        false
+                    )
+                }
+            }
+        }
+        onWork = false
     }
 
     fun checkId(time: LocalDate) : Boolean {
         return sleepSessionData.containsKey(UserSleepSessionEntity.getIdByDateTime(time))
     }
 
-    fun generateDataBarChart(range: Int, endDateOfDiagram: LocalDate): Triple<ArrayList<BarEntry>, List<Int>, Int> { //ArrayList<BarEntry> {
+    fun checkDarkMode() : Int {
+        var color = Color.BLACK
+        if (autoDarkMode) {
+            if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+                color = Color.WHITE
+            }
+        } else if (darkMode) {
+            color = Color.WHITE
+        }
+        return color
+    }
+
+    fun generateDataBarChart(range: Int, endDateOfDiagram: LocalDate): Triple<ArrayList<BarEntry>, List<Int>, Int> {
         val entries = ArrayList<BarEntry>()
         val xAxisLabels = mutableListOf<Int>()
         var xIndex = 0.5f
-        var maxSleepTime = 0
+        var maxSleepTime = 0f
 
         val ids = mutableSetOf<Int>()
         for (i in -(range-2)..1) {
             ids.add(
                 UserSleepSessionEntity.getIdByDateTime(
-                    LocalDate.ofEpochDay(endDateOfDiagram.toEpochDay().plus(i.toLong()))
+                    LocalDate.ofEpochDay(
+                        endDateOfDiagram.toEpochDay().plus((i - 1).toLong())
+                    )
                 )
             )
         }
@@ -129,20 +183,22 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
             if (sleepSessionData.containsKey(id)) {
                 val values = sleepSessionData[id]!!
 
-                val awake = values.third.sleepTimes.awakeTime
-                val sleep = values.third.sleepTimes.sleepDuration
-                val lightSleep = values.third.sleepTimes.lightSleepDuration
-                val deepSleep = values.third.sleepTimes.deepSleepDuration
+                val awake = values.third.sleepTimes.awakeTime / 60f
+                val sleep = values.third.sleepTimes.sleepDuration / 60f
+                val lightSleep = values.third.sleepTimes.lightSleepDuration / 60f
+                val deepSleep = values.third.sleepTimes.deepSleepDuration / 60f
 
-                if ((sleep + awake) > maxSleepTime) { maxSleepTime = (sleep + awake) }  //Later delete awake from here
+                if (((sleep + awake) * 60f) > maxSleepTime) {
+                    maxSleepTime = (sleep + awake) * 60f
+                }
 
-                if (lightSleep != 0 && deepSleep != 0) {
+                if (lightSleep != 0f && deepSleep != 0f) {
                     entries.add(
                         BarEntry(
                             xIndex, floatArrayOf(
-                                lightSleep.toFloat(),
-                                deepSleep.toFloat(),
-                                awake.toFloat(),
+                                lightSleep,
+                                deepSleep,
+                                awake,
                                 0.toFloat()
                             )
                         )
@@ -152,10 +208,10 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                     entries.add(
                         BarEntry(
                             xIndex, floatArrayOf(
-                                lightSleep.toFloat(),
-                                deepSleep.toFloat(),
-                                awake.toFloat(),
-                                0.toFloat()
+                                0.toFloat(),
+                                0.toFloat(),
+                                awake,
+                                sleep
                             )
                         )
                     )
@@ -166,141 +222,70 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
             xIndex += 1
         }
 
-        return Triple(entries, xAxisLabels, maxSleepTime)
+        return Triple(entries, xAxisLabels, maxSleepTime.toInt())
+    }
+
+    private fun generateBarDataSet(barEntries: ArrayList<BarEntry>) : BarDataSet {
+        val barDataSet = BarDataSet(barEntries, "")
+        barDataSet.setColors(
+            ContextCompat.getColor(context, R.color.light_sleep_color),
+            ContextCompat.getColor(context, R.color.deep_sleep_color),
+            ContextCompat.getColor(context, R.color.awake_sleep_color),
+            ContextCompat.getColor(context, R.color.sleep_sleep_color)
+        )
+        barDataSet.setDrawValues(false)
+
+        return barDataSet
+    }
+
+    private fun getBarChartYAxisProportion(sleepAmount: Int) : Float {
+        return if ((sleepAmount >= 540) && (sleepAmount < 660)) {
+            12F
+        } else if ((sleepAmount >= 660) && (sleepAmount < 780)) {
+            14F
+        } else if ((sleepAmount >= 780) && (sleepAmount < 900)) {
+            16F
+        } else if (sleepAmount >= 900) {
+            24F
+        } else {
+            10F
+        }
     }
 
     fun setBarChart(range: Int, endDateOfDiagram: LocalDate) : BarChart {
         //http://developine.com/android-grouped-stacked-bar-chart-using-mpchart-kotlin/
         val barChart = BarChart(context)
         val diagramData = generateDataBarChart(range, endDateOfDiagram)
-
-        val barDataSet1 = BarDataSet(diagramData.first, "")
-        barDataSet1.setColors(R.color.light_sleep_color, R.color.deep_sleep_color, R.color.awake_sleep_color, R.color.sleep_sleep_color)
-        barDataSet1.setDrawValues(false)
-
-        val barData = BarData(barDataSet1)
+        val barData = BarData(generateBarDataSet(diagramData.first))
         barChart.data = barData
-        barChart.description.isEnabled = false
-        barChart.data.isHighlightEnabled = false
-
-        val xAxisValues = ArrayList<String>()
-        barChart.xAxis.setDrawGridLines(false)
-        barChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
-
-        if (range > 21) {
-            for (i in diagramData.second.indices) {
-                val date = LocalDateTime.ofInstant(
-                    Instant.ofEpochMilli(diagramData.second[i].toLong() * 1000),
-                    ZoneOffset.systemDefault())
-
-                if (i == 0 || i == 10 || i == 20  || i == (diagramData.second.size - 1)) {
-                    xAxisValues.add(date.dayOfMonth.toString())
-                }
-                else { xAxisValues.add("") }
-            }
-
-            barChart.barData.barWidth = 0.5f
-            barChart.xAxis.axisMinimum = 0f
-            barChart.xAxis.axisMaximum = (diagramData.second.size).toFloat()
-            barChart.xAxis.labelCount = (diagramData.second.size)
-            barChart.xAxis.setCenterAxisLabels(true)
-        }
-        else {
-            for (i in diagramData.second.indices) {
-                xAxisValues.add("Mo")
-                xAxisValues.add("Tu")
-                xAxisValues.add("We")
-                xAxisValues.add("Th")
-                xAxisValues.add("Fr")
-                xAxisValues.add("Sa")
-                xAxisValues.add("Su")
-            }
-
-            barChart.barData.barWidth = 0.75f
-            barChart.xAxis.axisMinimum = 0f
-            barChart.xAxis.axisMaximum = 7f
-            barChart.xAxis.labelCount = 7
-            barChart.xAxis.setCenterAxisLabels(true)
-        }
-
-        barChart.xAxis.valueFormatter = IndexAxisValueFormatter(xAxisValues)
-        barChart.setFitBars(true)
-
-        // set bar label
-        val legend = barChart.legend
-        legend.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
-        legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
-        legend.orientation = Legend.LegendOrientation.HORIZONTAL
-        legend.setDrawInside(false)
-
-        val legendEntries = arrayListOf<LegendEntry>()
-        legendEntries.add((LegendEntry("Light", Legend.LegendForm.SQUARE, 8f, 8f, null ,
-            R.color.light_sleep_color)))
-        legendEntries.add((LegendEntry("Deep", Legend.LegendForm.SQUARE, 8f, 8f, null ,
-            R.color.deep_sleep_color)))
-        legendEntries.add((LegendEntry("Awake", Legend.LegendForm.SQUARE, 8f, 8f, null ,
-            R.color.awake_sleep_color)))
-        legendEntries.add((LegendEntry("Sleep", Legend.LegendForm.SQUARE, 8f, 8f, null ,
-            R.color.sleep_sleep_color)))
-        legend.setCustom(legendEntries)
-        legend.textSize = 12f
-
-        barChart.isDragEnabled = true
-
-        //Y-axis
-        barChart.axisRight.isEnabled = true
-        barChart.axisRight.axisMinimum = 0f
-        barChart.axisRight.labelCount = 10
-
-        barChart.axisLeft.spaceTop = 60f
-        barChart.axisLeft.axisMinimum = 0f
-        barChart.axisLeft.labelCount = 20
-
-        if ((diagramData.third > 540) && (diagramData.third < 660)) {
-            barChart.axisRight.axisMaximum = 12f
-            barChart.axisLeft.axisMaximum = 720f
-        }
-        else if ((diagramData.third > 660) && (diagramData.third < 780)) {
-            barChart.axisRight.axisMaximum = 14f
-            barChart.axisLeft.axisMaximum = 840f
-        }
-        else if ((diagramData.third > 780) && (diagramData.third < 900)) {
-            barChart.axisRight.axisMaximum = 16f
-            barChart.axisLeft.axisMaximum = 960f
-        }
-        else if (diagramData.third > 900) { // between 12h and 14h
-            barChart.axisRight.axisMaximum = 24f
-            barChart.axisLeft.axisMaximum = 1440f
-        }
-        else {
-            barChart.axisRight.axisMaximum = 10f
-            barChart.axisLeft.axisMaximum = 600f
-        }
-
+        visualSetUpBarChart(barChart, diagramData, range)
         return barChart
     }
 
     fun updateBarChart(barChart: BarChart, range: Int, endDateOfDiagram: LocalDate) {
-        //http://developine.com/android-grouped-stacked-bar-chart-using-mpchart-kotlin/
         val diagramData = generateDataBarChart(range, endDateOfDiagram)
-
-        val barDataSet1 = BarDataSet(diagramData.first, "")
-        barDataSet1.setColors(R.color.light_sleep_color, R.color.deep_sleep_color, R.color.awake_sleep_color, R.color.sleep_sleep_color)
-        barDataSet1.setDrawValues(false)
-
-        val barData = BarData(barDataSet1)
+        val barData = BarData(generateBarDataSet(diagramData.first))
         barChart.data = barData
+        visualSetUpBarChart(barChart, diagramData, range)
+        barChart.invalidate()
+    }
+
+    private fun visualSetUpBarChart(barChart: BarChart,
+                                    diagramData: Triple<ArrayList<BarEntry>, List<Int>, Int>,
+                                    range: Int) {
         barChart.description.isEnabled = false
         barChart.data.isHighlightEnabled = false
 
-        val xAxisValues = ArrayList<String>()
+        //val xAxisValues = ArrayList<String>()
         barChart.xAxis.setDrawGridLines(false)
         barChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+
+        xAxisValues.clear()
 
         if (range > 21) {
             for (i in diagramData.second.indices) {
                 val date = LocalDateTime.ofInstant(
-                    Instant.ofEpochMilli(diagramData.second[i].toLong() * 1000),
+                    Instant.ofEpochMilli((diagramData.second[i].toLong() + Constants.DAY_IN_SECONDS) * 1000),
                     ZoneOffset.systemDefault())
 
                 if (i == 0 || i == 10 || i == 20  || i == (diagramData.second.size - 1)) {
@@ -310,83 +295,167 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
             }
 
             barChart.barData.barWidth = 0.5f
-            barChart.xAxis.axisMinimum = 0f
             barChart.xAxis.axisMaximum = (diagramData.second.size).toFloat()
             barChart.xAxis.labelCount = (diagramData.second.size)
-            barChart.xAxis.setCenterAxisLabels(true)
         }
         else {
-            for (i in diagramData.second.indices) {
-                xAxisValues.add("Mo")
-                xAxisValues.add("Tu")
-                xAxisValues.add("We")
-                xAxisValues.add("Th")
-                xAxisValues.add("Fr")
-                xAxisValues.add("Sa")
-                xAxisValues.add("Su")
-            }
+            xAxisValues.add("Mo")
+            xAxisValues.add("Tu")
+            xAxisValues.add("We")
+            xAxisValues.add("Th")
+            xAxisValues.add("Fr")
+            xAxisValues.add("Sa")
+            xAxisValues.add("Su")
 
             barChart.barData.barWidth = 0.75f
-            barChart.xAxis.axisMinimum = 0f
             barChart.xAxis.axisMaximum = 7f
             barChart.xAxis.labelCount = 7
-            barChart.xAxis.setCenterAxisLabels(true)
         }
 
         barChart.xAxis.valueFormatter = IndexAxisValueFormatter(xAxisValues)
         barChart.setFitBars(true)
 
+        barChart.xAxis.axisMinimum = 0f
+        barChart.xAxis.setCenterAxisLabels(true)
+        barChart.xAxis.textColor = checkDarkMode()
+
         // set bar label
-        val legend = barChart.legend
-        legend.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
-        legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
-        legend.orientation = Legend.LegendOrientation.HORIZONTAL
-        legend.setDrawInside(false)
+        barChart.legend.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+        barChart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
+        barChart.legend.orientation = Legend.LegendOrientation.HORIZONTAL
+        barChart.legend.setDrawInside(false)
+        barChart.legend.textSize = 12f
+        barChart.legend.textColor = checkDarkMode()
 
-        val legendEntries = arrayListOf<LegendEntry>()
-        legendEntries.add((LegendEntry("Light", Legend.LegendForm.SQUARE, 8f, 8f, null ,
-            R.color.light_sleep_color)))
-        legendEntries.add((LegendEntry("Deep", Legend.LegendForm.SQUARE, 8f, 8f, null ,
-            R.color.deep_sleep_color)))
-        legendEntries.add((LegendEntry("Awake", Legend.LegendForm.SQUARE, 8f, 8f, null ,
-            R.color.awake_sleep_color)))
-        legendEntries.add((LegendEntry("Sleep", Legend.LegendForm.SQUARE, 8f, 8f, null ,
-            R.color.sleep_sleep_color)))
-        legend.setCustom(legendEntries)
-        legend.textSize = 12f
+        barChart.legend.setCustom(
+            listOf(
+                LegendEntry("Light", Legend.LegendForm.SQUARE, 8f, 8f, null,
+                    ContextCompat.getColor(context, R.color.light_sleep_color)),
+                LegendEntry("Deep", Legend.LegendForm.SQUARE, 8f, 8f, null,
+                    ContextCompat.getColor(context, R.color.deep_sleep_color)),
+                LegendEntry("Awake", Legend.LegendForm.SQUARE, 8f, 8f, null,
+                    ContextCompat.getColor(context, R.color.awake_sleep_color)),
+                LegendEntry("Sleep", Legend.LegendForm.SQUARE, 8f, 8f, null,
+                    ContextCompat.getColor(context, R.color.sleep_sleep_color),)
+            )
+        )
 
-        barChart.isDragEnabled = true
+        barChart.isDragEnabled = false
 
         //Y-axis
         barChart.axisRight.isEnabled = true
         barChart.axisRight.axisMinimum = 0f
-        barChart.axisRight.labelCount = 10
+        barChart.axisRight.labelCount = 0
+        barChart.axisRight.setDrawGridLines(false)
+        barChart.axisRight.setDrawLabels(false)
 
         barChart.axisLeft.spaceTop = 60f
         barChart.axisLeft.axisMinimum = 0f
-        barChart.axisLeft.labelCount = 20
+        barChart.axisLeft.labelCount = 10
+        barChart.axisLeft.setDrawGridLines(false)
+        barChart.axisLeft.textColor = checkDarkMode()
 
-        if ((diagramData.third > 540) && (diagramData.third < 660)) {
-            barChart.axisRight.axisMaximum = 12f
-            barChart.axisLeft.axisMaximum = 720f
+        val proportion = getBarChartYAxisProportion(diagramData.third)
+        barChart.axisRight.axisMaximum = proportion
+        barChart.axisLeft.axisMaximum = proportion
+        barChart.axisLeft.labelCount = proportion.toInt()
+    }
+
+    private fun generateDataActivityChart(range: Int, endDateOfDiagram: LocalDate): ArrayList<Entry> {
+        val entries = ArrayList<Entry>()
+        var xValue = 0
+
+        val ids = mutableSetOf<Int>()
+        for (i in -(range-2)..1) {
+            ids.add(
+                UserSleepSessionEntity.getIdByDateTime(
+                    LocalDate.ofEpochDay(
+                        endDateOfDiagram.toEpochDay().plus((i - 1).toLong())
+                    )
+                )
+            )
         }
-        else if ((diagramData.third > 660) && (diagramData.third < 780)) {
-            barChart.axisRight.axisMaximum = 14f
-            barChart.axisLeft.axisMaximum = 840f
+
+        ids.reversed()
+        for (id in ids) {
+            if (sleepSessionData.containsKey(id)) {
+                val values = sleepSessionData[id]?.third!!
+
+                entries.add(Entry(xValue.toFloat(), values.userSleepRating.activityOnDay.ordinal.toFloat()))
+            }
+            else {
+                entries.add(Entry(xValue.toFloat(), 0f))
+            }
+            xValue += 1
         }
-        else if ((diagramData.third > 780) && (diagramData.third < 900)) {
-            barChart.axisRight.axisMaximum = 16f
-            barChart.axisLeft.axisMaximum = 960f
-        }
-        else if (diagramData.third > 900) { // between 12h and 14h
-            barChart.axisRight.axisMaximum = 24f
-            barChart.axisLeft.axisMaximum = 1440f
+        return entries
+    }
+
+    fun setActivityChart(range: Int, endDateOfDiagram: LocalDate) : LineChart {
+        val chart = LineChart(context)
+        val lineDataSet = LineDataSet(generateDataActivityChart(range, endDateOfDiagram), "")
+        visualSetUpActivityChart(chart, lineDataSet, range)
+        chart.data = LineData(lineDataSet)
+        return chart
+    }
+
+    fun updateActivityChart(chart: LineChart, range: Int, endDateOfDiagram: LocalDate) {
+        val lineDataSet = LineDataSet(generateDataActivityChart(range, endDateOfDiagram), "")
+        visualSetUpActivityChart(chart, lineDataSet, range)
+        chart.data = LineData(lineDataSet)
+    }
+
+    private fun visualSetUpActivityChart(chart: LineChart, lineDataSet: LineDataSet, range: Int) {
+        lineDataSet.setDrawValues(false)
+        lineDataSet.setDrawFilled(true)
+        lineDataSet.setDrawCircles(false)
+        lineDataSet.lineWidth = 2f
+        lineDataSet.fillColor = ContextCompat.getColor(context, R.color.sleep_sleep_color)
+        lineDataSet.fillAlpha = 255
+        lineDataSet.color = ContextCompat.getColor(context, R.color.awake_sleep_color)
+        lineDataSet.fillDrawable = ContextCompat.getDrawable(context, R.drawable.bg_spark_line)
+
+        val yAxisValues = ArrayList<String>()
+        yAxisValues.add("")
+        yAxisValues.add(SmileySelectorUtil.getSmileyActivity(1))
+        yAxisValues.add("")
+        yAxisValues.add(SmileySelectorUtil.getSmileyActivity(2))
+        yAxisValues.add("")
+        yAxisValues.add(SmileySelectorUtil.getSmileyActivity(3))
+
+        chart.axisLeft.labelCount = 5
+        chart.axisLeft.axisMaximum = 5.05f
+
+        chart.axisLeft.valueFormatter = IndexAxisValueFormatter(yAxisValues)
+        chart.axisLeft.axisMinimum = -0.05f
+        chart.axisLeft.setDrawGridLines(false)
+        chart.axisLeft.textColor = checkDarkMode()
+        chart.axisLeft.textSize = 16f
+        chart.legend.isEnabled= false
+
+        chart.axisRight.setDrawLabels(false)
+        chart.axisRight.setDrawGridLines(false)
+
+        chart.xAxis.setDrawGridLines(false)
+        chart.xAxis.setDrawLabels(true)
+
+        chart.xAxis.textColor = checkDarkMode()
+        chart.xAxis.setCenterAxisLabels(false)
+        chart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+
+        if (xAxisValues.size > 21) {
+            chart.xAxis.labelCount = xAxisValues.size
+            lineDataSet.mode = LineDataSet.Mode.HORIZONTAL_BEZIER
         }
         else {
-            barChart.axisRight.axisMaximum = 10f
-            barChart.axisLeft.axisMaximum = 600f
+            chart.xAxis.labelCount = 6
+            lineDataSet.mode = LineDataSet.Mode.HORIZONTAL_BEZIER
         }
 
-        barChart.invalidate()
+        chart.xAxis.valueFormatter = IndexAxisValueFormatter(xAxisValues)
+
+        chart.description.isEnabled = false
+
+        chart.animateX(500)
     }
 }
