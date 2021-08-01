@@ -13,11 +13,19 @@ import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
 import java.time.*
 
+/**  */
 class HistoryWeekFragment : Fragment() {
 
+    /**  */
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(HistoryViewModel::class.java) }
+
+    /**  */
     private lateinit var binding: FragmentHistoryWeekBinding
+
+    /**  */
     private lateinit var barChart: BarChart
+
+    /**  */
     private lateinit var activityChart: LineChart
 
     override fun onCreateView(
@@ -61,6 +69,7 @@ class HistoryWeekFragment : Fragment() {
         return binding.root
     }
 
+    /**  */
     private fun getSundayOfWeek(): LocalDate {
         viewModel.analysisDate.get()?.let {
             val dayOfWeek = it.dayOfWeek

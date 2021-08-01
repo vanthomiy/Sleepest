@@ -14,6 +14,7 @@ import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.databinding.FragmentHistoryDayBinding
 import com.doitstudio.sleepest_master.model.data.ActivityOnDay
 import com.doitstudio.sleepest_master.model.data.MobilePosition
+import com.doitstudio.sleepest_master.sleepcalculation.model.UserSleepRating
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
 import com.doitstudio.sleepest_master.util.SmileySelectorUtil
@@ -30,13 +31,25 @@ import java.time.format.DateTimeFormatter
 import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
+/**  */
 class HistoryDayFragment : Fragment() {
 
+    /**  */
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(HistoryViewModel::class.java) }
+
+    /**  */
     private val viewModelDay by lazy { ViewModelProvider(this).get(HistoryDayViewModel::class.java) }
+
+    /**  */
     private lateinit var binding: FragmentHistoryDayBinding
+
+    /**  */
     private lateinit var sleepValues : Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>
+
+    /**  */
     private lateinit var lineChartSleepAnalysis: LineChart
+
+    /**  */
     private lateinit var pieChartSleepAnalysis: PieChart
 
     override fun onCreateView(
@@ -67,6 +80,10 @@ class HistoryDayFragment : Fragment() {
         ).toInt()
         pieChartSleepAnalysis.invalidate()
 
+        binding.rBSleepRatingBarDaily.setOnRatingBarChangeListener { ratingBar, rating, fromUser ->
+            saveSleepRatingDaily(rating)
+        }
+
         viewModel.analysisDate.addOnPropertyChangedCallback(
             object: Observable.OnPropertyChangedCallback() {
 
@@ -87,6 +104,12 @@ class HistoryDayFragment : Fragment() {
         return binding.root
     }
 
+    /**  */
+    private fun saveSleepRatingDaily(rating: Float) {
+        var saveIntoDatabase = rating.toInt()
+    }
+
+    /**  */
     private fun getDataValues() {
         viewModel.analysisDate.get()?.let {
             if (viewModel.checkId(it)) {
@@ -95,6 +118,7 @@ class HistoryDayFragment : Fragment() {
         }
     }
 
+    /**  */
     private fun generateSleepValueInformation(time: Int): String {
         return kotlin.math.floor((time.toFloat() / 60f).toDouble()).toInt().toString() +
                 "h " +
@@ -102,6 +126,7 @@ class HistoryDayFragment : Fragment() {
                 "min"
     }
 
+    /**  */
     private fun setTimeStamps() {
         var time = LocalDateTime.of(1970, 1, 1, 0, 0, 0).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
         viewModelDay.beginOfSleep.set(time)
@@ -156,6 +181,7 @@ class HistoryDayFragment : Fragment() {
         }
     }
 
+    /**  */
     private fun generateDataLineChart() : ArrayList<Entry> {
         val entries = ArrayList<Entry>()
 
@@ -188,6 +214,7 @@ class HistoryDayFragment : Fragment() {
         return entries
     }
 
+    /**  */
     private fun setLineChart() : LineChart {
         val chart = LineChart(viewModel.context)
         val lineDataSet = LineDataSet(generateDataLineChart(), "")
@@ -196,12 +223,14 @@ class HistoryDayFragment : Fragment() {
         return chart
     }
 
+    /**  */
     fun updateLineChart(chart: LineChart) {
         val lineDataSet = LineDataSet(generateDataLineChart(), "")
         visualSetUpLineChart(chart, lineDataSet)
         chart.data = LineData(lineDataSet)
     }
 
+    /**  */
     private fun visualSetUpLineChart(chart: LineChart, lineDataSet: LineDataSet) {
         lineDataSet.setDrawValues(false)
         lineDataSet.setDrawFilled(true)
@@ -262,6 +291,7 @@ class HistoryDayFragment : Fragment() {
         chart.animateX(1000)
     }
 
+    /**  */
     private fun generateDataPieChart() : Pair<ArrayList<PieEntry>, BooleanArray> {
         val entries = ArrayList<PieEntry>()
         val sleepTypes = booleanArrayOf(false, false, false, false)
@@ -307,6 +337,7 @@ class HistoryDayFragment : Fragment() {
         return Pair(entries, sleepTypes)
     }
 
+    /**  */
     private fun setPieChart() : PieChart {
         val chart = PieChart(viewModel.context)
         val data = generateDataPieChart()
@@ -316,6 +347,7 @@ class HistoryDayFragment : Fragment() {
         return chart
     }
 
+    /**  */
     private fun updatePieChart(chart: PieChart) {
         val data = generateDataPieChart()
         val pieDataSet = PieDataSet(data.first, "")
@@ -323,6 +355,7 @@ class HistoryDayFragment : Fragment() {
         chart.data = PieData(pieDataSet)
     }
 
+    /**  */
     private fun visualSetUpPieChart(chart: PieChart, pieDataSet: PieDataSet, sleepTypes: BooleanArray) {
         val listColors = ArrayList<Int>()
         //sleepTypes[0] = awake, sleepTypes[1] = sleep, sleepTypes[2] = light, sleepTypes[3] = deep
@@ -356,6 +389,7 @@ class HistoryDayFragment : Fragment() {
         chart.animateY(1000, Easing.EaseInOutQuad)
     }
 
+    /**  */
     private fun updateActivitySmiley() {
         var activityOnDay = 0
 
@@ -363,7 +397,7 @@ class HistoryDayFragment : Fragment() {
             if (viewModel.checkId(it_time)) {
                 sleepValues.let {
                     activityOnDay = when (it.third.userSleepRating.activityOnDay) {
-                        ActivityOnDay.NOACTIVITY -> 0
+                        ActivityOnDay.NOACTIVITY -> 1
                         ActivityOnDay.SMALLACTIVITY -> 1
                         ActivityOnDay.NORMALACTIVITY -> 2
                         ActivityOnDay.MUCHACTIVITY -> 2
@@ -371,6 +405,8 @@ class HistoryDayFragment : Fragment() {
                         else -> 0
                     }
                 }
+                // Update sleepRating Bar
+                binding.rBSleepRatingBarDaily.rating = sleepValues.third.userSleepRating.moodAfterSleep.ordinal.toFloat()
             }
         }
         viewModelDay.activitySmiley.set(SmileySelectorUtil.getSmileyActivity(activityOnDay))

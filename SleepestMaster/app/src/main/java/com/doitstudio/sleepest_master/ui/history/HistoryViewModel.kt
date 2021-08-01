@@ -36,22 +36,33 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
     private val scope: CoroutineScope = MainScope()
     val context: Context by lazy { getApplication<Application>().applicationContext }
+
+    /**  */
     val dataBaseRepository: DatabaseRepository by lazy {
         (context as MainApplication).dataBaseRepository
     }
+
+    /**  */
     private val dataStoreRepository: DataStoreRepository by lazy {
         (context as MainApplication).dataStoreRepository
     }
 
+    /**  */
     var analysisDate = ObservableField(LocalDate.now())
+
+    /**  */
     var darkMode = false
+
+    /**  */
     var autoDarkMode = false
+
+    /**  */
     var onWork = false
+
+    /**  */
     private val xAxisValues = ArrayList<String>()
 
-    /** <Int: Sleep session id, Triple<List<[SleepApiRawDataEntity]>, Int: Sleep duration, [UserSleepSessionEntity]>> */
-    //val sleepSessionData = ObservableArrayMap<Int, Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>>()
-
+    /**  */
     private val idsListener = ObservableInt()
 
     /** <Int: Sleep session id, Triple<List<[SleepApiRawDataEntity]>, Int: Sleep duration, [UserSleepSessionEntity]>> */
@@ -67,6 +78,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
     }
 
+    /**  */
     fun onPreviousDateClick(range: Int) {
         when (range) {
             0 -> analysisDate.set(analysisDate.get()?.minusDays(1L))
@@ -75,6 +87,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    /**  */
     fun onNextDateClick(range: Int) {
         when (range) {
             0 -> analysisDate.set(analysisDate.get()?.plusDays(1L))
@@ -83,6 +96,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    /**  */
     fun getSleepData() {
         val ids = mutableSetOf<Int>()
         analysisDate.get()?.let {
@@ -122,6 +136,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    /**  */
     private fun checkSessionIntegrity() {
         onWork = true
         for (key in sleepSessionData.keys) {
@@ -145,10 +160,12 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         onWork = false
     }
 
+    /**  */
     fun checkId(time: LocalDate) : Boolean {
         return sleepSessionData.containsKey(UserSleepSessionEntity.getIdByDateTime(time))
     }
 
+    /**  */
     fun checkDarkMode() : Int {
         var color = Color.BLACK
         if (autoDarkMode) {
@@ -161,6 +178,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return color
     }
 
+    /**  */
     fun generateDataBarChart(range: Int, endDateOfDiagram: LocalDate): Triple<ArrayList<BarEntry>, List<Int>, Int> {
         val entries = ArrayList<BarEntry>()
         val xAxisLabels = mutableListOf<Int>()
@@ -225,6 +243,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return Triple(entries, xAxisLabels, maxSleepTime.toInt())
     }
 
+    /**  */
     private fun generateBarDataSet(barEntries: ArrayList<BarEntry>) : BarDataSet {
         val barDataSet = BarDataSet(barEntries, "")
         barDataSet.setColors(
@@ -238,6 +257,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return barDataSet
     }
 
+    /**  */
     private fun getBarChartYAxisProportion(sleepAmount: Int) : Float {
         return if ((sleepAmount >= 540) && (sleepAmount < 660)) {
             12F
@@ -252,6 +272,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    /**  */
     fun setBarChart(range: Int, endDateOfDiagram: LocalDate) : BarChart {
         //http://developine.com/android-grouped-stacked-bar-chart-using-mpchart-kotlin/
         val barChart = BarChart(context)
@@ -262,6 +283,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return barChart
     }
 
+    /**  */
     fun updateBarChart(barChart: BarChart, range: Int, endDateOfDiagram: LocalDate) {
         val diagramData = generateDataBarChart(range, endDateOfDiagram)
         val barData = BarData(generateBarDataSet(diagramData.first))
@@ -270,6 +292,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         barChart.invalidate()
     }
 
+    /**  */
     private fun visualSetUpBarChart(barChart: BarChart,
                                     diagramData: Triple<ArrayList<BarEntry>, List<Int>, Int>,
                                     range: Int) {
@@ -361,6 +384,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         barChart.axisLeft.labelCount = proportion.toInt()
     }
 
+    /**  */
     private fun generateDataActivityChart(range: Int, endDateOfDiagram: LocalDate): ArrayList<Entry> {
         val entries = ArrayList<Entry>()
         var xValue = 0
@@ -391,6 +415,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return entries
     }
 
+    /**  */
     fun setActivityChart(range: Int, endDateOfDiagram: LocalDate) : LineChart {
         val chart = LineChart(context)
         val lineDataSet = LineDataSet(generateDataActivityChart(range, endDateOfDiagram), "")
@@ -399,12 +424,14 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return chart
     }
 
+    /**  */
     fun updateActivityChart(chart: LineChart, range: Int, endDateOfDiagram: LocalDate) {
         val lineDataSet = LineDataSet(generateDataActivityChart(range, endDateOfDiagram), "")
         visualSetUpActivityChart(chart, lineDataSet, range)
         chart.data = LineData(lineDataSet)
     }
 
+    /**  */
     private fun visualSetUpActivityChart(chart: LineChart, lineDataSet: LineDataSet, range: Int) {
         lineDataSet.setDrawValues(false)
         lineDataSet.setDrawFilled(true)
