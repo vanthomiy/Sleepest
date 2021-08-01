@@ -14,6 +14,7 @@ import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.databinding.FragmentHistoryDayBinding
 import com.doitstudio.sleepest_master.model.data.ActivityOnDay
 import com.doitstudio.sleepest_master.model.data.MobilePosition
+import com.doitstudio.sleepest_master.model.data.MoodType
 import com.doitstudio.sleepest_master.sleepcalculation.model.UserSleepRating
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
@@ -34,22 +35,25 @@ import kotlin.math.roundToInt
 /**  */
 class HistoryDayFragment : Fragment() {
 
-    /**  */
+    /** ViewModel for the main History Fragment. Contains calculations for the weekly and monthly charts. */
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(HistoryViewModel::class.java) }
 
-    /**  */
+    /** ViewModel for the daily calculations. */
     private val viewModelDay by lazy { ViewModelProvider(this).get(HistoryDayViewModel::class.java) }
 
-    /**  */
+    /** Binding for daily history analysis and the corresponding fragment_history_day.xml. */
     private lateinit var binding: FragmentHistoryDayBinding
 
-    /**  */
+    /** Contains all relevant values for one sleep session:
+     * A list of all [SleepApiRawDataEntity] of the session.
+     * The sleepDuration of for the sessions night.
+     * The whole session [UserSleepSessionEntity]. */
     private lateinit var sleepValues : Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>
 
-    /**  */
+    /** [LineChart] for the daily sleep analysis. */
     private lateinit var lineChartSleepAnalysis: LineChart
 
-    /**  */
+    /** [PieChart] for the daily sleep analysis. */
     private lateinit var pieChartSleepAnalysis: PieChart
 
     override fun onCreateView(
@@ -61,6 +65,7 @@ class HistoryDayFragment : Fragment() {
         binding = FragmentHistoryDayBinding.inflate(inflater, container, false)
         binding.historyDayViewModel = viewModelDay
 
+        // Initial set up for the daily sleep analysis line chart.
         lineChartSleepAnalysis = setLineChart()
         updateLineChart(lineChartSleepAnalysis)
         binding.lLSleepAnalysisChartsDaySleepPhases.addView(lineChartSleepAnalysis)
@@ -70,6 +75,7 @@ class HistoryDayFragment : Fragment() {
         lineChartSleepAnalysis.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
         lineChartSleepAnalysis.invalidate()
 
+        // Initial set up for the daily sleep analysis pie chart.
         pieChartSleepAnalysis = setPieChart()
         binding.lLSleepAnalysisChartsDaySleepPhasesAmount.addView(pieChartSleepAnalysis)
         pieChartSleepAnalysis.layoutParams.height = TypedValue.applyDimension(
@@ -80,10 +86,12 @@ class HistoryDayFragment : Fragment() {
         ).toInt()
         pieChartSleepAnalysis.invalidate()
 
+        // Listens to users input of the sleep rating for the previous night.
         binding.rBSleepRatingBarDaily.setOnRatingBarChangeListener { ratingBar, rating, fromUser ->
             saveSleepRatingDaily(rating)
         }
 
+        // Listener for changes in the analysis date. If user changes the day for the diagramms.
         viewModel.analysisDate.addOnPropertyChangedCallback(
             object: Observable.OnPropertyChangedCallback() {
 
@@ -104,12 +112,13 @@ class HistoryDayFragment : Fragment() {
         return binding.root
     }
 
-    /**  */
+    /** Save users input of the [UserSleepRating.moodAfterSleep] into database. */
     private fun saveSleepRatingDaily(rating: Float) {
         var saveIntoDatabase = rating.toInt()
+        sleepValues.third.userSleepRating.moodAfterSleep = MoodType.GOOD
     }
 
-    /**  */
+    /** Get [sleepValues] for the currently selected analysisDate. */
     private fun getDataValues() {
         viewModel.analysisDate.get()?.let {
             if (viewModel.checkId(it)) {
@@ -118,7 +127,7 @@ class HistoryDayFragment : Fragment() {
         }
     }
 
-    /**  */
+    /** Formats sleep duration times for [setTimeStamps]. */
     private fun generateSleepValueInformation(time: Int): String {
         return kotlin.math.floor((time.toFloat() / 60f).toDouble()).toInt().toString() +
                 "h " +
@@ -126,8 +135,10 @@ class HistoryDayFragment : Fragment() {
                 "min"
     }
 
-    /**  */
+    /** Tells the user the exact duration for the selected sleep session. */
     private fun setTimeStamps() {
+
+        // Initial setting necessary in case asynchronous demand of the sleep session (sleepValues) isn`t ready.
         var time = LocalDateTime.of(1970, 1, 1, 0, 0, 0).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
         viewModelDay.beginOfSleep.set(time)
         viewModelDay.endOfSeep.set(time)
@@ -148,6 +159,7 @@ class HistoryDayFragment : Fragment() {
             "Sleep: " + generateSleepValueInformation(0)
         )
 
+        // In case the session is available, set values.
         sleepValues.let {
             time = LocalDateTime.ofInstant(
                 Instant.ofEpochMilli((it.third.sleepTimes.sleepTimeStart.toLong()) * 1000),
@@ -181,7 +193,8 @@ class HistoryDayFragment : Fragment() {
         }
     }
 
-    /**  */
+    /** Generates the data needed for the [LineChart].
+     * Manages the visibility of the whole view for the daily analysis. */
     private fun generateDataLineChart() : ArrayList<Entry> {
         val entries = ArrayList<Entry>()
 
@@ -214,7 +227,7 @@ class HistoryDayFragment : Fragment() {
         return entries
     }
 
-    /**  */
+    /** Set up the [LineChart] for daily analysis. */
     private fun setLineChart() : LineChart {
         val chart = LineChart(viewModel.context)
         val lineDataSet = LineDataSet(generateDataLineChart(), "")
@@ -223,14 +236,14 @@ class HistoryDayFragment : Fragment() {
         return chart
     }
 
-    /**  */
+    /** Update the [LineChart] in case the user alters the analysis date. */
     fun updateLineChart(chart: LineChart) {
         val lineDataSet = LineDataSet(generateDataLineChart(), "")
         visualSetUpLineChart(chart, lineDataSet)
         chart.data = LineData(lineDataSet)
     }
 
-    /**  */
+    /** Visual set up for the [LineChart]. Only matches proportions for the daily sleep analysis purposes. */
     private fun visualSetUpLineChart(chart: LineChart, lineDataSet: LineDataSet) {
         lineDataSet.setDrawValues(false)
         lineDataSet.setDrawFilled(true)
@@ -243,8 +256,8 @@ class HistoryDayFragment : Fragment() {
 
         val yAxisValues = ArrayList<String>()
 
-        if (lineDataSet.yMax == 4f) {
-            // Only sleep and awake is detected
+        if (lineDataSet.yMax == 4f) { // TODO Maybe change this to Phone.INBED // Phone.NOTINBED
+            // Only sleep and awake is detected. Phone not in bed.
             yAxisValues.add("Awake")
             yAxisValues.add("")
             yAxisValues.add("")
@@ -255,6 +268,7 @@ class HistoryDayFragment : Fragment() {
             chart.axisLeft.axisMaximum = 5f
         }
         else {
+            // Normal night with all sleep phases detected. Phone in bed.
             yAxisValues.add("Awake")
             yAxisValues.add("Light")
             yAxisValues.add("Deep")
@@ -291,7 +305,7 @@ class HistoryDayFragment : Fragment() {
         chart.animateX(1000)
     }
 
-    /**  */
+    /** Generates the data needed for the [PieChart]. */
     private fun generateDataPieChart() : Pair<ArrayList<PieEntry>, BooleanArray> {
         val entries = ArrayList<PieEntry>()
         val sleepTypes = booleanArrayOf(false, false, false, false)
