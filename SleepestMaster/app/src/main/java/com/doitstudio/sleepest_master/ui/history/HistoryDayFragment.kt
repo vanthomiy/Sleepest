@@ -25,6 +25,9 @@ import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -34,6 +37,8 @@ import kotlin.math.roundToInt
 
 /**  */
 class HistoryDayFragment : Fragment() {
+
+    private val scope: CoroutineScope = MainScope()
 
     /** ViewModel for the main History Fragment. Contains calculations for the weekly and monthly charts. */
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(HistoryViewModel::class.java) }
@@ -114,8 +119,18 @@ class HistoryDayFragment : Fragment() {
 
     /** Save users input of the [UserSleepRating.moodAfterSleep] into database. */
     private fun saveSleepRatingDaily(rating: Float) {
-        var saveIntoDatabase = rating.toInt()
-        sleepValues.third.userSleepRating.moodAfterSleep = MoodType.GOOD
+        val mood = when (rating) {
+            1f -> MoodType.BAD
+            2f -> MoodType.GOOD
+            3f -> MoodType.EXCELLENT
+            4f -> MoodType.LAZY
+            5f -> MoodType.TIRED
+            else -> MoodType.NONE
+        }
+
+        scope.launch {
+            viewModel.dataBaseRepository.updateMoodAfterSleep(mood, sleepValues.third.id)
+        }
     }
 
     /** Get [sleepValues] for the currently selected analysisDate. */

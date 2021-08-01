@@ -1,6 +1,7 @@
 package com.doitstudio.sleepest_master.storage
 
 
+import com.doitstudio.sleepest_master.model.data.MoodType
 import com.doitstudio.sleepest_master.model.data.SleepState
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionDao
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
@@ -254,6 +255,10 @@ class DatabaseRepository(
 
     suspend fun deleteUserSleepSession() {
         userSleepSessionDao.deleteAll()
+    }
+
+    suspend fun updateMoodAfterSleep(moodType: MoodType, sessionId: Int) {
+        userSleepSessionDao.updateMoodAfterSleep(moodType, sessionId)
     }
 
     //endregion
