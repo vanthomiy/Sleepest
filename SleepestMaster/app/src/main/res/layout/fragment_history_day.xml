@@ -183,15 +183,64 @@
                     android:textColor="@color/primary_text_color"
                     android:textSize="22sp"/>
 
-                <RatingBar
-                    android:id="@+id/rB_sleepRatingBarDaily"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:progressBackgroundTint="@color/primary_button_color"
-                    android:progressTint="@color/accent_button_color"
                     android:layout_gravity="center"
-                    android:stepSize="1" />
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatToggleButton
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="5dp"
+                        android:background="@{historyDayViewModel.sleepMoodSmileyTag == 1? @drawable/sleep_mood_bad: @drawable/sleep_mood_bad_grey}"
+                        android:onClick="@{historyDayViewModel::sleepRating}"
+                        android:tag="1"
+                        android:textOff=""
+                        android:textOn="" />
+
+                    <androidx.appcompat.widget.AppCompatToggleButton
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="5dp"
+                        android:background="@{historyDayViewModel.sleepMoodSmileyTag == 2? @drawable/sleep_mood_good: @drawable/sleep_mood_good_grey}"
+                        android:onClick="@{historyDayViewModel::sleepRating}"
+                        android:tag="2"
+                        android:textOff=""
+                        android:textOn="" />
+
+                    <androidx.appcompat.widget.AppCompatToggleButton
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="5dp"
+                        android:background="@{historyDayViewModel.sleepMoodSmileyTag == 3? @drawable/sleep_mood_excellent: @drawable/sleep_mood_excellent_grey}"
+                        android:tag="3"
+                        android:onClick="@{historyDayViewModel::sleepRating}"
+                        android:textOn=""
+                        android:textOff=""/>
+
+                    <androidx.appcompat.widget.AppCompatToggleButton
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="5dp"
+                        android:background="@{historyDayViewModel.sleepMoodSmileyTag == 4? @drawable/sleep_mood_bad: @drawable/sleep_mood_bad_grey}"
+                        android:tag="4"
+                        android:onClick="@{historyDayViewModel::sleepRating}"
+                        android:textOn=""
+                        android:textOff=""/>
+
+                    <androidx.appcompat.widget.AppCompatToggleButton
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="5dp"
+                        android:background="@{historyDayViewModel.sleepMoodSmileyTag == 5? @drawable/sleep_mood_tired: @drawable/sleep_mood_tired_grey}"
+                        android:tag="5"
+                        android:onClick="@{historyDayViewModel::sleepRating}"
+                        android:textOn=""
+                        android:textOff=""/>
+
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"

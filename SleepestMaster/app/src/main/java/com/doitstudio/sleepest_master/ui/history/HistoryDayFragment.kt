@@ -91,15 +91,9 @@ class HistoryDayFragment : Fragment() {
         ).toInt()
         pieChartSleepAnalysis.invalidate()
 
-        // Listens to users input of the sleep rating for the previous night.
-        binding.rBSleepRatingBarDaily.setOnRatingBarChangeListener { ratingBar, rating, fromUser ->
-            saveSleepRatingDaily(rating)
-        }
-
         // Listener for changes in the analysis date. If user changes the day for the diagramms.
         viewModel.analysisDate.addOnPropertyChangedCallback(
             object: Observable.OnPropertyChangedCallback() {
-
                 override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
                     getDataValues()
                     updateLineChart(lineChartSleepAnalysis)
@@ -112,24 +106,26 @@ class HistoryDayFragment : Fragment() {
                 }
             })
 
+        viewModelDay.sleepMoodSmiley.addOnPropertyChangedCallback(
+            object: Observable.OnPropertyChangedCallback() {
+                override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                    saveSleepRatingDaily()
+                }
+            }
+        )
+
         getDataValues()
 
         return binding.root
     }
 
     /** Save users input of the [UserSleepRating.moodAfterSleep] into database. */
-    private fun saveSleepRatingDaily(rating: Float) {
-        val mood = when (rating) {
-            1f -> MoodType.BAD
-            2f -> MoodType.GOOD
-            3f -> MoodType.EXCELLENT
-            4f -> MoodType.LAZY
-            5f -> MoodType.TIRED
-            else -> MoodType.NONE
-        }
-
+    private fun saveSleepRatingDaily() {
         scope.launch {
-            viewModel.dataBaseRepository.updateMoodAfterSleep(mood, sleepValues.third.id)
+            viewModelDay.sleepMoodSmiley.get()?.let {
+                viewModel.dataBaseRepository.updateMoodAfterSleep(
+                    it, sleepValues.third.id)
+            }
         }
     }
 
@@ -435,7 +431,8 @@ class HistoryDayFragment : Fragment() {
                     }
                 }
                 // Update sleepRating Bar
-                binding.rBSleepRatingBarDaily.rating = sleepValues.third.userSleepRating.moodAfterSleep.ordinal.toFloat()
+                //binding.rBSleepRatingBarDaily.rating = sleepValues.third.userSleepRating.moodAfterSleep.ordinal.toFloat()
+                viewModelDay.sleepMoodSmileyTag.set(sleepValues.third.userSleepRating.moodAfterSleep.ordinal)
             }
         }
         viewModelDay.activitySmiley.set(SmileySelectorUtil.getSmileyActivity(activityOnDay))
