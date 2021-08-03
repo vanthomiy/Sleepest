@@ -57,8 +57,11 @@ class BackgroundAlarmTimeHandler(val context: Context) {
         scope.launch {
             sleepTimeBeginTemp = getSleepTimeBeginValue()
             sleepTimeEndTemp = getSleepTimeEndValue()
-            firstWakeupTemp = getFirstWakeup()
-            lastWakeupTemp = getLastWakeup()
+            if (checkAlarmActive()) {
+                firstWakeupTemp = getFirstWakeup()
+                lastWakeupTemp = getLastWakeup()
+            }
+
         }
 
     }
@@ -125,8 +128,11 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                 }
             }
 
-            lastWakeupTemp = getLastWakeup()
-            firstWakeupTemp = getFirstWakeup()
+            if (checkAlarmActive()) {
+                lastWakeupTemp = getLastWakeup()
+                firstWakeupTemp = getFirstWakeup()
+            }
+
 
         }
     }
