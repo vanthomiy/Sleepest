@@ -8,81 +8,110 @@ enum class Actions {
     START, STOP
 }
 
-interface IAlarmReceiverUsage {
-    fun getAlarmReceiverUsageValue() : Int
-}
-enum class AlarmReceiverUsage : IAlarmReceiverUsage {
-    DEFAULT {
-        override fun getAlarmReceiverUsageValue(): Int = 0
-    },
-    START_FOREGROUND{
-        override fun getAlarmReceiverUsageValue(): Int = 1
-    },
-    STOP_FOREGROUND{
-        override fun getAlarmReceiverUsageValue(): Int = 2
-    },
-    DISABLE_ALARM{
-        override fun getAlarmReceiverUsageValue(): Int = 3
-    },
-    NOT_SLEEPING{
-        override fun getAlarmReceiverUsageValue(): Int = 4
-    },
-    START_WORKMANAGER_CALCULATION{
-        override fun getAlarmReceiverUsageValue(): Int = 5
-    },
-    START_WORKMANAGER{
-        override fun getAlarmReceiverUsageValue(): Int = 6
-    },
-    STOP_WORKMANAGER{
-        override fun getAlarmReceiverUsageValue(): Int = 7
-    },
-    CURRENTLY_NOT_SLEEPING {
-        override fun getAlarmReceiverUsageValue(): Int = 8
-    },
-    SOLVE_API_PROBLEM {
-        override fun getAlarmReceiverUsageValue(): Int = 9
-    },
-    GO_TO_SLEEP {
-        override fun getAlarmReceiverUsageValue(): Int = 10
-    }
-}
-interface IAlarmClockReceiverUsage {
-    fun getAlarmClockReceiverUsageValue() : Int
-}
-enum class AlarmClockReceiverUsage : IAlarmClockReceiverUsage{
-    DEFAULT {
-        override fun getAlarmClockReceiverUsageValue(): Int = 0
-    },
-    START_ALARMCLOCK {
-        override fun getAlarmClockReceiverUsageValue(): Int = 1
-    },
-    STOP_ALARMCLOCK {
-        override fun getAlarmClockReceiverUsageValue(): Int = 2
-    },
-    SNOOZE_ALARMCLOCK {
-        override fun getAlarmClockReceiverUsageValue(): Int = 3
-    },
-    LATEST_WAKEUP_ALARMCLOCK {
-        override fun getAlarmClockReceiverUsageValue(): Int = 4
+enum class AlarmReceiverUsage {
+    START_FOREGROUND,
+    STOP_FOREGROUND,
+    DISABLE_ALARM,
+    NOT_SLEEPING,
+    START_WORKMANAGER_CALCULATION,
+    START_WORKMANAGER,
+    STOP_WORKMANAGER,
+    CURRENTLY_NOT_SLEEPING ,
+    SOLVE_API_PROBLEM,
+    GO_TO_SLEEP;
+
+    companion object {
+        fun getCount(type : AlarmReceiverUsage) : Int {
+            return when (type) {
+                START_FOREGROUND -> 31
+                STOP_FOREGROUND -> 32
+                DISABLE_ALARM -> 33
+                NOT_SLEEPING -> 34
+                START_WORKMANAGER_CALCULATION -> 35
+                START_WORKMANAGER -> 36
+                STOP_WORKMANAGER -> 37
+                CURRENTLY_NOT_SLEEPING -> 38
+                SOLVE_API_PROBLEM -> 39
+                GO_TO_SLEEP -> 40
+            }
+        }
     }
 }
 
-interface  INotificationUsage {
-    fun getNotificationUsageValue() : Int
+enum class AlarmClockReceiverUsage {
+
+    START_ALARMCLOCK,
+    STOP_ALARMCLOCK,
+    SNOOZE_ALARMCLOCK,
+    LATEST_WAKEUP_ALARMCLOCK;
+
+
+    companion object {
+        fun getCount(type : AlarmClockReceiverUsage) : Int {
+            return when (type) {
+                START_ALARMCLOCK -> 11
+                STOP_ALARMCLOCK -> 12
+                SNOOZE_ALARMCLOCK -> 13
+                LATEST_WAKEUP_ALARMCLOCK -> 14
+            }
+        }
+    }
 }
 
-enum class NotificationUsage : INotificationUsage {
-    NOTIFICATION_FOREGROUND_SERVICE {
-        override fun getNotificationUsageValue(): Int = 1
-    },
-    NOTIFICATION_USER_SHOULD_SLEEP {
-        override fun getNotificationUsageValue(): Int = 2
-    },
-    NOTIFICATION_NO_API_DATA {
-        override fun getNotificationUsageValue(): Int = 3
-    },
-    NOTIFICATION_ALARM_CLOCK {
-        override fun getNotificationUsageValue(): Int = 4
+enum class NotificationUsage {
+    NOTIFICATION_FOREGROUND_SERVICE,
+    NOTIFICATION_USER_SHOULD_SLEEP,
+    NOTIFICATION_NO_API_DATA,
+    NOTIFICATION_ALARM_CLOCK;
+
+    companion object {
+        fun getCount(type : NotificationUsage) : Int {
+            return when (type) {
+                NOTIFICATION_FOREGROUND_SERVICE -> 1
+                NOTIFICATION_USER_SHOULD_SLEEP -> 2
+                NOTIFICATION_NO_API_DATA -> 3
+                NOTIFICATION_ALARM_CLOCK -> 4
+            }
+        }
+    }
+}
+
+enum class ActivityIntentUsage {
+    MAIN_ACTIVITY,
+    LOCKSCREEN_ACTIVITY;
+
+    companion object {
+        fun getCount(type : ActivityIntentUsage) : Int {
+            return when (type) {
+                MAIN_ACTIVITY -> 50
+                LOCKSCREEN_ACTIVITY -> 51
+
+            }
+        }
+    }
+}
+
+enum class ActivityTransitionUsage {
+    REQUEST_CODE;
+
+    companion object {
+        fun getCount(type : ActivityTransitionUsage) : Int {
+            return when (type) {
+                REQUEST_CODE -> 60
+            }
+        }
+    }
+}
+
+enum class SleepApiUsage {
+    REQUEST_CODE;
+
+    companion object {
+        fun getCount(type : SleepApiUsage) : Int {
+            return when (type) {
+                REQUEST_CODE -> 70
+            }
+        }
     }
 }
 

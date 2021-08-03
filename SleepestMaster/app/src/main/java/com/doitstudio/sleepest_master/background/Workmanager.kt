@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi
 import androidx.work.*
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
+import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.NotificationUsage
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler.Companion.getHandler
@@ -28,9 +29,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-class Workmanager(appcontext: Context, workerParams: WorkerParameters) : Worker(appcontext, workerParams) {
-
-    private val sleepCalculationHandler: SleepCalculationHandler by lazy { getHandler(applicationContext) }
+class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
 
     @RequiresApi(Build.VERSION_CODES.P)
     override fun doWork(): Result {
@@ -44,6 +43,8 @@ class Workmanager(appcontext: Context, workerParams: WorkerParameters) : Worker(
         val dataBaseRepository: DatabaseRepository by lazy {
             (applicationContext as MainApplication).dataBaseRepository
         }
+
+        val sleepCalculationHandler : SleepCalculationHandler = getHandler(applicationContext)
 
         scope.launch {
             val sleepApiRawDataEntity =
