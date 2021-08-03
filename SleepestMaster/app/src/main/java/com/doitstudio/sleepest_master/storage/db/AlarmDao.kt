@@ -72,7 +72,4 @@ interface AlarmDao {
     @Query("UPDATE alarm_properties_table SET wasFired =0")
     suspend fun resetWasFired()
 
-    @Query("UPDATE alarm_properties_table SET actualWakeup =:wakeup")
-    suspend fun resetActualWakeup(wakeup: Int)
-
 }

@@ -16,7 +16,6 @@ import android.os.Build;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
-import androidx.media.app.NotificationCompat;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
@@ -27,7 +26,6 @@ import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage;
 import com.doitstudio.sleepest_master.model.data.Constants;
 import com.doitstudio.sleepest_master.googleapi.SleepHandler;
-import com.doitstudio.sleepest_master.model.data.NotificationUsage;
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 import com.doitstudio.sleepest_master.storage.DatabaseRepository;
@@ -47,6 +45,10 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         DataStoreRepository dataStoreRepository = DataStoreRepository.Companion.getRepo(context);
+        //DataStoreRepository dataStoreRepository = MainApplication.class.cast(context).getDataStoreRepository();
+        //Activity activity = (Activity) context;
+        //DataStoreRepository dataStoreRepository = ((MainApplication)activity.getApplication()).getDataStoreRepository();
+        //DatabaseRepository databaseRepository = MainApplication.class.cast(context).getDataBaseRepository();
         DatabaseRepository databaseRepository = ((MainApplication)context.getApplicationContext()).getDataBaseRepository();
         AlarmEntity alarmEntity = databaseRepository.getNextActiveAlarmJob();
 
@@ -65,20 +67,33 @@ public class AlarmReceiver extends BroadcastReceiver {
             case DEFAULT:
                 break;
             case START_FOREGROUND:
-                //Starts the cycle of receiving API data and setting alarms
+                //Start foregroundservice with an activity
                 BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).beginOfSleepTime(true);
                 break;
             case STOP_FOREGROUND:
-                //Stops the foregroundservice after a sleep session or if sleep time changes to out of sleep time
+                //Stop foregorundservice with an activity
                 BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).stopForegroundService(true);
                 break;
             case DISABLE_ALARM:
-                    //Disables the next active alarm temporarly
+                //if((databaseRepository.getNextActiveAlarmJob() != null) && !databaseRepository.getNextActiveAlarmJob().getTempDisabled()) {
+                    /**databaseRepository.updateAlarmTempDisabledJob(true, databaseRepository.getNextActiveAlarmJob().getId());
+                    Calendar calendarStopForeground = Calendar.getInstance();
+                    AlarmReceiver.startAlarmManager(calendarStopForeground.get(Calendar.DAY_OF_WEEK), calendarStopForeground.get(Calendar.HOUR_OF_DAY),
+                            calendarStopForeground.get(Calendar.MINUTE) + 5, context.getApplicationContext(), AlarmReceiverUsage.STOP_FOREGROUND);
+                    Toast.makeText(context.getApplicationContext(), context.getApplicationContext().getString(R.string.disable_alarm_message), Toast.LENGTH_LONG).show();**/
+                   // BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, false);
+            //    } else if ((databaseRepository.getNextActiveAlarmJob() != null) && databaseRepository.getNextActiveAlarmJob().getTempDisabled()) {
+                    /**databaseRepository.updateAlarmTempDisabledJob(false, databaseRepository.getNextActiveAlarmJob().getId());
+                    AlarmReceiver.cancelAlarm(context.getApplicationContext(), AlarmReceiverUsage.STOP_FOREGROUND);**/
+
                     if ((databaseRepository.getNextActiveAlarmJob() != null) && (!databaseRepository.getNextActiveAlarmJob().getTempDisabled())) {
                         BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, false);
                     } else {
                         BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, true);
                     }
+
+            // }
+
                 break;
             case NOT_SLEEPING:
                 //Button not Sleeping
@@ -112,27 +127,31 @@ public class AlarmReceiver extends BroadcastReceiver {
                 }**/
                 break;
             case STOP_WORKMANAGER:
+
                 BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).endOfSleepTime(true);
+                /**
+                //Stop Workmanager at end of sleeptime and unsubscribe to SleepApi
+                //TODO: Überprüfen, ob der Workmanager noch richtig abgebrochen wird
+                WorkManager.getInstance(context.getApplicationContext()).cancelAllWorkByTag(context.getApplicationContext().getString(R.string.workmanager1_tag));
+
+                sleepHandler.stopSleepHandler();
+
+                sleepCalculationHandler.defineUserWakeup( null, false);
+
+                //Set AlarmManager to start Workmanager at begin of sleeptime
+                calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeBeginJob());
+                AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context,AlarmReceiverUsage.START_WORKMANAGER_CALCULATION);
+                **/
                  break;
             case CURRENTLY_NOT_SLEEPING:
                 sleepCalculationHandler.userCurrentlyNotSleepingJob();
                 Toast.makeText(context.getApplicationContext(), context.getApplicationContext().getString(R.string.currently_not_sleeping_message), Toast.LENGTH_LONG).show();
                 break;
-            case SOLVE_API_PROBLEM:
-                Toast.makeText(context.getApplicationContext(), "Restarted sleepdata tracking", Toast.LENGTH_LONG).show();
-                BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).startWorkmanager();
-                NotificationManager notificationManagerApi = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManagerApi.cancel(NotificationUsage.NOTIFICATION_NO_API_DATA.getNotificationUsageValue());
-            case GO_TO_SLEEP:
-                Toast.makeText(context.getApplicationContext(), "Good night", Toast.LENGTH_LONG).show();
-                NotificationManager notificationManagerGoSleep = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManagerGoSleep.cancel(NotificationUsage.NOTIFICATION_NO_API_DATA.getNotificationUsageValue());
-
         }
     }
 
     /**
-     * Start a alarm at a specific time.
+     * Start a alarm at a specific time
      * @param day Number from 1-7, Sunday=1, Saturday=7
      * @param hour Hour from 0-23
      * @param min Minute from 0-59

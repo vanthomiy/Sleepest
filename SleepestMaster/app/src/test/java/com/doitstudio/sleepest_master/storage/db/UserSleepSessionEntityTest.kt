@@ -1,7 +1,6 @@
 package com.doitstudio.sleepest_master.storage.db
 
 import android.service.autofill.Validators.not
-import com.doitstudio.sleepest_master.util.TimeConverterUtil
 import com.google.common.base.Predicates.equalTo
 import org.hamcrest.CoreMatchers
 import org.junit.Assert.*

@@ -131,14 +131,8 @@ object SleepTimeValidationUtil {
             }
         }
 
-        if(wakeUpEarly != newWakeUpEarly || changeFrom == AlarmSleepChangeFrom.WAKEUPEARLYLY ) {
+        if(wakeUpEarly != newWakeUpEarly || changeFrom == AlarmSleepChangeFrom.WAKEUPEARLYLY )
             dataBaseRepository.updateWakeupEarly(newWakeUpEarly, alarmId)
-
-            if (LocalTime.now().toSecondOfDay() !in (newWakeUpEarly + 1) until newWakeUpLate) {
-                dataBaseRepository.updateWakeupTime(newWakeUpEarly, alarmId)
-            }
-        }
-
         if(wakeUpLate != newWakeUpLate || changeFrom == AlarmSleepChangeFrom.WAKEUPLATE)
             dataBaseRepository.updateWakeupLate(newWakeUpLate, alarmId)
         if(sleepDuration != newSleepDuration || changeFrom == AlarmSleepChangeFrom.DURATION)

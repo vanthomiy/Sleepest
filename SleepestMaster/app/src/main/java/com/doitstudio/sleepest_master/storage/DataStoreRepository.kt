@@ -187,10 +187,8 @@ class DataStoreRepository(context: Context) {
     suspend fun getSleepSubscribeStatus() : Boolean {
         return sleepApiDataStatus.sleepApiData.first().isSubscribed }
 
-    fun updateSleepIsSubscribed(isActive:Boolean) = runBlocking {
-        sleepApiDataStatus.updateIsSubscribed(isActive)
-    }
-
+    suspend fun updateSleepIsSubscribed(isActive:Boolean) =
+            sleepApiDataStatus.updateIsSubscribed(isActive)
 
     suspend fun updateSleepPermissionActive(isActive:Boolean) =
             sleepApiDataStatus.updatePermissionActive(isActive)

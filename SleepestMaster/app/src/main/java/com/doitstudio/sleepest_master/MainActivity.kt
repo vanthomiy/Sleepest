@@ -360,8 +360,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val test = System.currentTimeMillis()/1000
-        val b = test
         val dateTime = LocalDateTime.of(LocalDate.now(), LocalTime.now())
         val actualTimestampSeconds = dateTime.toEpochSecond(ZoneOffset.ofTotalSeconds(0)).toInt()
         val a = actualTimestampSeconds + 1

@@ -1,7 +1,6 @@
 package com.doitstudio.sleepest_master.storage
 
 
-import com.doitstudio.sleepest_master.model.data.Constants
 import com.doitstudio.sleepest_master.model.data.SleepState
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionDao
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
@@ -330,7 +329,7 @@ class DatabaseRepository(
     }
 
     suspend fun updateWakeupLate(wakeupLate: Int, alarmId: Int) {
-        val day = Constants.DAY_IN_SECONDS
+        val day = 24*60*60
         var newTime = wakeupLate
         if(wakeupLate > day)
             newTime -= day
@@ -341,7 +340,7 @@ class DatabaseRepository(
     }
 
     suspend fun updateWakeupTime(wakeupTime: Int, alarmId: Int) {
-        val day = Constants.DAY_IN_SECONDS
+        val day = 24*60*60
         var newTime = wakeupTime
         if(wakeupTime > day)
             newTime -= day
@@ -378,10 +377,6 @@ class DatabaseRepository(
     suspend fun resetAlarmTempDisabledWasFired() {
         alarmDao.resetTempDisabled()
         alarmDao.resetWasFired()
-    }
-
-    suspend fun resetActualWakeupTime(time : Int) {
-        alarmDao.resetActualWakeup(time)
     }
 
     //endregion
