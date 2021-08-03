@@ -312,8 +312,12 @@ class HistoryDayFragment : Fragment() {
          */
 
         chart.description.isEnabled = false
+        chart.setScaleEnabled(false)
+        chart.setTouchEnabled(false)
+        chart.setPinchZoom(false)
+        chart.isDoubleTapToZoomEnabled = false
 
-        chart.animateX(1000)
+        chart.animateX(500)
     }
 
     /** Generates the data needed for the [PieChart]. */
@@ -411,7 +415,8 @@ class HistoryDayFragment : Fragment() {
         chart.isDrawHoleEnabled = true
         chart.description.isEnabled = false
         chart.legend.textColor = viewModel.checkDarkMode()
-        chart.animateY(1000, Easing.EaseInOutQuad)
+        chart.setTouchEnabled(false)
+        chart.animateY(500, Easing.EaseInOutQuad)
     }
 
     /**  */

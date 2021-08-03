@@ -382,6 +382,11 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         barChart.axisRight.axisMaximum = proportion
         barChart.axisLeft.axisMaximum = proportion
         barChart.axisLeft.labelCount = proportion.toInt()
+
+        barChart.setScaleEnabled(false)
+        barChart.setTouchEnabled(false)
+        barChart.setPinchZoom(false)
+        barChart.isDoubleTapToZoomEnabled = false
     }
 
     /**  */
@@ -482,6 +487,10 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         chart.xAxis.valueFormatter = IndexAxisValueFormatter(xAxisValues)
 
         chart.description.isEnabled = false
+        chart.setScaleEnabled(false)
+        chart.setTouchEnabled(false)
+        chart.setPinchZoom(false)
+        chart.isDoubleTapToZoomEnabled = false
 
         chart.animateX(500)
     }
