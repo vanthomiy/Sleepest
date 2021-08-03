@@ -112,6 +112,9 @@ class HistoryTabView : Fragment() {
                 viewModel.getSleepData()
             }
         }
+
+        // Eingefügt, in der Hoffnung, dass es das View sofort lädt.
+        tVActualDayTabView.performClick()
     }
 
     fun updateDateInformation(range: Int) {
