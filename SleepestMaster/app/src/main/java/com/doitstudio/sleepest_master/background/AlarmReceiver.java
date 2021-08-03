@@ -1,6 +1,6 @@
 package com.doitstudio.sleepest_master.background;
 
-/**This class inherits from Broadcastreceiver and starts an alarm at a specific time and date*/
+/**This class inherits from Broadcastreceiver and starts an alarm at a specific time and date**/
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -46,11 +46,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        DataStoreRepository dataStoreRepository = DataStoreRepository.Companion.getRepo(context);
         DatabaseRepository databaseRepository = ((MainApplication)context.getApplicationContext()).getDataBaseRepository();
-        AlarmEntity alarmEntity = databaseRepository.getNextActiveAlarmJob();
-
-        SleepHandler sleepHandler = SleepHandler.Companion.getHandler(MainApplication.Companion.applicationContext());
         SleepCalculationHandler sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(MainApplication.Companion.applicationContext());
 
         Calendar calendar = Calendar.getInstance();
@@ -62,8 +58,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         ed.apply();
 
         switch (AlarmReceiverUsage.valueOf(intent.getStringExtra((context.getString(R.string.alarmmanager_key))))) {
-            case DEFAULT:
-                break;
             case START_FOREGROUND:
                 //Starts the cycle of receiving API data and setting alarms
                 BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).beginOfSleepTime(true);
@@ -89,27 +83,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                 //Start the workmanager for the calculation of the sleep
                 WorkmanagerCalculation.startPeriodicWorkmanager(Constants.WORKMANAGER_CALCULATION_DURATION, context.getApplicationContext());
                 break;
-            case START_WORKMANAGER: /**Übertragen**/
-                //Start Workmanager at sleeptime and subscribe to SleepApi
-                /**PeriodicWorkRequest periodicDataWork =
-                        new PeriodicWorkRequest.Builder(Workmanager.class, Constants.WORKMANAGER_DURATION, TimeUnit.MINUTES)
-                                .addTag(context.getString(R.string.workmanager1_tag)) //Tag is needed for canceling the periodic work
-                                .build();
-
-                WorkManager workManager = WorkManager.getInstance(context);
-                workManager.enqueueUniquePeriodicWork(context.getString(R.string.workmanager1_tag), ExistingPeriodicWorkPolicy.KEEP, periodicDataWork);
-
-                Toast.makeText(context, "Workmanager started", Toast.LENGTH_LONG).show();
-
-                sleepHandler.startSleepHandler();
-
-                //Set AlarmManager to stop Workmanager at end of sleeptime
-                calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeEndJob());
-                if (LocalTime.now().toSecondOfDay() < dataStoreRepository.getSleepTimeEndJob()) {
-                    AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context,AlarmReceiverUsage.STOP_FOREGROUND);
-                } else {
-                    AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK) + 1, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context, AlarmReceiverUsage.STOP_FOREGROUND);
-                }**/
+            case START_WORKMANAGER:
+                //Deprecated
                 break;
             case STOP_WORKMANAGER:
                 BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).endOfSleepTime(true);
@@ -122,11 +97,11 @@ public class AlarmReceiver extends BroadcastReceiver {
                 Toast.makeText(context.getApplicationContext(), "Restarted sleepdata tracking", Toast.LENGTH_LONG).show();
                 BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).startWorkmanager();
                 NotificationManager notificationManagerApi = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManagerApi.cancel(NotificationUsage.NOTIFICATION_NO_API_DATA.getNotificationUsageValue());
+                notificationManagerApi.cancel(NotificationUsage.Companion.getCount(NotificationUsage.NOTIFICATION_NO_API_DATA));
             case GO_TO_SLEEP:
                 Toast.makeText(context.getApplicationContext(), "Good night", Toast.LENGTH_LONG).show();
                 NotificationManager notificationManagerGoSleep = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManagerGoSleep.cancel(NotificationUsage.NOTIFICATION_NO_API_DATA.getNotificationUsageValue());
+                notificationManagerGoSleep.cancel(NotificationUsage.Companion.getCount(NotificationUsage.NOTIFICATION_NO_API_DATA));
 
         }
     }
@@ -145,13 +120,13 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         Intent intent = new Intent(alarmContext, AlarmReceiver.class);
         intent.putExtra(alarmContext.getString(R.string.alarmmanager_key), alarmReceiverUsage.name());
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(alarmContext, alarmReceiverUsage.getAlarmReceiverUsageValue(), intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(alarmContext, AlarmReceiverUsage.Companion.getCount(alarmReceiverUsage), intent, 0);
         AlarmManager alarmManager = (AlarmManager) alarmContext.getSystemService(ALARM_SERVICE);
 
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calenderAlarm.getTimeInMillis(), pendingIntent);
 
         Toast.makeText(alarmContext, "AlarmManager set to " + calenderAlarm.get(Calendar.DAY_OF_WEEK) + ": "
-                + calenderAlarm.get(Calendar.HOUR_OF_DAY) + ":" + calenderAlarm.get(Calendar.MINUTE) + ", usage: " + alarmReceiverUsage.getAlarmReceiverUsageValue(), Toast.LENGTH_LONG).show();
+                + calenderAlarm.get(Calendar.HOUR_OF_DAY) + ":" + calenderAlarm.get(Calendar.MINUTE) + ", usage: " + AlarmReceiverUsage.Companion.getCount(alarmReceiverUsage), Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -161,18 +136,18 @@ public class AlarmReceiver extends BroadcastReceiver {
     public static void cancelAlarm(Context cancelAlarmContext, AlarmReceiverUsage alarmReceiverUsage) {
 
         Intent intent = new Intent(cancelAlarmContext, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(cancelAlarmContext, alarmReceiverUsage.getAlarmReceiverUsageValue(), intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(cancelAlarmContext, AlarmReceiverUsage.Companion.getCount(alarmReceiverUsage), intent, 0);
         AlarmManager alarmManager = (AlarmManager) cancelAlarmContext.getSystemService(ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
         pendingIntent.cancel();
 
-        Toast.makeText(cancelAlarmContext, "AlarmManager canceled: " + alarmReceiverUsage.getAlarmReceiverUsageValue(), Toast.LENGTH_LONG).show();
+        Toast.makeText(cancelAlarmContext, "AlarmManager canceled: " + AlarmReceiverUsage.Companion.getCount(alarmReceiverUsage), Toast.LENGTH_LONG).show();
     }
 
     public static boolean isAlarmManagerActive(Context alarmActiveContext, AlarmReceiverUsage alarmReceiverUsage) {
         Intent intent = new Intent(alarmActiveContext, AlarmReceiver.class);
 
-        return (PendingIntent.getBroadcast(alarmActiveContext, alarmReceiverUsage.getAlarmReceiverUsageValue(), intent, PendingIntent.FLAG_NO_CREATE) != null);
+        return (PendingIntent.getBroadcast(alarmActiveContext, AlarmReceiverUsage.Companion.getCount(alarmReceiverUsage), intent, PendingIntent.FLAG_NO_CREATE) != null);
     }
 
     /**
