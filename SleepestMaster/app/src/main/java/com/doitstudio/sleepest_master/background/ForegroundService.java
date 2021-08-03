@@ -262,8 +262,16 @@ public class ForegroundService extends LifecycleService {
         foregroundServiceStartTime = LocalTime.now().toSecondOfDay();
     }
 
-    public static int getForegroundServiceStartTime() {
-        return foregroundServiceStartTime;
+    public static int getForegroundServiceTime() {
+
+        int time = 0;
+        if (foregroundServiceStartTime < LocalTime.now().toSecondOfDay()) {
+            time = LocalTime.now().toSecondOfDay() - foregroundServiceStartTime;
+        } else {
+            time = Constants.DAY_IN_SECONDS - foregroundServiceStartTime + LocalTime.now().toSecondOfDay();
+        }
+
+        return time;
     }
 
     //endregion
@@ -283,15 +291,18 @@ public class ForegroundService extends LifecycleService {
         Calendar calendar = Calendar.getInstance();
 
         //Update wakeup time
-        if ((LocalTime.now().toSecondOfDay() - foregroundServiceStartTime) < 3 && (LocalTime.now().toSecondOfDay() - foregroundServiceStartTime) > 0) {
+        /**if ((LocalTime.now().toSecondOfDay() - foregroundServiceStartTime) < 3 && (LocalTime.now().toSecondOfDay() - foregroundServiceStartTime) > 0) {
             alarmTimeInSeconds = time.getActualWakeup();
-        }
+        }**/
+
+        alarmTimeInSeconds = time.getActualWakeup();
 
         //Alarm must be active, if OnAlarmChanged will be called, so set it to true
         isAlarmActive = true;
 
         //Update the foreground notification with data
         updateNotification();
+        sendUserInformation();
 
         SharedPreferences pref = getSharedPreferences("AlarmChanged", 0);
         SharedPreferences.Editor ed = pref.edit();
@@ -529,6 +540,10 @@ public class ForegroundService extends LifecycleService {
         notificationUtil.chooseNotification();
     }
 
+    /**
+     * Fills the list for the information of the foregroundservice notification
+     * @return filled list
+     */
     private ArrayList<Object> fillList() {
         ArrayList<Object> arrayList = new ArrayList<>();
         arrayList.add(alarmEntity);
@@ -538,6 +553,7 @@ public class ForegroundService extends LifecycleService {
         arrayList.add(alarmTimeInSeconds);
         arrayList.add(bannerConfig);
         arrayList.add(isSubscribed);
+        arrayList.add(sleepValueAmount);
 
         return arrayList;
     }

@@ -52,10 +52,10 @@ public class NotificationUtil {
                 notification = createForegroundNotification();
                 break;
             case NOTIFICATION_USER_SHOULD_SLEEP:
-                notification = createInformationNotification(smileySelectorUtil.getSmileyAttention() + context.getString(R.string.information_notification_text_sleeptime_problem));
+                notification = createInformationNotification(smileySelectorUtil.getSmileyAttention() + context.getString(R.string.information_notification_text_sleeptime_problem), NotificationUsage.NOTIFICATION_USER_SHOULD_SLEEP.getNotificationUsageValue());
                 break;
             case NOTIFICATION_NO_API_DATA:
-                notification = createInformationNotification(smileySelectorUtil.getSmileyAttention() + context.getString(R.string.information_notification_text_sleep_api_problem));
+                notification = createInformationNotification(smileySelectorUtil.getSmileyAttention() + context.getString(R.string.information_notification_text_sleep_api_problem), NotificationUsage.NOTIFICATION_NO_API_DATA.getNotificationUsageValue());
                 break;
             case NOTIFICATION_ALARM_CLOCK:
                 notification = createAlarmClockNotification();
@@ -87,30 +87,51 @@ public class NotificationUtil {
         }
     }
 
-    private Notification createInformationNotification(String information) {
+    private Notification createInformationNotification(String information, int usage) {
         //Get Channel id
         String notificationChannelId = context.getApplicationContext().getString(R.string.information_notification_channel);
 
-        //Create intent if user tap on notification
-        Intent intent = new Intent(context.getApplicationContext(), MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent informationIntent;
+        PendingIntent informationPendingIntent;
+        String buttonText;
+
+        if (usage == NotificationUsage.NOTIFICATION_NO_API_DATA.getNotificationUsageValue()) {
+
+            informationIntent = new Intent(context.getApplicationContext(), AlarmReceiver.class);
+            informationIntent.putExtra(context.getString(R.string.alarmmanager_key), AlarmReceiverUsage.SOLVE_API_PROBLEM.name());
+            informationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            informationPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), AlarmReceiverUsage.SOLVE_API_PROBLEM.getAlarmReceiverUsageValue(), informationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            buttonText = "Solve it";
+
+        } else  {
+
+            informationIntent = new Intent(context.getApplicationContext(), AlarmReceiver.class);
+            informationIntent.putExtra(context.getString(R.string.alarmmanager_key), AlarmReceiverUsage.SOLVE_API_PROBLEM.name());
+            informationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            informationPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), AlarmReceiverUsage.SOLVE_API_PROBLEM.getAlarmReceiverUsageValue(), informationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            buttonText = "Good night";
+        }
+
+
 
         //Create manager and channel
         createNotificationChannel(context.getString(R.string.information_notification_channel), context.getString(R.string.information_notification_channel_name), context.getString(R.string.information_notification_channel_description));
 
         //Build the notification and return it
-        Notification.Builder builder;
-        builder = new Notification.Builder(context.getApplicationContext(), notificationChannelId);
+        NotificationCompat.Builder builder;
+        builder = new NotificationCompat.Builder(context.getApplicationContext(), notificationChannelId);
 
         return builder
                 .setContentTitle(context.getApplicationContext().getString(R.string.information_notification_title))
                 .setContentText(information)
-                .setStyle(new Notification.DecoratedCustomViewStyle())
+                .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
                 .setSmallIcon(R.drawable.logo_notification)
-                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .setContentIntent(informationPendingIntent)
+                .setDeleteIntent(informationPendingIntent)
                 .setOnlyAlertOnce(true)
-                .setVisibility(Notification.VISIBILITY_PUBLIC)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .addAction(R.drawable.logo_notification, buttonText, informationPendingIntent)
                 .build();
     }
 
@@ -200,7 +221,7 @@ public class NotificationUtil {
         boolean[] bannerConfig = (boolean[]) arrayList.get(5);
 
         if (bannerConfig[0]) {
-            remoteViews.setTextViewText(R.id.tvBannerAlarmActive, contentText + " sub:" + (boolean) arrayList.get(6));
+            remoteViews.setTextViewText(R.id.tvBannerAlarmActive, contentText + " sub:" + arrayList.get(6) + ",VA:" + arrayList.get(7));
             remoteViews.setViewVisibility(R.id.tvBannerAlarmActive, View.VISIBLE);
         } else {
             remoteViews.setViewVisibility(R.id.tvBannerAlarmActive, View.GONE);

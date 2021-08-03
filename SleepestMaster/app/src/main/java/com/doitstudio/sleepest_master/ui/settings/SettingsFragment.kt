@@ -21,13 +21,16 @@ import com.doitstudio.sleepest_master.DontKillMyAppFragment
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
 import com.doitstudio.sleepest_master.databinding.FragmentSettingsBinding
+import com.doitstudio.sleepest_master.googleapi.SleepHandler
 import com.doitstudio.sleepest_master.model.data.AlarmClockReceiverUsage
+import com.doitstudio.sleepest_master.model.data.NotificationUsage
 import com.doitstudio.sleepest_master.model.data.export.ImportUtil
 import com.doitstudio.sleepest_master.model.data.export.UserSleepExportData
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
+import com.doitstudio.sleepest_master.util.NotificationUtil
 import com.doitstudio.sleepest_master.util.TimeConverterUtil
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
@@ -47,8 +50,8 @@ class SettingsFragment : Fragment() {
     private val dataBaseRepository: DatabaseRepository by lazy {
         (actualContext as MainApplication).dataBaseRepository
     }
-    private val dataStoreRepository: DataStoreRepository by lazy {
-        (actualContext as MainApplication).dataStoreRepository
+    private val sleepHandler : SleepHandler by lazy {
+        SleepHandler.getHandler(actualContext)
     }
 
     private var caseOfEntrie = -1
@@ -88,8 +91,11 @@ class SettingsFragment : Fragment() {
             onDataClicked(it)
         }
         binding.btnTutorial.setOnClickListener() {
-            val calendar = TimeConverterUtil.getAlarmDate(LocalTime.now().toSecondOfDay() + 60)
-            AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context, AlarmClockReceiverUsage.START_ALARMCLOCK)
+            //val calendar = TimeConverterUtil.getAlarmDate(LocalTime.now().toSecondOfDay() + 60)
+            //AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context, AlarmClockReceiverUsage.START_ALARMCLOCK)
+            //val notificationsUtil = NotificationUtil(context, NotificationUsage.NOTIFICATION_NO_API_DATA,null)
+            //notificationsUtil.chooseNotification()
+            sleepHandler.stopSleepHandler()
         }
         binding.btnImportantSettings.setOnClickListener() {
             DontKillMyAppFragment.show(requireActivity())
@@ -121,7 +127,7 @@ class SettingsFragment : Fragment() {
             """.trimIndent()
         pref = actualContext.getSharedPreferences("Workmanager", 0)
         val textLastWorkmanager = """
-            Last workmanager call: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
+            Last workmanager call: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getLong("diff", 0)}
             
             """.trimIndent()
         pref = actualContext.getSharedPreferences("WorkmanagerCalculation", 0)
