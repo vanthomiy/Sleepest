@@ -9,6 +9,7 @@ import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
+import com.doitstudio.sleepest_master.SettingsData
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockAudio
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
 import com.doitstudio.sleepest_master.googleapi.SleepHandler
@@ -19,12 +20,14 @@ import com.doitstudio.sleepest_master.model.data.Constants
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
+import com.doitstudio.sleepest_master.storage.db.AlarmEntity
+import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.util.TimeConverterUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -297,7 +300,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
             Toast.makeText(context, "Workmanager stopped", Toast.LENGTH_LONG).show()
 
             sleepHandler.stopSleepHandler()
-            defineNewUserWakeup(null, false)
+            sleepCalculationHandler.defineUserWakeup(null, false)
 
             //Set AlarmManager to start Workmanager at begin of sleeptime
             val calendar = TimeConverterUtil.getAlarmDate(getSleepTimeBeginValue())
@@ -490,12 +493,6 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                     startWorkmanager()
                 }
             }
-        }
-    }
-
-    fun defineNewUserWakeup(localTime: LocalDateTime?, setAlarm:Boolean) {
-        scope.launch {
-            sleepCalculationHandler.defineUserWakeup(localTime, setAlarm)
         }
     }
 

@@ -9,7 +9,6 @@ import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import com.doitstudio.sleepest_master.googleapi.ActivityTransitionHandler.Companion.getHandler
 import com.doitstudio.sleepest_master.MainApplication
-import com.doitstudio.sleepest_master.model.data.ActivityTransitionUsage
 import com.google.android.gms.location.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -39,6 +38,8 @@ class ActivityTransitionHandler(private val context: Context) {
                 instance
             }
         }
+
+        const val REQUEST_CODE_INTENT_ACTIVITY_TRANSITION = 122
     }
 
     /**
@@ -111,7 +112,7 @@ class ActivityTransitionHandler(private val context: Context) {
         val intent = Intent(context, ActivityTransitionReciver::class.java)
         return PendingIntent.getBroadcast(
                 context,
-                ActivityTransitionUsage.getCount(ActivityTransitionUsage.REQUEST_CODE),
+                REQUEST_CODE_INTENT_ACTIVITY_TRANSITION,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT
         )

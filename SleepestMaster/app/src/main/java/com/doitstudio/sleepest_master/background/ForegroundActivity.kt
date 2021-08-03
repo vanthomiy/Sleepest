@@ -102,6 +102,33 @@ class ForegroundActivity : Activity() {
             }
         }
 
+        /*if (extras != null) {
+            val use = extras.getInt("intent", 0)
+            if (use == 1) {
+
+                // get the next alarm async
+                scope.launch {
+
+                    // next alarm or null
+                    if(databaseRepository.isAlarmActiv()){
+                        // start foreground if not null
+                            /**TODO: Abfrage, ob Background schon aktive ist*/
+
+                        if (!dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
+                            ForegroundService.startOrStopForegroundService(Actions.START, applicationContext)
+                        }
+
+                    } else {
+                        //Next foreground start at next day
+                        val calendarAlarm = AlarmReceiver.getAlarmDate(Calendar.getInstance()[Calendar.DAY_OF_WEEK] + 1, times.startForegroundHour, times.startForegroundMinute)
+                        AlarmReceiver.startAlarmManager(calendarAlarm[Calendar.DAY_OF_WEEK], calendarAlarm[Calendar.HOUR_OF_DAY], calendarAlarm[Calendar.MINUTE], applicationContext, 1)
+                    }
+                }
+            } else if (use == 2) {
+                ForegroundService.startOrStopForegroundService(Actions.STOP, applicationContext)
+            }
+        }*/
+
         finish()
 
     }

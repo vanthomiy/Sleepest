@@ -24,7 +24,6 @@ import androidx.annotation.RequiresApi;
 
 import com.doitstudio.sleepest_master.MainApplication;
 import com.doitstudio.sleepest_master.R;
-import com.doitstudio.sleepest_master.model.data.Constants;
 import com.doitstudio.sleepest_master.model.data.NotificationUsage;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog;
@@ -55,7 +54,10 @@ public class AlarmClockAudio {
     public void init(Context context) {
         if(appContext == null) {
             this.appContext = context;
+            //dataStoreRepository = ((MainApplication)getInstanceContext()).getDataStoreRepository();
             dataStoreRepository = DataStoreRepository.Companion.getRepo(appContext);
+            int a = 0;
+
         }
     }
 
@@ -153,6 +155,7 @@ public class AlarmClockAudio {
     public void startAlarm() {
         NotificationManager notificationManager = (NotificationManager) appContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
+
         //Check for do not disturb permission, otherwise play sound with help of music stream
         if(notificationManager.isNotificationPolicyAccessGranted()) {
             audioManager = getAudioManager();
@@ -173,10 +176,9 @@ public class AlarmClockAudio {
         }
 
         //Timer of 1 minute, which snoozes the alarm after finishing
-        countDownTimer = new CountDownTimer(Constants.MILLIS_UNTIL_SNOOZE, Constants.COUNTDOWN_TICK_INTERVAL) {
+        countDownTimer = new CountDownTimer(60000, 1000) {
 
             public void onTick(long millisUntilFinished) {
-
             }
 
             public void onFinish() {
@@ -200,7 +202,7 @@ public class AlarmClockAudio {
         audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
 
         //Init waveform for vibration and start vibration
-        long[] waveform = Constants.VIBRATION_WAVEFORM;
+        long[] waveform = {0, 400, 800, 400, 800, 400, 800};
         vibrator = AlarmClockAudio.getVibrator();
         vibrator.vibrate(VibrationEffect.createWaveform(waveform, 0));
     }
@@ -239,6 +241,7 @@ public class AlarmClockAudio {
 
         //Get instance of ringtone
         ringtoneManager = getRingtoneManager(dataStoreRepository.getAlarmToneJob());
+        /**TODO: Abfrage, ob Uri noch mit dem eingestellten übereinstimmt*/
 
         //Convert integer volume to float volume 0.0 - 1.0 for ringtone
         if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) > 0) {
@@ -251,7 +254,7 @@ public class AlarmClockAudio {
         ringtoneManager.setLooping(true);
         ringtoneManager.play();
 
-        long[] waveform = Constants.VIBRATION_WAVEFORM;
+        long[] waveform = {0, 400, 800, 400, 800, 400, 800};
         vibrator = AlarmClockAudio.getVibrator();
         vibrator.vibrate(VibrationEffect.createWaveform(waveform, 0));
 
@@ -283,7 +286,7 @@ public class AlarmClockAudio {
 
         if (restart) {
             //Snoozes the alarm for 10 minutes
-            AlarmClockReceiver.restartAlarmManager(Constants.MILLIS_SNOOZE, getInstanceContext());
+            AlarmClockReceiver.restartAlarmManager(600000, getInstanceContext());
         }
 
         NotificationManager notificationManager = (NotificationManager) appContext.getSystemService(Context.NOTIFICATION_SERVICE);
