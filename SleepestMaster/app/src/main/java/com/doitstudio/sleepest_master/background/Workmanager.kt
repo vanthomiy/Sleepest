@@ -41,17 +41,7 @@ class Workmanager(appcontext: Context, workerParams: WorkerParameters) : Worker(
         }
 
         scope.launch {
-           /* if (dataStoreRepository.isInSleepTime() && (dataBaseRepository.getNextActiveAlarm() != null)) {
-                // alarm should be active else set active
-                if(!dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
 
-                    if (!dataBaseRepository.getNextActiveAlarm()!!.wasFired ||
-                        ((LocalTime.now().toSecondOfDay() > dataBaseRepository.getNextActiveAlarm()!!.actualWakeup) &&
-                                (dataStoreRepository.getSleepTimeBegin() < LocalTime.now().toSecondOfDay()))){
-                        ForegroundService.startOrStopForegroundService(Actions.START, applicationContext);
-                    }
-                }
-            }*/
 
             if (LocalTime.now().toSecondOfDay() >= dataStoreRepository.getSleepTimeBegin() &&
                 ((LocalTime.now().toSecondOfDay() - ForegroundService.getForegroundServiceStartTime()) >= 60) && (dataStoreRepository.sleepApiDataFlow.first().sleepApiValuesAmount <= 3) &&
@@ -64,9 +54,11 @@ class Workmanager(appcontext: Context, workerParams: WorkerParameters) : Worker(
                 val notificationsUtil = NotificationUtil(applicationContext, NotificationUsage.NOTIFICATION_NO_API_DATA,null)
                 notificationsUtil.chooseNotification()
             }
+
+            sleepCalculationHandler.checkIsUserSleeping(null)
+
         }
 
-        sleepCalculationHandler.checkIsUserSleeping(null)
 
         val calendar: Calendar = Calendar.getInstance()
 

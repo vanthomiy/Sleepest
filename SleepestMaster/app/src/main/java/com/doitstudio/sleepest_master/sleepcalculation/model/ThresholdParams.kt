@@ -32,7 +32,7 @@ data class ThresholdParams(
         var light: Float = 0f,
 
 ){
-        fun absBetweenTresholds(paramsToSubtract : ThresholdParams){
+        fun absBetweenThresholds(paramsToSubtract : ThresholdParams){
                 confidence = kotlin.math.abs(confidence - paramsToSubtract.confidence)
                 light = kotlin.math.abs(light - paramsToSubtract.light)
                 motion = kotlin.math.abs(motion - paramsToSubtract.motion)
@@ -106,7 +106,7 @@ data class ThresholdParams(
                                 },
                                 motion = when(mobilePosition){
                                         MobilePosition.INBED -> 2f
-                                        else -> 2f
+                                        else -> 3f
                                 },
                                 light = when(mobilePosition){
                                         MobilePosition.INBED -> 0f
@@ -123,7 +123,7 @@ data class ThresholdParams(
                                 },
                                 motion = when(mobilePosition){
                                         MobilePosition.INBED -> 3f
-                                        else -> 3f
+                                        else -> 2f
                                 },
                                 light = when(mobilePosition){
                                         MobilePosition.INBED -> 3f
@@ -139,7 +139,7 @@ data class ThresholdParams(
                                         else -> 45f
                                 },
                                 motion = when(mobilePosition){
-                                        MobilePosition.INBED -> 4f
+                                        MobilePosition.INBED -> 5f
                                         else -> 2f
                                 },
                                 light = when(mobilePosition){
@@ -153,7 +153,7 @@ data class ThresholdParams(
                         return ThresholdParams(
                                 confidence = when(lightConditions){
                                         LightConditions.DARK -> 1f
-                                        else -> 1f
+                                        else -> 0.9f
                                 },
                                 motion = when(lightConditions){
                                         LightConditions.DARK -> 1f
@@ -161,7 +161,7 @@ data class ThresholdParams(
                                 },
                                 light = when(lightConditions){
                                         LightConditions.DARK -> 1f
-                                        else -> 1f
+                                        else -> 0.9f
                                 }
                         )
                 }
@@ -170,7 +170,7 @@ data class ThresholdParams(
                         return ThresholdParams(
                                 confidence = when(lightConditions){
                                         LightConditions.DARK -> 1f
-                                        else -> 1f
+                                        else -> 1.1f
                                 },
                                 motion = when(lightConditions){
                                         LightConditions.DARK -> 1f
@@ -178,7 +178,7 @@ data class ThresholdParams(
                                 },
                                 light = when(lightConditions){
                                         LightConditions.DARK -> 1f
-                                        else -> 1f
+                                        else -> 0.9f
                                 }
                         )
                 }
@@ -187,7 +187,7 @@ data class ThresholdParams(
                         return ThresholdParams(
                                 confidence = when(lightConditions){
                                         LightConditions.DARK -> 1f
-                                        else -> 1f
+                                        else -> 0.9f
                                 },
                                 motion = when(lightConditions){
                                         LightConditions.DARK -> 1f
@@ -195,7 +195,7 @@ data class ThresholdParams(
                                 },
                                 light = when(lightConditions){
                                         LightConditions.DARK -> 1f
-                                        else -> 1f
+                                        else -> 1.1f
                                 }
                         )
                 }
@@ -204,7 +204,7 @@ data class ThresholdParams(
                         return ThresholdParams(
                                 confidence = when(lightConditions){
                                         LightConditions.DARK -> 1f
-                                        else -> 1f
+                                        else -> 0.9f
                                 },
                                 motion = when(lightConditions){
                                         LightConditions.DARK -> 1f
@@ -212,7 +212,7 @@ data class ThresholdParams(
                                 },
                                 light = when(lightConditions){
                                         LightConditions.DARK -> 1f
-                                        else -> 1f
+                                        else -> 1.1f
                                 }
                         )
                 }
@@ -220,23 +220,25 @@ data class ThresholdParams(
                 fun createSleepStartBorder(mobileUseFrequency: MobileUseFrequency) : ThresholdParams{
                         return ThresholdParams(
                                 confidence = when(mobileUseFrequency){
-                                        MobileUseFrequency.VERYLESS -> 0.85f
-                                        MobileUseFrequency.LESS -> 0.9f
-                                        MobileUseFrequency.OFTEN -> 1.0f
-                                        MobileUseFrequency.VERYOFTEN -> 1.1f
+                                        MobileUseFrequency.VERYLESS -> 0.6f
+                                        MobileUseFrequency.LESS -> 0.7f
+                                        MobileUseFrequency.OFTEN -> 0.9f
+                                        MobileUseFrequency.VERYOFTEN -> 1f
                                         else -> 1f
                                 },
                                 motion = when(mobileUseFrequency){
-                                        MobileUseFrequency.VERYLESS -> 0.85f
-                                        MobileUseFrequency.LESS -> 0.9f
-                                        MobileUseFrequency.OFTEN -> 1.0f
-                                        MobileUseFrequency.VERYOFTEN -> 1.1f                                       else -> 1f
+                                        MobileUseFrequency.VERYLESS -> 0.6f
+                                        MobileUseFrequency.LESS -> 0.7f
+                                        MobileUseFrequency.OFTEN -> 0.9f
+                                        MobileUseFrequency.VERYOFTEN -> 1f
+                                        else -> 1f
                                 },
                                 light = when(mobileUseFrequency){
-                                        MobileUseFrequency.VERYLESS -> 0.85f
-                                        MobileUseFrequency.LESS -> 0.9f
-                                        MobileUseFrequency.OFTEN -> 1.0f
-                                        MobileUseFrequency.VERYOFTEN -> 1.1f                                       else -> 1f
+                                        MobileUseFrequency.VERYLESS -> 1f
+                                        MobileUseFrequency.LESS -> 1f
+                                        MobileUseFrequency.OFTEN -> 1f
+                                        MobileUseFrequency.VERYOFTEN -> 1f
+                                        else -> 1f
                                 }
                         )
                 }
@@ -244,23 +246,25 @@ data class ThresholdParams(
                 fun createSleepEndBorder(mobileUseFrequency: MobileUseFrequency) : ThresholdParams{
                         return ThresholdParams(
                                 confidence = when(mobileUseFrequency){
-                                        MobileUseFrequency.VERYLESS -> 0.85f
-                                        MobileUseFrequency.LESS -> 0.9f
-                                        MobileUseFrequency.OFTEN -> 1.0f
-                                        MobileUseFrequency.VERYOFTEN -> 1.1f
+                                        MobileUseFrequency.VERYLESS -> 0.6f
+                                        MobileUseFrequency.LESS -> 0.7f
+                                        MobileUseFrequency.OFTEN -> 0.9f
+                                        MobileUseFrequency.VERYOFTEN -> 1f
                                         else -> 1f
                                 },
                                 motion = when(mobileUseFrequency){
-                                        MobileUseFrequency.VERYLESS -> 0.85f
-                                        MobileUseFrequency.LESS -> 0.9f
-                                        MobileUseFrequency.OFTEN -> 1.0f
-                                        MobileUseFrequency.VERYOFTEN -> 1.1f                                       else -> 1f
+                                        MobileUseFrequency.VERYLESS -> 0.6f
+                                        MobileUseFrequency.LESS -> 0.7f
+                                        MobileUseFrequency.OFTEN -> 0.9f
+                                        MobileUseFrequency.VERYOFTEN -> 1f
+                                        else -> 1f
                                 },
                                 light = when(mobileUseFrequency){
-                                        MobileUseFrequency.VERYLESS -> 0.85f
-                                        MobileUseFrequency.LESS -> 0.9f
-                                        MobileUseFrequency.OFTEN -> 1.0f
-                                        MobileUseFrequency.VERYOFTEN -> 1.1f                                       else -> 1f
+                                        MobileUseFrequency.VERYLESS -> 1f
+                                        MobileUseFrequency.LESS -> 1f
+                                        MobileUseFrequency.OFTEN -> 1f
+                                        MobileUseFrequency.VERYOFTEN -> 1f
+                                        else -> 1f
                                 }
                         )
                 }
@@ -268,23 +272,25 @@ data class ThresholdParams(
                 fun createCleanUp(mobileUseFrequency: MobileUseFrequency) : ThresholdParams{
                         return ThresholdParams(
                                 confidence = when(mobileUseFrequency){
-                                        MobileUseFrequency.VERYLESS -> 0.85f
-                                        MobileUseFrequency.LESS -> 0.9f
-                                        MobileUseFrequency.OFTEN -> 1.0f
-                                        MobileUseFrequency.VERYOFTEN -> 1.1f
+                                        MobileUseFrequency.VERYLESS -> 1f
+                                        MobileUseFrequency.LESS -> 1f
+                                        MobileUseFrequency.OFTEN -> 1f
+                                        MobileUseFrequency.VERYOFTEN -> 1f
                                         else -> 1f
                                 },
                                 motion = when(mobileUseFrequency){
-                                        MobileUseFrequency.VERYLESS -> 0.85f
-                                        MobileUseFrequency.LESS -> 0.9f
-                                        MobileUseFrequency.OFTEN -> 1.0f
-                                        MobileUseFrequency.VERYOFTEN -> 1.1f                                       else -> 1f
+                                        MobileUseFrequency.VERYLESS -> 1f
+                                        MobileUseFrequency.LESS -> 1f
+                                        MobileUseFrequency.OFTEN -> 1f
+                                        MobileUseFrequency.VERYOFTEN -> 1f
+                                        else -> 1f
                                 },
                                 light = when(mobileUseFrequency){
-                                        MobileUseFrequency.VERYLESS -> 0.85f
-                                        MobileUseFrequency.LESS -> 0.9f
-                                        MobileUseFrequency.OFTEN -> 1.0f
-                                        MobileUseFrequency.VERYOFTEN -> 1.1f                                       else -> 1f
+                                        MobileUseFrequency.VERYLESS -> 1f
+                                        MobileUseFrequency.LESS -> 1f
+                                        MobileUseFrequency.OFTEN -> 1f
+                                        MobileUseFrequency.VERYOFTEN -> 1f
+                                        else -> 1f
                                 }
                         )
                 }
@@ -292,23 +298,25 @@ data class ThresholdParams(
                 fun createGeneralThreshold(mobileUseFrequency: MobileUseFrequency) : ThresholdParams{
                         return ThresholdParams(
                                 confidence = when(mobileUseFrequency){
-                                        MobileUseFrequency.VERYLESS -> 0.85f
-                                        MobileUseFrequency.LESS -> 0.9f
-                                        MobileUseFrequency.OFTEN -> 1.0f
-                                        MobileUseFrequency.VERYOFTEN -> 1.1f
+                                        MobileUseFrequency.VERYLESS -> 1f
+                                        MobileUseFrequency.LESS -> 1f
+                                        MobileUseFrequency.OFTEN -> 1f
+                                        MobileUseFrequency.VERYOFTEN -> 1f
                                         else -> 1f
                                 },
                                 motion = when(mobileUseFrequency){
-                                        MobileUseFrequency.VERYLESS -> 0.85f
-                                        MobileUseFrequency.LESS -> 0.9f
-                                        MobileUseFrequency.OFTEN -> 1.0f
-                                        MobileUseFrequency.VERYOFTEN -> 1.1f                                       else -> 1f
+                                        MobileUseFrequency.VERYLESS -> 1f
+                                        MobileUseFrequency.LESS -> 1f
+                                        MobileUseFrequency.OFTEN -> 1f
+                                        MobileUseFrequency.VERYOFTEN -> 1f
+                                        else -> 1f
                                 },
                                 light = when(mobileUseFrequency){
-                                        MobileUseFrequency.VERYLESS -> 0.85f
-                                        MobileUseFrequency.LESS -> 0.9f
-                                        MobileUseFrequency.OFTEN -> 1.0f
-                                        MobileUseFrequency.VERYOFTEN -> 1.1f                                       else -> 1f
+                                        MobileUseFrequency.VERYLESS -> 1f
+                                        MobileUseFrequency.LESS -> 1f
+                                        MobileUseFrequency.OFTEN -> 1f
+                                        MobileUseFrequency.VERYOFTEN -> 1f
+                                        else -> 1f
                                 }
                         )
                 }
@@ -318,15 +326,15 @@ data class ThresholdParams(
                 //region SleepState params
                 fun createLightSleepBorder() : ThresholdParams{
                         return ThresholdParams(
-                                confidence = 85f,
-                                motion = 3f,
-                                light = 3f
+                                confidence = 88f,
+                                motion = 2f,
+                                light = 2f
                         )
                 }
 
                 fun createDeepSleepBorder() : ThresholdParams{
                         return ThresholdParams(
-                                confidence = 95f,
+                                confidence = 88f,
                                 motion = 2f,
                                 light = 2f
                         )
@@ -334,7 +342,7 @@ data class ThresholdParams(
 
                 fun createRemSleepBorder() : ThresholdParams{
                         return ThresholdParams(
-                                confidence = 100f,
+                                confidence = 93f,
                                 motion = 1f,
                                 light = 1f
                         )
@@ -349,12 +357,12 @@ data class ThresholdParams(
                                 },
                                 motion = when(lightConditions){
                                         LightConditions.DARK -> 1f
-                                        LightConditions.LIGHT -> 1.15f
+                                        LightConditions.LIGHT -> 1f
                                         else -> 1f
                                 },
                                 light = when(lightConditions){
                                         LightConditions.DARK -> 1f
-                                        LightConditions.LIGHT -> 1.15f
+                                        LightConditions.LIGHT -> 1.05f
                                         else -> 1f
                                 }
                         )
@@ -369,12 +377,12 @@ data class ThresholdParams(
                                 },
                                 motion = when(lightConditions){
                                         LightConditions.DARK -> 1f
-                                        LightConditions.LIGHT -> 1.15f
+                                        LightConditions.LIGHT -> 1f
                                         else -> 1f
                                 },
                                 light = when(lightConditions){
                                         LightConditions.DARK -> 1f
-                                        LightConditions.LIGHT -> 1.15f
+                                        LightConditions.LIGHT -> 1.05f
                                         else -> 1f
                                 }
                         )
@@ -384,17 +392,17 @@ data class ThresholdParams(
                         return ThresholdParams(
                                 confidence = when(lightConditions){
                                         LightConditions.DARK -> 1f
-                                        LightConditions.LIGHT -> 0.95f
+                                        LightConditions.LIGHT -> 1f
                                         else -> 1f
                                 },
                                 motion = when(lightConditions){
                                         LightConditions.DARK -> 1f
-                                        LightConditions.LIGHT -> 1.15f
+                                        LightConditions.LIGHT -> 1f
                                         else -> 1f
                                 },
                                 light = when(lightConditions){
                                         LightConditions.DARK -> 1f
-                                        LightConditions.LIGHT -> 1.15f
+                                        LightConditions.LIGHT -> 1.025f
                                         else -> 1f
                                 }
                         )

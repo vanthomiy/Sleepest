@@ -44,6 +44,7 @@ object ImportUtil {
                         UserSleepSessionEntity(
                             session.id,
                             session.mobilePosition,
+                            session.lightConditions,
                             session.sleepTimes,
                             session.userSleepRating,
                             session.userCalculationRating

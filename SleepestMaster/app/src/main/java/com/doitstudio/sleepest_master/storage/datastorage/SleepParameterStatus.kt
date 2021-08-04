@@ -94,5 +94,17 @@ class SleepParameterStatus(private val dataStore: DataStore<SleepParameters>) {
         }
     }
 
+    suspend fun updateStandardMobilePositionOverLastWeek(position: Int){
+        dataStore.updateData{preference->
+            preference.toBuilder().setStandardMobilePositionOverLastWeek(position).build()
+        }
+    }
+
+    suspend fun updateLigthConditionOverLastWeek(position: Int){
+        dataStore.updateData{preference->
+            preference.toBuilder().setStandardLightConditionOverLastWeek(position).build()
+        }
+    }
+
 
 }

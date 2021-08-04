@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Sleepest-Master</string>
+    <string name="app_name">Sleepest - Best way to sleep</string>
     <string name="description_dont_kill_my_app">To ensure that the app stays active in the background
         and wakes you up safely, follow the instructions below for your device model and Android version</string>
     <string name="alarm_active">Alarm Active</string>

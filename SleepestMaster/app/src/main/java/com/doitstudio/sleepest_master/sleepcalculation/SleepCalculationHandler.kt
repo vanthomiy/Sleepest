@@ -11,6 +11,7 @@ import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.google.android.gms.location.DetectedActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -124,7 +125,7 @@ class SleepCalculationHandler(val context: Context) {
                     val requestedSecondsFuture = seconds + (i * 60)
                     var itemFuture: SleepApiRawDataEntity? = filteredList.firstOrNull { x -> x?.timestampSeconds >= requestedSecondsFuture }
                     var last = SleepApiRawDataEntity(
-                        timestampSeconds = filteredList.last().timestampSeconds * (i * 60),
+                        timestampSeconds = filteredList.last().timestampSeconds + (i * 60),
                         filteredList.last().confidence,
                         filteredList.last().motion,
                         filteredList.last().light,
@@ -178,29 +179,25 @@ class SleepCalculationHandler(val context: Context) {
     /**
      * Defines the [SleepState] for a sleep
      */
-    suspend fun defineSleepStates(time:Int, sleepApiRawDataEntity:List<SleepApiRawDataEntity>) : SleepState{
+    suspend fun defineSleepStates(time:Int, sleepApiRawDataEntity:List<SleepApiRawDataEntity>, lightConditions: LightConditions) : SleepState{
 
         // get the actual sleepApiDataList
         val sleepApiRawDataEntity = sleepApiRawDataEntity.sortedByDescending { x -> x.timestampSeconds }
 
-        // get count of future data
-        val futureCount = sleepApiRawDataEntity.filter{x-> x.timestampSeconds > time}.count()
 
-        // return just sleeping if there is a problem with the list or not enough future data
-        if(sleepApiRawDataEntity == null || sleepApiRawDataEntity.count() == 0 || futureCount < 3 ){
-            // do something!
+        // get normed list
+        val (normedSleepApiDataPast, frequency1) = createTimeNormedData(0.5f, false, time, sleepApiRawDataEntity.toList())
+        val (normedSleepApiDataFuture, frequency2) = createTimeNormedData(0.5f, true, time, sleepApiRawDataEntity.toList())
+
+        if(frequency1 == SleepDataFrequency.NONE || frequency2 == SleepDataFrequency.NONE) {
             return SleepState.SLEEPING
         }
 
-        // get normed list
-        val (normedSleepApiData, frequency) = createTimeNormedData(0.5f, true, time, sleepApiRawDataEntity)
-
         // create features for ml model
         val sleepClassifier = SleepClassifier.getHandler(context)
-        //val features = sleepClassifier.createFeatures(normedSleepApiData, ModelProcess.SLEEP12, frequency)
 
         // call the ml model
-        return  sleepClassifier.defineUserSleep(time,normedSleepApiData)
+        return  sleepClassifier.defineUserSleep(normedSleepApiDataPast, normedSleepApiDataFuture, lightConditions)
     }
 
     fun defineSleepStatesTest(time:Int, sleepApiRawDataEntity:List<SleepApiRawDataEntity>) : SleepState{
@@ -210,80 +207,158 @@ class SleepCalculationHandler(val context: Context) {
 
 
         // get normed list
-        val (normedSleepApiData, frequency) = createTimeNormedData(1f, true, time, sleepApiRawDataEntity.toList())
+        val (normedSleepApiDataPast, frequency1) = createTimeNormedData(0.5f, false, time, sleepApiRawDataEntity.toList())
+        val (normedSleepApiDataFuture, frequency2) = createTimeNormedData(0.5f, true, time, sleepApiRawDataEntity.toList())
 
-        if(frequency == SleepDataFrequency.NONE) {
+        if(frequency1 == SleepDataFrequency.NONE || frequency2 == SleepDataFrequency.NONE) {
             return SleepState.SLEEPING
         }
 
         // create features for ml model
         val sleepClassifier = SleepClassifier.getHandler(context)
-        //val features = sleepClassifier.createFeatures(normedSleepApiData, ModelProcess.SLEEP12, frequency)
 
         // call the ml model
-        return  sleepClassifier.defineUserSleepTest(time,normedSleepApiData)
+        return  sleepClassifier.defineUserSleepTest(normedSleepApiDataPast, normedSleepApiDataFuture)
     }
 
     // endregion
 
     //region Sleep calculation functions
 
+    fun checkIsUserSleepingJob(localTime: LocalDateTime? = null){
+        scope.launch{
+            checkIsUserSleeping(localTime)
+        }
+    }
+
     /**
      * Checks if the user is Sleeping or not at the moment.
      * Saves the state in the [SleepApiRawDataEntity] and in the [LiveUserSleepActivityStatus]
      * [time] the actual time in seconds
      */
-    fun checkIsUserSleeping(localTime: LocalDateTime? = null){
+    suspend fun checkIsUserSleeping(localTime: LocalDateTime? = null){
 
-        scope.launch {
             // get the actual sleepApiDataList
             val time = localTime ?: LocalDateTime.now()
             val sleepApiRawDataEntity =
                 dataBaseRepository.getSleepApiRawDataFromDateLive(time).first()
-                    .sortedByDescending { x -> x.timestampSeconds }
+                    .sortedBy { x -> x.timestampSeconds }
 
             if (sleepApiRawDataEntity == null || sleepApiRawDataEntity.count() == 0) {
                 // do something!
-
-                return@launch
+                return
             }
+
+            val sleepClassifier = SleepClassifier.getHandler(context)
+
+            val mobilePosition =
+                if(MobilePosition.getCount(dataStoreRepository.sleepParameterFlow.first().standardMobilePosition) == MobilePosition.UNIDENTIFIED) // create features for ml model
+                // call the model
+                    sleepClassifier.defineTableBed(sleepApiRawDataEntity)
+                else
+                    MobilePosition.getCount(dataStoreRepository.sleepParameterFlow.first().standardMobilePosition)
+
+            val lightConditions =
+                if(LightConditions.getCount(dataStoreRepository.sleepParameterFlow.first().standardLightCondition) == LightConditions.UNIDENTIFIED) // create features for ml model
+                // call the model
+                    sleepClassifier.defineLightConditions(sleepApiRawDataEntity, false)
+                else
+                    LightConditions.getCount(dataStoreRepository.sleepParameterFlow.first().standardLightCondition)
+
+            val mobileUseFrequency = MobileUseFrequency.getCount(dataStoreRepository.sleepParameterFlow.first().mobileUseFrequency)
+
 
             // check for each sleepstate
             sleepApiRawDataEntity.forEach { data ->
-
+                // First definition without future data
                 if(data.sleepState == SleepState.NONE){
 
                     // get normed list
-                    val (normedSleepApiData, frequency) = createTimeNormedData(
-                        1f,
+                    val (normedSleepApiDataBefore, frequency) = createTimeNormedData(
+                        0.5f,
                         false,
                         data.timestampSeconds,
-                        sleepApiRawDataEntity
+                        sleepApiRawDataEntity.toList()
                     )
+
+                    if(frequency == SleepDataFrequency.NONE) {
+                        return@forEach
+                    }
 
                     // create features for ml model
                     val sleepClassifier = SleepClassifier.getHandler(context)
 
-                    /*val features =
-                        sleepClassifier.createFeatures(normedSleepApiData, ModelProcess.SLEEP04, frequency)
-                    */
 
                     // call the ml model
-                    val result = sleepClassifier.isUserSleeping(normedSleepApiData, frequency)
+                    data.sleepState = sleepClassifier.isUserSleeping(
+                        normedSleepApiDataBefore,
+                        null,
+                        mobilePosition,
+                        lightConditions,
+                        mobileUseFrequency
+                    )
 
-                    // save the result to the sleep api data
-                    dataBaseRepository.updateSleepApiRawDataSleepState(data.timestampSeconds, result)
+                    dataBaseRepository.updateSleepApiRawDataSleepState(
+                        data.timestampSeconds,
+                        data.sleepState
+                    )
+
+                }
+                else if (data.oldSleepState == SleepState.NONE){
+                    // get normed list
+                    val (normedSleepApiDataBefore, frequency1) = createTimeNormedData(
+                        1f,
+                        false,
+                        data.timestampSeconds,
+                        sleepApiRawDataEntity.toList()
+                    )
+
+                    val (normedSleepApiDataAfter, frequency2) = createTimeNormedData(
+                        1f,
+                        true,
+                        data.timestampSeconds,
+                        sleepApiRawDataEntity.toList()
+                    )
+
+
+                    if(frequency1 == SleepDataFrequency.NONE || frequency2 == SleepDataFrequency.NONE){
+                        return@forEach
+                    }
+
+                    data.oldSleepState = data.sleepState
+
+                    // create features for ml model
+                    val sleepClassifier = SleepClassifier.getHandler(context)
+
+                    dataBaseRepository.updateOldSleepApiRawDataSleepState(
+                        data.timestampSeconds,
+                        data.oldSleepState
+                    )
+
+                    // call the ml model
+                    data.sleepState = sleepClassifier.isUserSleeping(
+                        normedSleepApiDataBefore,
+                        normedSleepApiDataAfter,
+                        mobilePosition,
+                        lightConditions,
+                        mobileUseFrequency
+                    )
+
+                    dataBaseRepository.updateSleepApiRawDataSleepState(
+                        data.timestampSeconds,
+                        data.sleepState
+                    )
                 }
             }
 
             // update live user sleep activity
-            dataStoreRepository.updateIsUserSleeping(sleepApiRawDataEntity.first().sleepState == SleepState.SLEEPING)
+            dataStoreRepository.updateIsUserSleeping(sleepApiRawDataEntity.last().sleepState == SleepState.SLEEPING)
             dataStoreRepository.updateUserSleepTime(
                 SleepApiRawDataEntity.getSleepTime(
                     sleepApiRawDataEntity
                 )
-            )
-        }
+                    )
+
     }
 
     /**
@@ -293,6 +368,8 @@ class SleepCalculationHandler(val context: Context) {
      */
     fun checkIsUserSleepingTest(sleepApiRawDataEntity: List<SleepApiRawDataEntity>) : List<SleepApiRawDataEntity>{
 
+
+
             // check for each sleepstate
             sleepApiRawDataEntity.forEach { data ->
                 // First definition without future data
@@ -300,7 +377,7 @@ class SleepCalculationHandler(val context: Context) {
 
                     // get normed list
                     val (normedSleepApiDataBefore, frequency) = createTimeNormedData(
-                        1f,
+                        0.5f,
                         false,
                         data.timestampSeconds,
                         sleepApiRawDataEntity.toList()
@@ -319,7 +396,7 @@ class SleepCalculationHandler(val context: Context) {
                         normedSleepApiDataBefore,
                         null,
                         MobilePosition.INBED,
-                        LightConditions.LIGHT,
+                        LightConditions.DARK,
                         MobileUseFrequency.OFTEN
                     )
 
@@ -356,7 +433,7 @@ class SleepCalculationHandler(val context: Context) {
                         normedSleepApiDataBefore,
                         normedSleepApiDataAfter,
                         MobilePosition.INBED,
-                        LightConditions.LIGHT,
+                        LightConditions.DARK,
                         MobileUseFrequency.OFTEN
                     )
                 }
@@ -365,17 +442,23 @@ class SleepCalculationHandler(val context: Context) {
             return sleepApiRawDataEntity
     }
 
+
+    fun defineUserWakeupJob(localTime: LocalDateTime? = null, setAlarm:Boolean = true){
+        scope.launch{
+            defineUserWakeup(localTime, setAlarm)
+        }
+    }
+
     /**
      * Sets the user sleep states for every sleeping state
      * Saves the state in the [SleepApiRawDataEntity] and in the [LiveUserSleepActivityStatus] and in the [UserSleepSessionEntity] with id
      * Stores alarm data in the main
      * [time] = the actual time in seconds
      */
-    fun defineUserWakeup(localTime: LocalDateTime? = null, setAlarm:Boolean = true) {
+    suspend fun defineUserWakeup(localTime: LocalDateTime? = null, setAlarm:Boolean = true) {
 
         val sleepClassifier = SleepClassifier.getHandler(context)
 
-        scope.launch {
             // for each sleeping time, we have to define the sleep state
             val time = localTime ?: LocalDateTime.now()
             val sleepApiRawDataEntity =
@@ -385,7 +468,7 @@ class SleepCalculationHandler(val context: Context) {
             if (sleepApiRawDataEntity == null || sleepApiRawDataEntity.count() == 0) {
                 // do something!
 
-                return@launch
+                return
             }
 
             // calculate all sleep states when the user is sleeping
@@ -403,16 +486,32 @@ class SleepCalculationHandler(val context: Context) {
                         MobilePosition.getCount(dataStoreRepository.sleepParameterFlow.first().standardMobilePosition)
             }
 
+            // only when unidentified
+            if(sleepSessionEntity.lightConditions == LightConditions.UNIDENTIFIED){
+                sleepSessionEntity.lightConditions =
+                    if(LightConditions.getCount(dataStoreRepository.sleepParameterFlow.first().standardLightCondition) == LightConditions.UNIDENTIFIED) // create features for ml model
+                    // call the model
+                        sleepClassifier.defineLightConditions(sleepApiRawDataEntity, true)
+                    else
+                        LightConditions.getCount(dataStoreRepository.sleepParameterFlow.first().standardLightCondition)
+            }
+
+
 
             // if in bed then check the single states of the sleep
             if (sleepSessionEntity.mobilePosition == MobilePosition.INBED) {
                 sleepApiRawDataEntity.forEach()
                 {
                     // we take all sleep values that are not already defined as light or deep but sleeping
-                    if (it.sleepState == SleepState.SLEEPING) {
+                    if (it.sleepState == SleepState.SLEEPING && it.oldSleepState != SleepState.NONE) {
                         // we need to calculate the sleep state
                         // and then we update it in the sleep api raw data entity
-                        val result = defineSleepStates(it.timestampSeconds, sleepApiRawDataEntity)
+                            dataBaseRepository.updateOldSleepApiRawDataSleepState(
+                            it.timestampSeconds,
+                            it.sleepState
+                        )
+
+                        val result = defineSleepStates(it.timestampSeconds, sleepApiRawDataEntity, sleepSessionEntity.lightConditions)
                         dataBaseRepository.updateSleepApiRawDataSleepState(
                             it.timestampSeconds,
                             result
@@ -458,7 +557,7 @@ class SleepCalculationHandler(val context: Context) {
                 sleepSessionEntity.userSleepRating.activityOnDay = activity
 
                 // store in the alarm...!!!
-                val alarm = dataBaseRepository.getNextActiveAlarm() ?: return@launch
+                val alarm = dataBaseRepository.getNextActiveAlarm() ?: return
 
                 var sleepDuration = alarm.sleepDuration
                 // If include then add the factors to it
@@ -495,19 +594,32 @@ class SleepCalculationHandler(val context: Context) {
                 sleepSessionEntity.sleepTimes.sleepTimeEnd =
                         SleepApiRawDataEntity.getSleepEndTime(sleepApiRawDataEntity)
 
+                // now we are also recalculating the default light and mobile position over the last week
+
+                val sleepSessions = dataBaseRepository.getUserSleepSessionSinceDays(7).first()
+
+                if(sleepSessions.filter { x -> x.mobilePosition == MobilePosition.INBED }.count() >= sleepSessions.count() / 2){
+                    dataStoreRepository.updateStandardMobilePositionOverLastWeek(MobilePosition.INBED.ordinal)
+                }
+                else {
+                    dataStoreRepository.updateStandardMobilePositionOverLastWeek(MobilePosition.ONTABLE.ordinal)
+                }
+
+                if(sleepSessions.filter { x -> x.lightConditions == LightConditions.LIGHT }.count() >= sleepSessions.count() / 2){
+                    dataStoreRepository.updateLigthConditionOverLastWeek(LightConditions.LIGHT.ordinal)
+                }
+                else {
+                    dataStoreRepository.updateLigthConditionOverLastWeek(LightConditions.DARK.ordinal)
+                }
+
             }
 
-            //dataBaseRepository.insertSleepApiRawData(sleepApiRawDataEntity)
             dataStoreRepository.updateUserSleepTime(sleepSessionEntity.sleepTimes.sleepDuration)
             dataBaseRepository.insertUserSleepSession(sleepSessionEntity)
-        }
+
     }
 
     fun defineUserWakeupTest(sleepApiRawDataEntity: List<SleepApiRawDataEntity>) : List<SleepApiRawDataEntity>{
-
-        val sleepClassifier = SleepClassifier.getHandler(context)
-
-
 
         // if in bed then check the single states of the sleep
         sleepApiRawDataEntity.forEach()

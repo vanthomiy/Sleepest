@@ -76,16 +76,6 @@ class DatabaseRepository(
     }
 
     /**
-     * [time] the duration in seconds eg. 86200 would be from 24hours ago to now the data
-     */
-    suspend fun getSleepApiRawDataSinceSeconds(time:Int): Flow<List<SleepApiRawDataEntity>>
-    {
-        val now = LocalDateTime.now(ZoneOffset.systemDefault())
-        val seconds = now.atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
-        return sleepApiRawDataDao.getSince(time)
-    }
-
-    /**
      * Gets the sleep api data from a specific state from a date in life time.
      * so we always getting the data from 15:00 the day or day before until the specific time
      * later we have to combine it with the actual sleeptimes
@@ -242,6 +232,16 @@ class DatabaseRepository(
         }
 
         return userSession
+    }
+
+    /**
+     * [time] the duration in seconds eg. 86200 would be from 24hours ago to now the data
+     */
+    suspend fun getUserSleepSessionSinceDays(days:Long): Flow<List<UserSleepSessionEntity>>
+    {
+        val now = LocalDateTime.now(ZoneOffset.systemDefault()).minusDays(days)
+        val seconds = now.atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+        return userSleepSessionDao.getSince(seconds)
     }
 
     suspend fun insertUserSleepSession(userSleepSession: UserSleepSessionEntity) {

@@ -1,5 +1,6 @@
 package com.doitstudio.sleepest_master.model.data.export
 
+import com.doitstudio.sleepest_master.model.data.LightConditions
 import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.sleepcalculation.model.SleepTimes
 import com.doitstudio.sleepest_master.sleepcalculation.model.UserCalculationRating
@@ -15,6 +16,7 @@ import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
 data class UserSleepExportData(
         val id:Int,
         val mobilePosition: MobilePosition = MobilePosition.UNIDENTIFIED,
+        val lightConditions: LightConditions = LightConditions.UNIDENTIFIED,
         val sleepTimes: SleepTimes = SleepTimes(),
         val userSleepRating: UserSleepRating = UserSleepRating(),
         val userCalculationRating: UserCalculationRating = UserCalculationRating(),

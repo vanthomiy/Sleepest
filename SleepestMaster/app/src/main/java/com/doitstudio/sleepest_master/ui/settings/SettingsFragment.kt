@@ -279,6 +279,7 @@ class SettingsFragment : Fragment() {
                         val userExporSession = UserSleepExportData(
                             session.id,
                             session.mobilePosition,
+                            session.lightConditions,
                             session.sleepTimes,
                             session.userSleepRating,
                             session.userCalculationRating,
