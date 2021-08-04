@@ -60,16 +60,15 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
                 val notificationsUtil = NotificationUtil(applicationContext, NotificationUsage.NOTIFICATION_NO_API_DATA,null)
                 notificationsUtil.chooseNotification()
             }
-
-            val calendar: Calendar = Calendar.getInstance()
-
-            val pref: SharedPreferences = applicationContext.getSharedPreferences("Workmanager", 0)
-            val ed = pref.edit()
-            ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY))
-            ed.putInt("minute", calendar.get(Calendar.MINUTE))
-            ed.putLong("diff", (actualTimestampSeconds - lastTimestampInSeconds))
-            ed.apply()
         }
+
+        val calendar: Calendar = Calendar.getInstance()
+
+        val pref: SharedPreferences = applicationContext.getSharedPreferences("Workmanager", 0)
+        val ed = pref.edit()
+        ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY))
+        ed.putInt("minute", calendar.get(Calendar.MINUTE))
+        ed.apply()
 
         sleepCalculationHandler.checkIsUserSleeping(null)
 

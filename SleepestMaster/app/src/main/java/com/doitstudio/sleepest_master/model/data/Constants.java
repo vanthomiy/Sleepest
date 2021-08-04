@@ -1,7 +1,7 @@
 package com.doitstudio.sleepest_master.model.data;
 
 public class Constants {
-    public static final int FOREGROUND_SERVICE_ID = 1000;
+    public static final int FOREGROUND_SERVICE_ID = 1;
     public static final int ALARM_CLOCK_NOTIFICATION_ID = 1001;
     public static final int EXPORT_REQUEST_CODE = 1002;
     public static final int IMPORT_REQUEST_CODE = 1003;

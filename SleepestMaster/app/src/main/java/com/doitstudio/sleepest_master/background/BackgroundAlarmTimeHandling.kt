@@ -254,8 +254,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
         //Start Workmanager at sleeptime and subscribe to SleepApi
         val periodicDataWork: PeriodicWorkRequest = PeriodicWorkRequest.Builder(Workmanager::class.java,
             Constants.WORKMANAGER_DURATION.toLong(),
-            TimeUnit.MINUTES
-        )
+            TimeUnit.MINUTES)
             .addTag(context.getString(R.string.workmanager1_tag)) //Tag is needed for canceling the periodic work
             .build()
 
