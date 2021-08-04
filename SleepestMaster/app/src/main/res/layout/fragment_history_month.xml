@@ -64,7 +64,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="10dp"
-                        android:visibility="@{historyMonthViewModel.actualExpand == 0 ? historyMonthViewModel.visibleState:historyWeekViewModel.goneState, default=gone}"
+                        android:visibility="@{historyMonthViewModel.actualExpand == 0 ? historyMonthViewModel.visibleState:historyMonthViewModel.goneState, default=gone}"
                         android:background="@drawable/bgroundedchoosen">
 
                         <TextView
@@ -117,7 +117,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="10dp"
-                        android:visibility="@{historyMonthViewModel.actualExpand == 1 ? historyMonthViewModel.visibleState:historyDayViewModel.goneState, default=gone}"
+                        android:visibility="@{historyMonthViewModel.actualExpand == 1 ? historyMonthViewModel.visibleState:historyMonthViewModel.goneState, default=gone}"
                         android:background="@drawable/bgroundedchoosen">
 
                         <TextView
