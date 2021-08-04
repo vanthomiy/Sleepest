@@ -5,7 +5,9 @@ import android.content.Context
 import android.graphics.BlendMode
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.transition.TransitionManager
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatButton
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
@@ -49,6 +51,12 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
     /** */
     var sleepMoodSmileyTag = ObservableField(0)
 
+    val actualExpand = ObservableField(-1)
+    val goneState = ObservableField(View.GONE)
+    val visibleState = ObservableField(View.VISIBLE)
+
+    lateinit var transitionsContainer : ViewGroup
+
     init {
 
     }
@@ -65,5 +73,18 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
 
         sleepMoodSmiley.set(mood)
         sleepMoodSmileyTag.set(view.tag.toString().toInt())
+    }
+
+    fun onInfoClicked(view: View){
+        updateInfoChanged(view.tag.toString(), true)
+    }
+
+    private fun updateInfoChanged(value: String, toggle: Boolean = false) {
+
+        TransitionManager.beginDelayedTransition(transitionsContainer);
+
+
+        actualExpand.set(if(actualExpand.get() == value.toIntOrNull()) -1 else value.toIntOrNull() )
+
     }
 }

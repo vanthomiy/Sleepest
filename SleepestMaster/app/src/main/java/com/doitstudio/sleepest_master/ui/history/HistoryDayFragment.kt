@@ -69,6 +69,8 @@ class HistoryDayFragment : Fragment() {
 
         binding = FragmentHistoryDayBinding.inflate(inflater, container, false)
         binding.historyDayViewModel = viewModelDay
+        viewModelDay.transitionsContainer = (binding.lLLinearAnimationLayoutDailyAnalysis)
+
 
         // Initial set up for the daily sleep analysis line chart.
         lineChartSleepAnalysis = setLineChart()
