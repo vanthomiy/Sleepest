@@ -191,7 +191,7 @@ public class ForegroundService extends LifecycleService {
 
 
         //Call function with null to transfer actual(local) time for correct calculation
-        sleepCalculationHandler.checkIsUserSleeping(null);
+        sleepCalculationHandler.checkIsUserSleepingJob(null);
         userSleepTime = 0;
 
         Calendar calendar = Calendar.getInstance();

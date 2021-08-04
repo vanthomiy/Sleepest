@@ -817,7 +817,7 @@
                             android:text="@string/profile_credits_flaticon"
                             android:textColor="@color/accent_text_color"
                             android:tag="flaticon"
-                            android:onClick="@{profileViewModel.onCreditsClicked}"
+                            android:onClick="@{profileViewModel::onCreditsClicked}"
                             />
 
                     </LinearLayout>

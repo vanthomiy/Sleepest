@@ -184,7 +184,7 @@ class SleepCalculationHandler(val context: Context) {
     /**
      * Defines the [SleepState] for a sleep
      */
-    suspend fun defineSleepStates(time:Int, sleepApiRawDataEntity:List<SleepApiRawDataEntity>, lightConditions: LightConditions) : SleepState{
+    fun defineSleepStates(time:Int, sleepApiRawDataEntity:List<SleepApiRawDataEntity>, lightConditions: LightConditions) : SleepState{
 
         // get the actual sleepApiDataList
         val sleepApiRawDataEntity = sleepApiRawDataEntity.sortedByDescending { x -> x.timestampSeconds }
