@@ -18,13 +18,18 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.asLiveData
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
+import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
+import com.doitstudio.sleepest_master.model.data.AlarmClockReceiverUsage
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.util.SmileySelectorUtil
+import com.doitstudio.sleepest_master.util.TimeConverterUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.time.LocalTime
+import java.util.*
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -111,8 +116,9 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     // region Help
 
     fun onHelpClicked(view: View) {
+
         when (view.tag.toString()) {
-            "tutorial" -> "asd"
+            "tutorial" -> "nksnklas"
             "importantSettings" -> "saas"
         }
     }

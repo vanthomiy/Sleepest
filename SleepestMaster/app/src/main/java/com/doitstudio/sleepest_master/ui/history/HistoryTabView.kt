@@ -10,6 +10,7 @@ import androidx.databinding.Observable
 import androidx.databinding.ObservableInt
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import androidx.viewpager2.widget.ViewPager2
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.databinding.FragmentHistoryTabviewBinding
@@ -105,6 +106,12 @@ class HistoryTabView : Fragment() {
         )
 
         updateDateInformation(tabLayout.selectedTabPosition)
+
+        viewModel.dataBaseRepository.allUserSleepSessions.asLiveData().observe(viewLifecycleOwner) {
+            if (!viewModel.onWork) {
+                viewModel.getSleepData()
+            }
+        }
     }
 
     fun updateDateInformation(range: Int) {

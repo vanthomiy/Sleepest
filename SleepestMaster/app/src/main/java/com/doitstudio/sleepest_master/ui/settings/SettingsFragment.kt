@@ -19,19 +19,23 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import com.doitstudio.sleepest_master.DontKillMyAppFragment
 import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
 import com.doitstudio.sleepest_master.databinding.FragmentSettingsBinding
+import com.doitstudio.sleepest_master.model.data.AlarmClockReceiverUsage
 import com.doitstudio.sleepest_master.model.data.export.ImportUtil
 import com.doitstudio.sleepest_master.model.data.export.UserSleepExportData
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
+import com.doitstudio.sleepest_master.util.TimeConverterUtil
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.*
+import java.time.LocalTime
 import java.util.*
 
 class SettingsFragment : Fragment() {
@@ -82,6 +86,10 @@ class SettingsFragment : Fragment() {
         }
         binding.exportButton.setOnClickListener {
             onDataClicked(it)
+        }
+        binding.btnTutorial.setOnClickListener() {
+            val calendar = TimeConverterUtil.getAlarmDate(LocalTime.now().toSecondOfDay() + 60)
+            AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context, AlarmClockReceiverUsage.START_ALARMCLOCK)
         }
         binding.btnImportantSettings.setOnClickListener() {
             DontKillMyAppFragment.show(requireActivity())

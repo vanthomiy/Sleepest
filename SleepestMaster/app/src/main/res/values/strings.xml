@@ -239,6 +239,12 @@
     <string name="profile_credits_flaticon">Flaticon Website</string>
     <string name="profile_flaticon_introduction">Wir haben Bilder von der Seite Flaticon verwendet. Im folgenden sind die einzelnen Authoren der Bilder aufgelistet.</string>
     <string name="prfofile_author">Autor: </string>
+    <string name="nichts_zu_sehen_n_geh_schlafen_um_daten_zu_generieren">Nichts zu sehen. \n Geh schlafen um Daten zu generieren!</string>
+    <string name="sleep_phases">Sleep phases:</string>
+    <string name="time_in_phase">Time in phase:</string>
+    <string name="history">History</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
 
     <!--endregion-->
 
