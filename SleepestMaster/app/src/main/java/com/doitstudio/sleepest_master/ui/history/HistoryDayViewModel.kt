@@ -80,10 +80,7 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     private fun updateInfoChanged(value: String, toggle: Boolean = false) {
-
         TransitionManager.beginDelayedTransition(transitionsContainer);
-
-
         actualExpand.set(if(actualExpand.get() == value.toIntOrNull()) -1 else value.toIntOrNull() )
 
     }

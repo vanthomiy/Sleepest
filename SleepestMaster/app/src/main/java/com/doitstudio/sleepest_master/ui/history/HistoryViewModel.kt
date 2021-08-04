@@ -38,14 +38,10 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
     val context: Context by lazy { getApplication<Application>().applicationContext }
 
     /**  */
-    val dataBaseRepository: DatabaseRepository by lazy {
-        (context as MainApplication).dataBaseRepository
-    }
+    val dataBaseRepository: DatabaseRepository by lazy { (context as MainApplication).dataBaseRepository }
 
     /**  */
-    private val dataStoreRepository: DataStoreRepository by lazy {
-        (context as MainApplication).dataStoreRepository
-    }
+    private val dataStoreRepository: DataStoreRepository by lazy { (context as MainApplication).dataStoreRepository }
 
     /**  */
     var analysisDate = ObservableField(LocalDate.now())
