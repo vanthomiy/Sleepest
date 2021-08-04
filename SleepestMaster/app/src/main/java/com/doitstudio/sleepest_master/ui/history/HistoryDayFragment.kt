@@ -69,7 +69,7 @@ class HistoryDayFragment : Fragment() {
 
         binding = FragmentHistoryDayBinding.inflate(inflater, container, false)
         binding.historyDayViewModel = viewModelDay
-        viewModelDay.transitionsContainer = (binding.lLLinearAnimationLayoutDailyAnalysis)
+        viewModelDay.transitionsContainer = binding.lLLinearAnimationLayoutDailyAnalysis
 
 
         // Initial set up for the daily sleep analysis line chart.
@@ -174,18 +174,20 @@ class HistoryDayFragment : Fragment() {
 
         // In case the session is available, set values.
         sleepValues.let {
-            time = LocalDateTime.ofInstant(
+            var tempTime = LocalDateTime.ofInstant(
                 Instant.ofEpochMilli((it.third.sleepTimes.sleepTimeStart.toLong()) * 1000),
                 ZoneOffset.systemDefault()
-            ).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+            )
 
+            time = tempTime.dayOfMonth.toString() + "." + tempTime.monthValue + " " + tempTime.hour + ":" + tempTime.minute
             viewModelDay.beginOfSleep.set(time)
 
-            time = LocalDateTime.ofInstant(
+            tempTime = LocalDateTime.ofInstant(
                 Instant.ofEpochMilli((it.third.sleepTimes.sleepTimeEnd.toLong()) * 1000),
                 ZoneOffset.systemDefault()
-            ).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-
+            )
+            
+            time = tempTime.dayOfMonth.toString() + "." + tempTime.monthValue + " " + tempTime.hour + ":" + tempTime.minute
             viewModelDay.endOfSeep.set(time)
 
             viewModelDay.awakeTime.set(

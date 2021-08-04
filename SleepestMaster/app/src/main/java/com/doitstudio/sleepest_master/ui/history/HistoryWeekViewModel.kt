@@ -30,8 +30,7 @@ class HistoryWeekViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     private fun updateInfoChanged(value: String, toggle: Boolean = false) {
-        TransitionManager.beginDelayedTransition(transitionsContainer);
-        actualExpand.set(if(actualExpand.get() == value.toIntOrNull()) -1 else value.toIntOrNull() )
-
+        TransitionManager.beginDelayedTransition(transitionsContainer)
+        actualExpand.set(if(actualExpand.get() == value.toIntOrNull()) -1 else value.toIntOrNull())
     }
 }
