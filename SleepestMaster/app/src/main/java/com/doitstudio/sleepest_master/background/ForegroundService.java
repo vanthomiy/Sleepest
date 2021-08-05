@@ -692,7 +692,7 @@ public class ForegroundService extends LifecycleService {
                 .setContentText(contentText)
                 .setCustomBigContentView(remoteViews)
                 .setStyle(new Notification.DecoratedCustomViewStyle())
-                .setSmallIcon(R.drawable.logo_notification)
+                .setSmallIcon(R.drawable.logov4round)
                 .setContentIntent(pendingIntent)
                 .setOnlyAlertOnce(true)
                 .build();

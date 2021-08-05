@@ -107,7 +107,7 @@ public class NotificationUtil {
                 .setContentTitle(context.getApplicationContext().getString(R.string.information_notification_title))
                 .setContentText(information)
                 .setStyle(new Notification.DecoratedCustomViewStyle())
-                .setSmallIcon(R.drawable.logo_notification)
+                .setSmallIcon(R.drawable.logov4round)
                 .setContentIntent(pendingIntent)
                 .setOnlyAlertOnce(true)
                 .setVisibility(Notification.VISIBILITY_PUBLIC)
@@ -243,7 +243,7 @@ public class NotificationUtil {
                 .setContentText(contentText)
                 .setCustomBigContentView(remoteViews)
                 .setStyle(new Notification.DecoratedCustomViewStyle())
-                .setSmallIcon(R.drawable.logo_notification)
+                .setSmallIcon(R.drawable.logov4round)
                 .setContentIntent(pendingIntent)
                 .setOnlyAlertOnce(true)
                 .setVisibility(Notification.VISIBILITY_PUBLIC)
@@ -287,7 +287,7 @@ public class NotificationUtil {
 
         //Build the builder for the notification
         return builder
-                .setSmallIcon(R.drawable.logo_notification)
+                .setSmallIcon(R.drawable.logov4round)
                 .setContentTitle(context.getString(R.string.alarm_notification_title))
                 .setContentText(context.getString(R.string.alarm_notification_text))
                 .setPriority(NotificationCompat.PRIORITY_MAX)
@@ -296,8 +296,8 @@ public class NotificationUtil {
                 .setContentIntent(cancelAlarmPendingIntent)
                 .setDeleteIntent(cancelAlarmPendingIntent)
                 .setFullScreenIntent(pendingIntent, true)
-                .addAction(R.drawable.logo_notification, context.getString(R.string.alarm_notification_button_1), cancelAlarmPendingIntent)
-                .addAction(R.drawable.logo_notification, context.getString(R.string.alarm_notification_button_2), snoozeAlarmPendingIntent)
+                .addAction(R.drawable.logov4round, context.getString(R.string.alarm_notification_button_1), cancelAlarmPendingIntent)
+                .addAction(R.drawable.logov4round, context.getString(R.string.alarm_notification_button_2), snoozeAlarmPendingIntent)
                 .build();
 
         //NotificationManagerCompat.from(context).notify(Constants.ALARM_CLOCK_NOTIFICATION_ID, notificationBuilder.build());

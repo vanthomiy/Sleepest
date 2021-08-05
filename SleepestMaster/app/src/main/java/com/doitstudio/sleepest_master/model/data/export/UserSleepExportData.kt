@@ -23,6 +23,15 @@ data class UserSleepExportData(
         var sleepApiRawData: List<SleepApiRawDataEntity>
 )
 
+data class UserSleepExportDataOld(
+        val id:Int,
+        val mobilePosition: MobilePosition = MobilePosition.UNIDENTIFIED,
+        val sleepTimes: SleepTimes = SleepTimes(),
+        val userSleepRating: UserSleepRating = UserSleepRating(),
+        val userCalculationRating: UserCalculationRating = UserCalculationRating(),
+        var sleepApiRawData: List<SleepApiRawDataEntity>
+)
+
 
 
 
