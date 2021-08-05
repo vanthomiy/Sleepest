@@ -185,7 +185,7 @@ enum class MoodType{
     BAD,
     GOOD,
     EXCELLENT,
-    LAZY,
+    EMPOWERED,
     TIRED,
 
 }

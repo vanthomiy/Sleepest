@@ -186,7 +186,7 @@ class HistoryDayFragment : Fragment() {
                 Instant.ofEpochMilli((it.third.sleepTimes.sleepTimeEnd.toLong()) * 1000),
                 ZoneOffset.systemDefault()
             )
-            
+
             time = tempTime.dayOfMonth.toString() + "." + tempTime.monthValue + " " + tempTime.hour + ":" + tempTime.minute
             viewModelDay.endOfSeep.set(time)
 

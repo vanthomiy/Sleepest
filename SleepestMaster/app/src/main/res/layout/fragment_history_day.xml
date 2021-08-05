@@ -335,7 +335,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_margin="5dp"
-                            android:background="@{historyDayViewModel.sleepMoodSmileyTag == 4? @drawable/sleep_mood_bad: @drawable/sleep_mood_bad_grey}"
+                            android:background="@{historyDayViewModel.sleepMoodSmileyTag == 4? @drawable/sleep_mood_empowered: @drawable/sleep_mood_empowered_grey}"
                             android:tag="4"
                             android:onClick="@{historyDayViewModel::sleepRating}"
                             android:textOn=""
