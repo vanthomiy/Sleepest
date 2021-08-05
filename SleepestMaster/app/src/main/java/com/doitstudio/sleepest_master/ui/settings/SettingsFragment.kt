@@ -48,7 +48,7 @@ class SettingsFragment : Fragment() {
         SleepHandler.getHandler(actualContext)
     }
     private val dataStoreRepository: DataStoreRepository by lazy {
-        (applicationContext as MainApplication).dataStoreRepository
+        (actualContext as MainApplication).dataStoreRepository
     }
 
     private var caseOfEntrie = -1

@@ -47,7 +47,7 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
         val sleepCalculationHandler : SleepCalculationHandler = getHandler(applicationContext)
 
         scope.launch {
-            val sleepApiRawDataEntity =
+            /*val sleepApiRawDataEntity =
                 dataBaseRepository.getSleepApiRawDataFromDateLive(LocalDateTime.now()).first()
                     .sortedByDescending { x -> x.timestampSeconds }
             val lastTimestampInSeconds = sleepApiRawDataEntity.first().timestampSeconds
@@ -59,7 +59,7 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
                 ((actualTimestampSeconds - lastTimestampInSeconds) > 600) && dataStoreRepository.isInSleepTime(null)) {
                 val notificationsUtil = NotificationUtil(applicationContext, NotificationUsage.NOTIFICATION_NO_API_DATA,null)
                 notificationsUtil.chooseNotification()
-            }
+            }*/
         }
 
         val calendar: Calendar = Calendar.getInstance()
