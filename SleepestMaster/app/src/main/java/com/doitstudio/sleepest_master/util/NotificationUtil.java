@@ -19,6 +19,7 @@ import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockAudio;
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver;
 import com.doitstudio.sleepest_master.background.AlarmReceiver;
+import com.doitstudio.sleepest_master.model.data.ActivityIntentUsage;
 import com.doitstudio.sleepest_master.model.data.AlarmClockReceiverUsage;
 import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage;
 import com.doitstudio.sleepest_master.model.data.Constants;
@@ -52,10 +53,10 @@ public class NotificationUtil {
                 notification = createForegroundNotification();
                 break;
             case NOTIFICATION_USER_SHOULD_SLEEP:
-                notification = createInformationNotification(smileySelectorUtil.getSmileyAttention() + context.getString(R.string.information_notification_text_sleeptime_problem));
+                notification = createInformationNotification(smileySelectorUtil.getSmileyAttention() + context.getString(R.string.information_notification_text_sleeptime_problem), NotificationUsage.Companion.getCount(NotificationUsage.NOTIFICATION_USER_SHOULD_SLEEP));
                 break;
             case NOTIFICATION_NO_API_DATA:
-                notification = createInformationNotification(smileySelectorUtil.getSmileyAttention() + context.getString(R.string.information_notification_text_sleep_api_problem));
+                notification = createInformationNotification(smileySelectorUtil.getSmileyAttention() + context.getString(R.string.information_notification_text_sleep_api_problem), NotificationUsage.Companion.getCount(NotificationUsage.NOTIFICATION_NO_API_DATA));
                 break;
             case NOTIFICATION_ALARM_CLOCK:
                 notification = createAlarmClockNotification();
@@ -67,7 +68,7 @@ public class NotificationUtil {
             notificationManager.notify(1, notification);
         } else if (notification != null) {
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.notify(notificationUsage.getNotificationUsageValue(), notification);
+            notificationManager.notify(notificationUsage.Companion.getCount(notificationUsage), notification);
         }
 
     }
@@ -87,30 +88,51 @@ public class NotificationUtil {
         }
     }
 
-    private Notification createInformationNotification(String information) {
+    private Notification createInformationNotification(String information, int usage) {
         //Get Channel id
         String notificationChannelId = context.getApplicationContext().getString(R.string.information_notification_channel);
 
-        //Create intent if user tap on notification
-        Intent intent = new Intent(context.getApplicationContext(), MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent informationIntent;
+        PendingIntent informationPendingIntent;
+        String buttonText;
+
+        if (usage == NotificationUsage.Companion.getCount(NotificationUsage.NOTIFICATION_NO_API_DATA)) {
+
+            informationIntent = new Intent(context.getApplicationContext(), AlarmReceiver.class);
+            informationIntent.putExtra(context.getString(R.string.alarmmanager_key), AlarmReceiverUsage.SOLVE_API_PROBLEM.name());
+            informationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            informationPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), AlarmReceiverUsage.Companion.getCount(AlarmReceiverUsage.SOLVE_API_PROBLEM), informationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            buttonText = "Solve it";
+
+        } else  {
+
+            informationIntent = new Intent(context.getApplicationContext(), AlarmReceiver.class);
+            informationIntent.putExtra(context.getString(R.string.alarmmanager_key), AlarmReceiverUsage.SOLVE_API_PROBLEM.name());
+            informationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            informationPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), AlarmReceiverUsage.Companion.getCount(AlarmReceiverUsage.SOLVE_API_PROBLEM), informationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            buttonText = "Good night";
+        }
+
+
 
         //Create manager and channel
         createNotificationChannel(context.getString(R.string.information_notification_channel), context.getString(R.string.information_notification_channel_name), context.getString(R.string.information_notification_channel_description));
 
         //Build the notification and return it
-        Notification.Builder builder;
-        builder = new Notification.Builder(context.getApplicationContext(), notificationChannelId);
+        NotificationCompat.Builder builder;
+        builder = new NotificationCompat.Builder(context.getApplicationContext(), notificationChannelId);
 
         return builder
                 .setContentTitle(context.getApplicationContext().getString(R.string.information_notification_title))
                 .setContentText(information)
-                .setStyle(new Notification.DecoratedCustomViewStyle())
+                .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
                 .setSmallIcon(R.drawable.logo_notification)
-                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .setContentIntent(informationPendingIntent)
+                .setDeleteIntent(informationPendingIntent)
                 .setOnlyAlertOnce(true)
-                .setVisibility(Notification.VISIBILITY_PUBLIC)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .addAction(R.drawable.logo_notification, buttonText, informationPendingIntent)
                 .build();
     }
 
@@ -130,14 +152,14 @@ public class NotificationUtil {
 
             remoteViews.setTextViewText(R.id.btnDisableAlarmNotification, context.getString(R.string.btn_reactivate_alarm));
 
-            btnClickPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), AlarmReceiverUsage.DISABLE_ALARM.getAlarmReceiverUsageValue(), btnClickIntent, 0);
+            btnClickPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), AlarmReceiverUsage.Companion.getCount(AlarmReceiverUsage.DISABLE_ALARM), btnClickIntent, 0);
             remoteViews.setOnClickPendingIntent(R.id.btnDisableAlarmNotification, btnClickPendingIntent);
         } else {
             btnClickIntent.putExtra(context.getApplicationContext().getString(R.string.alarmmanager_key), AlarmReceiverUsage.DISABLE_ALARM.name());
 
             remoteViews.setTextViewText(R.id.btnDisableAlarmNotification, context.getString(R.string.btn_disable_alarm));
 
-            btnClickPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), AlarmReceiverUsage.DISABLE_ALARM.getAlarmReceiverUsageValue(), btnClickIntent, 0);
+            btnClickPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), AlarmReceiverUsage.Companion.getCount(AlarmReceiverUsage.DISABLE_ALARM), btnClickIntent, 0);
             remoteViews.setOnClickPendingIntent(R.id.btnDisableAlarmNotification, btnClickPendingIntent);
         }
 
@@ -147,7 +169,7 @@ public class NotificationUtil {
             btnClickIntent.putExtra(context.getApplicationContext().getString(R.string.alarmmanager_key), AlarmReceiverUsage.NOT_SLEEPING.name());
             remoteViews.setTextViewText(R.id.btnNotSleepingNotification, context.getString(R.string.btn_not_sleeping_text));
 
-            btnClickPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), AlarmReceiverUsage.NOT_SLEEPING.getAlarmReceiverUsageValue(), btnClickIntent, 0);
+            btnClickPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), AlarmReceiverUsage.Companion.getCount(AlarmReceiverUsage.NOT_SLEEPING), btnClickIntent, 0);
             remoteViews.setOnClickPendingIntent(R.id.btnNotSleepingNotification, btnClickPendingIntent);
 
             remoteViews.setViewVisibility(R.id.btnNotSleepingNotification, View.VISIBLE);
@@ -157,7 +179,7 @@ public class NotificationUtil {
             btnClickIntent.putExtra(context.getApplicationContext().getString(R.string.alarmmanager_key), AlarmReceiverUsage.NOT_SLEEPING.name());
             remoteViews.setTextViewText(R.id.btnNotSleepingNotification, context.getString(R.string.btn_not_sleeping_text));
 
-            btnClickPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), AlarmReceiverUsage.NOT_SLEEPING.getAlarmReceiverUsageValue(), btnClickIntent, 0);
+            btnClickPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), AlarmReceiverUsage.Companion.getCount(AlarmReceiverUsage.NOT_SLEEPING), btnClickIntent, 0);
             remoteViews.setOnClickPendingIntent(R.id.btnNotSleepingNotification, btnClickPendingIntent);
 
             remoteViews.setViewVisibility(R.id.btnNotSleepingNotification, View.GONE);
@@ -167,7 +189,7 @@ public class NotificationUtil {
             btnClickIntent.putExtra(context.getApplicationContext().getString(R.string.alarmmanager_key), AlarmReceiverUsage.CURRENTLY_NOT_SLEEPING.name());
             remoteViews.setTextViewText(R.id.btnNotSleepingNotification, context.getString(R.string.btn_currently_not_sleeping_text));
 
-            btnClickPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), AlarmReceiverUsage.CURRENTLY_NOT_SLEEPING.getAlarmReceiverUsageValue(), btnClickIntent, 0);
+            btnClickPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), AlarmReceiverUsage.Companion.getCount(AlarmReceiverUsage.CURRENTLY_NOT_SLEEPING), btnClickIntent, 0);
             remoteViews.setOnClickPendingIntent(R.id.btnNotSleepingNotification, btnClickPendingIntent);
 
             remoteViews.setViewVisibility(R.id.btnNotSleepingNotification, View.VISIBLE);
@@ -200,7 +222,7 @@ public class NotificationUtil {
         boolean[] bannerConfig = (boolean[]) arrayList.get(5);
 
         if (bannerConfig[0]) {
-            remoteViews.setTextViewText(R.id.tvBannerAlarmActive, contentText + " sub:" + (boolean) arrayList.get(6));
+            remoteViews.setTextViewText(R.id.tvBannerAlarmActive, contentText + " sub:" + arrayList.get(6) + ",VA:" + arrayList.get(7));
             remoteViews.setViewVisibility(R.id.tvBannerAlarmActive, View.VISIBLE);
         } else {
             remoteViews.setViewVisibility(R.id.tvBannerAlarmActive, View.GONE);
@@ -230,7 +252,7 @@ public class NotificationUtil {
         //Set the Intent for tap on the notification, it will launch MainActivity
         Intent intent = new Intent(context.getApplicationContext(), MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), ActivityIntentUsage.Companion.getCount(ActivityIntentUsage.MAIN_ACTIVITY), intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Since Oreo there is a Notification Service needed
         createNotificationChannel(context.getString(R.string.foregroundservice_channel), context.getString(R.string.foregroundservice_channel_name), context.getString(R.string.foregroundservice_channel_description));
@@ -258,24 +280,24 @@ public class NotificationUtil {
         // Intent, which starts with tap on the Notification
         Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, ActivityIntentUsage.Companion.getCount(ActivityIntentUsage.MAIN_ACTIVITY), intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Intent, which starts with tap on the cancel button
         Intent cancelAlarmIntent = new Intent(context, AlarmClockReceiver.class);
         cancelAlarmIntent.putExtra(context.getString(R.string.alarm_clock_intent_key), AlarmClockReceiverUsage.STOP_ALARMCLOCK.name());
         cancelAlarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent cancelAlarmPendingIntent = PendingIntent.getBroadcast(context, AlarmClockReceiverUsage.STOP_ALARMCLOCK.getAlarmClockReceiverUsageValue(), cancelAlarmIntent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent cancelAlarmPendingIntent = PendingIntent.getBroadcast(context, AlarmClockReceiverUsage.Companion.getCount(AlarmClockReceiverUsage.STOP_ALARMCLOCK), cancelAlarmIntent, PendingIntent.FLAG_ONE_SHOT);
 
         // Intent, which starts with tap on the snooze button
         Intent snoozeAlarmIntent = new Intent(context, AlarmClockReceiver.class);
         snoozeAlarmIntent.putExtra(context.getString(R.string.alarm_clock_intent_key), AlarmClockReceiverUsage.SNOOZE_ALARMCLOCK.name());
         snoozeAlarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent snoozeAlarmPendingIntent = PendingIntent.getBroadcast(context, 0, snoozeAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent snoozeAlarmPendingIntent = PendingIntent.getBroadcast(context, AlarmClockReceiverUsage.Companion.getCount(AlarmClockReceiverUsage.SNOOZE_ALARMCLOCK), snoozeAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Intent autoCancelIntent = new Intent("NOTIFICATION_DELETED");
         autoCancelIntent.putExtra(context.getString(R.string.alarm_clock_intent_key), AlarmClockReceiverUsage.STOP_ALARMCLOCK.name());
         autoCancelIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent autoCancelPendingIntent = PendingIntent.getBroadcast(context, AlarmClockReceiverUsage.STOP_ALARMCLOCK.getAlarmClockReceiverUsageValue(), autoCancelIntent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent autoCancelPendingIntent = PendingIntent.getBroadcast(context, AlarmClockReceiverUsage.Companion.getCount(AlarmClockReceiverUsage.STOP_ALARMCLOCK), autoCancelIntent, PendingIntent.FLAG_ONE_SHOT);
 
 
         //Starts a new singleton audio class and init it, if not init yet
