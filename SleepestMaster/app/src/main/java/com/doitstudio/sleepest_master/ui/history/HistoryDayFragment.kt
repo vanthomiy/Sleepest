@@ -71,7 +71,6 @@ class HistoryDayFragment : Fragment() {
         binding.historyDayViewModel = viewModelDay
         viewModelDay.transitionsContainer = binding.lLLinearAnimationLayoutDailyAnalysis
 
-
         // Initial set up for the daily sleep analysis line chart.
         lineChartSleepAnalysis = setLineChart()
         updateLineChart(lineChartSleepAnalysis)
@@ -98,13 +97,7 @@ class HistoryDayFragment : Fragment() {
             object: Observable.OnPropertyChangedCallback() {
                 override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
                     getDataValues()
-                    updateLineChart(lineChartSleepAnalysis)
-                    lineChartSleepAnalysis.invalidate()
-
-                    updatePieChart(pieChartSleepAnalysis)
-                    pieChartSleepAnalysis.invalidate()
-
-                    updateActivitySmiley()
+                    updateCharts()
                 }
             })
 
@@ -116,9 +109,29 @@ class HistoryDayFragment : Fragment() {
             }
         )
 
-        getDataValues()
+        viewModel.dataReceived.addOnPropertyChangedCallback(
+            object: Observable.OnPropertyChangedCallback() {
+                override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                    if (viewModel.dataReceived.get()) {
+                        getDataValues()
+                        updateCharts()
+                        viewModel.dataReceived.set(false)
+                    }
+                }
+            }
+        )
 
         return binding.root
+    }
+
+    private fun updateCharts() {
+        updateLineChart(lineChartSleepAnalysis)
+        lineChartSleepAnalysis.invalidate()
+
+        updatePieChart(pieChartSleepAnalysis)
+        pieChartSleepAnalysis.invalidate()
+
+        updateActivitySmiley()
     }
 
     /** Save users input of the [UserSleepRating.moodAfterSleep] into database. */

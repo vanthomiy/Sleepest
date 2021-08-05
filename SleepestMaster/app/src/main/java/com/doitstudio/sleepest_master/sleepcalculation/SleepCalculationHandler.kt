@@ -418,6 +418,26 @@ class SleepCalculationHandler(val context: Context) {
                 sleepSessionEntity.sleepTimes.sleepTimeEnd =
                         SleepApiRawDataEntity.getSleepEndTime(sleepApiRawDataEntity)
 
+                sleepApiRawDataEntity.forEach()
+                {
+                    // we take all sleep values that are not already defined as light or deep but sleeping
+                    if ((it.sleepState == SleepState.SLEEPING) && (sleepSessionEntity.mobilePosition == MobilePosition.INBED)) {
+                        // we need to calculate the sleep state
+                        // and then we update it in the sleep api raw data entity
+
+                        dataBaseRepository.updateSleepApiRawDataSleepState(
+                            it.timestampSeconds,
+                            SleepState.LIGHT
+                        )
+                    }
+
+                    if (it.sleepState == SleepState.NONE) {
+                        dataBaseRepository.updateSleepApiRawDataSleepState(
+                            it.timestampSeconds,
+                            SleepState.AWAKE
+                        )
+                    }
+                }
             }
 
             //dataBaseRepository.insertSleepApiRawData(sleepApiRawDataEntity)

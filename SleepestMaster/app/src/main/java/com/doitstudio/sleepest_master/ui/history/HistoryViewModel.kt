@@ -61,6 +61,8 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
     /**  */
     private val idsListener = ObservableInt()
 
+    val dataReceived = ObservableBoolean(false)
+
     /** <Int: Sleep session id, Triple<List<[SleepApiRawDataEntity]>, Int: Sleep duration, [UserSleepSessionEntity]>> */
     val sleepSessionData = mutableMapOf<Int, Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>>()
 
@@ -129,6 +131,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                 idsListener.set(id)
             }
             checkSessionIntegrity()
+            dataReceived.set(true)
         }
     }
 
