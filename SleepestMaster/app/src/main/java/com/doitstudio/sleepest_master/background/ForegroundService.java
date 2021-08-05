@@ -129,34 +129,9 @@ public class ForegroundService extends LifecycleService {
 
         setForegroundServiceStartTime();
 
-
-
-        /**WEG
-        //Subscribe to sleep API
-        sleepHandler.startSleepHandler();
-        AlarmReceiver.cancelAlarm(getApplicationContext(), AlarmReceiverUsage.START_WORKMANAGER);
-
-        //Start Workmanager
-        PeriodicWorkRequest periodicDataWork =
-                new PeriodicWorkRequest.Builder(Workmanager.class, Constants.WORKMANAGER_DURATION, TimeUnit.MINUTES)
-                        .addTag(getApplicationContext().getString(R.string.workmanager1_tag)) //Tag is needed for canceling the periodic work
-                        .build();
-
-        WorkManager workManager = WorkManager.getInstance(getApplicationContext());
-        workManager.enqueueUniquePeriodicWork(getApplicationContext().getString(R.string.workmanager1_tag), ExistingPeriodicWorkPolicy.KEEP, periodicDataWork);
-
-        Toast.makeText(getApplicationContext(), "Workmanager started", Toast.LENGTH_LONG).show();
-
-        //Set Alarm to stop workmanager at end of sleep time
-        Calendar calendar = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeEndJob());
-        AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(),AlarmReceiverUsage.STOP_WORKMANAGER);
-
-        Bis Hier**/
-
         notificationUtil = new NotificationUtil(getApplicationContext(), NotificationUsage.NOTIFICATION_FOREGROUND_SERVICE, fillList());
 
         //Start the Foregroundservice
-        //startForeground(Constants.FOREGROUND_SERVICE_ID, createNotification());
         startForeground(Constants.FOREGROUND_SERVICE_ID, notificationUtil.createForegroundNotification());
         sendUserInformation();
     }
@@ -266,8 +241,16 @@ public class ForegroundService extends LifecycleService {
         foregroundServiceStartTime = LocalTime.now().toSecondOfDay();
     }
 
-    public static int getForegroundServiceStartTime() {
-        return foregroundServiceStartTime;
+    public static int getForegroundServiceTime() {
+
+        int time = 0;
+        if (foregroundServiceStartTime < LocalTime.now().toSecondOfDay()) {
+            time = LocalTime.now().toSecondOfDay() - foregroundServiceStartTime;
+        } else {
+            time = Constants.DAY_IN_SECONDS - foregroundServiceStartTime + LocalTime.now().toSecondOfDay();
+        }
+
+        return time;
     }
 
     //endregion
@@ -287,15 +270,18 @@ public class ForegroundService extends LifecycleService {
         Calendar calendar = Calendar.getInstance();
 
         //Update wakeup time
-        if ((LocalTime.now().toSecondOfDay() - foregroundServiceStartTime) < 3 && (LocalTime.now().toSecondOfDay() - foregroundServiceStartTime) > 0) {
+        /**if ((LocalTime.now().toSecondOfDay() - foregroundServiceStartTime) < 3 && (LocalTime.now().toSecondOfDay() - foregroundServiceStartTime) > 0) {
             alarmTimeInSeconds = time.getActualWakeup();
-        }
+        }**/
+
+        alarmTimeInSeconds = time.getActualWakeup();
 
         //Alarm must be active, if OnAlarmChanged will be called, so set it to true
         isAlarmActive = true;
 
         //Update the foreground notification with data
         updateNotification();
+        sendUserInformation();
 
         SharedPreferences pref = getSharedPreferences("AlarmChanged", 0);
         SharedPreferences.Editor ed = pref.edit();
@@ -533,6 +519,10 @@ public class ForegroundService extends LifecycleService {
         notificationUtil.chooseNotification();
     }
 
+    /**
+     * Fills the list for the information of the foregroundservice notification
+     * @return filled list
+     */
     private ArrayList<Object> fillList() {
         ArrayList<Object> arrayList = new ArrayList<>();
         arrayList.add(alarmEntity);
@@ -542,6 +532,7 @@ public class ForegroundService extends LifecycleService {
         arrayList.add(alarmTimeInSeconds);
         arrayList.add(bannerConfig);
         arrayList.add(isSubscribed);
+        arrayList.add(sleepValueAmount);
 
         return arrayList;
     }
@@ -565,14 +556,14 @@ public class ForegroundService extends LifecycleService {
 
             remoteViews.setTextViewText(R.id.btnDisableAlarmNotification, getString(R.string.btn_reactivate_alarm));
 
-            btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), AlarmReceiverUsage.DISABLE_ALARM.getAlarmReceiverUsageValue(), btnClickIntent, 0);
+            btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), AlarmReceiverUsage.Companion.getCount(AlarmReceiverUsage.DISABLE_ALARM), btnClickIntent, 0);
             remoteViews.setOnClickPendingIntent(R.id.btnDisableAlarmNotification, btnClickPendingIntent);
         } else {
             btnClickIntent.putExtra(getApplicationContext().getString(R.string.alarmmanager_key), AlarmReceiverUsage.DISABLE_ALARM.name());
 
             remoteViews.setTextViewText(R.id.btnDisableAlarmNotification, getString(R.string.btn_disable_alarm));
 
-            btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), AlarmReceiverUsage.DISABLE_ALARM.getAlarmReceiverUsageValue(), btnClickIntent, 0);
+            btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), AlarmReceiverUsage.Companion.getCount(AlarmReceiverUsage.DISABLE_ALARM), btnClickIntent, 0);
             remoteViews.setOnClickPendingIntent(R.id.btnDisableAlarmNotification, btnClickPendingIntent);
         }
 
@@ -582,7 +573,7 @@ public class ForegroundService extends LifecycleService {
             btnClickIntent.putExtra(getApplicationContext().getString(R.string.alarmmanager_key), AlarmReceiverUsage.NOT_SLEEPING.name());
             remoteViews.setTextViewText(R.id.btnNotSleepingNotification, getString(R.string.btn_not_sleeping_text));
 
-            btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), AlarmReceiverUsage.NOT_SLEEPING.getAlarmReceiverUsageValue(), btnClickIntent, 0);
+            btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), AlarmReceiverUsage.Companion.getCount(AlarmReceiverUsage.NOT_SLEEPING), btnClickIntent, 0);
             remoteViews.setOnClickPendingIntent(R.id.btnNotSleepingNotification, btnClickPendingIntent);
 
             remoteViews.setViewVisibility(R.id.btnNotSleepingNotification, View.VISIBLE);
@@ -592,7 +583,7 @@ public class ForegroundService extends LifecycleService {
             btnClickIntent.putExtra(getApplicationContext().getString(R.string.alarmmanager_key), AlarmReceiverUsage.NOT_SLEEPING.name());
             remoteViews.setTextViewText(R.id.btnNotSleepingNotification, getString(R.string.btn_not_sleeping_text));
 
-            btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), AlarmReceiverUsage.NOT_SLEEPING.getAlarmReceiverUsageValue(), btnClickIntent, 0);
+            btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), AlarmReceiverUsage.Companion.getCount(AlarmReceiverUsage.NOT_SLEEPING), btnClickIntent, 0);
             remoteViews.setOnClickPendingIntent(R.id.btnNotSleepingNotification, btnClickPendingIntent);
 
             remoteViews.setViewVisibility(R.id.btnNotSleepingNotification, View.GONE);
@@ -602,7 +593,7 @@ public class ForegroundService extends LifecycleService {
             btnClickIntent.putExtra(getApplicationContext().getString(R.string.alarmmanager_key), AlarmReceiverUsage.CURRENTLY_NOT_SLEEPING.name());
             remoteViews.setTextViewText(R.id.btnNotSleepingNotification, getString(R.string.btn_currently_not_sleeping_text));
 
-            btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), AlarmReceiverUsage.CURRENTLY_NOT_SLEEPING.getAlarmReceiverUsageValue(), btnClickIntent, 0);
+            btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), AlarmReceiverUsage.Companion.getCount(AlarmReceiverUsage.CURRENTLY_NOT_SLEEPING), btnClickIntent, 0);
             remoteViews.setOnClickPendingIntent(R.id.btnNotSleepingNotification, btnClickPendingIntent);
 
             remoteViews.setViewVisibility(R.id.btnNotSleepingNotification, View.VISIBLE);

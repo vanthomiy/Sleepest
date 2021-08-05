@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi
 import androidx.work.*
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
+import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.NotificationUsage
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler.Companion.getHandler
@@ -28,16 +29,12 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-class Workmanager(appcontext: Context, workerParams: WorkerParameters) : Worker(appcontext, workerParams) {
-
-    private val sleepCalculationHandler: SleepCalculationHandler by lazy { getHandler(applicationContext) }
+class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
 
     @RequiresApi(Build.VERSION_CODES.P)
     override fun doWork(): Result {
 
         val scope: CoroutineScope = MainScope()
-
-
 
         val dataStoreRepository: DataStoreRepository by lazy {
             (applicationContext as MainApplication).dataStoreRepository
@@ -47,52 +44,23 @@ class Workmanager(appcontext: Context, workerParams: WorkerParameters) : Worker(
             (applicationContext as MainApplication).dataBaseRepository
         }
 
+        val sleepCalculationHandler : SleepCalculationHandler = getHandler(applicationContext)
+
         scope.launch {
-            val sleepApiRawDataEntity =
+            /*val sleepApiRawDataEntity =
                 dataBaseRepository.getSleepApiRawDataFromDateLive(LocalDateTime.now()).first()
                     .sortedByDescending { x -> x.timestampSeconds }
-            val lastTimestampInSeconds = sleepApiRawDataEntity.last().timestampSeconds
+            val lastTimestampInSeconds = sleepApiRawDataEntity.first().timestampSeconds
+            val actualTimestampSeconds = System.currentTimeMillis()/1000
+            Toast.makeText(applicationContext, (actualTimestampSeconds - lastTimestampInSeconds).toString(), Toast.LENGTH_LONG).show()
+            Toast.makeText(applicationContext, ForegroundService.getForegroundServiceTime().toString(), Toast.LENGTH_LONG).show()
 
-            val dateTime = LocalDateTime.of(LocalDate.now(), LocalTime.now())
-            val actualTimestampSeconds = dateTime.toEpochSecond(ZoneOffset.UTC).toInt()
-
-           /* if (dataStoreRepository.isInSleepTime() && (dataBaseRepository.getNextActiveAlarm() != null)) {
-                // alarm should be active else set active
-                if(!dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
-
-                    if (!dataBaseRepository.getNextActiveAlarm()!!.wasFired ||
-                        ((LocalTime.now().toSecondOfDay() > dataBaseRepository.getNextActiveAlarm()!!.actualWakeup) &&
-                                (dataStoreRepository.getSleepTimeBegin() < LocalTime.now().toSecondOfDay()))){
-                        ForegroundService.startOrStopForegroundService(Actions.START, applicationContext);
-                    }
-                }
+            if (dataStoreRepository.backgroundServiceFlow.first().isForegroundActive && ForegroundService.getForegroundServiceTime() >= 1200 &&
+                ((actualTimestampSeconds - lastTimestampInSeconds) > 600) && dataStoreRepository.isInSleepTime(null)) {
+                val notificationsUtil = NotificationUtil(applicationContext, NotificationUsage.NOTIFICATION_NO_API_DATA,null)
+                notificationsUtil.chooseNotification()
             }*/
-
-            if (LocalTime.now().toSecondOfDay() >= dataStoreRepository.getSleepTimeBegin() &&
-                ((LocalTime.now().toSecondOfDay() - ForegroundService.getForegroundServiceStartTime()) >= 30) && ((lastTimestampInSeconds - actualTimestampSeconds) > 1000) &&
-                dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
-                val notificationsUtil = NotificationUtil(applicationContext, NotificationUsage.NOTIFICATION_NO_API_DATA,null)
-                notificationsUtil.chooseNotification()
-            } else if (LocalTime.now().toSecondOfDay() > ForegroundService.getForegroundServiceStartTime() &&
-                ((ForegroundService.getForegroundServiceStartTime() - LocalTime.now().toSecondOfDay()) >= 30) && ((lastTimestampInSeconds - actualTimestampSeconds) > 1000) &&
-                dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
-                val notificationsUtil = NotificationUtil(applicationContext, NotificationUsage.NOTIFICATION_NO_API_DATA,null)
-                notificationsUtil.chooseNotification()
-            }
-
-            /**if (LocalTime.now().toSecondOfDay() >= dataStoreRepository.getSleepTimeBegin() &&
-                ((LocalTime.now().toSecondOfDay() - ForegroundService.getForegroundServiceStartTime()) >= 60) && (dataStoreRepository.sleepApiDataFlow.first().sleepApiValuesAmount <= 3) &&
-                dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
-                val notificationsUtil = NotificationUtil(applicationContext, NotificationUsage.NOTIFICATION_NO_API_DATA,null)
-                notificationsUtil.chooseNotification()
-            } else if (LocalTime.now().toSecondOfDay() > ForegroundService.getForegroundServiceStartTime() &&
-                ((ForegroundService.getForegroundServiceStartTime() - LocalTime.now().toSecondOfDay()) >= 60) && (dataStoreRepository.sleepApiDataFlow.first().sleepApiValuesAmount <= 3) &&
-                dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
-                val notificationsUtil = NotificationUtil(applicationContext, NotificationUsage.NOTIFICATION_NO_API_DATA,null)
-                notificationsUtil.chooseNotification()
-            }**/
         }
-
 
         val calendar: Calendar = Calendar.getInstance()
 
@@ -102,38 +70,9 @@ class Workmanager(appcontext: Context, workerParams: WorkerParameters) : Worker(
         ed.putInt("minute", calendar.get(Calendar.MINUTE))
         ed.apply()
 
+        sleepCalculationHandler.checkIsUserSleeping(null)
+
         return Result.success()
     }
-
-
-
-    /*companion object {
-
-        /**
-         * Start the workmanager with a specific duration
-         * @param duration Number >= 15 stands for duration in minutes
-         */
-        fun startPeriodicWorkmanager(duration: Int, context1: Context) {
-
-
-            val periodicDataWork = PeriodicWorkRequest.Builder(Workmanager::class.java, duration.toLong(), TimeUnit.MINUTES)
-                .addTag("Workmanager 1") //Tag is needed for canceling the periodic work
-                .build()
-
-            WorkManager.getInstance(context1).enqueueUniquePeriodicWork("Workmanager 1",
-                ExistingPeriodicWorkPolicy.KEEP, periodicDataWork)
-
-
-            Toast.makeText(context1, "Workmanager started", Toast.LENGTH_LONG).show()
-        }
-
-        fun stopPeriodicWorkmanager() {
-
-            //Cancel periodic work by tag
-            WorkManager.getInstance(applicationContext).cancelAllWorkByTag("Workmanager 1")
-        }
-
-
-    }*/
 
 }

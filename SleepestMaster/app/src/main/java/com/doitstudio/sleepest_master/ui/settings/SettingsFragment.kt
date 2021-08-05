@@ -5,6 +5,7 @@ import android.Manifest
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.DocumentsContract
@@ -16,27 +17,23 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.asLiveData
 import com.doitstudio.sleepest_master.DontKillMyAppFragment
 import com.doitstudio.sleepest_master.MainApplication
-import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
 import com.doitstudio.sleepest_master.databinding.FragmentSettingsBinding
-import com.doitstudio.sleepest_master.model.data.AlarmClockReceiverUsage
+import com.doitstudio.sleepest_master.googleapi.SleepHandler
+import com.doitstudio.sleepest_master.model.data.Constants
 import com.doitstudio.sleepest_master.model.data.export.ImportUtil
 import com.doitstudio.sleepest_master.model.data.export.UserSleepExportData
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
-import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
-import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
-import com.doitstudio.sleepest_master.util.TimeConverterUtil
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.*
-import java.time.LocalTime
 import java.util.*
+
 
 class SettingsFragment : Fragment() {
 
@@ -46,6 +43,9 @@ class SettingsFragment : Fragment() {
     private val scope: CoroutineScope = MainScope()
     private val dataBaseRepository: DatabaseRepository by lazy {
         (actualContext as MainApplication).dataBaseRepository
+    }
+    private val sleepHandler : SleepHandler by lazy {
+        SleepHandler.getHandler(actualContext)
     }
     private val dataStoreRepository: DataStoreRepository by lazy {
         (actualContext as MainApplication).dataStoreRepository
@@ -88,19 +88,31 @@ class SettingsFragment : Fragment() {
             onDataClicked(it)
         }
         binding.btnTutorial.setOnClickListener() {
-            val calendar = TimeConverterUtil.getAlarmDate(LocalTime.now().toSecondOfDay() + 60)
-            AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context, AlarmClockReceiverUsage.START_ALARMCLOCK)
+            scope.launch {
+                if (dataStoreRepository.getSleepSubscribeStatus()) {
+                    sleepHandler.stopSleepHandler()
+                } else {
+                    sleepHandler.startSleepHandler()
+                }
+            }
+
         }
         binding.btnImportantSettings.setOnClickListener() {
             DontKillMyAppFragment.show(requireActivity())
         }
 
         viewModel.actualExpand.set(caseOfEntrie)
-
+        var version : String = "XX"
+        try {
+            val packageInfo = actualContext.packageManager.getPackageInfo(actualContext.packageName, 0)
+            version = packageInfo.versionName
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+        }
 
 
         //region Test
-
+        val textVersion = "Version: $version\n"
         var pref = actualContext.getSharedPreferences("AlarmChanged", 0)
         val textAlarm = """
             Last Alarm changed: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt(
@@ -121,7 +133,7 @@ class SettingsFragment : Fragment() {
             """.trimIndent()
         pref = actualContext.getSharedPreferences("Workmanager", 0)
         val textLastWorkmanager = """
-            Last workmanager call: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
+            Last workmanager call: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getLong("diff", 0)}
             
             """.trimIndent()
         pref = actualContext.getSharedPreferences("WorkmanagerCalculation", 0)
@@ -176,7 +188,7 @@ class SettingsFragment : Fragment() {
             
             """.trimIndent()
 
-        var textGesamt = textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation + textCalc1 + textCalc2 + textAlarmReceiver + textSleepTime + textBooReceiver1 + textStopException + textAlarmReceiver1
+        var textGesamt = textVersion + textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation + textCalc1 + textCalc2 + textAlarmReceiver + textSleepTime + textBooReceiver1 + textStopException + textAlarmReceiver1
 
 
         binding.testText.text = textGesamt
@@ -198,7 +210,7 @@ class SettingsFragment : Fragment() {
                     putExtra(Intent.EXTRA_TITLE, "Schlafdaten.json")
                 }
 
-                startActivityForResult(intent, 1010)
+                startActivityForResult(intent, Constants.EXPORT_REQUEST_CODE)
 
 
             }
@@ -211,7 +223,7 @@ class SettingsFragment : Fragment() {
                 }
 
 
-                startActivityForResult(intent, 1012)
+                startActivityForResult(intent, Constants.IMPORT_REQUEST_CODE)
             }
         }
     }
@@ -236,7 +248,7 @@ class SettingsFragment : Fragment() {
                 )
 
                 // Launch Intent, with the supplied request code
-                startActivityForResult(intent, 1234)
+                startActivityForResult(intent, Constants.ACTIVITY_RECOGNITION_PERMISSION_REQUEST_CODE)
 
             } else viewModel.showPermissionInfo("overlay")
         }
@@ -247,10 +259,10 @@ class SettingsFragment : Fragment() {
 
 
         // Check if a request code is received that matches that which we provided for the overlay draw request
-        if (requestCode == 1234) {
+        if (requestCode == Constants.ACTIVITY_RECOGNITION_PERMISSION_REQUEST_CODE) {
             viewModel.checkPermissions()
         }
-        else if (requestCode == 1012) {
+        else if (requestCode == Constants.IMPORT_REQUEST_CODE) {
 
             val uri = data?.data
 
@@ -259,15 +271,14 @@ class SettingsFragment : Fragment() {
                 putExtra(DocumentsContract.EXTRA_INITIAL_URI, uri)
                 type = "application/json"
             }
-
-            startActivityForResult(intent, 1011)
+            startActivityForResult(intent, Constants.LOAD_FILE_REQUEST_CODE)
         }
-        else if (requestCode == 1011) {
+        else if (requestCode == Constants.LOAD_FILE_REQUEST_CODE) {
             scope.launch {
                 ImportUtil.getLoadFileFromUri(data?.data, actualContext, dataBaseRepository)
             }
         }
-        else if (requestCode == 1010) {
+        else if (requestCode == Constants.EXPORT_REQUEST_CODE) {
 
             try {
                 scope.launch {
