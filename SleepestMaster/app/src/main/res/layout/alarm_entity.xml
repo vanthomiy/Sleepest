@@ -282,8 +282,8 @@
                         android:tag="1"
                         android:onClick="@{alarmInstanceViewModel::onDayChanged}"
                         android:checked="@{alarmInstanceViewModel.selectedDays.contains(1), default=false}"
-                        android:textOn="@string/alarm_entity_day_di"
-                        android:textOff="@string/alarm_entity_day_di"
+                        android:textOn="@string/alarm_entity_day_tu"
+                        android:textOff="@string/alarm_entity_day_tu"
                         android:textSize="10sp" />
 
                     <androidx.appcompat.widget.AppCompatToggleButton
@@ -294,8 +294,8 @@
                         android:tag="2"
                         android:onClick="@{alarmInstanceViewModel::onDayChanged}"
                         android:checked="@{alarmInstanceViewModel.selectedDays.contains(2), default=false}"
-                        android:textOn="@string/alarm_entity_day_mi"
-                        android:textOff="@string/alarm_entity_day_mi"
+                        android:textOn="@string/alarm_entity_day_we"
+                        android:textOff="@string/alarm_entity_day_we"
                         android:textSize="10sp" />
 
                     <androidx.appcompat.widget.AppCompatToggleButton
@@ -306,8 +306,8 @@
                         android:tag="3"
                         android:onClick="@{alarmInstanceViewModel::onDayChanged}"
                         android:checked="@{alarmInstanceViewModel.selectedDays.contains(3), default=false}"
-                        android:textOn="@string/alarm_entity_day_do"
-                        android:textOff="@string/alarm_entity_day_do"
+                        android:textOn="@string/alarm_entity_day_th"
+                        android:textOff="@string/alarm_entity_day_th"
                         android:textSize="10sp" />
 
                     <androidx.appcompat.widget.AppCompatToggleButton
@@ -342,8 +342,8 @@
                         android:tag="6"
                         android:onClick="@{alarmInstanceViewModel::onDayChanged}"
                         android:checked="@{alarmInstanceViewModel.selectedDays.contains(6), default=false}"
-                        android:textOn="@string/alarm_entity_day_so"
-                        android:textOff="@string/alarm_entity_day_so"
+                        android:textOn="@string/alarm_entity_day_su"
+                        android:textOff="@string/alarm_entity_day_su"
                         android:textSize="10sp" />
 
                 </LinearLayout>
