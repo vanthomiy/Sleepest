@@ -41,16 +41,18 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="@dimen/valuesHeight"
             android:orientation="horizontal"
+            android:layout_marginHorizontal="10dp"
             android:layout_marginBottom="8dp">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_Previous"
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
+
                 android:layout_weight="1"
-                android:backgroundTint="@color/primary_button_color"
+                android:background="@drawable/bgrounded_button"
                 android:textColor="@color/primary_text_color"
                 android:text="@string/history_button_analysisDate_previous"/>
 
@@ -61,14 +63,15 @@
                 android:layout_weight="10"
                 android:gravity="center"
                 android:textColor="@color/primary_text_color"
-                android:textSize="25sp" />
+                android:textStyle="bold"
+                android:textSize="18sp" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_Next"
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:backgroundTint="@color/primary_button_color"
+                android:background="@drawable/bgrounded_button"
                 android:textColor="@color/primary_text_color"
                 android:text="@string/history_button_analysisDate_next"/>
         </LinearLayout>

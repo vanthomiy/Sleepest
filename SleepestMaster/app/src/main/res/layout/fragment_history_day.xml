@@ -79,9 +79,18 @@
                         android:layout_marginVertical="5dp"
                         android:layout_marginHorizontal="10dp">
 
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="start"
+                            app:tint="@color/primary_text_color"
+                            android:src="@drawable/ic_baseline_night_shelter_24"
+                            android:tag="1"/>
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="40dp"
                             android:text="@string/history_sleepPhases_title"
                             android:textColor="@color/primary_text_color"
                             android:textSize="@dimen/headerSize"/>
@@ -90,6 +99,7 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_gravity="end"
+                            app:tint="@color/primary_text_color"
                             android:src="@drawable/ic_baseline_info_24"
                             android:onClick="@{historyDayViewModel::onInfoClicked}"
                             android:tag="0"/>
@@ -99,6 +109,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="10dp"
+                        android:layout_marginHorizontal="10dp"
                         android:visibility="@{historyDayViewModel.actualExpand == 0 ? historyDayViewModel.visibleState:historyDayViewModel.goneState, default=gone}"
                         android:background="@drawable/bgroundedchoosen">
 
@@ -161,9 +172,18 @@
                         android:layout_marginVertical="5dp"
                         android:layout_marginHorizontal="10dp">
 
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="start"
+                            app:tint="@color/primary_text_color"
+                            android:src="@drawable/moon"
+                            android:tag="1"/>
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="40dp"
                             android:text="@string/history_day_sleepPhases_time_in_phase_title"
                             android:textColor="@color/primary_text_color"
                             android:textSize="@dimen/headerSize"/>
@@ -172,6 +192,7 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_gravity="end"
+                            app:tint="@color/primary_text_color"
                             android:src="@drawable/ic_baseline_info_24"
                             android:onClick="@{historyDayViewModel::onInfoClicked}"
                             android:tag="1"/>
@@ -181,6 +202,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="10dp"
+                        android:layout_marginHorizontal="10dp"
                         android:visibility="@{historyDayViewModel.actualExpand == 1 ? historyDayViewModel.visibleState:historyDayViewModel.goneState, default=gone}"
                         android:background="@drawable/bgroundedchoosen">
 
@@ -261,9 +283,18 @@
                         android:layout_marginVertical="5dp"
                         android:layout_marginHorizontal="10dp">
 
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="start"
+                            app:tint="@color/primary_text_color"
+                            android:src="@drawable/ic_arrow_down_"
+                            android:tag="1"/>
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="40dp"
                             android:text="@string/history_day_sleep_quality_rating_title"
                             android:textColor="@color/primary_text_color"
                             android:textSize="@dimen/headerSize"/>
@@ -272,6 +303,7 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_gravity="end"
+                            app:tint="@color/primary_text_color"
                             android:src="@drawable/ic_baseline_info_24"
                             android:onClick="@{historyDayViewModel::onInfoClicked}"
                             android:tag="2"/>
@@ -281,6 +313,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="10dp"
+                        android:layout_marginHorizontal="10dp"
                         android:visibility="@{historyDayViewModel.actualExpand == 2 ? historyDayViewModel.visibleState:historyDayViewModel.goneState, default=gone}"
                         android:background="@drawable/bgroundedchoosen">
 
@@ -365,9 +398,18 @@
                         android:layout_marginVertical="5dp"
                         android:layout_marginHorizontal="10dp">
 
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="start"
+                            app:tint="@color/primary_text_color"
+                            android:src="@drawable/ic_baseline_pending_actions_24"
+                            android:tag="1"/>
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="40dp"
                             android:text="@string/history_activity_title"
                             android:textColor="@color/primary_text_color"
                             android:textSize="@dimen/headerSize"/>
@@ -376,6 +418,7 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_gravity="end"
+                            app:tint="@color/primary_text_color"
                             android:src="@drawable/ic_baseline_info_24"
                             android:onClick="@{historyDayViewModel::onInfoClicked}"
                             android:tag="3"/>
@@ -385,6 +428,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="10dp"
+                        android:layout_marginHorizontal="10dp"
                         android:visibility="@{historyDayViewModel.actualExpand == 3 ? historyDayViewModel.visibleState:historyDayViewModel.goneState, default=gone}"
                         android:background="@drawable/bgroundedchoosen">
 

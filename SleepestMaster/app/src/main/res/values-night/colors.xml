@@ -4,6 +4,7 @@
     <color name="primary_app_background">#1a1a1a</color>
     <color name="primary_text_color">#FFFFFF</color> //a1a1a1 previously
     <color name="primary_button_color">#a1a1a1</color> //FFFFFF previously
+    <color name="semi_transparent_button_color">#44a1a1a1</color>
 
     <color name="secondary_app_background">#FFFFFF</color>
     <color name="secondary_text_color">#1a1a1a</color>
@@ -29,4 +30,10 @@
     <color name="sleep_sleep_color">#074E4E</color>
 
     <color name="transparent">#00FFFFFF</color>
+
+    <color name="sleep_indicator_perfect">#444CAF50</color>
+    <color name="sleep_indicator_good">#44CDDC39</color>
+    <color name="sleep_indicator_bad">#44FFC107</color>
+    <color name="sleep_indicator_worst">#44FF9800</color>
+
 </resources>
