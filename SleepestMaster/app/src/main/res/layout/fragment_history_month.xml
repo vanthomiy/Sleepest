@@ -47,7 +47,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/sleep_phases"
+                            android:text="@string/history_day_sleepPhases_title"
                             android:textColor="@color/primary_text_color"
                             android:textSize="@dimen/headerSize"/>
 

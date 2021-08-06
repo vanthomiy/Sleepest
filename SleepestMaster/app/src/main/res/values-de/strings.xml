@@ -318,6 +318,25 @@
     <string name="profile_credits">Credits</string>
     <string name="profile_flaticon_introduction">Wir haben Bilder von der Seite Flaticon verwendet. Im folgenden sind die einzelnen Authoren der Bilder aufgelistet.</string>
     <string name="prfofile_author">Autor: </string>
+    <string name="alarm_entity_day_fr">Fr</string>
+    <string name="alarm_entity_day_sa">Sa</string>
+    <string name="alarm_entity_day_so">Su</string>
+    <string name="alarm_entity_day_do">Do</string>
+    <string name="alarm_entity_day_mi">Mi</string>
+    <string name="alarm_entity_day_di">Di</string>
+    <string name="alarm_entity_day_mo">Mo</string>
+    <string name="nichts_zu_sehen_n_geh_schlafen_um_daten_zu_generieren">Nichts zu sehen.   Geh schlafen um Daten zu generieren!</string>
+    <string name="history_day_sleepPhases_title">Schlafphasen:</string>
+    <string name="history_day_sleepPhases_time_in_phase_title">Zeit in Phase:</string>
+    <string name="history_fragment_title">&#128467; &#128202; &#128466; &#128200; &#128197; History</string>
+    <string name="history_button_analysisDate_previous">Zurück</string>
+    <string name="history_button_analysisDate_next">Nächste</string>
+    <string name="history_day_information_sleepPhases_lineChart">Informationen über das Liniendiagramm der Schlaphasen.</string>
+    <string name="history_day_sleep_quality_rating_title">Schlafqualität:</string>
+    <string name="history_day_activity_title">Aktivität:</string>
+    <string name="history_day_information_timeInPhase">Informationen über das Tortendiagramm der Schlaphasen.</string>
+    <string name="history_day_information_sleepQualityRating">Informationen über das Schlafqualitätsrating.</string>
+    <string name="history_day_information_activity_lineChart">Informationen über das Aktivitätsdiagramm.</string>
     <!--endregion-->
 
 
