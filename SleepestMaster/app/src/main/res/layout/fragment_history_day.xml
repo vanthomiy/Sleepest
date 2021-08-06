@@ -32,7 +32,7 @@
             android:layout_height="36dp"
             android:layout_margin="10dp"
             android:maxWidth="300dp"
-            android:text="@string/nichts_zu_sehen_n_geh_schlafen_um_daten_zu_generieren"
+            android:text="@string/history_day_information_noDataAvailable"
             android:textAlignment="center"
             android:textColor="@color/accent_text_color"
             android:textSize="@dimen/valueSize"
@@ -82,7 +82,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/history_day_sleepPhases_title"
+                            android:text="@string/history_sleepPhases_title"
                             android:textColor="@color/primary_text_color"
                             android:textSize="@dimen/headerSize"/>
 
@@ -368,7 +368,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/history_day_activity_title"
+                            android:text="@string/history_activity_title"
                             android:textColor="@color/primary_text_color"
                             android:textSize="@dimen/headerSize"/>
 

@@ -239,18 +239,22 @@
     <string name="profile_credits_flaticon">Flaticon Website</string>
     <string name="profile_flaticon_introduction">Wir haben Bilder von der Seite Flaticon verwendet. Im folgenden sind die einzelnen Authoren der Bilder aufgelistet.</string>
     <string name="prfofile_author">Autor: </string>
-    <string name="history_day_sleepPhases_title">Sleep phases:</string>
+    <string name="history_sleepPhases_title">Sleep phases:</string>
     <string name="history_day_sleepPhases_time_in_phase_title">Time in phase:</string>
     <string name="history_fragment_title">&#128467; &#128202; &#128466; &#128200; &#128197; History</string>
     <string name="history_button_analysisDate_previous">Previous</string>
     <string name="history_button_analysisDate_next">Next</string>
-    <string name="nichts_zu_sehen_n_geh_schlafen_um_daten_zu_generieren">Nothing here. Go to bed to gernerate data.</string>
+    <string name="history_day_information_noDataAvailable">Nothing here. Go to bed to generate data.</string>
     <string name="history_day_information_sleepPhases_lineChart">Information about the sleep phases line chart.</string>
     <string name="history_day_sleep_quality_rating_title">Sleep quality rating:</string>
-    <string name="history_day_activity_title">Activity:</string>
+    <string name="history_activity_title">Activity:</string>
     <string name="history_day_information_timeInPhase">Information about the sleep phases pie chart.</string>
     <string name="history_day_information_sleepQualityRating">Information about the sleep quality rating buttons.</string>
-    <string name="history_day_information_activity_lineChart">Information about the activity diagramm.</string>
+    <string name="history_day_information_activity_lineChart">Information about the activity diagram.</string>
+    <string name="history_week_information_sleepPhases_barChart">Information about the weekly sleep phases bar chart.</string>
+    <string name="history_week_information_activity_lineChart">Information about the weekly activity line chart.</string>
+    <string name="history_month_information_sleepPhases_barChart">Information about the monthly sleep phases bar chart.</string>
+    <string name="history_month_information_activity_lineChart">Information about the monthly activity line chart.</string>
 
     <!--endregion-->
 

@@ -46,7 +46,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/history_day_sleepPhases_title"
+                            android:text="@string/history_sleepPhases_title"
                             android:textColor="@color/primary_text_color"
                             android:textSize="@dimen/headerSize"/>
 
@@ -73,7 +73,7 @@
                             android:gravity="center"
                             android:layout_margin="10dp"
                             android:textColor="@color/primary_text_color"
-                            android:text="@string/sleep_sleeptimes_info"/>
+                            android:text="@string/history_week_information_activity_lineChart"/>
                     </FrameLayout>
 
                     <LinearLayout
@@ -99,7 +99,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Activity:"
+                            android:text="@string/history_activity_title"
                             android:textColor="@color/primary_text_color"
                             android:textSize="@dimen/headerSize"/>
 
@@ -126,7 +126,7 @@
                             android:gravity="center"
                             android:layout_margin="10dp"
                             android:textColor="@color/primary_text_color"
-                            android:text="@string/sleep_sleeptimes_info"/>
+                            android:text="@string/history_week_information_sleepPhases_barChart"/>
                     </FrameLayout>
 
                     <LinearLayout
