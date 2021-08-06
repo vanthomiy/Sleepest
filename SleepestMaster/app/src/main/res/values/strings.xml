@@ -242,7 +242,8 @@
 
     <string name="history_sleepPhases_title">Sleep phases:</string>
     <string name="history_day_sleepPhases_time_in_phase_title">Time in phase:</string>
-    <string name="history_fragment_title">&#128467; &#128202; &#128466; &#128200; &#128197; History</string>
+    <!--string name="history_fragment_title">&#128467; &#128202; &#128466; &#128200; &#128197; History</string!-->
+    <string name="history_fragment_title">&#128197; History</string>
     <string name="history_button_analysisDate_previous">Previous</string>
     <string name="history_button_analysisDate_next">Next</string>
     <string name="history_day_information_noDataAvailable">Nothing here. Go to bed to generate data.</string>
