@@ -132,7 +132,7 @@ public class NotificationUtil {
                 .setDeleteIntent(informationPendingIntent)
                 .setOnlyAlertOnce(true)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .addAction(R.drawable.logo_notification, buttonText, informationPendingIntent)
+                .addAction(R.drawable.logov4round, buttonText, informationPendingIntent)
                 .build();
     }
 
