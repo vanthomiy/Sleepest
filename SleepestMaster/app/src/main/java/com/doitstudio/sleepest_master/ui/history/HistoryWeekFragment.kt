@@ -13,12 +13,23 @@ import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
 import java.time.*
 
+/**  */
 class HistoryWeekFragment : Fragment() {
 
+    /**  */
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(HistoryViewModel::class.java) }
+
+    private val viewModelWeek by lazy { ViewModelProvider(this).get(HistoryWeekViewModel::class.java) }
+
+    /**  */
     private lateinit var binding: FragmentHistoryWeekBinding
+
+    /**  */
     private lateinit var barChart: BarChart
+
+    /**  */
     private lateinit var activityChart: LineChart
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,13 +38,14 @@ class HistoryWeekFragment : Fragment() {
     ): View {
 
         binding = FragmentHistoryWeekBinding.inflate(inflater, container, false)
-        binding.historyWeekViewModel = viewModel
+        binding.historyWeekViewModel = viewModelWeek
+        viewModelWeek.transitionsContainer = (binding.lLLinearAnimationLayoutWeeklyAnalysis)
 
         barChart = viewModel.setBarChart(7, getSundayOfWeek())
         activityChart = viewModel.setActivityChart(7, getSundayOfWeek())
 
-        binding.lLSleepAnalysisChartsWeek.addView(barChart)
-        binding.lLSleepAnalysisChartsWeek.addView(activityChart)
+        binding.lLSleepAnalysisChartsWeekSleepPhases.addView(barChart)
+        binding.lLActivityAnalysisChartWeek.addView(activityChart)
 
         val height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 350F, resources.displayMetrics)
         barChart.layoutParams.height = height.toInt()
@@ -61,6 +73,7 @@ class HistoryWeekFragment : Fragment() {
         return binding.root
     }
 
+    /**  */
     private fun getSundayOfWeek(): LocalDate {
         viewModel.analysisDate.get()?.let {
             val dayOfWeek = it.dayOfWeek

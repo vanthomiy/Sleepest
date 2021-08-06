@@ -16,6 +16,9 @@ import java.time.LocalDate
 class HistoryMonthFragment : Fragment() {
 
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(HistoryViewModel::class.java) }
+
+    private val viewModelMonth by lazy { ViewModelProvider(this).get(HistoryMonthViewModel::class.java) }
+
     private lateinit var binding: FragmentHistoryMonthBinding
     private lateinit var barChart: BarChart
     private lateinit var barChartDates :  Pair<Int, LocalDate>
@@ -28,14 +31,15 @@ class HistoryMonthFragment : Fragment() {
     ): View {
 
         binding = FragmentHistoryMonthBinding.inflate(inflater, container, false)
-        binding.historyMonthViewModel = viewModel
+        binding.historyMonthViewModel = viewModelMonth
+        viewModelMonth.transitionsContainer = (binding.lLLinearAnimationLayoutMonthlyAnalysis)
 
         barChartDates = getEndOfMonth()
         barChart = viewModel.setBarChart(barChartDates.first, barChartDates.second)
         activityChart = viewModel.setActivityChart(barChartDates.first, barChartDates.second)
 
-        binding.lLSleepAnalysisChartsMonth.addView(barChart)
-        binding.lLSleepAnalysisChartsMonth.addView(activityChart)
+        binding.lLSleepAnalysisChartsMonthSleepPhases.addView(barChart)
+        binding.lLActivityAnalysisChartMonth.addView(activityChart)
 
         val height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 350F, resources.displayMetrics)
         barChart.layoutParams.height = height.toInt()

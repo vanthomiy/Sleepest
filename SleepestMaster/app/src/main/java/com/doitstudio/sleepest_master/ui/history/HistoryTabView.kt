@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.databinding.Observable
-import androidx.databinding.ObservableInt
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
@@ -53,7 +52,7 @@ class HistoryTabView : Fragment() {
         tVActualDayTabView = view.findViewById(R.id.tV_actualDayTabView)
         previousMonthAnalysisDate = LocalDate.now().month
 
-        val tabs = listOf("Day", "Week", "Month")
+        val tabs = listOf(getString(R.string.history_day_title), getString(R.string.history_week_title), getString(R.string.history_month_title))
 
         val tabLayout = binding.tabLayout
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
@@ -124,16 +123,16 @@ class HistoryTabView : Fragment() {
 
     private fun createCalendarDayInformation(): String {
         val actualDay = LocalDate.now()
-        var information = "none"
+        var information = getString(R.string.history_failure_title)
 
         viewModel.analysisDate.get()?.let {
 
             information = when {
                 actualDay.dayOfYear == it.dayOfYear -> {
-                    "Today"
+                    getString(R.string.history_today_title)
                 }
                 (actualDay.dayOfYear - 1) == it.dayOfYear -> {
-                    "Yesterday"
+                    getString(R.string.history_yesterday_title)
                 }
                 else -> {
                     ("${it.dayOfMonth}.${it.monthValue}.${it.year}")
@@ -148,7 +147,7 @@ class HistoryTabView : Fragment() {
         var analysisWeekOfYear: Int
         val actualDate = LocalDate.now()
         val actualWeekOfYear: Int
-        var information = "none"
+        var information = getString(R.string.history_failure_title)
 
         val actualCalendar = Calendar.getInstance()
         actualCalendar.set(actualDate.year, actualDate.monthValue, actualDate.dayOfMonth)
@@ -161,10 +160,10 @@ class HistoryTabView : Fragment() {
 
             information = when {
                 actualWeekOfYear == analysisWeekOfYear -> {
-                    "This week"
+                    getString(R.string.history_currentWeek_title)
                 }
                 (actualWeekOfYear - 1) == analysisWeekOfYear -> {
-                    "Last week"
+                    getString(R.string.history_previousWeek_title)
                 }
                 else -> {
                     getWeekRange(it)
@@ -196,21 +195,21 @@ class HistoryTabView : Fragment() {
     private fun createCalendarMonthInformation(): String {
         viewModel.analysisDate.get()?.let {
             return when (it.monthValue) {
-                1 -> "January"
-                2 -> "February"
-                3 -> "March"
-                4 -> "April"
-                5 -> "Mai"
-                6 -> "June"
-                7 -> "July"
-                8 -> "August"
-                9 -> "September"
-                10 -> "October"
-                11 -> "November"
-                else -> "December"
+                1 -> getString(R.string.history_january_title)
+                2 -> getString(R.string.history_february_title)
+                3 -> getString(R.string.history_march_title)
+                4 -> getString(R.string.history_april_title)
+                5 -> getString(R.string.history_may_title)
+                6 -> getString(R.string.history_june_title)
+                7 -> getString(R.string.history_july_title)
+                8 -> getString(R.string.history_august_title)
+                9 -> getString(R.string.history_september_title)
+                10 -> getString(R.string.history_october_title)
+                11 -> getString(R.string.history_november_title)
+                else -> getString(R.string.history_december_title)
             }
         }
 
-        return "none"
+        return getString(R.string.history_failure_title)
     }
 }

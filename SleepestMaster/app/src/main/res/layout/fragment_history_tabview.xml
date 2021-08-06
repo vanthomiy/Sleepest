@@ -24,7 +24,7 @@
             android:textStyle="bold"
             android:layout_gravity="center"
             android:textColor="@color/primary_text_color"
-            android:text="@string/history"/>
+            android:text="@string/history_fragment_title"/>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout"
@@ -52,7 +52,7 @@
                 android:layout_weight="1"
                 android:backgroundTint="@color/primary_button_color"
                 android:textColor="@color/primary_text_color"
-                android:text="@string/previous"/>
+                android:text="@string/history_button_analysisDate_previous"/>
 
             <TextView
                 android:id="@+id/tV_actualDayTabView"
@@ -70,7 +70,7 @@
                 android:layout_weight="1"
                 android:backgroundTint="@color/primary_button_color"
                 android:textColor="@color/primary_text_color"
-                android:text="@string/next"/>
+                android:text="@string/history_button_analysisDate_next"/>
         </LinearLayout>
     </LinearLayout>
 </layout>
