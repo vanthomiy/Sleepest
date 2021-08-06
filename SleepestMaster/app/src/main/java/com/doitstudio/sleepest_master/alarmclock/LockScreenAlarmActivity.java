@@ -35,6 +35,7 @@ import com.doitstudio.sleepest_master.background.BackgroundAlarmTimeHandler;
 import com.doitstudio.sleepest_master.background.ForegroundService;
 import com.doitstudio.sleepest_master.model.data.Actions;
 import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage;
+import com.doitstudio.sleepest_master.model.data.Constants;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 
 import java.io.IOException;
@@ -99,7 +100,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
 
 
 
-            new CountDownTimer(1000, 1000) {
+            new CountDownTimer(Constants.DELAY, Constants.COUNTDOWN_TICK_INTERVAL) {
 
                 public void onTick(long millisUntilFinished) { }
 
@@ -110,7 +111,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
             }.start();
 
 
-            new CountDownTimer(60000, 1000) {
+            new CountDownTimer(Constants.MILLIS_UNTIL_SNOOZE, Constants.COUNTDOWN_TICK_INTERVAL) {
 
                 public void onTick(long millisUntilFinished) { }
 
@@ -148,7 +149,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
         int yDest = view.getMeasuredHeight();
 
         TranslateAnimation translateAnimation = new TranslateAnimation( 0, xDest - originalPos[0] , 0, yDest - originalPos[1] );
-        translateAnimation.setDuration(1000);
+        translateAnimation.setDuration(Constants.LOCKSCREEN_ANIMATION_DURATION);
         translateAnimation.setRepeatCount(Animation.INFINITE);
         translateAnimation.setRepeatMode(Animation.RESTART);
         translateAnimation.setFillAfter( true );
@@ -179,7 +180,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
                 //moveViewToScreenCenter(imageView);
             }
         });
-        colorAnimation.setDuration(2000);
+        colorAnimation.setDuration(Constants.LOCKSCREEN_COLOR_ANIMATION_DURATION);
         colorAnimation.setRepeatCount(ValueAnimator.INFINITE);
         colorAnimation.setRepeatMode(ValueAnimator.REVERSE);
         colorAnimation.start();

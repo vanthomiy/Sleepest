@@ -32,6 +32,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZoneOffset
 import java.util.*
 
 
@@ -208,109 +212,11 @@ class MainActivity : AppCompatActivity() {
         activeAlarmsLiveData.observe(this){ list ->
             // check the list if empty or not
             BackgroundAlarmTimeHandler.getHandler(applicationContext).changeOfAlarmEntity(list.isEmpty())
-            /**scope.launch {
-                // is in sleep time ?
-                if (dataStoreRepository.isInSleepTime() && dataBaseRepository.getNextActiveAlarm() != null) {
-                    if(list.isEmpty())
-                    {
-                        // empty..
-                        // We need to check if foreground is active or not... if not active we have to start it from here
-                        // if already inside sleeptime
-                        if(dataStoreRepository.backgroundServiceFlow.first().isForegroundActive){
-                            ForegroundService.startOrStopForegroundService(
-                                Actions.STOP,
-                                applicationContext
-                            )
-                        }
-                    }
-                    else if(!dataStoreRepository.backgroundServiceFlow.first().isForegroundActive && !dataBaseRepository.getNextActiveAlarm()!!.wasFired && !dataBaseRepository.getNextActiveAlarm()!!.tempDisabled
-                        && !dataBaseRepository.getNextActiveAlarm()!!.tempDisabled && ((LocalTime.now().toSecondOfDay() < dataBaseRepository.getNextActiveAlarm()!!.actualWakeup) || (dataStoreRepository.getSleepTimeBegin() < LocalTime.now().toSecondOfDay()))){
-                        // Is empty..
-                        // We need to check if foreground is active or not... if active we have to stop it from here
-                        // if already inside sleeptime
-                        ForegroundService.startOrStopForegroundService(
-                            Actions.START,
-                            applicationContext
-                        )
-                    }
-                }
-
-            }**/
         }
 
         // observe sleeptime changes
         sleepParametersLiveData.observe(this) { livedata ->
             BackgroundAlarmTimeHandler.getHandler(applicationContext).changeSleepTime()
-            /**scope.launch {
-
-                // in sleep time
-                if (dataStoreRepository.isInSleepTime() && (dataBaseRepository.getNextActiveAlarm() != null)) {
-                    // alarm should be active else set active
-                    if(!dataStoreRepository.backgroundServiceFlow.first().isForegroundActive){
-
-                        if (!dataBaseRepository.getNextActiveAlarm()!!.wasFired && !dataBaseRepository.getNextActiveAlarm()!!.tempDisabled ||
-                                ((LocalTime.now().toSecondOfDay() > dataBaseRepository.getNextActiveAlarm()!!.actualWakeup) &&
-                                        (dataStoreRepository.getSleepTimeBegin() < LocalTime.now().toSecondOfDay())) && !dataBaseRepository.getNextActiveAlarm()!!.tempDisabled) {
-                            ForegroundService.startOrStopForegroundService(
-                                Actions.START,
-                                applicationContext
-                            )
-
-                        }
-                    } else if (earliestWakeupTemp != dataBaseRepository.getNextActiveAlarm()!!.wakeupEarly) {
-
-                        earliestWakeupTemp = dataBaseRepository.getNextActiveAlarm()!!.wakeupEarly
-
-                        val calendarFirstCalc = AlarmReceiver.getAlarmDate(dataBaseRepository.getNextActiveAlarm()!!.wakeupEarly - 1800)
-                        AlarmReceiver.startAlarmManager(
-                            calendarFirstCalc[Calendar.DAY_OF_WEEK],
-                            calendarFirstCalc[Calendar.HOUR_OF_DAY],
-                            calendarFirstCalc[Calendar.MINUTE],
-                            applicationContext,
-                            AlarmReceiverUsage.START_WORKMANAGER_CALCULATION
-                        )
-                    }
-                } else // not in sleep time
-                {
-                    // alarm should be not active else disable and set to a new time...
-                    if(dataStoreRepository.backgroundServiceFlow.first().isForegroundActive){
-                        ForegroundService.startOrStopForegroundService(
-                            Actions.STOP,
-                            applicationContext
-                        )
-                    }
-
-                    if (sleepTimeBeginTemp != livedata.sleepTimeStart) {
-                        sleepTimeBeginTemp = livedata.sleepTimeStart
-
-                        val calendarAlarm = Calendar.getInstance()
-                        calendarAlarm[Calendar.HOUR_OF_DAY] = 0
-                        calendarAlarm[Calendar.MINUTE] = 0
-                        calendarAlarm[Calendar.SECOND] = 0
-                        calendarAlarm.add(Calendar.SECOND, livedata.sleepTimeStart)
-
-                        //Start a alarm for the new foregroundservice start time
-                        AlarmReceiver.startAlarmManager(
-                            calendarAlarm[Calendar.DAY_OF_WEEK],
-                            calendarAlarm[Calendar.HOUR_OF_DAY],
-                            calendarAlarm[Calendar.MINUTE],
-                            applicationContext,
-                            AlarmReceiverUsage.START_FOREGROUND
-                        )
-
-                        val pref = getSharedPreferences("AlarmReceiver1", 0)
-                        val ed = pref.edit()
-                        ed.putString("usage", "MainActivity")
-                        ed.putInt("day", calendarAlarm[Calendar.DAY_OF_WEEK])
-                        ed.putInt("hour", calendarAlarm[Calendar.HOUR_OF_DAY])
-                        ed.putInt("minute", calendarAlarm[Calendar.MINUTE])
-                        ed.apply()
-
-                    }
-
-
-                }
-            }**/
         }
 
         settingsLiveData.observe(this) { settings ->
@@ -355,7 +261,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
     }
 
     override fun onResume() {
@@ -438,30 +343,6 @@ class MainActivity : AppCompatActivity() {
 
                 scope.launch {
                     val calendar = TimeConverterUtil.getAlarmDate(dataStoreRepository.getSleepTimeBegin())
-                    //AlarmReceiver.cancelAlarm(applicationContext, 6)
-
-                    /**AlarmReceiver.startAlarmManager(
-                        calendar.get(Calendar.DAY_OF_WEEK), calendar.get(
-                            Calendar.HOUR_OF_DAY
-                        ), calendar.get(Calendar.MINUTE), applicationContext, AlarmReceiverUsage.START_WORKMANAGER
-                    )**/
-
-                    /**AlarmReceiver.startAlarmManager(
-                        calendar.get(Calendar.DAY_OF_WEEK),
-                        calendar.get(
-                            Calendar.HOUR_OF_DAY
-                        ),
-                        calendar.get(Calendar.MINUTE),
-                        applicationContext,
-                        AlarmReceiverUsage.START_WORKMANAGER
-                    )**/
-
-
-                    /**val calendarAlarm = Calendar.getInstance()
-                    calendarAlarm[Calendar.HOUR_OF_DAY] = 0
-                    calendarAlarm[Calendar.MINUTE] = 0
-                    calendarAlarm[Calendar.SECOND] = 0
-                    calendarAlarm.add(Calendar.SECOND, dataStoreRepository.getSleepTimeBegin())**/
 
                     //Start a alarm for the new foregroundservice start time
                     AlarmReceiver.startAlarmManager(

@@ -9,7 +9,6 @@ import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
-import com.doitstudio.sleepest_master.SettingsData
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockAudio
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
 import com.doitstudio.sleepest_master.googleapi.SleepHandler
@@ -20,14 +19,12 @@ import com.doitstudio.sleepest_master.model.data.Constants
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
-import com.doitstudio.sleepest_master.storage.db.AlarmEntity
-import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.util.TimeConverterUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -50,27 +47,37 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
     private var sleepTimeBeginTemp = 0
     private var sleepTimeEndTemp = 0
+    private var firstWakeupTemp = 0
+    private var lastWakeupTemp = 0
 
+    init {
+        scope.launch {
+            sleepTimeBeginTemp = getSleepTimeBeginValue()
+            sleepTimeEndTemp = getSleepTimeEndValue()
+            if (checkAlarmActive()) {
+                firstWakeupTemp = getFirstWakeup()
+                lastWakeupTemp = getLastWakeup()
+            }
+
+        }
+
+    }
 
     fun changeSleepTime() {
         scope.launch {
 
-            if (checkInSleepTime() && !checkAlarmFired() && !checkAlarmTempDisabled() && !checkForegroundStatus() && checkAlarmActive()) {
+            if (checkInSleepTime() && (getSleepTimeBeginValue() != sleepTimeBeginTemp)) {
                 beginOfSleepTime(false)
                 AlarmReceiver.cancelAlarm(context, AlarmReceiverUsage.START_FOREGROUND)
             } else {
-                if (checkForegroundStatus() && !checkInSleepTime()) {
-
+                if ((sleepTimeEndTemp != getSleepTimeEndValue()) && !checkInSleepTime()) {
                     endOfSleepTime(false)
-                } else if (checkForegroundStatus() && checkInSleepTime()) {
-                    if (checkAlarmActive()) {
-                        var calendar = TimeConverterUtil.getAlarmDate(getLastWakeup())
-                        calendar = TimeConverterUtil.getAlarmDate(getSleepTimeEndValue())
-                        AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context.applicationContext, AlarmReceiverUsage.STOP_WORKMANAGER);
-                    }
+                } else if (checkInSleepTime() && (sleepTimeEndTemp != getSleepTimeEndValue())) {
+                    val calendar = TimeConverterUtil.getAlarmDate(getSleepTimeEndValue())
+                    AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context.applicationContext, AlarmReceiverUsage.STOP_WORKMANAGER);
                 }
 
-                if (getSleepTimeBeginValue() != sleepTimeBeginTemp) {
+                if ((getSleepTimeBeginValue() != sleepTimeBeginTemp) && !checkInSleepTime()) {
                     val calendarAlarm = TimeConverterUtil.getAlarmDate(getSleepTimeBeginValue())
                     AlarmReceiver.startAlarmManager(
                         calendarAlarm[Calendar.DAY_OF_WEEK],
@@ -84,14 +91,11 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                     ed.putInt("hour", calendarAlarm[Calendar.HOUR_OF_DAY])
                     ed.putInt("minute", calendarAlarm[Calendar.MINUTE])
                     ed.apply()
-
-                    sleepTimeBeginTemp = getSleepTimeBeginValue()
                 }
-
-
-
-
             }
+
+            sleepTimeBeginTemp = getSleepTimeBeginValue()
+            sleepTimeEndTemp = getSleepTimeEndValue()
         }
     }
 
@@ -104,18 +108,30 @@ class BackgroundAlarmTimeHandler(val context: Context) {
             }
 
             if (checkInSleepTime() && checkAlarmActive() && checkForegroundStatus() && !checkAlarmFired() && !checkAlarmTempDisabled() && !listEmpty) {
-                val calenderCalculation = TimeConverterUtil.getAlarmDate(getFirstWakeup() - 1800)
-                AlarmReceiver.startAlarmManager(
-                    calenderCalculation[Calendar.DAY_OF_WEEK],
-                    calenderCalculation[Calendar.HOUR_OF_DAY],
-                    calenderCalculation[Calendar.MINUTE],
-                    context,
-                    AlarmReceiverUsage.START_WORKMANAGER_CALCULATION)
-                val calendar = TimeConverterUtil.getAlarmDate(getLastWakeup())
-                AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context.applicationContext, AlarmClockReceiverUsage.LATEST_WAKEUP_ALARMCLOCK);
-            }
-        }
 
+                if (getFirstWakeup() != firstWakeupTemp) {
+                    val calenderCalculation = TimeConverterUtil.getAlarmDate(getFirstWakeup() - 1800)
+                    AlarmReceiver.startAlarmManager(
+                        calenderCalculation[Calendar.DAY_OF_WEEK],
+                        calenderCalculation[Calendar.HOUR_OF_DAY],
+                        calenderCalculation[Calendar.MINUTE],
+                        context,
+                        AlarmReceiverUsage.START_WORKMANAGER_CALCULATION)
+                }
+
+                if (getLastWakeup() != lastWakeupTemp) {
+                    val calendar = TimeConverterUtil.getAlarmDate(getLastWakeup())
+                    AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context.applicationContext, AlarmClockReceiverUsage.LATEST_WAKEUP_ALARMCLOCK);
+                }
+            }
+
+            if (checkAlarmActive()) {
+                lastWakeupTemp = getLastWakeup()
+                firstWakeupTemp = getFirstWakeup()
+            }
+
+
+        }
     }
 
     fun alarmClockRang(isScreenOn : Boolean) {
@@ -124,10 +140,10 @@ class BackgroundAlarmTimeHandler(val context: Context) {
             if (isScreenOn) {
                 AlarmClockAudio.getInstance().stopAlarm(false)
 
-                stopForegroundService(true)
-
+                //stopForegroundService(true)
+                Toast.makeText(context, "Alarmclock stopped", Toast.LENGTH_LONG).show()
                 val calendar = Calendar.getInstance()
-                var pref: SharedPreferences = context.getSharedPreferences("AlarmClock", 0)
+                val pref: SharedPreferences = context.getSharedPreferences("AlarmClock", 0)
                 var ed = pref.edit()
                 ed.putInt("hour", calendar[Calendar.HOUR_OF_DAY])
                 ed.putInt("minute", calendar[Calendar.MINUTE])
@@ -183,7 +199,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                     ForegroundService.startOrStopForegroundService(Actions.STOP, context)
                 }
 
-                WorkManager.getInstance(context.applicationContext).cancelAllWorkByTag(context.getString(R.string.workmanager2_tag))
+                WorkmanagerCalculation.stopPeriodicWorkmanager()
                 AlarmClockReceiver.cancelAlarm(context.applicationContext, AlarmClockReceiverUsage.START_ALARMCLOCK);
                 AlarmClockReceiver.cancelAlarm(context.applicationContext, AlarmClockReceiverUsage.LATEST_WAKEUP_ALARMCLOCK);
 
@@ -232,14 +248,13 @@ class BackgroundAlarmTimeHandler(val context: Context) {
             startWorkmanager()
     }
 
-    private suspend fun startWorkmanager() {
+    fun startWorkmanager() {
         AlarmReceiver.cancelAlarm(context, AlarmReceiverUsage.START_FOREGROUND)
 
         //Start Workmanager at sleeptime and subscribe to SleepApi
         val periodicDataWork: PeriodicWorkRequest = PeriodicWorkRequest.Builder(Workmanager::class.java,
             Constants.WORKMANAGER_DURATION.toLong(),
-            TimeUnit.MINUTES
-        )
+            TimeUnit.MINUTES)
             .addTag(context.getString(R.string.workmanager1_tag)) //Tag is needed for canceling the periodic work
             .build()
 
@@ -249,13 +264,15 @@ class BackgroundAlarmTimeHandler(val context: Context) {
         Toast.makeText(context, "Workmanager started", Toast.LENGTH_LONG).show()
 
         sleepHandler.startSleepHandler()
+        scope.launch {
+            //Set AlarmManager to stop Workmanager at end of sleeptime
+            val calendar = TimeConverterUtil.getAlarmDate(getSleepTimeEndValue())
+            AlarmReceiver.startAlarmManager(
+                calendar.get(Calendar.DAY_OF_WEEK),
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE), context, AlarmReceiverUsage.STOP_WORKMANAGER)
+        }
 
-        //Set AlarmManager to stop Workmanager at end of sleeptime
-        val calendar = TimeConverterUtil.getAlarmDate(getSleepTimeEndValue())
-        AlarmReceiver.startAlarmManager(
-            calendar.get(Calendar.DAY_OF_WEEK),
-            calendar.get(Calendar.HOUR_OF_DAY),
-            calendar.get(Calendar.MINUTE), context, AlarmReceiverUsage.STOP_WORKMANAGER)
     }
 
     fun beginOfSleepTime(inActivity: Boolean) {
@@ -282,9 +299,10 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
             //Stop Workmanager at end of sleeptime and unsubscribe to SleepApi
             WorkManager.getInstance(context.applicationContext).cancelAllWorkByTag(context.getString(R.string.workmanager1_tag))
+            Toast.makeText(context, "Workmanager stopped", Toast.LENGTH_LONG).show()
 
             sleepHandler.stopSleepHandler()
-            sleepCalculationHandler.defineUserWakeup(null, false)
+            defineNewUserWakeup(null, false)
 
             //Set AlarmManager to start Workmanager at begin of sleeptime
             val calendar = TimeConverterUtil.getAlarmDate(getSleepTimeBeginValue())
@@ -303,7 +321,10 @@ class BackgroundAlarmTimeHandler(val context: Context) {
             }
 
             if (inTheMorning) {
-                resetTempDisabledAndWasFired()
+                if (checkAlarmActive()) {
+                    resetTempDisabledAndWasFired()
+                    dataStoreRepository.updateUserSleepTime(0)
+                }
             }
         }
     }
@@ -335,73 +356,26 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
     }
 
-    /**fun deviceBoot() {
-        scope.launch {
-            if (checkForegroundStatus() && checkAlarmActive()) {
-                if (!checkAlarmFired() && !checkAlarmTempDisabled() && checkInSleepTime()) {
-                    startForegroundService(true)
-                } else {
-                    val calendar = TimeConverterUtil.getAlarmDate(getSleepTimeBeginValue())
-                    AlarmReceiver.startAlarmManager(calendar[Calendar.DAY_OF_WEEK],
-                        calendar[Calendar.HOUR_OF_DAY], calendar[Calendar.MINUTE],
-                        context.applicationContext,
-                        AlarmReceiverUsage.START_FOREGROUND)
-                    dataStoreRepository.backgroundUpdateIsActive(false)
-                }
-            } else if (!checkForegroundStatus() && checkAlarmActive()) {
-                if (!checkAlarmFired() && !checkAlarmTempDisabled() && checkInSleepTime()) {
-                    startForegroundService(true)
-                } else {
-                    if (!checkInSleepTime()) {
-                        val calendar = TimeConverterUtil.getAlarmDate(getSleepTimeBeginValue())
-                        AlarmReceiver.startAlarmManager(calendar[Calendar.DAY_OF_WEEK],
-                            calendar[Calendar.HOUR_OF_DAY], calendar[Calendar.MINUTE],
-                            context.applicationContext,
-                            AlarmReceiverUsage.START_FOREGROUND)
-                    }
-                }
-            } else {
-                if (!checkInSleepTime()) {
-                    val calendar = TimeConverterUtil.getAlarmDate(getSleepTimeBeginValue())
-                    AlarmReceiver.startAlarmManager(
-                        calendar[Calendar.DAY_OF_WEEK],
-                        calendar[Calendar.HOUR_OF_DAY], calendar[Calendar.MINUTE],
-                        context.applicationContext,
-                        AlarmReceiverUsage.START_FOREGROUND
-                    )
-                }
-            }
-
-            val calendar = Calendar.getInstance()
-            var pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
-            var ed = pref.edit()
-            ed.putInt("hour", calendar[Calendar.HOUR_OF_DAY])
-            ed.putInt("minute", calendar[Calendar.MINUTE])
-            ed.apply()
-        }
-
-    }**/
-
     fun chooseStateBeforeReboot() {
 
         scope.launch {
             Toast.makeText(context, "Choose", Toast.LENGTH_LONG).show()
             if (!checkInSleepTime() && (!checkAlarmActive() || !checkAlarmTempDisabled() || !checkAlarmFired()) && !checkForegroundStatus()) {
-                executeStateAfterReboot(1);
+                executeStateAfterReboot(1)
 
                 val calendar = Calendar.getInstance()
-                var pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
-                var ed = pref.edit()
+                val pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
+                val ed = pref.edit()
                 ed.putInt("hour", calendar[Calendar.HOUR_OF_DAY])
                 ed.putInt("minute", calendar[Calendar.MINUTE])
                 ed.putInt("usage", 1)
                 ed.apply()
             } else if (checkInSleepTime() && (!checkAlarmActive() || !checkAlarmTempDisabled() || !checkAlarmFired()) && !checkForegroundStatus()) {
-                executeStateAfterReboot(2);
+                executeStateAfterReboot(2)
 
                 val calendar = Calendar.getInstance()
-                var pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
-                var ed = pref.edit()
+                val pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
+                val ed = pref.edit()
                 ed.putInt("hour", calendar[Calendar.HOUR_OF_DAY])
                 ed.putInt("minute", calendar[Calendar.MINUTE])
                 ed.putInt("usage", 2)
@@ -410,72 +384,72 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                 Toast.makeText(context, "Alarm Detected", Toast.LENGTH_LONG).show()
                 val time = LocalTime.now().toSecondOfDay()
                 if (time > getFirstWakeup() && time < getLastWakeup()) {
-                    executeStateAfterReboot(3);
+                    executeStateAfterReboot(3)
 
                     val calendar = Calendar.getInstance()
-                    var pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
-                    var ed = pref.edit()
+                    val pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
+                    val ed = pref.edit()
                     ed.putInt("hour", calendar[Calendar.HOUR_OF_DAY])
                     ed.putInt("minute", calendar[Calendar.MINUTE])
                     ed.putInt("usage", 3)
                     ed.apply()
                 } else if (time > (getFirstWakeup() - 1800) && time < getFirstWakeup()) {
-                    executeStateAfterReboot(3);
+                    executeStateAfterReboot(3)
 
                     val calendar = Calendar.getInstance()
-                    var pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
-                    var ed = pref.edit()
+                    val pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
+                    val ed = pref.edit()
                     ed.putInt("hour", calendar[Calendar.HOUR_OF_DAY])
                     ed.putInt("minute", calendar[Calendar.MINUTE])
                     ed.putInt("usage", 3)
                     ed.apply()
                 } else if (time > getLastWakeup() && time < getSleepTimeBeginValue()) {
-                    executeStateAfterReboot(5);
+                    executeStateAfterReboot(5)
 
                     val calendar = Calendar.getInstance()
-                    var pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
-                    var ed = pref.edit()
+                    val pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
+                    val ed = pref.edit()
                     ed.putInt("hour", calendar[Calendar.HOUR_OF_DAY])
                     ed.putInt("minute", calendar[Calendar.MINUTE])
                     ed.putInt("usage", 5)
                     ed.apply()
                 } else if ((time < (getFirstWakeup() - 1800)) || (time > getSleepTimeBeginValue())) {
-                    executeStateAfterReboot(6);
+                    executeStateAfterReboot(6)
 
                     val calendar = Calendar.getInstance()
-                    var pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
-                    var ed = pref.edit()
+                    val pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
+                    val ed = pref.edit()
                     ed.putInt("hour", calendar[Calendar.HOUR_OF_DAY])
                     ed.putInt("minute", calendar[Calendar.MINUTE])
                     ed.putInt("usage", 6)
                     ed.apply()
                 }
             } else if (!checkInSleepTime() && (!checkAlarmActive() || !checkAlarmTempDisabled() || !checkAlarmFired()) && checkForegroundStatus()) {
-                executeStateAfterReboot(4);
+                executeStateAfterReboot(4)
 
                 val calendar = Calendar.getInstance()
-                var pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
-                var ed = pref.edit()
+                val pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
+                val ed = pref.edit()
                 ed.putInt("hour", calendar[Calendar.HOUR_OF_DAY])
                 ed.putInt("minute", calendar[Calendar.MINUTE])
                 ed.putInt("usage", 4)
                 ed.apply()
             } else if (!checkInSleepTime() && checkAlarmActive() && !checkAlarmTempDisabled() && !checkAlarmFired() && checkForegroundStatus()) {
-                executeStateAfterReboot(4);
+                executeStateAfterReboot(4)
 
                 val calendar = Calendar.getInstance()
-                var pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
-                var ed = pref.edit()
+                val pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
+                val ed = pref.edit()
                 ed.putInt("hour", calendar[Calendar.HOUR_OF_DAY])
                 ed.putInt("minute", calendar[Calendar.MINUTE])
                 ed.putInt("usage", 4)
                 ed.apply()
             } else if (!checkInSleepTime() && checkAlarmActive() && !checkAlarmTempDisabled() && !checkAlarmFired() && !checkForegroundStatus()) {
-                executeStateAfterReboot(1);
+                executeStateAfterReboot(1)
 
                 val calendar = Calendar.getInstance()
-                var pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
-                var ed = pref.edit()
+                val pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
+                val ed = pref.edit()
                 ed.putInt("hour", calendar[Calendar.HOUR_OF_DAY])
                 ed.putInt("minute", calendar[Calendar.MINUTE])
                 ed.putInt("usage", 1)
@@ -524,8 +498,15 @@ class BackgroundAlarmTimeHandler(val context: Context) {
         }
     }
 
+    fun defineNewUserWakeup(localTime: LocalDateTime?, setAlarm:Boolean) {
+        scope.launch {
+            sleepCalculationHandler.defineUserWakeup(localTime, setAlarm)
+        }
+    }
+
     private suspend fun resetTempDisabledAndWasFired() {
         dataBaseRepository.resetAlarmTempDisabledWasFired()
+        dataBaseRepository.resetActualWakeupTime(getFirstWakeup())
     }
 
     private suspend fun getSleepTimeBeginValue() =
@@ -559,7 +540,13 @@ class BackgroundAlarmTimeHandler(val context: Context) {
         dataStoreRepository.backgroundUpdateIsActive(status)
     }
 
+    private suspend fun getAlarmId() : Int {
+        if(checkAlarmActive()) {
+            return dataBaseRepository.getNextActiveAlarm()!!.id
+        }
 
+        return -1
+    }
 
     companion object {
         // For Singleton instantiation
