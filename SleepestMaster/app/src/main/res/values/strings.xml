@@ -260,8 +260,8 @@
     <string name="history_day_timeInPhase_lightSleep">Light sleep</string>
     <string name="history_day_timeInPhase_deepSleep">Deep sleep</string>
     <string name="history_day_timeInPhase_sleepSum">Sleep</string>
-    <string name="histroy_day_title">Day</string>
-    <string name="histroy_week_title">Week</string>
+    <string name="history_day_title">Day</string>
+    <string name="history_week_title">Week</string>
     <string name="history_month_title">Month</string>
     <string name="history_today_title">Today</string>
     <string name="history_yesterday_title">Yesterday</string>

@@ -346,8 +346,8 @@
     <string name="history_day_timeInPhase_lightSleep">Leichtschlaf</string>
     <string name="history_day_timeInPhase_deepSleep">Tiefschlaf</string>
     <string name="history_day_timeInPhase_sleepSum">Schlafzeit</string>
-    <string name="histroy_day_title">Tag</string>
-    <string name="histroy_week_title">Woche</string>
+    <string name="history_day_title">Tag</string>
+    <string name="history_week_title">Woche</string>
     <string name="history_month_title">Monat</string>
     <string name="history_today_title">Heute</string>
     <string name="history_yesterday_title">Gestern</string>

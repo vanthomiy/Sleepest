@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.databinding.Observable
-import androidx.databinding.ObservableInt
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
@@ -53,7 +52,7 @@ class HistoryTabView : Fragment() {
         tVActualDayTabView = view.findViewById(R.id.tV_actualDayTabView)
         previousMonthAnalysisDate = LocalDate.now().month
 
-        val tabs = listOf(getString(R.string.histroy_day_title), getString(R.string.histroy_week_title), getString(R.string.history_month_title))
+        val tabs = listOf(getString(R.string.history_day_title), getString(R.string.history_week_title), getString(R.string.history_month_title))
 
         val tabLayout = binding.tabLayout
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
