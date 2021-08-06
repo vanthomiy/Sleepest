@@ -74,7 +74,7 @@
                             android:gravity="center"
                             android:layout_margin="10dp"
                             android:textColor="@color/primary_text_color"
-                            android:text="@string/history_week_information_sleepPhases_barChart"/>
+                            android:text="@string/history_month_information_sleepPhases_barChart"/>
                     </FrameLayout>
 
                     <LinearLayout

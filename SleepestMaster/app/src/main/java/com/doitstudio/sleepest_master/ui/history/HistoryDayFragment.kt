@@ -14,7 +14,6 @@ import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.databinding.FragmentHistoryDayBinding
 import com.doitstudio.sleepest_master.model.data.ActivityOnDay
 import com.doitstudio.sleepest_master.model.data.MobilePosition
-import com.doitstudio.sleepest_master.model.data.MoodType
 import com.doitstudio.sleepest_master.sleepcalculation.model.UserSleepRating
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
@@ -170,19 +169,19 @@ class HistoryDayFragment : Fragment() {
         viewModelDay.endOfSeep.set(time)
 
         viewModelDay.awakeTime.set(
-            "Awake: " + generateSleepValueInformation(0)
+            getString(R.string.history_day_timeInPhase_awake) + " " + generateSleepValueInformation(0)
         )
 
         viewModelDay.lightSleepTime.set(
-            "Light: " + generateSleepValueInformation(0)
+            getString(R.string.history_day_timeInPhase_lightSleep) + " " + generateSleepValueInformation(0)
         )
 
         viewModelDay.deepSleepTime.set(
-            "Deep: " + generateSleepValueInformation(0)
+            getString(R.string.history_day_timeInPhase_deepSleep) + " " + generateSleepValueInformation(0)
         )
 
         viewModelDay.sleepTime.set(
-            "Sleep: " + generateSleepValueInformation(0)
+            getString(R.string.history_day_timeInPhase_sleepSum) + " " + generateSleepValueInformation(0)
         )
 
         // In case the session is available, set values.
@@ -204,19 +203,19 @@ class HistoryDayFragment : Fragment() {
             viewModelDay.endOfSeep.set(time)
 
             viewModelDay.awakeTime.set(
-                "Awake: " + generateSleepValueInformation(it.third.sleepTimes.awakeTime)
+                getString(R.string.history_day_timeInPhase_awake) + " " + generateSleepValueInformation(it.third.sleepTimes.awakeTime)
             )
 
             viewModelDay.lightSleepTime.set(
-                "Light: " + generateSleepValueInformation(it.third.sleepTimes.lightSleepDuration)
+                getString(R.string.history_day_timeInPhase_lightSleep) + " " + generateSleepValueInformation(it.third.sleepTimes.lightSleepDuration)
             )
 
             viewModelDay.deepSleepTime.set(
-                "Deep: " + generateSleepValueInformation(it.third.sleepTimes.deepSleepDuration)
+                getString(R.string.history_day_timeInPhase_deepSleep) + " " + generateSleepValueInformation(it.third.sleepTimes.deepSleepDuration)
             )
 
             viewModelDay.sleepTime.set(
-                "Sleep: " + generateSleepValueInformation(it.third.sleepTimes.sleepDuration)
+                getString(R.string.history_day_timeInPhase_sleepSum) + " " + generateSleepValueInformation(it.third.sleepTimes.sleepDuration)
             )
         }
     }
@@ -286,20 +285,20 @@ class HistoryDayFragment : Fragment() {
 
         if (lineDataSet.yMax == 4f) { // TODO Maybe change this to Phone.INBED // Phone.NOTINBED
             // Only sleep and awake is detected. Phone not in bed.
-            yAxisValues.add("Awake")
+            yAxisValues.add(getString(R.string.history_day_timeInPhase_awake))
             yAxisValues.add("")
             yAxisValues.add("")
             yAxisValues.add("")
-            yAxisValues.add("Sleep")
+            yAxisValues.add(getString(R.string.history_day_timeInPhase_sleepSum))
             yAxisValues.add("")
             chart.axisLeft.labelCount = 5
             chart.axisLeft.axisMaximum = 5f
         }
         else {
             // Normal night with all sleep phases detected. Phone in bed.
-            yAxisValues.add("Awake")
-            yAxisValues.add("Light")
-            yAxisValues.add("Deep")
+            yAxisValues.add(getString(R.string.history_day_timeInPhase_awake))
+            yAxisValues.add(getString(R.string.history_day_timeInPhase_lightSleep))
+            yAxisValues.add(getString(R.string.history_day_timeInPhase_deepSleep))
             chart.axisLeft.labelCount = 2
             chart.axisLeft.axisMaximum = 2f
         }
@@ -350,30 +349,30 @@ class HistoryDayFragment : Fragment() {
                 val deepSleep = sleepValues.third.sleepTimes.deepSleepDuration
 
                 if (sleepValues.third.mobilePosition == MobilePosition.ONTABLE) {
-                    entries.add(PieEntry(awake.toFloat(), "Awake"))
+                    entries.add(PieEntry(awake.toFloat(), getString(R.string.history_day_timeInPhase_awake)))
                     sleepTypes[0] = true
-                    entries.add(PieEntry(sleep.toFloat(), "Sleep"))
+                    entries.add(PieEntry(sleep.toFloat(), getString(R.string.history_day_timeInPhase_sleepSum)))
                     sleepTypes[1] = true
                 }
                 else if (sleepValues.third.mobilePosition == MobilePosition.INBED) {
                     if (lightSleep != 0 && deepSleep != 0 && awake == 0) {
-                        entries.add(PieEntry(lightSleep.toFloat(), "Light"))
+                        entries.add(PieEntry(lightSleep.toFloat(), getString(R.string.history_day_timeInPhase_lightSleep)))
                         sleepTypes[2] = true
-                        entries.add(PieEntry(deepSleep.toFloat(), "Deep"))
+                        entries.add(PieEntry(deepSleep.toFloat(), getString(R.string.history_day_timeInPhase_deepSleep)))
                         sleepTypes[3] = true
                     }
                     else if (lightSleep != 0 && deepSleep == 0 && awake != 0) {
-                        entries.add(PieEntry(lightSleep.toFloat(), "Light"))
+                        entries.add(PieEntry(lightSleep.toFloat(), getString(R.string.history_day_timeInPhase_lightSleep)))
                         sleepTypes[2] = true
-                        entries.add(PieEntry(awake.toFloat(), "Awake"))
+                        entries.add(PieEntry(awake.toFloat(), getString(R.string.history_day_timeInPhase_awake)))
                         sleepTypes[0] = true
                     }
                     else {
-                        entries.add(PieEntry(lightSleep.toFloat(), "Light"))
+                        entries.add(PieEntry(lightSleep.toFloat(), getString(R.string.history_day_timeInPhase_lightSleep)))
                         sleepTypes[2] = true
-                        entries.add(PieEntry(deepSleep.toFloat(), "Deep"))
+                        entries.add(PieEntry(deepSleep.toFloat(), getString(R.string.history_day_timeInPhase_deepSleep)))
                         sleepTypes[3] = true
-                        entries.add(PieEntry(awake.toFloat(), "Awake"))
+                        entries.add(PieEntry(awake.toFloat(), getString(R.string.history_day_timeInPhase_awake)))
                         sleepTypes[0] = true
                     }
                 }

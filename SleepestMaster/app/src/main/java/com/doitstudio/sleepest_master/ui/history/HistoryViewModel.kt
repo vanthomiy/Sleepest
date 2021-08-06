@@ -3,7 +3,6 @@ package com.doitstudio.sleepest_master.ui.history
 import android.app.Application
 import android.content.Context
 import android.graphics.Color
-import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.databinding.*
@@ -19,6 +18,7 @@ import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
 import com.doitstudio.sleepest_master.util.SmileySelectorUtil
+import com.doitstudio.sleepest_master.util.StringUtil
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Legend
@@ -321,13 +321,48 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
             barChart.xAxis.labelCount = (diagramData.second.size)
         }
         else {
-            xAxisValues.add("Mo")
-            xAxisValues.add("Tu")
-            xAxisValues.add("We")
-            xAxisValues.add("Th")
-            xAxisValues.add("Fr")
-            xAxisValues.add("Sa")
-            xAxisValues.add("Su")
+            xAxisValues.add(
+                StringUtil.getStringXml(
+                    R.string.alarm_entity_day_mo,
+                    getApplication()
+                )
+            )
+            xAxisValues.add(
+                StringUtil.getStringXml(
+                    R.string.alarm_entity_day_tu,
+                    getApplication()
+                )
+            )
+            xAxisValues.add(
+                StringUtil.getStringXml(
+                    R.string.alarm_entity_day_we,
+                    getApplication()
+                )
+            )
+            xAxisValues.add(
+                StringUtil.getStringXml(
+                    R.string.alarm_entity_day_th,
+                    getApplication()
+                )
+            )
+            xAxisValues.add(
+                StringUtil.getStringXml(
+                    R.string.alarm_entity_day_fr,
+                    getApplication()
+                )
+            )
+            xAxisValues.add(
+                StringUtil.getStringXml(
+                    R.string.alarm_entity_day_sa,
+                    getApplication()
+                )
+            )
+            xAxisValues.add(
+                StringUtil.getStringXml(
+                    R.string.alarm_entity_day_su,
+                    getApplication()
+                )
+            )
 
             barChart.barData.barWidth = 0.75f
             barChart.xAxis.axisMaximum = 7f
@@ -341,6 +376,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         barChart.xAxis.setCenterAxisLabels(true)
         barChart.xAxis.textColor = checkDarkMode()
 
+
         // set bar label
         barChart.legend.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
         barChart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
@@ -351,14 +387,38 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
         barChart.legend.setCustom(
             listOf(
-                LegendEntry("Light", Legend.LegendForm.SQUARE, 8f, 8f, null,
-                    ContextCompat.getColor(context, R.color.light_sleep_color)),
-                LegendEntry("Deep", Legend.LegendForm.SQUARE, 8f, 8f, null,
-                    ContextCompat.getColor(context, R.color.deep_sleep_color)),
-                LegendEntry("Awake", Legend.LegendForm.SQUARE, 8f, 8f, null,
-                    ContextCompat.getColor(context, R.color.awake_sleep_color)),
-                LegendEntry("Sleep", Legend.LegendForm.SQUARE, 8f, 8f, null,
-                    ContextCompat.getColor(context, R.color.sleep_sleep_color),)
+                LegendEntry(
+                    StringUtil.getStringXml(R.string.history_day_timeInPhase_lightSleep, getApplication()),
+                    Legend.LegendForm.SQUARE,
+                    8f,
+                    8f,
+                    null,
+                    ContextCompat.getColor(context, R.color.light_sleep_color)
+                ),
+                LegendEntry(
+                    StringUtil.getStringXml(R.string.history_day_timeInPhase_deepSleep, getApplication()),
+                    Legend.LegendForm.SQUARE,
+                    8f,
+                    8f,
+                    null,
+                    ContextCompat.getColor(context, R.color.deep_sleep_color)
+                ),
+                LegendEntry(
+                    StringUtil.getStringXml(R.string.history_day_timeInPhase_awake, getApplication()),
+                    Legend.LegendForm.SQUARE,
+                    8f,
+                    8f,
+                    null,
+                    ContextCompat.getColor(context, R.color.awake_sleep_color)
+                ),
+                LegendEntry(
+                    StringUtil.getStringXml(R.string.history_day_timeInPhase_sleepSum, getApplication()),
+                    Legend.LegendForm.SQUARE,
+                    8f,
+                    8f,
+                    null,
+                    ContextCompat.getColor(context, R.color.sleep_sleep_color)
+                )
             )
         )
 
