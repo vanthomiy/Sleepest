@@ -71,6 +71,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/valuesHeight"
                         android:layout_marginVertical="5dp"
+                        android:backgroundTint="@{alarmsViewModel.cancelAlarmWhenAwake ? @color/sleep_indicator_perfect : @color/primary_button_color}"
                         android:background="@drawable/bgroundedchoosen"
                         >
 
@@ -81,7 +82,7 @@
                             android:layout_marginStart="10dp"
                             android:gravity="center_vertical"
                             android:text="@string/sleep_alarm_auto_cancel_alarm"
-                            android:textColor="@color/tertiary_text_color"
+                            android:textColor="@color/primary_text_color"
                             android:textSize="@dimen/valueSize"
                             android:textStyle="bold" />
 
@@ -122,7 +123,7 @@
                             android:background="@drawable/bgroundedchoosen"
                             android:layout_marginStart="100dp"
                             android:text="@{alarmsViewModel.alarmSoundName}"
-                            android:textColor="@color/tertiary_text_color"
+                            android:textColor="@color/primary_text_color"
                             android:textSize="@dimen/valueSize"></androidx.appcompat.widget.AppCompatButton>
 
                     </FrameLayout>

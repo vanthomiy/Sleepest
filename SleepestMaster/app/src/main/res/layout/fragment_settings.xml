@@ -44,28 +44,6 @@
                     android:layout_margin="20dp"
                     android:textStyle="bold"/>
 
-                <androidx.constraintlayout.motion.widget.MotionLayout
-                    android:id="@+id/animatedTopView"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_margin="20dp"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    android:background="@drawable/bgroundedwhite"
-                    app:layoutDescription="@xml/fragment_profile_scene">
-
-                    <TextView
-                        android:id="@+id/header"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="40dp"
-                        android:textSize="@dimen/headerSize"
-                        android:layout_gravity="start"
-                        android:textColor="@color/primary_text_color"
-                        android:text="@string/profile_app_function"/>
-
-                </androidx.constraintlayout.motion.widget.MotionLayout>
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -131,7 +109,7 @@
                             android:layout_marginLeft="0dp"
                             android:orientation="vertical"
                             android:layout_marginVertical="10dp"
-                            android:background="@drawable/bgroundedchoosen">
+                            android:background="@drawable/bgrounded_button">
 
                             <FrameLayout
                                 android:layout_width="match_parent"
@@ -159,19 +137,23 @@
                             </FrameLayout>
 
 
-                            <androidx.appcompat.widget.AppCompatToggleButton
-                                android:layout_width="match_parent"
-                                android:visibility="@{profileViewModel.showDarkModeSetting}"
-                                android:layout_height="@dimen/valuesHeight"
-                                android:background="@drawable/transparent"
-                                android:textOn="Dark Mode"
-                                android:textOff="Light Mode"
-                                android:textColor="@color/primary_text_color"
-                                android:layout_marginBottom="10dp"
-                                android:checked="@={profileViewModel.darkMode}"
-                                android:onClick="@{profileViewModel::darkModeToggled}"/>
 
                         </LinearLayout>
+
+                        <androidx.appcompat.widget.AppCompatToggleButton
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:layout_gravity="start"
+                            android:background="@drawable/bgrounded_button"
+                            android:textSize="@dimen/valueSize"
+                            android:layout_marginVertical="5dp"
+                            android:textColor="@color/primary_text_color"
+                            android:textOn="Dark Mode"
+                            android:textOff="Light Mode"
+                            android:layout_marginBottom="10dp"
+                            android:checked="@={profileViewModel.darkMode}"
+                            android:onClick="@{profileViewModel::darkModeToggled}"/>
+
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -189,7 +171,7 @@
                             android:layout_marginLeft="0dp"
                             android:orientation="vertical"
                             android:layout_marginVertical="10dp"
-                            android:background="@drawable/bgroundedchoosen">
+                            android:background="@drawable/bgrounded_button">
 
                             <FrameLayout
                                 android:layout_width="match_parent"
@@ -375,7 +357,7 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgroundedchoosen"
+                            android:background="@drawable/bgrounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_tutorial"
@@ -388,7 +370,7 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgroundedchoosen"
+                            android:background="@drawable/bgrounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_neccessary_settings"
@@ -452,7 +434,7 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgroundedchoosen"
+                            android:background="@drawable/bgrounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_suggestions"
@@ -465,7 +447,7 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgroundedchoosen"
+                            android:background="@drawable/bgrounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_rate"
@@ -478,7 +460,7 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgroundedchoosen"
+                            android:background="@drawable/bgrounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_report_error"
@@ -549,7 +531,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/valuesHeight"
                                 android:layout_marginEnd="50dp"
-                                android:background="@drawable/bgroundedchoosen"
+                                android:background="@drawable/bgrounded_button"
                                 android:textSize="@dimen/valueSize"
                                 android:textColor="@color/primary_text_color"
                                 android:layout_marginVertical="5dp"
@@ -598,7 +580,7 @@
                                 android:layout_height="@dimen/valuesHeight"
                                 android:layout_marginVertical="5dp"
                                 android:layout_marginEnd="50dp"
-                                android:background="@drawable/bgroundedchoosen"
+                                android:background="@drawable/bgrounded_button"
                                 android:onClick="onPermissionClicked"
                                 android:tag="dailyActivity"
                                 android:id="@+id/dailyActivityPermission"
@@ -644,7 +626,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/valuesHeight"
                                 android:layout_marginEnd="50dp"
-                                android:background="@drawable/bgroundedchoosen"
+                                android:background="@drawable/bgrounded_button"
                                 android:textSize="@dimen/valueSize"
                                 android:layout_marginVertical="5dp"
                                 android:text="@string/profile_storage"
@@ -694,7 +676,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/valuesHeight"
                                 android:layout_marginEnd="50dp"
-                                android:background="@drawable/bgroundedchoosen"
+                                android:background="@drawable/bgrounded_button"
                                 android:textSize="@dimen/valueSize"
                                 android:layout_marginVertical="5dp"
                                 android:text="@string/profile_overlapp_app"
@@ -876,7 +858,7 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgroundedchoosen"
+                            android:background="@drawable/bgrounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_export_data"
@@ -887,7 +869,7 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgroundedchoosen"
+                            android:background="@drawable/bgrounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_import_data"

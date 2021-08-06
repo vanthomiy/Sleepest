@@ -67,7 +67,7 @@
                         android:onClick="@{sleepViewModel::onInfoClicked}"
                         android:tag="7"
                         android:text="@string/show_tips"
-                        android:textColor="@color/primary_text_color"
+                        android:textColor="@color/accent_text_color"
                         android:textSize="@dimen/valueSize"
                         android:textStyle="bold" />
 
@@ -140,11 +140,12 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_gravity="start"
+                            app:tint="@color/primary_text_color"
                             android:src="@drawable/ic_baseline_bedtime_24"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="40dp"
+                            android:layout_marginStart="40dp"
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
                             android:textColor="@color/primary_text_color"
@@ -154,6 +155,7 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_gravity="end"
+                            app:tint="@color/primary_text_color"
                             android:src="@drawable/ic_baseline_info_24"
                             android:onClick="@{sleepViewModel::onInfoClicked}"
                             android:tag="0"/>
@@ -191,7 +193,7 @@
                             android:layout_gravity="start"
                             android:clickable="@{sleepViewModel.manualSleepTime}"
                             android:onClick="@{sleepViewModel::onAlarmStartClicked}"
-                            android:background="@drawable/bgroundedchoosen">
+                            android:background="@drawable/bgrounded_button">
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -220,30 +222,29 @@
                             android:layout_width="150dp"
                             android:layout_height="match_parent"
                             android:layout_gravity="end"
+                            android:background="@drawable/bgrounded_button"
                             android:clickable="@{sleepViewModel.manualSleepTime}"
-                            android:onClick="@{sleepViewModel::onAlarmEndClicked}"
-                            android:background="@drawable/bgroundedchoosen">
+                            android:onClick="@{sleepViewModel::onAlarmEndClicked}">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginStart="10dp"
-                                android:textSize="@dimen/valueSize"
+                                android:text="@string/sleep_sleeptime_end"
                                 android:textColor="@color/primary_text_color"
-                            android:textStyle="bold"
-                            android:text="@string/sleep_sleeptime_end"
-                            />
+                                android:textSize="@dimen/valueSize"
+                                android:textStyle="bold" />
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_gravity="end"
-                                android:gravity="center_vertical"
                                 android:layout_marginRight="10dp"
-                                android:textSize="@dimen/valueSize"
-                                android:textColor="@color/primary_text_color"
+                                android:gravity="center_vertical"
                                 android:text="@{sleepViewModel.sleepEndValue}"
-                                />
+                                android:textColor="@color/primary_text_color"
+                                android:textSize="@dimen/valueSize" />
 
                         </FrameLayout>
 
@@ -254,13 +255,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/valuesHeight"
                         android:layout_gravity="start"
-                        android:background="@drawable/bgroundedchoosen"
+                        android:background="@drawable/bgrounded_button"
                         android:textSize="@dimen/valueSize"
                         android:layout_marginVertical="5dp"
+                        android:textColor="@color/primary_text_color"
+                        android:backgroundTint="@{sleepViewModel.autoSleepTime ? @color/sleep_indicator_perfect :  @color/semi_transparent_button_color}"
                         android:onClick="@{sleepViewModel::SleepTimeToogled}"
                         android:checked="@={sleepViewModel.autoSleepTime}"
                         android:textOn="@string/sleep_sleeptimes_autoOn"
-                        android:textColor="@color/primary_text_color"
                         android:textOff="@string/sleep_sleeptimes_autoOff">
 
                     </ToggleButton>
@@ -282,6 +284,7 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_gravity="start"
+                            app:tint="@color/primary_text_color"
                             android:src="@drawable/ic_baseline_night_shelter_24"/>
                         <TextView
                             android:layout_width="wrap_content"
@@ -296,6 +299,7 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_gravity="end"
+                            app:tint="@color/primary_text_color"
                             android:src="@drawable/ic_baseline_info_24"
                             android:onClick="@{sleepViewModel::onInfoClicked}"
                             android:tag="1"/>
@@ -355,7 +359,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
-                        android:background="@drawable/bgroundedchoosen">
+                        android:background="@drawable/bgroundedchoosen"
+                        android:backgroundTint="@color/transparent">
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -450,6 +455,7 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_gravity="start"
+                            app:tint="@color/primary_text_color"
                             android:src="@drawable/ic_baseline_phone_android_24"/>
                         <TextView
                             android:layout_width="wrap_content"
@@ -464,6 +470,7 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_gravity="end"
+                            app:tint="@color/primary_text_color"
                             android:src="@drawable/ic_baseline_info_24"
                             android:onClick="@{sleepViewModel::onInfoClicked}"
                             android:tag="6"/>
@@ -496,6 +503,7 @@
                         android:layout_gravity="start"
                         android:theme="@style/Spinner"
                         android:textColor="@color/primary_text_color"
+                        android:backgroundTint="@{sleepViewModel.lightCondition == 0 ? @color/sleep_indicator_perfect : sleepViewModel.lightCondition == 1 ? @color/sleep_indicator_worst : @color/semi_transparent_button_color}"
                         android:entries="@{sleepViewModel.lightConditionSelections}"
                         android:selectedItemPosition="@={sleepViewModel.lightCondition}"
                         android:onItemSelected = "@{sleepViewModel::onLightConditionChanged}"
@@ -521,6 +529,7 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_gravity="start"
+                            app:tint="@color/primary_text_color"
                             android:src="@drawable/ic_baseline_phone_android_24"/>
                         <TextView
                             android:layout_width="wrap_content"
@@ -535,6 +544,7 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_gravity="end"
+                            app:tint="@color/primary_text_color"
                             android:src="@drawable/ic_baseline_info_24"
                             android:onClick="@{sleepViewModel::onInfoClicked}"
                             android:tag="2"/>
@@ -567,6 +577,7 @@
                         android:theme="@style/Spinner"
                         android:textColor="@color/primary_text_color"
                         android:background="@drawable/bgroundedchoosen"
+                        android:backgroundTint="@{sleepViewModel.mobilePosition == 0 ? @color/sleep_indicator_perfect : sleepViewModel.mobilePosition == 1 ? @color/sleep_indicator_worst : @color/semi_transparent_button_color}"
                         android:entries="@{sleepViewModel.phonePositionSelections}"
                         android:selectedItemPosition="@={sleepViewModel.mobilePosition}"
                         android:onItemSelected = "@{sleepViewModel::onMobilePositionChanged}">
@@ -590,6 +601,7 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_gravity="start"
+                            app:tint="@color/primary_text_color"
                             android:src="@drawable/ic_baseline_data_usage_24"/>
                         <TextView
                             android:layout_width="wrap_content"
@@ -604,6 +616,7 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_gravity="end"
+                            app:tint="@color/primary_text_color"
                             android:src="@drawable/ic_baseline_info_24"
                             android:onClick="@{sleepViewModel::onInfoClicked}"
                             android:tag="3"/>
@@ -634,6 +647,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/valuesHeight"
                         android:layout_gravity="start"
+                        android:backgroundTint="@{sleepViewModel.phoneUsageValue == 0 ? @color/sleep_indicator_worst : sleepViewModel.phoneUsageValue == 1 ? @color/sleep_indicator_bad : sleepViewModel.phoneUsageValue == 2 ? @color/semi_transparent_button_color : sleepViewModel.phoneUsageValue == 3 ? @color/sleep_indicator_good : @color/sleep_indicator_perfect}"
                         android:background="@drawable/bgroundedchoosen">
                         <TextView
                             android:layout_width="wrap_content"
@@ -696,6 +710,7 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_gravity="start"
+                            app:tint="@color/primary_text_color"
                             android:src="@drawable/ic_baseline_pending_actions_24"
                             android:onClick="@{sleepViewModel::onInfoClicked}"
                             android:tag="4"/>
@@ -712,6 +727,7 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_gravity="end"
+                            app:tint="@color/primary_text_color"
                             android:onClick="@{sleepViewModel::onInfoClicked}"
                             android:tag="4"
                             android:src="@drawable/ic_baseline_info_24"/>
@@ -743,6 +759,7 @@
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:background="@drawable/bgroundedchoosen"
+                            android:backgroundTint="@{sleepViewModel.activityTracking ? @color/sleep_indicator_perfect : @color/sleep_indicator_worst}"
                             android:layout_height="@dimen/valuesHeight">
                             <TextView
                                 android:layout_width="wrap_content"
@@ -773,6 +790,7 @@
                             android:visibility="@{sleepViewModel.activityTrackingView}"
                             android:layout_height="@dimen/valuesHeight"
                             android:layout_marginTop="5dp"
+                            android:backgroundTint="@{sleepViewModel.includeActivityInCalculation ? @color/sleep_indicator_perfect : @color/sleep_indicator_worst}"
                             android:background="@drawable/bgroundedchoosen">
                             <TextView
                                 android:layout_width="wrap_content"

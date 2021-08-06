@@ -66,7 +66,6 @@ class SettingsFragment : Fragment() {
 
         binding = FragmentSettingsBinding.inflate(inflater, container, false)
         viewModel.transitionsContainer = (binding.linearAnimationlayout)
-        viewModel.animatedTopView = binding.animatedTopView
         binding.profileViewModel = viewModel
 
         binding.sleepActivityPermission.setOnClickListener {

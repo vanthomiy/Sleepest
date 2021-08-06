@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.doitstudio.sleepest_master.model.data.MoodType
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -32,4 +33,7 @@ interface UserSleepSessionDao {
 
     @Query("DELETE FROM user_sleep_session_entity")
     suspend fun deleteAll()
+
+    @Query("UPDATE user_sleep_session_entity SET sleepRatingmoodAfterSleep =:mood WHERE id LIKE :sessionId")
+    suspend fun updateMoodAfterSleep(mood: MoodType, sessionId: Int)
 }
