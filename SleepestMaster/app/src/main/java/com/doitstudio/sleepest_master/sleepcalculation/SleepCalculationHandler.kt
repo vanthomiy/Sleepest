@@ -205,27 +205,6 @@ class SleepCalculationHandler(val context: Context) {
         return  sleepClassifier.defineUserSleep(normedSleepApiDataPast, normedSleepApiDataFuture, lightConditions)
     }
 
-    fun defineSleepStatesTest(time:Int, sleepApiRawDataEntity:List<SleepApiRawDataEntity>) : SleepState{
-
-        // get the actual sleepApiDataList
-        val sleepApiRawDataEntity = sleepApiRawDataEntity.sortedByDescending { x -> x.timestampSeconds }
-
-
-        // get normed list
-        val (normedSleepApiDataPast, frequency1) = createTimeNormedData(0.5f, false, time, sleepApiRawDataEntity.toList())
-        val (normedSleepApiDataFuture, frequency2) = createTimeNormedData(0.5f, true, time, sleepApiRawDataEntity.toList())
-
-        if(frequency1 == SleepDataFrequency.NONE || frequency2 == SleepDataFrequency.NONE) {
-            return SleepState.SLEEPING
-        }
-
-        // create features for ml model
-        val sleepClassifier = SleepClassifier.getHandler(context)
-
-        // call the ml model
-        return  sleepClassifier.defineUserSleepTest(normedSleepApiDataPast, normedSleepApiDataFuture)
-    }
-
     // endregion
 
     //region Sleep calculation functions
@@ -364,94 +343,6 @@ class SleepCalculationHandler(val context: Context) {
                 )
                     )
 
-    }
-
-    /**
-     * Checks if the user is Sleeping or not at the moment.
-     * Saves the state in the [SleepApiRawDataEntity] and in the [LiveUserSleepActivityStatus]
-     * [time] the actual time in seconds
-     */
-    fun checkIsUserSleepingTest(sleepApiRawDataEntity: List<SleepApiRawDataEntity>) : List<SleepApiRawDataEntity>{
-
-
-
-            // check for each sleepstate
-            sleepApiRawDataEntity.forEach { data ->
-                // First definition without future data
-                if(data.sleepState == SleepState.NONE){
-
-                    // get normed list
-                    val (normedSleepApiDataBefore, frequency) = createTimeNormedData(
-                        0.5f,
-                        false,
-                        data.timestampSeconds,
-                        sleepApiRawDataEntity.toList()
-                    )
-
-                    if(frequency == SleepDataFrequency.NONE) {
-                        data.sleepState = SleepState.AWAKE
-                        return@forEach
-                    }
-
-                    // create features for ml model
-                    val sleepClassifier = SleepClassifier.getHandler(context)
-
-                    // call the ml model
-                    data.sleepState = sleepClassifier.isUserSleepingTest(
-                        normedSleepApiDataBefore,
-                        null,
-                        MobilePosition.INBED,
-                        LightConditions.DARK,
-                        MobileUseFrequency.OFTEN
-                    )
-
-                }
-                else if (data.oldSleepState == SleepState.NONE){
-                    // get normed list
-                    val (normedSleepApiDataBefore, frequency1) = createTimeNormedData(
-                        1f,
-                        false,
-                        data.timestampSeconds,
-                        sleepApiRawDataEntity.toList()
-                    )
-
-                    val (normedSleepApiDataAfter, frequency2) = createTimeNormedData(
-                        1f,
-                        true,
-                        data.timestampSeconds,
-                        sleepApiRawDataEntity.toList()
-                    )
-
-
-                    if(frequency1 == SleepDataFrequency.NONE || frequency2 == SleepDataFrequency.NONE){
-                        //data.sleepState = SleepState.AWAKE
-                        return@forEach
-                    }
-
-                    data.oldSleepState = data.sleepState
-
-                    // create features for ml model
-                    val sleepClassifier = SleepClassifier.getHandler(context)
-
-                    // call the ml model
-                    data.sleepState = sleepClassifier.isUserSleepingTest(
-                        normedSleepApiDataBefore,
-                        normedSleepApiDataAfter,
-                        MobilePosition.INBED,
-                        LightConditions.DARK,
-                        MobileUseFrequency.OFTEN
-                    )
-                }
-            }
-
-            return sleepApiRawDataEntity
-    }
-
-
-    fun defineUserWakeupJob(localTime: LocalDateTime? = null, setAlarm:Boolean = true){
-        scope.launch{
-            defineUserWakeup(localTime, setAlarm)
-        }
     }
 
     /**
@@ -645,24 +536,6 @@ class SleepCalculationHandler(val context: Context) {
 
     }
 
-    fun defineUserWakeupTest(sleepApiRawDataEntity: List<SleepApiRawDataEntity>) : List<SleepApiRawDataEntity>{
-
-        // if in bed then check the single states of the sleep
-        sleepApiRawDataEntity.forEach()
-        {
-            // we take all sleep values that are not already defined as light or deep but sleeping
-            if (it.sleepState == SleepState.SLEEPING && it.oldSleepState != SleepState.NONE) {
-                // we need to calculate the sleep state
-                // and then we update it in the sleep api raw data entity
-                val result = defineSleepStatesTest(it.timestampSeconds, sleepApiRawDataEntity)
-
-                it.sleepState = result
-            }
-        }
-
-        return sleepApiRawDataEntity
-
-    }
 
     fun userNotSleepingJob(){
         scope.launch { userNotSleeping(null) }
