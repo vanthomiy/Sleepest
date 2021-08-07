@@ -280,6 +280,7 @@
     <string name="profile_remove_data_warning">Ohje, alle daten werden gelöscht ok?</string>
     <string name="profile_remove_data_ackn">Verstanden und löschen</string>
     <string name="profile_about_us">Sleepest - App\nMade with &#10084; in Bavaria\n\n This app was created by 3 students as a students project and will be improved and maintained in the future</string>
+    <string name="splash_screen_with_love">Made with &#10084; in Bavaria</string>
     <string name="alarm_monday_dayname">Montag</string>
     <string name="alarm_tuesday_dayname">Dienstag</string>
     <string name="alarm_wednesday_dayname">Mittwoch</string>

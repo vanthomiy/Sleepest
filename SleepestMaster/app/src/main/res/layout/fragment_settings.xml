@@ -148,6 +148,7 @@
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:textColor="@color/primary_text_color"
+                            android:visibility="@{profileViewModel.autoDarkMode ? profileViewModel.goneState : profileViewModel.visibleState}"
                             android:textOn="Dark Mode"
                             android:textOff="Light Mode"
                             android:layout_marginBottom="10dp"
