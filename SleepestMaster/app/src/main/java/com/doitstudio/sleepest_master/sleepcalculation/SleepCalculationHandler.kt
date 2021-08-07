@@ -550,16 +550,17 @@ class SleepCalculationHandler(val context: Context) {
             // use some custom factors...except its not on table, then use just 1
             sleepSessionEntity.sleepTimes.sleepDuration =
                 (sleepSessionEntity.sleepTimes.lightSleepDuration * (if (sleepSessionEntity.mobilePosition != MobilePosition.INBED) 1f else 1f) +
-                        sleepSessionEntity.sleepTimes.deepSleepDuration * 1f).toInt()
+                        sleepSessionEntity.sleepTimes.deepSleepDuration * 1f + sleepSessionEntity.sleepTimes.remSleepDuration * 1f).toInt()
 
 
             // now define the new wakeUpPoint for the user...
             // sleep time
 
+            val activity = getUserActivityOnDay(time)
+            sleepSessionEntity.userSleepRating.activityOnDay = activity
+
             if(setAlarm) {
                 // get user activity
-                val activity = getUserActivityOnDay(time)
-                sleepSessionEntity.userSleepRating.activityOnDay = activity
 
                 // store in the alarm...!!!
                 val alarm = dataBaseRepository.getNextActiveAlarm() ?: return
