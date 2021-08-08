@@ -332,7 +332,7 @@
     <string name="history_fragment_title">&#128467; &#128202; &#128466; &#128200; &#128197; History</string>
     <string name="history_button_analysisDate_previous">Zurück</string>
     <string name="history_button_analysisDate_next">Nächste</string>
-    <string name="history_day_information_sleepPhases_lineChart">Informationen über das Liniendiagramm der Schlaphasen.</string>
+    <string name="history_day_information_sleepPhases_lineChart">Dieses Diagramm zeigt Deine Schlafphasen der letzten Nacht an. Links und rechts über dem Diagramm kannst Du die, von der App erkannten, Einschlaf- und Aufwachzeitpunkte sehen. Die Nacht ist, je nachdem wo sich dein Handy in dieser Nacht befand, in zwei oder drei Schlafstati eingeteilt. Befand sich das Gerät neben dem Bett kannst Du die Phasen \"Wach\" und \"Schlaf\" erkennen. Lag es im Bett wird die Nacht in die Phasen \"Tiefschlaf\", \"Leichtschlaf\" und \"Wach\" eingeteilt. Das Diagramm ist linear über die Nacht aufgeteilt.</string>
     <string name="history_day_sleep_quality_rating_title">Schlafqualität:</string>
     <string name="history_activity_title">Aktivität:</string>
     <string name="history_day_information_timeInPhase">Informationen über das Tortendiagramm der Schlaphasen.</string>
