@@ -395,7 +395,7 @@
                             android:gravity="center"
                             android:layout_margin="10dp"
                             android:textColor="@color/primary_text_color"
-                            android:text="@string/history_day_information_activity_lineChart"/>
+                            android:text="@string/history_day_information_activity"/>
                     </FrameLayout>
 
                     <LinearLayout
