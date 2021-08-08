@@ -73,6 +73,7 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
 
         val tpd = TimePickerDialog(
             view.context,
+            R.style.TimePickerTheme,
             { view, h, m ->
 
                 val tempWakeup = LocalTime.of(h, m)
@@ -104,6 +105,7 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
 
         val tpd = TimePickerDialog(
             view.context,
+            R.style.TimePickerTheme,
             TimePickerDialog.OnTimeSetListener(function = { view, h, m ->
 
                 val tempWakeup = LocalTime.of(h, m)
@@ -209,6 +211,7 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
 
     init {
         scope.launch {
+
             var alarmSettings = dataBaseRepository.getAlarmById(alarmId).first()
 
             val wakeupEarly = LocalTime.ofSecondOfDay(alarmSettings.wakeupEarly.toLong())

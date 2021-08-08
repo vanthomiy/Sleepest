@@ -1,9 +1,11 @@
 package com.doitstudio.sleepest_master.ui.sleep
 
+import android.R.attr.animation
 import android.app.Application
 import android.app.TimePickerDialog
+import android.graphics.drawable.AnimatedVectorDrawable
+import android.graphics.drawable.Drawable
 import android.transition.TransitionManager
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -20,7 +22,6 @@ import com.doitstudio.sleepest_master.model.data.*
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.util.SleepTimeValidationUtil
-import com.doitstudio.sleepest_master.util.StringUtil
 import com.doitstudio.sleepest_master.util.StringUtil.getStringXml
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -76,6 +77,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
         val tpd = TimePickerDialog(
                 view.context,
+            R.style.TimePickerTheme,
                 { view, h, m ->
 
                     val tempWakeup = LocalTime.of(h, m)
@@ -108,6 +110,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
         val tpd = TimePickerDialog(
             view.context,
+            R.style.TimePickerTheme,
             { view, h, m ->
 
                 val tempWakeup = LocalTime.of(h, m)
@@ -161,6 +164,13 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
     fun onInfoClicked(view: View){
         updateInfoChanged(view.tag.toString(), true)
+
+        val d: Drawable = (view as ImageView).drawable
+        if (d is AnimatedVectorDrawable) {
+            val animation = d as AnimatedVectorDrawable
+            animation.start()
+        }
+
     }
 
     private fun updateInfoChanged(value: String, toggle: Boolean = false) {

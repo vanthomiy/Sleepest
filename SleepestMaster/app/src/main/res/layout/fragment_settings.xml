@@ -949,6 +949,7 @@
                         android:gravity="center_horizontal"
                         android:textAlignment="center"
                         android:textSize="@dimen/headerSize"
+                        android:fontFamily="@font/salina"
                         android:layout_gravity="center_horizontal"
                         android:textColor="@color/primary_text_color"
                         android:text="@string/profile_about_us"/>

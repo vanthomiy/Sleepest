@@ -17,74 +17,22 @@
         android:src="@drawable/logofullroundtransparent" />
 
     <LinearLayout
+        android:id="@+id/motionLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:orientation="horizontal">
+
         <TextView
             android:id="@+id/tvS1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="s"
+            android:fontFamily="@font/salina"
+            android:text="sleepest"
             android:textAlignment="center"
             android:textSize="50sp"
-            android:fontFamily="@font/salina"/>
-        <TextView
-            android:id="@+id/tvL1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="l"
-            android:textAlignment="center"
-            android:textSize="50sp"
-            android:fontFamily="@font/salina"/>
-        <TextView
-            android:id="@+id/tvE1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="e"
-            android:textAlignment="center"
-            android:textSize="50sp"
-            android:fontFamily="@font/salina"/>
-        <TextView
-            android:id="@+id/tvE2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="e"
-            android:textAlignment="center"
-            android:textSize="50sp"
-            android:fontFamily="@font/salina"/>
-        <TextView
-            android:id="@+id/tvP1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="p"
-            android:textAlignment="center"
-            android:textSize="50sp"
-            android:fontFamily="@font/salina"/>
-        <TextView
-            android:id="@+id/tvE3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="e"
-            android:textAlignment="center"
-            android:textSize="50sp"
-            android:fontFamily="@font/salina"/>
-        <TextView
-            android:id="@+id/tvS2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="s"
-            android:textAlignment="center"
-            android:textSize="50sp"
-            android:fontFamily="@font/salina"/>
-        <TextView
-            android:id="@+id/tvT1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="t"
-            android:textAlignment="center"
-            android:textSize="50sp"
-            android:fontFamily="@font/salina"/>
+            android:layout_gravity="center"/>
+
     </LinearLayout>
 
 

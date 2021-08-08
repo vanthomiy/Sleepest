@@ -85,7 +85,9 @@ class DataStoreRepository(context: Context) {
         return@runBlocking getSleepTimeEnd()
     }
 
-
+    suspend fun getNormalSleepTime() : Int {
+        return sleepParameterFlow.first().normalSleepTime
+    }
 
     suspend fun getSleepTimeBegin() : Int {
         return sleepParameterFlow.first().sleepTimeStart

@@ -545,7 +545,7 @@
                             android:layout_height="25dp"
                             android:layout_gravity="end"
                             app:tint="@color/primary_text_color"
-                            android:src="@drawable/ic_baseline_info_24"
+                            android:src="@drawable/ic_info_animated"
                             android:onClick="@{sleepViewModel::onInfoClicked}"
                             android:tag="2"/>
 
