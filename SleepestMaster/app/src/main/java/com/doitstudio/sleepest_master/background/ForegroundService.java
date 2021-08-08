@@ -412,10 +412,10 @@ public class ForegroundService extends LifecycleService {
      */
     private void checkAlarmSet() {
         if ((actualWakeUp != 0) && !AlarmClockReceiver.isAlarmClockActive(getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK)) {
-            Calendar calendar = TimeConverterUtil.getAlarmDate(actualWakeUp);
-            AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK) ,calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
+            //Calendar calendar = TimeConverterUtil.getAlarmDate(actualWakeUp);
+            //AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK) ,calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
 
-            setPreferences(calendar, actualWakeUp, 9);
+            //setPreferences(calendar, actualWakeUp, 9);
         }
     }
 
