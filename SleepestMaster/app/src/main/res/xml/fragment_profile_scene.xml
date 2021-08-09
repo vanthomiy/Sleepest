@@ -1,37 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:constraintSetEnd="@+id/end"
+        motion:constraintSetStart="@+id/start"
+        motion:duration="250"
+        motion:motionInterpolator="linear">
+
+        <OnSwipe
+            motion:dragDirection="dragUp"
+            motion:touchAnchorId="@+id/motionLayout"
+            motion:touchAnchorSide="bottom" />
+    </Transition>
 
     <ConstraintSet android:id="@+id/start">
-        <Constraint android:id="@+id/widget" />
+        <Constraint
+            android:id="@id/motionLayout"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            motion:layout_constraintTop_toTopOf="parent" />
 
         <Constraint
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_marginTop="20dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:id="@+id/appStatus"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:id="@id/scrollable"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintTop_toBottomOf="@+id/motionLayout" />
+
+
 
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
-        <Constraint android:id="@id/widget" />
+        <Constraint
+            android:id="@+id/motionLayout"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:motionProgress="1" />
 
         <Constraint
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="20dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:id="@+id/appStatus" />
+            android:id="@id/scrollable"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintTop_toBottomOf="@+id/motionLayout" />
+
+
 
     </ConstraintSet>
-
-    <Transition
-        app:constraintSetEnd="@id/end"
-        app:constraintSetStart="@+id/start"
-        app:duration="500"/>
 </MotionScene>

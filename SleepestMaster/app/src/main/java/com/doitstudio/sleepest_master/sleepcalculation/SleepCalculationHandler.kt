@@ -173,10 +173,10 @@ class SleepCalculationHandler(val context: Context) {
         }
 
         return when {
-            activityCount > 360 -> ActivityOnDay.EXTREMACTIVITY
-            activityCount > 180 -> ActivityOnDay.MUCHACTIVITY
-            activityCount > 90 -> ActivityOnDay.NORMALACTIVITY
-            activityCount > 45 -> ActivityOnDay.SMALLACTIVITY
+            activityCount > 180 -> ActivityOnDay.EXTREMACTIVITY
+            activityCount > 90 -> ActivityOnDay.MUCHACTIVITY
+            activityCount > 60 -> ActivityOnDay.NORMALACTIVITY
+            activityCount > 30 -> ActivityOnDay.SMALLACTIVITY
             else -> ActivityOnDay.NOACTIVITY
         }
     }
@@ -447,11 +447,11 @@ class SleepCalculationHandler(val context: Context) {
             // now define the new wakeUpPoint for the user...
             // sleep time
 
+            // get user activity
             val activity = getUserActivityOnDay(time)
             sleepSessionEntity.userSleepRating.activityOnDay = activity
 
             if(setAlarm) {
-                // get user activity
 
                 // store in the alarm...!!!
                 val alarm = dataBaseRepository.getNextActiveAlarm() ?: return

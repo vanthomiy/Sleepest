@@ -5,6 +5,7 @@ import android.app.Application
 import android.app.TimePickerDialog
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.AnimationDrawable
 import android.transition.TransitionManager
 import android.view.View
 import android.view.ViewGroup
@@ -164,12 +165,6 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
     fun onInfoClicked(view: View){
         updateInfoChanged(view.tag.toString(), true)
-
-        val d: Drawable = (view as ImageView).drawable
-        if (d is AnimatedVectorDrawable) {
-            val animation = d as AnimatedVectorDrawable
-            animation.start()
-        }
 
     }
 
@@ -389,7 +384,6 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     //region animation
 
     lateinit var transitionsContainer : ViewGroup
-    lateinit var transitionsContainerTop : ViewGroup
     lateinit var animatedTopView : MotionLayout
     lateinit var imageMoonView : AppCompatImageView
 
@@ -405,7 +399,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         //TransitionManager.beginDelayedTransition(transitionsContainerTop);
 
         newProgress = (1f / 500f) * scrollY
-        animatedTopView.progress = newProgress
+        //animatedTopView.progress = newProgress
 
         if(abs(progress - newProgress) > 0.25 ) {
             progress = newProgress
