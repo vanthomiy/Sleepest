@@ -10,12 +10,24 @@
             type="com.doitstudio.sleepest_master.ui.settings.SettingsViewModel" />
     </data>
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@color/primary_app_background"
         >
+
+        <TextView
+            android:id="@+id/animTextSleep"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/profile_header"
+            android:textColor="@color/primary_text_color"
+            android:textSize="@dimen/headerSize"
+            android:layout_margin="20dp"
+            android:textStyle="bold"/>
 
 
         <androidx.core.widget.NestedScrollView
@@ -33,16 +45,7 @@
                 android:id="@+id/linearAnimationlayout"
                 >
 
-                <TextView
-                    android:id="@+id/animTextSleep"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/profile_header"
-                    android:textColor="@color/primary_text_color"
-                    android:textSize="@dimen/headerSize"
-                    android:layout_margin="20dp"
-                    android:textStyle="bold"/>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"

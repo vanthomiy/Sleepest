@@ -38,4 +38,6 @@
     <color name="sleep_indicator_bad">#44FFC107</color>
     <color name="sleep_indicator_worst">#44FF9800</color>
 
+    <color name="white">#FFFFFF</color>
+
 </resources>
