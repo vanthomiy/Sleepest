@@ -31,6 +31,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.*
+import java.time.format.DateTimeFormatter
 
 class HistoryViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -78,20 +79,37 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
     /**  */
     fun onPreviousDateClick(range: Int) {
-        when (range) {
-            0 -> analysisDate.set(analysisDate.get()?.minusDays(1L))
-            1 -> analysisDate.set(analysisDate.get()?.minusWeeks(1L))
-            2 -> analysisDate.set(analysisDate.get()?.minusMonths(1L))
+        analysisDate.let {
+            when (range) {
+                0 -> it.set(it.get()?.minusDays(1L))
+                1 -> it.set(it.get()?.minusWeeks(1L))
+                2 -> it.set(it.get()?.minusMonths(1L))
+            }
         }
     }
 
     /**  */
     fun onNextDateClick(range: Int) {
-        when (range) {
-            0 -> analysisDate.set(analysisDate.get()?.plusDays(1L))
-            1 -> analysisDate.set(analysisDate.get()?.plusWeeks(1L))
-            2 -> analysisDate.set(analysisDate.get()?.plusMonths(1L))
+        analysisDate.let {
+            when (range) {
+                0 -> {
+                    if (LocalDate.now().dayOfYear >= it.get()?.plusDays(1L)?.dayOfYear!!) {
+                        it.set(it.get()?.plusDays(1L))
+                    }
+                }
+                1 -> {
+                    if (LocalDate.now().dayOfYear >= it.get()?.plusWeeks(1L)?.dayOfYear!!) {
+                        it.set(it.get()?.plusWeeks(1L))
+                    }
+                }
+                2 -> {
+                    if (LocalDate.now().dayOfYear >= it.get()?.plusMonths(1L)?.dayOfYear!!) {
+                        it.set(it.get()?.plusMonths(1L))
+                    }
+                }
+            }
         }
+
     }
 
     /**  */
