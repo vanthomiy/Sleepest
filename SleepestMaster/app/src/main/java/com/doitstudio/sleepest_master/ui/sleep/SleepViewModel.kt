@@ -2,6 +2,7 @@ package com.doitstudio.sleepest_master.ui.sleep
 
 import android.app.Application
 import android.app.TimePickerDialog
+import android.graphics.drawable.AnimationDrawable
 import android.transition.TransitionManager
 import android.view.MotionEvent
 import android.view.View
@@ -161,6 +162,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
     fun onInfoClicked(view: View){
         updateInfoChanged(view.tag.toString(), true)
+
     }
 
     private fun updateInfoChanged(value: String, toggle: Boolean = false) {
