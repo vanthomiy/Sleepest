@@ -46,6 +46,8 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
     /** */
     var sleepMoodSmileyTag = ObservableField(0)
 
+    var sleepRatingUpdate = false
+
     val actualExpand = ObservableField(-1)
     val goneState = ObservableField(View.GONE)
     val visibleState = ObservableField(View.VISIBLE)
@@ -57,6 +59,7 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     fun sleepRating(view: View) {
+        sleepRatingUpdate = true
         val mood = when (view.tag.toString().toInt()) {
             1 -> MoodType.BAD
             2 -> MoodType.GOOD

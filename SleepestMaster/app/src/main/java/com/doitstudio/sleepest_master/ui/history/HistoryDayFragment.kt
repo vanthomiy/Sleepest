@@ -111,11 +111,12 @@ class HistoryDayFragment : Fragment() {
         viewModel.dataReceived.addOnPropertyChangedCallback(
             object: Observable.OnPropertyChangedCallback() {
                 override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                    if (viewModel.dataReceived.get()) {
+                    if (viewModel.dataReceived.get() && !viewModelDay.sleepRatingUpdate) {
                         getDataValues()
                         updateCharts()
                         viewModel.dataReceived.set(false)
                     }
+                    viewModelDay.sleepRatingUpdate = false
                 }
             }
         )
