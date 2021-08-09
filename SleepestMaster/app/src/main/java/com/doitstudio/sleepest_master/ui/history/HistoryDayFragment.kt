@@ -350,10 +350,16 @@ class HistoryDayFragment : Fragment() {
                 val deepSleep = sleepValues.third.sleepTimes.deepSleepDuration
 
                 if (sleepValues.third.mobilePosition == MobilePosition.ONTABLE) {
-                    entries.add(PieEntry(awake.toFloat(), getString(R.string.history_day_timeInPhase_awake)))
-                    sleepTypes[0] = true
-                    entries.add(PieEntry(sleep.toFloat(), getString(R.string.history_day_timeInPhase_sleepSum)))
-                    sleepTypes[1] = true
+                    if (awake == 0) {
+                        entries.add(PieEntry(sleep.toFloat(), getString(R.string.history_day_timeInPhase_sleepSum)))
+                        sleepTypes[1] = true
+                    }
+                    else {
+                        entries.add(PieEntry(awake.toFloat(), getString(R.string.history_day_timeInPhase_awake)))
+                        sleepTypes[0] = true
+                        entries.add(PieEntry(sleep.toFloat(), getString(R.string.history_day_timeInPhase_sleepSum)))
+                        sleepTypes[1] = true
+                    }
                 }
                 else if (sleepValues.third.mobilePosition == MobilePosition.INBED) {
                     if (lightSleep != 0 && deepSleep != 0 && awake == 0) {
@@ -408,6 +414,9 @@ class HistoryDayFragment : Fragment() {
 
         if (sleepTypes[0] && sleepTypes[1]) {
             listColors.add(ContextCompat.getColor(viewModel.context, R.color.awake_sleep_color))
+            listColors.add(ContextCompat.getColor(viewModel.context, R.color.sleep_sleep_color))
+        }
+        else if (!sleepTypes[0] && sleepTypes[1]) {
             listColors.add(ContextCompat.getColor(viewModel.context, R.color.sleep_sleep_color))
         }
         else if (sleepTypes[2] && sleepTypes[3] && !sleepTypes[0]) {
