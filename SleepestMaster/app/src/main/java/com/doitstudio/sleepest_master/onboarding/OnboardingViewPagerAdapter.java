@@ -48,8 +48,21 @@ public class OnboardingViewPagerAdapter extends PagerAdapter {
     private String startTimeValueText;
     private String endTimeValueText;
 
-    public OnboardingViewPagerAdapter(Context context) {
+    public OnboardingViewPagerAdapter(Context context, ArrayList<Object> arrayList) {
         this.context = context;
+
+        if (arrayList.size() > 0) {
+            starttime = (int) arrayList.get(0);
+            endtime = (int) arrayList.get(1);
+
+            durationHours = (int) arrayList.get(2);
+            durationMinutes = (int) arrayList.get(3);
+
+            startTimeText = "Start";
+            endTimeText = "End";
+            startTimeValueText = (String) arrayList.get(4);
+            endTimeValueText = (String) arrayList.get(5);
+        }
     }
 
     @Override
@@ -310,4 +323,5 @@ public class OnboardingViewPagerAdapter extends PagerAdapter {
     public boolean isPermissionNotificationPrivacyGranted() {
         return PermissionsUtil.isNotificationPolicyAccessGranted(context);
     }
+
 }

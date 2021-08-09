@@ -18,12 +18,15 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.DontKillMyAppFragment
+import com.doitstudio.sleepest_master.MainActivity
 import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.databinding.FragmentSettingsBinding
 import com.doitstudio.sleepest_master.googleapi.SleepHandler
 import com.doitstudio.sleepest_master.model.data.Constants
 import com.doitstudio.sleepest_master.model.data.export.ImportUtil
 import com.doitstudio.sleepest_master.model.data.export.UserSleepExportData
+import com.doitstudio.sleepest_master.onboarding.OnboardingActivity
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.google.gson.Gson
@@ -89,11 +92,13 @@ class SettingsFragment : Fragment() {
         }
         binding.btnTutorial.setOnClickListener() {
             scope.launch {
-                if (dataStoreRepository.getSleepSubscribeStatus()) {
-                    sleepHandler.stopSleepHandler()
-                } else {
-                    sleepHandler.startSleepHandler()
-                }
+                val intent = Intent(activity, OnboardingActivity::class.java)
+                intent.putExtra(getString(R.string.onboarding_intent_not_first_app_start), true)
+                intent.putExtra(getString(R.string.onboarding_intent_starttime), dataStoreRepository.getSleepTimeBegin())
+                intent.putExtra(getString(R.string.onboarding_intent_endtime), dataStoreRepository.getSleepTimeEnd())
+                intent.putExtra(getString(R.string.onboarding_intent_endtime), 25200) /**TODO: Dynamic sleep duration (DataStore repo)*/
+
+                startActivity(intent)
             }
 
         }

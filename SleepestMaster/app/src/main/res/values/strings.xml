@@ -255,6 +255,7 @@
     <string name="onboarding_intent_starttime">StartTime</string>
     <string name="onboarding_intent_endtime">EndTime</string>
     <string name="onboarding_intent_duration">Duration</string>
+    <string name="onboarding_intent_not_first_app_start">NotFirstAppStart</string>
 
 
 
