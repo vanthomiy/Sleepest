@@ -46,6 +46,7 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
     /** */
     var sleepMoodSmileyTag = ObservableField(0)
 
+    /** This will prevent the daily sleep analysis diagrams from reloading when the sleep rating was altered. */
     var sleepRatingUpdate = false
 
     val actualExpand = ObservableField(-1)
