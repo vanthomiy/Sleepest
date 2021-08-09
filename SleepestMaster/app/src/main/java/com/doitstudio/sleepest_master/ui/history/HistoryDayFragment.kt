@@ -1,5 +1,6 @@
 package com.doitstudio.sleepest_master.ui.history
 
+import android.app.Application
 import android.graphics.Color
 import android.os.Bundle
 import android.util.TypedValue
@@ -13,21 +14,28 @@ import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.databinding.FragmentHistoryDayBinding
 import com.doitstudio.sleepest_master.model.data.ActivityOnDay
+import com.doitstudio.sleepest_master.model.data.Constants
 import com.doitstudio.sleepest_master.model.data.MobilePosition
+import com.doitstudio.sleepest_master.model.data.SleepState
 import com.doitstudio.sleepest_master.sleepcalculation.model.UserSleepRating
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
 import com.doitstudio.sleepest_master.util.SmileySelectorUtil
+import com.doitstudio.sleepest_master.util.StringUtil
 import com.github.mikephil.charting.animation.Easing
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.LegendEntry
+import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.time.Instant
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -60,6 +68,8 @@ class HistoryDayFragment : Fragment() {
     /** [PieChart] for the daily sleep analysis. */
     private lateinit var pieChartSleepAnalysis: PieChart
 
+    private lateinit var barChartSleepAnalysis: BarChart
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -79,6 +89,17 @@ class HistoryDayFragment : Fragment() {
         ).toInt()
         lineChartSleepAnalysis.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
         lineChartSleepAnalysis.invalidate()
+
+
+        barChartSleepAnalysis = setBarChart()
+        updateBarChart(barChartSleepAnalysis)
+        binding.lLSleepAnalysisChartsDaySleepPhases.addView(barChartSleepAnalysis)
+        barChartSleepAnalysis.layoutParams.height = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics
+        ).toInt()
+        barChartSleepAnalysis.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+        barChartSleepAnalysis.invalidate()
+
 
         // Initial set up for the daily sleep analysis pie chart.
         pieChartSleepAnalysis = setPieChart()
@@ -127,6 +148,9 @@ class HistoryDayFragment : Fragment() {
     private fun updateCharts() {
         updateLineChart(lineChartSleepAnalysis)
         lineChartSleepAnalysis.invalidate()
+
+        updateBarChart(barChartSleepAnalysis)
+        barChartSleepAnalysis.invalidate()
 
         updatePieChart(pieChartSleepAnalysis)
         pieChartSleepAnalysis.invalidate()
@@ -467,6 +491,195 @@ class HistoryDayFragment : Fragment() {
             }
         }
         viewModelDay.activitySmiley.set(SmileySelectorUtil.getSmileyActivity(activityOnDay))
+    }
+
+    fun generateDataBarChart(): ArrayList<BarEntry> {
+        val entries = ArrayList<BarEntry>()
+        var xIndex = 0.5f
+
+        viewModel.analysisDate.get()?.let {
+            if (viewModel.checkId(it)) {
+
+                for (rawData in sleepValues.first) {
+                    for (minute in 0..((sleepValues.second / 60).toDouble()).roundToInt()) {
+                        when (rawData.sleepState) {
+                            SleepState.AWAKE -> {
+                                entries.add(BarEntry(xIndex, 1f))
+                            }
+                            SleepState.LIGHT -> {
+                                entries.add(BarEntry(xIndex, 2f))
+                            }
+                            SleepState.DEEP -> {
+                                entries.add(BarEntry(xIndex, 3f))
+                            }
+                            SleepState.SLEEPING -> {
+                                entries.add(BarEntry(xIndex, 4f))
+                            }
+                            else -> entries.add(BarEntry(xIndex, 5f))
+                        }
+                        xIndex += 1f
+                    }
+                }
+
+                //setTimeStamps()
+
+                //binding.iVNoDataAvailable.visibility = View.GONE
+                //binding.tVNoDataAvailable.visibility = View.GONE
+                //binding.tVActivitySmileyNoSleepDataAvailable.visibility = View.GONE
+                //binding.sVSleepAnalysisChartsDays.visibility = View.VISIBLE
+            }
+            else {
+                //binding.sVSleepAnalysisChartsDays.visibility = View.GONE
+                //binding.iVNoDataAvailable.visibility = View.VISIBLE
+                //binding.tVNoDataAvailable.visibility = View.VISIBLE
+                //binding.tVActivitySmileyNoSleepDataAvailable.visibility = View.VISIBLE
+            }
+        }
+
+        return entries
+    }
+
+    /**  */
+    private fun generateBarDataSet(barEntries: ArrayList<BarEntry>) : BarDataSet {
+        val barDataSet = BarDataSet(barEntries, "")
+
+        val colorList = mutableListOf<Int>()
+        for (ent in barEntries) {
+            when (ent.y) {
+                1f -> colorList.add(ContextCompat.getColor(viewModel.context, R.color.awake_sleep_color))
+                2f -> colorList.add(ContextCompat.getColor(viewModel.context, R.color.light_sleep_color))
+                3f -> colorList.add(ContextCompat.getColor(viewModel.context, R.color.deep_sleep_color))
+                4f -> colorList.add(ContextCompat.getColor(viewModel.context, R.color.sleep_sleep_color))
+                else -> colorList.add(ContextCompat.getColor(viewModel.context, R.color.warning_color))
+            }
+        }
+
+        barDataSet.colors = colorList
+        barDataSet.setDrawValues(false)
+
+        return barDataSet
+    }
+
+    /**  */
+    private fun getBarChartYAxisProportion(entries: ArrayList<BarEntry>) : Float {
+        var size = 0f
+        for (ent in entries) {
+            if (size < ent.y) {
+                size = ent.y
+            }
+        }
+        return  size
+    }
+
+    /**  */
+    fun setBarChart() : BarChart {
+        //http://developine.com/android-grouped-stacked-bar-chart-using-mpchart-kotlin/
+        val barChart = BarChart(context)
+        val diagramData = generateDataBarChart()
+        val barData = BarData(generateBarDataSet(diagramData))
+        barChart.data = barData
+        visualSetUpBarChart(barChart, diagramData)
+        return barChart
+    }
+
+    /**  */
+    fun updateBarChart(barChart: BarChart) {
+        val diagramData = generateDataBarChart()
+        val barData = BarData(generateBarDataSet(diagramData))
+        barChart.data = barData
+        visualSetUpBarChart(barChart, diagramData)
+        barChart.invalidate()
+    }
+
+    /**  */
+    private fun visualSetUpBarChart(barChart: BarChart, diagramData: ArrayList<BarEntry>) {
+        barChart.description.isEnabled = false
+        barChart.data.isHighlightEnabled = false
+
+        //val xAxisValues = ArrayList<String>()
+        barChart.xAxis.setDrawGridLines(false)
+        barChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+
+        barChart.barData.barWidth = 1.1f
+        barChart.xAxis.axisMaximum = diagramData.size.toFloat()
+
+        barChart.setFitBars(true)
+
+        barChart.xAxis.axisMinimum = 0f
+        barChart.xAxis.setDrawLabels(false)
+        //barChart.xAxis.textColor = viewModel.checkDarkMode()
+
+
+        // set bar label
+        barChart.legend.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+        barChart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
+        barChart.legend.orientation = Legend.LegendOrientation.HORIZONTAL
+        barChart.legend.setDrawInside(false)
+        barChart.legend.textSize = 12f
+        barChart.legend.textColor = viewModel.checkDarkMode()
+
+        barChart.legend.setCustom(
+            listOf(
+                LegendEntry(
+                    StringUtil.getStringXml(R.string.history_day_timeInPhase_lightSleep, viewModel.getApplication()),
+                    Legend.LegendForm.SQUARE,
+                    8f,
+                    8f,
+                    null,
+                    ContextCompat.getColor(viewModel.context, R.color.light_sleep_color)
+                ),
+                LegendEntry(
+                    StringUtil.getStringXml(R.string.history_day_timeInPhase_deepSleep, viewModel.getApplication()),
+                    Legend.LegendForm.SQUARE,
+                    8f,
+                    8f,
+                    null,
+                    ContextCompat.getColor(viewModel.context, R.color.deep_sleep_color)
+                ),
+                LegendEntry(
+                    StringUtil.getStringXml(R.string.history_day_timeInPhase_awake, viewModel.getApplication()),
+                    Legend.LegendForm.SQUARE,
+                    8f,
+                    8f,
+                    null,
+                    ContextCompat.getColor(viewModel.context, R.color.awake_sleep_color)
+                ),
+                LegendEntry(
+                    StringUtil.getStringXml(R.string.history_day_timeInPhase_sleepSum, viewModel.getApplication()),
+                    Legend.LegendForm.SQUARE,
+                    8f,
+                    8f,
+                    null,
+                    ContextCompat.getColor(viewModel.context, R.color.sleep_sleep_color)
+                )
+            )
+        )
+
+        barChart.isDragEnabled = false
+
+        //Y-axis
+        barChart.axisRight.isEnabled = true
+        barChart.axisRight.axisMinimum = 0f
+        barChart.axisRight.labelCount = 0
+        barChart.axisRight.setDrawGridLines(false)
+        barChart.axisRight.setDrawLabels(false)
+
+        barChart.axisLeft.spaceTop = 1f
+        barChart.axisLeft.axisMinimum = 0f
+        barChart.axisLeft.labelCount = 0
+        barChart.axisLeft.setDrawGridLines(false)
+        //barChart.axisLeft.textColor = viewModel.checkDarkMode()
+        barChart.axisLeft.setDrawLabels(false)
+
+        val proportion = getBarChartYAxisProportion(diagramData)
+        barChart.axisRight.axisMaximum = proportion
+        barChart.axisLeft.axisMaximum = proportion
+        barChart.axisLeft.labelCount = proportion.toInt()
+
+        barChart.setScaleEnabled(false)
+        barChart.setTouchEnabled(false)
+        barChart.setPinchZoom(false)
+        barChart.isDoubleTapToZoomEnabled = false
     }
 }
 
