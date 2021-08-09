@@ -233,8 +233,8 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                             xIndex, floatArrayOf(
                                 lightSleep,
                                 deepSleep,
-                                awake,
-                                0.toFloat()
+                                0.toFloat(),
+                                awake
                             )
                         )
                     )
@@ -245,8 +245,8 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                             xIndex, floatArrayOf(
                                 0.toFloat(),
                                 0.toFloat(),
-                                awake,
-                                sleep
+                                sleep,
+                                awake
                             )
                         )
                     )
@@ -266,8 +266,8 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         barDataSet.setColors(
             ContextCompat.getColor(context, R.color.light_sleep_color),
             ContextCompat.getColor(context, R.color.deep_sleep_color),
-            ContextCompat.getColor(context, R.color.awake_sleep_color),
-            ContextCompat.getColor(context, R.color.sleep_sleep_color)
+            ContextCompat.getColor(context, R.color.sleep_sleep_color),
+            ContextCompat.getColor(context, R.color.awake_sleep_color)
         )
         barDataSet.setDrawValues(false)
 
@@ -422,20 +422,20 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                     ContextCompat.getColor(context, R.color.deep_sleep_color)
                 ),
                 LegendEntry(
-                    StringUtil.getStringXml(R.string.history_day_timeInPhase_awake, getApplication()),
-                    Legend.LegendForm.SQUARE,
-                    8f,
-                    8f,
-                    null,
-                    ContextCompat.getColor(context, R.color.awake_sleep_color)
-                ),
-                LegendEntry(
                     StringUtil.getStringXml(R.string.history_day_timeInPhase_sleepSum, getApplication()),
                     Legend.LegendForm.SQUARE,
                     8f,
                     8f,
                     null,
                     ContextCompat.getColor(context, R.color.sleep_sleep_color)
+                ),
+                LegendEntry(
+                    StringUtil.getStringXml(R.string.history_day_timeInPhase_awake, getApplication()),
+                    Legend.LegendForm.SQUARE,
+                    8f,
+                    8f,
+                    null,
+                    ContextCompat.getColor(context, R.color.awake_sleep_color)
                 )
             )
         )
