@@ -338,9 +338,9 @@
     <string name="history_day_information_timeInPhase">Informationen über das Tortendiagramm der Schlaphasen.</string>
     <string name="history_day_information_sleepQualityRating">Hier kannst du Deine Befindlichtkeit nach dem Aufwachen eintragen. Du kannst zwischen den Werten \"schlecht\", \"gut\", \"überragend\", \"Tatendrang\" und \"müde\" unterscheiden.</string>
     <string name="history_day_information_activity">Dieses Diagramm zeigt Dein Aktivitätslevel des Tages an. Du kannst drei verschiedene Medallien erhalten.</string>
-    <string name="history_week_information_sleepPhases_barChart">"Dieses Diagramm zeigt Dir die Verteilung der verschiedenen Schlafphasen für die jeweilige Woche an. Je nach dem, wo sich Dein Handy in der Nacht befand, varriert das Diagramm zwischen zwei verschiedenen Anzeigemöglichkeiten. "</string>
+    <string name="history_week_information_sleepPhases_barChart">Dieses Diagramm zeigt Dir die Verteilung der verschiedenen Schlafphasen für die jeweilige Woche an. Je nach dem, wo sich Dein Handy in der Nacht befand, varriert das Diagramm zwischen zwei verschiedenen Anzeigemöglichkeiten. Die Werte der y-Achse entsprechen Stunden.</string>
     <string name="history_week_information_activity_lineChart">Hier kannst Du deine Aktivitätslevel für die jeweilige Woche einsehen.</string>
-    <string name="history_month_information_sleepPhases_barChart">"Dieses Diagramm zeigt Dir die Verteilung der verschiedenen Schlafphasen für den jeweiligen Monat an. Je nach dem, wo sich Dein Handy in der Nacht befand, varriert das Diagramm zwischen zwei verschiedenen Anzeigemöglichkeiten. "</string>
+    <string name="history_month_information_sleepPhases_barChart">"Dieses Diagramm zeigt Dir die Verteilung der verschiedenen Schlafphasen für den jeweiligen Monat an. Je nach dem, wo sich Dein Handy in der Nacht befand, varriert das Diagramm zwischen zwei verschiedenen Anzeigemöglichkeiten. Die Werte der y-Achse entsprechen Stunden. "</string>
     <string name="history_month_information_activity_lineChart">Hier kannst Du deine Aktivitätslevel für die jeweilige Woche einsehen.</string>
     <string name="history_day_timeInPhase_awake">Wach</string>
     <string name="history_day_timeInPhase_lightSleep">Leichtschlaf</string>

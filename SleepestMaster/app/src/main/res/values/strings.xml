@@ -252,9 +252,9 @@
     <string name="history_day_information_timeInPhase">Information about the sleep phases pie chart.</string>
     <string name="history_day_information_sleepQualityRating">" Here you can ener your state of mind after waking up. You can distinguish between the values \"bad\", \"good\", \"excellent\", \"full of energy\" and \"tired\". "</string>
     <string name="history_day_information_activity">This chart shows your activity level for the day. You can get three different medals.</string>
-    <string name="history_week_information_sleepPhases_barChart">This diagram shows you the distribution of the different sleep phases for the respective week. Depending on where your phone was during the night, the chart varies between two different display options.</string>
+    <string name="history_week_information_sleepPhases_barChart">This diagram shows you the distribution of the different sleep phases for the respective week. Depending on where your phone was during the night, the diagram varies between two different display options. The values of the y-axis correspond to hours.</string>
     <string name="history_week_information_activity_lineChart">Here you can view your activity levels for the week.</string>
-    <string name="history_month_information_sleepPhases_barChart">"This diagram shows you the distribution of the different sleep phases for the respective month. Depending on where your phone was during the night, the chart varies between two different display options. "</string>
+    <string name="history_month_information_sleepPhases_barChart">This diagram shows you the distribution of the different sleep phases for the respective month. Depending on where your phone was during the night, the chart varies between two different display options. The values of the y-axis correspond to hours.</string>
     <string name="history_month_information_activity_lineChart">Here you can view your activity levels for the week.</string>
     <string name="history_day_timeInPhase_awake">Awake</string>
     <string name="history_day_timeInPhase_lightSleep">Light sleep</string>
