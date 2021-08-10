@@ -439,6 +439,7 @@ class SleepCalculationHandler(val context: Context) {
 
             // how long have the user slept already? REM is not counted at the moment!!!
             // use some custom factors...except its not on table, then use just 1
+            // TODO(Add factors to the different sleep states for the calculation)
             sleepSessionEntity.sleepTimes.sleepDuration =
                 (sleepSessionEntity.sleepTimes.lightSleepDuration * (if (sleepSessionEntity.mobilePosition != MobilePosition.INBED) 1f else 1f) +
                         sleepSessionEntity.sleepTimes.deepSleepDuration * 1f + sleepSessionEntity.sleepTimes.remSleepDuration * 1f).toInt()
@@ -513,6 +514,7 @@ class SleepCalculationHandler(val context: Context) {
                 {
                     // we take all sleep values that are not already defined as light or deep but sleeping
                     if ((it.sleepState == SleepState.SLEEPING) && (sleepSessionEntity.mobilePosition == MobilePosition.INBED)) {
+
                         // we need to calculate the sleep state
                         // and then we update it in the sleep api raw data entity
 
