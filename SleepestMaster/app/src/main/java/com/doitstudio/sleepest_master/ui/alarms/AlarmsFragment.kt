@@ -81,7 +81,8 @@ class AlarmsFragment() : Fragment() {
             }
         }
         scope.launch {
-            databaseRepository.insertAlarm(AlarmEntity(newId))
+            var sleepTime = dataStoreRepository.getNormalSleepTime()
+            databaseRepository.insertAlarm(AlarmEntity(newId, sleepDuration = sleepTime))
         }
         addAlarmEntity(actualContext, newId)
         usedIds.add(newId)

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Sleepest-Master</string>
+    <string name="app_name">Sleepest - Best way to sleep</string>
     <string name="description_dont_kill_my_app">To ensure that the app stays active in the background
         and wakes you up safely, follow the instructions below for your device model and Android version</string>
     <string name="alarm_active">Alarm Active</string>
@@ -205,6 +205,7 @@
     <string name="alarms_alarme">&#9200; Alarme</string>
 
     <string name="profile_about_us">Sleepest - App\nMade with &#10084; in Bavaria\n\n This app was created by 3 students as a students project and will be improved and maintained in the future</string>
+    <string name="splash_screen_with_love">Made with &#10084; in Bavaria</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
@@ -232,7 +233,7 @@
     <string name="alarm_entity_day_we">We</string>
     <string name="alarm_entity_day_tu">Tu</string>
     <string name="alarm_entity_day_mo">Mo</string>
-    <string name="alarms_no_alarms">Keine Alarme. Füge über den + Buttonen einen neuen Alarm hinzu!</string>
+    <string name="alarms_no_alarms">Keine Alarme. Füge über den + Button einen neuen Alarm hinzu!</string>
     <string name="settings_return">return</string>
     <string name="settings_delete_all_data">delete all data</string>
     <string name="profile_credits">Credits</string>

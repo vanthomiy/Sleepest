@@ -241,6 +241,10 @@ dependencies {
 
     // Activity reco
     implementation 'com.google.android.gms:play-services-location:16.0.0'
+
+    // Lottie animation
+    implementation "com.airbnb.android:lottie:3.4.0"
+
 }
 
 repositories {

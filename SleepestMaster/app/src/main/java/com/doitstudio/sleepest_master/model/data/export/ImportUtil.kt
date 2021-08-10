@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Parcelable
 import android.widget.Toast
+import com.doitstudio.sleepest_master.model.data.LightConditions
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
@@ -29,8 +30,10 @@ object ImportUtil {
                     gson.fromJson(importJson, Array<UserSleepExportData>::class.java).asList()
                 )
             } catch (ex: Exception) {
+
                 Toast.makeText(actualContext, "Wrong data format", Toast.LENGTH_SHORT).show()
                 return@let
+
             }
 
             try {
@@ -44,6 +47,7 @@ object ImportUtil {
                         UserSleepSessionEntity(
                             session.id,
                             session.mobilePosition,
+                            session.lightConditions?:LightConditions.UNIDENTIFIED,
                             session.sleepTimes,
                             session.userSleepRating,
                             session.userCalculationRating
@@ -56,11 +60,13 @@ object ImportUtil {
                 dataBaseRepository.insertSleepApiRawData(sleepApiRawDataEntity)
                 dataBaseRepository.insertUserSleepSessions(sessions)
 
+                Toast.makeText(actualContext, "Successful imported data", Toast.LENGTH_SHORT).show()
+
+
             } catch (ex: Exception) {
                 Toast.makeText(actualContext, "Cant write to database", Toast.LENGTH_SHORT).show()
                 return@let
             } finally {
-                Toast.makeText(actualContext, "Successful imported data", Toast.LENGTH_SHORT).show()
             }
         }
 

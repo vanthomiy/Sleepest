@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Sleepest-Master</string>
+    <string name="app_name">Sleepest - Produktivität und Schlaf vereinen</string>
     <string name="alarm_active">Alarm Active</string>
     <string name="alarm_disabled">Alarm Disabled</string>
     <string name="insert_data">Alarm Disabled</string>
@@ -280,6 +280,7 @@
     <string name="profile_remove_data_warning">Ohje, alle daten werden gelöscht ok?</string>
     <string name="profile_remove_data_ackn">Verstanden und löschen</string>
     <string name="profile_about_us">Sleepest - App\nMade with &#10084; in Bavaria\n\n This app was created by 3 students as a students project and will be improved and maintained in the future</string>
+    <string name="splash_screen_with_love">Made with &#10084; in Bavaria</string>
     <string name="alarm_monday_dayname">Montag</string>
     <string name="alarm_tuesday_dayname">Dienstag</string>
     <string name="alarm_wednesday_dayname">Mittwoch</string>
@@ -312,7 +313,7 @@
     <string name="alarm_instance_days_a_week">Wochentage:</string>
     <string name="alarm_instance_sleep_duration">Schlafdauer:</string>
     <string name="alarms_alarme">&#9200; Wecker</string>
-    <string name="alarms_no_alarms">Keine Alarme. Füge über den + Buttonen einen neuen Alarm hinzu!</string>
+    <string name="alarms_no_alarms">Keine Alarme. Füge über den + Button einen neuen Alarm hinzu!</string>
     <string name="settings_return">return</string>
     <string name="settings_delete_all_data">delete all data</string>
     <string name="profile_credits">Credits</string>

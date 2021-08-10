@@ -85,7 +85,9 @@ class DataStoreRepository(context: Context) {
         return@runBlocking getSleepTimeEnd()
     }
 
-
+    suspend fun getNormalSleepTime() : Int {
+        return sleepParameterFlow.first().normalSleepTime
+    }
 
     suspend fun getSleepTimeBegin() : Int {
         return sleepParameterFlow.first().sleepTimeStart
@@ -129,6 +131,10 @@ class DataStoreRepository(context: Context) {
         sleepParameterStatus.updateStandardMobilePosition(time)
     suspend fun updateLigthCondition(time:Int) =
         sleepParameterStatus.updateLigthCondition(time)
+    suspend fun updateStandardMobilePositionOverLastWeek(time:Int) =
+        sleepParameterStatus.updateStandardMobilePositionOverLastWeek(time)
+    suspend fun updateLigthConditionOverLastWeek(time:Int) =
+        sleepParameterStatus.updateLigthConditionOverLastWeek(time)
     suspend fun updateUserMobileFequency(time:Int) =
         sleepParameterStatus.updateUserMobileFequency(time)
     suspend fun triggerObserver() =

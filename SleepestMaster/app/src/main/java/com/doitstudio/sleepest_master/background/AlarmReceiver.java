@@ -185,7 +185,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setContentTitle(context.getApplicationContext().getString(R.string.information_notification_title))
                 .setContentText(information) /**TODO: Textauswahl**/
                 .setStyle(new Notification.DecoratedCustomViewStyle())
-                .setSmallIcon(R.drawable.logo_notification)
+                .setSmallIcon(R.drawable.logov4round)
                 .setContentIntent(pendingIntent)
                 .setOnlyAlertOnce(true)
                 .build();

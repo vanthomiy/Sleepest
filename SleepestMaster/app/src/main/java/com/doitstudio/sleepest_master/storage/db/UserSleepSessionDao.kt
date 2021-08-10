@@ -19,6 +19,9 @@ interface UserSleepSessionDao {
     @Query("SELECT * FROM user_sleep_session_entity WHERE id LIKE :id")
     fun getById(id:Int): Flow<List<UserSleepSessionEntity>>
 
+    @Query("SELECT * FROM user_sleep_session_entity WHERE id >= :time ORDER BY id DESC")
+    fun getSince(time:Int): Flow<List<UserSleepSessionEntity>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(sleepSegmentEventEntityRaw: UserSleepSessionEntity)
 
