@@ -1,4 +1,4 @@
-package com.doitstudio.sleepest_master.sleepcalculation.ml
+package com.doitstudio.sleepest_master.sleepcalculation
 
 import com.doitstudio.sleepest_master.model.data.LightConditions
 import com.doitstudio.sleepest_master.model.data.MobilePosition

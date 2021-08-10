@@ -1,4 +1,4 @@
-package com.doitstudio.sleepest_master.sleepcalculation.ml
+package com.doitstudio.sleepest_master.sleepcalculation
 
 import android.content.Context
 import com.doitstudio.sleepest_master.MainApplication
@@ -99,7 +99,8 @@ class SleepClassifier constructor(private val context: Context) {
     ) : SleepState {
 
         // check for standard mobile position.
-        val actualParams = ParamsHandler.createDefaultParams(mobilePosition, lightConditions, mobileUseFrequency)
+        val actualParams =
+            ParamsHandler.createDefaultParams(mobilePosition, lightConditions, mobileUseFrequency)
 
         // Now we are using the algorithm
         val sortedSleepListBefore = normedSleepApiDataBefore.sortedBy { x->x.timestampSeconds }
@@ -206,7 +207,8 @@ class SleepClassifier constructor(private val context: Context) {
     ) : SleepState {
 
         // check for standard mobile position.
-        val actualParams = ParamsHandler.createDefaultParams(mobilePosition, lightConditions, mobileUseFrequency)
+        val actualParams =
+            ParamsHandler.createDefaultParams(mobilePosition, lightConditions, mobileUseFrequency)
 
         // Now we are using the algorithm
         val sortedSleepListBefore = normedSleepApiDataBefore.sortedBy { x->x.timestampSeconds }
