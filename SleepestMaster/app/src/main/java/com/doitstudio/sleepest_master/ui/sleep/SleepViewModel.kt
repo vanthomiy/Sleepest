@@ -20,6 +20,7 @@ import com.doitstudio.sleepest_master.googleapi.ActivityTransitionHandler
 import com.doitstudio.sleepest_master.model.data.*
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
+import com.doitstudio.sleepest_master.util.IconAnimatorUtil
 import com.doitstudio.sleepest_master.util.SleepTimeValidationUtil
 import com.doitstudio.sleepest_master.util.StringUtil
 import com.doitstudio.sleepest_master.util.StringUtil.getStringXml
@@ -159,9 +160,26 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     val actualExpand = ObservableField(-1)
     val goneState = ObservableField(View.GONE)
     val visibleState = ObservableField(View.VISIBLE)
-
+    private var lastView: ImageView? = null
     fun onInfoClicked(view: View){
         updateInfoChanged(view.tag.toString(), true)
+
+        // Check if its an image view
+        if(view.tag.toString() != "7"){
+            IconAnimatorUtil.animateView(view as ImageView)
+
+                IconAnimatorUtil.resetView(lastView)
+
+            lastView = if(lastView != view)
+                (view as ImageView)
+            else
+                null
+        }
+        else{
+            IconAnimatorUtil.resetView(lastView)
+            lastView = null
+        }
+
 
     }
 
@@ -171,7 +189,6 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
 
         actualExpand.set(if(actualExpand.get() == value.toIntOrNull()) -1 else value.toIntOrNull() )
-
     }
 
     val phoneUsageValueString = ObservableField("Normal")

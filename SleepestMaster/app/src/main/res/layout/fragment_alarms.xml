@@ -235,15 +235,21 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/btn_addAlarmEntity"
+        <FrameLayout
             android:layout_width="55dp"
             android:layout_height="55dp"
             android:layout_gravity="bottom|center"
-            android:foreground="@drawable/ic_baseline_add_24"
             android:background="@drawable/roundedbutton"
             android:layout_marginBottom="10dp"
-            android:backgroundTint="@color/accent_text_color"/>
+            android:backgroundTint="@color/accent_text_color">
+            <ImageView
+                android:id="@+id/btn_addAlarmEntity"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/add_anim"
+                />
+        </FrameLayout>
+
 
     </FrameLayout>
 </layout>

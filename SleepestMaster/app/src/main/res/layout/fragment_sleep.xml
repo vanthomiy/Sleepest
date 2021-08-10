@@ -481,7 +481,7 @@
                                 android:layout_height="25dp"
                                 android:layout_gravity="end"
                                 app:tint="@color/primary_text_color"
-                                android:src="@drawable/ic_baseline_info_24"
+                                android:src="@drawable/info_help"
                                 android:onClick="@{sleepViewModel::onInfoClicked}"
                                 android:tag="6"/>
 
@@ -555,7 +555,7 @@
                                 android:layout_height="25dp"
                                 android:layout_gravity="end"
                                 app:tint="@color/primary_text_color"
-                                android:src="@drawable/ic_baseline_info_24"
+                                android:src="@drawable/info_help"
                                 android:onClick="@{sleepViewModel::onInfoClicked}"
                                 android:tag="2"/>
 
@@ -627,7 +627,7 @@
                                 android:layout_height="25dp"
                                 android:layout_gravity="end"
                                 app:tint="@color/primary_text_color"
-                                android:src="@drawable/ic_baseline_info_24"
+                                android:src="@drawable/info_help"
                                 android:onClick="@{sleepViewModel::onInfoClicked}"
                                 android:tag="3"/>
 
@@ -740,7 +740,8 @@
                                 app:tint="@color/primary_text_color"
                                 android:onClick="@{sleepViewModel::onInfoClicked}"
                                 android:tag="4"
-                                android:src="@drawable/ic_baseline_info_24"/>
+                                android:src="@drawable/info_help"
+                                />
 
                         </FrameLayout>
 
