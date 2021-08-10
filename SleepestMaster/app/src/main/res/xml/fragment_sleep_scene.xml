@@ -1,107 +1,158 @@
 <?xml version="1.0" encoding="utf-8"?>
 <MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:constraintSetEnd="@+id/end"
+        motion:constraintSetStart="@+id/start"
+        motion:duration="1000"
+        motion:motionInterpolator="linear">
+        <OnSwipe
+            motion:dragDirection="dragUp"
+            motion:touchAnchorId="@+id/background"
+            motion:touchAnchorSide="bottom" />
+    </Transition>
 
     <ConstraintSet android:id="@+id/start">
-        <Constraint android:id="@+id/widget" />
-
-
-        <Constraint android:id="@+id/animHeaderLogo"
-            android:layout_width="200dp"
+        <Constraint
+            android:id="@id/background"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:alpha="1.0"
+            android:scaleX="1.2"
+            android:scaleY="1.2"
+            motion:layout_constraintTop_toTopOf="parent" />
+        <Constraint
             android:layout_height="200dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:rotation="180" />
-        <Constraint
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginTop="0dp"
-            android:id="@+id/animTextSleep" />
-        <Constraint
-            android:layout_height="wrap_content"
-            android:layout_width="75dp"
-            android:id="@+id/animTextDescription"
-            android:layout_marginBottom="65dp"
-            android:scaleX="1.25"
-            android:scaleY="1.25"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/animHeaderLogo" />
+            android:layout_width="200dp"
+            android:id="@+id/moon"
+            android:alpha="1.0"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="50dp"
+            android:rotation="180"
+            motion:layout_editor_absoluteY="200dp"
+            motion:layout_constraintTop_toBottomOf="@id/header"
+            motion:layout_constraintBottom_toTopOf="@+id/bottom"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent" />
 
         <Constraint
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:id="@+id/animTextNumber"
-            android:layout_marginBottom="125dp"
-            android:scaleX="1.25"
-            android:scaleY="1.25"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/animHeaderLogo" />
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="75dp"
+            android:id="@+id/animTextSleepScoreValue"
+            android:scaleX="1.0"
+            android:scaleY="1.0"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintTop_toTopOf="@+id/moon"
+            motion:layout_constraintBottom_toBottomOf="@+id/moon">
+            <CustomAttribute
+                motion:attributeName="textColor"
+                motion:customColorValue="@color/white" />
+        </Constraint>
+
 
         <Constraint
-            android:layout_height="wrap_content"
+            android:scaleX="1"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:scaleY="1"
+            android:layout_height="@dimen/valuesHeight"
+            android:layout_width="match_parent"
+            motion:layout_constraintTop_toBottomOf="@+id/moon"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="20dp"
+            android:id="@+id/showTipp"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp" />
+
+        <Constraint
+            android:id="@+id/animTextSleepText"
+            android:alpha = "1.0"
             android:layout_width="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="0dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:id="@+id/animTextTipp" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintTop_toBottomOf="@+id/bottom">
+                <CustomAttribute
+                    motion:attributeName="textColor"
+                    motion:customColorValue="@color/white" />
+        </Constraint>
+
+        <Constraint
+            android:id="@id/animTextSleep">
+            <CustomAttribute
+                motion:attributeName="textColor"
+                motion:customColorValue="@color/white" />
+        </Constraint>
+
 
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
-        <Constraint android:id="@id/widget" />
+        <Constraint
+            android:id="@id/background"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:alpha="0"
+            android:translationX="0dp"
+            android:translationY="0dp"
+            motion:layout_constraintTop_toTopOf="parent" />
+
+        <Constraint
+            android:id="@id/animTextSleep">
+            <CustomAttribute
+                motion:attributeName="textColor"
+                motion:customColorValue="@color/primary_text_color" />
+        </Constraint>
+
+        <Constraint
+            android:id="@+id/moon"
+            android:alpha="0" />
 
         <Constraint
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginTop="20dp"
-            android:id="@+id/animTextSleep" />
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="20dp"
+            android:scaleX="0.5"
+            android:scaleY="0.5"
+            android:id="@+id/animTextSleepScoreValue"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintBottom_toBottomOf="@+id/header">
+            <CustomAttribute
+                motion:attributeName="textColor"
+                motion:customColorValue="@color/primary_text_color" />
+        </Constraint>
 
-        <Constraint android:id="@+id/animHeaderLogo"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:rotation="180" />
         <Constraint
             android:layout_height="wrap_content"
-            android:layout_width="75dp"
-            android:id="@+id/animTextDescription"
-            android:layout_marginLeft="0dp"
-            android:layout_marginBottom="5dp"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="0dp"
             android:scaleX="0.75"
             android:scaleY="0.75"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/animTextNumber" />
+            android:id="@+id/showTipp"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintTop_toTopOf="parent">
+        </Constraint>
 
         <Constraint
-            android:layout_height="wrap_content"
+            android:id="@+id/animTextSleepText"
+            android:alpha = "0"
             android:layout_width="wrap_content"
-            android:id="@+id/animTextNumber"
-            android:layout_marginLeft="10dp"
-            android:layout_marginBottom="10dp"
-            android:scaleX="0.75"
-            android:scaleY="0.75"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/animHeaderLogo" />
-
-        <Constraint
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="15dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:id="@+id/animTextTipp" />
+            android:layout_gravity="center_horizontal"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintTop_toBottomOf="@+id/bottom"
+            >
+        </Constraint>
 
     </ConstraintSet>
-
-    <Transition
-        app:constraintSetEnd="@id/end"
-        app:constraintSetStart="@+id/start"
-        app:duration="500"/>
 </MotionScene>
