@@ -106,6 +106,16 @@ message  SleepParameters{
   int32 standardLightCondition = 10;
 
   /**
+* standard position of the mobile phone
+*/
+  int32 standardMobilePositionOverLastWeek = 15;
+
+  /**
+  * standard light condition
+  */
+  int32 standardLightConditionOverLastWeek = 16;
+
+  /**
   * user frequency use of the mobile phone
   */
   int32 mobileUseFrequency = 5;
@@ -260,4 +270,5 @@ message SettingsData{
   bool afterRestartApp = 7;
 
 }
+
 

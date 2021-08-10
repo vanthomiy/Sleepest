@@ -60,6 +60,7 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
                 val notificationsUtil = NotificationUtil(applicationContext, NotificationUsage.NOTIFICATION_NO_API_DATA,null)
                 notificationsUtil.chooseNotification()
             }*/
+
         }
 
         val calendar: Calendar = Calendar.getInstance()
@@ -70,7 +71,9 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
         ed.putInt("minute", calendar.get(Calendar.MINUTE))
         ed.apply()
 
-        sleepCalculationHandler.checkIsUserSleeping(null)
+        scope.launch {
+            sleepCalculationHandler.checkIsUserSleeping(null)
+        }
 
         return Result.success()
     }

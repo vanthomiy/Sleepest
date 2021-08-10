@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:background="@color/primary_app_background">
 
-        <ImageView
+        <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/iV_noDataAvailable"
             android:layout_width="100dp"
             android:layout_height="100dp"
@@ -24,7 +24,20 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/flashlight_by_freepik" />
+            app:lottie_rawRes="@raw/empty"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"/>
+
+        <!--ImageView
+            android:id="@+id/iV_noDataAvailable"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="96dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/flashlight_by_freepik" /!-->
 
         <TextView
             android:id="@id/tV_noDataAvailable"
@@ -77,7 +90,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="5dp"
-                        android:layout_marginHorizontal="20dp">
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="10dp">
 
                         <ImageView
                             android:layout_width="25dp"
@@ -170,7 +185,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="5dp"
-                        android:layout_marginHorizontal="20dp">
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="10dp">
 
                         <ImageView
                             android:layout_width="25dp"
@@ -281,7 +298,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="5dp"
-                        android:layout_marginHorizontal="20dp">
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="10dp">
 
                         <ImageView
                             android:layout_width="25dp"
@@ -394,9 +413,11 @@
 
                     <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="wrap_content"                        
                         android:layout_marginVertical="5dp"
-                        android:layout_marginHorizontal="20dp">
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="10dp">
 
                         <ImageView
                             android:layout_width="25dp"

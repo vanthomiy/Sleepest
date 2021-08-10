@@ -3,6 +3,7 @@ package com.doitstudio.sleepest_master.storage.db
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.doitstudio.sleepest_master.model.data.LightConditions
 import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.sleepcalculation.model.SleepTimes
 import com.doitstudio.sleepest_master.sleepcalculation.model.UserCalculationRating
@@ -28,6 +29,10 @@ data class UserSleepSessionEntity(
          */
         var mobilePosition: MobilePosition = MobilePosition.UNIDENTIFIED,
 
+        /**
+         * The actual [LightConditions] for the sleep which was detected by the algorithm or set by the user.
+         */
+        var lightConditions: LightConditions = LightConditions.UNIDENTIFIED,
 
         @Embedded(prefix = "sleepTimes") val sleepTimes: SleepTimes = SleepTimes(),
         @Embedded(prefix = "sleepRating") val userSleepRating: UserSleepRating = UserSleepRating(),

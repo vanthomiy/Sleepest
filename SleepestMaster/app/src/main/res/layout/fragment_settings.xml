@@ -151,6 +151,7 @@
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:textColor="@color/primary_text_color"
+                            android:visibility="@{profileViewModel.autoDarkMode ? profileViewModel.goneState : profileViewModel.visibleState}"
                             android:textOn="Dark Mode"
                             android:textOff="Light Mode"
                             android:layout_marginBottom="10dp"
@@ -951,6 +952,7 @@
                         android:gravity="center_horizontal"
                         android:textAlignment="center"
                         android:textSize="@dimen/headerSize"
+                        android:fontFamily="@font/salina"
                         android:layout_gravity="center_horizontal"
                         android:textColor="@color/primary_text_color"
                         android:text="@string/profile_about_us"/>

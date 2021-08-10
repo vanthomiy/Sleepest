@@ -22,7 +22,7 @@ data class AlarmEntity(
         val tempDisabled: Boolean = false,
 
         @ColumnInfo(name = "sleepDuration")
-        val sleepDuration: Int = 28800,
+        val sleepDuration: Int = Int.MIN_VALUE,
 
         @ColumnInfo(name = "wakeupEarly")
         val wakeupEarly: Int = 21600,

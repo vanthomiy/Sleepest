@@ -164,13 +164,15 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                 val isUnidentified = it.any { x -> x.sleepState == SleepState.NONE }
 
                 if ((mobilePosition == MobilePosition.INBED && isSleeping)) { // || isUnidentified) {
-                    SleepCalculationHandler.getHandler(context).defineUserWakeup(
-                        LocalDateTime.ofInstant(
-                            Instant.ofEpochMilli((sleepSessionData[key]?.third?.sleepTimes?.sleepTimeStart?.toLong())!! * 1000),
-                            ZoneOffset.systemDefault()
-                        ),
-                        false
-                    )
+                    scope.launch {
+                        SleepCalculationHandler.getHandler(context).defineUserWakeup(
+                            LocalDateTime.ofInstant(
+                                Instant.ofEpochMilli((sleepSessionData[key]?.third?.sleepTimes?.sleepTimeStart?.toLong())!! * 1000),
+                                ZoneOffset.systemDefault()
+                            ),
+                            false
+                        )
+                    }
                 }
             }
         }
