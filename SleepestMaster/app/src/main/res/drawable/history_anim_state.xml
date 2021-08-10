@@ -5,15 +5,15 @@
 
     <!-- provide a different drawable for each state-->
     <item android:id="@+id/state_on"
-        android:drawable="@drawable/ic_watch_later_black_24dp"
+        android:drawable="@drawable/ic_insert_full_chart_black_24dp"
         android:state_checked="true"/>
 
     <item android:id="@+id/state_off"
-        android:drawable="@drawable/ic_watch_fill_later_black_24dp"/>
+        android:drawable="@drawable/ic_insert_chart_black_24dp"/>
 
     <!-- specify transitions -->
     <transition
-        android:drawable="@drawable/alarm_reguar_fill_anim"
+        android:drawable="@drawable/chart_regular_filled_animation"
         android:fromId="@id/state_off"
         android:toId="@id/state_on" />
 
