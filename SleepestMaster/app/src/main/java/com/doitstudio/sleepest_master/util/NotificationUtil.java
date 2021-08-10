@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -13,6 +14,7 @@ import android.widget.RemoteViews;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
 import com.doitstudio.sleepest_master.MainActivity;
 import com.doitstudio.sleepest_master.R;
@@ -126,13 +128,14 @@ public class NotificationUtil {
                 .setContentTitle(context.getApplicationContext().getString(R.string.information_notification_title))
                 .setContentText(information)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
-                .setSmallIcon(R.drawable.logov4round)
+                .setSmallIcon(R.drawable.logofullroundtransparentwhite)
+                .setColor(ContextCompat.getColor(context.getApplicationContext(), R.color.accent_text_color))
                 .setAutoCancel(true)
                 .setContentIntent(informationPendingIntent)
                 .setDeleteIntent(informationPendingIntent)
                 .setOnlyAlertOnce(true)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .addAction(R.drawable.logov4round, buttonText, informationPendingIntent)
+                .addAction(R.drawable.logofullroundtransparentwhite, buttonText, informationPendingIntent)
                 .build();
     }
 
@@ -265,7 +268,8 @@ public class NotificationUtil {
                 .setContentText(contentText)
                 .setCustomBigContentView(remoteViews)
                 .setStyle(new Notification.DecoratedCustomViewStyle())
-                .setSmallIcon(R.drawable.logov4round)
+                .setSmallIcon(R.drawable.logofullroundtransparentwhite)
+                .setColor(ContextCompat.getColor(context.getApplicationContext(), R.color.accent_text_color))
                 .setContentIntent(pendingIntent)
                 .setOnlyAlertOnce(true)
                 .setVisibility(Notification.VISIBILITY_PUBLIC)
@@ -309,7 +313,8 @@ public class NotificationUtil {
 
         //Build the builder for the notification
         return builder
-                .setSmallIcon(R.drawable.logov4round)
+                .setSmallIcon(R.drawable.logofullroundtransparentwhite)
+                .setColor(ContextCompat.getColor(context.getApplicationContext(), R.color.accent_text_color))
                 .setContentTitle(context.getString(R.string.alarm_notification_title))
                 .setContentText(context.getString(R.string.alarm_notification_text))
                 .setPriority(NotificationCompat.PRIORITY_MAX)
@@ -318,8 +323,8 @@ public class NotificationUtil {
                 .setContentIntent(cancelAlarmPendingIntent)
                 .setDeleteIntent(cancelAlarmPendingIntent)
                 .setFullScreenIntent(pendingIntent, true)
-                .addAction(R.drawable.logov4round, context.getString(R.string.alarm_notification_button_1), cancelAlarmPendingIntent)
-                .addAction(R.drawable.logov4round, context.getString(R.string.alarm_notification_button_2), snoozeAlarmPendingIntent)
+                .addAction(R.drawable.logofullroundtransparentwhite, context.getString(R.string.alarm_notification_button_1), cancelAlarmPendingIntent)
+                .addAction(R.drawable.logofullroundtransparentwhite, context.getString(R.string.alarm_notification_button_2), snoozeAlarmPendingIntent)
                 .build();
 
         //NotificationManagerCompat.from(context).notify(Constants.ALARM_CLOCK_NOTIFICATION_ID, notificationBuilder.build());

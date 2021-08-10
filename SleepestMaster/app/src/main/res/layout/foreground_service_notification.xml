@@ -17,10 +17,10 @@
 
             <ImageView
                 style="@style/Theme.AppCompat.DayNight"
-                android:layout_width="wrap_content"
+                android:layout_width="69dp"
                 android:layout_height="69dp"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/logov4round" />
+                android:src="@drawable/logofullroundtransparent" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -83,7 +83,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="1dp"
                 android:layout_marginLeft="1dp"
-                android:background="@drawable/rounded_button_green"
+                android:background="@drawable/roundedbutton"
                 style="@style/Theme.AppCompat.DayNight"
                 android:layout_gravity="bottom|center_horizontal"
                 android:textSize="15sp"/>
@@ -96,7 +96,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="1dp"
                 android:layout_marginLeft="1dp"
-                android:background="@drawable/rounded_button_green"
+                android:background="@drawable/roundedbutton"
                 style="@style/Theme.AppCompat.DayNight"
                 android:layout_gravity="bottom|center_horizontal"
                 android:textSize="15sp"/>
