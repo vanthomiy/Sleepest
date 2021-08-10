@@ -29,6 +29,7 @@ import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.background.BackgroundAlarmTimeHandler
 import com.doitstudio.sleepest_master.databinding.FragmentAlarmsBinding
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity
+import com.doitstudio.sleepest_master.util.IconAnimatorUtil
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -88,6 +89,8 @@ class AlarmsFragment() : Fragment() {
         usedIds.add(newId)
 
         viewModel.noAlarmsView.set(View.GONE)
+
+        IconAnimatorUtil.animateView(view as ImageView)
     }
 
     private fun addAlarmEntity(context: Context, alarmId: Int) {

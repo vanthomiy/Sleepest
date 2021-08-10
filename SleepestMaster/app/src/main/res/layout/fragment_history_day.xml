@@ -17,8 +17,8 @@
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/iV_noDataAvailable"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:layout_marginBottom="96dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -89,9 +89,10 @@
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginHorizontal="20dp"
                         android:layout_marginTop="15dp"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginHorizontal="10dp">
+                        android:layout_marginBottom="10dp">
 
                         <ImageView
                             android:layout_width="25dp"
@@ -114,7 +115,7 @@
                             android:layout_height="25dp"
                             android:layout_gravity="end"
                             app:tint="@color/primary_text_color"
-                            android:src="@drawable/ic_baseline_info_24"
+                            android:src="@drawable/info_help"
                             android:onClick="@{historyDayViewModel::onInfoClicked}"
                             android:tag="0"/>
                     </FrameLayout>
@@ -183,9 +184,10 @@
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginHorizontal="20dp"
                         android:layout_marginTop="15dp"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginHorizontal="10dp">
+                        android:layout_marginBottom="10dp">
 
                         <ImageView
                             android:layout_width="25dp"
@@ -208,7 +210,7 @@
                             android:layout_height="25dp"
                             android:layout_gravity="end"
                             app:tint="@color/primary_text_color"
-                            android:src="@drawable/ic_baseline_info_24"
+                            android:src="@drawable/info_help"
                             android:onClick="@{historyDayViewModel::onInfoClicked}"
                             android:tag="1"/>
                     </FrameLayout>
@@ -295,9 +297,10 @@
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginHorizontal="20dp"
                         android:layout_marginTop="15dp"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginHorizontal="10dp">
+                        android:layout_marginBottom="10dp">
 
                         <ImageView
                             android:layout_width="25dp"
@@ -320,7 +323,7 @@
                             android:layout_height="25dp"
                             android:layout_gravity="end"
                             app:tint="@color/primary_text_color"
-                            android:src="@drawable/ic_baseline_info_24"
+                            android:src="@drawable/info_help"
                             android:onClick="@{historyDayViewModel::onInfoClicked}"
                             android:tag="2"/>
                     </FrameLayout>
@@ -410,9 +413,11 @@
 
                     <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="wrap_content"                        
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginHorizontal="20dp"
                         android:layout_marginTop="15dp"
-                        android:layout_marginBottom="10dp"                        android:layout_marginHorizontal="10dp">
+                        android:layout_marginBottom="10dp">
 
                         <ImageView
                             android:layout_width="25dp"
@@ -435,7 +440,7 @@
                             android:layout_height="25dp"
                             android:layout_gravity="end"
                             app:tint="@color/primary_text_color"
-                            android:src="@drawable/ic_baseline_info_24"
+                            android:src="@drawable/info_help"
                             android:onClick="@{historyDayViewModel::onInfoClicked}"
                             android:tag="3"/>
                     </FrameLayout>

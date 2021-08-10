@@ -96,14 +96,22 @@
                         android:visibility="@{profileViewModel.actualExpand == 0 ? profileViewModel.visibleState:profileViewModel.goneState, default=gone}"
                         >
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="0dp"
-                            android:textSize="@dimen/headerSize"
-                            android:layout_gravity="start"
-                            android:textColor="@color/primary_text_color"
-                            android:text="@string/profile_dark_mode"/>
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="0dp"
+                                android:textSize="@dimen/headerSize"
+                                android:layout_gravity="start"
+                                android:textColor="@color/primary_text_color"
+                                android:text="@string/profile_dark_mode"/>
+
+                        </LinearLayout>
+
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -158,11 +166,20 @@
                             android:checked="@={profileViewModel.darkMode}"
                             android:onClick="@{profileViewModel::darkModeToggled}"/>
 
+                        <com.airbnb.lottie.LottieAnimationView
+                            android:id="@+id/lottieDarkMode"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:tag="0"
+                            app:lottie_rawRes="@raw/darkmode"
+                            app:lottie_autoPlay="false"
+                            app:lottie_loop="false"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="0dp"
+                            android:layout_marginTop="10dp"
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
                             android:textColor="@color/primary_text_color"
@@ -307,6 +324,9 @@
 
 
                     </LinearLayout>
+
+
+
                 </LinearLayout>
 
                 <LinearLayout

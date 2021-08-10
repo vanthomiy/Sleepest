@@ -5,11 +5,13 @@ import android.content.Context
 import android.transition.TransitionManager
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.model.data.MoodType
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
+import com.doitstudio.sleepest_master.util.IconAnimatorUtil
 import com.doitstudio.sleepest_master.util.SmileySelectorUtil
 
 
@@ -25,8 +27,19 @@ class HistoryWeekViewModel(application: Application) : AndroidViewModel(applicat
 
     }
 
+    private var lastView: ImageView? = null
     fun onInfoClicked(view: View){
         updateInfoChanged(view.tag.toString(), true)
+
+        // Check if its an image view
+        IconAnimatorUtil.animateView(view as ImageView)
+
+        IconAnimatorUtil.resetView(lastView)
+
+        lastView = if(lastView != view)
+            (view as ImageView)
+        else
+            null
     }
 
     private fun updateInfoChanged(value: String, toggle: Boolean = false) {

@@ -15,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.DontKillMyAppFragment
@@ -26,6 +27,8 @@ import com.doitstudio.sleepest_master.model.data.export.ImportUtil
 import com.doitstudio.sleepest_master.model.data.export.UserSleepExportData
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
+import com.doitstudio.sleepest_master.util.IconAnimatorUtil
+import com.doitstudio.sleepest_master.util.IconAnimatorUtil.isDarkThemeOn
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -197,6 +200,18 @@ class SettingsFragment : Fragment() {
 
     }
 
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES || (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM &&  actualContext.isDarkThemeOn()))
+            binding.lottieDarkMode.setMinAndMaxFrame(0,240) //to play the first half
+        else
+            binding.lottieDarkMode.setMinAndMaxFrame(240,481) //to play the second half
+        binding.lottieDarkMode.playAnimation()
+
+    }
 
 
     fun onDataClicked(view: View) {
