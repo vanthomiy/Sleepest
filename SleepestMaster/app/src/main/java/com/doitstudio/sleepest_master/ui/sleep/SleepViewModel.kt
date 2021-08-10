@@ -182,8 +182,6 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
             IconAnimatorUtil.resetView(lastView)
             lastView = null
         }
-
-
     }
 
     private fun updateInfoChanged(value: String, toggle: Boolean = false) {
