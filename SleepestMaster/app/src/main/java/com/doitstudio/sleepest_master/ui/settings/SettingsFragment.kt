@@ -8,7 +8,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.provider.DocumentsContract
 import android.provider.Settings
 import android.view.LayoutInflater
@@ -21,8 +20,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.AppCompatButton
-import androidx.core.view.marginTop
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.DontKillMyAppFragment
@@ -37,7 +34,6 @@ import com.doitstudio.sleepest_master.model.data.export.ImportUtil
 import com.doitstudio.sleepest_master.model.data.export.UserSleepExportData
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
-import com.doitstudio.sleepest_master.util.IconAnimatorUtil
 import com.doitstudio.sleepest_master.util.IconAnimatorUtil.isDarkThemeOn
 import com.doitstudio.sleepest_master.util.SmileySelectorUtil
 import com.google.gson.Gson
@@ -46,7 +42,6 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.*
-import java.util.*
 
 
 class SettingsFragment : Fragment() {
