@@ -3,16 +3,15 @@ package com.doitstudio.sleepest_master.sleepcalculation
 import org.junit.Assert.*
 import android.content.Context
 import androidx.test.platform.app.InstrumentationRegistry
+import com.doitstudio.sleepest_master.model.data.LightConditions
 import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.SleepDataFrequency
 import com.doitstudio.sleepest_master.model.data.SleepState
-import com.doitstudio.sleepest_master.sleepcalculation.ml.ModelInputAssignment
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.storage.db.*
 import com.google.gson.Gson
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.first
 import org.hamcrest.CoreMatchers
 import org.junit.Before
@@ -24,8 +23,9 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneOffset
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.abs
-import kotlin.random.Random
 
 class SleepCalculationHandlerTest
 {
@@ -71,7 +71,7 @@ class SleepCalculationHandlerTest
 
 
         // no data available
-        var result = sleepCalculationHandler.getFrequencyFromListByHours(2, false, actualtime, sleepList.toList())
+        var result = sleepCalculationHandler.getFrequencyFromListByHours(1f, false, actualtime, sleepList.toList())
         assertThat(result, CoreMatchers.equalTo(SleepDataFrequency.NONE))
 
 
@@ -84,7 +84,7 @@ class SleepCalculationHandlerTest
             sleepList.add(data)
         }
 
-        result = sleepCalculationHandler.getFrequencyFromListByHours(2, false, actualtime, sleepList.toList())
+        result = sleepCalculationHandler.getFrequencyFromListByHours(1f, false, actualtime, sleepList.toList())
         assertThat(result, CoreMatchers.equalTo(SleepDataFrequency.THIRTY))
 
         sleepList.clear()
@@ -96,7 +96,7 @@ class SleepCalculationHandlerTest
             sleepList.add(data)
         }
 
-        result = sleepCalculationHandler.getFrequencyFromListByHours(2, false, actualtime, sleepList.toList())
+        result = sleepCalculationHandler.getFrequencyFromListByHours(1f, false, actualtime, sleepList.toList())
         assertThat(result, CoreMatchers.equalTo(SleepDataFrequency.TEN))
 
         sleepList.clear()
@@ -108,7 +108,7 @@ class SleepCalculationHandlerTest
             sleepList.add(data)
         }
 
-        result = sleepCalculationHandler.getFrequencyFromListByHours(2, false, actualtime, sleepList.toList())
+        result = sleepCalculationHandler.getFrequencyFromListByHours(1f, false, actualtime, sleepList.toList())
         assertThat(result, CoreMatchers.equalTo(SleepDataFrequency.FIVE))
 
         sleepList.clear()
@@ -120,7 +120,7 @@ class SleepCalculationHandlerTest
             sleepList.add(data)
         }
 
-        result = sleepCalculationHandler.getFrequencyFromListByHours(1, true, actualtime, sleepList.toList())
+        result = sleepCalculationHandler.getFrequencyFromListByHours(1f, true, actualtime, sleepList.toList())
         assertThat(result, CoreMatchers.equalTo(SleepDataFrequency.FIVE))
 
     }
@@ -136,7 +136,7 @@ class SleepCalculationHandlerTest
         var sleepList = mutableListOf<SleepApiRawDataEntity>()
 
 
-        var (normedSleepApiData, frequency) = sleepCalculationHandler.createTimeNormedData(2, false, actualtime, sleepList)
+        var (normedSleepApiData, frequency) = sleepCalculationHandler.createTimeNormedData(1f, false, actualtime, sleepList)
 
         assertThat(normedSleepApiData.count(), CoreMatchers.equalTo(0))
         assertThat(frequency, CoreMatchers.equalTo(SleepDataFrequency.NONE))
@@ -150,7 +150,7 @@ class SleepCalculationHandlerTest
             sleepList.add(data)
         }
 
-        var (normedSleepApiData1, frequency1) = sleepCalculationHandler.createTimeNormedData(2, false, actualtime, sleepList)
+        var (normedSleepApiData1, frequency1) = sleepCalculationHandler.createTimeNormedData(1f, false, actualtime, sleepList)
 
         assertThat(normedSleepApiData1.count(), CoreMatchers.equalTo(4))
         assertThat(frequency1, CoreMatchers.equalTo(SleepDataFrequency.THIRTY))
@@ -164,7 +164,7 @@ class SleepCalculationHandlerTest
             sleepList.add(data)
         }
 
-        var (normedSleepApiData2, frequency2) = sleepCalculationHandler.createTimeNormedData(2, false, actualtime, sleepList)
+        var (normedSleepApiData2, frequency2) = sleepCalculationHandler.createTimeNormedData(1f, false, actualtime, sleepList)
 
         assertThat(normedSleepApiData2.count(), CoreMatchers.equalTo(12))
         assertThat(frequency2, CoreMatchers.equalTo(SleepDataFrequency.TEN))
@@ -178,7 +178,7 @@ class SleepCalculationHandlerTest
             sleepList.add(data)
         }
 
-        var (normedSleepApiData3, frequency3) = sleepCalculationHandler.createTimeNormedData(2, false, actualtime, sleepList)
+        var (normedSleepApiData3, frequency3) = sleepCalculationHandler.createTimeNormedData(1f, false, actualtime, sleepList)
 
         assertThat(normedSleepApiData3.count(), CoreMatchers.equalTo(24))
         assertThat(frequency3, CoreMatchers.equalTo(SleepDataFrequency.FIVE))
@@ -192,7 +192,7 @@ class SleepCalculationHandlerTest
             sleepList.add(data)
         }
 
-        var (normedSleepApiData4, frequency4) = sleepCalculationHandler.createTimeNormedData(2, false, actualtime, sleepList)
+        var (normedSleepApiData4, frequency4) = sleepCalculationHandler.createTimeNormedData(1f, false, actualtime, sleepList)
 
         assertThat(normedSleepApiData4.count(), CoreMatchers.equalTo(24))
         assertThat(frequency4, CoreMatchers.equalTo(SleepDataFrequency.FIVE))
@@ -322,10 +322,12 @@ class SleepCalculationHandlerTest
 
         val actualTimeSeconds = 100000
         val sleepCalculationHandler = SleepCalculationHandler.getHandler(context)
+        val classifier = SleepClassifier.getHandler(context)
+
         var sleepList5 = mutableListOf<SleepApiRawDataEntity>()
         var sleepList30 = mutableListOf<SleepApiRawDataEntity>()
 
-        var calPosition = sleepCalculationHandler.checkPhonePosition(sleepList5)
+        var calPosition = classifier.defineTableBed(sleepList5)
 
         assertThat(calPosition, CoreMatchers.equalTo(MobilePosition.UNIDENTIFIED))
 
@@ -343,10 +345,10 @@ class SleepCalculationHandlerTest
             sleepList30.add(data)
         }
 
-        calPosition = sleepCalculationHandler.checkPhonePosition(sleepList5)
+        calPosition = classifier.defineTableBed(sleepList5)
         assertThat(calPosition, CoreMatchers.equalTo(MobilePosition.ONTABLE))
 
-        calPosition = sleepCalculationHandler.checkPhonePosition(sleepList30)
+        calPosition = classifier.defineTableBed(sleepList30)
         assertThat(calPosition, CoreMatchers.equalTo(MobilePosition.ONTABLE))
 
         sleepList5.clear()
@@ -365,10 +367,10 @@ class SleepCalculationHandlerTest
             sleepList30.add(data)
         }
 
-        calPosition = sleepCalculationHandler.checkPhonePosition(sleepList5)
+        calPosition = classifier.defineTableBed(sleepList5)
         assertThat(calPosition, CoreMatchers.equalTo(MobilePosition.INBED))
 
-        calPosition = sleepCalculationHandler.checkPhonePosition(sleepList30)
+        calPosition = classifier.defineTableBed(sleepList30)
         assertThat(calPosition, CoreMatchers.equalTo(MobilePosition.INBED))
 
     }
@@ -394,7 +396,7 @@ class SleepCalculationHandlerTest
         var sleepList30 = mutableListOf<SleepApiRawDataEntity>()
 
         // keine daten
-        var sleepState = sleepCalculationHandler.defineSleepStates(actualTimeSeconds, sleepList5)
+        var sleepState = sleepCalculationHandler.defineSleepStates(actualTimeSeconds, sleepList5, LightConditions.DARK)
         assertThat(sleepState, CoreMatchers.equalTo(SleepState.SLEEPING))
 
         // add 5 freuquency data with table but all in past
@@ -404,7 +406,7 @@ class SleepCalculationHandlerTest
             sleepList5.add(data)
         }
 
-        sleepState = sleepCalculationHandler.defineSleepStates(actualTimeSeconds, sleepList5)
+        sleepState = sleepCalculationHandler.defineSleepStates(actualTimeSeconds, sleepList5,LightConditions.DARK)
         assertThat(sleepState, CoreMatchers.equalTo(SleepState.SLEEPING))
 
 
@@ -415,7 +417,7 @@ class SleepCalculationHandlerTest
             sleepList5.add(data)
         }
 
-        sleepState = sleepCalculationHandler.defineSleepStates(actualTimeSeconds, sleepList5)
+        sleepState = sleepCalculationHandler.defineSleepStates(actualTimeSeconds, sleepList5,LightConditions.DARK)
         assertThat(sleepState, CoreMatchers.equalTo(SleepState.SLEEPING))
 
         // add 5 freuquency data in future enought
@@ -425,7 +427,7 @@ class SleepCalculationHandlerTest
             sleepList5.add(data)
         }
 
-        sleepState = sleepCalculationHandler.defineSleepStates(actualTimeSeconds, sleepList5)
+        sleepState = sleepCalculationHandler.defineSleepStates(actualTimeSeconds, sleepList5, LightConditions.DARK)
         assertThat((sleepState != SleepState.SLEEPING), CoreMatchers.equalTo(true))
 
     }
@@ -590,5 +592,451 @@ class SleepCalculationHandlerTest
         val sleepSessions = sleepDbRepository.allUserSleepSessions.first()
 
         //assertThat(sleepSessions.size , CoreMatchers.equalTo(dayCount))
+    }
+
+    /**
+     * We test the complete sleep calculation with a few sleeps and check if the sleep amount and the alarm is setup right
+     */
+    @Test
+    fun sleepCalculationTest() = runBlocking {
+
+        var sleepCalculationHandler = SleepCalculationHandler.getHandler(context)
+
+        sleepDbRepository.deleteUserSleepSession()
+        sleepDbRepository.deleteSleepApiRawData()
+        sleepDbRepository.deleteAllAlarms()
+
+        // add alarm for each day
+        val days = DayOfWeek.values().toCollection(ArrayList())
+        val alarm = AlarmEntity(1,
+            isActive = true,
+            wasFired = false,
+            sleepDuration = 25800,
+            wakeupEarly = 21600,
+            wakeupLate = 32400,
+            activeDayOfWeek = days
+        )
+
+        sleepDbRepository.insertAlarm(alarm)
+
+
+
+        var path = "databases/testdata/SleepValues.json"
+        var pathTrue = "databases/testdata/SleepValuesTrue.json"
+
+        var gson = Gson()
+
+        val jsonFile = context
+            .assets
+            .open(path)
+            .bufferedReader()
+            .use(BufferedReader::readText)
+
+        val jsonFileTrue = context
+            .assets
+            .open(pathTrue)
+            .bufferedReader()
+            .use(BufferedReader::readText)
+
+        var dataUnPred =  gson.fromJson(jsonFile, Array<Array<SleepApiRawDataEntity>>::class.java).asList()
+        var dataTrue =  gson.fromJson(jsonFileTrue, Array<Array<SleepApiRawDataRealEntity>>::class.java).asList()
+
+
+        val awakeState = mutableMapOf<SleepState, Int>(
+            SleepState.AWAKE to 0,
+            SleepState.NONE to 0,
+            SleepState.SLEEPING to 0,
+            SleepState.LIGHT to 0,
+            SleepState.DEEP to 0,
+            SleepState.REM to 0)
+        var sleepingState = mutableMapOf<SleepState, Int>(
+            SleepState.AWAKE to 0,
+            SleepState.NONE to 0,
+            SleepState.SLEEPING to 0,
+            SleepState.LIGHT to 0,
+            SleepState.DEEP to 0,
+            SleepState.REM to 0)
+        var lightState = mutableMapOf<SleepState, Int>(
+            SleepState.AWAKE to 0,
+            SleepState.NONE to 0,
+            SleepState.SLEEPING to 0,
+            SleepState.LIGHT to 0,
+            SleepState.DEEP to 0,
+            SleepState.REM to 0)
+        var deepState = mutableMapOf<SleepState, Int>(
+            SleepState.AWAKE to 0,
+            SleepState.NONE to 0,
+            SleepState.SLEEPING to 0,
+            SleepState.LIGHT to 0,
+            SleepState.DEEP to 0,
+            SleepState.REM to 0)
+        var remState = mutableMapOf<SleepState, Int>(
+            SleepState.AWAKE to 0,
+            SleepState.NONE to 0,
+            SleepState.SLEEPING to 0,
+            SleepState.LIGHT to 0,
+            SleepState.DEEP to 0,
+            SleepState.REM to 0)
+
+        var realCounts = mutableMapOf<SleepState, Int>(
+            SleepState.AWAKE to 0,
+            SleepState.NONE to 0,
+            SleepState.SLEEPING to 0,
+            SleepState.LIGHT to 0,
+            SleepState.DEEP to 0,
+            SleepState.REM to 0)
+
+        var predCounts = mutableMapOf<SleepState, Int>(
+            SleepState.AWAKE to 0,
+            SleepState.NONE to 0,
+            SleepState.SLEEPING to 0,
+            SleepState.LIGHT to 0,
+            SleepState.DEEP to 0,
+            SleepState.REM to 0)
+
+        for (i in 52 until 63)
+        {
+            val data = dataUnPred[i]
+
+            var lastTimestamp = 0
+            var holdTime = 15*60
+            var lastTimestampWakeup = 0
+
+            var lastCall = 0
+
+            for (j in 1 until (data.count() * (1)).toInt()) {
+
+                val rawdata = data[j]
+                rawdata.sleepState = SleepState.NONE
+                rawdata.oldSleepState = SleepState.NONE
+                // insert the sleep api data
+                sleepDbRepository.insertSleepApiRawData(rawdata)
+
+                val actualTime = LocalDateTime.ofInstant(
+                    Instant.ofEpochMilli(lastTimestamp.toLong() * 1000),
+                    ZoneOffset.systemDefault()
+                )
+
+                if(1615094160 < rawdata.timestampSeconds){
+                    val a = 1
+                    val b = rawdata
+                }
+
+
+                // only call it every 15 minutes or like so
+                if (lastTimestamp + holdTime < rawdata.timestampSeconds) {
+
+                    lastTimestamp = rawdata.timestampSeconds
+                    // call the sleep calc handler...
+
+                    sleepCalculationHandler.checkIsUserSleeping(actualTime)
+                    //lastCall = rawdata.timestampSeconds
+                }
+
+                if (j > data.count() * 0.25f && lastTimestampWakeup + holdTime < rawdata.timestampSeconds) {
+
+                    // letzter aufruf der verheizten zeit
+                    lastTimestampWakeup = rawdata.timestampSeconds
+                    sleepCalculationHandler.defineUserWakeup(actualTime)
+                    lastCall = rawdata.timestampSeconds
+
+                }
+            }
+
+            val actualTime = LocalDateTime.ofInstant(
+                Instant.ofEpochMilli(lastTimestamp.toLong() * 1000),
+                ZoneOffset.systemDefault()
+            )
+
+            val newlist = sleepDbRepository.getSleepApiRawDataFromDate(actualTime).first()
+
+            if(newlist.count() != dataTrue[i].count()){
+                for (j in 1 until (newlist.count() * (1)).toInt()) {
+
+                    val actData = dataTrue[i].firstOrNull{x-> x.timestampSeconds == newlist[j].timestampSeconds}
+
+                    try {
+                        val realSleepState = when (actData?.real) {
+                            "sleeping" -> listOf(SleepState.SLEEPING)
+                            "awake" -> listOf(SleepState.AWAKE)
+                            "light" -> listOf(SleepState.LIGHT)
+                            "deep" -> listOf(SleepState.DEEP)
+                            "rem" -> listOf(SleepState.REM)
+                            else -> listOf(SleepState.NONE)
+                        }
+
+                        realSleepState.forEach { state ->
+
+                            when (state) {
+                                SleepState.AWAKE -> awakeState[newlist[j].sleepState] =
+                                    awakeState[newlist[j].sleepState]!! + 1
+                                SleepState.SLEEPING -> sleepingState[newlist[j].sleepState] =
+                                    sleepingState[newlist[j].sleepState]!! + 1
+                                SleepState.LIGHT -> {
+                                    lightState[newlist[j].sleepState] =
+                                        lightState[newlist[j].sleepState]!! + 1
+                                    sleepingState[newlist[j].sleepState] =
+                                        sleepingState[newlist[j].sleepState]!! + 1
+                                }
+                                SleepState.DEEP -> {
+                                    deepState[newlist[j].sleepState] =
+                                        deepState[newlist[j].sleepState]!! + 1
+                                    sleepingState[newlist[j].sleepState] =
+                                        sleepingState[newlist[j].sleepState]!! + 1
+                                }
+                                SleepState.REM -> {
+                                    remState[newlist[j].sleepState] =
+                                        remState[newlist[j].sleepState]!! + 1
+                                    sleepingState[newlist[j].sleepState] =
+                                        sleepingState[newlist[j].sleepState]!! + 1
+                                }
+                            }
+
+                            realCounts[state] = realCounts[state]!! + 1
+                            predCounts[newlist[j].sleepState] =
+                                predCounts[newlist[j].sleepState]!! + 1
+                        }
+                    } catch (e: Exception) {
+                        val d = 2
+                        val c = d
+                        val ee = e
+                        //you can have multiple catch blocks
+                        //code to handle if this exception is occurred
+                    }
+                }
+            }
+            else {
+                for (j in 1 until (newlist.count() * (1)).toInt()) {
+                    try {
+                        val realSleepState = when (dataTrue[i][j].real) {
+                            "sleeping" -> listOf(SleepState.SLEEPING)
+                            "awake" -> listOf(SleepState.AWAKE)
+                            "light" -> listOf(SleepState.LIGHT)
+                            "deep" -> listOf(SleepState.DEEP)
+                            "rem" -> listOf(SleepState.REM)
+                            else -> listOf(SleepState.NONE)
+                        }
+
+                        realSleepState.forEach { state ->
+
+                            when (state) {
+                                SleepState.AWAKE -> awakeState[newlist[j].sleepState] =
+                                    awakeState[newlist[j].sleepState]!! + 1
+                                SleepState.SLEEPING -> sleepingState[newlist[j].sleepState] =
+                                    sleepingState[newlist[j].sleepState]!! + 1
+                                SleepState.LIGHT -> {
+                                    lightState[newlist[j].sleepState] =
+                                        lightState[newlist[j].sleepState]!! + 1
+                                    sleepingState[newlist[j].sleepState] =
+                                        sleepingState[newlist[j].sleepState]!! + 1
+                                }
+                                SleepState.DEEP -> {
+                                    deepState[newlist[j].sleepState] =
+                                        deepState[newlist[j].sleepState]!! + 1
+                                    sleepingState[newlist[j].sleepState] =
+                                        sleepingState[newlist[j].sleepState]!! + 1
+                                }
+                                SleepState.REM -> {
+                                    remState[newlist[j].sleepState] =
+                                        remState[newlist[j].sleepState]!! + 1
+                                    sleepingState[newlist[j].sleepState] =
+                                        sleepingState[newlist[j].sleepState]!! + 1
+                                }
+                            }
+
+                            realCounts[state] = realCounts[state]!! + 1
+                            predCounts[newlist[j].sleepState] =
+                                predCounts[newlist[j].sleepState]!! + 1
+                        }
+                    } catch (e: Exception) {
+                        val d = 2
+                        val c = d
+                        val ee = e
+                        //you can have multiple catch blocks
+                        //code to handle if this exception is occurred
+                    }
+                }
+            }
+        }
+
+        var a = awakeState
+        var b = lightState
+        var c = deepState
+        var d = remState
+        var e = sleepingState
+        var f = predCounts
+        var g = realCounts
+    }
+
+    /**
+     * We test the complete sleep calculation with a few sleeps and check if the sleep amount and the alarm is setup right
+     */
+    @Test
+    fun sleepCalculationTestTest() {
+
+        var path = "databases/testdata/SleepValues.json"
+        var pathTrue = "databases/testdata/SleepValuesTrue.json"
+
+        var gson = Gson()
+
+        val jsonFile = context
+            .assets
+            .open(path)
+            .bufferedReader()
+            .use(BufferedReader::readText)
+
+        val jsonFileTrue = context
+            .assets
+            .open(pathTrue)
+            .bufferedReader()
+            .use(BufferedReader::readText)
+
+        var dataUnPred =  gson.fromJson(jsonFile, Array<Array<SleepApiRawDataEntity>>::class.java).asList()
+        var dataTrue =  gson.fromJson(jsonFileTrue, Array<Array<SleepApiRawDataRealEntity>>::class.java).asList()
+
+
+        var sleepCalculationHandler = SleepCalculationHandler.getHandler(context)
+
+        // add alarm for each day
+        val days = DayOfWeek.values().toCollection(ArrayList())
+
+        var sleepSessionsListReal = mutableListOf<UserSleepSessionEntity>()
+
+        val awakeState = mutableMapOf<SleepState, Int>(
+            SleepState.AWAKE to 0,
+            SleepState.SLEEPING to 0,
+            SleepState.LIGHT to 0,
+            SleepState.DEEP to 0,
+            SleepState.REM to 0)
+        var sleepingState = mutableMapOf<SleepState, Int>(
+            SleepState.AWAKE to 0,
+            SleepState.SLEEPING to 0,
+            SleepState.LIGHT to 0,
+            SleepState.DEEP to 0,
+            SleepState.REM to 0)
+        var lightState = mutableMapOf<SleepState, Int>(
+            SleepState.AWAKE to 0,
+            SleepState.SLEEPING to 0,
+            SleepState.LIGHT to 0,
+            SleepState.DEEP to 0,
+            SleepState.REM to 0)
+        var deepState = mutableMapOf<SleepState, Int>(
+            SleepState.AWAKE to 0,
+            SleepState.SLEEPING to 0,
+            SleepState.LIGHT to 0,
+            SleepState.DEEP to 0,
+            SleepState.REM to 0)
+        var remState = mutableMapOf<SleepState, Int>(
+            SleepState.AWAKE to 0,
+            SleepState.SLEEPING to 0,
+            SleepState.LIGHT to 0,
+            SleepState.DEEP to 0,
+            SleepState.REM to 0)
+
+        var realCounts = mutableMapOf<SleepState, Int>(
+            SleepState.AWAKE to 0,
+            SleepState.SLEEPING to 0,
+            SleepState.LIGHT to 0,
+            SleepState.DEEP to 0,
+            SleepState.REM to 0)
+
+        var predCounts = mutableMapOf<SleepState, Int>(
+            SleepState.AWAKE to 0,
+            SleepState.SLEEPING to 0,
+            SleepState.LIGHT to 0,
+            SleepState.DEEP to 0,
+            SleepState.REM to 0)
+
+        for (i in 1 until (dataUnPred.count() * (1)).toInt())
+        {
+            val data = dataUnPred[i]
+
+            // take each time 10 days/nights and calculate!!
+            var lastTimestamp = 0
+            var holdTime = 15 * 60
+            var lastTimestampWakeup = 0
+
+            var newlist = listOf<SleepApiRawDataEntity>()
+
+            var lastCall = 0
+
+
+            for (j in 1 until (data.count() * (1)).toInt()) {
+
+                val rawdata = data[j]
+                rawdata.sleepState = SleepState.NONE
+                rawdata.oldSleepState = SleepState.NONE
+                // insert the sleep api data
+
+                val data1 = data.take(j)
+                val actualTime = LocalDateTime.ofInstant(
+                    Instant.ofEpochMilli(lastTimestamp.toLong() * 1000),
+                    ZoneOffset.systemDefault()
+                )
+
+                // only call it every 15 minutes or like so
+                if (lastTimestamp + holdTime < rawdata.timestampSeconds) {
+
+                    lastTimestamp = rawdata.timestampSeconds
+                    // call the sleep calc handler...
+
+                    newlist = sleepCalculationHandler.checkIsUserSleepingTest(data1)
+                    //lastCall = rawdata.timestampSeconds
+                }
+
+                if (j > data.count() * 0.25f && lastTimestampWakeup + holdTime < rawdata.timestampSeconds) {
+
+                    // letzter aufruf der verheizten zeit
+                    lastTimestampWakeup = rawdata.timestampSeconds
+                    sleepCalculationHandler.defineUserWakeupTest(data1)
+                    lastCall = rawdata.timestampSeconds
+                }
+            }
+
+            for (j in 1 until (newlist.count() * (1)).toInt()) {
+                val realSleepState = when(dataTrue[i][j].real){
+                    "sleeping" -> listOf(SleepState.SLEEPING)
+                    "awake" -> listOf(SleepState.AWAKE)
+                    "light" -> listOf(SleepState.LIGHT)
+                    "deep" -> listOf(SleepState.DEEP)
+                    "rem" -> listOf(SleepState.REM)
+                    else -> listOf(SleepState.NONE)
+                }
+                realSleepState.forEach{
+                    state->
+                    when(state){
+                        SleepState.AWAKE -> awakeState[newlist[j].sleepState] = awakeState[newlist[j].sleepState]!! + 1
+                        SleepState.SLEEPING -> sleepingState[newlist[j].sleepState] = sleepingState[newlist[j].sleepState]!! + 1
+                        SleepState.LIGHT -> {
+                            lightState[newlist[j].sleepState] = lightState[newlist[j].sleepState]!! + 1
+                            sleepingState[newlist[j].sleepState] = sleepingState[newlist[j].sleepState]!! + 1
+                        }
+                        SleepState.DEEP ->  {
+                            deepState[newlist[j].sleepState] = deepState[newlist[j].sleepState]!! + 1
+                            sleepingState[newlist[j].sleepState] = sleepingState[newlist[j].sleepState]!! + 1
+                        }
+                        SleepState.REM ->  {
+                            remState[newlist[j].sleepState] = remState[newlist[j].sleepState]!! + 1
+                            sleepingState[newlist[j].sleepState] = sleepingState[newlist[j].sleepState]!! + 1
+                        }
+                    }
+
+                    realCounts[state] = realCounts[state]!! + 1
+                    predCounts[newlist[j].sleepState] = predCounts[newlist[j].sleepState]!! + 1
+                }
+
+            }
+
+            // compare lists
+        }
+
+        var a = awakeState
+        var b = lightState
+        var c = deepState
+        var d = remState
+        var e = sleepingState
+        var f = predCounts
+        var g = realCounts
+
     }
 }

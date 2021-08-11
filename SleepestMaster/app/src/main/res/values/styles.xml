@@ -12,4 +12,16 @@
         <!--item name="android:background">@color/primary_button_color</item!-->
     </style>
 
+    <style name="TimePickerTheme" parent="Theme.AppCompat.DayNight.Dialog">
+        <item name="colorAccent">@color/accent_text_color</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:headerBackground">@color/colorAccent</item>
+        <item name="android:numbersTextColor">@color/primary_text_color</item>
+        <item name="android:numbersInnerTextColor">@color/primary_text_color</item>
+        <item name="android:numbersSelectorColor">@color/sleep_indicator_good</item>
+        <item name="android:numbersBackgroundColor">@color/primary_text_color</item>
+        <item name="android:amPmTextColor">@color/primary_text_color</item>
+    </style>
+
 </resources>

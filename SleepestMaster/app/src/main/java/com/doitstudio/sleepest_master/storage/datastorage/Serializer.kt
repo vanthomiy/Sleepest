@@ -106,6 +106,10 @@ class SleepParameterSerializer() : Serializer<SleepParameters> {
         .setNormalSleepTime(32400)
         .setSleepTimeStart(72000)
         .setSleepTimeEnd(36000)
+        .setStandardLightCondition(0)
+        .setStandardLightConditionOverLastWeek(0)
+        .setStandardMobilePosition(0)
+        .setStandardMobilePositionOverLastWeek(0)
         .build()
 }
 

@@ -1,9 +1,12 @@
 package com.doitstudio.sleepest_master.ui.sleep
 
+import android.R.attr.animation
 import android.app.Application
 import android.app.TimePickerDialog
+import android.graphics.drawable.AnimatedVectorDrawable
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.AnimationDrawable
 import android.transition.TransitionManager
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -19,8 +22,8 @@ import com.doitstudio.sleepest_master.googleapi.ActivityTransitionHandler
 import com.doitstudio.sleepest_master.model.data.*
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
+import com.doitstudio.sleepest_master.util.IconAnimatorUtil
 import com.doitstudio.sleepest_master.util.SleepTimeValidationUtil
-import com.doitstudio.sleepest_master.util.StringUtil
 import com.doitstudio.sleepest_master.util.StringUtil.getStringXml
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -76,6 +79,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
         val tpd = TimePickerDialog(
                 view.context,
+            R.style.TimePickerTheme,
                 { view, h, m ->
 
                     val tempWakeup = LocalTime.of(h, m)
@@ -108,6 +112,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
         val tpd = TimePickerDialog(
             view.context,
+            R.style.TimePickerTheme,
             { view, h, m ->
 
                 val tempWakeup = LocalTime.of(h, m)
@@ -158,9 +163,25 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     val actualExpand = ObservableField(-1)
     val goneState = ObservableField(View.GONE)
     val visibleState = ObservableField(View.VISIBLE)
-
+    private var lastView: ImageView? = null
     fun onInfoClicked(view: View){
         updateInfoChanged(view.tag.toString(), true)
+
+        // Check if its an image view
+        if(view.tag.toString() != "7"){
+            IconAnimatorUtil.animateView(view as ImageView)
+
+                IconAnimatorUtil.resetView(lastView)
+
+            lastView = if(lastView != view)
+                (view as ImageView)
+            else
+                null
+        }
+        else{
+            IconAnimatorUtil.resetView(lastView)
+            lastView = null
+        }
     }
 
     private fun updateInfoChanged(value: String, toggle: Boolean = false) {
@@ -169,7 +190,6 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
 
         actualExpand.set(if(actualExpand.get() == value.toIntOrNull()) -1 else value.toIntOrNull() )
-
     }
 
     val phoneUsageValueString = ObservableField("Normal")
@@ -379,7 +399,6 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     //region animation
 
     lateinit var transitionsContainer : ViewGroup
-    lateinit var transitionsContainerTop : ViewGroup
     lateinit var animatedTopView : MotionLayout
     lateinit var imageMoonView : AppCompatImageView
 
@@ -395,7 +414,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         //TransitionManager.beginDelayedTransition(transitionsContainerTop);
 
         newProgress = (1f / 500f) * scrollY
-        animatedTopView.progress = newProgress
+        //animatedTopView.progress = newProgress
 
         if(abs(progress - newProgress) > 0.25 ) {
             progress = newProgress
