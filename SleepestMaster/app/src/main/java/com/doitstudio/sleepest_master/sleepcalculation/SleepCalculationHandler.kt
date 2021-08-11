@@ -77,8 +77,8 @@ class SleepCalculationHandler(val context: Context) {
         val frequency = (hours * 60.0) / sleepList.count().toFloat()
 
         return when {
-            frequency <= 10 -> { SleepDataFrequency.FIVE }
-            frequency <= 30 -> { SleepDataFrequency.TEN }
+            frequency < 10 -> { SleepDataFrequency.FIVE }
+            frequency < 30 -> { SleepDataFrequency.TEN }
             else -> { SleepDataFrequency.THIRTY }
         }
     }
@@ -109,7 +109,7 @@ class SleepCalculationHandler(val context: Context) {
             return Pair(listOf<SleepApiRawDataEntity>(),SleepDataFrequency.NONE)
         }
 
-        val frequencyType = getFrequencyFromListByHours(hours, false, seconds, list)
+        val frequencyType = getFrequencyFromListByHours(hours, false, seconds, filteredList)
 
         val minutes = (hours * 60).toInt()
         val frequency = SleepDataFrequency.getValue(frequencyType)
@@ -142,6 +142,8 @@ class SleepCalculationHandler(val context: Context) {
 
         return Pair(timeNormedData.sortedByDescending { x -> x.timestampSeconds }, frequencyType)
     }
+
+
 
     /**
      * Gets the user activity and classifies what type of activity was done

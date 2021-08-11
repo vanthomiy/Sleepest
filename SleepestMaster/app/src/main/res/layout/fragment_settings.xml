@@ -786,6 +786,7 @@
                     </FrameLayout>
 
                     <LinearLayout
+                        android:id="@+id/ll_credits"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="10dp"
@@ -804,7 +805,7 @@
                             android:textColor="@color/primary_text_color"
                             android:text="@string/profile_flaticon_introduction"/>
 
-                        <TextView
+                        <!--TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="40dp"
@@ -824,7 +825,7 @@
                             android:textColor="@color/accent_text_color"
                             android:tag="flaticon"
                             android:onClick="@{profileViewModel::onCreditsClicked}"
-                            />
+                            /!-->
 
                     </LinearLayout>
 

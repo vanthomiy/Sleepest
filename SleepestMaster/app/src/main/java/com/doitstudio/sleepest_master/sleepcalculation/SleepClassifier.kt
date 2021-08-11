@@ -53,7 +53,7 @@ class SleepClassifier constructor(private val context: Context) {
         }
 
         // under 1.4 is on table and over is in bed
-        return if(sleepingData.sumBy { x -> x.motion } > 1.4f){
+        return if(sleepingData.sumBy { x -> x.motion } / sleepingData.count() > 1.4f){
             MobilePosition.INBED
         } else {
             MobilePosition.ONTABLE
@@ -104,7 +104,7 @@ class SleepClassifier constructor(private val context: Context) {
 
         // Now we are using the algorithm
         val sortedSleepListBefore = normedSleepApiDataBefore.sortedBy { x->x.timestampSeconds }
-        val sortedSleepListAfter = normedSleepApiDataAfter?.sortedByDescending { x->x.timestampSeconds }
+        var sortedSleepListAfter = normedSleepApiDataAfter?.sortedByDescending { x->x.timestampSeconds }
 
         // now take the params and check the sleep
         // first check if a sleep start detection is needed
@@ -115,6 +115,11 @@ class SleepClassifier constructor(private val context: Context) {
         var isSleepStarted = false
         var isSleepingAllowed = false
         var isSleeping = false
+
+        if(!prePrediction && sortedSleepListAfter!!.count() != sortedSleepListBefore.count()){
+            sortedSleepListAfter = switchToFrequency(sortedSleepListAfter, sortedSleepListAfter.count(), sortedSleepListBefore.count())
+        }
+
 
         // Sleep start detection
         if(countSleeping <= 3){// || (startBorderListBefore[1].sleepState != SleepState.SLEEPING || startBorderListBefore[2].sleepState != SleepState.SLEEPING)){
@@ -156,8 +161,8 @@ class SleepClassifier constructor(private val context: Context) {
             avgThreshold.motion = 0f
 
             var factor = 0
-            val count = sortedSleepListBefore.count()-1
-            for (i in 0..count) {
+            val count = sortedSleepListBefore.count()
+            for (i in 0 until count) {
 
                 factor += (i * i)
 
@@ -305,6 +310,45 @@ class SleepClassifier constructor(private val context: Context) {
     }
 
 
+    fun switchToFrequency(list: List<SleepApiRawDataEntity>, fromCount: Int, toCount: Int): List<SleepApiRawDataEntity>
+    {
+        var timeNormedData = mutableListOf<SleepApiRawDataEntity>()
+
+        // 30 / 10 = 3 or 5 / 10 = 0.5
+        val frequenceFactor = toCount.toFloat() / fromCount.toFloat()
+
+
+        var sleepDataBuffer = mutableListOf<SleepApiRawDataEntity>()
+
+        for (i in 0 until list.count()){
+            if (frequenceFactor > 1){
+                for (j in 0 until frequenceFactor.toInt())
+                    timeNormedData.add(list[i])
+            }
+            else{
+                sleepDataBuffer.add(list[i])
+
+                if(sleepDataBuffer.count() >= (1/frequenceFactor).toInt()){
+                    timeNormedData.add(SleepApiRawDataEntity(
+                        timestampSeconds = sleepDataBuffer[0].timestampSeconds,
+                        confidence = sleepDataBuffer.sumBy {x -> x.confidence} / sleepDataBuffer.count(),
+                        motion = sleepDataBuffer.sumBy {x -> x.motion} / sleepDataBuffer.count(),
+                        light = sleepDataBuffer.sumBy {x -> x.light} / sleepDataBuffer.count(),
+                        sleepState = sleepDataBuffer[0].sleepState,
+                        oldSleepState = sleepDataBuffer[0].oldSleepState,
+                        wakeUpTime = sleepDataBuffer[0].wakeUpTime
+                    ))
+
+                    sleepDataBuffer.clear()
+                }
+            }
+        }
+
+        return timeNormedData
+    }
+
+
+
     fun defineUserSleep(
         normedSleepApiDataBefore: List<SleepApiRawDataEntity>,
         normedSleepApiDataAfter: List<SleepApiRawDataEntity>,
@@ -314,7 +358,7 @@ class SleepClassifier constructor(private val context: Context) {
         // check for standard mobile position.
 
         val sortedSleepListBefore = normedSleepApiDataBefore.sortedBy { x->x.timestampSeconds }
-        val sortedSleepListAfter = normedSleepApiDataAfter.sortedByDescending { x->x.timestampSeconds }
+        var sortedSleepListAfter = normedSleepApiDataAfter.sortedByDescending { x->x.timestampSeconds }
 
         val actualParams = ParamsHandler.createSleepStateParams(lightConditions)
 
@@ -326,8 +370,13 @@ class SleepClassifier constructor(private val context: Context) {
         avgThreshold.motion = 0f
 
         var factor = 0
-        val count = sortedSleepListBefore.count()-1
-        for (i in 0..count){
+        val count = sortedSleepListBefore.count()
+
+        if(count != sortedSleepListAfter.count()){
+            sortedSleepListAfter = switchToFrequency(sortedSleepListAfter, sortedSleepListAfter.count(), count)
+        }
+
+        for (i in 0 until count){
 
             factor += i
 
@@ -348,47 +397,6 @@ class SleepClassifier constructor(private val context: Context) {
         }
     }
 
-    fun defineUserSleepTest(
-        normedSleepApiDataBefore: List<SleepApiRawDataEntity>,
-        normedSleepApiDataAfter: List<SleepApiRawDataEntity>,
-    ) : SleepState {
-
-        // check for standard mobile position.
-
-        val sortedSleepListBefore = normedSleepApiDataBefore.sortedBy { x->x.timestampSeconds }
-        val sortedSleepListAfter = normedSleepApiDataAfter.sortedByDescending { x->x.timestampSeconds }
-
-        val actualParams = ParamsHandler.createSleepStateParams(LightConditions.DARK)
-
-        // Now we are using the algorithm
-        val avgThreshold = ThresholdParams()
-
-        avgThreshold.confidence = 0f
-        avgThreshold.light = 0f
-        avgThreshold.motion = 0f
-
-        var factor = 0
-        val count = sortedSleepListBefore.count()-1
-        for (i in 0..count){
-
-            factor += i
-
-            avgThreshold.confidence += ((sortedSleepListBefore[i].confidence + sortedSleepListAfter[i].confidence) / 2).toFloat() * i
-            avgThreshold.light += ((sortedSleepListBefore[i].light + sortedSleepListAfter[i].light) / 2).toFloat() * i
-            avgThreshold.motion += ((sortedSleepListBefore[i].motion + sortedSleepListAfter[i].motion) / 2).toFloat() * i
-        }
-
-        avgThreshold.confidence = avgThreshold.confidence / factor
-        avgThreshold.light = avgThreshold.light / factor
-        avgThreshold.motion = avgThreshold.motion / factor
-
-        return when {
-            actualParams.lightSleepParams.checkIfThreshold(false, 1, avgThreshold) -> SleepState.LIGHT
-            actualParams.remSleepParams.checkIfThreshold(true, 2, avgThreshold) -> SleepState.REM
-            actualParams.deepSleepParams.checkIfThreshold(true, 2, avgThreshold) -> SleepState.DEEP
-            else -> SleepState.LIGHT
-        }
-    }
 
     /**
      * Companion object is used for static fields in kotlin

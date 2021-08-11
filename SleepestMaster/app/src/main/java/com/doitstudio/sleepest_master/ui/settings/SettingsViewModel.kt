@@ -20,6 +20,7 @@ import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
 import com.doitstudio.sleepest_master.model.data.AlarmClockReceiverUsage
+import com.doitstudio.sleepest_master.model.data.credits.CreditsSites
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.util.SmileySelectorUtil
@@ -200,7 +201,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     }
 
     val authorsText = ObservableField("")
-    val authors = listOf("Author1", "Author2", "Author3")
+
     // endregion
 
     // region Data
@@ -259,7 +260,6 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     }
 
-
     //endregion
 
     init {
@@ -278,9 +278,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
         }
 
-        authors.forEach{
-            authorsText.set(authorsText.get() + "\n\n" + SmileySelectorUtil.getSmileyIteration() + "   "+ context.getString(R.string.prfofile_author) + " " + it)
-        }
+
 
         checkPermissions()
     }
