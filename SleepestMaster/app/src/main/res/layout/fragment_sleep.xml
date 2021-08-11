@@ -466,7 +466,7 @@
                                 android:layout_height="25dp"
                                 android:layout_gravity="start"
                                 app:tint="@color/primary_text_color"
-                                android:src="@drawable/ic_baseline_phone_android_24"/>
+                                android:src="@drawable/ic_baseline_wb_sunny_24"/>
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"

@@ -304,25 +304,6 @@ enum class SleepDataFrequency{
 }
 
 /**
- * Defines the actual model that is used in the process
- */
-enum class ModelProcess{
-    SLEEP04,
-    SLEEP12,
-    LIGHTAWAKE,
-    TABLEBED;
-
-    companion object {
-        /**
-         * Takes an [ModelProcess] and will return the associated [String] value for the sleep calculation
-         */
-        fun getString(type: ModelProcess): String {
-            return type.toString().toLowerCase().capitalize()
-        }
-    }
-}
-
-/**
  * Helper for checking sleep times for alarms
  */
 enum class AlarmSleepChangeFrom {
@@ -338,6 +319,33 @@ enum class SleepSleepChangeFrom {
     DURATION,
     SLEEPTIMESTART,
     SLEEPTIMEEND
+}
+
+/**
+ * Helper for different credits websites
+ */
+enum class Websites {
+    FLATICON,
+    LOTTIEFILES;
+
+    companion object {
+
+        fun getWebsite(type:Websites) : String {
+            return when (type) {
+                Websites.FLATICON -> "https://flaticon.com/"
+                Websites.LOTTIEFILES -> "https://lottiefiles.com/"
+                else -> ""
+            }
+        }
+
+        fun getName(type:Websites) : String {
+            return when (type) {
+                Websites.FLATICON -> "Flaticon"
+                Websites.LOTTIEFILES -> "Lottifiles"
+                else -> ""
+            }
+        }
+    }
 }
 
 
