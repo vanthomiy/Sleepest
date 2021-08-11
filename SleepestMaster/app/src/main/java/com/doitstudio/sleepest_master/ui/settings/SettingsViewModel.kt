@@ -260,7 +260,6 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     }
 
-
     //endregion
 
     init {
@@ -279,17 +278,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
         }
 
-        val creditsSites = CreditsSites.createCreditSites()
-        var creditsText = ""
-        creditsSites.forEach{ site ->
-            creditsText += "\n" + site.name + "\n"
 
-            site.authors.forEach{ author ->
-                creditsText += "\n" + SmileySelectorUtil.getSmileyIteration() + "   "+ context.getString(R.string.prfofile_author) + " " + author.author
-            }
-        }
-
-        authorsText.set(creditsText)
 
         checkPermissions()
     }
