@@ -71,7 +71,7 @@ class SleepCalculationHandlerTest
 
 
         // no data available
-        var result = sleepCalculationHandler.getFrequencyFromListByHours(1f, false, actualtime, sleepList.toList())
+        var result = sleepCalculationHandler.getFrequencyFromListByHours(2f, false, actualtime, sleepList.toList())
         assertThat(result, CoreMatchers.equalTo(SleepDataFrequency.NONE))
 
 
@@ -84,7 +84,7 @@ class SleepCalculationHandlerTest
             sleepList.add(data)
         }
 
-        result = sleepCalculationHandler.getFrequencyFromListByHours(1f, false, actualtime, sleepList.toList())
+        result = sleepCalculationHandler.getFrequencyFromListByHours(2f, false, actualtime, sleepList.toList())
         assertThat(result, CoreMatchers.equalTo(SleepDataFrequency.THIRTY))
 
         sleepList.clear()
@@ -96,7 +96,7 @@ class SleepCalculationHandlerTest
             sleepList.add(data)
         }
 
-        result = sleepCalculationHandler.getFrequencyFromListByHours(1f, false, actualtime, sleepList.toList())
+        result = sleepCalculationHandler.getFrequencyFromListByHours(2f, false, actualtime, sleepList.toList())
         assertThat(result, CoreMatchers.equalTo(SleepDataFrequency.TEN))
 
         sleepList.clear()
@@ -108,7 +108,7 @@ class SleepCalculationHandlerTest
             sleepList.add(data)
         }
 
-        result = sleepCalculationHandler.getFrequencyFromListByHours(1f, false, actualtime, sleepList.toList())
+        result = sleepCalculationHandler.getFrequencyFromListByHours(2f, false, actualtime, sleepList.toList())
         assertThat(result, CoreMatchers.equalTo(SleepDataFrequency.FIVE))
 
         sleepList.clear()
@@ -120,7 +120,7 @@ class SleepCalculationHandlerTest
             sleepList.add(data)
         }
 
-        result = sleepCalculationHandler.getFrequencyFromListByHours(1f, true, actualtime, sleepList.toList())
+        result = sleepCalculationHandler.getFrequencyFromListByHours(2f, true, actualtime, sleepList.toList())
         assertThat(result, CoreMatchers.equalTo(SleepDataFrequency.FIVE))
 
     }
@@ -152,7 +152,7 @@ class SleepCalculationHandlerTest
 
         var (normedSleepApiData1, frequency1) = sleepCalculationHandler.createTimeNormedData(1f, false, actualtime, sleepList)
 
-        assertThat(normedSleepApiData1.count(), CoreMatchers.equalTo(4))
+        assertThat(normedSleepApiData1.count(), CoreMatchers.equalTo(2))
         assertThat(frequency1, CoreMatchers.equalTo(SleepDataFrequency.THIRTY))
 
         sleepList.clear()
@@ -166,7 +166,7 @@ class SleepCalculationHandlerTest
 
         var (normedSleepApiData2, frequency2) = sleepCalculationHandler.createTimeNormedData(1f, false, actualtime, sleepList)
 
-        assertThat(normedSleepApiData2.count(), CoreMatchers.equalTo(12))
+        assertThat(normedSleepApiData2.count(), CoreMatchers.equalTo(6))
         assertThat(frequency2, CoreMatchers.equalTo(SleepDataFrequency.TEN))
 
         sleepList.clear()
@@ -180,7 +180,7 @@ class SleepCalculationHandlerTest
 
         var (normedSleepApiData3, frequency3) = sleepCalculationHandler.createTimeNormedData(1f, false, actualtime, sleepList)
 
-        assertThat(normedSleepApiData3.count(), CoreMatchers.equalTo(24))
+        assertThat(normedSleepApiData3.count(), CoreMatchers.equalTo(12))
         assertThat(frequency3, CoreMatchers.equalTo(SleepDataFrequency.FIVE))
 
         sleepList.clear()
@@ -194,7 +194,7 @@ class SleepCalculationHandlerTest
 
         var (normedSleepApiData4, frequency4) = sleepCalculationHandler.createTimeNormedData(1f, false, actualtime, sleepList)
 
-        assertThat(normedSleepApiData4.count(), CoreMatchers.equalTo(24))
+        assertThat(normedSleepApiData4.count(), CoreMatchers.equalTo(12))
         assertThat(frequency4, CoreMatchers.equalTo(SleepDataFrequency.FIVE))
 
 
@@ -329,17 +329,19 @@ class SleepCalculationHandlerTest
 
         var calPosition = classifier.defineTableBed(sleepList5)
 
-        assertThat(calPosition, CoreMatchers.equalTo(MobilePosition.UNIDENTIFIED))
+        var pos = MobilePosition.getCount(sleepStoreRepository.sleepParameterFlow.first().standardMobilePositionOverLastWeek)
+
+        assertThat(calPosition, CoreMatchers.equalTo(pos))
 
         // add 5 freuquency data with table
-        for(i in 0..20 step 5) // 2 hours / 20  < 10
+        for(i in 0..25 step 5) // 2 hours / 20  < 10
         {
             val data = SleepApiRawDataEntity(actualTimeSeconds-(i*5*60), 96,1,1,sleepState = SleepState.SLEEPING)
             sleepList5.add(data)
         }
 
         // add 5 freuquency data with table
-        for(i in 0..5 step 30) // 2 hours / 20  < 10
+        for(i in 0..180 step 30) // 2 hours / 20  < 10
         {
             val data = SleepApiRawDataEntity(actualTimeSeconds-(i*30*60), 96,1,1,sleepState = SleepState.SLEEPING)
             sleepList30.add(data)
@@ -354,14 +356,14 @@ class SleepCalculationHandlerTest
         sleepList5.clear()
 
         // add 5 freuquency data with bed
-        for(i in 0..20 step 5) // 2 hours / 20  < 10
+        for(i in 0..25 step 5) // 2 hours / 20  < 10
         {
             val data = SleepApiRawDataEntity(actualTimeSeconds-(i*5*60), 85,2,1,sleepState = SleepState.SLEEPING)
             sleepList5.add(data)
         }
 
         // add 5 freuquency data with bed
-        for(i in 0..5 step 30) // 2 hours / 20  < 10
+        for(i in 0..180 step 30) // 2 hours / 20  < 10
         {
             val data = SleepApiRawDataEntity(actualTimeSeconds-(i*30*60), 85,3,1,sleepState = SleepState.SLEEPING)
             sleepList30.add(data)
@@ -870,7 +872,7 @@ class SleepCalculationHandlerTest
 
     /**
      * We test the complete sleep calculation with a few sleeps and check if the sleep amount and the alarm is setup right
-     */
+
     @Test
     fun sleepCalculationTestTest() {
 
@@ -1039,4 +1041,5 @@ class SleepCalculationHandlerTest
         var g = realCounts
 
     }
+    */
 }

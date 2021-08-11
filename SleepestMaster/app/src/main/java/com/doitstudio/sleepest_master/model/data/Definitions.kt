@@ -300,18 +300,6 @@ enum class SleepDataFrequency{
                 else -> 1000 // Avoiding dividing by zero
             }
         }
-
-        /**
-         * Takes an [SleepDataFrequency] and will return the associated [Int] value for the sleep calculation input patterns for the machine learning model
-         */
-        fun getCount(type:SleepDataFrequency) : Int {
-            return when (type) {
-                SleepDataFrequency.FIVE -> 24
-                SleepDataFrequency.TEN -> 12
-                SleepDataFrequency.THIRTY -> 4
-                else -> 1000 // Avoiding dividing by zero
-            }
-        }
     }
 }
 
