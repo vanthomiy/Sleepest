@@ -349,3 +349,32 @@ enum class Websites {
 }
 
 
+/**
+ * Helper for different info types
+ */
+enum class Info {
+    SLEEP,
+    HISTORY,
+    SETTINGS;
+    companion object{
+
+        fun getById(id:Int) : Info{
+            return when(id){
+                0 -> SLEEP
+                1 -> HISTORY
+                else -> SETTINGS
+            }
+        }
+
+    }
+}
+
+/**
+ * Helper for different info types style
+ */
+enum class InfoEntityStlye {
+    TYPE1,
+    TYPE2,
+    TYPE3,
+    TYPE4
+}

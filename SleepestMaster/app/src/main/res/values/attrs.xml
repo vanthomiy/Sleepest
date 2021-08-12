@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="InfoFragment_MembersInjector">
+        <attr name="infoId" format="integer" />
+        <attr name="info" format="enum">
+            <enum name="SLEEP" value="0"/>
+            <enum name="HISTORY" value="1"/>
+            <enum name="SETTINGS" value="2"/>
+        </attr>
+    </declare-styleable>
+</resources>

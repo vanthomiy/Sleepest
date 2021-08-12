@@ -142,8 +142,17 @@
                     android:id="@+id/linearAnimationlayout"
                     >
 
+                    <fragment
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
+                        android:id="@+id/fragment"
+                        android:layout_gravity="center_horizontal"
+                        app:infoId = "1"
+                        app:info = "SETTINGS"
+                        />
 
-                    <FrameLayout
+                    <!--FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="20dp"
@@ -161,7 +170,7 @@
                             android:textColor="@color/primary_text_color"
                             android:text="@string/sleep_general_info"/>
 
-                    </FrameLayout>
+                    </FrameLayout!-->
 
                     <LinearLayout
                         android:layout_width="match_parent"
