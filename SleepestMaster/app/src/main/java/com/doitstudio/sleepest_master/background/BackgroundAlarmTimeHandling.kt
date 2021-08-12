@@ -140,7 +140,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
             if (isScreenOn) {
                 AlarmClockAudio.getInstance().stopAlarm(false)
 
-                //stopForegroundService(true)
+                stopForegroundService(true)
                 Toast.makeText(context, "Alarmclock stopped", Toast.LENGTH_LONG).show()
                 val calendar = Calendar.getInstance()
                 val pref: SharedPreferences = context.getSharedPreferences("AlarmClock", 0)
