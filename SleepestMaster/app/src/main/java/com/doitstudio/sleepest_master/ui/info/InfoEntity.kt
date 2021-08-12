@@ -24,11 +24,37 @@ data class InfoEntity (
 
         private fun historyInfo(id:Int) : List<InfoEntity>{
             return when(id){
-                0 ->  listOf(InfoEntity(
-                    image = R.drawable.history_icon,
-                    lottie = R.raw.settings,
+                0 ->  listOf(
+                    InfoEntity(
+                    image = R.drawable.sleep_mood_bad,
+                    lottie = null,
+                    textHeader = null,
+                    textDescription = "There is some information to pass here"
+                    ),
+                    InfoEntity(
+                        image = null,
+                        lottie = R.raw.empty,
+                        textHeader = null,
+                        textDescription = "Nothing much to see here haha"
+                    ),
+                    InfoEntity(
+                        image = null,
+                        lottie = null,
+                        textHeader = null,
+                        textDescription = "Nothing much to see here haha"
+                    ),
+                    InfoEntity(
+                        image = null,
+                        lottie = null,
+                        textHeader = "New Header",
+                        textDescription = "Nothing much to see here haha"
+                    )
+                )
+                1 ->  listOf(InfoEntity(
+                    image = R.drawable.empty_alarms,
+                    lottie = null,
                     textHeader = "Sleep",
-                    textDescription = ""
+                    textDescription = "Nothing much to see here haha"
                 ))
                 else -> noInfo()
             }

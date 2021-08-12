@@ -2,6 +2,7 @@ package com.doitstudio.sleepest_master.ui.info
 
 import android.content.Context
 import android.os.Bundle
+import android.util.LayoutDirection
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +25,15 @@ class InfoEntityFragment(val applicationContext: Context, private val infoEntity
         binding = FragmentInfoEntityBinding.inflate(inflater, container, false)
         binding.infoViewModel = viewModel
         viewModel.transitionsContainer = (binding.rLEntityLayer)
+
+        if(style == InfoEntityStlye.TYPE1 || style == InfoEntityStlye.TYPE3){
+            viewModel.layoutFormat.set(
+                LayoutDirection.LTR)
+        }
+        else{
+            viewModel.layoutFormat.set(
+                LayoutDirection.RTL)
+        }
 
         if (infoEntity.textHeader != null) {
             viewModel.headerVisible.set(View.VISIBLE)

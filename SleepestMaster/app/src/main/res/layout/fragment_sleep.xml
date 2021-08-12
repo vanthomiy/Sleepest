@@ -142,15 +142,21 @@
                     android:id="@+id/linearAnimationlayout"
                     >
 
-                    <fragment
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
-                        android:id="@+id/fragment"
-                        android:layout_gravity="center_horizontal"
-                        app:infoId = "1"
-                        app:info = "SETTINGS"
-                        />
+                        android:layout_height="wrap_content"
+                        android:visibility="@{sleepViewModel.actualExpand == 7 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}">
+                        <fragment
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
+                            android:id="@+id/fragment"
+                            android:layout_gravity="center_horizontal"
+                            app:infoId = "0"
+                            app:info = "HISTORY"
+                            />
+                    </FrameLayout>
+
 
                     <!--FrameLayout
                         android:layout_width="match_parent"

@@ -37,31 +37,8 @@ class InfoFragment : Fragment() {
         super.onInflate(context, attrs, savedInstanceState)
         if (context != null && attrs != null && infoId == null && info == null) {
             val styledAttributes = context.obtainStyledAttributes(attrs, R.styleable.InfoFragment_MembersInjector)
-            val infoId = styledAttributes.getInt(R.styleable.InfoFragment_MembersInjector_infoId, 0)
-            val info = styledAttributes.getInt(R.styleable.InfoFragment_MembersInjector_info, 0)
-
-            val infoEntity = InfoEntity.getInfo(Info.getById(info), infoId)
-
-            var actualStlye = InfoEntityStlye.TYPE1
-
-            infoEntity.forEach{ info ->
-                val transactions = childFragmentManager.beginTransaction()
-                //transactions.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
-
-                val infoFragment = InfoEntityFragment(context, info, actualStlye)
-                transactions?.add(binding.lLInfo.id, infoFragment)?.commit()
-
-                actualStlye = if(info.textHeader == null)
-                {
-                    if (actualStlye == InfoEntityStlye.TYPE1) InfoEntityStlye.TYPE2 else
-                        InfoEntityStlye.TYPE1
-                }
-                else{
-                    if (actualStlye == InfoEntityStlye.TYPE3) InfoEntityStlye.TYPE4 else
-                        InfoEntityStlye.TYPE3
-                }
-            }
-
+            infoId = styledAttributes.getInt(R.styleable.InfoFragment_MembersInjector_infoId, 0)
+            info = styledAttributes.getInt(R.styleable.InfoFragment_MembersInjector_info, 0)
             styledAttributes.recycle()
         }
     }
@@ -78,6 +55,35 @@ class InfoFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val infoEntity = infoId?.let { info?.let { Info.getById(it) }?.let { it1 ->
+            InfoEntity.getInfo(
+                it1, it)
+        } }
+
+        var actualStlye = InfoEntityStlye.TYPE1
+
+        infoEntity?.forEach{ info ->
+            val transactions = childFragmentManager.beginTransaction()
+            //transactions.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+
+            val infoFragment = InfoEntityFragment(view?.context, info, actualStlye)
+            transactions?.add(binding.lLInfo.id, infoFragment)?.commit()
+
+            actualStlye = if(info.textHeader == null)
+            {
+                if (actualStlye == InfoEntityStlye.TYPE1) InfoEntityStlye.TYPE2 else
+                    InfoEntityStlye.TYPE1
+            }
+            else{
+                if (actualStlye == InfoEntityStlye.TYPE3) InfoEntityStlye.TYPE4 else
+                    InfoEntityStlye.TYPE3
+            }
+        }
+
+    }
 
 }
 
