@@ -148,7 +148,15 @@ class SleepClassifier constructor(private val context: Context) {
 
             actualThreshold.absBetweenThresholds(avgStartThreshold)
 
-            isSleepStarted = actualParams.sleepStartBorder.checkIfDifferenceThreshold(true, 3, actualThreshold)
+            isSleepStarted = actualParams.sleepStartBorder.checkIfDifferenceThreshold(true, 3, actualThreshold) &&
+                    actualParams.sleepStartThreshold.checkIfThreshold(true, 3,
+                        ThresholdParams(
+                            confidence = sortedSleepListBefore.last().confidence.toFloat(),
+                            light = sortedSleepListBefore.last().light.toFloat(),
+                            motion = sortedSleepListBefore.last().motion.toFloat()
+                    ))
+
+
         }
 
         // Is Sleeping detection cleanup

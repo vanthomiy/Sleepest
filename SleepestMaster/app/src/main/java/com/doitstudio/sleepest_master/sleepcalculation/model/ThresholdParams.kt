@@ -98,19 +98,19 @@ data class ThresholdParams(
                         )
                 }
 
-                fun createSleepEndBorder(mobilePosition: MobilePosition) : ThresholdParams{
+                fun createSleepStartThreshold(mobilePosition: MobilePosition) : ThresholdParams{
                         return ThresholdParams(
                                 confidence = when(mobilePosition){
-                                        MobilePosition.INBED -> 20f
-                                        else -> 50f
+                                        MobilePosition.INBED -> 35f
+                                        else -> 45f
                                 },
                                 motion = when(mobilePosition){
                                         MobilePosition.INBED -> 2f
-                                        else -> 3f
+                                        else -> 2f
                                 },
                                 light = when(mobilePosition){
-                                        MobilePosition.INBED -> 0f
-                                        else -> 0f
+                                        MobilePosition.INBED -> 6f
+                                        else -> 6f
                                 }
                         )
                 }
@@ -166,11 +166,11 @@ data class ThresholdParams(
                         )
                 }
 
-                fun createSleepEndBorder(lightConditions: LightConditions) : ThresholdParams{
+                fun createSleepStartThreshold(lightConditions: LightConditions) : ThresholdParams{
                         return ThresholdParams(
                                 confidence = when(lightConditions){
                                         LightConditions.DARK -> 1f
-                                        else -> 1.1f
+                                        else -> 1f
                                 },
                                 motion = when(lightConditions){
                                         LightConditions.DARK -> 1f
@@ -178,7 +178,7 @@ data class ThresholdParams(
                                 },
                                 light = when(lightConditions){
                                         LightConditions.DARK -> 1f
-                                        else -> 0.9f
+                                        else -> 1f
                                 }
                         )
                 }
@@ -243,29 +243,11 @@ data class ThresholdParams(
                         )
                 }
 
-                fun createSleepEndBorder(mobileUseFrequency: MobileUseFrequency) : ThresholdParams{
+                fun createSleepStartThreshold(mobileUseFrequency: MobileUseFrequency) : ThresholdParams{
                         return ThresholdParams(
-                                confidence = when(mobileUseFrequency){
-                                        MobileUseFrequency.VERYLESS -> 0.6f
-                                        MobileUseFrequency.LESS -> 0.7f
-                                        MobileUseFrequency.OFTEN -> 0.9f
-                                        MobileUseFrequency.VERYOFTEN -> 1f
-                                        else -> 1f
-                                },
-                                motion = when(mobileUseFrequency){
-                                        MobileUseFrequency.VERYLESS -> 0.6f
-                                        MobileUseFrequency.LESS -> 0.7f
-                                        MobileUseFrequency.OFTEN -> 0.9f
-                                        MobileUseFrequency.VERYOFTEN -> 1f
-                                        else -> 1f
-                                },
-                                light = when(mobileUseFrequency){
-                                        MobileUseFrequency.VERYLESS -> 1f
-                                        MobileUseFrequency.LESS -> 1f
-                                        MobileUseFrequency.OFTEN -> 1f
-                                        MobileUseFrequency.VERYOFTEN -> 1f
-                                        else -> 1f
-                                }
+                                confidence = 1f,
+                                motion = 1f,
+                                light = 1f
                         )
                 }
 
