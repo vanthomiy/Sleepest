@@ -145,39 +145,18 @@
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
                         android:visibility="@{sleepViewModel.actualExpand == 7 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}">
                         <fragment
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
-                            android:id="@+id/fragment"
                             android:layout_gravity="center_horizontal"
+                            android:tag="7"
                             app:infoId = "0"
                             app:info = "HISTORY"
-                            app:direction = "PICTURE_RIGHT"
                             />
                     </FrameLayout>
-
-
-                    <!--FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="20dp"
-                        android:layout_marginHorizontal="10dp"
-                        android:visibility="@{sleepViewModel.actualExpand == 7 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}"
-                        android:background="@drawable/bgroundedchoosen"
-                        >
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:layout_margin="10dp"
-                            android:textColor="@color/primary_text_color"
-                            android:text="@string/sleep_general_info"/>
-
-                    </FrameLayout!-->
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -323,6 +302,7 @@
                         </ToggleButton>
 
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -364,22 +344,17 @@
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginVertical="10dp"
-                            android:visibility="@{sleepViewModel.actualExpand == 1 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}"
-                            android:background="@drawable/bgroundedchoosen"
-                            >
-
-                            <TextView
-                                android:layout_width="wrap_content"
+                            android:visibility="@{sleepViewModel.actualExpand == 1 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}">
+                            <fragment
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:gravity="center"
-                                android:layout_margin="10dp"
-                                android:textColor="@color/primary_text_color"
-                                android:text="@string/sleep_sleepduration_info"/>
-
+                                android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
+                                android:layout_gravity="center_horizontal"
+                                android:tag="1"
+                                app:infoId = "0"
+                                app:info = "HISTORY"
+                                />
                         </FrameLayout>
-
 
                         <FrameLayout
                             android:layout_width="match_parent"

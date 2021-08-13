@@ -3,13 +3,15 @@ package com.doitstudio.sleepest_master.ui.info
 import android.graphics.drawable.Drawable
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.model.data.Info
+import com.doitstudio.sleepest_master.model.data.InfoEntityStlye
 
 data class InfoEntity (
     val image : Int?,
     val lottie : Int?,
     val textHeader : String?,
-    val textDescription : String?
-    )
+    val textDescription : String?,
+    val infoEntityStlye : InfoEntityStlye = InfoEntityStlye.RANDOM
+)
 {
     companion object{
 
@@ -29,19 +31,22 @@ data class InfoEntity (
                     image = R.drawable.sleep_mood_bad,
                     lottie = null,
                     textHeader = null,
-                    textDescription = "There is some information to pass here"
+                    textDescription = "There is some information to pass here",
+                        infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
                     ),
                     InfoEntity(
                         image = null,
                         lottie = R.raw.empty,
                         textHeader = null,
-                        textDescription = "Nothing much to see here haha"
+                        textDescription = "Nothing much to see here haha",
+                        infoEntityStlye = InfoEntityStlye.PICTURE_TOP
                     ),
                     InfoEntity(
                         image = null,
                         lottie = null,
                         textHeader = null,
-                        textDescription = "Nothing much to see here haha"
+                        textDescription = "Nothing much to see here haha",
+                        infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
                     ),
                     InfoEntity(
                         image = null,

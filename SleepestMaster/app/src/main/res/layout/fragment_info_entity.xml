@@ -14,7 +14,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="15dp"
+        android:layout_marginHorizontal="0dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/transparentrounded"
         android:orientation="vertical">
@@ -35,25 +35,27 @@
             android:id="@+id/rL_EntityLayer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
             android:layoutDirection="@{infoViewModel.layoutFormat}"
-            >
+            android:orientation="@{infoViewModel.orientation}">
+
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="200dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_margin="10dp"
-                android:layout_height="match_parent"
+                android:layout_gravity="center"
                 android:visibility="@{infoViewModel.imageVisible}"
                 android:src="@drawable/ic_baseline_wb_sunny_24"
                 android:layout_weight="1"
-                />
+                    />
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/lottieAnim"
-                android:layout_width="200dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_margin="10dp"
-                android:layout_height="match_parent"
+                android:layout_gravity="center"
                 android:visibility="@{infoViewModel.lottieVisible}"
                 android:layout_weight="1"
                 app:lottie_autoPlay="true"

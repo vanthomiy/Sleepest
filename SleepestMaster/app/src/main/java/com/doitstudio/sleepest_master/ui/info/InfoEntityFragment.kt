@@ -6,6 +6,7 @@ import android.util.LayoutDirection
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.databinding.FragmentInfoEntityBinding
@@ -24,15 +25,23 @@ class InfoEntityFragment(val applicationContext: Context, private val infoEntity
 
         binding = FragmentInfoEntityBinding.inflate(inflater, container, false)
         binding.infoViewModel = viewModel
-        viewModel.transitionsContainer = (binding.rLEntityLayer)
 
-        if(style == InfoEntityStlye.PICTURE_LEFT){
+        if(style == InfoEntityStlye.PICTURE_LEFT || style == InfoEntityStlye.PICTURE_TOP){
             viewModel.layoutFormat.set(
                 LayoutDirection.LTR)
         }
-        else if(style == InfoEntityStlye.PICTURE_RIGHT) {
+        else if(style == InfoEntityStlye.PICTURE_RIGHT || style == InfoEntityStlye.PICTURE_BOTTOM) {
             viewModel.layoutFormat.set(
                 LayoutDirection.RTL)
+        }
+
+        if(style == InfoEntityStlye.PICTURE_LEFT || style == InfoEntityStlye.PICTURE_RIGHT){
+            viewModel.orientation.set(
+                LinearLayout.HORIZONTAL)
+        }
+        else if(style == InfoEntityStlye.PICTURE_BOTTOM || style == InfoEntityStlye.PICTURE_TOP) {
+            viewModel.orientation.set(
+                LinearLayout.VERTICAL)
         }
 
         if (infoEntity.textHeader != null) {

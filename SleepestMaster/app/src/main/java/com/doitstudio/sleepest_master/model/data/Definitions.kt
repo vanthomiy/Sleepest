@@ -376,7 +376,8 @@ enum class InfoEntityStlye {
     PICTURE_LEFT,
     PICTURE_RIGHT,
     PICTURE_TOP,
-    PICTURE_BOTTOM;
+    PICTURE_BOTTOM,
+    RANDOM;
 
     companion object{
 
