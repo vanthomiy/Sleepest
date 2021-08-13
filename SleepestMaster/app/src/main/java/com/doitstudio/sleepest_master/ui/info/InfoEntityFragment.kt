@@ -26,11 +26,11 @@ class InfoEntityFragment(val applicationContext: Context, private val infoEntity
         binding.infoViewModel = viewModel
         viewModel.transitionsContainer = (binding.rLEntityLayer)
 
-        if(style == InfoEntityStlye.TYPE1 || style == InfoEntityStlye.TYPE3){
+        if(style == InfoEntityStlye.PICTURE_LEFT){
             viewModel.layoutFormat.set(
                 LayoutDirection.LTR)
         }
-        else{
+        else if(style == InfoEntityStlye.PICTURE_RIGHT) {
             viewModel.layoutFormat.set(
                 LayoutDirection.RTL)
         }

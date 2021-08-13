@@ -21,6 +21,7 @@ class InfoFragment : Fragment() {
     // your fragment parameter, a string
     private var infoId: Int? = null
     private var info: Int? = null
+    private var direction: Int? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -31,6 +32,10 @@ class InfoFragment : Fragment() {
         if (info == null) {
             info = arguments?.getInt("info")
         }
+
+        if (direction == null) {
+            direction = arguments?.getInt("direction")
+        }
     }
 
     override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
@@ -39,6 +44,7 @@ class InfoFragment : Fragment() {
             val styledAttributes = context.obtainStyledAttributes(attrs, R.styleable.InfoFragment_MembersInjector)
             infoId = styledAttributes.getInt(R.styleable.InfoFragment_MembersInjector_infoId, 0)
             info = styledAttributes.getInt(R.styleable.InfoFragment_MembersInjector_info, 0)
+            direction = styledAttributes.getInt(R.styleable.InfoFragment_MembersInjector_direction, 0)
             styledAttributes.recycle()
         }
     }
@@ -63,23 +69,25 @@ class InfoFragment : Fragment() {
                 it1, it)
         } }
 
-        var actualStlye = InfoEntityStlye.TYPE1
+        var actualStlye = direction?.let { InfoEntityStlye.getById(it) }
 
         infoEntity?.forEach{ info ->
             val transactions = childFragmentManager.beginTransaction()
             //transactions.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
 
-            val infoFragment = InfoEntityFragment(view?.context, info, actualStlye)
-            transactions?.add(binding.lLInfo.id, infoFragment)?.commit()
+            val infoFragment = actualStlye?.let { InfoEntityFragment(view?.context, info, it) }
+            if (infoFragment != null) {
+                transactions?.add(binding.lLInfo.id, infoFragment)?.commit()
+            }
 
             actualStlye = if(info.textHeader == null)
             {
-                if (actualStlye == InfoEntityStlye.TYPE1) InfoEntityStlye.TYPE2 else
-                    InfoEntityStlye.TYPE1
+                if (actualStlye == InfoEntityStlye.PICTURE_LEFT) InfoEntityStlye.PICTURE_RIGHT else
+                    InfoEntityStlye.PICTURE_LEFT
             }
             else{
-                if (actualStlye == InfoEntityStlye.TYPE3) InfoEntityStlye.TYPE4 else
-                    InfoEntityStlye.TYPE3
+                if (actualStlye == InfoEntityStlye.PICTURE_BOTTOM) InfoEntityStlye.PICTURE_TOP else
+                    InfoEntityStlye.PICTURE_BOTTOM
             }
         }
 

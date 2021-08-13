@@ -154,6 +154,7 @@
                             android:layout_gravity="center_horizontal"
                             app:infoId = "0"
                             app:info = "HISTORY"
+                            app:direction = "PICTURE_RIGHT"
                             />
                     </FrameLayout>
 

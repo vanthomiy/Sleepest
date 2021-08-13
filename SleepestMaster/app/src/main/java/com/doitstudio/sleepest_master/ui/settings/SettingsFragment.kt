@@ -367,17 +367,19 @@ class SettingsFragment : Fragment() {
                             session.sleepTimes.sleepTimeEnd
                         ).first()
 
-                        val userExporSession = UserSleepExportData(
-                            session.id,
-                            session.mobilePosition,
-                            session.lightConditions,
-                            session.sleepTimes,
-                            session.userSleepRating,
-                            session.userCalculationRating,
-                            sessionSleepData
-                        )
+                        val userExporSession = sessionSleepData?.let {
+                            UserSleepExportData(
+                                session.id,
+                                session.mobilePosition,
+                                session.lightConditions,
+                                session.sleepTimes,
+                                session.userSleepRating,
+                                session.userCalculationRating,
+                                it
+                            )
+                        }
 
-                        userExporSessions.add(userExporSession)
+                        userExporSession?.let { userExporSessions.add(it) }
                     }
 
                     val exportFile = gson.toJson(userExporSessions)

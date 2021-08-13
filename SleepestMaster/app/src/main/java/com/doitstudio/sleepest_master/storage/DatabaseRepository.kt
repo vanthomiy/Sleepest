@@ -64,13 +64,13 @@ class DatabaseRepository(
 
     // Methods for SleepApiRawDataDao
     // Observed Flow will notify the observer when the data has changed.
-    val allSleepApiRawData: Flow<List<SleepApiRawDataEntity>> =
+    val allSleepApiRawData: Flow<List<SleepApiRawDataEntity>?> =
         sleepApiRawDataDao.getAll()
 
     /**
      * [time] the duration in seconds eg. 86200 would be from 24hours ago to now the data
      */
-    suspend fun getSleepApiRawDataSince(time:Int): Flow<List<SleepApiRawDataEntity>>
+    suspend fun getSleepApiRawDataSince(time:Int): Flow<List<SleepApiRawDataEntity>?>
     {
         val now = LocalDateTime.now(ZoneOffset.systemDefault())
         val seconds = now.atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
@@ -82,7 +82,7 @@ class DatabaseRepository(
      * so we always getting the data from 15:00 the day or day before until the specific time
      * later we have to combine it with the actual sleeptimes
      */
-    fun getSleepApiRawDataFromDateLive(actualTime:LocalDateTime): Flow<List<SleepApiRawDataEntity>>
+    fun getSleepApiRawDataFromDateLive(actualTime:LocalDateTime): Flow<List<SleepApiRawDataEntity>?>
     {
         val startTime = if (actualTime.hour < 15)
             actualTime.toLocalDate().minusDays(1).atTime(15,0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
@@ -98,7 +98,7 @@ class DatabaseRepository(
      * e.g. the dateTime 20.05.2021 at 20:00 returns all data in between 20.05.2021 15:00 to 21.05.2021 at 15:00
      * later we have to combine it with the actual sleeptimes
      */
-    fun getSleepApiRawDataFromDate(actualTime:LocalDateTime): Flow<List<SleepApiRawDataEntity>>
+    fun getSleepApiRawDataFromDate(actualTime:LocalDateTime): Flow<List<SleepApiRawDataEntity>?>
     {
         val startTime = if (actualTime.hour < 15)
             actualTime.toLocalDate().minusDays(1).atTime(15,0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
@@ -111,7 +111,7 @@ class DatabaseRepository(
         return sleepApiRawDataDao.getBetween(startTime,endTime)
     }
 
-    fun getSleepApiRawDataBetweenTimestamps(startTime: Int, endTime: Int): Flow<List<SleepApiRawDataEntity>>
+    fun getSleepApiRawDataBetweenTimestamps(startTime: Int, endTime: Int): Flow<List<SleepApiRawDataEntity>?>
     {
         return sleepApiRawDataDao.getBetween(startTime, endTime)
     }

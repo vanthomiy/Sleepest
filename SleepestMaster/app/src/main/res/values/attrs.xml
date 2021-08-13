@@ -8,5 +8,11 @@
             <enum name="HISTORY" value="1"/>
             <enum name="SETTINGS" value="2"/>
         </attr>
+        <attr name="direction" format="enum">
+            <enum name="PICTURE_LEFT" value="0"/>
+            <enum name="PICTURE_RIGHT" value="1"/>
+            <enum name="PICTURE_TOP" value="2"/>
+            <enum name="PICTURE_BOTTOM" value="3"/>
+        </attr>
     </declare-styleable>
 </resources>
