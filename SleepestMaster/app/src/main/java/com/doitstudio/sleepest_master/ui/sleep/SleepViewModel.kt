@@ -219,7 +219,6 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         scope.launch {
             dataStoreRepository.updateStandardMobilePosition(position)
             sleepCalculateFactorCalculation()
-
         }
 
     }
@@ -280,10 +279,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
             ) }
 
             sleepCalculateFactorCalculation()
-
         }
-
-
     }
 
     val sleepScoreValue = ObservableField("50")
@@ -385,7 +381,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
             mobilePosition.set(sleepParams.standardMobilePosition)
 
             lightConditionSelections.addAll(arrayListOf<String>(getStringXml(R.string.sleep_lightcondidition_dark, getApplication()), getStringXml(R.string.sleep_lightcondidition_light, getApplication()), getStringXml(R.string.sleep_lightcondidition_auto, getApplication())))
-            mobilePosition.set(sleepParams.standardLightCondition)
+            lightCondition.set(sleepParams.standardLightCondition)
 
             activityTracking.set(sleepParams.userActivityTracking)
             includeActivityInCalculation.set(sleepParams.implementUserActivityInSleepTime)
