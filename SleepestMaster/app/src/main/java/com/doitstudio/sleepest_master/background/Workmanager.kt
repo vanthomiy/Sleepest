@@ -46,21 +46,28 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
 
         val sleepCalculationHandler : SleepCalculationHandler = getHandler(applicationContext)
 
+
         scope.launch {
-            /*val sleepApiRawDataEntity =
-                dataBaseRepository.getSleepApiRawDataFromDateLive(LocalDateTime.now()).first()
-                    .sortedByDescending { x -> x.timestampSeconds }
-            val lastTimestampInSeconds = sleepApiRawDataEntity.first().timestampSeconds
-            val actualTimestampSeconds = System.currentTimeMillis()/1000
-            Toast.makeText(applicationContext, (actualTimestampSeconds - lastTimestampInSeconds).toString(), Toast.LENGTH_LONG).show()
-            Toast.makeText(applicationContext, ForegroundService.getForegroundServiceTime().toString(), Toast.LENGTH_LONG).show()
+            if (dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
+                val sleepApiRawDataEntity =
+                    dataBaseRepository.getSleepApiRawDataFromDateLive(LocalDateTime.now()).first()
+                        ?.sortedByDescending { x -> x.timestampSeconds }
 
-            if (dataStoreRepository.backgroundServiceFlow.first().isForegroundActive && ForegroundService.getForegroundServiceTime() >= 1200 &&
-                ((actualTimestampSeconds - lastTimestampInSeconds) > 600) && dataStoreRepository.isInSleepTime(null)) {
-                val notificationsUtil = NotificationUtil(applicationContext, NotificationUsage.NOTIFICATION_NO_API_DATA,null)
-                notificationsUtil.chooseNotification()
-            }*/
+                if (sleepApiRawDataEntity != null) {
+                    val lastTimestampInSeconds = sleepApiRawDataEntity.first().timestampSeconds
+                    val actualTimestampSeconds = System.currentTimeMillis()/1000
+                    Toast.makeText(applicationContext, (actualTimestampSeconds - lastTimestampInSeconds).toString(), Toast.LENGTH_LONG).show()
+                    Toast.makeText(applicationContext, ForegroundService.getForegroundServiceTime().toString(), Toast.LENGTH_LONG).show()
 
+                    if (ForegroundService.getForegroundServiceTime() >= 1200 && ((actualTimestampSeconds - lastTimestampInSeconds) > 600) && dataStoreRepository.isInSleepTime(null)) {
+                        val notificationsUtil = NotificationUtil(applicationContext, NotificationUsage.NOTIFICATION_NO_API_DATA,null)
+                        notificationsUtil.chooseNotification()
+                    }
+                } else {
+                    val notificationsUtil = NotificationUtil(applicationContext, NotificationUsage.NOTIFICATION_NO_API_DATA,null)
+                    notificationsUtil.chooseNotification()
+                }
+            }
         }
 
         val calendar: Calendar = Calendar.getInstance()
