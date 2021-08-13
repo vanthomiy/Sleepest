@@ -349,3 +349,45 @@ enum class Websites {
 }
 
 
+/**
+ * Helper for different info types
+ */
+enum class Info {
+    SLEEP,
+    HISTORY,
+    SETTINGS;
+    companion object{
+
+        fun getById(id:Int) : Info{
+            return when(id){
+                0 -> SLEEP
+                1 -> HISTORY
+                else -> SETTINGS
+            }
+        }
+
+    }
+}
+
+/**
+ * Helper for different info types style
+ */
+enum class InfoEntityStlye {
+    PICTURE_LEFT,
+    PICTURE_RIGHT,
+    PICTURE_TOP,
+    PICTURE_BOTTOM;
+
+    companion object{
+
+        fun getById(id:Int) : InfoEntityStlye{
+            return when(id){
+                0 -> PICTURE_LEFT
+                1 -> PICTURE_RIGHT
+                2 -> PICTURE_TOP
+                else -> PICTURE_BOTTOM
+            }
+        }
+
+    }
+}

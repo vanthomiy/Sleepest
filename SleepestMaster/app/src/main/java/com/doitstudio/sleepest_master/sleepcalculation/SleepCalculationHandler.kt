@@ -220,13 +220,13 @@ class SleepCalculationHandler(val context: Context) {
      * Saves the state in the [SleepApiRawDataEntity] and in the [LiveUserSleepActivityStatus]
      * [time] the actual time in seconds
      */
-    suspend fun checkIsUserSleeping(localTime: LocalDateTime? = null){
+    suspend fun checkIsUserSleeping(localTime: LocalDateTime? = null, finalCalc: Boolean = false){
 
             // get the actual sleepApiDataList
             val time = localTime ?: LocalDateTime.now()
             val sleepApiRawDataEntity =
                 dataBaseRepository.getSleepApiRawDataFromDateLive(time).first()
-                    .sortedBy { x -> x.timestampSeconds }
+                    ?.sortedBy { x -> x.timestampSeconds }
 
             if (sleepApiRawDataEntity == null || sleepApiRawDataEntity.count() == 0) {
                 // do something!
@@ -333,6 +333,14 @@ class SleepCalculationHandler(val context: Context) {
                         data.sleepState
                     )
                 }
+
+
+                if(finalCalc && data.sleepState == SleepState.NONE){
+                    dataBaseRepository.updateSleepApiRawDataSleepState(
+                        data.timestampSeconds,
+                        SleepState.AWAKE
+                    )
+                }
             }
 
             // update live user sleep activity
@@ -359,7 +367,7 @@ class SleepCalculationHandler(val context: Context) {
             val time = localTime ?: LocalDateTime.now()
             val sleepApiRawDataEntity =
                 dataBaseRepository.getSleepApiRawDataFromDate(time).first()
-                    .sortedBy { x -> x.timestampSeconds }
+                    ?.sortedBy { x -> x.timestampSeconds }
 
             if (sleepApiRawDataEntity == null || sleepApiRawDataEntity.count() == 0) {
                 // do something!
@@ -554,9 +562,9 @@ class SleepCalculationHandler(val context: Context) {
         val time = localTime ?: LocalDateTime.now()
         val sleepApiRawDataEntity =
             dataBaseRepository.getSleepApiRawDataFromDateLive(time).first()
-                .sortedBy { x -> x.timestampSeconds }
+                ?.sortedBy { x -> x.timestampSeconds }
 
-        if (sleepApiRawDataEntity.count() == 0) {
+        if (sleepApiRawDataEntity == null || sleepApiRawDataEntity.count() == 0) {
             return
         }
 
@@ -604,9 +612,9 @@ class SleepCalculationHandler(val context: Context) {
         val time = localTime ?: LocalDateTime.now()
         val sleepApiRawDataEntity =
             dataBaseRepository.getSleepApiRawDataFromDateLive(time).first()
-                .sortedBy { x -> x.timestampSeconds }
+                ?.sortedBy { x -> x.timestampSeconds }
 
-        if (sleepApiRawDataEntity.count() == 0) {
+        if (sleepApiRawDataEntity == null || sleepApiRawDataEntity.count() == 0) {
             return
         }
 
