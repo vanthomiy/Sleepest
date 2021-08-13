@@ -223,8 +223,8 @@ class SleepCalculationHandlerTest
 
         sleepCalculationHandler.userNotSleeping(actualTime)
 
-        val newSleepList = sleepDbRepository.allSleepApiRawData.first().filter{x -> x.sleepState == SleepState.SLEEPING }
-        assertThat(newSleepList.count(), CoreMatchers.equalTo(0))
+        val newSleepList = sleepDbRepository.allSleepApiRawData.first()?.filter{ x -> x.sleepState == SleepState.SLEEPING }
+        assertThat(newSleepList?.count(), CoreMatchers.equalTo(0))
     }
 
     @Test
@@ -250,8 +250,8 @@ class SleepCalculationHandlerTest
 
         sleepCalculationHandler.userCurrentlyNotSleeping(actualTime)
 
-        val newSleepList = sleepDbRepository.allSleepApiRawData.first().filter{x -> x.sleepState == SleepState.SLEEPING }
-        assertThat(newSleepList.count(), CoreMatchers.equalTo(sleepList.count()-1))
+        val newSleepList = sleepDbRepository.allSleepApiRawData.first()?.filter{ x -> x.sleepState == SleepState.SLEEPING }
+        assertThat(newSleepList?.count(), CoreMatchers.equalTo(sleepList.count()-1))
     }
 
     /*
@@ -752,110 +752,115 @@ class SleepCalculationHandlerTest
 
             val newlist = sleepDbRepository.getSleepApiRawDataFromDate(actualTime).first()
 
-            if(newlist.count() != dataTrue[i].count()){
-                for (j in 1 until (newlist.count() * (1)).toInt()) {
+            if (newlist != null) {
+                if(newlist.count() != dataTrue[i].count()){
+                    if (newlist != null) {
+                        for (j in 1 until (newlist.count() * (1)).toInt()) {
 
-                    val actData = dataTrue[i].firstOrNull{x-> x.timestampSeconds == newlist[j].timestampSeconds}
+                            val actData = dataTrue[i].firstOrNull{x-> x.timestampSeconds == newlist[j].timestampSeconds}
 
-                    try {
-                        val realSleepState = when (actData?.real) {
-                            "sleeping" -> listOf(SleepState.SLEEPING)
-                            "awake" -> listOf(SleepState.AWAKE)
-                            "light" -> listOf(SleepState.LIGHT)
-                            "deep" -> listOf(SleepState.DEEP)
-                            "rem" -> listOf(SleepState.REM)
-                            else -> listOf(SleepState.NONE)
-                        }
-
-                        realSleepState.forEach { state ->
-
-                            when (state) {
-                                SleepState.AWAKE -> awakeState[newlist[j].sleepState] =
-                                    awakeState[newlist[j].sleepState]!! + 1
-                                SleepState.SLEEPING -> sleepingState[newlist[j].sleepState] =
-                                    sleepingState[newlist[j].sleepState]!! + 1
-                                SleepState.LIGHT -> {
-                                    lightState[newlist[j].sleepState] =
-                                        lightState[newlist[j].sleepState]!! + 1
-                                    sleepingState[newlist[j].sleepState] =
-                                        sleepingState[newlist[j].sleepState]!! + 1
+                            try {
+                                val realSleepState = when (actData?.real) {
+                                    "sleeping" -> listOf(SleepState.SLEEPING)
+                                    "awake" -> listOf(SleepState.AWAKE)
+                                    "light" -> listOf(SleepState.LIGHT)
+                                    "deep" -> listOf(SleepState.DEEP)
+                                    "rem" -> listOf(SleepState.REM)
+                                    else -> listOf(SleepState.NONE)
                                 }
-                                SleepState.DEEP -> {
-                                    deepState[newlist[j].sleepState] =
-                                        deepState[newlist[j].sleepState]!! + 1
-                                    sleepingState[newlist[j].sleepState] =
-                                        sleepingState[newlist[j].sleepState]!! + 1
+
+                                realSleepState.forEach { state ->
+
+                                    when (state) {
+                                        SleepState.AWAKE -> awakeState[newlist[j].sleepState] =
+                                            awakeState[newlist[j].sleepState]!! + 1
+                                        SleepState.SLEEPING -> sleepingState[newlist[j].sleepState] =
+                                            sleepingState[newlist[j].sleepState]!! + 1
+                                        SleepState.LIGHT -> {
+                                            lightState[newlist[j].sleepState] =
+                                                lightState[newlist[j].sleepState]!! + 1
+                                            sleepingState[newlist[j].sleepState] =
+                                                sleepingState[newlist[j].sleepState]!! + 1
+                                        }
+                                        SleepState.DEEP -> {
+                                            deepState[newlist[j].sleepState] =
+                                                deepState[newlist[j].sleepState]!! + 1
+                                            sleepingState[newlist[j].sleepState] =
+                                                sleepingState[newlist[j].sleepState]!! + 1
+                                        }
+                                        SleepState.REM -> {
+                                            remState[newlist[j].sleepState] =
+                                                remState[newlist[j].sleepState]!! + 1
+                                            sleepingState[newlist[j].sleepState] =
+                                                sleepingState[newlist[j].sleepState]!! + 1
+                                        }
+                                    }
+
+                                    realCounts[state] = realCounts[state]!! + 1
+                                    predCounts[newlist[j].sleepState] =
+                                        predCounts[newlist[j].sleepState]!! + 1
                                 }
-                                SleepState.REM -> {
-                                    remState[newlist[j].sleepState] =
-                                        remState[newlist[j].sleepState]!! + 1
-                                    sleepingState[newlist[j].sleepState] =
-                                        sleepingState[newlist[j].sleepState]!! + 1
-                                }
+                            } catch (e: Exception) {
+                                val d = 2
+                                val c = d
+                                val ee = e
+                                //you can have multiple catch blocks
+                                //code to handle if this exception is occurred
                             }
-
-                            realCounts[state] = realCounts[state]!! + 1
-                            predCounts[newlist[j].sleepState] =
-                                predCounts[newlist[j].sleepState]!! + 1
                         }
-                    } catch (e: Exception) {
-                        val d = 2
-                        val c = d
-                        val ee = e
-                        //you can have multiple catch blocks
-                        //code to handle if this exception is occurred
                     }
-                }
-            }
-            else {
-                for (j in 1 until (newlist.count() * (1)).toInt()) {
-                    try {
-                        val realSleepState = when (dataTrue[i][j].real) {
-                            "sleeping" -> listOf(SleepState.SLEEPING)
-                            "awake" -> listOf(SleepState.AWAKE)
-                            "light" -> listOf(SleepState.LIGHT)
-                            "deep" -> listOf(SleepState.DEEP)
-                            "rem" -> listOf(SleepState.REM)
-                            else -> listOf(SleepState.NONE)
-                        }
+                } else {
+                    if (newlist != null) {
+                        for (j in 1 until (newlist.count() * (1)).toInt()) {
+                            try {
+                                val realSleepState = when (dataTrue[i][j].real) {
+                                    "sleeping" -> listOf(SleepState.SLEEPING)
+                                    "awake" -> listOf(SleepState.AWAKE)
+                                    "light" -> listOf(SleepState.LIGHT)
+                                    "deep" -> listOf(SleepState.DEEP)
+                                    "rem" -> listOf(SleepState.REM)
+                                    else -> listOf(SleepState.NONE)
+                                }
 
-                        realSleepState.forEach { state ->
+                                realSleepState.forEach { state ->
 
-                            when (state) {
-                                SleepState.AWAKE -> awakeState[newlist[j].sleepState] =
-                                    awakeState[newlist[j].sleepState]!! + 1
-                                SleepState.SLEEPING -> sleepingState[newlist[j].sleepState] =
-                                    sleepingState[newlist[j].sleepState]!! + 1
-                                SleepState.LIGHT -> {
-                                    lightState[newlist[j].sleepState] =
-                                        lightState[newlist[j].sleepState]!! + 1
-                                    sleepingState[newlist[j].sleepState] =
-                                        sleepingState[newlist[j].sleepState]!! + 1
+                                    when (state) {
+                                        SleepState.AWAKE -> awakeState[newlist[j].sleepState] =
+                                            awakeState[newlist[j].sleepState]!! + 1
+                                        SleepState.SLEEPING -> sleepingState[newlist[j].sleepState] =
+                                            sleepingState[newlist[j].sleepState]!! + 1
+                                        SleepState.LIGHT -> {
+                                            lightState[newlist[j].sleepState] =
+                                                lightState[newlist[j].sleepState]!! + 1
+                                            sleepingState[newlist[j].sleepState] =
+                                                sleepingState[newlist[j].sleepState]!! + 1
+                                        }
+                                        SleepState.DEEP -> {
+                                            deepState[newlist[j].sleepState] =
+                                                deepState[newlist[j].sleepState]!! + 1
+                                            sleepingState[newlist[j].sleepState] =
+                                                sleepingState[newlist[j].sleepState]!! + 1
+                                        }
+                                        SleepState.REM -> {
+                                            remState[newlist[j].sleepState] =
+                                                remState[newlist[j].sleepState]!! + 1
+                                            sleepingState[newlist[j].sleepState] =
+                                                sleepingState[newlist[j].sleepState]!! + 1
+                                        }
+                                    }
+
+                                    realCounts[state] = realCounts[state]!! + 1
+                                    predCounts[newlist[j].sleepState] =
+                                        predCounts[newlist[j].sleepState]!! + 1
                                 }
-                                SleepState.DEEP -> {
-                                    deepState[newlist[j].sleepState] =
-                                        deepState[newlist[j].sleepState]!! + 1
-                                    sleepingState[newlist[j].sleepState] =
-                                        sleepingState[newlist[j].sleepState]!! + 1
-                                }
-                                SleepState.REM -> {
-                                    remState[newlist[j].sleepState] =
-                                        remState[newlist[j].sleepState]!! + 1
-                                    sleepingState[newlist[j].sleepState] =
-                                        sleepingState[newlist[j].sleepState]!! + 1
-                                }
+                            } catch (e: Exception) {
+                                val d = 2
+                                val c = d
+                                val ee = e
+                                //you can have multiple catch blocks
+                                //code to handle if this exception is occurred
                             }
-
-                            realCounts[state] = realCounts[state]!! + 1
-                            predCounts[newlist[j].sleepState] =
-                                predCounts[newlist[j].sleepState]!! + 1
                         }
-                    } catch (e: Exception) {
-                        val d = 2
-                        val c = d
-                        val ee = e
-                        //you can have multiple catch blocks
-                        //code to handle if this exception is occurred
                     }
                 }
             }

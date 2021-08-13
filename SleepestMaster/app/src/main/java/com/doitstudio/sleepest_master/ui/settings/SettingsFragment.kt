@@ -211,13 +211,19 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES || (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM &&  actualContext.isDarkThemeOn()))
-            binding.lottieDarkMode.setMinAndMaxFrame(0,240) //to play the first half
-        else
-            binding.lottieDarkMode.setMinAndMaxFrame(240,481) //to play the second half
-        binding.lottieDarkMode.playAnimation()
+        scope.launch {
+
+            val settings = dataStoreRepository.settingsDataFlow.first()
 
 
+            if ((settings.designAutoDarkMode  && actualContext.isDarkThemeOn()) || !settings.designAutoDarkMode && settings.designDarkMode)
+                binding.lottieDarkMode.setMinAndMaxFrame(0, 240) //to play the first half
+            else
+                binding.lottieDarkMode.setMinAndMaxFrame(240, 481) //to play the second half
+
+            binding.lottieDarkMode.playAnimation()
+
+        }
         createCredits()
     }
 
@@ -263,6 +269,7 @@ class SettingsFragment : Fragment() {
             binding.llCredits.addView(textView)
         }
     }
+
     private fun onWebsiteClicked(view: View) {
         val websiteUrl = Websites.getWebsite(view.tag as Websites)
 
@@ -270,7 +277,6 @@ class SettingsFragment : Fragment() {
 
 
     }
-
 
     private fun onDataClicked(view: View) {
         when (view.tag.toString()) {
