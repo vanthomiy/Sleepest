@@ -23,6 +23,7 @@ import com.doitstudio.sleepest_master.model.data.AlarmClockReceiverUsage
 import com.doitstudio.sleepest_master.model.data.credits.CreditsSites
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
+import com.doitstudio.sleepest_master.util.PermissionsUtil
 import com.doitstudio.sleepest_master.util.SmileySelectorUtil
 import com.doitstudio.sleepest_master.util.TimeConverterUtil
 import kotlinx.coroutines.CoroutineScope
@@ -164,27 +165,18 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     fun checkPermissions(){
 
         activityPermission.set(
-            PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACTIVITY_RECOGNITION
-            )
+            PermissionsUtil.isActivityRecognitionPermissionGranted(context)
         )
 
         dailyPermission.set(
-            PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACTIVITY_RECOGNITION
-            )
+            PermissionsUtil.isActivityRecognitionPermissionGranted(context)
         )
 
         storagePermission.set(
-            PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ANSWER_PHONE_CALLS
-            )
+            PermissionsUtil.isNotificationPolicyAccessGranted(context)
         )
 
-        overlayPermission.set(Settings.canDrawOverlays(context))
+        overlayPermission.set(PermissionsUtil.isOverlayPermissionGranted(context))
 
     }
 
