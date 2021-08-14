@@ -66,7 +66,7 @@ class InfoFragment : Fragment() {
 
         val infoEntity = infoId?.let { info?.let { Info.getById(it) }?.let { it1 ->
             InfoEntity.getInfo(
-                it1, it)
+                it1, it, view.context)
         } }
 
         var actualStlye = direction?.let { InfoEntityStlye.getById(it) }

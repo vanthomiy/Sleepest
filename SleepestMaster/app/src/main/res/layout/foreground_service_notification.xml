@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    style="@style/Theme.AppCompat.DayNight">
+    android:background="@color/primary_app_background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,7 +16,6 @@
             android:orientation="horizontal">
 
             <ImageView
-                style="@style/Theme.AppCompat.DayNight"
                 android:layout_width="69dp"
                 android:layout_height="69dp"
                 android:layout_gravity="center_vertical"
@@ -34,7 +33,7 @@
                     android:layout_marginTop="1dp"
                     android:textSize="13sp"
                     android:text=" "
-                    style="@style/Theme.AppCompat.DayNight"/>
+                    android:textColor="@color/primary_text_color"/>
 
                 <TextView
                     android:id="@+id/tvBannerActualWakeup"
@@ -43,7 +42,7 @@
                     android:layout_marginTop="1dp"
                     android:textSize="13sp"
                     android:text=" "
-                    style="@style/Theme.AppCompat.DayNight"/>
+                    android:textColor="@color/primary_text_color"/>
 
                 <TextView
                     android:id="@+id/tvBannerActualSleeptime"
@@ -52,7 +51,7 @@
                     android:layout_marginTop="1dp"
                     android:textSize="13sp"
                     android:text=" "
-                    style="@style/Theme.AppCompat.DayNight"/>
+                    android:textColor="@color/primary_text_color"/>
 
                 <TextView
                     android:id="@+id/tvBannerIsSleeping"
@@ -61,7 +60,7 @@
                     android:layout_marginTop="1dp"
                     android:textSize="13sp"
                     android:text=" "
-                    style="@style/Theme.AppCompat.DayNight"/>
+                    android:textColor="@color/primary_text_color"/>
 
             </LinearLayout>
 
@@ -73,33 +72,36 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="4dp"
-            style="@style/Theme.AppCompat.DayNight">
+            android:textColor="@color/primary_text_color">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnDisableAlarmNotification"
                 android:layout_width="0dp"
                 android:layout_weight="0.5"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="1dp"
-                android:layout_marginLeft="1dp"
-                android:background="@drawable/roundedbutton"
-                style="@style/Theme.AppCompat.DayNight"
-                android:layout_gravity="bottom|center_horizontal"
-                android:textSize="15sp"/>
+                android:layout_height="@dimen/valuesHeight"
+                android:layout_margin="5dp"
+                android:background="@drawable/bgrounded_button"
+                android:backgroundTint="@color/error_color"
+                android:layout_gravity="center_horizontal"
+                android:textSize="15sp"
+                android:textColor="@color/primary_text_color"
+                >
+            </androidx.appcompat.widget.AppCompatButton>
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnNotSleepingNotification"
                 android:layout_width="0dp"
                 android:layout_weight="0.5"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="1dp"
-                android:layout_marginLeft="1dp"
-                android:background="@drawable/roundedbutton"
-                style="@style/Theme.AppCompat.DayNight"
-                android:layout_gravity="bottom|center_horizontal"
-                android:textSize="15sp"/>
+                android:layout_height="@dimen/valuesHeight"
+                android:layout_margin="5dp"
+                android:background="@drawable/bgrounded_button"
+                android:backgroundTint="@color/warning_color"
+                android:layout_gravity="center_horizontal"
+                android:textSize="15sp"
+                android:textColor="@color/primary_text_color"
+                >
+            </androidx.appcompat.widget.AppCompatButton>
+
         </LinearLayout>
 
     </LinearLayout>

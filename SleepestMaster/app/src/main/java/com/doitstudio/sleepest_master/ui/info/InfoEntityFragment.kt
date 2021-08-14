@@ -44,12 +44,12 @@ class InfoEntityFragment(val applicationContext: Context, private val infoEntity
                 LinearLayout.VERTICAL)
         }
 
-        if (infoEntity.textHeader != null) {
+        if (infoEntity.textHeader != null && infoEntity.textHeader != "") {
             viewModel.headerVisible.set(View.VISIBLE)
             viewModel.textHeader.set(infoEntity.textHeader)
         }
 
-        if (infoEntity.textDescription != null) {
+        if (infoEntity.textDescription != null && infoEntity.textDescription != "") {
             viewModel.descrriptionVisible.set(View.VISIBLE)
             viewModel.textDescription.set(infoEntity.textDescription)
         }

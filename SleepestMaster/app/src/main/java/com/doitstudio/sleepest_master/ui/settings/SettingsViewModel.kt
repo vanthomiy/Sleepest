@@ -3,6 +3,7 @@ package com.doitstudio.sleepest_master.ui.settings
 import android.Manifest
 import android.app.Application
 import android.content.pm.PackageManager
+import android.os.Build
 import android.provider.Settings
 import android.transition.TransitionManager
 import android.view.View
@@ -114,18 +115,6 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     // endregion
 
-    // region Help
-
-    fun onHelpClicked(view: View) {
-
-        when (view.tag.toString()) {
-            "tutorial" -> "nksnklas"
-            "importantSettings" -> "saas"
-        }
-    }
-
-    // endregion
-
     // region About us
 
     fun onAboutUsClicked(view: View) {
@@ -163,24 +152,28 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     fun checkPermissions(){
 
-        activityPermission.set(
-            PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACTIVITY_RECOGNITION
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            activityPermission.set(
+                PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACTIVITY_RECOGNITION
+                )
             )
-        )
+        }
 
-        dailyPermission.set(
-            PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACTIVITY_RECOGNITION
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            dailyPermission.set(
+                PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACTIVITY_RECOGNITION
+                )
             )
-        )
+        }
 
         storagePermission.set(
             PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
                 context,
-                Manifest.permission.ANSWER_PHONE_CALLS
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
         )
 
@@ -188,19 +181,6 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     }
 
-
-    // endregion
-
-    // region Credits
-
-    fun onCreditsClicked(view: View) {
-        when (view.tag.toString()) {
-            "flaticon" -> "asd"
-
-        }
-    }
-
-    val authorsText = ObservableField("")
 
     // endregion
 

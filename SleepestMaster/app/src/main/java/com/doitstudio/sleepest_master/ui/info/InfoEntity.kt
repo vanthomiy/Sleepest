@@ -1,5 +1,6 @@
 package com.doitstudio.sleepest_master.ui.info
 
+import android.content.Context
 import android.graphics.drawable.Drawable
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.model.data.Info
@@ -15,23 +16,23 @@ data class InfoEntity (
 {
     companion object{
 
-        fun getInfo(info: Info, id:Int) : List<InfoEntity>{
+        fun getInfo(info: Info, id:Int, context: Context) : List<InfoEntity>{
             return when(info){
-                Info.HISTORY -> historyInfo(id)
-                Info.SETTINGS -> settingsInfo(id)
-                Info.SLEEP -> sleepInfo(id)
-                else -> noInfo()
+                Info.HISTORY -> historyInfo(id, context)
+                Info.SETTINGS -> settingsInfo(id, context)
+                Info.SLEEP -> sleepInfo(id, context)
+                else -> noInfo(context)
             }
         }
 
-        private fun historyInfo(id:Int) : List<InfoEntity>{
+        private fun historyInfo(id:Int, context: Context) : List<InfoEntity>{
             return when(id){
                 0 ->  listOf(
                     InfoEntity(
-                    image = R.drawable.sleep_mood_bad,
-                    lottie = null,
-                    textHeader = null,
-                    textDescription = "There is some information to pass here",
+                        image = R.drawable.sleep_mood_bad,
+                        lottie = null,
+                        textHeader = null,
+                        textDescription = "There is some information to pass here",
                         infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
                     ),
                     InfoEntity(
@@ -56,46 +57,100 @@ data class InfoEntity (
                     )
                 )
                 1 ->  listOf(InfoEntity(
-                    image = R.drawable.empty_alarms,
-                    lottie = null,
-                    textHeader = "Sleep",
-                    textDescription = "Nothing much to see here haha"
-                ))
-                else -> noInfo()
+                        image = R.drawable.empty_alarms,
+                        lottie = null,
+                        textHeader = "Sleep",
+                        textDescription = "Nothing much to see here haha"
+                    )
+                )
+                else -> noInfo(context)
             }
         }
 
-        private fun settingsInfo(id:Int) : List<InfoEntity>{
+        private fun settingsInfo(id:Int, context: Context) : List<InfoEntity>{
             return when(id){
                 0 ->  listOf(InfoEntity(
                     image = R.drawable.ic_settings_black_24dp,
-                    lottie = R.raw.settings,
-                    textHeader = "Settings",
-                    textDescription = ""
-                ))
-                else -> noInfo()
+                    lottie = null,
+                    textHeader = "",
+                    textDescription = context.resources.getString(R.string.sleep_general_info),
+                    infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
+                    )
+                )
+                else -> noInfo(context)
             }
         }
 
-        private fun sleepInfo(id:Int) : List<InfoEntity>{
+        private fun sleepInfo(id:Int, context: Context) : List<InfoEntity>{
             return when(id){
-                0 ->  listOf(InfoEntity(
+                7 ->  listOf(InfoEntity(
                     image = R.drawable.sleep_mood_bad,
-                    lottie = R.raw.settings,
+                    lottie = null,
                     textHeader = "Sleeep",
-                    textDescription = ""
-                ))
-                else -> noInfo()
+                    textDescription = context.resources.getString(R.string.sleep_general_info),
+                    infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
+                    )
+                )
+                0 ->  listOf(InfoEntity(
+                        image = null,
+                        lottie = R.raw.settings,
+                        textHeader = "",
+                        textDescription = context.resources.getString(R.string.sleep_sleeptimes_info),
+                    infoEntityStlye = InfoEntityStlye.PICTURE_RIGHT
+                    )
+                )
+                1 ->  listOf(InfoEntity(
+                    image = R.drawable.sleep_mood_bad,
+                    lottie = null,
+                    textHeader = "",
+                    textDescription = context.resources.getString(R.string.sleep_sleepduration_info),
+                    infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
+                )
+                )
+                6 ->  listOf(InfoEntity(
+                    image = null,
+                    lottie = R.raw.settings,
+                    textHeader = "",
+                    textDescription = context.resources.getString(R.string.sleep_lightcondition_info),
+                    infoEntityStlye = InfoEntityStlye.PICTURE_RIGHT
+                )
+                )
+                2 ->  listOf(InfoEntity(
+                    image = R.drawable.sleep_mood_bad,
+                    lottie = null,
+                    textHeader = "",
+                    textDescription = context.resources.getString(R.string.sleep_phoneposition_info),
+                    infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
+                )
+                )
+                3 ->  listOf(InfoEntity(
+                    image = null,
+                    lottie = R.raw.settings,
+                    textHeader = "",
+                    textDescription = context.resources.getString(R.string.sleep_phoneusage_info),
+                    infoEntityStlye = InfoEntityStlye.PICTURE_RIGHT
+                )
+                )
+                4 ->  listOf(InfoEntity(
+                    image = R.drawable.sleep_mood_bad,
+                    lottie = null,
+                    textHeader = "",
+                    textDescription = context.resources.getString(R.string.sleep_activitytracking_info),
+                    infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
+                )
+                )
+                else -> noInfo(context)
             }
         }
 
-        private fun noInfo() : List<InfoEntity>{
+        private fun noInfo(context: Context) : List<InfoEntity>{
             return listOf(InfoEntity(
                 image = R.drawable.empty_alarms,
                 lottie = R.raw.empty,
                 textHeader = "Wrong",
                 textDescription = null
-            ))
+                )
+            )
         }
 
     }

@@ -16,6 +16,7 @@
         <entry key="..\:/Users/vanth/Documents/Projekte/Sleepest/SleepestMaster/app/src/main/res/layout/alarm_entity.xml" value="0.1" />
         <entry key="..\:/Users/vanth/Documents/Projekte/Sleepest/SleepestMaster/app/src/main/res/layout/foreground_service_notification.xml" value="0.14666666666666667" />
         <entry key="..\:/Users/vanth/Documents/Projekte/Sleepest/SleepestMaster/app/src/main/res/layout/fragment_alarms.xml" value="0.14666666666666667" />
+        <entry key="..\:/Users/vanth/Documents/Projekte/Sleepest/SleepestMaster/app/src/main/res/layout/fragment_dont_kill_my_app.xml" value="0.10740740740740741" />
         <entry key="..\:/Users/vanth/Documents/Projekte/Sleepest/SleepestMaster/app/src/main/res/layout/fragment_history_day.xml" value="0.1" />
         <entry key="..\:/Users/vanth/Documents/Projekte/Sleepest/SleepestMaster/app/src/main/res/layout/fragment_history_month.xml" value="0.17395529640427598" />
         <entry key="..\:/Users/vanth/Documents/Projekte/Sleepest/SleepestMaster/app/src/main/res/layout/fragment_history_tabview.xml" value="0.1" />
@@ -26,6 +27,7 @@
         <entry key="..\:/Users/vanth/Documents/Projekte/Sleepest/SleepestMaster/app/src/main/res/layout/fragment_settings.xml" value="0.1" />
         <entry key="..\:/Users/vanth/Documents/Projekte/Sleepest/SleepestMaster/app/src/main/res/layout/fragment_sleep.xml" value="0.1" />
         <entry key="..\:/Users/vanth/Documents/Projekte/Sleepest/SleepestMaster/app/src/main/res/layout/info_entity.xml" value="0.18229166666666666" />
+        <entry key="..\:/Users/vanth/Documents/Projekte/Sleepest/SleepestMaster/app/src/main/res/layout/splash_screen.xml" value="0.10740740740740741" />
       </map>
     </option>
   </component>
