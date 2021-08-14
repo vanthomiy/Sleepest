@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Sleepest-Master</string>
+    <string name="app_name">Sleepest - Produktivität und Schlaf vereinen</string>
     <string name="alarm_active">Alarm Active</string>
     <string name="alarm_disabled">Alarm Disabled</string>
     <string name="insert_data">Alarm Disabled</string>
@@ -11,10 +11,10 @@
     <string name="alarm_clock_channel_name">Alarmclock Channel</string>
     <string name="alarm_clock_channel_description">This channel is for all notifications in alarm clock actions</string>
     <string name="alarm_clock_intent_key">com.doitstudio.sleepest_master.alarmclock.AlarmClockIntentKey</string>
-    <string name="alarm_notification_title">"It's time to wake up"</string>
-    <string name="alarm_notification_text">"Tap Snooze to sleep for further 10 minutes"</string>
-    <string name="alarm_notification_button_1">"Cancel"</string>
-    <string name="alarm_notification_button_2">"Snooze"</string>
+    <string name="alarm_notification_title">Zeit aufzustehen</string>
+    <string name="alarm_notification_text">Drücke Schlummern um den Alaum um 10 Minuten zu verzögern</string>
+    <string name="alarm_notification_button_1">Abbrechen</string>
+    <string name="alarm_notification_button_2">Schlummern</string>
     <string name="alarm_lockscreen_Button_1">"Cancel Alarm"</string>
     <string name="alarm_lockscreen_Button_2">"Snooze Alarm"</string>
     <!--endregion-->
@@ -26,26 +26,26 @@
     <string name="information_notification_channel">Information Notification Channel</string>
     <string name="information_notification_channel_name">Information Notification Channel</string>
     <string name="information_notification_channel_description">Dieser Channel zeigt dem Nutzer, dass er nun schlafen sollte.</string>
-    <string name="information_notification_text">Sie können Ihre eingestellte Schlafzeit nicht mehr erreichen</string>
+    <string name="information_notification_text">Du kannst Deine eingestellte Schlafzeit nicht mehr erreichen</string>
     <string name="foregroundservice_notification_title">Sleepest - The best sleep you ever had</string>
     <string name="workmanager1_tag">Workmanager 1</string>
     <string name="workmanager2_tag">Workmanager 2</string>
     <string name="alarmmanager_key">com.doitstudio.sleepest_master.background.AlarmIntentKey</string>
     <string name="title_activity_test">Testaktivität</string>
-    <string name="error_start_foreground">Something went wrong, try to start the alarms</string>
-    <string name="disable_alarm_message">You can reactivate the alarm in Sleepest at any time</string>
+    <string name="error_start_foreground">Etwas lief schief. Versuche alle Alarme zu starten.</string>
+    <string name="disable_alarm_message">Du kanns den Alarm jederzeit reaktivieren.</string>
     <string name="reactivate_alarm_message">Reactivated alarm</string>
-    <string name="not_sleeping_message">Sleep time until now deleted</string>
-    <string name="currently_not_sleeping_message">Last few minutes of sleep deleted</string>
-    <string name="btn_not_sleeping_text">Not slept yet</string>
-    <string name="btn_currently_not_sleeping_text">Currently not sleeping</string>
-    <string name="btn_disable_alarm">Disable alarm</string>
-    <string name="btn_reactivate_alarm">Reactivate alarm</string>
-    <string name="alarm_status_false">Alarm not active</string>
-    <string name="alarm_status_true">Alarm active</string>
+    <string name="not_sleeping_message">Schlafenszeiten bis jetzt gelöscht.</string>
+    <string name="currently_not_sleeping_message">Die letzten paar Minuten wurden gelöscht.</string>
+    <string name="btn_not_sleeping_text">Noch nicht geschlafen.</string>
+    <string name="btn_currently_not_sleeping_text">Im Moment kein Schlaf.</string>
+    <string name="btn_disable_alarm">Alarm deaktivieren.</string>
+    <string name="btn_reactivate_alarm">Alarm reaktivieren.</string>
+    <string name="alarm_status_false">Alarm inaktiv.</string>
+    <string name="alarm_status_true">Alarm aktiv.</string>
     <string name="wakelock_tag">Foregroundservice_lock</string>
-    <string name="sleep_status_false">You are currently not sleeping</string>
-    <string name="sleep_status_true">You are currently sleeping</string>
+    <string name="sleep_status_false">Du schläfst momentan nicht.</string>
+    <string name="sleep_status_true">Du schläfst im Moment.</string>
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
@@ -282,6 +282,7 @@
     <string name="profile_remove_data_warning">Ohje, alle daten werden gelöscht ok?</string>
     <string name="profile_remove_data_ackn">Verstanden und löschen</string>
     <string name="profile_about_us">Sleepest - App\nMade with &#10084; in Bavaria\n\n This app was created by 3 students as a students project and will be improved and maintained in the future</string>
+    <string name="splash_screen_with_love">Made with &#10084; in Bavaria</string>
     <string name="alarm_monday_dayname">Montag</string>
     <string name="alarm_tuesday_dayname">Dienstag</string>
     <string name="alarm_wednesday_dayname">Mittwoch</string>
@@ -314,12 +315,61 @@
     <string name="alarm_instance_days_a_week">Wochentage:</string>
     <string name="alarm_instance_sleep_duration">Schlafdauer:</string>
     <string name="alarms_alarme">&#9200; Wecker</string>
-    <string name="alarms_no_alarms">Keine Alarme. Füge über den + Buttonen einen neuen Alarm hinzu!</string>
+    <string name="alarms_no_alarms">Keine Alarme. Füge über den + Button einen neuen Alarm hinzu!</string>
     <string name="settings_return">return</string>
     <string name="settings_delete_all_data">delete all data</string>
     <string name="profile_credits">Credits</string>
     <string name="profile_flaticon_introduction">Wir haben Bilder von der Seite Flaticon verwendet. Im folgenden sind die einzelnen Authoren der Bilder aufgelistet.</string>
     <string name="prfofile_author">Autor: </string>
+    <string name="alarm_entity_day_fr">Fr</string>
+    <string name="alarm_entity_day_sa">Sa</string>
+    <string name="alarm_entity_day_su">Su</string>
+    <string name="alarm_entity_day_th">Do</string>
+    <string name="alarm_entity_day_we">Mi</string>
+    <string name="alarm_entity_day_tu">Di</string>
+    <string name="alarm_entity_day_mo">Mo</string>
+
+    <string name="history_day_information_noDataAvailable">Nichts zu sehen.   Geh schlafen um Daten zu generieren!</string>
+    <string name="history_sleepPhases_title">Schlafphasen:</string>
+    <string name="history_day_sleepPhases_time_in_phase_title">Zeit in Phase:</string>
+    <!--string name="history_fragment_title">&#128467; &#128202; &#128466; &#128200; &#128197; History</string!-->
+    <string name="history_fragment_title">&#128197; History</string>
+    <string name="history_button_analysisDate_previous">Zurück</string>
+    <string name="history_button_analysisDate_next">Nächste</string>
+    <string name="history_day_information_sleepPhases_lineChart">Dieses Diagramm zeigt Deine Schlafphasen der letzten Nacht an. Links und rechts über dem Diagramm kannst Du die, von der App erkannten, Einschlaf- und Aufwachzeitpunkte sehen. Die Nacht ist, je nachdem wo sich dein Handy in dieser Nacht befand, in zwei oder drei Schlafstati eingeteilt. Befand sich das Gerät neben dem Bett kannst Du die Phasen \"Wach\" und \"Schlaf\" erkennen. Lag es im Bett wird die Nacht in die Phasen \"Tiefschlaf\", \"Leichtschlaf\" und \"Wach\" eingeteilt. Das Diagramm ist linear über die Nacht aufgeteilt.</string>
+    <string name="history_day_sleep_quality_rating_title">Schlafqualität:</string>
+    <string name="history_activity_title">Aktivität:</string>
+    <string name="history_day_information_timeInPhase">Informationen über das Tortendiagramm der Schlaphasen.</string>
+    <string name="history_day_information_sleepQualityRating">Hier kannst du Deine Befindlichtkeit nach dem Aufwachen eintragen. Du kannst zwischen den Werten \"schlecht\", \"gut\", \"überragend\", \"Tatendrang\" und \"müde\" unterscheiden.</string>
+    <string name="history_day_information_activity">Dieses Diagramm zeigt Dein Aktivitätslevel des Tages an. Du kannst drei verschiedene Medallien erhalten.</string>
+    <string name="history_week_information_sleepPhases_barChart">Dieses Diagramm zeigt Dir die Verteilung der verschiedenen Schlafphasen für die jeweilige Woche an. Je nach dem, wo sich Dein Handy in der Nacht befand, varriert das Diagramm zwischen zwei verschiedenen Anzeigemöglichkeiten. Die Werte der y-Achse entsprechen Stunden.</string>
+    <string name="history_week_information_activity_lineChart">Hier kannst Du deine Aktivitätslevel für die jeweilige Woche einsehen.</string>
+    <string name="history_month_information_sleepPhases_barChart">"Dieses Diagramm zeigt Dir die Verteilung der verschiedenen Schlafphasen für den jeweiligen Monat an. Je nach dem, wo sich Dein Handy in der Nacht befand, varriert das Diagramm zwischen zwei verschiedenen Anzeigemöglichkeiten. Die Werte der y-Achse entsprechen Stunden. "</string>
+    <string name="history_month_information_activity_lineChart">Hier kannst Du deine Aktivitätslevel für die jeweilige Woche einsehen.</string>
+    <string name="history_day_timeInPhase_awake">Wach</string>
+    <string name="history_day_timeInPhase_lightSleep">Leichtschlaf</string>
+    <string name="history_day_timeInPhase_deepSleep">Tiefschlaf</string>
+    <string name="history_day_timeInPhase_sleepSum">Schlafzeit</string>
+    <string name="history_day_title">Tag</string>
+    <string name="history_week_title">Woche</string>
+    <string name="history_month_title">Monat</string>
+    <string name="history_today_title">Heute</string>
+    <string name="history_yesterday_title">Gestern</string>
+    <string name="history_failure_title">Fehler</string>
+    <string name="history_currentWeek_title">Aktuelle Woche</string>
+    <string name="history_previousWeek_title">Letzte Woche</string>
+    <string name="history_january_title">Januar</string>
+    <string name="history_february_title">Februar</string>
+    <string name="history_march_title">März</string>
+    <string name="history_april_title">April</string>
+    <string name="history_may_title">Mai</string>
+    <string name="history_june_title">Juni</string>
+    <string name="history_july_title">Juli</string>
+    <string name="history_august_title">August</string>
+    <string name="history_september_title">September</string>
+    <string name="history_october_title">Oktober</string>
+    <string name="history_november_title">November</string>
+    <string name="history_december_title">Dezember</string>
     <!--endregion-->
 
 

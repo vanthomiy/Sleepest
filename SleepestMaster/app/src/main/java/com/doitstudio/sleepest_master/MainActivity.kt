@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -303,29 +304,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun checkDoNotDisturbPermission() {
-       val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-
-        if (!notificationManager.isNotificationPolicyAccessGranted){
-            val intent = Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
-            startActivity(intent)
-        }
-    }
-
-    private fun checkDrawOverlayPermission() {
-
-        // Checks if app already has permission to draw overlays
-        if (!Settings.canDrawOverlays(this)) {
-
-            // If not, start Intent to launch the permission request
-            val intent = Intent(
-                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                Uri.parse("package:$packageName")
-            )
-            startActivity(intent)
-        }
-    }
-    
     // region get permission for sleep api at first start etc.
     private fun activityRecognitionPermissionApproved(): Boolean {
         // Because this app targets 29 and above (recommendation for using the Sleep APIs), we

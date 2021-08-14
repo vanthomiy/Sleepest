@@ -19,9 +19,9 @@
     <application
         android:name=".MainApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logov4"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/logov4round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SleepestMaster">
         <activity android:name=".onboarding.PermissionActivity"></activity>
@@ -51,10 +51,17 @@
             android:exported="false" />
 
         <activity
+            android:name=".SplashScreen"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
+
+        <activity
             android:name=".MainActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait">
+
             <intent-filter>
+
                 <action android:name="android.intent.action.SEND" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -70,12 +77,7 @@
                 <data android:mimeType="application/json" />
             </intent-filter>
         </activity>
-        <!--
-service
-            android:name=".DetectedActivitiesIntentService"
-            android:enabled="true"
-            android:exported="false" /!
-        -->
+
         <service
             android:name=".background.ForegroundService"
             android:enabled="true"

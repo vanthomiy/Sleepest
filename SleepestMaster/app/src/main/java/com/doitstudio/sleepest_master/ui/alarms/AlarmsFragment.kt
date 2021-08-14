@@ -29,6 +29,8 @@ import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.background.BackgroundAlarmTimeHandler
 import com.doitstudio.sleepest_master.databinding.FragmentAlarmsBinding
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity
+import com.doitstudio.sleepest_master.util.IconAnimatorUtil
+import com.doitstudio.sleepest_master.util.PermissionsUtil
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -81,12 +83,15 @@ class AlarmsFragment() : Fragment() {
             }
         }
         scope.launch {
-            databaseRepository.insertAlarm(AlarmEntity(newId))
+            var sleepTime = dataStoreRepository.getNormalSleepTime()
+            databaseRepository.insertAlarm(AlarmEntity(newId, sleepDuration = sleepTime))
         }
         addAlarmEntity(actualContext, newId)
         usedIds.add(newId)
 
         viewModel.noAlarmsView.set(View.GONE)
+
+        IconAnimatorUtil.animateView(view as ImageView)
     }
 
     private fun addAlarmEntity(context: Context, alarmId: Int) {
@@ -219,7 +224,7 @@ class AlarmsFragment() : Fragment() {
 
         binding.btnAddAlarmEntity.setOnClickListener {
 
-            if (checkPermissions()) {
+            if (PermissionsUtil.checkAllNeccessaryPermissions(actualContext)) {
                 onAddAlarm(it)
             } else {
 
@@ -269,24 +274,6 @@ class AlarmsFragment() : Fragment() {
         setupAlarms()
 
         return binding.root
-    }
-
-    private fun checkPermissions(): Boolean {
-        val notificationManager =
-            actualContext.getSystemService(AppCompatActivity.NOTIFICATION_SERVICE) as NotificationManager
-        if (!notificationManager.isNotificationPolicyAccessGranted) {
-            return false
-        } else if (!Settings.canDrawOverlays(actualContext)) {
-            return false
-        } else if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(
-                actualContext,
-                Manifest.permission.ACTIVITY_RECOGNITION
-            )
-        ) {
-            return false
-        }
-
-        return true
     }
 
     companion object {

@@ -48,6 +48,8 @@ import com.doitstudio.sleepest_master.util.SleepUtil;
 import com.doitstudio.sleepest_master.util.SmileySelectorUtil;
 import com.doitstudio.sleepest_master.util.TimeConverterUtil;
 
+import kotlinx.coroutines.CoroutineScope;
+
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -161,8 +163,10 @@ public class ForegroundService extends LifecycleService {
         /**Calendar calenderCalculation = AlarmReceiver.getAlarmDate(alarmEntity.getWakeupEarly() - 1800);
         AlarmReceiver.startAlarmManager(calenderCalculation.get(Calendar.DAY_OF_WEEK), calenderCalculation.get(Calendar.HOUR_OF_DAY), calenderCalculation.get(Calendar.MINUTE), getApplicationContext(), AlarmReceiverUsage.START_WORKMANAGER_CALCULATION);
         **/
+
+
         //Call function with null to transfer actual(local) time for correct calculation
-        sleepCalculationHandler.checkIsUserSleeping(null);
+        sleepCalculationHandler.checkIsUserSleepingJob(null);
         userSleepTime = 0;
 
         Calendar calendar = Calendar.getInstance();
@@ -679,7 +683,7 @@ public class ForegroundService extends LifecycleService {
                 .setContentText(contentText)
                 .setCustomBigContentView(remoteViews)
                 .setStyle(new Notification.DecoratedCustomViewStyle())
-                .setSmallIcon(R.drawable.logo_notification)
+                .setSmallIcon(R.drawable.logofulllinesoutlineround)
                 .setContentIntent(pendingIntent)
                 .setOnlyAlertOnce(true)
                 .build();

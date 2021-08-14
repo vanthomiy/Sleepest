@@ -6,7 +6,7 @@ public class Constants {
     public static final int EXPORT_REQUEST_CODE = 1002;
     public static final int IMPORT_REQUEST_CODE = 1003;
     public static final int LOAD_FILE_REQUEST_CODE = 1004;
-    public static final int ACTIVITY_RECOGNITION_PERMISSION_REQUEST_CODE = 1003;
+    public static final int ACTIVITY_RECOGNITION_PERMISSION_REQUEST_CODE = 1005;
     public static final int WORKMANAGER_CALCULATION_DURATION = 16;
     public static final int WORKMANAGER_DURATION = 16;
     public static final int LEVEL_AND_FLAGS = 1;

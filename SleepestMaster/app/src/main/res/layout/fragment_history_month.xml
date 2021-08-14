@@ -7,7 +7,7 @@
     <data>
         <variable
             name="historyMonthViewModel"
-            type="com.doitstudio.sleepest_master.ui.history.HistoryViewModel" />
+            type="com.doitstudio.sleepest_master.ui.history.HistoryMonthViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,13 +27,149 @@
             tools:visibility="visible">
 
             <LinearLayout
-                android:id="@+id/lL_sleepAnalysisChartsMonth"
+                android:id="@+id/lL_linearAnimationLayoutMonthlyAnalysis"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="visible"
-                app:layout_constraintTop_toTopOf="@+id/sV_sleepAnalysisChartsMonth"
                 android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"                        
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="10dp">
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="start"
+                            app:tint="@color/primary_text_color"
+                            android:src="@drawable/ic_baseline_night_shelter_24"
+                            android:tag="1"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="40dp"
+                            android:text="@string/history_sleepPhases_title"
+                            android:textColor="@color/primary_text_color"
+                            android:textSize="@dimen/headerSize"/>
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="end"
+                            app:tint="@color/primary_text_color"
+                            android:src="@drawable/info_help"
+                            android:onClick="@{historyMonthViewModel::onInfoClicked}"
+                            android:tag="0"/>
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:visibility="@{historyMonthViewModel.actualExpand == 0 ? historyMonthViewModel.visibleState:historyMonthViewModel.goneState, default=gone}"
+                        android:background="@drawable/bgroundedchoosen">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:layout_margin="10dp"
+                            android:textColor="@color/primary_text_color"
+                            android:text="@string/history_month_information_sleepPhases_barChart"/>
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:id="@+id/lL_sleepAnalysisChartsMonthSleepPhases"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical" >
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="10dp">
+                        
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="start"
+                            app:tint="@color/primary_text_color"
+                            android:src="@drawable/ic_baseline_pending_actions_24"
+                            android:tag="1"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="40dp"
+                            android:text="@string/history_activity_title"
+                            android:textColor="@color/primary_text_color"
+                            android:textSize="@dimen/headerSize"/>
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="end"
+                            app:tint="@color/primary_text_color"
+                            android:src="@drawable/info_help"
+                            android:onClick="@{historyMonthViewModel::onInfoClicked}"
+                            android:tag="1"/>
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:visibility="@{historyMonthViewModel.actualExpand == 1 ? historyMonthViewModel.visibleState:historyMonthViewModel.goneState, default=gone}"
+                        android:background="@drawable/bgroundedchoosen">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:layout_margin="10dp"
+                            android:textColor="@color/primary_text_color"
+                            android:text="@string/history_month_information_activity_lineChart"/>
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/lL_activityAnalysisChartMonth"
+                            android:orientation="horizontal" />
+                    </LinearLayout>
+                </LinearLayout>
+
             </LinearLayout>
+
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

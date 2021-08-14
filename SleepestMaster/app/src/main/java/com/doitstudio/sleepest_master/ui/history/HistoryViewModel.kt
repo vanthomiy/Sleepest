@@ -3,7 +3,6 @@ package com.doitstudio.sleepest_master.ui.history
 import android.app.Application
 import android.content.Context
 import android.graphics.Color
-import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.databinding.*
@@ -19,6 +18,7 @@ import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
 import com.doitstudio.sleepest_master.util.SmileySelectorUtil
+import com.doitstudio.sleepest_master.util.StringUtil
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Legend
@@ -31,28 +31,38 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.*
+import java.time.format.DateTimeFormatter
 
 class HistoryViewModel(application: Application) : AndroidViewModel(application) {
 
     private val scope: CoroutineScope = MainScope()
     val context: Context by lazy { getApplication<Application>().applicationContext }
-    val dataBaseRepository: DatabaseRepository by lazy {
-        (context as MainApplication).dataBaseRepository
-    }
-    private val dataStoreRepository: DataStoreRepository by lazy {
-        (context as MainApplication).dataStoreRepository
-    }
 
+    /**  */
+    val dataBaseRepository: DatabaseRepository by lazy { (context as MainApplication).dataBaseRepository }
+
+    /**  */
+    private val dataStoreRepository: DataStoreRepository by lazy { (context as MainApplication).dataStoreRepository }
+
+    /**  */
     var analysisDate = ObservableField(LocalDate.now())
+
+    /**  */
     var darkMode = false
+
+    /**  */
     var autoDarkMode = false
+
+    /**  */
     var onWork = false
+
+    /**  */
     private val xAxisValues = ArrayList<String>()
 
-    /** <Int: Sleep session id, Triple<List<[SleepApiRawDataEntity]>, Int: Sleep duration, [UserSleepSessionEntity]>> */
-    //val sleepSessionData = ObservableArrayMap<Int, Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>>()
-
+    /**  */
     private val idsListener = ObservableInt()
+
+    val dataReceived = ObservableBoolean(false)
 
     /** <Int: Sleep session id, Triple<List<[SleepApiRawDataEntity]>, Int: Sleep duration, [UserSleepSessionEntity]>> */
     val sleepSessionData = mutableMapOf<Int, Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>>()
@@ -67,22 +77,42 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
     }
 
+    /**  */
     fun onPreviousDateClick(range: Int) {
-        when (range) {
-            0 -> analysisDate.set(analysisDate.get()?.minusDays(1L))
-            1 -> analysisDate.set(analysisDate.get()?.minusWeeks(1L))
-            2 -> analysisDate.set(analysisDate.get()?.minusMonths(1L))
+        analysisDate.let {
+            when (range) {
+                0 -> it.set(it.get()?.minusDays(1L))
+                1 -> it.set(it.get()?.minusWeeks(1L))
+                2 -> it.set(it.get()?.minusMonths(1L))
+            }
         }
     }
 
+    /**  */
     fun onNextDateClick(range: Int) {
-        when (range) {
-            0 -> analysisDate.set(analysisDate.get()?.plusDays(1L))
-            1 -> analysisDate.set(analysisDate.get()?.plusWeeks(1L))
-            2 -> analysisDate.set(analysisDate.get()?.plusMonths(1L))
+        analysisDate.let {
+            when (range) {
+                0 -> {
+                    if (LocalDate.now().dayOfYear >= it.get()?.plusDays(1L)?.dayOfYear!!) {
+                        it.set(it.get()?.plusDays(1L))
+                    }
+                }
+                1 -> {
+                    if (LocalDate.now().dayOfYear >= it.get()?.plusWeeks(1L)?.dayOfYear!!) {
+                        it.set(it.get()?.plusWeeks(1L))
+                    }
+                }
+                2 -> {
+                    if (LocalDate.now().dayOfYear >= it.get()?.plusMonths(1L)?.dayOfYear!!) {
+                        it.set(it.get()?.plusMonths(1L))
+                    }
+                }
+            }
         }
+
     }
 
+    /**  */
     fun getSleepData() {
         val ids = mutableSetOf<Int>()
         analysisDate.get()?.let {
@@ -110,18 +140,20 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                     sleepSessionData[id] = Triple(
                         dataBaseRepository.getSleepApiRawDataBetweenTimestamps(
                             session.sleepTimes.sleepTimeStart,
-                            session.sleepTimes.sleepTimeEnd).first().sortedBy { x -> x.timestampSeconds },
+                            session.sleepTimes.sleepTimeEnd).first()?.sortedBy { x -> x.timestampSeconds },
                         session.sleepTimes.sleepDuration,
                         session
-                    )
+                    ) as Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>
                 }
 
                 idsListener.set(id)
             }
             checkSessionIntegrity()
+            dataReceived.set(true)
         }
     }
 
+    /**  */
     private fun checkSessionIntegrity() {
         onWork = true
         for (key in sleepSessionData.keys) {
@@ -131,24 +163,40 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                 val isSleeping = it.any { x -> x.sleepState == SleepState.SLEEPING }
                 val isUnidentified = it.any { x -> x.sleepState == SleepState.NONE }
 
+                if ((isUnidentified)) {
+                    scope.launch {
+                        SleepCalculationHandler.getHandler(context).checkIsUserSleeping(
+                            LocalDateTime.ofInstant(
+                                Instant.ofEpochMilli((sleepSessionData[key]?.third?.sleepTimes?.sleepTimeStart?.toLong())!! * 1000),
+                                ZoneOffset.systemDefault()
+                            ),
+                            true
+                        )
+                    }
+                }
+
                 if ((mobilePosition == MobilePosition.INBED && isSleeping)) { // || isUnidentified) {
-                    SleepCalculationHandler.getHandler(context).defineUserWakeup(
-                        LocalDateTime.ofInstant(
-                            Instant.ofEpochMilli((sleepSessionData[key]?.third?.sleepTimes?.sleepTimeStart?.toLong())!! * 1000),
-                            ZoneOffset.systemDefault()
-                        ),
-                        false
-                    )
+                    scope.launch {
+                        SleepCalculationHandler.getHandler(context).defineUserWakeup(
+                            LocalDateTime.ofInstant(
+                                Instant.ofEpochMilli((sleepSessionData[key]?.third?.sleepTimes?.sleepTimeStart?.toLong())!! * 1000),
+                                ZoneOffset.systemDefault()
+                            ),
+                            false
+                        )
+                    }
                 }
             }
         }
         onWork = false
     }
 
+    /**  */
     fun checkId(time: LocalDate) : Boolean {
         return sleepSessionData.containsKey(UserSleepSessionEntity.getIdByDateTime(time))
     }
 
+    /**  */
     fun checkDarkMode() : Int {
         var color = Color.BLACK
         if (autoDarkMode) {
@@ -161,6 +209,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return color
     }
 
+    /**  */
     fun generateDataBarChart(range: Int, endDateOfDiagram: LocalDate): Triple<ArrayList<BarEntry>, List<Int>, Int> {
         val entries = ArrayList<BarEntry>()
         val xAxisLabels = mutableListOf<Int>()
@@ -225,6 +274,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return Triple(entries, xAxisLabels, maxSleepTime.toInt())
     }
 
+    /**  */
     private fun generateBarDataSet(barEntries: ArrayList<BarEntry>) : BarDataSet {
         val barDataSet = BarDataSet(barEntries, "")
         barDataSet.setColors(
@@ -238,6 +288,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return barDataSet
     }
 
+    /**  */
     private fun getBarChartYAxisProportion(sleepAmount: Int) : Float {
         return if ((sleepAmount >= 540) && (sleepAmount < 660)) {
             12F
@@ -252,6 +303,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    /**  */
     fun setBarChart(range: Int, endDateOfDiagram: LocalDate) : BarChart {
         //http://developine.com/android-grouped-stacked-bar-chart-using-mpchart-kotlin/
         val barChart = BarChart(context)
@@ -262,6 +314,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return barChart
     }
 
+    /**  */
     fun updateBarChart(barChart: BarChart, range: Int, endDateOfDiagram: LocalDate) {
         val diagramData = generateDataBarChart(range, endDateOfDiagram)
         val barData = BarData(generateBarDataSet(diagramData.first))
@@ -270,6 +323,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         barChart.invalidate()
     }
 
+    /**  */
     private fun visualSetUpBarChart(barChart: BarChart,
                                     diagramData: Triple<ArrayList<BarEntry>, List<Int>, Int>,
                                     range: Int) {
@@ -299,13 +353,48 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
             barChart.xAxis.labelCount = (diagramData.second.size)
         }
         else {
-            xAxisValues.add("Mo")
-            xAxisValues.add("Tu")
-            xAxisValues.add("We")
-            xAxisValues.add("Th")
-            xAxisValues.add("Fr")
-            xAxisValues.add("Sa")
-            xAxisValues.add("Su")
+            xAxisValues.add(
+                StringUtil.getStringXml(
+                    R.string.alarm_entity_day_mo,
+                    getApplication()
+                )
+            )
+            xAxisValues.add(
+                StringUtil.getStringXml(
+                    R.string.alarm_entity_day_tu,
+                    getApplication()
+                )
+            )
+            xAxisValues.add(
+                StringUtil.getStringXml(
+                    R.string.alarm_entity_day_we,
+                    getApplication()
+                )
+            )
+            xAxisValues.add(
+                StringUtil.getStringXml(
+                    R.string.alarm_entity_day_th,
+                    getApplication()
+                )
+            )
+            xAxisValues.add(
+                StringUtil.getStringXml(
+                    R.string.alarm_entity_day_fr,
+                    getApplication()
+                )
+            )
+            xAxisValues.add(
+                StringUtil.getStringXml(
+                    R.string.alarm_entity_day_sa,
+                    getApplication()
+                )
+            )
+            xAxisValues.add(
+                StringUtil.getStringXml(
+                    R.string.alarm_entity_day_su,
+                    getApplication()
+                )
+            )
 
             barChart.barData.barWidth = 0.75f
             barChart.xAxis.axisMaximum = 7f
@@ -319,6 +408,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         barChart.xAxis.setCenterAxisLabels(true)
         barChart.xAxis.textColor = checkDarkMode()
 
+
         // set bar label
         barChart.legend.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
         barChart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
@@ -329,14 +419,38 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
         barChart.legend.setCustom(
             listOf(
-                LegendEntry("Light", Legend.LegendForm.SQUARE, 8f, 8f, null,
-                    ContextCompat.getColor(context, R.color.light_sleep_color)),
-                LegendEntry("Deep", Legend.LegendForm.SQUARE, 8f, 8f, null,
-                    ContextCompat.getColor(context, R.color.deep_sleep_color)),
-                LegendEntry("Awake", Legend.LegendForm.SQUARE, 8f, 8f, null,
-                    ContextCompat.getColor(context, R.color.awake_sleep_color)),
-                LegendEntry("Sleep", Legend.LegendForm.SQUARE, 8f, 8f, null,
-                    ContextCompat.getColor(context, R.color.sleep_sleep_color),)
+                LegendEntry(
+                    StringUtil.getStringXml(R.string.history_day_timeInPhase_lightSleep, getApplication()),
+                    Legend.LegendForm.SQUARE,
+                    8f,
+                    8f,
+                    null,
+                    ContextCompat.getColor(context, R.color.light_sleep_color)
+                ),
+                LegendEntry(
+                    StringUtil.getStringXml(R.string.history_day_timeInPhase_deepSleep, getApplication()),
+                    Legend.LegendForm.SQUARE,
+                    8f,
+                    8f,
+                    null,
+                    ContextCompat.getColor(context, R.color.deep_sleep_color)
+                ),
+                LegendEntry(
+                    StringUtil.getStringXml(R.string.history_day_timeInPhase_awake, getApplication()),
+                    Legend.LegendForm.SQUARE,
+                    8f,
+                    8f,
+                    null,
+                    ContextCompat.getColor(context, R.color.awake_sleep_color)
+                ),
+                LegendEntry(
+                    StringUtil.getStringXml(R.string.history_day_timeInPhase_sleepSum, getApplication()),
+                    Legend.LegendForm.SQUARE,
+                    8f,
+                    8f,
+                    null,
+                    ContextCompat.getColor(context, R.color.sleep_sleep_color)
+                )
             )
         )
 
@@ -359,8 +473,14 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         barChart.axisRight.axisMaximum = proportion
         barChart.axisLeft.axisMaximum = proportion
         barChart.axisLeft.labelCount = proportion.toInt()
+
+        barChart.setScaleEnabled(false)
+        barChart.setTouchEnabled(false)
+        barChart.setPinchZoom(false)
+        barChart.isDoubleTapToZoomEnabled = false
     }
 
+    /**  */
     private fun generateDataActivityChart(range: Int, endDateOfDiagram: LocalDate): ArrayList<Entry> {
         val entries = ArrayList<Entry>()
         var xValue = 0
@@ -391,6 +511,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return entries
     }
 
+    /**  */
     fun setActivityChart(range: Int, endDateOfDiagram: LocalDate) : LineChart {
         val chart = LineChart(context)
         val lineDataSet = LineDataSet(generateDataActivityChart(range, endDateOfDiagram), "")
@@ -399,12 +520,14 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return chart
     }
 
+    /**  */
     fun updateActivityChart(chart: LineChart, range: Int, endDateOfDiagram: LocalDate) {
         val lineDataSet = LineDataSet(generateDataActivityChart(range, endDateOfDiagram), "")
         visualSetUpActivityChart(chart, lineDataSet, range)
         chart.data = LineData(lineDataSet)
     }
 
+    /**  */
     private fun visualSetUpActivityChart(chart: LineChart, lineDataSet: LineDataSet, range: Int) {
         lineDataSet.setDrawValues(false)
         lineDataSet.setDrawFilled(true)
@@ -455,6 +578,10 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         chart.xAxis.valueFormatter = IndexAxisValueFormatter(xAxisValues)
 
         chart.description.isEnabled = false
+        chart.setScaleEnabled(false)
+        chart.setTouchEnabled(false)
+        chart.setPinchZoom(false)
+        chart.isDoubleTapToZoomEnabled = false
 
         chart.animateX(500)
     }

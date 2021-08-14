@@ -11,6 +11,7 @@ import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import androidx.lifecycle.AndroidViewModel
+import com.airbnb.lottie.LottieAnimationView
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
@@ -38,6 +39,8 @@ class AlarmsViewModel(application: Application) : AndroidViewModel(application) 
     val actualExpand = ObservableField(View.GONE)
     val rotateState = ObservableField(0)
 
+    var lottie : LottieAnimationView? = null
+
     fun onExpandClicked(view: View) {
         TransitionManager.beginDelayedTransition(transitionsContainer);
 
@@ -45,6 +48,15 @@ class AlarmsViewModel(application: Application) : AndroidViewModel(application) 
         rotateState.set(if (actualExpand.get() == View.GONE) 0 else 180)
 
         alarmExpandId.set(-1)
+
+        lottie = view as LottieAnimationView
+
+        //lottie.loop(actualExpand.get() == View.GONE)
+        if(actualExpand.get() == View.GONE)
+            lottie?.playAnimation()
+        else
+            lottie?.pauseAnimation()
+
     }
 
     fun updateExpandChanged(isExpaned : Boolean) {
@@ -56,6 +68,11 @@ class AlarmsViewModel(application: Application) : AndroidViewModel(application) 
             actualExpand.set(View.GONE)
             rotateState.set(0)
         }
+
+        if(actualExpand.get() == View.GONE)
+            lottie?.playAnimation()
+        else
+            lottie?.pauseAnimation()
     }
 
     val cancelAlarmWhenAwake = ObservableField(false)

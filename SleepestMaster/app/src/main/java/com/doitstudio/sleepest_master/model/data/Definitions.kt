@@ -220,7 +220,7 @@ enum class MoodType{
     BAD,
     GOOD,
     EXCELLENT,
-    LAZY,
+    EMPOWERED,
     TIRED,
 
 }
@@ -300,37 +300,6 @@ enum class SleepDataFrequency{
                 else -> 1000 // Avoiding dividing by zero
             }
         }
-
-        /**
-         * Takes an [SleepDataFrequency] and will return the associated [Int] value for the sleep calculation input patterns for the machine learning model
-         */
-        fun getCount(type:SleepDataFrequency) : Int {
-            return when (type) {
-                SleepDataFrequency.FIVE -> 24
-                SleepDataFrequency.TEN -> 12
-                SleepDataFrequency.THIRTY -> 4
-                else -> 1000 // Avoiding dividing by zero
-            }
-        }
-    }
-}
-
-/**
- * Defines the actual model that is used in the process
- */
-enum class ModelProcess{
-    SLEEP04,
-    SLEEP12,
-    LIGHTAWAKE,
-    TABLEBED;
-
-    companion object {
-        /**
-         * Takes an [ModelProcess] and will return the associated [String] value for the sleep calculation
-         */
-        fun getString(type: ModelProcess): String {
-            return type.toString().toLowerCase().capitalize()
-        }
     }
 }
 
@@ -352,4 +321,73 @@ enum class SleepSleepChangeFrom {
     SLEEPTIMEEND
 }
 
+/**
+ * Helper for different credits websites
+ */
+enum class Websites {
+    FLATICON,
+    LOTTIEFILES;
 
+    companion object {
+
+        fun getWebsite(type:Websites) : String {
+            return when (type) {
+                Websites.FLATICON -> "https://flaticon.com/"
+                Websites.LOTTIEFILES -> "https://lottiefiles.com/"
+                else -> ""
+            }
+        }
+
+        fun getName(type:Websites) : String {
+            return when (type) {
+                Websites.FLATICON -> "Flaticon"
+                Websites.LOTTIEFILES -> "Lottifiles"
+                else -> ""
+            }
+        }
+    }
+}
+
+
+/**
+ * Helper for different info types
+ */
+enum class Info {
+    SLEEP,
+    HISTORY,
+    SETTINGS;
+    companion object{
+
+        fun getById(id:Int) : Info{
+            return when(id){
+                0 -> SLEEP
+                1 -> HISTORY
+                else -> SETTINGS
+            }
+        }
+
+    }
+}
+
+/**
+ * Helper for different info types style
+ */
+enum class InfoEntityStlye {
+    PICTURE_LEFT,
+    PICTURE_RIGHT,
+    PICTURE_TOP,
+    PICTURE_BOTTOM;
+
+    companion object{
+
+        fun getById(id:Int) : InfoEntityStlye{
+            return when(id){
+                0 -> PICTURE_LEFT
+                1 -> PICTURE_RIGHT
+                2 -> PICTURE_TOP
+                else -> PICTURE_BOTTOM
+            }
+        }
+
+    }
+}

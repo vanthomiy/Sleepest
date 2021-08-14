@@ -1,6 +1,7 @@
 package com.doitstudio.sleepest_master.storage
 
 
+import com.doitstudio.sleepest_master.model.data.MoodType
 import com.doitstudio.sleepest_master.model.data.Constants
 import com.doitstudio.sleepest_master.model.data.SleepState
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionDao
@@ -63,13 +64,13 @@ class DatabaseRepository(
 
     // Methods for SleepApiRawDataDao
     // Observed Flow will notify the observer when the data has changed.
-    val allSleepApiRawData: Flow<List<SleepApiRawDataEntity>> =
+    val allSleepApiRawData: Flow<List<SleepApiRawDataEntity>?> =
         sleepApiRawDataDao.getAll()
 
     /**
      * [time] the duration in seconds eg. 86200 would be from 24hours ago to now the data
      */
-    suspend fun getSleepApiRawDataSince(time:Int): Flow<List<SleepApiRawDataEntity>>
+    suspend fun getSleepApiRawDataSince(time:Int): Flow<List<SleepApiRawDataEntity>?>
     {
         val now = LocalDateTime.now(ZoneOffset.systemDefault())
         val seconds = now.atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
@@ -77,21 +78,11 @@ class DatabaseRepository(
     }
 
     /**
-     * [time] the duration in seconds eg. 86200 would be from 24hours ago to now the data
-     */
-    suspend fun getSleepApiRawDataSinceSeconds(time:Int): Flow<List<SleepApiRawDataEntity>>
-    {
-        val now = LocalDateTime.now(ZoneOffset.systemDefault())
-        val seconds = now.atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
-        return sleepApiRawDataDao.getSince(time)
-    }
-
-    /**
      * Gets the sleep api data from a specific state from a date in life time.
      * so we always getting the data from 15:00 the day or day before until the specific time
      * later we have to combine it with the actual sleeptimes
      */
-    fun getSleepApiRawDataFromDateLive(actualTime:LocalDateTime): Flow<List<SleepApiRawDataEntity>>
+    fun getSleepApiRawDataFromDateLive(actualTime:LocalDateTime): Flow<List<SleepApiRawDataEntity>?>
     {
         val startTime = if (actualTime.hour < 15)
             actualTime.toLocalDate().minusDays(1).atTime(15,0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
@@ -107,7 +98,7 @@ class DatabaseRepository(
      * e.g. the dateTime 20.05.2021 at 20:00 returns all data in between 20.05.2021 15:00 to 21.05.2021 at 15:00
      * later we have to combine it with the actual sleeptimes
      */
-    fun getSleepApiRawDataFromDate(actualTime:LocalDateTime): Flow<List<SleepApiRawDataEntity>>
+    fun getSleepApiRawDataFromDate(actualTime:LocalDateTime): Flow<List<SleepApiRawDataEntity>?>
     {
         val startTime = if (actualTime.hour < 15)
             actualTime.toLocalDate().minusDays(1).atTime(15,0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
@@ -120,7 +111,7 @@ class DatabaseRepository(
         return sleepApiRawDataDao.getBetween(startTime,endTime)
     }
 
-    fun getSleepApiRawDataBetweenTimestamps(startTime: Int, endTime: Int): Flow<List<SleepApiRawDataEntity>>
+    fun getSleepApiRawDataBetweenTimestamps(startTime: Int, endTime: Int): Flow<List<SleepApiRawDataEntity>?>
     {
         return sleepApiRawDataDao.getBetween(startTime, endTime)
     }
@@ -245,6 +236,16 @@ class DatabaseRepository(
         return userSession
     }
 
+    /**
+     * [time] the duration in seconds eg. 86200 would be from 24hours ago to now the data
+     */
+    suspend fun getUserSleepSessionSinceDays(days:Long): Flow<List<UserSleepSessionEntity>>
+    {
+        val now = LocalDateTime.now(ZoneOffset.systemDefault()).minusDays(days)
+        val seconds = now.atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+        return userSleepSessionDao.getSince(seconds)
+    }
+
     suspend fun insertUserSleepSession(userSleepSession: UserSleepSessionEntity) {
         userSleepSessionDao.insert(userSleepSession)
     }
@@ -255,6 +256,10 @@ class DatabaseRepository(
 
     suspend fun deleteUserSleepSession() {
         userSleepSessionDao.deleteAll()
+    }
+
+    suspend fun updateMoodAfterSleep(moodType: MoodType, sessionId: Int) {
+        userSleepSessionDao.updateMoodAfterSleep(moodType, sessionId)
     }
 
     //endregion

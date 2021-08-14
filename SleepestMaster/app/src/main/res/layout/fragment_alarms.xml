@@ -47,7 +47,7 @@
                         android:textSize="@dimen/headerSize"
                         android:textStyle="bold" />
 
-                    <ImageView
+                    <!--ImageView
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="end|center"
@@ -55,7 +55,18 @@
                         android:rotation="@{alarmsViewModel.rotateState}"
                         android:src="@drawable/ic_baseline_settings_24"
                         android:tag="0"
-                        app:tint="@color/primary_text_color" />
+                        app:tint="@color/primary_text_color" /!-->
+
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="end|center"
+                        android:onClick="@{alarmsViewModel::onExpandClicked}"
+                        android:rotation="@{alarmsViewModel.rotateState}"
+                        android:tag="0"
+                        app:lottie_rawRes="@raw/settings"
+                        app:lottie_autoPlay="true"
+                        app:lottie_loop="true"/>
 
                 </FrameLayout>
 
@@ -71,6 +82,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/valuesHeight"
                         android:layout_marginVertical="5dp"
+                        android:backgroundTint="@{alarmsViewModel.cancelAlarmWhenAwake ? @color/sleep_indicator_perfect : @color/primary_button_color}"
                         android:background="@drawable/bgroundedchoosen"
                         >
 
@@ -81,7 +93,7 @@
                             android:layout_marginStart="10dp"
                             android:gravity="center_vertical"
                             android:text="@string/sleep_alarm_auto_cancel_alarm"
-                            android:textColor="@color/tertiary_text_color"
+                            android:textColor="@color/primary_text_color"
                             android:textSize="@dimen/valueSize"
                             android:textStyle="bold" />
 
@@ -122,7 +134,7 @@
                             android:background="@drawable/bgroundedchoosen"
                             android:layout_marginStart="100dp"
                             android:text="@{alarmsViewModel.alarmSoundName}"
-                            android:textColor="@color/tertiary_text_color"
+                            android:textColor="@color/primary_text_color"
                             android:textSize="@dimen/valueSize"></androidx.appcompat.widget.AppCompatButton>
 
                     </FrameLayout>
@@ -216,11 +228,14 @@
             android:orientation="vertical"
             android:visibility="@{alarmsViewModel.noAlarmsView}"
             android:layout_gravity="center">
-            <ImageView
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
                 android:layout_gravity="center"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/empty_alarms"/>
+                app:lottie_rawRes="@raw/alarm_clock"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -234,15 +249,22 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/btn_addAlarmEntity"
+        <FrameLayout
             android:layout_width="55dp"
             android:layout_height="55dp"
             android:layout_gravity="bottom|center"
-            android:foreground="@drawable/ic_baseline_add_24"
             android:background="@drawable/roundedbutton"
             android:layout_marginBottom="10dp"
-            android:backgroundTint="@color/accent_text_color"/>
+            android:backgroundTint="@color/accent_text_color">
+            <ImageView
+                android:id="@+id/btn_addAlarmEntity"
+                android:layout_width="match_parent"
+                app:tint="@color/primary_text_color"
+                android:layout_height="match_parent"
+                android:src="@drawable/add_anim"
+                />
+        </FrameLayout>
+
 
     </FrameLayout>
 </layout>

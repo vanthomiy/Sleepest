@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.Settings;
 
 import androidx.activity.result.ActivityResult;
@@ -50,7 +51,24 @@ public class PermissionsUtil {
 
     public static boolean isActivityRecognitionPermissionGranted(Context context) {
 
-        if (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(context, Manifest.permission.ACTIVITY_RECOGNITION)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(context, Manifest.permission.ACTIVITY_RECOGNITION)) {
+                return true;
+            }
+        }
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            if ((PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(context, "com.google.android.gms.permission.ACTIVITY_RECOGNITION"))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean checkAllNeccessaryPermissions (Context context) {
+        if (PermissionsUtil.isNotificationPolicyAccessGranted(context) && PermissionsUtil.isOverlayPermissionGranted(context) &&
+                PermissionsUtil.isActivityRecognitionPermissionGranted(context)) {
             return true;
         }
 

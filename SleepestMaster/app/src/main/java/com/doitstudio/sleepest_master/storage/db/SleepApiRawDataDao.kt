@@ -10,13 +10,13 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface SleepApiRawDataDao {
     @Query("SELECT * FROM sleep_api_raw_data_table ORDER BY time_stamp_seconds DESC")
-    fun getAll(): Flow<List<SleepApiRawDataEntity>>
+    fun getAll(): Flow<List<SleepApiRawDataEntity>?>
 
     @Query("SELECT * FROM sleep_api_raw_data_table WHERE time_stamp_seconds >= :time ORDER BY time_stamp_seconds DESC")
-    fun getSince(time:Int): Flow<List<SleepApiRawDataEntity>>
+    fun getSince(time:Int): Flow<List<SleepApiRawDataEntity>?>
 
     @Query("SELECT * FROM sleep_api_raw_data_table WHERE time_stamp_seconds >= :startTime AND time_stamp_seconds <= :endTime ORDER BY time_stamp_seconds DESC")
-    fun getBetween(startTime:Int, endTime:Int): Flow<List<SleepApiRawDataEntity>>
+    fun getBetween(startTime:Int, endTime:Int): Flow<List<SleepApiRawDataEntity>?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(sleepSegmentEventEntityRaw: SleepApiRawDataEntity)

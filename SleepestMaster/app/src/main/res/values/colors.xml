@@ -4,6 +4,7 @@
     <color name="primary_app_background">#FFFFFF</color>
     <color name="primary_text_color">#1a1a1a</color>
     <color name="primary_button_color">#a1a1a1</color>
+    <color name="semi_transparent_button_color">#44a1a1a1</color>
 
     <color name="secondary_app_background">#7D7D7D</color>
     <color name="secondary_text_color">#FFFFFF</color>
@@ -17,7 +18,7 @@
     <color name="accent_button_color">#00BCD4</color>
 
     <color name="transparent_overlay_primary">#77a1a1a1</color>
-    <color name="transparent_overlay_tertiary">#11FFFFFF</color>
+    <color name="transparent_overlay_tertiary">#11000000</color>
     <color name="transparent_overlay_secondary">#77a1a1a1</color>
 
     <color name="warning_color">#FF5722</color>
@@ -31,4 +32,12 @@
     <color name="testfarbe">#FFFF0000</color>
 
     <color name="transparent">#00FFFFFF</color>
+
+    <color name="sleep_indicator_perfect">#444CAF50</color>
+    <color name="sleep_indicator_good">#44CDDC39</color>
+    <color name="sleep_indicator_bad">#44FFC107</color>
+    <color name="sleep_indicator_worst">#44FF9800</color>
+
+    <color name="white">#FFFFFF</color>
+
 </resources>

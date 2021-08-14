@@ -10,12 +10,24 @@
             type="com.doitstudio.sleepest_master.ui.settings.SettingsViewModel" />
     </data>
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@color/primary_app_background"
         >
+
+        <TextView
+            android:id="@+id/animTextSleep"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/profile_header"
+            android:textColor="@color/primary_text_color"
+            android:textSize="@dimen/headerSize"
+            android:layout_margin="20dp"
+            android:textStyle="bold"/>
 
 
         <androidx.core.widget.NestedScrollView
@@ -33,38 +45,7 @@
                 android:id="@+id/linearAnimationlayout"
                 >
 
-                <TextView
-                    android:id="@+id/animTextSleep"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/profile_header"
-                    android:textColor="@color/primary_text_color"
-                    android:textSize="@dimen/headerSize"
-                    android:layout_margin="20dp"
-                    android:textStyle="bold"/>
 
-                <androidx.constraintlayout.motion.widget.MotionLayout
-                    android:id="@+id/animatedTopView"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_margin="20dp"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    android:background="@drawable/bgroundedwhite"
-                    app:layoutDescription="@xml/fragment_profile_scene">
-
-                    <TextView
-                        android:id="@+id/header"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="40dp"
-                        android:textSize="@dimen/headerSize"
-                        android:layout_gravity="start"
-                        android:textColor="@color/primary_text_color"
-                        android:text="@string/profile_app_function"/>
-
-                </androidx.constraintlayout.motion.widget.MotionLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -115,14 +96,22 @@
                         android:visibility="@{profileViewModel.actualExpand == 0 ? profileViewModel.visibleState:profileViewModel.goneState, default=gone}"
                         >
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="0dp"
-                            android:textSize="@dimen/headerSize"
-                            android:layout_gravity="start"
-                            android:textColor="@color/primary_text_color"
-                            android:text="@string/profile_dark_mode"/>
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="0dp"
+                                android:textSize="@dimen/headerSize"
+                                android:layout_gravity="start"
+                                android:textColor="@color/primary_text_color"
+                                android:text="@string/profile_dark_mode"/>
+
+                        </LinearLayout>
+
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -131,7 +120,7 @@
                             android:layout_marginLeft="0dp"
                             android:orientation="vertical"
                             android:layout_marginVertical="10dp"
-                            android:background="@drawable/bgroundedchoosen">
+                            android:background="@drawable/bgrounded_button">
 
                             <FrameLayout
                                 android:layout_width="match_parent"
@@ -159,24 +148,38 @@
                             </FrameLayout>
 
 
-                            <androidx.appcompat.widget.AppCompatToggleButton
-                                android:layout_width="match_parent"
-                                android:visibility="@{profileViewModel.showDarkModeSetting}"
-                                android:layout_height="@dimen/valuesHeight"
-                                android:background="@drawable/transparent"
-                                android:textOn="Dark Mode"
-                                android:textOff="Light Mode"
-                                android:textColor="@color/primary_text_color"
-                                android:layout_marginBottom="10dp"
-                                android:checked="@={profileViewModel.darkMode}"
-                                android:onClick="@{profileViewModel::darkModeToggled}"/>
 
                         </LinearLayout>
+
+                        <androidx.appcompat.widget.AppCompatToggleButton
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:layout_gravity="start"
+                            android:background="@drawable/bgrounded_button"
+                            android:textSize="@dimen/valueSize"
+                            android:layout_marginVertical="5dp"
+                            android:textColor="@color/primary_text_color"
+                            android:visibility="@{profileViewModel.autoDarkMode ? profileViewModel.goneState : profileViewModel.visibleState}"
+                            android:textOn="Dark Mode"
+                            android:textOff="Light Mode"
+                            android:layout_marginBottom="10dp"
+                            android:checked="@={profileViewModel.darkMode}"
+                            android:onClick="@{profileViewModel::darkModeToggled}"/>
+
+                        <com.airbnb.lottie.LottieAnimationView
+                            android:id="@+id/lottieDarkMode"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:tag="0"
+                            app:lottie_rawRes="@raw/darkmode"
+                            app:lottie_autoPlay="false"
+                            app:lottie_loop="false"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="0dp"
+                            android:layout_marginTop="10dp"
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
                             android:textColor="@color/primary_text_color"
@@ -189,7 +192,7 @@
                             android:layout_marginLeft="0dp"
                             android:orientation="vertical"
                             android:layout_marginVertical="10dp"
-                            android:background="@drawable/bgroundedchoosen">
+                            android:background="@drawable/bgrounded_button">
 
                             <FrameLayout
                                 android:layout_width="match_parent"
@@ -321,6 +324,9 @@
 
 
                     </LinearLayout>
+
+
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -375,7 +381,7 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgroundedchoosen"
+                            android:background="@drawable/bgrounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_tutorial"
@@ -388,7 +394,7 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgroundedchoosen"
+                            android:background="@drawable/bgrounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_neccessary_settings"
@@ -452,7 +458,7 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgroundedchoosen"
+                            android:background="@drawable/bgrounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_suggestions"
@@ -465,7 +471,7 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgroundedchoosen"
+                            android:background="@drawable/bgrounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_rate"
@@ -478,7 +484,7 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgroundedchoosen"
+                            android:background="@drawable/bgrounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_report_error"
@@ -549,7 +555,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/valuesHeight"
                                 android:layout_marginEnd="50dp"
-                                android:background="@drawable/bgroundedchoosen"
+                                android:background="@drawable/bgrounded_button"
                                 android:textSize="@dimen/valueSize"
                                 android:textColor="@color/primary_text_color"
                                 android:layout_marginVertical="5dp"
@@ -598,7 +604,7 @@
                                 android:layout_height="@dimen/valuesHeight"
                                 android:layout_marginVertical="5dp"
                                 android:layout_marginEnd="50dp"
-                                android:background="@drawable/bgroundedchoosen"
+                                android:background="@drawable/bgrounded_button"
                                 android:onClick="onPermissionClicked"
                                 android:tag="dailyActivity"
                                 android:id="@+id/dailyActivityPermission"
@@ -644,7 +650,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/valuesHeight"
                                 android:layout_marginEnd="50dp"
-                                android:background="@drawable/bgroundedchoosen"
+                                android:background="@drawable/bgrounded_button"
                                 android:textSize="@dimen/valueSize"
                                 android:layout_marginVertical="5dp"
                                 android:text="@string/profile_storage"
@@ -694,7 +700,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/valuesHeight"
                                 android:layout_marginEnd="50dp"
-                                android:background="@drawable/bgroundedchoosen"
+                                android:background="@drawable/bgrounded_button"
                                 android:textSize="@dimen/valueSize"
                                 android:layout_marginVertical="5dp"
                                 android:text="@string/profile_overlapp_app"
@@ -780,14 +786,13 @@
                     </FrameLayout>
 
                     <LinearLayout
+                        android:id="@+id/ll_credits"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="10dp"
                         android:orientation="vertical"
                         android:visibility="@{profileViewModel.actualExpand == 5 ? profileViewModel.visibleState:profileViewModel.goneState, default=gone}"
                         >
-
-
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -797,28 +802,6 @@
                             android:layout_gravity="start"
                             android:textColor="@color/primary_text_color"
                             android:text="@string/profile_flaticon_introduction"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="40dp"
-                            android:textSize="@dimen/headerSize"
-                            android:textAlignment="viewStart"
-                            android:layout_gravity="start"
-                            android:textColor="@color/primary_text_color"
-                            android:text="@{profileViewModel.authorsText}"/>
-
-                        <androidx.appcompat.widget.AppCompatButton
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/transparentrounded"
-                            android:textSize="@dimen/valueSize"
-                            android:layout_marginTop="10dp"
-                            android:text="@string/profile_credits_flaticon"
-                            android:textColor="@color/accent_text_color"
-                            android:tag="flaticon"
-                            android:onClick="@{profileViewModel::onCreditsClicked}"
-                            />
 
                     </LinearLayout>
 
@@ -876,7 +859,7 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgroundedchoosen"
+                            android:background="@drawable/bgrounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_export_data"
@@ -887,7 +870,7 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgroundedchoosen"
+                            android:background="@drawable/bgrounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/profile_import_data"
@@ -900,7 +883,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
                             android:background="@drawable/bgroundedchoosen"
-                            android:backgroundTint="@color/error_color"
+                            android:backgroundTint="@{profileViewModel.removeExpand ? @color/warning_color:@color/error_color, default=@color/error_color}"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@{profileViewModel.removeButtonText}"
@@ -966,6 +949,7 @@
                         android:gravity="center_horizontal"
                         android:textAlignment="center"
                         android:textSize="@dimen/headerSize"
+                        android:fontFamily="@font/salina"
                         android:layout_gravity="center_horizontal"
                         android:textColor="@color/primary_text_color"
                         android:text="@string/profile_about_us"/>

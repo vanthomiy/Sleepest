@@ -12,9 +12,14 @@ import android.provider.DocumentsContract
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.TEXT_ALIGNMENT_CENTER
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.DontKillMyAppFragment
@@ -24,18 +29,21 @@ import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.databinding.FragmentSettingsBinding
 import com.doitstudio.sleepest_master.googleapi.SleepHandler
 import com.doitstudio.sleepest_master.model.data.Constants
+import com.doitstudio.sleepest_master.model.data.Websites
+import com.doitstudio.sleepest_master.model.data.credits.CreditsSites
 import com.doitstudio.sleepest_master.model.data.export.ImportUtil
 import com.doitstudio.sleepest_master.model.data.export.UserSleepExportData
 import com.doitstudio.sleepest_master.onboarding.OnboardingActivity
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
+import com.doitstudio.sleepest_master.util.IconAnimatorUtil.isDarkThemeOn
+import com.doitstudio.sleepest_master.util.SmileySelectorUtil
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.*
-import java.util.*
 
 
 class SettingsFragment : Fragment() {
@@ -69,7 +77,6 @@ class SettingsFragment : Fragment() {
 
         binding = FragmentSettingsBinding.inflate(inflater, container, false)
         viewModel.transitionsContainer = (binding.linearAnimationlayout)
-        viewModel.animatedTopView = binding.animatedTopView
         binding.profileViewModel = viewModel
 
         binding.sleepActivityPermission.setOnClickListener {
@@ -205,7 +212,77 @@ class SettingsFragment : Fragment() {
 
 
 
-    fun onDataClicked(view: View) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        scope.launch {
+
+            val settings = dataStoreRepository.settingsDataFlow.first()
+
+
+            if ((settings.designAutoDarkMode  && actualContext.isDarkThemeOn()) || !settings.designAutoDarkMode && settings.designDarkMode)
+                binding.lottieDarkMode.setMinAndMaxFrame(0, 240) //to play the first half
+            else
+                binding.lottieDarkMode.setMinAndMaxFrame(240, 481) //to play the second half
+
+            binding.lottieDarkMode.playAnimation()
+
+        }
+        createCredits()
+    }
+
+    private fun createCredits(){
+        val creditsSites = CreditsSites.createCreditSites()
+
+        creditsSites.forEach{ site ->
+            var creditsText = ""
+
+            site.authors.forEach{ author ->
+                creditsText += "\n      " + SmileySelectorUtil.getSmileyIteration() + "   "+ actualContext.getString(
+                    R.string.prfofile_author) + " " + author.author
+            }
+
+
+
+
+            // creating the button
+            val button = Button(actualContext)
+            // setting layout_width and layout_height using layout parameters
+            button.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, resources.getDimension(R.dimen.valuesHeight).toInt())
+            var marginParams = button.layoutParams as ViewGroup.MarginLayoutParams
+            marginParams.setMargins(10,50,10,5)
+            button.setTextColor(resources.getColor(R.color.accent_text_color))
+            button.setBackgroundDrawable(resources.getDrawable(R.drawable.transparentrounded))
+            button.textAlignment = TEXT_ALIGNMENT_CENTER
+            button.text = site.name
+            button.tag = site.site
+            button.textSize = 14f
+            button.setOnClickListener { onWebsiteClicked(it) }
+            // add Button to LinearLayout
+            binding.llCredits.addView(button)
+
+            // creating the text
+            val textView = TextView(actualContext)
+            // setting layout_width and layout_height using layout parameters
+            textView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            textView.setPadding(40,5,0,30)
+            textView.textSize = 16f
+            textView.setTextColor(resources.getColor(R.color.primary_text_color))
+            textView.text = creditsText
+            // add text to LinearLayout
+            binding.llCredits.addView(textView)
+        }
+    }
+
+    private fun onWebsiteClicked(view: View) {
+        val websiteUrl = Websites.getWebsite(view.tag as Websites)
+
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(websiteUrl)))
+
+
+    }
+
+    private fun onDataClicked(view: View) {
         when (view.tag.toString()) {
             "export" -> {
 
@@ -233,7 +310,7 @@ class SettingsFragment : Fragment() {
         }
     }
 
-    fun onPermissionClicked(view: View) {
+    private fun onPermissionClicked(view: View) {
         when (view.tag.toString()) {
             "dailyActivity" -> if (viewModel.dailyPermission.get() != true) requestPermissionLauncher.launch(
                 Manifest.permission.ACTIVITY_RECOGNITION
@@ -300,16 +377,19 @@ class SettingsFragment : Fragment() {
                             session.sleepTimes.sleepTimeEnd
                         ).first()
 
-                        val userExporSession = UserSleepExportData(
-                            session.id,
-                            session.mobilePosition,
-                            session.sleepTimes,
-                            session.userSleepRating,
-                            session.userCalculationRating,
-                            sessionSleepData
-                        )
+                        val userExporSession = sessionSleepData?.let {
+                            UserSleepExportData(
+                                session.id,
+                                session.mobilePosition,
+                                session.lightConditions,
+                                session.sleepTimes,
+                                session.userSleepRating,
+                                session.userCalculationRating,
+                                it
+                            )
+                        }
 
-                        userExporSessions.add(userExporSession)
+                        userExporSession?.let { userExporSessions.add(it) }
                     }
 
                     val exportFile = gson.toJson(userExporSessions)
