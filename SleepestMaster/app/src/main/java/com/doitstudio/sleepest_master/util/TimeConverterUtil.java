@@ -23,6 +23,27 @@ public class TimeConverterUtil {
         return time;
     }
 
+    public static String toTimeFormat(int hour, int minute) {
+
+        //wakeUpEarlyValue.set((if (wakeUpEarly.hour < 10) "0" else "") + wakeUpEarly.hour.toString() + ":" + (if (wakeUpEarly.minute < 10) "0" else "") + (wakeUpEarly.minute.toString()))
+        String hourText = null, minuteText = null;
+
+        if(hour < 10) {
+            hourText = "0" + hour;
+        } else {
+            hourText = Integer.toString(hour);
+        }
+
+        if(minute < 10) {
+            minuteText = "0" + minute;
+        } else {
+            minuteText = Integer.toString(minute);
+        }
+
+        return hourText + ":" + minuteText;
+
+    }
+
     /**
      * Convert the date to secondsOfDay
      * @param calendar date

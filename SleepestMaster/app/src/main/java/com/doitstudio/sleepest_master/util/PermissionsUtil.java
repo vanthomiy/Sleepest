@@ -17,8 +17,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.doitstudio.sleepest_master.background.ForegroundActivity;
 import com.doitstudio.sleepest_master.onboarding.OnboardingActivity;
+import com.doitstudio.sleepest_master.onboarding.PermissionActivity;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
 
 public class PermissionsUtil {
@@ -61,6 +66,12 @@ public class PermissionsUtil {
         Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"));
         context.startActivity(intent);
     }
+
+    public static void setActivityRecognitionPermission(Context context) {
+        Intent intent = new Intent(context, PermissionActivity.class);
+        context.startActivity(intent);
+    }
+
 
     /*private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {

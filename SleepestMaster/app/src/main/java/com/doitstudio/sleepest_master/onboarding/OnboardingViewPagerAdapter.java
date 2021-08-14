@@ -13,8 +13,10 @@ import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -31,11 +33,16 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class OnboardingViewPagerAdapter extends PagerAdapter {
 
     private Context context;
     private List<ImageView> indicators = new ArrayList<>();
+
+    private boolean notFirstAppStart = false;
+    private boolean enableStartApp = false;
 
     private int starttime = 72000;
     private int endtime = 32400;
@@ -47,6 +54,10 @@ public class OnboardingViewPagerAdapter extends PagerAdapter {
     private String endTimeText = "Select end time";
     private String startTimeValueText;
     private String endTimeValueText;
+
+    private Thread thread = null;
+
+    Timer timer;
 
     public OnboardingViewPagerAdapter(Context context, ArrayList<Object> arrayList) {
         this.context = context;
@@ -62,6 +73,13 @@ public class OnboardingViewPagerAdapter extends PagerAdapter {
             endTimeText = "End";
             startTimeValueText = (String) arrayList.get(4);
             endTimeValueText = (String) arrayList.get(5);
+
+            notFirstAppStart = (Boolean) arrayList.get(6);
+
+            enableStartApp = true;
+
+            timer = new Timer();
+
         }
     }
 
@@ -74,8 +92,6 @@ public class OnboardingViewPagerAdapter extends PagerAdapter {
     public boolean isViewFromObject(@NonNull @NotNull View view, @NonNull @NotNull Object object) {
         return view == object;
     }
-
-
 
     @NonNull
     @NotNull
@@ -92,6 +108,9 @@ public class OnboardingViewPagerAdapter extends PagerAdapter {
         FrameLayout frameLayoutEndTime = view.findViewById(R.id.frameLayoutEndTime);
 
         ImageView imageView = view.findViewById(R.id.ivOnboadingNoticeImage);
+        ImageView ivPermission1 = view.findViewById(R.id.ivPermission1);
+        ImageView ivPermission2 = view.findViewById(R.id.ivPermission2);
+        ImageView ivPermission3 = view.findViewById(R.id.ivPermission3);
         ImageView ivPermission4 = view.findViewById(R.id.ivPermission4);
 
         LottieAnimationView lottieAnimationViewSearch = view.findViewById(R.id.animationSearch);
@@ -107,6 +126,9 @@ public class OnboardingViewPagerAdapter extends PagerAdapter {
         TextView tvOnboardingEndTimeValue = view.findViewById(R.id.tvOnboardingEndTimeValue);
 
         Button btnOnboardingNotificationPrivacyPermission = view.findViewById(R.id.btnOnboardingNotificationPrivacyPermission);
+        Button btnOnboardingOverlayPermission = view.findViewById(R.id.btnOnboardingOverlayPermission);
+        Button btnOnboardingActivityRecognitionPermission = view.findViewById(R.id.btnOnboardingSleepdataPermission);
+        Button btnOnboardingActivityTransitionPermission = view.findViewById(R.id.btnOnboardingDailyActivityPermission);
 
         linearLayoutPermission.setVisibility(View.GONE);
         linearLayoutSettings.setVisibility(View.GONE);
@@ -137,25 +159,76 @@ public class OnboardingViewPagerAdapter extends PagerAdapter {
         indicators.add(view.findViewById(R.id.ivOnboardingIndicator2));
         indicators.add(view.findViewById(R.id.ivOnboardingIndicator3));*/
 
+        if (thread != null) {
+            thread.stop();
+        }
+
         Button btnEndOnboarding = view.findViewById(R.id.btnEndOnboarding);
         btnEndOnboarding.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent intent=new Intent(context , MainActivity.class);
-                intent.putExtra(context.getString(R.string.onboarding_intent_show_dontkillmyapp), true);
-                intent.putExtra(context.getString(R.string.onboarding_intent_starttime), starttime);
-                intent.putExtra(context.getString(R.string.onboarding_intent_endtime), endtime);
-                intent.putExtra(context.getString(R.string.onboarding_intent_duration), (durationHours * 60 + durationMinutes) * 60);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
+                if (!checkAllPermissions()) {
+                    Toast.makeText(context, context.getString(R.string.onboarding_toast_permissions), Toast.LENGTH_LONG).show();
+                    OnboardingActivity.viewPager.setCurrentItem(7);
+                } else if (enableStartApp) {
+                    Intent intent=new Intent(context , MainActivity.class);
+                    intent.putExtra(context.getString(R.string.onboarding_intent_show_dontkillmyapp), !notFirstAppStart);
+                    intent.putExtra(context.getString(R.string.onboarding_intent_starttime), starttime);
+                    intent.putExtra(context.getString(R.string.onboarding_intent_endtime), endtime);
+                    intent.putExtra(context.getString(R.string.onboarding_intent_duration), (durationHours * 60 + durationMinutes) * 60);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                } else {
+                    Toast.makeText(context, context.getString(R.string.onboarding_toast_read_to_end), Toast.LENGTH_LONG).show();
+                }
+
             }
         });
 
         btnOnboardingNotificationPrivacyPermission.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //PermissionsUtil.setNotificationPolicyAccess(context);
+                if (!PermissionsUtil.isNotificationPolicyAccessGranted(context)) {
+                    PermissionsUtil.setNotificationPolicyAccess(context);
+                } else {
+                    Toast.makeText(context, context.getString(R.string.onboarding_toast_permission_already_granted), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        btnOnboardingActivityRecognitionPermission.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!PermissionsUtil.isActivityRecognitionPermissionGranted(context)) {
+                    PermissionsUtil.setActivityRecognitionPermission(context);
+                } else {
+                    Toast.makeText(context, context.getString(R.string.onboarding_toast_permission_already_granted), Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
+
+        btnOnboardingActivityTransitionPermission.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!PermissionsUtil.isActivityRecognitionPermissionGranted(context)) {
+                    PermissionsUtil.setActivityRecognitionPermission(context);
+                } else {
+                    Toast.makeText(context, context.getString(R.string.onboarding_toast_permission_already_granted), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        btnOnboardingOverlayPermission.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!PermissionsUtil.isOverlayPermissionGranted(context)) {
+                    PermissionsUtil.setOverlayPermission(context);
+                } else {
+                    Toast.makeText(context, context.getString(R.string.onboarding_toast_permission_already_granted), Toast.LENGTH_LONG).show();
+                }
+
             }
         });
 
@@ -197,7 +270,7 @@ public class OnboardingViewPagerAdapter extends PagerAdapter {
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         starttime = (hourOfDay * 60 + minute) * 60;
                         startTimeText = "Start";
-                        startTimeValueText = hourOfDay + ":" + minute;
+                        startTimeValueText = TimeConverterUtil.toTimeFormat(hourOfDay, minute);
                         tvOnboardingStartTime.setText(startTimeText);
                         tvOnboardingStartTimeValue.setText(startTimeValueText);
 
@@ -215,7 +288,7 @@ public class OnboardingViewPagerAdapter extends PagerAdapter {
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         endtime = (hourOfDay * 60 + minute) * 60;
                         endTimeText = "End";
-                        endTimeValueText = hourOfDay + ":" + minute;
+                        endTimeValueText = TimeConverterUtil.toTimeFormat(hourOfDay, minute);
                         tvOnboardingEndTime.setText(endTimeText);
                         tvOnboardingEndTimeValue.setText(endTimeValueText);
                     }
@@ -240,49 +313,49 @@ public class OnboardingViewPagerAdapter extends PagerAdapter {
 
         switch (position) {
             case 0:
-                tvTitle.setText("Sleepest");
-                tvContent.setText("We want to give you the best possible sleep");
+                tvTitle.setText(context.getString(R.string.onboarding_title_page_1));
+                tvContent.setText(context.getString(R.string.onboarding_content_page_1));
                 imageView.setVisibility(View.VISIBLE);
                 ivInditacor1.setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
             case 1:
-                tvTitle.setText("Sleep detection");
-                tvContent.setText("The app detects when you fall asleep");
+                tvTitle.setText(context.getString(R.string.onboarding_title_page_2));
+                tvContent.setText(context.getString(R.string.onboarding_content_page_2));
                 lottieAnimationViewSearch.setVisibility(View.VISIBLE);
                 ivInditacor2.setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
             case 2:
-                tvTitle.setText("Sleep tracking");
-                tvContent.setText("The app tracks your sleep and differs awake and light or deep sleep");
+                tvTitle.setText(context.getString(R.string.onboarding_title_page_3));
+                tvContent.setText(context.getString(R.string.onboarding_content_page_3));
                 imageView.setVisibility(View.VISIBLE);
                 imageView.setImageResource(R.drawable.analytics);
                 ivInditacor3.setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
             case 3:
-                tvTitle.setText("Calculating wakeup");
-                tvContent.setText("The wake-up time is calculated based on the quality of sleep in order to achieve the set sleep duration");
+                tvTitle.setText(context.getString(R.string.onboarding_title_page_4));
+                tvContent.setText(context.getString(R.string.onboarding_content_page_4));
                 lottieAnimationViewSearch.setVisibility(View.VISIBLE);
                 lottieAnimationViewSearch.setAnimation(R.raw.animation_alarm_clock);
+                ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) lottieAnimationViewSearch.getLayoutParams();
+                layoutParams.leftMargin = 80;
                 ivInditacor4.setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
             case 4:
-                tvTitle.setText("Illustration of sleep");
-                tvContent.setText("You can look at your past sleep and analyze it");
+                tvTitle.setText(context.getString(R.string.onboarding_title_page_5));
+                tvContent.setText(context.getString(R.string.onboarding_content_page_5));
                 imageView.setVisibility(View.VISIBLE);
                 ivInditacor5.setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
             case 5:
-                tvTitle.setText("Phone position");
-                tvContent.setText("To track your sleep correctly, you should position your phone in your bed, preferably next or under your pillow. The sleep is tracked with the help of your phone sensors");
+                tvTitle.setText(context.getString(R.string.onboarding_title_page_6));
+                tvContent.setText(context.getString(R.string.onboarding_content_page_6));
                 imageView.setImageResource(R.drawable.phone_position_tim);
                 imageView.setVisibility(View.VISIBLE);
                 ivInditacor6.setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
             case 6:
-                tvTitle.setText("Settings");
-                tvContent.setText("Set your ordinary sleep time and your prefered sleep duration\n" +
-                        "You can change them later.\n" +
-                        "Tip: Set your ordinary sleep time generously to achieve a good sleep detection");
+                tvTitle.setText(context.getString(R.string.onboarding_title_page_7));
+                tvContent.setText(context.getString(R.string.onboarding_content_page_7));
                 linearLayoutSettings.setVisibility(View.VISIBLE);
                 tvOnboardingStartTime.setText(startTimeText);
                 tvOnboardingStartTimeValue.setText(startTimeValueText);
@@ -293,23 +366,46 @@ public class OnboardingViewPagerAdapter extends PagerAdapter {
                 ivInditacor7.setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
             case 7:
-                tvTitle.setText("Permissions");
-                tvContent.setText("To guarantee that the app works correct you must accept the permissions above");
+                tvTitle.setText(context.getString(R.string.onboarding_title_page_8));
+                tvContent.setText(context.getString(R.string.onboarding_content_page_8));
                 linearLayoutPermission.setVisibility(View.VISIBLE);
-                ivPermission4.setImageResource(isPermissionNotificationPrivacyGranted() ? R.drawable.ic_baseline_gpp_good_24 : R.drawable.ic_baseline_gpp_bad_24);
-                ivInditacor8.setImageResource(R.drawable.onboarding_indicator_selected);
+                int colorError = ContextCompat.getColor(context, R.color.error_color);
+                int colorGood = ContextCompat.getColor(context, R.color.accent_text_color);
+
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        ivPermission1.setImageResource(PermissionsUtil.isActivityRecognitionPermissionGranted(context) ? R.drawable.ic_baseline_gpp_good_24 : R.drawable.ic_baseline_gpp_bad_24);
+                        ivPermission2.setImageResource(PermissionsUtil.isOverlayPermissionGranted(context) ? R.drawable.ic_baseline_gpp_good_24 : R.drawable.ic_baseline_gpp_bad_24);
+                        ivPermission3.setImageResource(PermissionsUtil.isActivityRecognitionPermissionGranted(context) ? R.drawable.ic_baseline_gpp_good_24 : R.drawable.ic_baseline_gpp_bad_24);
+                        ivPermission4.setImageResource(PermissionsUtil.isNotificationPolicyAccessGranted(context) ? R.drawable.ic_baseline_gpp_good_24 : R.drawable.ic_baseline_gpp_bad_24);
+                        ivPermission1.setColorFilter((PermissionsUtil.isActivityRecognitionPermissionGranted(context) ? colorGood : colorError), android.graphics.PorterDuff.Mode.SRC_IN);
+                        ivPermission2.setColorFilter((PermissionsUtil.isOverlayPermissionGranted(context) ? colorGood : colorError), android.graphics.PorterDuff.Mode.SRC_IN);
+                        ivPermission3.setColorFilter((PermissionsUtil.isActivityRecognitionPermissionGranted(context) ? colorGood : colorError), android.graphics.PorterDuff.Mode.SRC_IN);
+                        ivPermission4.setColorFilter((PermissionsUtil.isNotificationPolicyAccessGranted(context) ? colorGood : colorError), android.graphics.PorterDuff.Mode.SRC_IN);
+                    }
+                }, 0, 1000);//wait 0 ms before doing the action and do it every 1000ms (1second)
+
+                /*ivPermission1.setImageResource(PermissionsUtil.isActivityRecognitionPermissionGranted(context) ? R.drawable.ic_baseline_gpp_good_24 : R.drawable.ic_baseline_gpp_bad_24);
+                ivPermission2.setImageResource(PermissionsUtil.isOverlayPermissionGranted(context) ? R.drawable.ic_baseline_gpp_good_24 : R.drawable.ic_baseline_gpp_bad_24);
+                ivPermission3.setImageResource(PermissionsUtil.isActivityRecognitionPermissionGranted(context) ? R.drawable.ic_baseline_gpp_good_24 : R.drawable.ic_baseline_gpp_bad_24);
+                ivPermission4.setImageResource(PermissionsUtil.isNotificationPolicyAccessGranted(context) ? R.drawable.ic_baseline_gpp_good_24 : R.drawable.ic_baseline_gpp_bad_24);
+                ivPermission1.setColorFilter((PermissionsUtil.isActivityRecognitionPermissionGranted(context) ? colorGood : colorError), android.graphics.PorterDuff.Mode.SRC_IN);
+                ivPermission2.setColorFilter((PermissionsUtil.isOverlayPermissionGranted(context) ? colorGood : colorError), android.graphics.PorterDuff.Mode.SRC_IN);
+                ivPermission3.setColorFilter((PermissionsUtil.isActivityRecognitionPermissionGranted(context) ? colorGood : colorError), android.graphics.PorterDuff.Mode.SRC_IN);
+                ivPermission4.setColorFilter((PermissionsUtil.isNotificationPolicyAccessGranted(context) ? colorGood : colorError), android.graphics.PorterDuff.Mode.SRC_IN);
+                */ivInditacor8.setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
             case 8:
-                tvTitle.setText("Battery optimization");
-                tvContent.setText("The app must run in the background to track your sleep. That's why you must follow the instructions to disable battery optimization for your device model.\n" +
-                        "Please read carefully");
-                linearLayoutPermission.setVisibility(View.VISIBLE);
+                tvTitle.setText(context.getString(R.string.onboarding_title_page_9));
+                tvContent.setText(context.getString(R.string.onboarding_content_page_9));
+                lottieAnimationViewSearch.setVisibility(View.VISIBLE);
+                lottieAnimationViewSearch.setAnimation(R.raw.animation_battery_optimization);
                 ivInditacor9.setImageResource(R.drawable.onboarding_indicator_selected);
+
+                enableStartApp = true;
                 break;
         }
-
-
-
 
         container.addView(view);
         return view;
@@ -320,8 +416,12 @@ public class OnboardingViewPagerAdapter extends PagerAdapter {
         container.removeView((View) object);
     }
 
-    public boolean isPermissionNotificationPrivacyGranted() {
-        return PermissionsUtil.isNotificationPolicyAccessGranted(context);
-    }
+    private boolean checkAllPermissions() {
+        if (PermissionsUtil.isActivityRecognitionPermissionGranted(context) && PermissionsUtil.isNotificationPolicyAccessGranted(context) &&
+         PermissionsUtil.isNotificationPolicyAccessGranted(context)) {
+            return true;
+        }
 
+        return false;
+    }
 }

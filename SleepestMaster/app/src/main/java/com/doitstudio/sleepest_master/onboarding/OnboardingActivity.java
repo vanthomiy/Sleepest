@@ -13,6 +13,7 @@ import com.doitstudio.sleepest_master.MainActivity;
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.util.TimeConverterUtil;
 
+import java.sql.Time;
 import java.util.ArrayList;
 
 public class OnboardingActivity extends AppCompatActivity {
@@ -55,10 +56,11 @@ public class OnboardingActivity extends AppCompatActivity {
                 arrayList.add(bundle.getInt(getString(R.string.onboarding_intent_endtime)));
                 arrayList.add(TimeConverterUtil.millisToTimeFormat(bundle.getInt(getString(R.string.onboarding_intent_duration)))[0]);
                 arrayList.add(TimeConverterUtil.millisToTimeFormat(bundle.getInt(getString(R.string.onboarding_intent_duration)))[1]);
-                arrayList.add(TimeConverterUtil.millisToTimeFormat(bundle.getInt(getString(R.string.onboarding_intent_starttime)))[0] + ":" +
-                        TimeConverterUtil.millisToTimeFormat(bundle.getInt(getString(R.string.onboarding_intent_starttime)))[1]);
-                arrayList.add(TimeConverterUtil.millisToTimeFormat(bundle.getInt(getString(R.string.onboarding_intent_endtime)))[0] + ":" +
-                        TimeConverterUtil.millisToTimeFormat(bundle.getInt(getString(R.string.onboarding_intent_endtime)))[1]);
+                arrayList.add(TimeConverterUtil.toTimeFormat(TimeConverterUtil.millisToTimeFormat(bundle.getInt(getString(R.string.onboarding_intent_starttime)))[0],
+                        TimeConverterUtil.millisToTimeFormat(bundle.getInt(getString(R.string.onboarding_intent_starttime)))[1]));
+                arrayList.add(TimeConverterUtil.toTimeFormat(TimeConverterUtil.millisToTimeFormat(bundle.getInt(getString(R.string.onboarding_intent_endtime)))[0],
+                        TimeConverterUtil.millisToTimeFormat(bundle.getInt(getString(R.string.onboarding_intent_endtime)))[1]));
+                arrayList.add(true);
             }
         }
 
