@@ -18,6 +18,7 @@ import com.doitstudio.sleepest_master.background.AlarmReceiver
 import com.doitstudio.sleepest_master.background.BackgroundAlarmTimeHandler
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
 import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage
+import com.doitstudio.sleepest_master.model.data.SleepSleepChangeFrom
 import com.doitstudio.sleepest_master.model.data.export.ImportUtil
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
@@ -26,6 +27,7 @@ import com.doitstudio.sleepest_master.ui.history.HistoryTabView
 import com.doitstudio.sleepest_master.ui.settings.SettingsFragment
 import com.doitstudio.sleepest_master.ui.sleep.SleepFragment
 import com.doitstudio.sleepest_master.util.PermissionsUtil
+import com.doitstudio.sleepest_master.util.SleepTimeValidationUtil
 import com.doitstudio.sleepest_master.util.TimeConverterUtil
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
@@ -60,10 +62,6 @@ class MainActivity : AppCompatActivity() {
     private val activeAlarmsLiveData by lazy {  dataBaseRepository.activeAlarmsFlow().asLiveData() }
     private val sleepParametersLiveData by lazy {  dataStoreRepository.sleepParameterFlow.asLiveData() }
     private val settingsLiveData by lazy {  dataStoreRepository.settingsDataFlow.asLiveData() }
-
-
-    private var sleepTimeBeginTemp = 0
-    private var earliestWakeupTemp = 0
 
     // endregion
 
@@ -198,17 +196,6 @@ class MainActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
 
-        sleepTimeBeginTemp = dataStoreRepository.getSleepTimeBeginJob();
-
-        scope.launch {
-
-            if (dataBaseRepository.getNextActiveAlarm() != null) {
-                earliestWakeupTemp = dataBaseRepository.getNextActiveAlarm()!!.wakeupEarly
-            } else {
-                earliestWakeupTemp = 0
-            }
-        }
-
         // observe alarm changes
         activeAlarmsLiveData.observe(this){ list ->
             // check the list if empty or not
@@ -260,6 +247,27 @@ class MainActivity : AppCompatActivity() {
                         ImportUtil.getLoadFileFromIntent(intent, applicationContext, dataBaseRepository)
                     }
                 }
+            }
+        }
+
+        val bundle :Bundle ?=intent.extras
+
+        if (bundle != null) {
+            if( bundle.getBoolean(getString(R.string.onboarding_intent_show_dontkillmyapp))) {
+                DontKillMyAppFragment.show(this@MainActivity)
+            }
+
+            scope.launch {
+                SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
+                    dataStoreRepository,
+                    dataBaseRepository,
+                    applicationContext,
+                    bundle.getInt(getString(R.string.onboarding_intent_starttime)),
+                    bundle.getInt(getString(R.string.onboarding_intent_endtime)),
+                    bundle.getInt(getString(R.string.onboarding_intent_duration)),
+                    false,
+                    SleepSleepChangeFrom.DURATION
+                )
             }
         }
     }

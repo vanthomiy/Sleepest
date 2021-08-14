@@ -246,6 +246,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
             }
 
             startWorkmanager()
+            AlarmClockReceiver.cancelAlarm(context, AlarmClockReceiverUsage.START_ALARMCLOCK)
     }
 
     fun startWorkmanager() {

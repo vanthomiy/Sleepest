@@ -48,6 +48,7 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
 
 
         scope.launch {
+
             if (dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
                 val sleepApiRawDataEntity =
                     dataBaseRepository.getSleepApiRawDataFromDateLive(LocalDateTime.now()).first()

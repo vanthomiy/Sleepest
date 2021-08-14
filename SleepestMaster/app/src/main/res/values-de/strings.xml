@@ -274,6 +274,8 @@
     <string name="profile_permission_storage">ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk</string>
     <string name="profile_overlapp_app">App Überlappen</string>
     <string name="profile_permission_overlapp_app">ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk</string>
+    <string name="profile_permission_notification_privacy">ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk</string>
+    <string name="profile__notification_privacy">Notification Privacy</string>
     <string name="profile_data">Daten</string>
     <string name="profile_export_data">Daten Exportieren</string>
     <string name="profile_import_data">Daten Importieren</string>
