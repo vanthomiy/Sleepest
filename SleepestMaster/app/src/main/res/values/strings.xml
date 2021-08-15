@@ -308,7 +308,7 @@
     <string name="onboarding_content_page_4">The wake-up time is calculated based on the quality of sleep in order to achieve the set sleep duration</string>
     <string name="onboarding_content_page_5">You can look at your past sleep and analyze it</string>
     <string name="onboarding_content_page_6">To track your sleep correctly, you should position your phone in your bed, preferably next or under your pillow. The sleep is tracked with the help of your phone sensors</string>
-    <string name="onboarding_content_page_7">Set your ordinary sleep time and your prefered sleep duration\n
+    <string name="onboarding_content_page_7">Set your ordinary sleep time and your preferred sleep duration\n
                         You can change them later.\n
                         Tip: Set your ordinary sleep time generously to achieve a good sleep detection</string>
     <string name="onboarding_content_page_8">To guarantee that the app works correct you must accept the permissions above</string>

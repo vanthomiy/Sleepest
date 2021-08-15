@@ -372,6 +372,36 @@
     <string name="history_december_title">Dezember</string>
     <!--endregion-->
 
+    <!--region onboarding-->
+    <string name="onboarding_intent_show_dontkillmyapp">ShowDontKillMyApp</string>
+    <string name="onboarding_intent_starttime">StartTime</string>
+    <string name="onboarding_intent_endtime">EndTime</string>
+    <string name="onboarding_intent_duration">Duration</string>
+    <string name="onboarding_intent_not_first_app_start">NotFirstAppStart</string>
+    <string name="onboarding_title_page_1">Sleepest</string>
+    <string name="onboarding_title_page_2">Schlaferkennung</string>
+    <string name="onboarding_title_page_3">Schlafaufzeichnung</string>
+    <string name="onboarding_title_page_4">Kalkulation des Weckzeitpunktes</string>
+    <string name="onboarding_title_page_5">Darstellung des Schlafes</string>
+    <string name="onboarding_title_page_6">Smartphone Position</string>
+    <string name="onboarding_title_page_7">Einstellungen</string>
+    <string name="onboarding_title_page_8">Berechtigungen</string>
+    <string name="onboarding_title_page_9">Akku Optimierung</string>
+    <string name="onboarding_content_page_1">Unser Ziel ist es, dir den bestmöglichen Schlaf zu geben</string>
+    <string name="onboarding_content_page_2">Die App erkennt, wenn du einschläfst</string>
+    <string name="onboarding_content_page_3">Die App zeichnet deinen Schlaf auf und unterscheidet in wach, Leicht- und Tiefschlafphasen</string>
+    <string name="onboarding_content_page_4">Der Aufweckzeitpunt wird anhand der Qualität des Schlafes berechnet, um die eingestellte Schlafdauer zu erreichen</string>
+    <string name="onboarding_content_page_5">Du kannst deinen vergangenen Schlaf betrachten und analysieren</string>
+    <string name="onboarding_content_page_6">Um deinen Schlaf korrekt aufzuzeichnen, solltest du dein Smartphone in deinem Bett positionieren, bestenfalls neben oder unter das Kopfkissen. Der Schlaf wird mithilfe der Sensoren deines Smartphones aufgezeichnet.</string>
+    <string name="onboarding_content_page_7">Stelle deine ungefähre Schlafenszeit und Schlafdauer ein\n
+                        Du kannst diese zu einem späteren Zeitpunkt jederzeit anpassen.\n
+                        Tipp: Setze deine ungefähre Schlafzeit großzügig, um eine gute Schlaferkennung zu ermöglichen</string>
+    <string name="onboarding_content_page_8">Um eine korrekte Ausführung der App zu gewährleisten, musst du die oben stehenden Berechtigungen akzeptieren</string>
+    <string name="onboarding_content_page_9">Die App muss im Hintergrund aktiv bleiben, um deinen Schlaf aufzuzeichnen. Deshalb solltest du die nachfolgenden Anweisungen zur Akku Optimierung befolgen.\n Bitte lies die ANweisungen sorgfältig.</string>
+    <string name="onboarding_toast_permissions">Bitte akzeptiere alle Berechtigungen</string>
+    <string name="onboarding_toast_read_to_end">Bitte lies das ganze Tutorial</string>
+    <string name="onboarding_toast_permission_already_granted">Diese Berechtigung wurde schon akzeptiert</string>
+
 
 
 </resources>

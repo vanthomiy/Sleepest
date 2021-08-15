@@ -36,7 +36,7 @@ import java.util.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class OnboardingViewPagerAdapter extends PagerAdapter {
+public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnClickListener {
 
     private Context context;
     private List<ImageView> indicators = new ArrayList<>();
@@ -56,6 +56,8 @@ public class OnboardingViewPagerAdapter extends PagerAdapter {
     private String endTimeValueText;
 
     private Thread thread = null;
+
+    private List<ImageView> dots = new ArrayList<>();
 
     Timer timer;
 
@@ -113,6 +115,9 @@ public class OnboardingViewPagerAdapter extends PagerAdapter {
         ImageView ivPermission3 = view.findViewById(R.id.ivPermission3);
         ImageView ivPermission4 = view.findViewById(R.id.ivPermission4);
 
+        ImageView ivNextPage = view.findViewById(R.id.ivOnboardingNextPage);
+        ImageView ivPreviousPage = view.findViewById(R.id.ivOnboardingPreviousPage);
+
         LottieAnimationView lottieAnimationViewSearch = view.findViewById(R.id.animationSearch);
 
         com.shawnlin.numberpicker.NumberPicker npDurationHours = view.findViewById(R.id.npDurationHour);
@@ -129,13 +134,25 @@ public class OnboardingViewPagerAdapter extends PagerAdapter {
         Button btnOnboardingOverlayPermission = view.findViewById(R.id.btnOnboardingOverlayPermission);
         Button btnOnboardingActivityRecognitionPermission = view.findViewById(R.id.btnOnboardingSleepdataPermission);
         Button btnOnboardingActivityTransitionPermission = view.findViewById(R.id.btnOnboardingDailyActivityPermission);
+        Button btnEndOnboarding = view.findViewById(R.id.btnEndOnboarding);
 
         linearLayoutPermission.setVisibility(View.GONE);
         linearLayoutSettings.setVisibility(View.GONE);
         imageView.setVisibility(View.GONE);
         lottieAnimationViewSearch.setVisibility(View.GONE);
 
-        ImageView ivInditacor1 = view.findViewById(R.id.ivOnboardingIndicator1);
+        dots.clear();
+        dots.add(view.findViewById(R.id.ivOnboardingIndicator1));
+        dots.add(view.findViewById(R.id.ivOnboardingIndicator2));
+        dots.add(view.findViewById(R.id.ivOnboardingIndicator3));
+        dots.add(view.findViewById(R.id.ivOnboardingIndicator4));
+        dots.add(view.findViewById(R.id.ivOnboardingIndicator5));
+        dots.add(view.findViewById(R.id.ivOnboardingIndicator6));
+        dots.add(view.findViewById(R.id.ivOnboardingIndicator7));
+        dots.add(view.findViewById(R.id.ivOnboardingIndicator8));
+        dots.add(view.findViewById(R.id.ivOnboardingIndicator9));
+
+        /*ImageView ivInditacor1 = view.findViewById(R.id.ivOnboardingIndicator1);
         ImageView ivInditacor2 = view.findViewById(R.id.ivOnboardingIndicator2);
         ImageView ivInditacor3 = view.findViewById(R.id.ivOnboardingIndicator3);
         ImageView ivInditacor4 = view.findViewById(R.id.ivOnboardingIndicator4);
@@ -143,9 +160,13 @@ public class OnboardingViewPagerAdapter extends PagerAdapter {
         ImageView ivInditacor6 = view.findViewById(R.id.ivOnboardingIndicator6);
         ImageView ivInditacor7 = view.findViewById(R.id.ivOnboardingIndicator7);
         ImageView ivInditacor8 = view.findViewById(R.id.ivOnboardingIndicator8);
-        ImageView ivInditacor9 = view.findViewById(R.id.ivOnboardingIndicator9);
+        ImageView ivInditacor9 = view.findViewById(R.id.ivOnboardingIndicator9);*/
 
-        ivInditacor1.setImageResource(R.drawable.onboarding_indicator_unselected);
+        for(int i = 0; i < dots.size(); i++) {
+            dots.get(i).setImageResource(R.drawable.onboarding_indicator_unselected);
+        }
+
+        /*ivInditacor1.setImageResource(R.drawable.onboarding_indicator_unselected);
         ivInditacor2.setImageResource(R.drawable.onboarding_indicator_unselected);
         ivInditacor3.setImageResource(R.drawable.onboarding_indicator_unselected);
         ivInditacor4.setImageResource(R.drawable.onboarding_indicator_unselected);
@@ -153,90 +174,20 @@ public class OnboardingViewPagerAdapter extends PagerAdapter {
         ivInditacor6.setImageResource(R.drawable.onboarding_indicator_unselected);
         ivInditacor7.setImageResource(R.drawable.onboarding_indicator_unselected);
         ivInditacor8.setImageResource(R.drawable.onboarding_indicator_unselected);
-        ivInditacor9.setImageResource(R.drawable.onboarding_indicator_unselected);
+        ivInditacor9.setImageResource(R.drawable.onboarding_indicator_unselected);*/
 
-        /*indicators.add(view.findViewById(R.id.ivOnboardingIndicator1));
-        indicators.add(view.findViewById(R.id.ivOnboardingIndicator2));
-        indicators.add(view.findViewById(R.id.ivOnboardingIndicator3));*/
+        btnEndOnboarding.setOnClickListener(this);
+        btnOnboardingNotificationPrivacyPermission.setOnClickListener(this);
+        btnOnboardingActivityRecognitionPermission.setOnClickListener(this);
+        btnOnboardingActivityTransitionPermission.setOnClickListener(this);
+        btnOnboardingOverlayPermission.setOnClickListener(this);
+
+        ivNextPage.setVisibility(View.VISIBLE);
+        ivPreviousPage.setVisibility(View.VISIBLE);
 
         if (thread != null) {
             thread.stop();
         }
-
-        Button btnEndOnboarding = view.findViewById(R.id.btnEndOnboarding);
-        btnEndOnboarding.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (!checkAllPermissions()) {
-                    Toast.makeText(context, context.getString(R.string.onboarding_toast_permissions), Toast.LENGTH_LONG).show();
-                    OnboardingActivity.viewPager.setCurrentItem(7);
-                } else if (enableStartApp) {
-                    Intent intent=new Intent(context , MainActivity.class);
-                    intent.putExtra(context.getString(R.string.onboarding_intent_show_dontkillmyapp), !notFirstAppStart);
-                    intent.putExtra(context.getString(R.string.onboarding_intent_starttime), starttime);
-                    intent.putExtra(context.getString(R.string.onboarding_intent_endtime), endtime);
-                    intent.putExtra(context.getString(R.string.onboarding_intent_duration), (durationHours * 60 + durationMinutes) * 60);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
-                } else {
-                    Toast.makeText(context, context.getString(R.string.onboarding_toast_read_to_end), Toast.LENGTH_LONG).show();
-                }
-
-            }
-        });
-
-        btnOnboardingNotificationPrivacyPermission.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!PermissionsUtil.isNotificationPolicyAccessGranted(context)) {
-                    PermissionsUtil.setNotificationPolicyAccess(context);
-                } else {
-                    Toast.makeText(context, context.getString(R.string.onboarding_toast_permission_already_granted), Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-
-        btnOnboardingActivityRecognitionPermission.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!PermissionsUtil.isActivityRecognitionPermissionGranted(context)) {
-                    PermissionsUtil.setActivityRecognitionPermission(context);
-                } else {
-                    Toast.makeText(context, context.getString(R.string.onboarding_toast_permission_already_granted), Toast.LENGTH_LONG).show();
-                }
-
-            }
-        });
-
-        btnOnboardingActivityTransitionPermission.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!PermissionsUtil.isActivityRecognitionPermissionGranted(context)) {
-                    PermissionsUtil.setActivityRecognitionPermission(context);
-                } else {
-                    Toast.makeText(context, context.getString(R.string.onboarding_toast_permission_already_granted), Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-
-        btnOnboardingOverlayPermission.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!PermissionsUtil.isOverlayPermissionGranted(context)) {
-                    PermissionsUtil.setOverlayPermission(context);
-                } else {
-                    Toast.makeText(context, context.getString(R.string.onboarding_toast_permission_already_granted), Toast.LENGTH_LONG).show();
-                }
-
-            }
-        });
-
-        ImageView ivNextPage = view.findViewById(R.id.ivOnboardingNextPage);
-        ImageView ivPreviousPage = view.findViewById(R.id.ivOnboardingPreviousPage);
-        ivNextPage.setVisibility(View.VISIBLE);
-        ivPreviousPage.setVisibility(View.VISIBLE);
-
 
         ivNextPage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -316,20 +267,23 @@ public class OnboardingViewPagerAdapter extends PagerAdapter {
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_1));
                 tvContent.setText(context.getString(R.string.onboarding_content_page_1));
                 imageView.setVisibility(View.VISIBLE);
-                ivInditacor1.setImageResource(R.drawable.onboarding_indicator_selected);
+                dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
+                //ivInditacor1.setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
             case 1:
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_2));
                 tvContent.setText(context.getString(R.string.onboarding_content_page_2));
                 lottieAnimationViewSearch.setVisibility(View.VISIBLE);
-                ivInditacor2.setImageResource(R.drawable.onboarding_indicator_selected);
+                dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
+                //ivInditacor2.setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
             case 2:
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_3));
                 tvContent.setText(context.getString(R.string.onboarding_content_page_3));
                 imageView.setVisibility(View.VISIBLE);
                 imageView.setImageResource(R.drawable.analytics);
-                ivInditacor3.setImageResource(R.drawable.onboarding_indicator_selected);
+                dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
+                //ivInditacor3.setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
             case 3:
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_4));
@@ -338,20 +292,23 @@ public class OnboardingViewPagerAdapter extends PagerAdapter {
                 lottieAnimationViewSearch.setAnimation(R.raw.animation_alarm_clock);
                 ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) lottieAnimationViewSearch.getLayoutParams();
                 layoutParams.leftMargin = 80;
-                ivInditacor4.setImageResource(R.drawable.onboarding_indicator_selected);
+                dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
+                //ivInditacor4.setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
             case 4:
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_5));
                 tvContent.setText(context.getString(R.string.onboarding_content_page_5));
                 imageView.setVisibility(View.VISIBLE);
-                ivInditacor5.setImageResource(R.drawable.onboarding_indicator_selected);
+                dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
+                //ivInditacor5.setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
             case 5:
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_6));
                 tvContent.setText(context.getString(R.string.onboarding_content_page_6));
                 imageView.setImageResource(R.drawable.phone_position_tim);
                 imageView.setVisibility(View.VISIBLE);
-                ivInditacor6.setImageResource(R.drawable.onboarding_indicator_selected);
+                dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
+                //ivInditacor6.setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
             case 6:
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_7));
@@ -363,7 +320,8 @@ public class OnboardingViewPagerAdapter extends PagerAdapter {
                 tvOnboardingEndTimeValue.setText(endTimeValueText);
                 npDurationHours.setValue(durationHours);
                 npDurationMinutes.setValue(durationMinutes);
-                ivInditacor7.setImageResource(R.drawable.onboarding_indicator_selected);
+                dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
+                //ivInditacor7.setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
             case 7:
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_8));
@@ -386,22 +344,16 @@ public class OnboardingViewPagerAdapter extends PagerAdapter {
                     }
                 }, 0, 1000);//wait 0 ms before doing the action and do it every 1000ms (1second)
 
-                /*ivPermission1.setImageResource(PermissionsUtil.isActivityRecognitionPermissionGranted(context) ? R.drawable.ic_baseline_gpp_good_24 : R.drawable.ic_baseline_gpp_bad_24);
-                ivPermission2.setImageResource(PermissionsUtil.isOverlayPermissionGranted(context) ? R.drawable.ic_baseline_gpp_good_24 : R.drawable.ic_baseline_gpp_bad_24);
-                ivPermission3.setImageResource(PermissionsUtil.isActivityRecognitionPermissionGranted(context) ? R.drawable.ic_baseline_gpp_good_24 : R.drawable.ic_baseline_gpp_bad_24);
-                ivPermission4.setImageResource(PermissionsUtil.isNotificationPolicyAccessGranted(context) ? R.drawable.ic_baseline_gpp_good_24 : R.drawable.ic_baseline_gpp_bad_24);
-                ivPermission1.setColorFilter((PermissionsUtil.isActivityRecognitionPermissionGranted(context) ? colorGood : colorError), android.graphics.PorterDuff.Mode.SRC_IN);
-                ivPermission2.setColorFilter((PermissionsUtil.isOverlayPermissionGranted(context) ? colorGood : colorError), android.graphics.PorterDuff.Mode.SRC_IN);
-                ivPermission3.setColorFilter((PermissionsUtil.isActivityRecognitionPermissionGranted(context) ? colorGood : colorError), android.graphics.PorterDuff.Mode.SRC_IN);
-                ivPermission4.setColorFilter((PermissionsUtil.isNotificationPolicyAccessGranted(context) ? colorGood : colorError), android.graphics.PorterDuff.Mode.SRC_IN);
-                */ivInditacor8.setImageResource(R.drawable.onboarding_indicator_selected);
+                dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
+                //ivInditacor8.setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
             case 8:
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_9));
                 tvContent.setText(context.getString(R.string.onboarding_content_page_9));
                 lottieAnimationViewSearch.setVisibility(View.VISIBLE);
                 lottieAnimationViewSearch.setAnimation(R.raw.animation_battery_optimization);
-                ivInditacor9.setImageResource(R.drawable.onboarding_indicator_selected);
+                dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
+                //ivInditacor9.setImageResource(R.drawable.onboarding_indicator_selected);
 
                 enableStartApp = true;
                 break;
@@ -418,10 +370,60 @@ public class OnboardingViewPagerAdapter extends PagerAdapter {
 
     private boolean checkAllPermissions() {
         if (PermissionsUtil.isActivityRecognitionPermissionGranted(context) && PermissionsUtil.isNotificationPolicyAccessGranted(context) &&
-         PermissionsUtil.isNotificationPolicyAccessGranted(context)) {
+                PermissionsUtil.isNotificationPolicyAccessGranted(context)) {
             return true;
         }
 
         return false;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btnOnboardingDailyActivityPermission:
+                if (!PermissionsUtil.isActivityRecognitionPermissionGranted(context)) {
+                    PermissionsUtil.setActivityRecognitionPermission(context);
+                } else {
+                    Toast.makeText(context, context.getString(R.string.onboarding_toast_permission_already_granted), Toast.LENGTH_LONG).show();
+                }
+                break;
+            case R.id.btnOnboardingNotificationPrivacyPermission:
+                if (!PermissionsUtil.isNotificationPolicyAccessGranted(context)) {
+                    PermissionsUtil.setNotificationPolicyAccess(context);
+                } else {
+                    Toast.makeText(context, context.getString(R.string.onboarding_toast_permission_already_granted), Toast.LENGTH_LONG).show();
+                }
+                break;
+            case R.id.btnOnboardingOverlayPermission:
+                if (!PermissionsUtil.isOverlayPermissionGranted(context)) {
+                    PermissionsUtil.setOverlayPermission(context);
+                } else {
+                    Toast.makeText(context, context.getString(R.string.onboarding_toast_permission_already_granted), Toast.LENGTH_LONG).show();
+                }
+                break;
+            case R.id.btnOnboardingSleepdataPermission:
+                if (!PermissionsUtil.isActivityRecognitionPermissionGranted(context)) {
+                    PermissionsUtil.setActivityRecognitionPermission(context);
+                } else {
+                    Toast.makeText(context, context.getString(R.string.onboarding_toast_permission_already_granted), Toast.LENGTH_LONG).show();
+                }
+                break;
+            case R.id.btnEndOnboarding:
+                if (!checkAllPermissions()) {
+                    Toast.makeText(context, context.getString(R.string.onboarding_toast_permissions), Toast.LENGTH_LONG).show();
+                    OnboardingActivity.viewPager.setCurrentItem(7);
+                } else if (enableStartApp) {
+                    Intent intent=new Intent(context , MainActivity.class);
+                    intent.putExtra(context.getString(R.string.onboarding_intent_show_dontkillmyapp), !notFirstAppStart);
+                    intent.putExtra(context.getString(R.string.onboarding_intent_starttime), starttime);
+                    intent.putExtra(context.getString(R.string.onboarding_intent_endtime), endtime);
+                    intent.putExtra(context.getString(R.string.onboarding_intent_duration), (durationHours * 60 + durationMinutes) * 60);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                } else {
+                    Toast.makeText(context, context.getString(R.string.onboarding_toast_read_to_end), Toast.LENGTH_LONG).show();
+                }
+                break;
+        }
     }
 }

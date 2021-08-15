@@ -2,14 +2,9 @@ package com.doitstudio.sleepest_master
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.view.WindowManager
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
-import com.doitstudio.sleepest_master.databinding.SplashScreenBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
+import com.doitstudio.sleepest_master.onboarding.OnboardingActivity
 
 class SplashScreen : AppCompatActivity() {
 
@@ -37,11 +32,26 @@ class SplashScreen : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
+
         // Send user to MainActivity as soon as this activity loads
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
         // remove this activity from the stack
-        finish()
+        if (notFirstAppStart()) {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        } else {
+            val editor = getSharedPreferences("FirstAppStart", MODE_PRIVATE).edit()
+            editor.putBoolean("started", true)
+            editor.apply()
+            val intent = Intent(this, OnboardingActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+    }
+
+    private fun notFirstAppStart(): Boolean {
+        val sharedPreferences = getSharedPreferences("FirstAppStart", MODE_PRIVATE)
+        return sharedPreferences.getBoolean("started", false)
     }
 
     companion object {
