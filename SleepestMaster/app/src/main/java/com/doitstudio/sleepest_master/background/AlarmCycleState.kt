@@ -29,13 +29,13 @@ class AlarmCycleState(private val context: Context) {
     suspend fun chooseState() : AlarmCycleStates {
         if (databaseRepository.getNextActiveAlarm() != null && dataStoreRepository.isInSleepTime(null)) {
 
-            if (isBetweenTwoTimes(dataStoreRepository.getSleepTimeBegin(), databaseRepository.getNextActiveAlarm()!!.wakeupEarly - 1800,
-                checkDayChange(dataStoreRepository.getSleepTimeBegin(), databaseRepository.getNextActiveAlarm()!!.wakeupEarly - 1800))) {
+            if (isBetweenTwoTimes(dataStoreRepository.getSleepTimeBegin(), databaseRepository.getNextActiveAlarm()!!.wakeupEarly - Constants.CALCULATION_START_DIFFERENCE,
+                checkDayChange(dataStoreRepository.getSleepTimeBegin(), databaseRepository.getNextActiveAlarm()!!.wakeupEarly - Constants.CALCULATION_START_DIFFERENCE))) {
 
                     return AlarmCycleStates.BETWEEN_SLEEPTIME_START_AND_CALCULATION
 
-            } else if (isBetweenTwoTimes(databaseRepository.getNextActiveAlarm()!!.wakeupEarly - 1800, databaseRepository.getNextActiveAlarm()!!.wakeupEarly,
-                    checkDayChange(databaseRepository.getNextActiveAlarm()!!.wakeupEarly - 1800, databaseRepository.getNextActiveAlarm()!!.wakeupEarly))) {
+            } else if (isBetweenTwoTimes(databaseRepository.getNextActiveAlarm()!!.wakeupEarly - Constants.CALCULATION_START_DIFFERENCE, databaseRepository.getNextActiveAlarm()!!.wakeupEarly,
+                    checkDayChange(databaseRepository.getNextActiveAlarm()!!.wakeupEarly - Constants.CALCULATION_START_DIFFERENCE, databaseRepository.getNextActiveAlarm()!!.wakeupEarly))) {
 
                         return AlarmCycleStates.BETWEEN_CALCULATION_AND_FIRST_WAKEUP
 

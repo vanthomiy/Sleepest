@@ -580,7 +580,7 @@ public class ForegroundService extends LifecycleService {
             remoteViews.setOnClickPendingIntent(R.id.btnDisableAlarmNotification, btnClickPendingIntent);
         }
 
-        if((userSleepTime <= 60) && (userSleepTime > 0)) {
+        if((userSleepTime <= Constants.NOT_SLEEP_BUTTON_DELAY) && (userSleepTime > 0)) {
             //Set button for not sleeping
             btnClickIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
             btnClickIntent.putExtra(getApplicationContext().getString(R.string.alarmmanager_key), AlarmReceiverUsage.NOT_SLEEPING.name());
