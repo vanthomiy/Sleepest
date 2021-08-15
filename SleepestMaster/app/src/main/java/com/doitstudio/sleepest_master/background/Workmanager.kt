@@ -75,6 +75,7 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
 
         val pref: SharedPreferences = applicationContext.getSharedPreferences("Workmanager", 0)
         val ed = pref.edit()
+        ed.putInt("day", calendar.get(Calendar.DAY_OF_WEEK))
         ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY))
         ed.putInt("minute", calendar.get(Calendar.MINUTE))
         ed.apply()

@@ -145,12 +145,12 @@ class SettingsFragment : Fragment() {
             """.trimIndent()
         pref = actualContext.getSharedPreferences("Workmanager", 0)
         val textLastWorkmanager = """
-            Last workmanager call: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getLong("diff", 0)}
+            Last workmanager call: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt("day", 0)}
             
             """.trimIndent()
         pref = actualContext.getSharedPreferences("WorkmanagerCalculation", 0)
         val textLastWorkmanagerCalculation = """
-            Last workmanagerCalc call: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
+            Last workmanagerCalc call: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt("day", 0)}
             
             """.trimIndent()
         pref = actualContext.getSharedPreferences("AlarmClock", 0)

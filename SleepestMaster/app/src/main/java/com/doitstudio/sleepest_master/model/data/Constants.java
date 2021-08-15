@@ -9,6 +9,7 @@ public class Constants {
     public static final int ACTIVITY_RECOGNITION_PERMISSION_REQUEST_CODE = 1005;
     public static final int WORKMANAGER_CALCULATION_DURATION = 16;
     public static final int WORKMANAGER_DURATION = 16;
+    public static final int CALCULATION_START_DIFFERENCE = 1800;
     public static final int LEVEL_AND_FLAGS = 1;
     public static final long WAKE_LOCK_TIMEOUT = 60 * 1000L;
     public static final int DAY_IN_SECONDS = 86400;
