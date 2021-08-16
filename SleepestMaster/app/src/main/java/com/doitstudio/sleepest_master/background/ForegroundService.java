@@ -125,6 +125,8 @@ public class ForegroundService extends LifecycleService {
         sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(MainApplication.Companion.applicationContext());
         alarmCycleState = new AlarmCycleState(getApplicationContext());
 
+        foregroundObserver.resetSleepTime();
+
         if (alarmEntity != null) {
             foregroundObserver.updateAlarmWasFired(false, alarmEntity.getId());
             alarmTimeInSeconds = alarmEntity.getWakeupEarly();

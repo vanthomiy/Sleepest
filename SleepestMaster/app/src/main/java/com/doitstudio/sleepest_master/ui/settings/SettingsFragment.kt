@@ -26,8 +26,11 @@ import com.doitstudio.sleepest_master.DontKillMyAppFragment
 import com.doitstudio.sleepest_master.MainActivity
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
+import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
+import com.doitstudio.sleepest_master.background.ForegroundActivity
 import com.doitstudio.sleepest_master.databinding.FragmentSettingsBinding
 import com.doitstudio.sleepest_master.googleapi.SleepHandler
+import com.doitstudio.sleepest_master.model.data.AlarmClockReceiverUsage
 import com.doitstudio.sleepest_master.model.data.Constants
 import com.doitstudio.sleepest_master.model.data.Websites
 import com.doitstudio.sleepest_master.model.data.credits.CreditsSites
@@ -38,12 +41,15 @@ import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.util.IconAnimatorUtil.isDarkThemeOn
 import com.doitstudio.sleepest_master.util.SmileySelectorUtil
+import com.doitstudio.sleepest_master.util.TimeConverterUtil
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.*
+import java.time.LocalTime
+import java.util.*
 
 
 class SettingsFragment : Fragment() {
@@ -110,7 +116,10 @@ class SettingsFragment : Fragment() {
 
         }
         binding.btnImportantSettings.setOnClickListener() {
-            DontKillMyAppFragment.show(requireActivity())
+            //DontKillMyAppFragment.show(requireActivity())
+            val calendar = TimeConverterUtil.getAlarmDate(LocalTime.now().toSecondOfDay() + 120)
+            AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), actualContext, AlarmClockReceiverUsage.START_ALARMCLOCK)
+
         }
 
         viewModel.actualExpand.set(caseOfEntrie)

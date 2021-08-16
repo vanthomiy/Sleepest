@@ -47,7 +47,7 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
         val sleepCalculationHandler : SleepCalculationHandler = getHandler(applicationContext)
 
 
-        scope.launch {
+        /*scope.launch {
 
             if (dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
                 val sleepApiRawDataEntity =
@@ -69,7 +69,7 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
                     notificationsUtil.chooseNotification()
                 }
             }
-        }
+        }*/
 
         val calendar: Calendar = Calendar.getInstance()
 
@@ -80,9 +80,11 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
         ed.putInt("minute", calendar.get(Calendar.MINUTE))
         ed.apply()
 
-        scope.launch {
+        /*scope.launch {
             sleepCalculationHandler.checkIsUserSleeping(null)
-        }
+        }*/
+
+        sleepCalculationHandler.checkIsUserSleepingJob(null)
 
         return Result.success()
     }

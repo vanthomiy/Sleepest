@@ -24,6 +24,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.*
@@ -185,9 +186,16 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
     }
 
-    fun stopForegroundService(inActivity : Boolean) {
-        scope.launch {
+    fun stopForegroundService(inActivity : Boolean) = runBlocking{
+
             if (checkForegroundStatus()) {
+
+                WorkmanagerCalculation.stopPeriodicWorkmanager()
+                AlarmClockReceiver.cancelAlarm(context.applicationContext, AlarmClockReceiverUsage.START_ALARMCLOCK);
+                AlarmClockReceiver.cancelAlarm(context.applicationContext, AlarmClockReceiverUsage.LATEST_WAKEUP_ALARMCLOCK);
+
+                //Cancel Alarm for starting Workmanager
+                AlarmReceiver.cancelAlarm(context, AlarmReceiverUsage.START_WORKMANAGER_CALCULATION)
 
                 if (inActivity) {
                     val startForegroundIntent = Intent(context, ForegroundActivity::class.java)
@@ -199,14 +207,9 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                     ForegroundService.startOrStopForegroundService(Actions.STOP, context)
                 }
 
-                WorkmanagerCalculation.stopPeriodicWorkmanager()
-                AlarmClockReceiver.cancelAlarm(context.applicationContext, AlarmClockReceiverUsage.START_ALARMCLOCK);
-                AlarmClockReceiver.cancelAlarm(context.applicationContext, AlarmClockReceiverUsage.LATEST_WAKEUP_ALARMCLOCK);
 
-                //Cancel Alarm for starting Workmanager
-                AlarmReceiver.cancelAlarm(context, AlarmReceiverUsage.START_WORKMANAGER_CALCULATION)
             }
-        }
+
     }
 
     private suspend fun startForegroundService(inActivity : Boolean) {
