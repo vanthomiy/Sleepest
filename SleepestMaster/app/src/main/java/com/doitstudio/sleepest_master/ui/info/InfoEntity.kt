@@ -73,7 +73,7 @@ data class InfoEntity (
                     image = R.drawable.ic_settings_black_24dp,
                     lottie = null,
                     textHeader = "",
-                    textDescription = context.resources.getString(R.string.sleep_general_info),
+                    textDescription = context.resources.getString(R.string.sleep_general_info_1),
                     infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
                     )
                 )
@@ -86,58 +86,121 @@ data class InfoEntity (
                 7 ->  listOf(InfoEntity(
                     image = R.drawable.sleep_mood_bad,
                     lottie = null,
-                    textHeader = "Sleeep",
-                    textDescription = context.resources.getString(R.string.sleep_general_info),
-                    infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
+                    textHeader = null,
+                    textDescription = context.resources.getString(R.string.sleep_general_info_1),
+                    infoEntityStlye = InfoEntityStlye.PICTURE_TOP
+                    ),
+                    InfoEntity(
+                    image = R.drawable.sleep_mood_bad,
+                    lottie = null,
+                    textHeader = null,
+                    textDescription = context.resources.getString(R.string.sleep_general_info_2),
+                    infoEntityStlye = InfoEntityStlye.PICTURE_RIGHT
+                    ),
+                    InfoEntity(
+                        image = null,
+                        lottie = null,
+                        textHeader = null,
+                        textDescription = context.resources.getString(R.string.sleep_general_info_3),
+                        infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
                     )
                 )
                 0 ->  listOf(InfoEntity(
                         image = null,
                         lottie = R.raw.settings,
-                        textHeader = "",
-                        textDescription = context.resources.getString(R.string.sleep_sleeptimes_info),
+                        textHeader = null,
+                        textDescription = context.resources.getString(R.string.sleep_sleeptimes_info_1),
                     infoEntityStlye = InfoEntityStlye.PICTURE_RIGHT
+                    ),
+                    InfoEntity(
+                        image = null,
+                        lottie = R.raw.settings,
+                        textHeader = null,
+                        textDescription = context.resources.getString(R.string.sleep_sleeptimes_info_2),
+                        infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
+                    ),
+                    InfoEntity(
+                        image = null,
+                        lottie = R.raw.settings,
+                        textHeader = null,
+                        textDescription = context.resources.getString(R.string.sleep_sleeptimes_info_3),
+                        infoEntityStlye = InfoEntityStlye.PICTURE_RIGHT
                     )
                 )
                 1 ->  listOf(InfoEntity(
                     image = R.drawable.sleep_mood_bad,
                     lottie = null,
-                    textHeader = "",
-                    textDescription = context.resources.getString(R.string.sleep_sleepduration_info),
+                    textHeader = null,
+                    textDescription = context.resources.getString(R.string.sleep_sleepduration_info_1),
                     infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
-                )
+                ),
+                    InfoEntity(
+                        image = R.drawable.sleep_mood_bad,
+                        lottie = null,
+                        textHeader = null,
+                        textDescription = context.resources.getString(R.string.sleep_sleepduration_info_2),
+                        infoEntityStlye = InfoEntityStlye.PICTURE_RIGHT
+                    )
                 )
                 6 ->  listOf(InfoEntity(
                     image = null,
                     lottie = R.raw.settings,
-                    textHeader = "",
-                    textDescription = context.resources.getString(R.string.sleep_lightcondition_info),
+                    textHeader = null,
+                    textDescription = context.resources.getString(R.string.sleep_lightcondition_info_1),
                     infoEntityStlye = InfoEntityStlye.PICTURE_RIGHT
-                )
+                ),
+                    InfoEntity(
+                        image = null,
+                        lottie = R.raw.settings,
+                        textHeader = null,
+                        textDescription = context.resources.getString(R.string.sleep_lightcondition_info_2),
+                        infoEntityStlye = InfoEntityStlye.PICTURE_RIGHT
+                    )
                 )
                 2 ->  listOf(InfoEntity(
                     image = R.drawable.sleep_mood_bad,
                     lottie = null,
-                    textHeader = "",
-                    textDescription = context.resources.getString(R.string.sleep_phoneposition_info),
+                    textHeader = null,
+                    textDescription = context.resources.getString(R.string.sleep_phoneposition_info_1),
                     infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
-                )
+                ),
+                    InfoEntity(
+                        image = R.drawable.sleep_mood_bad,
+                        lottie = null,
+                        textHeader = null,
+                        textDescription = context.resources.getString(R.string.sleep_phoneposition_info_2),
+                        infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
+                    )
                 )
                 3 ->  listOf(InfoEntity(
                     image = null,
                     lottie = R.raw.settings,
-                    textHeader = "",
-                    textDescription = context.resources.getString(R.string.sleep_phoneusage_info),
+                    textHeader = null,
+                    textDescription = context.resources.getString(R.string.sleep_phoneusage_info_1),
                     infoEntityStlye = InfoEntityStlye.PICTURE_RIGHT
-                )
+                ),
+                    InfoEntity(
+                        image = null,
+                        lottie = R.raw.settings,
+                        textHeader = null,
+                        textDescription = context.resources.getString(R.string.sleep_phoneusage_info_2),
+                        infoEntityStlye = InfoEntityStlye.PICTURE_RIGHT
+                    )
                 )
                 4 ->  listOf(InfoEntity(
                     image = R.drawable.sleep_mood_bad,
                     lottie = null,
-                    textHeader = "",
-                    textDescription = context.resources.getString(R.string.sleep_activitytracking_info),
+                    textHeader = null,
+                    textDescription = context.resources.getString(R.string.sleep_activitytracking_info_1),
                     infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
-                )
+                ),
+                    InfoEntity(
+                        image = R.drawable.sleep_mood_bad,
+                        lottie = null,
+                        textHeader = null,
+                        textDescription = context.resources.getString(R.string.sleep_activitytracking_info_2),
+                        infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
+                    )
                 )
                 else -> noInfo(context)
             }
