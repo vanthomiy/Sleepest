@@ -137,7 +137,11 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
 
     fun onDurationChange(hour: Int, minute: Int) {
 
-        val time = LocalTime.of(hour, (minute-1) * 15)
+        var hourSetter = hour
+        if(hour >= 24)
+            hourSetter = 23
+
+        val time = LocalTime.of(hourSetter, (minute-1) * 15)
 
         scope.launch {
             SleepTimeValidationUtil.checkAlarmActionIsAllowedAndDoAction(
