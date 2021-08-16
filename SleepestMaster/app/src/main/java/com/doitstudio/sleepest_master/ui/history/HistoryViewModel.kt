@@ -140,10 +140,10 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                     sleepSessionData[id] = Triple(
                         dataBaseRepository.getSleepApiRawDataBetweenTimestamps(
                             session.sleepTimes.sleepTimeStart,
-                            session.sleepTimes.sleepTimeEnd).first().sortedBy { x -> x.timestampSeconds },
+                            session.sleepTimes.sleepTimeEnd).first()?.sortedBy { x -> x.timestampSeconds },
                         session.sleepTimes.sleepDuration,
                         session
-                    )
+                    ) as Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>
                 }
 
                 idsListener.set(id)
@@ -162,6 +162,18 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                 val mobilePosition = sleepSessionData[key]?.third?.mobilePosition
                 val isSleeping = it.any { x -> x.sleepState == SleepState.SLEEPING }
                 val isUnidentified = it.any { x -> x.sleepState == SleepState.NONE }
+
+                if ((isUnidentified)) {
+                    scope.launch {
+                        SleepCalculationHandler.getHandler(context).checkIsUserSleeping(
+                            LocalDateTime.ofInstant(
+                                Instant.ofEpochMilli((sleepSessionData[key]?.third?.sleepTimes?.sleepTimeStart?.toLong())!! * 1000),
+                                ZoneOffset.systemDefault()
+                            ),
+                            true
+                        )
+                    }
+                }
 
                 if ((mobilePosition == MobilePosition.INBED && isSleeping)) { // || isUnidentified) {
                     scope.launch {

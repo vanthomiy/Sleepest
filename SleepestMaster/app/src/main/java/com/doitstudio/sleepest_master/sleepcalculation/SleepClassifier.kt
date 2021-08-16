@@ -129,6 +129,8 @@ class SleepClassifier constructor(private val context: Context) {
 
             val actualThreshold = ThresholdParams()
 
+            val nextThreeTimes = ThresholdParams()
+
             if(prePrediction) {
                 actualThreshold.confidence = sortedSleepListBefore.last().confidence.toFloat()
                 actualThreshold.light = sortedSleepListBefore.last().light.toFloat()
@@ -138,6 +140,10 @@ class SleepClassifier constructor(private val context: Context) {
                 actualThreshold.confidence = (sortedSleepListAfter!!.sumOf { x-> x.confidence } / sortedSleepListAfter.count()).toFloat()
                 actualThreshold.light = (sortedSleepListAfter!!.sumOf { x-> x.light } / sortedSleepListAfter.count()).toFloat()
                 actualThreshold.motion = (sortedSleepListAfter!!.sumOf { x-> x.motion } / sortedSleepListAfter.count()).toFloat()
+
+                nextThreeTimes.confidence = (sortedSleepListAfter!!.take(3).sumOf { x-> x.confidence } / sortedSleepListAfter.take(3).count()).toFloat()
+                nextThreeTimes.light = (sortedSleepListAfter!!.take(3).sumOf { x-> x.light } / sortedSleepListAfter.take(3).count()).toFloat()
+                nextThreeTimes.motion = (sortedSleepListAfter!!.take(3).sumOf { x-> x.motion } / sortedSleepListAfter.take(3).count()).toFloat()
             }
 
             val avgStartThreshold = ThresholdParams()
@@ -148,7 +154,16 @@ class SleepClassifier constructor(private val context: Context) {
 
             actualThreshold.absBetweenThresholds(avgStartThreshold)
 
-            isSleepStarted = actualParams.sleepStartBorder.checkIfDifferenceThreshold(true, 3, actualThreshold)
+            isSleepStarted = (actualParams.sleepStartBorder.checkIfDifferenceThreshold(
+                true,
+                3,
+                actualThreshold) &&
+                    (!prePrediction || actualParams.sleepStartThreshold.checkIfThreshold(
+                        true,
+                        3,
+                        nextThreeTimes)
+                            ))
+
         }
 
         // Is Sleeping detection cleanup

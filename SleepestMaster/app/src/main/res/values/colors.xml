@@ -18,7 +18,7 @@
     <color name="accent_button_color">#00BCD4</color>
 
     <color name="transparent_overlay_primary">#77a1a1a1</color>
-    <color name="transparent_overlay_tertiary">#11FFFFFF</color>
+    <color name="transparent_overlay_tertiary">#11000000</color>
     <color name="transparent_overlay_secondary">#77a1a1a1</color>
 
     <color name="warning_color">#FF5722</color>

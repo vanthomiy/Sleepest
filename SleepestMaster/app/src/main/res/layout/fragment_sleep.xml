@@ -142,8 +142,24 @@
                     android:id="@+id/linearAnimationlayout"
                     >
 
-
                     <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="@{sleepViewModel.actualExpand == 7 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}">
+                        <fragment
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
+                            android:id="@+id/fragment"
+                            android:layout_gravity="center_horizontal"
+                            app:infoId = "0"
+                            app:info = "HISTORY"
+                            app:direction = "PICTURE_RIGHT"
+                            />
+                    </FrameLayout>
+
+
+                    <!--FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="20dp"
@@ -161,7 +177,7 @@
                             android:textColor="@color/primary_text_color"
                             android:text="@string/sleep_general_info"/>
 
-                    </FrameLayout>
+                    </FrameLayout!-->
 
                     <LinearLayout
                         android:layout_width="match_parent"

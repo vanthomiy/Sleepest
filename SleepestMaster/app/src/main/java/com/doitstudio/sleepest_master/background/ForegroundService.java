@@ -35,6 +35,7 @@ import com.doitstudio.sleepest_master.SleepApiData;
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver;
 import com.doitstudio.sleepest_master.model.data.Actions;
 import com.doitstudio.sleepest_master.model.data.AlarmClockReceiverUsage;
+import com.doitstudio.sleepest_master.model.data.AlarmCycleStates;
 import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage;
 import com.doitstudio.sleepest_master.model.data.Constants;
 import com.doitstudio.sleepest_master.googleapi.SleepHandler;
@@ -77,6 +78,7 @@ public class ForegroundService extends LifecycleService {
     private SleepHandler sleepHandler; //Instance of SleepHandler
     public ForegroundObserver foregroundObserver; //Instance of the ForegroundObserver for live data
     private NotificationUtil notificationUtil;
+    private AlarmCycleState alarmCycleState;
 
     //region service functions
 
@@ -121,6 +123,7 @@ public class ForegroundService extends LifecycleService {
         dataStoreRepository = DataStoreRepository.Companion.getRepo(getApplicationContext());
         sleepHandler =  SleepHandler.Companion.getHandler(getApplicationContext());
         sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(MainApplication.Companion.applicationContext());
+        alarmCycleState = new AlarmCycleState(getApplicationContext());
 
         if (alarmEntity != null) {
             foregroundObserver.updateAlarmWasFired(false, alarmEntity.getId());
@@ -416,10 +419,10 @@ public class ForegroundService extends LifecycleService {
      */
     private void checkAlarmSet() {
         if ((actualWakeUp != 0) && !AlarmClockReceiver.isAlarmClockActive(getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK)) {
-            Calendar calendar = TimeConverterUtil.getAlarmDate(actualWakeUp);
-            AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK) ,calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
+            //Calendar calendar = TimeConverterUtil.getAlarmDate(actualWakeUp);
+            //AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK) ,calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
 
-            setPreferences(calendar, actualWakeUp, 9);
+            //setPreferences(calendar, actualWakeUp, 9);
         }
     }
 
@@ -529,12 +532,22 @@ public class ForegroundService extends LifecycleService {
         arrayList.add(userSleepTime);
         arrayList.add(isAlarmActive);
         arrayList.add(isSleeping);
-        arrayList.add(alarmTimeInSeconds);
+        arrayList.add(getRealAlarmTime(alarmTimeInSeconds));
         arrayList.add(bannerConfig);
         arrayList.add(isSubscribed);
         arrayList.add(sleepValueAmount);
 
         return arrayList;
+    }
+
+    private int getRealAlarmTime(int actualTime) {
+        if (alarmCycleState.getState() == AlarmCycleStates.BETWEEN_SLEEPTIME_START_AND_CALCULATION && alarmEntity != null) {
+            return alarmEntity.getWakeupEarly();
+        } else if (alarmEntity != null && (actualTime > alarmEntity.getWakeupLate())) {
+            return alarmEntity.getWakeupLate();
+        }
+
+        return actualTime;
     }
 
     /**
@@ -567,7 +580,7 @@ public class ForegroundService extends LifecycleService {
             remoteViews.setOnClickPendingIntent(R.id.btnDisableAlarmNotification, btnClickPendingIntent);
         }
 
-        if((userSleepTime <= 60) && (userSleepTime > 0)) {
+        if((userSleepTime <= Constants.NOT_SLEEP_BUTTON_DELAY) && (userSleepTime > 0)) {
             //Set button for not sleeping
             btnClickIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
             btnClickIntent.putExtra(getApplicationContext().getString(R.string.alarmmanager_key), AlarmReceiverUsage.NOT_SLEEPING.name());
@@ -621,12 +634,6 @@ public class ForegroundService extends LifecycleService {
 
         String sleeptimeText = smileySelectorUtil.getSmileyTime() + "Sleep time: " + TimeConverterUtil.minuteToTimeFormat(userSleepTime)[0] + "h " + TimeConverterUtil.minuteToTimeFormat(userSleepTime)[1] + "min";
         String alarmtimeText = smileySelectorUtil.getSmileyAlarmClock() + "Alarm time: " + TimeConverterUtil.millisToTimeFormat(alarmTimeInSeconds)[0] + ":" + TimeConverterUtil.millisToTimeFormat(alarmTimeInSeconds)[1];
-
-        //Set the text in textview of the expanded notification view
-        /**String notificationText = "AlarmActive: " + isAlarmActive + " Value: " + sleepValueAmount
-                + "\nIsSubscribed: " + isSubscribed + "\nSleepTime: " + sleeptime
-                + "\nIsSleeping: " + isSleeping + " Wakeup: " + alarmtime;
-        remoteViews.setTextViewText(R.id.tvTextAlarm, notificationText);**/
 
         if (bannerConfig[0]) {
             remoteViews.setTextViewText(R.id.tvBannerAlarmActive, contentText + " sub:" + isSubscribed);

@@ -23,6 +23,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.doitstudio.sleepest_master.DontKillMyAppFragment
+import com.doitstudio.sleepest_master.MainActivity
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.databinding.FragmentSettingsBinding
@@ -32,6 +33,7 @@ import com.doitstudio.sleepest_master.model.data.Websites
 import com.doitstudio.sleepest_master.model.data.credits.CreditsSites
 import com.doitstudio.sleepest_master.model.data.export.ImportUtil
 import com.doitstudio.sleepest_master.model.data.export.UserSleepExportData
+import com.doitstudio.sleepest_master.onboarding.OnboardingActivity
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.util.IconAnimatorUtil.isDarkThemeOn
@@ -97,11 +99,13 @@ class SettingsFragment : Fragment() {
         }
         binding.btnTutorial.setOnClickListener() {
             scope.launch {
-                if (dataStoreRepository.getSleepSubscribeStatus()) {
-                    sleepHandler.stopSleepHandler()
-                } else {
-                    sleepHandler.startSleepHandler()
-                }
+                val intent = Intent(activity, OnboardingActivity::class.java)
+                intent.putExtra(getString(R.string.onboarding_intent_not_first_app_start), true)
+                intent.putExtra(getString(R.string.onboarding_intent_starttime), dataStoreRepository.getSleepTimeBegin())
+                intent.putExtra(getString(R.string.onboarding_intent_endtime), dataStoreRepository.getSleepTimeEnd())
+                intent.putExtra(getString(R.string.onboarding_intent_duration), 25200) /**TODO: Dynamic sleep duration (DataStore repo)*/
+
+                startActivity(intent)
             }
 
         }
@@ -141,12 +145,12 @@ class SettingsFragment : Fragment() {
             """.trimIndent()
         pref = actualContext.getSharedPreferences("Workmanager", 0)
         val textLastWorkmanager = """
-            Last workmanager call: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getLong("diff", 0)}
+            Last workmanager call: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt("day", 0)}
             
             """.trimIndent()
         pref = actualContext.getSharedPreferences("WorkmanagerCalculation", 0)
         val textLastWorkmanagerCalculation = """
-            Last workmanagerCalc call: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
+            Last workmanagerCalc call: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt("day", 0)}
             
             """.trimIndent()
         pref = actualContext.getSharedPreferences("AlarmClock", 0)
@@ -211,13 +215,19 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES || (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM &&  actualContext.isDarkThemeOn()))
-            binding.lottieDarkMode.setMinAndMaxFrame(0,240) //to play the first half
-        else
-            binding.lottieDarkMode.setMinAndMaxFrame(240,481) //to play the second half
-        binding.lottieDarkMode.playAnimation()
+        scope.launch {
+
+            val settings = dataStoreRepository.settingsDataFlow.first()
 
 
+            if ((settings.designAutoDarkMode  && actualContext.isDarkThemeOn()) || !settings.designAutoDarkMode && settings.designDarkMode)
+                binding.lottieDarkMode.setMinAndMaxFrame(0, 240) //to play the first half
+            else
+                binding.lottieDarkMode.setMinAndMaxFrame(240, 481) //to play the second half
+
+            binding.lottieDarkMode.playAnimation()
+
+        }
         createCredits()
     }
 
@@ -263,6 +273,7 @@ class SettingsFragment : Fragment() {
             binding.llCredits.addView(textView)
         }
     }
+
     private fun onWebsiteClicked(view: View) {
         val websiteUrl = Websites.getWebsite(view.tag as Websites)
 
@@ -270,7 +281,6 @@ class SettingsFragment : Fragment() {
 
 
     }
-
 
     private fun onDataClicked(view: View) {
         when (view.tag.toString()) {
@@ -367,17 +377,19 @@ class SettingsFragment : Fragment() {
                             session.sleepTimes.sleepTimeEnd
                         ).first()
 
-                        val userExporSession = UserSleepExportData(
-                            session.id,
-                            session.mobilePosition,
-                            session.lightConditions,
-                            session.sleepTimes,
-                            session.userSleepRating,
-                            session.userCalculationRating,
-                            sessionSleepData
-                        )
+                        val userExporSession = sessionSleepData?.let {
+                            UserSleepExportData(
+                                session.id,
+                                session.mobilePosition,
+                                session.lightConditions,
+                                session.sleepTimes,
+                                session.userSleepRating,
+                                session.userCalculationRating,
+                                it
+                            )
+                        }
 
-                        userExporSessions.add(userExporSession)
+                        userExporSession?.let { userExporSessions.add(it) }
                     }
 
                     val exportFile = gson.toJson(userExporSessions)

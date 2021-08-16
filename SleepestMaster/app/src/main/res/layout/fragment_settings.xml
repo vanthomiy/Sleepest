@@ -794,8 +794,6 @@
                         android:visibility="@{profileViewModel.actualExpand == 5 ? profileViewModel.visibleState:profileViewModel.goneState, default=gone}"
                         >
 
-
-
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -804,28 +802,6 @@
                             android:layout_gravity="start"
                             android:textColor="@color/primary_text_color"
                             android:text="@string/profile_flaticon_introduction"/>
-
-                        <!--TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="40dp"
-                            android:textSize="@dimen/headerSize"
-                            android:textAlignment="viewStart"
-                            android:layout_gravity="start"
-                            android:textColor="@color/primary_text_color"
-                            android:text="@{profileViewModel.authorsText}"/>
-
-                        <androidx.appcompat.widget.AppCompatButton
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/transparentrounded"
-                            android:textSize="@dimen/valueSize"
-                            android:layout_marginTop="10dp"
-                            android:text="@string/profile_credits_flaticon"
-                            android:textColor="@color/accent_text_color"
-                            android:tag="flaticon"
-                            android:onClick="@{profileViewModel::onCreditsClicked}"
-                            /!-->
 
                     </LinearLayout>
 
@@ -907,7 +883,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
                             android:background="@drawable/bgroundedchoosen"
-                            android:backgroundTint="@color/error_color"
+                            android:backgroundTint="@{profileViewModel.removeExpand ? @color/warning_color:@color/error_color, default=@color/error_color}"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@{profileViewModel.removeButtonText}"

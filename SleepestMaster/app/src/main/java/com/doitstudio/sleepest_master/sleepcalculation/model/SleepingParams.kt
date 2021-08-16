@@ -21,7 +21,7 @@ data class SleepingParams(
         /**
          * The utc timestamp in seconds when the first user sleep of the sleep session is detected
          */
-        //var sleepEndBorder: ThresholdParams,
+        var sleepStartThreshold: ThresholdParams,
 
         /**
          * The utc timestamp in seconds when the first user sleep of the sleep session is detected
@@ -38,7 +38,7 @@ data class SleepingParams(
 
         fun mergeParameters(factorParams:SleepingParams){
                 sleepStartBorder.mergeParameters(factorParams = factorParams.sleepStartBorder)
-                //sleepEndBorder.mergeParameters(factorParams = factorParams.sleepEndBorder)
+                sleepStartThreshold.mergeParameters(factorParams = factorParams.sleepStartThreshold)
                 sleepCleanUp.mergeParameters(factorParams = factorParams.sleepCleanUp)
                 generalThreshold.mergeParameters(factorParams = factorParams.generalThreshold)
         }
@@ -47,7 +47,7 @@ data class SleepingParams(
                 fun createDefaultParams(mobilePosition: MobilePosition) : SleepingParams {
                         return SleepingParams(
                                 sleepStartBorder = ThresholdParams.createSleepStartBorder(mobilePosition),
-                                //sleepEndBorder = ThresholdParams.createSleepEndBorder(mobilePosition),
+                                sleepStartThreshold = ThresholdParams.createSleepStartThreshold(mobilePosition),
                                 sleepCleanUp = ThresholdParams.createCleanUp(mobilePosition),
                                 generalThreshold = ThresholdParams.createGeneralThreshold(mobilePosition)
                         )
@@ -56,7 +56,7 @@ data class SleepingParams(
                 fun createLightConditionParams(lightCondition : LightConditions ) : SleepingParams {
                         return SleepingParams(
                                 sleepStartBorder = ThresholdParams.createSleepStartBorder(lightCondition),
-                                //sleepEndBorder = ThresholdParams.createSleepEndBorder(lightCondition),
+                                sleepStartThreshold = ThresholdParams.createSleepStartThreshold(lightCondition),
                                 sleepCleanUp = ThresholdParams.createCleanUp(lightCondition),
                                 generalThreshold = ThresholdParams.createGeneralThreshold(lightCondition)
                         )
@@ -65,7 +65,7 @@ data class SleepingParams(
                 fun createMobileUseFrequencyParams(mobileUseFrequency: MobileUseFrequency) : SleepingParams {
                         return SleepingParams(
                                 sleepStartBorder = ThresholdParams.createSleepStartBorder(mobileUseFrequency),
-                                //sleepEndBorder = ThresholdParams.createSleepEndBorder(mobileUseFrequency),
+                                sleepStartThreshold = ThresholdParams.createSleepStartThreshold(mobileUseFrequency),
                                 sleepCleanUp = ThresholdParams.createCleanUp(mobileUseFrequency),
                                 generalThreshold = ThresholdParams.createGeneralThreshold(mobileUseFrequency)
                         )
