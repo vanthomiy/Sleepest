@@ -110,7 +110,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
             if (checkInSleepTime() && checkAlarmActive() && checkForegroundStatus() && !checkAlarmFired() && !checkAlarmTempDisabled() && !listEmpty) {
 
                 if (getFirstWakeup() != firstWakeupTemp) {
-                    val calenderCalculation = TimeConverterUtil.getAlarmDate(getFirstWakeup() - 1800)
+                    val calenderCalculation = TimeConverterUtil.getAlarmDate(getFirstWakeup() - Constants.CALCULATION_START_DIFFERENCE)
                     AlarmReceiver.startAlarmManager(
                         calenderCalculation[Calendar.DAY_OF_WEEK],
                         calenderCalculation[Calendar.HOUR_OF_DAY],
@@ -227,8 +227,8 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                 //Set Alarm to start calculation
                 if (checkAlarmActive()) {
 
-                    if ((LocalTime.now().toSecondOfDay() < (getFirstWakeup() - 1800)) || (LocalTime.now().toSecondOfDay() > getSleepTimeBeginValue())) {
-                        val calenderCalculation = TimeConverterUtil.getAlarmDate(getFirstWakeup() - 1800)
+                    if ((LocalTime.now().toSecondOfDay() < (getFirstWakeup() - Constants.CALCULATION_START_DIFFERENCE)) || (LocalTime.now().toSecondOfDay() > getSleepTimeBeginValue())) {
+                        val calenderCalculation = TimeConverterUtil.getAlarmDate(getFirstWakeup() - Constants.CALCULATION_START_DIFFERENCE)
                         AlarmReceiver.startAlarmManager(
                             calenderCalculation[Calendar.DAY_OF_WEEK],
                             calenderCalculation[Calendar.HOUR_OF_DAY],
@@ -246,6 +246,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
             }
 
             startWorkmanager()
+            AlarmClockReceiver.cancelAlarm(context, AlarmClockReceiverUsage.START_ALARMCLOCK)
     }
 
     fun startWorkmanager() {
@@ -339,7 +340,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                 if (checkAlarmActive() && !checkAlarmTempDisabled()) {
                     dataBaseRepository.updateAlarmTempDisabled(true, dataBaseRepository.getNextActiveAlarm()!!.id)
                     val calendarStopForeground = Calendar.getInstance()
-                    calendarStopForeground.add(Calendar.MINUTE, 2)
+                    calendarStopForeground.add(Calendar.MINUTE, Constants.DISABLE_ALARM_DELAY)
                     AlarmReceiver.startAlarmManager(calendarStopForeground.get(Calendar.DAY_OF_WEEK), calendarStopForeground.get(Calendar.HOUR_OF_DAY), calendarStopForeground.get(Calendar.MINUTE), context.applicationContext, AlarmReceiverUsage.STOP_FOREGROUND)
                     Toast.makeText(context.applicationContext,context.applicationContext.getString(R.string.disable_alarm_message), Toast.LENGTH_LONG).show()
                 }
@@ -393,7 +394,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                     ed.putInt("minute", calendar[Calendar.MINUTE])
                     ed.putInt("usage", 3)
                     ed.apply()
-                } else if (time > (getFirstWakeup() - 1800) && time < getFirstWakeup()) {
+                } else if (time > (getFirstWakeup() - Constants.CALCULATION_START_DIFFERENCE) && time < getFirstWakeup()) {
                     executeStateAfterReboot(3)
 
                     val calendar = Calendar.getInstance()
@@ -413,7 +414,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                     ed.putInt("minute", calendar[Calendar.MINUTE])
                     ed.putInt("usage", 5)
                     ed.apply()
-                } else if ((time < (getFirstWakeup() - 1800)) || (time > getSleepTimeBeginValue())) {
+                } else if ((time < (getFirstWakeup() - Constants.CALCULATION_START_DIFFERENCE)) || (time > getSleepTimeBeginValue())) {
                     executeStateAfterReboot(6)
 
                     val calendar = Calendar.getInstance()

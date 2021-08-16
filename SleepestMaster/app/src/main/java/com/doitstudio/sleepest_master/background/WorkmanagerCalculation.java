@@ -13,6 +13,7 @@ import androidx.work.WorkerParameters;
 
 import com.doitstudio.sleepest_master.MainApplication;
 import com.doitstudio.sleepest_master.R;
+import com.doitstudio.sleepest_master.model.data.AlarmCycleStates;
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
 
 import java.util.Calendar;
@@ -26,11 +27,6 @@ public class WorkmanagerCalculation extends Worker {
     public WorkmanagerCalculation(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
         this.context = context;
-
-
-        //sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(context);
-
-
     }
 
     @NonNull
@@ -44,14 +40,13 @@ public class WorkmanagerCalculation extends Worker {
          * angeschaut wird. Prozesse, die den Nutzer nicht benötigen, sind hier aber im Normalfall
          * problemlos möglich.
          */
-        //sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(MainApplication.Companion.applicationContext());
-        //sleepCalculationHandler.defineUserWakeup( null, true);
+
         BackgroundAlarmTimeHandler.Companion.getHandler(context).defineNewUserWakeup(null, true);
 
         Calendar calendar = Calendar.getInstance();
-
         SharedPreferences pref = context.getSharedPreferences("WorkmanagerCalculation", 0);
         SharedPreferences.Editor ed = pref.edit();
+        ed.putInt("day", calendar.get(Calendar.DAY_OF_WEEK));
         ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
         ed.putInt("minute", calendar.get(Calendar.MINUTE));
         ed.apply();
@@ -61,16 +56,19 @@ public class WorkmanagerCalculation extends Worker {
 
     public static void startPeriodicWorkmanager(int duration, Context context1) {
 
-        PeriodicWorkRequest periodicDataWork =
-                new PeriodicWorkRequest.Builder(WorkmanagerCalculation.class, duration, TimeUnit.MINUTES)
-                        .addTag(context1.getString(R.string.workmanager2_tag)) //Tag is needed for canceling the periodic work
-                        .build();
+        AlarmCycleState alarmCycleState = new AlarmCycleState(context1);
+        if (alarmCycleState.getState() == AlarmCycleStates.BETWEEN_CALCULATION_AND_FIRST_WAKEUP ||
+            alarmCycleState.getState() == AlarmCycleStates.BETWEEN_FIRST_AND_LAST_WAKEUP) {
+            PeriodicWorkRequest periodicDataWork =
+                    new PeriodicWorkRequest.Builder(WorkmanagerCalculation.class, duration, TimeUnit.MINUTES)
+                            .addTag(context1.getString(R.string.workmanager2_tag)) //Tag is needed for canceling the periodic work
+                            .build();
 
-        WorkManager workManager = WorkManager.getInstance(context);
-        workManager.enqueueUniquePeriodicWork(context1.getString(R.string.workmanager2_tag), ExistingPeriodicWorkPolicy.KEEP, periodicDataWork);
+            WorkManager workManager = WorkManager.getInstance(context1);
+            workManager.enqueueUniquePeriodicWork(context1.getString(R.string.workmanager2_tag), ExistingPeriodicWorkPolicy.KEEP, periodicDataWork);
 
-        Toast.makeText(context1, "WorkmanagerCalculation started", Toast.LENGTH_LONG).show();
-
+            Toast.makeText(context1, "WorkmanagerCalculation started", Toast.LENGTH_LONG).show();
+        }
     }
 
     public static void stopPeriodicWorkmanager() {

@@ -24,6 +24,7 @@ import com.doitstudio.sleepest_master.model.data.AlarmClockReceiverUsage
 import com.doitstudio.sleepest_master.model.data.credits.CreditsSites
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
+import com.doitstudio.sleepest_master.util.PermissionsUtil
 import com.doitstudio.sleepest_master.util.SmileySelectorUtil
 import com.doitstudio.sleepest_master.util.TimeConverterUtil
 import kotlinx.coroutines.CoroutineScope
@@ -152,32 +153,19 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     fun checkPermissions(){
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            activityPermission.set(
-                PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.ACTIVITY_RECOGNITION
-                )
-            )
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            dailyPermission.set(
-                PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.ACTIVITY_RECOGNITION
-                )
-            )
-        }
-
-        storagePermission.set(
-            PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
+        activityPermission.set(
+            PermissionsUtil.isActivityRecognitionPermissionGranted(context)
         )
 
-        overlayPermission.set(Settings.canDrawOverlays(context))
+        dailyPermission.set(
+            PermissionsUtil.isActivityRecognitionPermissionGranted(context)
+        )
+
+        storagePermission.set(
+            PermissionsUtil.isNotificationPolicyAccessGranted(context)
+        )
+
+        overlayPermission.set(PermissionsUtil.isOverlayPermissionGranted(context))
 
     }
 

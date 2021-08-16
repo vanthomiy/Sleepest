@@ -115,6 +115,29 @@ enum class SleepApiUsage {
     }
 }
 
+enum class AlarmCycleStates {
+    NO_STATE_DETECTED,
+    BETWEEN_SLEEPTIME_START_AND_CALCULATION,
+    BETWEEN_CALCULATION_AND_FIRST_WAKEUP,
+    BETWEEN_FIRST_AND_LAST_WAKEUP,
+    BETWEEN_LAST_WAKEUP_AND_SLEEPtIME_END,
+    BETWEEN_SLEEPTIME_END_AND_SLEEPTIME_START;
+
+    companion object {
+        fun getCount(type : AlarmCycleStates) : Int {
+            return when (type) {
+                NO_STATE_DETECTED -> 80
+                BETWEEN_SLEEPTIME_START_AND_CALCULATION -> 81
+                BETWEEN_CALCULATION_AND_FIRST_WAKEUP -> 82
+                BETWEEN_FIRST_AND_LAST_WAKEUP -> 83
+                BETWEEN_LAST_WAKEUP_AND_SLEEPtIME_END -> 84
+                BETWEEN_SLEEPTIME_END_AND_SLEEPTIME_START -> 85
+
+            }
+        }
+    }
+}
+
 /**
  * Defines the different states of the sleep a user can be in
  */
