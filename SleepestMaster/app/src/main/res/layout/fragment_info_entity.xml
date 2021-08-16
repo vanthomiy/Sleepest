@@ -41,39 +41,39 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="100dp"
+                android:layout_width="wrap_content"
                 android:layout_height="100dp"
-                android:layout_margin="10dp"
                 android:layout_gravity="center"
-                android:visibility="@{infoViewModel.imageVisible}"
-                android:src="@drawable/ic_baseline_wb_sunny_24"
                 android:layout_weight="1"
-                    />
+                android:layout_margin="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_baseline_wb_sunny_24"
+                android:visibility="@{infoViewModel.imageVisible}" />
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/lottieAnim"
-                android:layout_width="100dp"
+                android:layout_width="wrap_content"
                 android:layout_height="100dp"
-                android:layout_margin="10dp"
                 android:layout_gravity="center"
-                android:visibility="@{infoViewModel.lottieVisible}"
                 android:layout_weight="1"
+                android:scaleType="centerCrop"
+                android:visibility="@{infoViewModel.lottieVisible}"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
-                />
+                app:lottie_rawRes="@raw/sleeping_polar_bear" />
 
 
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="100dp"
                 android:text="@{infoViewModel.textDescription, default = Description}"
                 android:visibility="@{infoViewModel.descrriptionVisible}"
                 android:textAlignment="center"
-                android:layout_margin="10dp"
                 android:gravity="center"
+                android:textSize="@dimen/valueSize"
                 android:layout_weight="1"
-                android:textSize="@dimen/headerSize"
+                android:layout_margin="10dp"
                 android:textStyle="bold"
                 />
 

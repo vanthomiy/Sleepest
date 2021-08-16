@@ -1,6 +1,8 @@
 package com.doitstudio.sleepest_master.model.data
 
+import android.content.Context
 import androidx.room.Entity
+import com.doitstudio.sleepest_master.R
 
 
 // Enum actions for service start/stop
@@ -378,14 +380,25 @@ enum class Websites {
 enum class Info {
     SLEEP,
     HISTORY,
-    SETTINGS;
+    SETTINGS,
+    ALARM;
     companion object{
 
         fun getById(id:Int) : Info{
             return when(id){
                 0 -> SLEEP
                 1 -> HISTORY
-                else -> SETTINGS
+                2 -> SETTINGS
+                else -> ALARM
+            }
+        }
+
+        fun getName(type:Info, context:Context) : String {
+            return when (type) {
+                SLEEP -> context.resources.getString(R.string.sleep_sleep_header)
+                SETTINGS -> context.resources.getString(R.string.profile_header)
+                ALARM -> context.resources.getString(R.string.sleep_alarm_header)
+                else -> ""
             }
         }
 

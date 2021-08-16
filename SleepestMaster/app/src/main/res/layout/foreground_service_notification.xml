@@ -74,7 +74,7 @@
             android:layout_marginTop="4dp"
             android:textColor="@color/primary_text_color">
 
-            <androidx.appcompat.widget.AppCompatButton
+            <Button
                 android:id="@+id/btnDisableAlarmNotification"
                 android:layout_width="0dp"
                 android:layout_weight="0.5"
@@ -86,9 +86,9 @@
                 android:textSize="15sp"
                 android:textColor="@color/primary_text_color"
                 >
-            </androidx.appcompat.widget.AppCompatButton>
+            </Button>
 
-            <androidx.appcompat.widget.AppCompatButton
+            <Button
                 android:id="@+id/btnNotSleepingNotification"
                 android:layout_width="0dp"
                 android:layout_weight="0.5"
@@ -100,7 +100,7 @@
                 android:textSize="15sp"
                 android:textColor="@color/primary_text_color"
                 >
-            </androidx.appcompat.widget.AppCompatButton>
+            </Button>
 
         </LinearLayout>
 
