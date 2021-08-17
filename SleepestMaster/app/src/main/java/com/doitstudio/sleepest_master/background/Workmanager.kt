@@ -47,14 +47,14 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
         val sleepCalculationHandler : SleepCalculationHandler = getHandler(applicationContext)
 
 
-        scope.launch {
+        /*scope.launch {
 
             if (dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
                 val sleepApiRawDataEntity =
                     dataBaseRepository.getSleepApiRawDataFromDateLive(LocalDateTime.now()).first()
                         ?.sortedByDescending { x -> x.timestampSeconds }
 
-                if (sleepApiRawDataEntity != null) {
+                if (sleepApiRawDataEntity != null && sleepApiRawDataEntity.count() > 0) {
                     val lastTimestampInSeconds = sleepApiRawDataEntity.first().timestampSeconds
                     val actualTimestampSeconds = System.currentTimeMillis()/1000
                     Toast.makeText(applicationContext, (actualTimestampSeconds - lastTimestampInSeconds).toString(), Toast.LENGTH_LONG).show()
@@ -69,7 +69,7 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
                     notificationsUtil.chooseNotification()
                 }
             }
-        }
+        }*/
 
         val calendar: Calendar = Calendar.getInstance()
 
@@ -80,9 +80,11 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
         ed.putInt("minute", calendar.get(Calendar.MINUTE))
         ed.apply()
 
-        scope.launch {
+        /*scope.launch {
             sleepCalculationHandler.checkIsUserSleeping(null)
-        }
+        }*/
+
+        sleepCalculationHandler.checkIsUserSleepingJob(null)
 
         return Result.success()
     }

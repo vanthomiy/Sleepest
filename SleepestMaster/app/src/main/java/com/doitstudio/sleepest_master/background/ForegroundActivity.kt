@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.*
 
-class ForegroundActivity : AppCompatActivity() {
+class ForegroundActivity : Activity() {
 
     private val scope: CoroutineScope = MainScope()
     private val databaseRepository: DatabaseRepository by lazy {

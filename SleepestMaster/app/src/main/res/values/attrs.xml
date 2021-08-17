@@ -5,7 +5,9 @@
         <attr name="infoId" format="integer" />
         <attr name="info" format="enum">
             <enum name="SLEEP" value="0"/>
-            <enum name="HISTORY" value="1"/>
+            <enum name="DAY_HISTORY" value="1"/>
+            <enum name="WEEK_HISTORY" value="1"/>
+            <enum name="MONTH_HISTORY" value="1"/>
             <enum name="SETTINGS" value="2"/>
         </attr>
         <attr name="direction" format="enum">
@@ -13,6 +15,7 @@
             <enum name="PICTURE_RIGHT" value="1"/>
             <enum name="PICTURE_TOP" value="2"/>
             <enum name="PICTURE_BOTTOM" value="3"/>
+            <enum name="RANDOM" value="4"/>
         </attr>
     </declare-styleable>
 </resources>
