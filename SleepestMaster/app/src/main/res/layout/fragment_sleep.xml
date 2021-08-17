@@ -36,8 +36,8 @@
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:src="@drawable/moon"
-                app:layout_constraintTop_toBottomOf="@id/header"
                 app:layout_constraintBottom_toTopOf="@+id/bottom"
+                app:layout_constraintTop_toBottomOf="@id/header"
                 tools:layout_editor_absoluteX="106dp" />
 
             <TextView

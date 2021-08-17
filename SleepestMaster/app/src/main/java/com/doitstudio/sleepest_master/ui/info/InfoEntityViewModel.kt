@@ -29,6 +29,8 @@ import java.time.LocalTime
 
 class InfoEntityViewModel(application: Application) : AndroidViewModel(application) {
 
+
+    val backgroundColor = ObservableField(
     val textHeader = ObservableField("")
     val textDescription = ObservableField("")
     val orientation = ObservableField(LinearLayout.HORIZONTAL)
