@@ -123,19 +123,17 @@
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginVertical="10dp"
-                        android:layout_marginHorizontal="10dp"
-                        android:visibility="@{historyDayViewModel.actualExpand == 0 ? historyDayViewModel.visibleState:historyDayViewModel.goneState, default=gone}"
-                        android:background="@drawable/bgroundedchoosen">
-
-                        <TextView
-                            android:layout_width="wrap_content"
+                        android:layout_margin="10dp"
+                        android:visibility="@{historyDayViewModel.actualExpand == 0 ? historyDayViewModel.visibleState:historyDayViewModel.goneState, default=gone}">
+                        <fragment
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:layout_margin="10dp"
-                            android:textColor="@color/primary_text_color"
-                            android:text="@string/history_day_information_sleepPhases_lineChart"/>
+                            android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
+                            android:layout_gravity="center_horizontal"
+                            android:tag="0"
+                            app:infoId = "0"
+                            app:info = "DAY_HISTORY"
+                            />
                     </FrameLayout>
 
                     <LinearLayout
@@ -218,19 +216,17 @@
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginVertical="10dp"
-                        android:layout_marginHorizontal="10dp"
-                        android:visibility="@{historyDayViewModel.actualExpand == 1 ? historyDayViewModel.visibleState:historyDayViewModel.goneState, default=gone}"
-                        android:background="@drawable/bgroundedchoosen">
-
-                        <TextView
-                            android:layout_width="wrap_content"
+                        android:layout_margin="10dp"
+                        android:visibility="@{historyDayViewModel.actualExpand == 1 ? historyDayViewModel.visibleState:historyDayViewModel.goneState, default=gone}">
+                        <fragment
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:layout_margin="10dp"
-                            android:textColor="@color/primary_text_color"
-                            android:text="@string/history_day_information_timeInPhase"/>
+                            android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
+                            android:layout_gravity="center_horizontal"
+                            android:tag="1"
+                            app:infoId = "1"
+                            app:info = "DAY_HISTORY"
+                            />
                     </FrameLayout>
 
                     <LinearLayout
@@ -331,19 +327,17 @@
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginVertical="10dp"
-                        android:layout_marginHorizontal="10dp"
-                        android:visibility="@{historyDayViewModel.actualExpand == 2 ? historyDayViewModel.visibleState:historyDayViewModel.goneState, default=gone}"
-                        android:background="@drawable/bgroundedchoosen">
-
-                        <TextView
-                            android:layout_width="wrap_content"
+                        android:layout_margin="10dp"
+                        android:visibility="@{historyDayViewModel.actualExpand == 2 ? historyDayViewModel.visibleState:historyDayViewModel.goneState, default=gone}">
+                        <fragment
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:layout_margin="10dp"
-                            android:textColor="@color/primary_text_color"
-                            android:text="@string/history_day_information_sleepQualityRating"/>
+                            android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
+                            android:layout_gravity="center_horizontal"
+                            android:tag="2"
+                            app:infoId = "2"
+                            app:info = "DAY_HISTORY"
+                            />
                     </FrameLayout>
 
                     <LinearLayout
@@ -448,19 +442,17 @@
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginVertical="10dp"
-                        android:layout_marginHorizontal="10dp"
-                        android:visibility="@{historyDayViewModel.actualExpand == 3 ? historyDayViewModel.visibleState:historyDayViewModel.goneState, default=gone}"
-                        android:background="@drawable/bgroundedchoosen">
-
-                        <TextView
-                            android:layout_width="wrap_content"
+                        android:layout_margin="10dp"
+                        android:visibility="@{historyDayViewModel.actualExpand == 3 ? historyDayViewModel.visibleState:historyDayViewModel.goneState, default=gone}">
+                        <fragment
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:layout_margin="10dp"
-                            android:textColor="@color/primary_text_color"
-                            android:text="@string/history_day_information_activity"/>
+                            android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
+                            android:layout_gravity="center_horizontal"
+                            android:tag="3"
+                            app:infoId = "3"
+                            app:info = "DAY_HISTORY"
+                            />
                     </FrameLayout>
 
                     <LinearLayout

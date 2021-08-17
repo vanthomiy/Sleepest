@@ -73,19 +73,17 @@
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginVertical="10dp"
-                        android:layout_marginHorizontal="10dp"
-                        android:visibility="@{historyWeekViewModel.actualExpand == 0 ? historyWeekViewModel.visibleState:historyWeekViewModel.goneState, default=gone}"
-                        android:background="@drawable/bgroundedchoosen">
-
-                        <TextView
-                            android:layout_width="wrap_content"
+                        android:layout_margin="10dp"
+                        android:visibility="@{historyWeekViewModel.actualExpand == 0 ? historyWeekViewModel.visibleState:historyWeekViewModel.goneState, default=gone}">
+                        <fragment
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:layout_margin="10dp"
-                            android:textColor="@color/primary_text_color"
-                            android:text="@string/history_week_information_sleepPhases_barChart"/>
+                            android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
+                            android:layout_gravity="center_horizontal"
+                            android:tag="0"
+                            app:infoId = "0"
+                            app:info = "WEEK_HISTORY"
+                            />
                     </FrameLayout>
 
                     <LinearLayout
@@ -139,19 +137,17 @@
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginVertical="10dp"
-                        android:layout_marginHorizontal="10dp"
-                        android:visibility="@{historyWeekViewModel.actualExpand == 1 ? historyWeekViewModel.visibleState:historyWeekViewModel.goneState, default=gone}"
-                        android:background="@drawable/bgroundedchoosen">
-
-                        <TextView
-                            android:layout_width="wrap_content"
+                        android:layout_margin="10dp"
+                        android:visibility="@{historyWeekViewModel.actualExpand == 1 ? historyWeekViewModel.visibleState:historyWeekViewModel.goneState, default=gone}">
+                        <fragment
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:layout_margin="10dp"
-                            android:textColor="@color/primary_text_color"
-                            android:text="@string/history_week_information_activity_lineChart"/>
+                            android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
+                            android:layout_gravity="center_horizontal"
+                            android:tag="1"
+                            app:infoId = "1"
+                            app:info = "WEEK_HISTORY"
+                            />
                     </FrameLayout>
 
                     <LinearLayout

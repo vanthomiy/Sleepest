@@ -18,54 +18,105 @@ data class InfoEntity (
 
         fun getInfo(info: Info, id:Int, context: Context) : List<InfoEntity>{
             return when(info){
-                Info.HISTORY -> historyInfo(id, context)
+                Info.MONTH_HISTORY -> monthHistoryInfo(id, context)
+                Info.DAY_HISTORY -> dayHistoryInfo(id, context)
+                Info.WEEK_HISTORY -> weekHistoryInfo(id, context)
                 Info.SETTINGS -> settingsInfo(id, context)
                 Info.SLEEP -> sleepInfo(id, context)
                 else -> noInfo(context)
             }
         }
 
-        private fun historyInfo(id:Int, context: Context) : List<InfoEntity>{
+        private fun dayHistoryInfo(id:Int, context: Context) : List<InfoEntity>{
             return when(id){
                 0 ->  listOf(
                     InfoEntity(
-                        image = R.drawable.sleep_mood_bad,
+                        image = null,
                         lottie = null,
                         textHeader = null,
-                        textDescription = "There is some information to pass here",
+                        textDescription = context.resources.getString(R.string.history_day_information_sleepPhases_lineChart),
                         infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
-                    ),
-                    InfoEntity(
-                        image = null,
-                        lottie = R.raw.empty,
-                        textHeader = null,
-                        textDescription = "Nothing much to see here haha",
-                        infoEntityStlye = InfoEntityStlye.PICTURE_TOP
-                    ),
-                    InfoEntity(
-                        image = null,
-                        lottie = null,
-                        textHeader = null,
-                        textDescription = "Nothing much to see here haha",
-                        infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
-                    ),
-                    InfoEntity(
-                        image = null,
-                        lottie = null,
-                        textHeader = "New Header",
-                        textDescription = "Nothing much to see here haha"
                     )
                 )
-                1 ->  listOf(InfoEntity(
-                        image = R.drawable.empty_alarms,
+                1 ->  listOf(
+                    InfoEntity(
+                        image = null,
                         lottie = null,
-                        textHeader = "Sleep",
-                        textDescription = "Nothing much to see here haha"
+                        textHeader = null,
+                        textDescription = context.resources.getString(R.string.history_day_information_timeInPhase),
+                        infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
+                    )
+                )
+                2 ->  listOf(
+                    InfoEntity(
+                        image = null,
+                        lottie = null,
+                        textHeader = null,
+                        textDescription = context.resources.getString(R.string.history_day_information_sleepQualityRating),
+                        infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
+                    )
+                )
+                3 ->  listOf(
+                    InfoEntity(
+                        image = null,
+                        lottie = null,
+                        textHeader = null,
+                        textDescription = context.resources.getString(R.string.history_day_information_activity),
+                        infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
                     )
                 )
                 else -> noInfo(context)
             }
         }
+
+        private fun weekHistoryInfo(id:Int, context: Context) : List<InfoEntity>{
+            return when(id){
+                0 ->  listOf(
+                    InfoEntity(
+                        image = null,
+                        lottie = null,
+                        textHeader = null,
+                        textDescription = context.resources.getString(R.string.history_week_information_sleepPhases_barChart),
+                        infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
+                    )
+                )
+                1 ->  listOf(
+                    InfoEntity(
+                        image = null,
+                        lottie = null,
+                        textHeader = null,
+                        textDescription = context.resources.getString(R.string.history_week_information_activity_lineChart),
+                        infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
+                    )
+                )
+                else -> noInfo(context)
+            }
+        }
+
+        private fun monthHistoryInfo(id:Int, context: Context) : List<InfoEntity>{
+            return when(id){
+                0 ->  listOf(
+                    InfoEntity(
+                        image = null,
+                        lottie = null,
+                        textHeader = null,
+                        textDescription = context.resources.getString(R.string.history_month_information_sleepPhases_barChart),
+                        infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
+                    )
+                )
+                1 ->  listOf(
+                    InfoEntity(
+                        image = null,
+                        lottie = null,
+                        textHeader = null,
+                        textDescription = context.resources.getString(R.string.history_month_information_activity_lineChart),
+                        infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
+                    )
+                )
+                else -> noInfo(context)
+            }
+        }
+
 
         private fun settingsInfo(id:Int, context: Context) : List<InfoEntity>{
             return when(id){

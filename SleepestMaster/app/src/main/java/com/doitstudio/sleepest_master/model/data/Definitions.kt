@@ -379,7 +379,9 @@ enum class Websites {
  */
 enum class Info {
     SLEEP,
-    HISTORY,
+    DAY_HISTORY,
+    WEEK_HISTORY,
+    MONTH_HISTORY,
     SETTINGS,
     ALARM;
     companion object{
@@ -387,7 +389,9 @@ enum class Info {
         fun getById(id:Int) : Info{
             return when(id){
                 0 -> SLEEP
-                1 -> HISTORY
+                1 -> DAY_HISTORY
+                1 -> WEEK_HISTORY
+                1 -> MONTH_HISTORY
                 2 -> SETTINGS
                 else -> ALARM
             }
@@ -397,6 +401,9 @@ enum class Info {
             return when (type) {
                 SLEEP -> context.resources.getString(R.string.sleep_sleep_header)
                 SETTINGS -> context.resources.getString(R.string.profile_header)
+                DAY_HISTORY -> context.resources.getString(R.string.history_day_title)
+                WEEK_HISTORY -> context.resources.getString(R.string.history_week_title)
+                MONTH_HISTORY -> context.resources.getString(R.string.history_month_title)
                 ALARM -> context.resources.getString(R.string.sleep_alarm_header)
                 else -> ""
             }
