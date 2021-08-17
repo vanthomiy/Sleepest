@@ -376,7 +376,7 @@
     <string name="history_day_timeInPhase_awake">Wach</string>
     <string name="history_day_timeInPhase_lightSleep">Leichtschlaf</string>
     <string name="history_day_timeInPhase_deepSleep">Tiefschlaf</string>
-    <string name="history_day_timeInPhase_sleepSum">Schlafzeit</string>
+    <string name="history_day_timeInPhase_sleepSum">Schlaf</string>
     <string name="history_day_title">Tag</string>
     <string name="history_week_title">Woche</string>
     <string name="history_month_title">Monat</string>
