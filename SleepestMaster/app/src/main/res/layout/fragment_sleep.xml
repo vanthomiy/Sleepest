@@ -145,39 +145,18 @@
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
                         android:visibility="@{sleepViewModel.actualExpand == 7 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}">
                         <fragment
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
-                            android:id="@+id/fragment"
                             android:layout_gravity="center_horizontal"
-                            app:infoId = "0"
-                            app:info = "HISTORY"
-                            app:direction = "PICTURE_RIGHT"
+                            android:tag="7"
+                            app:infoId = "7"
+                            app:info = "SLEEP"
                             />
                     </FrameLayout>
-
-
-                    <!--FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="20dp"
-                        android:layout_marginHorizontal="10dp"
-                        android:visibility="@{sleepViewModel.actualExpand == 7 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}"
-                        android:background="@drawable/bgroundedchoosen"
-                        >
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:layout_margin="10dp"
-                            android:textColor="@color/primary_text_color"
-                            android:text="@string/sleep_general_info"/>
-
-                    </FrameLayout!-->
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -220,20 +199,17 @@
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginVertical="10dp"
-                            android:visibility="@{sleepViewModel.actualExpand == 0 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}"
-                            android:background="@drawable/bgroundedchoosen"
-                            >
-
-                            <TextView
-                                android:layout_width="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:visibility="@{sleepViewModel.actualExpand == 0 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}">
+                            <fragment
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:gravity="center"
-                                android:layout_margin="10dp"
-                                android:textColor="@color/primary_text_color"
-                                android:text="@string/sleep_sleeptimes_info"/>
-
+                                android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
+                                android:layout_gravity="center_horizontal"
+                                android:tag="0"
+                                app:infoId = "0"
+                                app:info = "SLEEP"
+                                />
                         </FrameLayout>
 
                         <FrameLayout
@@ -323,6 +299,7 @@
                         </ToggleButton>
 
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -364,22 +341,18 @@
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginVertical="10dp"
-                            android:visibility="@{sleepViewModel.actualExpand == 1 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}"
-                            android:background="@drawable/bgroundedchoosen"
-                            >
-
-                            <TextView
-                                android:layout_width="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:visibility="@{sleepViewModel.actualExpand == 1 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}">
+                            <fragment
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:gravity="center"
-                                android:layout_margin="10dp"
-                                android:textColor="@color/primary_text_color"
-                                android:text="@string/sleep_sleepduration_info"/>
-
+                                android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
+                                android:layout_gravity="center_horizontal"
+                                android:tag="1"
+                                app:infoId = "1"
+                                app:info = "SLEEP"
+                                />
                         </FrameLayout>
-
 
                         <FrameLayout
                             android:layout_width="match_parent"
@@ -506,20 +479,17 @@
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginVertical="10dp"
-                            android:visibility="@{sleepViewModel.actualExpand == 6 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}"
-                            android:background="@drawable/bgroundedchoosen"
-                            >
-
-                            <TextView
-                                android:layout_width="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:visibility="@{sleepViewModel.actualExpand == 6 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}">
+                            <fragment
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:gravity="center"
-                                android:layout_margin="10dp"
-                                android:textColor="@color/primary_text_color"
-                                android:text="@string/sleep_lightcondition_info"/>
-
+                                android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
+                                android:layout_gravity="center_horizontal"
+                                android:tag="6"
+                                app:infoId = "6"
+                                app:info = "SLEEP"
+                                />
                         </FrameLayout>
 
                         <androidx.appcompat.widget.AppCompatSpinner
@@ -580,20 +550,17 @@
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginVertical="10dp"
-                            android:visibility="@{sleepViewModel.actualExpand == 2 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}"
-                            android:background="@drawable/bgroundedchoosen"
-                            >
-
-                            <TextView
-                                android:layout_width="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:visibility="@{sleepViewModel.actualExpand == 2 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}">
+                            <fragment
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:gravity="center"
-                                android:layout_margin="10dp"
-                                android:textColor="@color/primary_text_color"
-                                android:text="@string/sleep_phoneposition_info"/>
-
+                                android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
+                                android:layout_gravity="center_horizontal"
+                                android:tag="2"
+                                app:infoId = "2"
+                                app:info = "SLEEP"
+                                />
                         </FrameLayout>
 
                         <androidx.appcompat.widget.AppCompatSpinner
@@ -611,6 +578,7 @@
                         </androidx.appcompat.widget.AppCompatSpinner>
 
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -652,22 +620,18 @@
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginVertical="10dp"
-                            android:visibility="@{sleepViewModel.actualExpand == 3 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}"
-                            android:background="@drawable/bgroundedchoosen"
-                            >
-
-                            <TextView
-                                android:layout_width="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:visibility="@{sleepViewModel.actualExpand == 3 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}">
+                            <fragment
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:gravity="center"
-                                android:layout_margin="10dp"
-                                android:textColor="@color/primary_text_color"
-                                android:text="@string/sleep_phoneusage_info"/>
-
+                                android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
+                                android:layout_gravity="center_horizontal"
+                                android:tag="3"
+                                app:infoId = "3"
+                                app:info = "SLEEP"
+                                />
                         </FrameLayout>
-
 
                         <FrameLayout
                             android:layout_width="match_parent"
@@ -717,9 +681,8 @@
 
                         </FrameLayout>
 
-
-
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -764,24 +727,18 @@
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginVertical="10dp"
-                            android:visibility="@{sleepViewModel.actualExpand == 4 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}"
-                            android:background="@drawable/bgroundedchoosen"
-                            >
-
-                            <TextView
-                                android:layout_width="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:visibility="@{sleepViewModel.actualExpand == 4 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}">
+                            <fragment
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:gravity="center"
-                                android:layout_margin="10dp"
-                                android:textColor="@color/primary_text_color"
-                                android:text="@string/sleep_activitytracking_info"/>
-
+                                android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
+                                android:layout_gravity="center_horizontal"
+                                android:tag="4"
+                                app:infoId = "4"
+                                app:info = "SLEEP"
+                                />
                         </FrameLayout>
-
-
-
 
                         <FrameLayout
                             android:layout_width="match_parent"
@@ -810,7 +767,6 @@
                                 android:onClick="@{sleepViewModel::onActivityTrackingChanged}"
                                 />
                         </FrameLayout>
-
 
                         <FrameLayout
                             android:layout_width="match_parent"

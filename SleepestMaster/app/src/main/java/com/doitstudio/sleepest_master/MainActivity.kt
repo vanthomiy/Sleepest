@@ -5,15 +5,18 @@ import android.app.NotificationManager
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.asLiveData
+import com.doitstudio.sleepest_master.alarmclock.LockScreenExtendedFragment
 import com.doitstudio.sleepest_master.background.AlarmReceiver
 import com.doitstudio.sleepest_master.background.BackgroundAlarmTimeHandler
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
@@ -170,6 +173,7 @@ class MainActivity : AppCompatActivity() {
 
     // endregion
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         // null workaround... else pass the [savedInstanceState]
         super.onCreate(null)

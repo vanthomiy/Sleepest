@@ -55,7 +55,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
             hourSetter = 23
 
         val time = LocalTime.of(hourSetter, (minute-1) * 15)
-        
+
         scope.launch {
             SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
                 dataStoreRepository,

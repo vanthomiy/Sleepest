@@ -31,8 +31,8 @@
         android:id="@+id/btnSnoozeAlarmLockScreen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/snooze"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"/>
+        android:background="@drawable/snooze" />
 
 </RelativeLayout>

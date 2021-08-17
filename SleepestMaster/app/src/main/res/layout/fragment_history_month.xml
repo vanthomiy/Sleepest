@@ -74,19 +74,17 @@
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginVertical="10dp"
-                        android:layout_marginHorizontal="10dp"
-                        android:visibility="@{historyMonthViewModel.actualExpand == 0 ? historyMonthViewModel.visibleState:historyMonthViewModel.goneState, default=gone}"
-                        android:background="@drawable/bgroundedchoosen">
-
-                        <TextView
-                            android:layout_width="wrap_content"
+                        android:layout_margin="10dp"
+                        android:visibility="@{historyMonthViewModel.actualExpand == 0 ? historyMonthViewModel.visibleState:historyMonthViewModel.goneState, default=gone}">
+                        <fragment
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:layout_margin="10dp"
-                            android:textColor="@color/primary_text_color"
-                            android:text="@string/history_month_information_sleepPhases_barChart"/>
+                            android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
+                            android:layout_gravity="center_horizontal"
+                            android:tag="0"
+                            app:infoId = "0"
+                            app:info = "MONTH_HISTORY"
+                            />
                     </FrameLayout>
 
                     <LinearLayout
@@ -137,22 +135,21 @@
                             android:tag="1"/>
                     </FrameLayout>
 
+
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginVertical="10dp"
-                        android:layout_marginHorizontal="10dp"
-                        android:visibility="@{historyMonthViewModel.actualExpand == 1 ? historyMonthViewModel.visibleState:historyMonthViewModel.goneState, default=gone}"
-                        android:background="@drawable/bgroundedchoosen">
-
-                        <TextView
-                            android:layout_width="wrap_content"
+                        android:layout_margin="10dp"
+                        android:visibility="@{historyMonthViewModel.actualExpand == 1 ? historyMonthViewModel.visibleState:historyMonthViewModel.goneState, default=gone}">
+                        <fragment
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:layout_margin="10dp"
-                            android:textColor="@color/primary_text_color"
-                            android:text="@string/history_month_information_activity_lineChart"/>
+                            android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
+                            android:layout_gravity="center_horizontal"
+                            android:tag="1"
+                            app:infoId = "1"
+                            app:info = "MONTH_HISTORY"
+                            />
                     </FrameLayout>
 
                     <LinearLayout
