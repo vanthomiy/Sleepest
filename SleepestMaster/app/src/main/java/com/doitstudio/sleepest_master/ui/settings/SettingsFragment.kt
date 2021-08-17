@@ -249,7 +249,7 @@ class SettingsFragment : Fragment() {
 
             site.authors.forEach{ author ->
                 creditsText += "\n      " + SmileySelectorUtil.getSmileyIteration() + " " + author.author + " " +
-                        actualContext.getString(R.string.profile_from) + " " +
+                        actualContext.getString(R.string.settings_from) + " " +
                         Info.getName(author.usage, actualContext)
             }
 
