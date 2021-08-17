@@ -76,14 +76,14 @@
 
     <string name="alarm_entity_day_fr">Fr</string>
     <string name="alarm_entity_day_sa">Sa</string>
-    <string name="alarm_entity_day_su">Su</string>
+    <string name="alarm_entity_day_su">SO</string>
     <string name="alarm_entity_day_th">Do</string>
     <string name="alarm_entity_day_we">Mi</string>
     <string name="alarm_entity_day_tu">Di</string>
     <string name="alarm_entity_day_mo">Mo</string>
 
-    <string name="alarm_fragment_btn_disable_alarm_disable">Nächsten Alarm ausschalten.</string>
-    <string name="alarm_fragment_btn_disable_alarm_reactivate">Reaktiviere nächsten Alarm.</string>
+    <string name="alarm_fragment_btn_disable_alarm_disable">Nächsten Alarm ausschalten</string>
+    <string name="alarm_fragment_btn_disable_alarm_reactivate">Reaktiviere nächsten Alarm</string>
 
     <string name="alarm_instance_alarm">Alarm</string>
     <string name="alarm_instance_no_day_choosen">Kein Tag ausgewählt</string>
@@ -102,6 +102,11 @@
     <string name="alarms_alarme">&#9200; Wecker</string>
     <string name="alarms_no_alarms">Keine Alarme. Füge über den + Button einen neuen Alarm hinzu!</string>
 
+    <string name="alarms_type_selection_only_alarm">Nur Alarm</string>
+    <string name="alarms_type_selection_alarm_vibration">Alarm und Vibration</string>
+    <string name="alarms_type_selection_only_vibration">Nur Vibration</string>
+    <string name="alarms_type_selection_default">Standard</string>
+
     <!--endregion-->
 
     <!--region Sleep Fragment texts -->
@@ -111,60 +116,60 @@
         Du kannst allgemeine parameter zu deinem Schlaf einstellen
     </string>
     <string name="sleep_general_info_2">
-        Die Punktzahl zwischen 50 und 100 gibt an, wie gut wir deinen Schlaf überwachen können.
+        Die Punktzahl zwischen 50 und 100 gibt an, wie gut wir deinen Schlaf überwachen können
     </string>
     <string name="sleep_general_info_3">
-        Umso höher der Wert ist, umso besser können wir nur mit deinem Handy deinen Schlaf bestimmen.
+        Umso höher der Wert ist, umso besser können wir nur mit deinem Handy deinen Schlaf bestimmen
     </string>
     <string name="sleep_sleeptimes_header">Schlafzeiten</string>
 
     <string name="sleep_sleeptimes_info_1">
-        Die Schlafzeit sollte immer die komplette Zeit erfassen, in der du schläfst.
+        Die Schlafzeit sollte immer die komplette Zeit erfassen, in der du schläfst
     </string>
     <string name="sleep_sleeptimes_info_2">
-        Die App zeichnet nur in dieser Zeit die Daten auf und kann damit deinen Schlaf erkennen.
+        Die App zeichnet nur in dieser Zeit die Daten auf und kann damit deinen Schlaf erkennen
     </string>
     <string name="sleep_sleeptimes_info_3">
-        Im Auto-Modus wird die Schlafenszeit automatisch von der App an deine Wecker angepasst.
+        Im Auto-Modus wird die Schlafenszeit automatisch von der App an deine Wecker angepasst
     </string>
     <string name="sleep_sleeptime_start">Start:</string>
     <string name="sleep_sleeptime_end">Ende:</string>
     <string name="sleep_sleepduration_header">Schlafdauer</string>
     <string name="sleep_sleepduration_info_1">
-        Über die Schlafdauer kannst du einstellen, wie lange du standardmäßig schlafen willst.
+        Über die Schlafdauer kannst du einstellen, wie lange du standardmäßig schlafen willst
     </string>
     <string name="sleep_sleepduration_info_2">
-        Du kannst für jeden Alarm die Schlafdauer noch einmal zusätzlich anpassen.
+        Du kannst für jeden Alarm die Schlafdauer noch einmal zusätzlich anpassen
     </string>
     <string name="sleep_lightcondition_header">Lichtverhältnisse</string>
     <string name="sleep_lightcondition_info_1">
-        Ob du im dunkeln oder im hellen schläfst beeinträchtigt wie gut die App deinen Schlaf bestimmen kann.
+        Ob du im dunkeln oder im hellen schläfst beeinträchtigt wie gut die App deinen Schlaf bestimmen kann
     </string>
     <string name="sleep_lightcondition_info_2">
-        Wenn du eine richtig gute Schlafüberwachung haben willst solltest du im Dunkeln schlafen.
+        Wenn du eine richtig gute Schlafüberwachung haben willst solltest du im Dunkeln schlafen
     </string>
     <string name="sleep_phoneposition_header">Handyposition</string>
     <string name="sleep_phoneposition_info_1">
-        Für eine gute Schlafbestimmung sollte das Handy beim Schlafen mit im Bett liegen.
+        Für eine gute Schlafbestimmung sollte das Handy beim Schlafen mit im Bett liegen
     </string>
     <string name="sleep_phoneposition_info_2">
-        Du kannst das Handy aber auch nur neben das Bett oder im Raum haben, dementsprechend versuchen wir nur deine Schlafzeiten zu bestimmen.
+        Du kannst das Handy aber auch nur neben das Bett oder im Raum haben, dementsprechend versuchen wir nur deine Schlafzeiten zu bestimmen
     </string>
     <string name="sleep_phoneusage_header">Handynutzung</string>
     <string name="sleep_phoneusage_info_1">
-        Umso öfter du dein Handy regulär verwendest, umso genauer können wir deinen Einschlafzeitpunkt bestimmen.
+        Umso öfter du dein Handy regulär verwendest, umso genauer können wir deinen Einschlafzeitpunkt bestimmen
     </string>
     <string name="sleep_phoneusage_info_2">
-        Wenn du dein Handy wirklich nie benutzt kann die App keine zuverlässige bestimmung des Einschlafzeitpunkts treffen.
+        Wenn du dein Handy wirklich nie benutzt kann die App keine zuverlässige bestimmung des Einschlafzeitpunkts treffen
     </string>
     <string name="sleep_phoneusage_less">Wenig</string>
     <string name="sleep_phoneusage_often">Häufig</string>
     <string name="sleep_activitytracking_header">Aktivitätsverfolgung</string>
     <string name="sleep_activitytracking_info_1">
-        Aktivierst du die Aktivitätsverfolgung bestimmen wir deine Aktivität über den Tag und zeigen diese in Verlauf für die einzelnen Tage an.
+        Aktivierst du die Aktivitätsverfolgung bestimmen wir deine Aktivität über den Tag und zeigen diese in Verlauf für die einzelnen Tage an
     </string>
     <string name="sleep_activitytracking_info_2">
-        Mit "In Schlafenszeit einbeziehen" gibt dir die App mehr oder weniger Schlaf, je nach dem wie viel Bewegung du am Tag hattest.
+        Mit "In Schlafenszeit einbeziehen" gibt dir die App mehr oder weniger Schlaf, je nach dem wie viel Bewegung du am Tag hattest
     </string>
     <string name="sleep_trackactivity_header">Tägliche aktivitäten aufzeichnen</string>
     <string name="sleep_trackactivity_include_in_wakeup">In Schlafzeit einbeziehen</string>
@@ -219,14 +224,21 @@
     <string name="settings_report_error">Fehler melden</string>
     <string name="settings_permissions">Berechtigungen</string>
     <string name="settings_sleepdata">Schlafdaten</string>
-    <string name="settings_permission_sleepdata">ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk</string>
+    <string name="settings_permission_sleepdata">
+        Wir benötigen diese Berechtigung um den Schlaf mit Hilfe deines Handys zu überwachen. Ohne diese Berechtigung funktioniert unsere App nicht!
+    </string>
     <string name="settings_daily_activity">Tägliche Aktivität</string>
-    <string name="settings_permission_daily_activity">ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk</string>
+    <string name="settings_permission_daily_activity">
+        Wir benötigen diese Berechtigung um deine Aktivität am Tag aufzuzeichnen
+    </string>
     <string name="settings_storage">Speicherzugriff</string>
-    <string name="settings_permission_storage">ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk</string>
+    <string name="settings_permission_storage">
+        Um deine Daten zu exportieren oder vorhandene Daten in die App zu laden brauchen wir diese Berechtigung
+    </string>
     <string name="settings_overlapp_app">App Überlappen</string>
-    <string name="settings_permission_overlapp_app">ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk</string>
-    <string name="settings_permission_notification_privacy">ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk</string>
+    <string name="settings_permission_overlapp_app">
+        Wir benötigen diese Berechtigung, damit unsere App dich auch bei gesperrtem Handy richtig Wecken kann
+    </string>
     <string name="settings_notification_privacy">Notification Privacy</string>
     <string name="settings_data">Daten</string>
     <string name="settings_export_data">Daten Exportieren</string>

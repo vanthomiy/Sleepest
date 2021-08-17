@@ -103,6 +103,11 @@
     <string name="alarms_alarme">&#9200; Alarme</string>
     <string name="alarms_no_alarms">Keine Alarme. Füge über den + Button einen neuen Alarm hinzu!</string>
 
+    <string name="alarms_type_selection_only_alarm">Nur Alarm</string>
+    <string name="alarms_type_selection_alarm_vibration">Alarm und Vibration</string>
+    <string name="alarms_type_selection_only_vibration">Nur Vibration</string>
+    <string name="alarms_type_selection_default">Standard</string>
+
     <!--endregion-->
 
     <!--region Sleep Fragment texts -->
