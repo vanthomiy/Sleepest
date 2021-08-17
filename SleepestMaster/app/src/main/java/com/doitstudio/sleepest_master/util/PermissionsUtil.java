@@ -75,16 +75,28 @@ public class PermissionsUtil {
         return false;
     }
 
+    /**
+     * Set the permission for disable do not disturb
+     * @param context Activity context
+     */
     public static void setNotificationPolicyAccess(Context context) {
         Intent intent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
         context.startActivity(intent);
     }
 
+    /**
+     * Set the permission for overlay the screen
+     * @param context Activity context
+     */
     public static void setOverlayPermission(Context context) {
-        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"));
+        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
         context.startActivity(intent);
     }
 
+    /**
+     * Set the permission for tracking activity data
+     * @param context Activity context
+     */
     public static void setActivityRecognitionPermission(Context context) {
         Intent intent = new Intent(context, PermissionActivity.class);
         context.startActivity(intent);

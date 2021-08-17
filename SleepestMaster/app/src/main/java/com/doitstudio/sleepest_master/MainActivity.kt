@@ -224,13 +224,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         if(!PermissionsUtil.isOverlayPermissionGranted(applicationContext)) {
-            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
-            startActivity(intent)
+            PermissionsUtil.setOverlayPermission(this@MainActivity)
         }
 
         if (!PermissionsUtil.isNotificationPolicyAccessGranted(applicationContext)) {
-            val intent = Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
-            startActivity(intent)
+            PermissionsUtil.setOverlayPermission(this@MainActivity)
         }
 
         when (intent?.action) {
