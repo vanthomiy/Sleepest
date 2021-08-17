@@ -30,7 +30,7 @@ import java.time.LocalTime
 class InfoEntityViewModel(application: Application) : AndroidViewModel(application) {
 
 
-    val backgroundColor = ObservableField(
+    //val backgroundColor = ObservableField(R.color.transparent_overlay_tertiary)
     val textHeader = ObservableField("")
     val textDescription = ObservableField("")
     val orientation = ObservableField(LinearLayout.HORIZONTAL)
