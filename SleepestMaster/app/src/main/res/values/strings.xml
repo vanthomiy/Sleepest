@@ -266,7 +266,7 @@
     <string name="profile_credits">Credits</string>
     <string name="profile_credits_flaticon">Flaticon Website</string>
     <string name="profile_flaticon_introduction">Wir haben Bilder von der Seite Flaticon verwendet. Im folgenden sind die einzelnen Authoren der Bilder aufgelistet.</string>
-    <string name="prfofile_author">Autor: </string>
+    <string name="profile_from"> at </string>
 
     <string name="history_sleepPhases_title">Sleep phases:</string>
     <string name="history_day_sleepPhases_time_in_phase_title">Time in phase:</string>

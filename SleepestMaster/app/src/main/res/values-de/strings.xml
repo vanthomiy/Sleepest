@@ -347,7 +347,7 @@
     <string name="settings_delete_all_data">delete all data</string>
     <string name="profile_credits">Credits</string>
     <string name="profile_flaticon_introduction">Wir haben Bilder von der Seite Flaticon verwendet. Im folgenden sind die einzelnen Authoren der Bilder aufgelistet.</string>
-    <string name="prfofile_author">Autor: </string>
+    <string name="profile_from"> im </string>
     <string name="alarm_entity_day_fr">Fr</string>
     <string name="alarm_entity_day_sa">Sa</string>
     <string name="alarm_entity_day_su">Su</string>
