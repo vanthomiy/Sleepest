@@ -14,8 +14,11 @@ import androidx.work.WorkerParameters;
 import com.doitstudio.sleepest_master.MainApplication;
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.model.data.AlarmCycleStates;
+import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage;
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler;
+import com.doitstudio.sleepest_master.util.TimeConverterUtil;
 
+import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
@@ -57,8 +60,8 @@ public class WorkmanagerCalculation extends Worker {
     public static void startPeriodicWorkmanager(int duration, Context context1) {
 
         AlarmCycleState alarmCycleState = new AlarmCycleState(context1);
-       // if (alarmCycleState.getState() == AlarmCycleStates.BETWEEN_CALCULATION_AND_FIRST_WAKEUP ||
-         //   alarmCycleState.getState() == AlarmCycleStates.BETWEEN_FIRST_AND_LAST_WAKEUP) {
+        if (alarmCycleState.getState() == AlarmCycleStates.BETWEEN_CALCULATION_AND_FIRST_WAKEUP ||
+            alarmCycleState.getState() == AlarmCycleStates.BETWEEN_FIRST_AND_LAST_WAKEUP) {
             PeriodicWorkRequest periodicDataWork =
                     new PeriodicWorkRequest.Builder(WorkmanagerCalculation.class, duration, TimeUnit.MINUTES)
                             .addTag(context1.getString(R.string.workmanager2_tag)) //Tag is needed for canceling the periodic work
@@ -68,7 +71,10 @@ public class WorkmanagerCalculation extends Worker {
             workManager.enqueueUniquePeriodicWork(context1.getString(R.string.workmanager2_tag), ExistingPeriodicWorkPolicy.KEEP, periodicDataWork);
 
             Toast.makeText(context1, "WorkmanagerCalculation started", Toast.LENGTH_LONG).show();
-       // }
+        } else {
+            Calendar calendar = TimeConverterUtil.getAlarmDate(LocalTime.now().toSecondOfDay() + 300);
+            AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context1, AlarmReceiverUsage.START_WORKMANAGER_CALCULATION);
+        }
     }
 
     public static void stopPeriodicWorkmanager() {

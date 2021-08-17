@@ -208,8 +208,13 @@ class SettingsFragment : Fragment() {
             Last Boot: ${pref.getInt("hour", 0)},${pref.getInt("minute", 0)},${pref.getInt("usage", 0)}
             
             """.trimIndent()
+        pref = actualContext.getSharedPreferences("State", 0)
+        val textActualState= """
+            Actual State: ${pref.getString("state", "XX")}
+            
+            """.trimIndent()
 
-        var textGesamt = textVersion + textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation + textCalc1 + textCalc2 + textAlarmReceiver + textSleepTime + textBooReceiver1 + textStopException + textAlarmReceiver1
+        var textGesamt = textVersion + textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation + textCalc1 + textCalc2 + textAlarmReceiver + textSleepTime + textBooReceiver1 + textStopException + textAlarmReceiver1 + textActualState
 
 
         binding.testText.text = textGesamt
