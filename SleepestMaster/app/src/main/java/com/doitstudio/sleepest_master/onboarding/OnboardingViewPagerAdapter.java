@@ -64,6 +64,8 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
     public OnboardingViewPagerAdapter(Context context, ArrayList<Object> arrayList) {
         this.context = context;
 
+        timer = new Timer();
+
         if (arrayList.size() > 0) {
             starttime = (int) arrayList.get(0);
             endtime = (int) arrayList.get(1);
@@ -79,8 +81,6 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
             notFirstAppStart = (Boolean) arrayList.get(6);
 
             enableStartApp = true;
-
-            timer = new Timer();
 
         }
     }

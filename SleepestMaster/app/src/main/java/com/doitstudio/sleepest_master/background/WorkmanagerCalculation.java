@@ -57,8 +57,8 @@ public class WorkmanagerCalculation extends Worker {
     public static void startPeriodicWorkmanager(int duration, Context context1) {
 
         AlarmCycleState alarmCycleState = new AlarmCycleState(context1);
-        if (alarmCycleState.getState() == AlarmCycleStates.BETWEEN_CALCULATION_AND_FIRST_WAKEUP ||
-            alarmCycleState.getState() == AlarmCycleStates.BETWEEN_FIRST_AND_LAST_WAKEUP) {
+       // if (alarmCycleState.getState() == AlarmCycleStates.BETWEEN_CALCULATION_AND_FIRST_WAKEUP ||
+         //   alarmCycleState.getState() == AlarmCycleStates.BETWEEN_FIRST_AND_LAST_WAKEUP) {
             PeriodicWorkRequest periodicDataWork =
                     new PeriodicWorkRequest.Builder(WorkmanagerCalculation.class, duration, TimeUnit.MINUTES)
                             .addTag(context1.getString(R.string.workmanager2_tag)) //Tag is needed for canceling the periodic work
@@ -68,7 +68,7 @@ public class WorkmanagerCalculation extends Worker {
             workManager.enqueueUniquePeriodicWork(context1.getString(R.string.workmanager2_tag), ExistingPeriodicWorkPolicy.KEEP, periodicDataWork);
 
             Toast.makeText(context1, "WorkmanagerCalculation started", Toast.LENGTH_LONG).show();
-        }
+       // }
     }
 
     public static void stopPeriodicWorkmanager() {
