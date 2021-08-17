@@ -202,6 +202,7 @@ class HistoryDayFragment : Fragment() {
 
             time = tempTime.dayOfMonth.toString() + "." + tempTime.monthValue + " " + tempTime.hour + ":" + tempTime.minute
             viewModelDay.beginOfSleep.set(time)
+            viewModelDay.beginOfSleepEpoch.set(it.third.sleepTimes.sleepTimeStart.toLong() * 1000)
 
             tempTime = LocalDateTime.ofInstant(
                 Instant.ofEpochMilli((it.third.sleepTimes.sleepTimeEnd.toLong()) * 1000),
@@ -210,6 +211,7 @@ class HistoryDayFragment : Fragment() {
 
             time = tempTime.dayOfMonth.toString() + "." + tempTime.monthValue + " " + tempTime.hour + ":" + tempTime.minute
             viewModelDay.endOfSeep.set(time)
+            viewModelDay.endOfSleepEpoch.set(it.third.sleepTimes.sleepTimeEnd.toLong() * 1000)
 
             viewModelDay.awakeTime.set(
                 getString(R.string.history_day_timeInPhase_awake) + " " + generateSleepValueInformation(it.third.sleepTimes.awakeTime)
@@ -545,7 +547,5 @@ class HistoryDayFragment : Fragment() {
         }
         viewModelDay.activitySmiley.set(SmileySelectorUtil.getSmileyActivity(activityOnDay))
     }
-
-
 }
 

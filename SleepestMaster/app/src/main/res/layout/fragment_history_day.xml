@@ -141,28 +141,75 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <FrameLayout
+                            android:layout_width="150dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginTop="4dp"
-                            android:text="@{historyDayViewModel.beginOfSleep}"
-                            android:textColor="@color/accent_text_color"
-                            tools:text="22:00" />
+                            android:layout_gravity="start"
+                            android:clickable="true"
+                            android:tag="BeginOfSleep"
+                            android:onClick="@{historyDayViewModel::manualChangeSleepTimes}"
+                            android:background="@drawable/bgrounded_button">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginStart="10dp"
+                                android:textSize="@dimen/valueSize"
+                                android:textColor="@color/primary_text_color"
+                                android:textStyle="bold"
+                                android:text="@string/sleep_sleeptime_start" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="16dp"
+                                android:layout_marginTop="4dp"
+                                android:layout_gravity="end"
+                                android:gravity="center_vertical"
+                                android:layout_marginEnd="10dp"
+                                android:text="@{historyDayViewModel.beginOfSleep}"
+                                android:textColor="@color/accent_text_color"
+                                tools:text="22:00" />
+
+                        </FrameLayout>
 
                         <View
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <FrameLayout
+                            android:layout_width="150dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="16dp"
-                            android:layout_marginTop="4dp"
-                            android:text="@{historyDayViewModel.endOfSeep}"
-                            android:textColor="@color/accent_text_color"
-                            tools:text="06:00" />
+                            android:layout_gravity="end"
+                            android:background="@drawable/bgrounded_button"
+                            android:clickable="true"
+                            android:tag="EndOfSleep"
+                            android:onClick="@{historyDayViewModel::manualChangeSleepTimes}">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginStart="10dp"
+                                android:text="@string/sleep_sleeptime_end"
+                                android:textColor="@color/primary_text_color"
+                                android:textSize="@dimen/valueSize"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="16dp"
+                                android:layout_marginTop="4dp"
+                                android:layout_gravity="end"
+                                android:gravity="center_vertical"
+                                android:layout_marginEnd="10dp"
+                                android:text="@{historyDayViewModel.endOfSeep}"
+                                android:textColor="@color/accent_text_color"
+                                tools:text="6:00" />
+                        </FrameLayout>
                     </LinearLayout>
 
                     <LinearLayout

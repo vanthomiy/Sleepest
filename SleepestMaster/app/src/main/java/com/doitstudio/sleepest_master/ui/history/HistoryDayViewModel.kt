@@ -1,6 +1,7 @@
 package com.doitstudio.sleepest_master.ui.history
 
 import android.app.Application
+import android.app.TimePickerDialog
 import android.content.Context
 import android.transition.TransitionManager
 import android.view.View
@@ -9,10 +10,15 @@ import android.widget.ImageView
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.model.data.MoodType
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.util.IconAnimatorUtil
 import com.doitstudio.sleepest_master.util.SmileySelectorUtil
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZoneOffset
 
 /**  */
 class HistoryDayViewModel(application: Application) : AndroidViewModel(application) {
@@ -24,8 +30,12 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
     /**  */
     var beginOfSleep = ObservableField("")
 
+    var beginOfSleepEpoch = ObservableField(0L)
+
     /**  */
     var endOfSeep = ObservableField("")
+
+    var endOfSleepEpoch = ObservableField(0L)
 
     /**  */
     var awakeTime = ObservableField("")
@@ -94,5 +104,37 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
     private fun updateInfoChanged(value: String, toggle: Boolean = false) {
         TransitionManager.beginDelayedTransition(transitionsContainer)
         actualExpand.set(if(actualExpand.get() == value.toIntOrNull()) -1 else value.toIntOrNull())
+    }
+
+    fun manualChangeSleepTimes(view: View) {
+
+        val time : LocalDateTime = if (view.tag == "BeginOfSleep") {
+            //Set the fall asleep time.
+            LocalDateTime.ofInstant(
+                beginOfSleepEpoch.get()?.let { Instant.ofEpochMilli(it) },
+                ZoneOffset.systemDefault()
+            )
+        } else {
+            LocalDateTime.ofInstant(
+                endOfSleepEpoch.get()?.let { Instant.ofEpochMilli(it) },
+                ZoneOffset.systemDefault()
+            )
+        }
+
+        createPickerDialogue(view, time.hour, time.minute)
+    }
+
+    private fun createPickerDialogue(view: View, hour: Int, minute: Int) {
+        val tpd = TimePickerDialog(
+            view.context,
+            R.style.TimePickerTheme,
+            { _, h, m ->
+                val tempTime = LocalTime.of(h, m)
+            },
+            hour,
+            minute,
+            true
+        )
+        tpd.show()
     }
 }
