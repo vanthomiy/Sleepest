@@ -116,7 +116,9 @@ class DatabaseRepositoryTest {
     @Test
     fun insertSleepData() = runBlocking {
 
-        sleepDatabaseRepository.deleteUserSleepSession()
+        sleepDatabaseRepository.deleteAllUserSleepSessions(
+
+        )
 
         // load all data
         var pathTrue = "databases/testdata/SleepValuesTrue.json"

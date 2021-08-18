@@ -196,7 +196,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                     dataBaseRepository.deleteAllAlarms()
                     dataBaseRepository.deleteActivityApiRawData()
                     dataBaseRepository.deleteSleepApiRawData()
-                    dataBaseRepository.deleteUserSleepSession()
+                    dataBaseRepository.deleteAllUserSleepSessions()
 
                     dataStoreRepository.deleteAllData()
                 }
