@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.util.PermissionsUtil
 import com.google.android.gms.location.ActivityRecognition
 import com.google.android.gms.location.SleepSegmentRequest
 import kotlinx.coroutines.CoroutineScope
@@ -108,10 +109,8 @@ class SleepHandler(private val context: Context) {
         // Because this app targets 29 and above (recommendation for using the Sleep APIs), we
         // don't need to check if this is on a device before runtime permissions, that is, a device
         // prior to 29 / Q.
-        return PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACTIVITY_RECOGNITION
-        )
+        return PermissionsUtil.isActivityRecognitionPermissionGranted(context)
+
     }
 
 }

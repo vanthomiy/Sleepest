@@ -133,9 +133,10 @@ public class AlarmClockReceiver extends BroadcastReceiver {
         Intent intent = new Intent(restartAlarmContext, AlarmClockReceiver.class);
         intent.putExtra(context.getString(R.string.alarm_clock_intent_key), AlarmClockReceiverUsage.START_ALARMCLOCK.name());
         PendingIntent pendingIntent = PendingIntent.getBroadcast(restartAlarmContext, AlarmClockReceiverUsage.Companion.getCount(AlarmClockReceiverUsage.SNOOZE_ALARMCLOCK), intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmManager = (AlarmManager) restartAlarmContext.getSystemService(ALARM_SERVICE);
 
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + snoozeTime, pendingIntent);
+        //AlarmManager alarmManager = (AlarmManager) restartAlarmContext.getSystemService(ALARM_SERVICE);
+
+        //alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + snoozeTime, pendingIntent);
     }
 
     /**

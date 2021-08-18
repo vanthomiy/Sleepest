@@ -24,13 +24,17 @@ import androidx.annotation.RequiresApi;
 
 import com.doitstudio.sleepest_master.MainApplication;
 import com.doitstudio.sleepest_master.R;
+import com.doitstudio.sleepest_master.model.data.AlarmClockReceiverUsage;
 import com.doitstudio.sleepest_master.model.data.Constants;
 import com.doitstudio.sleepest_master.model.data.NotificationUsage;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
+import com.doitstudio.sleepest_master.util.TimeConverterUtil;
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog;
 import com.kevalpatel.ringtonepicker.RingtonePickerListener;
 
 import java.io.IOException;
+import java.time.LocalTime;
+import java.util.Calendar;
 import java.util.stream.Stream;
 
 public class AlarmClockAudio {
@@ -183,7 +187,10 @@ public class AlarmClockAudio {
 
                 if (ringtoneManager.isPlaying()) {
                     stopAlarm(true);
+                } else {
+                    stopAlarm(true);
                 }
+
             }
 
         }.start();
@@ -283,7 +290,9 @@ public class AlarmClockAudio {
 
         if (restart) {
             //Snoozes the alarm for 10 minutes
-            AlarmClockReceiver.restartAlarmManager(Constants.MILLIS_SNOOZE, getInstanceContext());
+            //AlarmClockReceiver.restartAlarmManager(Constants.MILLIS_SNOOZE, getInstanceContext());
+            Calendar calendar = TimeConverterUtil.getAlarmDate(LocalTime.now().toSecondOfDay() + Constants.MILLIS_SNOOZE/1000);
+            AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
         }
 
         NotificationManager notificationManager = (NotificationManager) appContext.getSystemService(Context.NOTIFICATION_SERVICE);

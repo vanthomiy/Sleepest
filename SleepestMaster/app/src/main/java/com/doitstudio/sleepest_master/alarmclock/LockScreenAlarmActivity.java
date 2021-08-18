@@ -111,7 +111,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
             }.start();
 
 
-            new CountDownTimer(Constants.MILLIS_UNTIL_SNOOZE, Constants.COUNTDOWN_TICK_INTERVAL) {
+            new CountDownTimer(Constants.MILLIS_UNTIL_SNOOZE + 5000, Constants.COUNTDOWN_TICK_INTERVAL) {
 
                 public void onTick(long millisUntilFinished) { }
 
