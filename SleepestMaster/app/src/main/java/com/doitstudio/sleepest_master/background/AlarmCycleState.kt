@@ -26,8 +26,8 @@ class AlarmCycleState(private val context: Context) {
         return@runBlocking chooseState()
     }
 
-    suspend fun chooseState() : AlarmCycleStates {
-        if (databaseRepository.getNextActiveAlarm() != null && dataStoreRepository.isInSleepTime(null)) {
+    suspend private fun chooseState() : AlarmCycleStates {
+        if (databaseRepository.getNextActiveAlarm() != null) {
 
             if (isBetweenTwoTimes(dataStoreRepository.getSleepTimeBegin(), databaseRepository.getNextActiveAlarm()!!.wakeupEarly - Constants.CALCULATION_START_DIFFERENCE,
                 checkDayChange(dataStoreRepository.getSleepTimeBegin(), databaseRepository.getNextActiveAlarm()!!.wakeupEarly - Constants.CALCULATION_START_DIFFERENCE))) {
@@ -47,12 +47,12 @@ class AlarmCycleState(private val context: Context) {
             }  else if (isBetweenTwoTimes(databaseRepository.getNextActiveAlarm()!!.wakeupLate, dataStoreRepository.getSleepTimeEnd(),
                     checkDayChange(databaseRepository.getNextActiveAlarm()!!.wakeupLate, dataStoreRepository.getSleepTimeEnd()))) {
 
-                        return AlarmCycleStates.BETWEEN_FIRST_AND_LAST_WAKEUP
+                        return AlarmCycleStates.BETWEEN_LAST_WAKEUP_AND_SLEEPTIME_END
 
             } else if (isBetweenTwoTimes(dataStoreRepository.getSleepTimeEnd(), dataStoreRepository.getSleepTimeBegin(),
                     checkDayChange(dataStoreRepository.getSleepTimeEnd(), dataStoreRepository.getSleepTimeBegin()))) {
 
-                return AlarmCycleStates.BETWEEN_FIRST_AND_LAST_WAKEUP
+                return AlarmCycleStates.BETWEEN_SLEEPTIME_END_AND_SLEEPTIME_START
 
             }
         }
@@ -70,9 +70,11 @@ class AlarmCycleState(private val context: Context) {
 
     private fun isBetweenTwoTimes(firstTime : Int, secondTime : Int, withDayChange : Boolean) : Boolean {
         if (withDayChange) {
-           return ((LocalTime.now().toSecondOfDay() <= secondTime) || (LocalTime.now().toSecondOfDay() >= firstTime))
+            val a = ((LocalTime.now().toSecondOfDay() <= secondTime) || (LocalTime.now().toSecondOfDay() >= firstTime))
+           return a
         } else {
-            return LocalTime.now().toSecondOfDay() in firstTime..secondTime
+            val a = LocalTime.now().toSecondOfDay() in firstTime..secondTime
+            return a
         }
     }
 }

@@ -3,12 +3,14 @@ package com.doitstudio.sleepest_master
 import android.Manifest
 import android.app.NotificationManager
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
+
 import android.net.Uri
 import android.os.Build
+
 import android.os.Bundle
 import android.provider.Settings
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -16,7 +18,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.asLiveData
+
+import com.doitstudio.sleepest_master.background.AlarmCycleState
+
 import com.doitstudio.sleepest_master.alarmclock.LockScreenExtendedFragment
+
 import com.doitstudio.sleepest_master.background.AlarmReceiver
 import com.doitstudio.sleepest_master.background.BackgroundAlarmTimeHandler
 import com.doitstudio.sleepest_master.databinding.ActivityMainBinding
@@ -38,10 +44,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.ZoneOffset
 import java.util.*
 
 
@@ -228,13 +230,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         if(!PermissionsUtil.isOverlayPermissionGranted(applicationContext)) {
-            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
-            startActivity(intent)
+            PermissionsUtil.setOverlayPermission(this@MainActivity)
         }
 
         if (!PermissionsUtil.isNotificationPolicyAccessGranted(applicationContext)) {
-            val intent = Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
-            startActivity(intent)
+            PermissionsUtil.setOverlayPermission(this@MainActivity)
         }
 
         when (intent?.action) {
@@ -274,6 +274,12 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
+
+        val alarmCycleState = AlarmCycleState(applicationContext)
+        val pref: SharedPreferences = getSharedPreferences("State", 0)
+        val ed = pref.edit()
+        ed.putString("state", alarmCycleState.getState().toString())
+        ed.apply()
     }
 
     override fun onResume() {
