@@ -1,10 +1,13 @@
 package com.doitstudio.sleepest_master.ui.info
 
+import android.app.ActionBar
 import android.app.Application
 import android.app.TimePickerDialog
+import android.graphics.drawable.GradientDrawable
 import android.util.LayoutDirection
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.databinding.Observable
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
@@ -28,7 +31,7 @@ class InfoEntityViewModel(application: Application) : AndroidViewModel(applicati
 
     val textHeader = ObservableField("")
     val textDescription = ObservableField("")
-    val rightToLeft = ObservableField(false)
+    val orientation = ObservableField(LinearLayout.HORIZONTAL)
     val layoutFormat = ObservableField(LayoutDirection.LTR)
 
     val imageVisible = ObservableField(View.GONE)
@@ -38,12 +41,6 @@ class InfoEntityViewModel(application: Application) : AndroidViewModel(applicati
 
     //endregion
 
-
-    //region animation
-
-    lateinit var transitionsContainer : ViewGroup
-
-    //endregion
 }
 
 

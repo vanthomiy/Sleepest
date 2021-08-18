@@ -1,5 +1,6 @@
 package com.doitstudio.sleepest_master.model.data.credits
 
+import com.doitstudio.sleepest_master.model.data.Info
 import com.doitstudio.sleepest_master.model.data.Websites
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -32,7 +33,7 @@ data class CreditsSites(
 
 data class CreditsAuthors(
     val author:String,
-    val date:LocalDate
+    val usage: Info
 ){
 
     companion object{
@@ -41,12 +42,17 @@ data class CreditsAuthors(
 
             return when(site) {
                 Websites.FLATICON -> listOf(
-                    CreditsAuthors("aut1", LocalDate.of(2021, 8, 10)),
-                    CreditsAuthors("aut2", LocalDate.of(2021, 8, 10))
+                    CreditsAuthors("Eucalyp", Info.SLEEP),
+                    CreditsAuthors("aut2", Info.SLEEP)
                 )
                 Websites.LOTTIEFILES -> listOf(
-                    CreditsAuthors("aut3", LocalDate.of(2021, 8, 10)),
-                    CreditsAuthors("aut4", LocalDate.of(2021, 8, 10))
+                    CreditsAuthors("asjadnaqvi", Info.SLEEP),
+                    CreditsAuthors("arpangupta", Info.SLEEP),
+                    CreditsAuthors("batman", Info.SLEEP),
+                    CreditsAuthors("motionstk.studio", Info.SLEEP),
+                    CreditsAuthors("Beecher", Info.SLEEP),
+                    CreditsAuthors("lpdesign", Info.ALARM),
+                    CreditsAuthors("DarkMuzishn", Info.SETTINGS)
                 )
                 else -> listOf()
             }

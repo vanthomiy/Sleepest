@@ -44,7 +44,7 @@ class InfoFragment : Fragment() {
             val styledAttributes = context.obtainStyledAttributes(attrs, R.styleable.InfoFragment_MembersInjector)
             infoId = styledAttributes.getInt(R.styleable.InfoFragment_MembersInjector_infoId, 0)
             info = styledAttributes.getInt(R.styleable.InfoFragment_MembersInjector_info, 0)
-            direction = styledAttributes.getInt(R.styleable.InfoFragment_MembersInjector_direction, 0)
+            direction = styledAttributes.getInt(R.styleable.InfoFragment_MembersInjector_direction, 4)
             styledAttributes.recycle()
         }
     }
@@ -66,7 +66,7 @@ class InfoFragment : Fragment() {
 
         val infoEntity = infoId?.let { info?.let { Info.getById(it) }?.let { it1 ->
             InfoEntity.getInfo(
-                it1, it)
+                it1, it, view.context)
         } }
 
         var actualStlye = direction?.let { InfoEntityStlye.getById(it) }
@@ -75,12 +75,22 @@ class InfoFragment : Fragment() {
             val transactions = childFragmentManager.beginTransaction()
             //transactions.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
 
-            val infoFragment = actualStlye?.let { InfoEntityFragment(view?.context, info, it) }
+            val infoFragment = if(info.infoEntityStlye != InfoEntityStlye.RANDOM)
+            {
+                actualStlye = info.infoEntityStlye
+                InfoEntityFragment(view?.context, info, info.infoEntityStlye)
+
+            }
+            else{
+                actualStlye?.let { InfoEntityFragment(view?.context, info, it) }
+            }
+
             if (infoFragment != null) {
                 transactions?.add(binding.lLInfo.id, infoFragment)?.commit()
             }
 
-            actualStlye = if(info.textHeader == null)
+
+            actualStlye = if(actualStlye == InfoEntityStlye.PICTURE_LEFT || actualStlye == InfoEntityStlye.PICTURE_RIGHT)
             {
                 if (actualStlye == InfoEntityStlye.PICTURE_LEFT) InfoEntityStlye.PICTURE_RIGHT else
                     InfoEntityStlye.PICTURE_LEFT

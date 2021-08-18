@@ -1,5 +1,6 @@
 package com.doitstudio.sleepest_master.ui.history
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import java.time.LocalDate
 import java.time.Month
 import java.util.*
+import kotlin.time.milliseconds
 
 class HistoryTabView : Fragment() {
     private lateinit var adapter: HistoryTabViewAdapter
@@ -85,7 +87,30 @@ class HistoryTabView : Fragment() {
         }
 
         tVActualDayTabView.setOnClickListener {
+            val c = Calendar.getInstance()
+            val year = c.get(Calendar.YEAR)
+            val month = c.get(Calendar.MONTH)
+            val day = c.get(Calendar.DAY_OF_MONTH)
+
+            val dpd = activity?.let { it ->
+                DatePickerDialog(
+                    it,
+                    DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+                        viewModel.analysisDate.set(LocalDate.of(year, monthOfYear + 1, dayOfMonth))
+                    },
+                    year,
+                    month,
+                    day
+                )
+            }
+
+            dpd?.datePicker?.maxDate = System.currentTimeMillis()
+            dpd?.show()
+        }
+
+        tVActualDayTabView.setOnLongClickListener {
             viewModel.analysisDate.set(LocalDate.now())
+            return@setOnLongClickListener true
         }
 
         viewModel.analysisDate.addOnPropertyChangedCallback(

@@ -32,6 +32,7 @@ import com.doitstudio.sleepest_master.databinding.FragmentSettingsBinding
 import com.doitstudio.sleepest_master.googleapi.SleepHandler
 import com.doitstudio.sleepest_master.model.data.AlarmClockReceiverUsage
 import com.doitstudio.sleepest_master.model.data.Constants
+import com.doitstudio.sleepest_master.model.data.Info
 import com.doitstudio.sleepest_master.model.data.Websites
 import com.doitstudio.sleepest_master.model.data.credits.CreditsSites
 import com.doitstudio.sleepest_master.model.data.export.ImportUtil
@@ -252,8 +253,9 @@ class SettingsFragment : Fragment() {
             var creditsText = ""
 
             site.authors.forEach{ author ->
-                creditsText += "\n      " + SmileySelectorUtil.getSmileyIteration() + "   "+ actualContext.getString(
-                    R.string.prfofile_author) + " " + author.author
+                creditsText += "\n      " + SmileySelectorUtil.getSmileyIteration() + " " + author.author + " " +
+                        actualContext.getString(R.string.profile_from) + " " +
+                        Info.getName(author.usage, actualContext)
             }
 
 
