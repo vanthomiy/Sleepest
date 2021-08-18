@@ -80,19 +80,11 @@ public class PermissionsUtil {
         context.startActivity(intent);
     }
 
-    /**
-     *
-     * @param context Activity context
-     */
     public static void setOverlayPermission(Context context) {
-        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"));
         context.startActivity(intent);
     }
 
-    /**
-     *
-     * @param context Activity context
-     */
     public static void setActivityRecognitionPermission(Context context) {
         Intent intent = new Intent(context, PermissionActivity.class);
         context.startActivity(intent);

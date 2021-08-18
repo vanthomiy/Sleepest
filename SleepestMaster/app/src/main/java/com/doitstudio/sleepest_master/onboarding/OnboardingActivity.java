@@ -52,7 +52,7 @@ public class OnboardingActivity extends AppCompatActivity {
         }
 
         viewPager = findViewById(R.id.onboarding_viewpager);
-        onboardingViewPagerAdapter = new OnboardingViewPagerAdapter(OnboardingActivity.this, arrayList);
+        onboardingViewPagerAdapter = new OnboardingViewPagerAdapter(this, arrayList);
         viewPager.setAdapter(onboardingViewPagerAdapter);
     }
 }
