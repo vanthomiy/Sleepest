@@ -202,6 +202,7 @@ class HistoryDayFragment : Fragment() {
 
             time = tempTime.dayOfMonth.toString() + "." + tempTime.monthValue + " " + tempTime.hour + ":" + tempTime.minute
             viewModelDay.beginOfSleep.set(time)
+            viewModelDay.sessionId = it.third.id
             viewModelDay.beginOfSleepEpoch.set(it.third.sleepTimes.sleepTimeStart.toLong() * 1000)
 
             tempTime = LocalDateTime.ofInstant(

@@ -15,6 +15,9 @@ import com.doitstudio.sleepest_master.model.data.MoodType
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.util.IconAnimatorUtil
 import com.doitstudio.sleepest_master.util.SmileySelectorUtil
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -24,6 +27,8 @@ import java.time.ZoneOffset
 class HistoryDayViewModel(application: Application) : AndroidViewModel(application) {
 
     val context: Context by lazy { getApplication<Application>().applicationContext }
+
+    private val scope: CoroutineScope = MainScope()
 
     val dataBaseRepository: DatabaseRepository by lazy { (context as MainApplication).dataBaseRepository }
 
@@ -36,6 +41,8 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
     var endOfSeep = ObservableField("")
 
     var endOfSleepEpoch = ObservableField(0L)
+
+    var sessionId = 0
 
     /**  */
     var awakeTime = ObservableField("")
@@ -122,6 +129,7 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
         }
 
         createPickerDialogue(view, time.hour, time.minute)
+        //Unterscheidung zwischen Einschlaf und Aufwachzeitpunkt.
     }
 
     private fun createPickerDialogue(view: View, hour: Int, minute: Int) {
@@ -129,7 +137,11 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
             view.context,
             R.style.TimePickerTheme,
             { _, h, m ->
-                val tempTime = LocalTime.of(h, m)
+                scope.launch {
+                    val tempTime = LocalTime.of(h, m)
+                    //TODO(Funktion, welche Thomas die UTC Zeiten (Epoch in Sekunden) des neuen Einschlaf und Aufwachzeitpunktes übergibt.)
+                    //dataBaseRepository.updateSleepSessionStartManuel(startTimeEpoch = 0, sessionId = 0)
+                }
             },
             hour,
             minute,

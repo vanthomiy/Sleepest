@@ -262,6 +262,14 @@ class DatabaseRepository(
         userSleepSessionDao.updateMoodAfterSleep(moodType, sessionId)
     }
 
+    suspend fun updateSleepSessionStartManuel(startTimeEpoch: Int, sessionId: Int) {
+        //TODO(Implement, StartTime in epoch seconds)
+    }
+
+    suspend fun updateSleepSessionEndManuel(endTimeEpoch: Int, sessionId: Int) {
+        //TODO(Implement, StartTime in epoch seconds)
+    }
+
     //endregion
 
     //region Alarm
