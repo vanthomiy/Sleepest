@@ -693,7 +693,7 @@ class SleepCalculationHandlerTest
             SleepState.DEEP to 0,
             SleepState.REM to 0)
 
-        for (i in 52 until 63)
+        for (i in 1 until 49)
         {
             val data = dataUnPred[i]
 
@@ -911,7 +911,8 @@ class SleepCalculationHandlerTest
 
         var sleepCalculationHandler = SleepCalculationHandler.getHandler(context)
 
-        val sleepApiRawDataEntityList = sleepDbRepository.getSleepApiRawDataFromDate(LocalDateTime.now()).first()
+        val day = LocalDateTime.now().minusDays(1)
+        val sleepApiRawDataEntityList = sleepDbRepository.getSleepApiRawDataFromDate(day).first()
 
         sleepApiRawDataEntityList?.forEach { data ->
             data.oldSleepState = SleepState.NONE
@@ -921,10 +922,10 @@ class SleepCalculationHandlerTest
         }
 
 
-        sleepCalculationHandler.checkIsUserSleeping()
-        sleepCalculationHandler.checkIsUserSleeping()
+        sleepCalculationHandler.checkIsUserSleeping(day)
+        sleepCalculationHandler.checkIsUserSleeping(day)
 
-        sleepCalculationHandler.defineUserWakeup()
+        sleepCalculationHandler.defineUserWakeup(day)
 
     }
 }

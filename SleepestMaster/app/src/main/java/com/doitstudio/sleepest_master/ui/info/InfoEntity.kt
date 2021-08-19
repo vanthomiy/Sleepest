@@ -174,11 +174,11 @@ data class InfoEntity (
                         infoEntityStlye = InfoEntityStlye.PICTURE_RIGHT
                     ),
                     InfoEntity(
-                        image = null,
-                        lottie = R.raw.idea_bulb,
+                        image = R.drawable.light_bulb,
+                        lottie = null,
                         textHeader = null,
                         textDescription = context.resources.getString(R.string.sleep_sleeptimes_info_3),
-                        infoEntityStlye = InfoEntityStlye.PICTURE_RIGHT
+                        infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
                     )
                 )
                 1 ->  listOf(InfoEntity(
@@ -189,8 +189,8 @@ data class InfoEntity (
                     infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
                 ),
                     InfoEntity(
-                        image = null,
-                        lottie = R.raw.idea_bulb,
+                        image = R.drawable.light_bulb,
+                        lottie = null,
                         textHeader = null,
                         textDescription = context.resources.getString(R.string.sleep_sleepduration_info_2),
                         infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
@@ -204,8 +204,8 @@ data class InfoEntity (
                     infoEntityStlye = InfoEntityStlye.PICTURE_RIGHT
                 ),
                     InfoEntity(
-                        image = null,
-                        lottie = R.raw.idea_bulb,
+                        image = R.drawable.light_bulb,
+                        lottie = null,
                         textHeader = null,
                         textDescription = context.resources.getString(R.string.sleep_lightcondition_info_2),
                         infoEntityStlye = InfoEntityStlye.PICTURE_RIGHT
@@ -219,8 +219,8 @@ data class InfoEntity (
                     infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
                 ),
                     InfoEntity(
-                        image = null,
-                        lottie = R.raw.idea_bulb,
+                        image = R.drawable.light_bulb,
+                        lottie = null,
                         textHeader = null,
                         textDescription = context.resources.getString(R.string.sleep_phoneposition_info_2),
                         infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
@@ -234,8 +234,8 @@ data class InfoEntity (
                     infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
                 ),
                     InfoEntity(
-                        image = null,
-                        lottie = R.raw.idea_bulb,
+                        image = R.drawable.light_bulb,
+                        lottie = null,
                         textHeader = null,
                         textDescription = context.resources.getString(R.string.sleep_phoneusage_info_2),
                         infoEntityStlye = InfoEntityStlye.PICTURE_RIGHT
@@ -249,8 +249,8 @@ data class InfoEntity (
                     infoEntityStlye = InfoEntityStlye.PICTURE_TOP
                 ),
                     InfoEntity(
-                        image = null,
-                        lottie = R.raw.idea_bulb,
+                        image = R.drawable.light_bulb,
+                        lottie = null,
                         textHeader = null,
                         textDescription = context.resources.getString(R.string.sleep_activitytracking_info_2),
                         infoEntityStlye = InfoEntityStlye.PICTURE_LEFT

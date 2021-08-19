@@ -160,7 +160,7 @@ class SleepClassifier constructor(private val context: Context) {
                 true,
                 3,
                 actualThreshold) &&
-                    (!prePrediction || actualParams.sleepStartThreshold.checkIfThreshold(
+                    (prePrediction || actualParams.sleepStartThreshold.checkIfThreshold(
                         true,
                         3,
                         nextThreeTimes)
