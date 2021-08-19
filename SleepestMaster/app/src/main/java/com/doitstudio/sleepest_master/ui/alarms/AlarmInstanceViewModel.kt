@@ -94,7 +94,7 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
             },
             hour,
             minute,
-            false
+            SleepTimeValidationUtil.Is24HourFormat(context)
         )
         tpd.show()
     }
@@ -106,8 +106,7 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
         val tpd = TimePickerDialog(
             view.context,
             R.style.TimePickerTheme,
-            TimePickerDialog.OnTimeSetListener(function = { view, h, m ->
-
+            { view, h, m ->
                 val tempWakeup = LocalTime.of(h, m)
 
                 scope.launch {
@@ -123,10 +122,10 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
                         AlarmSleepChangeFrom.WAKEUPLATE
                     )
                 }
-            }),
+            },
             hour,
             minute,
-            false
+            SleepTimeValidationUtil.Is24HourFormat(context)
         )
 
         tpd.show()

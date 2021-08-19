@@ -1,15 +1,13 @@
 package com.doitstudio.sleepest_master.util
 
 import android.content.Context
+import android.text.format.DateFormat
 import android.widget.Toast
-import androidx.lifecycle.asLiveData
-import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.model.data.AlarmSleepChangeFrom
 import com.doitstudio.sleepest_master.model.data.SleepSleepChangeFrom
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import kotlinx.coroutines.flow.first
-import java.lang.Math.abs
 import java.time.LocalTime
 
 object SleepTimeValidationUtil {
@@ -239,5 +237,12 @@ object SleepTimeValidationUtil {
 
     fun createMinutePickerHelper() : Array<String>{
         return arrayOf("0","15","30","45")
+    }
+
+    /**
+     * Returns true if the date format is 24h format else false
+     */
+    fun Is24HourFormat(context:Context) : Boolean{
+        return DateFormat.is24HourFormat(context)
     }
 }

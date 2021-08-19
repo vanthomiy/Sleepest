@@ -24,6 +24,7 @@ import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.util.IconAnimatorUtil
 import com.doitstudio.sleepest_master.util.SleepTimeValidationUtil
+import com.doitstudio.sleepest_master.util.SleepTimeValidationUtil.Is24HourFormat
 import com.doitstudio.sleepest_master.util.StringUtil.getStringXml
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -104,7 +105,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
                 },
                 hour,
                 minute,
-                false
+            Is24HourFormat(context)
         )
 
         tpd.show()
@@ -137,7 +138,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
             },
                 hour,
                 minute,
-                false
+            Is24HourFormat(context)
         )
 
         tpd.show()

@@ -14,6 +14,7 @@ import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.model.data.MoodType
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.util.IconAnimatorUtil
+import com.doitstudio.sleepest_master.util.SleepTimeValidationUtil
 import com.doitstudio.sleepest_master.util.SmileySelectorUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -145,7 +146,7 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
             },
             hour,
             minute,
-            true
+            SleepTimeValidationUtil.Is24HourFormat(context)
         )
         tpd.show()
     }
