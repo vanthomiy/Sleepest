@@ -13,7 +13,8 @@
     <androidx.constraintlayout.motion.widget.MotionLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layoutDescription="@xml/fragment_profile_scene">
+        app:layoutDescription="@xml/fragment_sleep_header_scene"
+        >
 
         <androidx.constraintlayout.motion.widget.MotionLayout
             android:id="@+id/motionLayout"
@@ -35,8 +36,8 @@
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:src="@drawable/moon"
-                app:layout_constraintTop_toBottomOf="@id/header"
                 app:layout_constraintBottom_toTopOf="@+id/bottom"
+                app:layout_constraintTop_toBottomOf="@id/header"
                 tools:layout_editor_absoluteX="106dp" />
 
             <TextView
@@ -83,7 +84,8 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:layout_height="@dimen/valuesHeight"
-                android:background="@drawable/transparentrounded"                android:layout_width="match_parent"
+                android:background="@drawable/transparentrounded"
+                android:layout_width="match_parent"
                 android:layout_marginTop="20dp"
                 android:layout_marginHorizontal="50dp"
                 android:scaleX="1"
@@ -92,26 +94,13 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:textSize="@dimen/valueSize"
-                android:text="@string/show_tips"
+                android:text="@string/sleep_show_tips"
                 android:textColor="@color/accent_text_color"
                 android:id="@+id/showTipp"
                 android:tag = "7"
                 android:onClick="@{sleepViewModel::onInfoClicked}"
                 />
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/header"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_begin="50dp"/>
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/bottom"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_end = "100dp"/>
 
         </androidx.constraintlayout.motion.widget.MotionLayout>
 

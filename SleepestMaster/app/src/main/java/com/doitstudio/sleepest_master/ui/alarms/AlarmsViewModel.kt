@@ -105,13 +105,13 @@ class AlarmsViewModel(application: Application) : AndroidViewModel(application) 
             var settings = dataStoreRepository.alarmParameterFlow.first()
 
             cancelAlarmWhenAwake.set(settings.endAlarmAfterFired)
-            alarmArtSelections.addAll(arrayListOf<String>(("Nur Alarm"), ("Alarm und Vibration"), ("Nur Vibration")))
+            alarmArtSelections.addAll(arrayListOf<String>((context.getString(R.string.alarms_type_selection_only_alarm)), (context.getString(R.string.alarms_type_selection_alarm_vibration)), (context.getString(R.string.alarms_type_selection_only_vibration))))
             alarmArt.set(settings.alarmArt)
 
             if(settings.alarmName != "") {
                 alarmSoundName.set(settings.alarmName)
             } else{
-                alarmSoundName.set("default")
+                alarmSoundName.set(context.getString(R.string.alarms_type_selection_default))
             }
 
         }

@@ -46,11 +46,10 @@
     <string name="wakelock_tag">Foregroundservice_lock</string>
     <string name="sleep_status_false">Du schläfst momentan nicht.</string>
     <string name="sleep_status_true">Du schläfst im Moment.</string>
-    <!--
-    This string is used for square devices and overridden by hello_world in
-    values-round/strings.xml for round devices.
-    -->
-    <string name="hello_world">Hello Square World!</string>
+    <string name="description_dont_kill_my_app">Sicherstellen, dass die App auch im Hintergrund aktiv bleibt</string>
+    <string name="information_notification_text_sleeptime_problem">Du solltest nun schlafen oder den Aufwachzeitpunkt aktualisieren, da Du deine eingestellte Schlafdauer nicht mehr erreichen wirst.</string>
+    <string name="information_notification_text_sleep_api_problem">Es liegt ein Fehler vor. Bitte starte den Alarm neu.</string>
+    <string name="information_notification_title">Achtung</string>
     <!--endregion-->
 
     <!--region SleepSettings-->
@@ -64,186 +63,113 @@
     <!--endregion-->
 
     <!--region AlarmSettings-->
-    <string name="einstellungen">Sleepest</string>
-    <string name="schlafdauer">Schlafdauer:</string>
-    <string name="aufwachzeitpunkt">Aufweckzeitpunkt:</string>
-    <string name="alarm_TextView">Wecker</string>
-    <string name="title_activity_navigation">MainActivity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Benachrichtigungen</string>
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
+    <string name="alarm_sleep_duration">Schlafdauer:</string>
+    <string name="alarm_wake_up_timespan">Aufweckzeitpunkt:</string>
 
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
+    <string name="alarm_monday_dayname">Montag</string>
+    <string name="alarm_tuesday_dayname">Dienstag</string>
+    <string name="alarm_wednesday_dayname">Mittwoch</string>
+    <string name="alarm_thursday_dayname">Donnerstag</string>
+    <string name="alarm_friday_dayname">Freitag</string>
+    <string name="alarm_saturday_dayname">Samstag</string>
+    <string name="alarm_sunday_dayname">Sonntag</string>
 
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
-    <string name="large_text">
-        "Material is the metaphor.\n\n"
+    <string name="alarm_entity_day_fr">Fr</string>
+    <string name="alarm_entity_day_sa">Sa</string>
+    <string name="alarm_entity_day_su">SO</string>
+    <string name="alarm_entity_day_th">Do</string>
+    <string name="alarm_entity_day_we">Mi</string>
+    <string name="alarm_entity_day_tu">Di</string>
+    <string name="alarm_entity_day_mo">Mo</string>
 
-        "A material metaphor is the unifying theory of a rationalized space and a system of motion."
-        "The material is grounded in tactile reality, inspired by the study of paper and ink, yet "
-        "technologically advanced and open to imagination and magic.\n"
-        "Surfaces and edges of the material provide visual cues that are grounded in reality. The "
-        "use of familiar tactile attributes helps users quickly understand affordances. Yet the "
-        "flexibility of the material creates new affordances that supercede those in the physical "
-        "world, without breaking the rules of physics.\n"
-        "The fundamentals of light, surface, and movement are key to conveying how objects move, "
-        "interact, and exist in space and in relation to each other. Realistic lighting shows "
-        "seams, divides space, and indicates moving parts.\n\n"
+    <string name="alarm_fragment_btn_disable_alarm_disable">Nächsten Alarm ausschalten</string>
+    <string name="alarm_fragment_btn_disable_alarm_reactivate">Reaktiviere nächsten Alarm</string>
 
-        "Bold, graphic, intentional.\n\n"
+    <string name="alarm_instance_alarm">Alarm</string>
+    <string name="alarm_instance_no_day_choosen">Kein Tag ausgewählt</string>
+    <string name="alarm_instance_alarm_remove">Alarm Entfernen</string>
+    <string name="alarm_instance_wake_up_range">Aufweckzeitraum:</string>
+    <string name="alarm_wakeup_early">Frühestens</string>
+    <string name="alarm_wakeup_late">Spätestens</string>
+    <string name="alarm_hours">Stunden</string>
+    <string name="alarm_minutes">Minuten</string>
+    <string name="alarm_instance_daily">Täglich</string>
+    <string name="alarm_instance_alarm_header">Schlaf</string>
+    <string name="alarm_instance_inbetween">zwischen</string>
+    <string name="alarm_instance_and">und</string>
+    <string name="alarm_instance_days_a_week">Wochentage:</string>
+    <string name="alarm_instance_sleep_duration">Schlafdauer:</string>
+    <string name="alarms_alarme">&#9200; Wecker</string>
+    <string name="alarms_no_alarms">Keine Alarme. Füge über den + Button einen neuen Alarm hinzu!</string>
 
-        "The foundational elements of print based design typography, grids, space, scale, color, "
-        "and use of imagery guide visual treatments. These elements do far more than please the "
-        "eye. They create hierarchy, meaning, and focus. Deliberate color choices, edge to edge "
-        "imagery, large scale typography, and intentional white space create a bold and graphic "
-        "interface that immerse the user in the experience.\n"
-        "An emphasis on user actions makes core functionality immediately apparent and provides "
-        "waypoints for the user.\n\n"
+    <string name="alarms_type_selection_only_alarm">Nur Alarm</string>
+    <string name="alarms_type_selection_alarm_vibration">Alarm und Vibration</string>
+    <string name="alarms_type_selection_only_vibration">Nur Vibration</string>
+    <string name="alarms_type_selection_default">Standard</string>
 
-        "Motion provides meaning.\n\n"
-
-        "Motion respects and reinforces the user as the prime mover. Primary user actions are "
-        "inflection points that initiate motion, transforming the whole design.\n"
-        "All action takes place in a single environment. Objects are presented to the user without "
-        "breaking the continuity of experience even as they transform and reorganize.\n"
-        "Motion is meaningful and appropriate, serving to focus attention and maintain continuity. "
-        "Feedback is subtle yet clear. Transitions are efﬁcient yet coherent.\n\n"
-
-        "3D world.\n\n"
-
-        "The material environment is a 3D space, which means all objects have x, y, and z "
-        "dimensions. The z-axis is perpendicularly aligned to the plane of the display, with the "
-        "positive z-axis extending towards the viewer. Every sheet of material occupies a single "
-        "position along the z-axis and has a standard 1dp thickness.\n"
-        "On the web, the z-axis is used for layering and not for perspective. The 3D world is "
-        "emulated by manipulating the y-axis.\n\n"
-
-        "Light and shadow.\n\n"
-
-        "Within the material environment, virtual lights illuminate the scene. Key lights create "
-        "directional shadows, while ambient light creates soft shadows from all angles.\n"
-        "Shadows in the material environment are cast by these two light sources. In Android "
-        "development, shadows occur when light sources are blocked by sheets of material at "
-        "various positions along the z-axis. On the web, shadows are depicted by manipulating the "
-        "y-axis only. The following example shows the card with a height of 6dp.\n\n"
-
-        "Resting elevation.\n\n"
-
-        "All material objects, regardless of size, have a resting elevation, or default elevation "
-        "that does not change. If an object changes elevation, it should return to its resting "
-        "elevation as soon as possible.\n\n"
-
-        "Component elevations.\n\n"
-
-        "The resting elevation for a component type is consistent across apps (e.g., FAB elevation "
-        "does not vary from 6dp in one app to 16dp in another app).\n"
-        "Components may have different resting elevations across platforms, depending on the depth "
-        "of the environment (e.g., TV has a greater depth than mobile or desktop).\n\n"
-
-        "Responsive elevation and dynamic elevation offsets.\n\n"
-
-        "Some component types have responsive elevation, meaning they change elevation in response "
-        "to user input (e.g., normal, focused, and pressed) or system events. These elevation "
-        "changes are consistently implemented using dynamic elevation offsets.\n"
-        "Dynamic elevation offsets are the goal elevation that a component moves towards, relative "
-        "to the component’s resting state. They ensure that elevation changes are consistent "
-        "across actions and component types. For example, all components that lift on press have "
-        "the same elevation change relative to their resting elevation.\n"
-        "Once the input event is completed or cancelled, the component will return to its resting "
-        "elevation.\n\n"
-
-        "Avoiding elevation interference.\n\n"
-
-        "Components with responsive elevations may encounter other components as they move between "
-        "their resting elevations and dynamic elevation offsets. Because material cannot pass "
-        "through other material, components avoid interfering with one another any number of ways, "
-        "whether on a per component basis or using the entire app layout.\n"
-        "On a component level, components can move or be removed before they cause interference. "
-        "For example, a floating action button (FAB) can disappear or move off screen before a "
-        "user picks up a card, or it can move if a snackbar appears.\n"
-        "On the layout level, design your app layout to minimize opportunities for interference. "
-        "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
-        "when a user tries to pick up one of cards.\n\n"
-    </string>
-    <string name="x">X</string>
-    <string name="active_Weekdays">Wochentage</string>
-    <string name="sleeptimedescription">Setup your usual sleep times. Beetween the start and end-time we will check if you are sleeping</string>
-    <string name="target_sleep_time">target time</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <!--endregion-->
 
     <!--region Sleep Fragment texts -->
-    <string name="show_tips">Tipps anzeigen</string>
+    <string name="sleep_show_tips">Tipps anzeigen</string>
 
     <string name="sleep_general_info_1">
         Du kannst allgemeine parameter zu deinem Schlaf einstellen
     </string>
     <string name="sleep_general_info_2">
-        Die Punktzahl zwischen 50 und 100 gibt an, wie gut wir deinen Schlaf überwachen können.
+        Die Punktzahl zwischen 50 und 100 gibt an, wie gut wir deinen Schlaf überwachen können
     </string>
     <string name="sleep_general_info_3">
-        Umso höher der Wert ist, umso besser können wir nur mit deinem Handy deinen Schlaf bestimmen.
+        Umso höher der Wert ist, umso besser können wir nur mit deinem Handy deinen Schlaf bestimmen
     </string>
     <string name="sleep_sleeptimes_header">Schlafzeiten</string>
 
     <string name="sleep_sleeptimes_info_1">
-        Die Schlafzeit sollte immer die komplette Zeit erfassen, in der du schläfst.
+        Die Schlafzeit sollte immer die komplette Zeit erfassen, in der du schläfst
     </string>
     <string name="sleep_sleeptimes_info_2">
-        Die App zeichnet nur in dieser Zeit die Daten auf und kann damit deinen Schlaf erkennen.
+        Die App zeichnet nur in dieser Zeit die Daten auf und kann damit deinen Schlaf erkennen
     </string>
     <string name="sleep_sleeptimes_info_3">
-        Im Auto-Modus wird die Schlafenszeit automatisch von der App an deine Wecker angepasst.
+        Im Auto-Modus wird die Schlafenszeit automatisch von der App an deine Wecker angepasst
     </string>
     <string name="sleep_sleeptime_start">Start:</string>
     <string name="sleep_sleeptime_end">Ende:</string>
     <string name="sleep_sleepduration_header">Schlafdauer</string>
     <string name="sleep_sleepduration_info_1">
-        Über die Schlafdauer kannst du einstellen, wie lange du standardmäßig schlafen willst.
+        Über die Schlafdauer kannst du einstellen, wie lange du standardmäßig schlafen willst
     </string>
     <string name="sleep_sleepduration_info_2">
-        Du kannst für jeden Alarm die Schlafdauer noch einmal zusätzlich anpassen.
+        Du kannst für jeden Alarm die Schlafdauer noch einmal zusätzlich anpassen
     </string>
     <string name="sleep_lightcondition_header">Lichtverhältnisse</string>
     <string name="sleep_lightcondition_info_1">
-        Ob du im dunkeln oder im hellen schläfst beeinträchtigt wie gut die App deinen Schlaf bestimmen kann.
+        Ob du im dunkeln oder im hellen schläfst beeinträchtigt wie gut die App deinen Schlaf bestimmen kann
     </string>
     <string name="sleep_lightcondition_info_2">
-        Wenn du eine richtig gute Schlafüberwachung haben willst solltest du im Dunkeln schlafen.
+        Wenn du eine richtig gute Schlafüberwachung haben willst solltest du im Dunkeln schlafen
     </string>
     <string name="sleep_phoneposition_header">Handyposition</string>
     <string name="sleep_phoneposition_info_1">
-        Für eine gute Schlafbestimmung sollte das Handy beim Schlafen mit im Bett liegen.
+        Für eine gute Schlafbestimmung sollte das Handy beim Schlafen mit im Bett liegen
     </string>
     <string name="sleep_phoneposition_info_2">
-        Du kannst das Handy aber auch nur neben das Bett oder im Raum haben, dementsprechend versuchen wir nur deine Schlafzeiten zu bestimmen.
+        Du kannst das Handy aber auch nur neben das Bett oder im Raum haben, dementsprechend versuchen wir nur deine Schlafzeiten zu bestimmen
     </string>
     <string name="sleep_phoneusage_header">Handynutzung</string>
     <string name="sleep_phoneusage_info_1">
-        Umso öfter du dein Handy regulär verwendest, umso genauer können wir deinen Einschlafzeitpunkt bestimmen.
+        Umso öfter du dein Handy regulär verwendest, umso genauer können wir deinen Einschlafzeitpunkt bestimmen
     </string>
     <string name="sleep_phoneusage_info_2">
-        Wenn du dein Handy wirklich nie benutzt kann die App keine zuverlässige bestimmung des Einschlafzeitpunkts treffen.
+        Wenn du dein Handy wirklich nie benutzt kann die App keine zuverlässige bestimmung des Einschlafzeitpunkts treffen
     </string>
     <string name="sleep_phoneusage_less">Wenig</string>
     <string name="sleep_phoneusage_often">Häufig</string>
     <string name="sleep_activitytracking_header">Aktivitätsverfolgung</string>
     <string name="sleep_activitytracking_info_1">
-        Aktivierst du die Aktivitätsverfolgung bestimmen wir deine Aktivität über den Tag und zeigen diese in Verlauf für die einzelnen Tage an.
+        Aktivierst du die Aktivitätsverfolgung bestimmen wir deine Aktivität über den Tag und zeigen diese in Verlauf für die einzelnen Tage an
     </string>
     <string name="sleep_activitytracking_info_2">
-        Mit "In Schlafenszeit einbeziehen" gibt dir die App mehr oder weniger Schlaf, je nach dem wie viel Bewegung du am Tag hattest.
+        Mit "In Schlafenszeit einbeziehen" gibt dir die App mehr oder weniger Schlaf, je nach dem wie viel Bewegung du am Tag hattest
     </string>
     <string name="sleep_trackactivity_header">Tägliche aktivitäten aufzeichnen</string>
     <string name="sleep_trackactivity_include_in_wakeup">In Schlafzeit einbeziehen</string>
@@ -274,92 +200,69 @@
 
     <!--endregion-->
 
-    <!--region Profile Fragment texts -->
-    <string name="profile_remove_button_text_normal">Daten Löschen</string>
-    <string name="profile_remove_button_text_choosen">Abbrechen</string>
-    <string name="profile_language_german">Deutsch</string>
-    <string name="profile_language_english">Englisch</string>
-    <string name="profile_header">&#128241; Einstellungen</string>
-    <string name="profile_app_function">Wie funktioniert die App?</string>
-    <string name="profile_design">Design</string>
-    <string name="profile_dark_mode">Dark Mode</string>
-    <string name="profile_auto_dark_mode">Use system settings</string>
-    <string name="profile_language">Sprache</string>
-    <string name="profile_help">Hilfe</string>
-    <string name="profile_tutorial">Tutorial</string>
-    <string name="profile_neccessary_settings">Wichtige Einstellungen</string>
-    <string name="profile_app_info">Die App</string>
-    <string name="profile_suggestions">Verbesserungen vorschlagen</string>
-    <string name="profile_rate">App Bewerten</string>
-    <string name="profile_report_error">Fehler melden</string>
-    <string name="profile_permissions">Berechtigungen</string>
-    <string name="profile_sleepdata">Schlafdaten</string>
-    <string name="profile_permission_sleepdata">ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk</string>
-    <string name="profile_daily_activity">Tägliche Aktivität</string>
-    <string name="profile_permission_daily_activity">ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk</string>
-    <string name="profile_storage">Speicherzugriff</string>
-    <string name="profile_permission_storage">ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk</string>
-    <string name="profile_overlapp_app">App Überlappen</string>
-    <string name="profile_permission_overlapp_app">ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk</string>
-    <string name="profile_permission_notification_privacy">ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk</string>
-    <string name="profile__notification_privacy">Notification Privacy</string>
-    <string name="profile_data">Daten</string>
-    <string name="profile_export_data">Daten Exportieren</string>
-    <string name="profile_import_data">Daten Importieren</string>
-    <string name="profile_remove_data_warning">Ohje, alle daten werden gelöscht ok?</string>
-    <string name="profile_remove_data_ackn">Verstanden und löschen</string>
-    <string name="profile_about_us">Sleepest - App\nMade with &#10084; in Bavaria\n\n This app was created by 3 students as a students project and will be improved and maintained in the future</string>
+    <!--region Splashscreen-->
     <string name="splash_screen_with_love">Made with &#10084; in Bavaria</string>
-    <string name="alarm_monday_dayname">Montag</string>
-    <string name="alarm_tuesday_dayname">Dienstag</string>
-    <string name="alarm_wednesday_dayname">Mittwoch</string>
-    <string name="alarm_thursday_dayname">Donnerstag</string>
-    <string name="alarm_friday_dayname">Freitag</string>
-    <string name="alarm_saturday_dayname">Samstag</string>
-    <string name="alarm_sunday_dayname">Sonntag</string>
-    <string name="alarm_alarmdays_activeAlarmdaysWeek">Wecktage</string>
-    <string name="alarm_save_activeAlarmDaysWeek">Speichern</string>
-    <string name="alarm_saveSuccessful_activeAlarmDaysWeek">Speichern erfolgreich</string>
-    <string name="description_dont_kill_my_app">Sicherstellen, dass die App auch im Hintergrund aktiv bleibt</string>
-    <string name="information_notification_text_sleeptime_problem">Du solltest nun schlafen oder den Aufwachzeitpunkt aktualisieren, da Du deine eingestellte Schlafdauer nicht mehr erreichen wirst.</string>
-    <string name="information_notification_text_sleep_api_problem">Es liegt ein Fehler vor. Bitte starte den Alarm neu.</string>
-    <string name="information_notification_title">Achtung</string>
-    <string name="alarm_fragment_btn_disable_alarm_disable">Nächsten Alarm ausschalten.</string>
-    <string name="alarm_fragment_btn_disable_alarm_reactivate">Reaktiviere nächsten Alarm.</string>
+    <!--endregion-->
 
-    <string name="alarm_instance_alarm">Alarm</string>
-    <string name="alarm_instance_no_day_choosen">Kein Tag ausgewählt</string>
-    <string name="alarm_instance_alarm_remove">Alarm Entfernen</string>
-    <string name="alarm_instance_wake_up_range">Aufweckzeitraum:</string>
-    <string name="alarm_wakeup_early">Frühestens</string>
-    <string name="alarm_wakeup_late">Spätestens</string>
-    <string name="alarm_hours">Stunden</string>
-    <string name="alarm_minutes">Minuten</string>
-    <string name="alarm_instance_daily">Täglich</string>
-    <string name="alarm_instance_alarm_header">Schlaf</string>
-    <string name="alarm_instance_inbetween">zwischen</string>
-    <string name="alarm_instance_and">und</string>
-    <string name="alarm_instance_days_a_week">Wochentage:</string>
-    <string name="alarm_instance_sleep_duration">Schlafdauer:</string>
-    <string name="alarms_alarme">&#9200; Wecker</string>
-    <string name="alarms_no_alarms">Keine Alarme. Füge über den + Button einen neuen Alarm hinzu!</string>
+    <!--region Settings Fragment texts -->
+    <string name="settings_remove_button_text_normal">Daten Löschen</string>
+    <string name="settings_remove_button_text_choosen">Abbrechen</string>
+    <string name="settings_language_german">Deutsch</string>
+    <string name="settings_language_english">Englisch</string>
+    <string name="settings_header">&#128241; Einstellungen</string>
+    <string name="settings_app_function">Wie funktioniert die App?</string>
+    <string name="settings_design">Design</string>
+    <string name="settings_dark_mode">Dark Mode</string>
+    <string name="settings_auto_dark_mode">Use system settings</string>
+    <string name="settings_language">Sprache</string>
+    <string name="settings_help">Hilfe</string>
+    <string name="settings_tutorial">Tutorial</string>
+    <string name="settings_neccessary_settings">Wichtige Einstellungen</string>
+    <string name="settings_app_info">Die App</string>
+    <string name="settings_suggestions">Verbesserungen vorschlagen</string>
+    <string name="settings_rate">App Bewerten</string>
+    <string name="settings_report_error">Fehler melden</string>
+    <string name="settings_permissions">Berechtigungen</string>
+    <string name="settings_sleepdata">Schlafdaten</string>
+    <string name="settings_permission_sleepdata">
+        Wir benötigen diese Berechtigung um den Schlaf mit Hilfe deines Handys zu überwachen. Ohne diese Berechtigung funktioniert unsere App nicht!
+    </string>
+    <string name="settings_daily_activity">Tägliche Aktivität</string>
+    <string name="settings_permission_daily_activity">
+        Wir benötigen diese Berechtigung um deine Aktivität am Tag aufzuzeichnen
+    </string>
+    <string name="settings_storage">Speicherzugriff</string>
+    <string name="settings_permission_storage">
+        Um deine Daten zu exportieren oder vorhandene Daten in die App zu laden brauchen wir diese Berechtigung
+    </string>
+    <string name="settings_overlapp_app">App Überlappen</string>
+    <string name="settings_permission_overlapp_app">
+        Wir benötigen diese Berechtigung, damit unsere App dich auch bei gesperrtem Handy richtig Wecken kann
+    </string>
+    <string name="settings_notification_privacy">Notification Privacy</string>
+    <string name="settings_data">Daten</string>
+    <string name="settings_export_data">Daten Exportieren</string>
+    <string name="settings_import_data">Daten Importieren</string>
+    <string name="settings_remove_data_warning">Ohje, alle daten werden gelöscht ok?</string>
+    <string name="settings_remove_data_ackn">Verstanden und löschen</string>
+    <string name="settings_about_us">Sleepest - App\nMade with &#10084; in Bavaria\n\n This app was created by 3 students as a students project and will be improved and maintained in the future</string>
+
     <string name="settings_return">return</string>
     <string name="settings_delete_all_data">delete all data</string>
-    <string name="profile_credits">Credits</string>
-    <string name="profile_flaticon_introduction">Wir haben Bilder von der Seite Flaticon verwendet. Im folgenden sind die einzelnen Authoren der Bilder aufgelistet.</string>
-    <string name="profile_from"> im </string>
-    <string name="alarm_entity_day_fr">Fr</string>
-    <string name="alarm_entity_day_sa">Sa</string>
-    <string name="alarm_entity_day_su">Su</string>
-    <string name="alarm_entity_day_th">Do</string>
-    <string name="alarm_entity_day_we">Mi</string>
-    <string name="alarm_entity_day_tu">Di</string>
-    <string name="alarm_entity_day_mo">Mo</string>
+    <string name="settings_credits">Credits</string>
+    <string name="settings_flaticon_introduction">Wir haben Bilder von der Seite Flaticon verwendet. Im folgenden sind die einzelnen Authoren der Bilder aufgelistet.</string>
+    <string name="settings_from"> im </string>
+
+    <string name="settings_credits_flaticon">Flaticon Website</string>
+
+    <!--endregion-->
+
+
+    <!--region History Fragment texts -->
 
     <string name="history_day_information_noDataAvailable">Nichts zu sehen.   Geh schlafen um Daten zu generieren!</string>
     <string name="history_sleepPhases_title">Schlafphasen:</string>
     <string name="history_day_sleepPhases_time_in_phase_title">Zeit in Phase:</string>
-    <!--string name="history_fragment_title">&#128467; &#128202; &#128466; &#128200; &#128197; History</string!-->
     <string name="history_fragment_title">&#128197; History</string>
     <string name="history_button_analysisDate_previous">Zurück</string>
     <string name="history_button_analysisDate_next">Nächste</string>
@@ -428,7 +331,7 @@
     <string name="onboarding_toast_permissions">Bitte akzeptiere alle Berechtigungen</string>
     <string name="onboarding_toast_read_to_end">Bitte lies das ganze Tutorial</string>
     <string name="onboarding_toast_permission_already_granted">Diese Berechtigung wurde schon akzeptiert</string>
-
+    <!--endregion-->
 
 
 </resources>

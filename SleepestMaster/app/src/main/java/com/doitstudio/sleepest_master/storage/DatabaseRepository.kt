@@ -254,8 +254,12 @@ class DatabaseRepository(
         userSleepSessionDao.insertAll(userSleepSession)
     }
 
-    suspend fun deleteUserSleepSession() {
+    suspend fun deleteAllUserSleepSessions() {
         userSleepSessionDao.deleteAll()
+    }
+
+    suspend fun deleteUserSleepSession(sleepSessionEntity: UserSleepSessionEntity) {
+        userSleepSessionDao.delete(sleepSessionEntity)
     }
 
     suspend fun updateMoodAfterSleep(moodType: MoodType, sessionId: Int) {

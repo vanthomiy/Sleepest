@@ -43,11 +43,10 @@ data class CreditsAuthors(
             return when(site) {
                 Websites.FLATICON -> listOf(
                     CreditsAuthors("Eucalyp", Info.SLEEP),
-                    CreditsAuthors("aut2", Info.SLEEP)
+                    CreditsAuthors("Freepik", Info.SLEEP)
                 )
                 Websites.LOTTIEFILES -> listOf(
                     CreditsAuthors("asjadnaqvi", Info.SLEEP),
-                    CreditsAuthors("arpangupta", Info.SLEEP),
                     CreditsAuthors("batman", Info.SLEEP),
                     CreditsAuthors("motionstk.studio", Info.SLEEP),
                     CreditsAuthors("Beecher", Info.SLEEP),
