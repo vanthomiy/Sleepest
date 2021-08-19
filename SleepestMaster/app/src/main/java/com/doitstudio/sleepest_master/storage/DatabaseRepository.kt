@@ -1,19 +1,20 @@
 package com.doitstudio.sleepest_master.storage
 
 
+import android.content.Context
 import com.doitstudio.sleepest_master.model.data.MoodType
 import com.doitstudio.sleepest_master.model.data.Constants
+import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.SleepState
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionDao
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
 import com.doitstudio.sleepest_master.storage.db.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.runBlocking
-import java.time.DayOfWeek
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.ZoneOffset
+import java.time.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -266,12 +267,80 @@ class DatabaseRepository(
         userSleepSessionDao.updateMoodAfterSleep(moodType, sessionId)
     }
 
-    suspend fun updateSleepSessionStartManuel(startTimeEpoch: Int, sessionId: Int) {
-        //TODO(Implement, StartTime in epoch seconds)
-    }
+    suspend fun updateSleepSessionStartManuel(context : Context, startTimeEpoch: Int, endTimeEpoch: Int, sessionId: Int) {
 
-    suspend fun updateSleepSessionEndManuel(endTimeEpoch: Int, sessionId: Int) {
-        //TODO(Implement, StartTime in epoch seconds)
+        val sleepHandler = SleepCalculationHandler.getHandler(context)
+        val sessionEntity = getSleepSessionById(sessionId).first().firstOrNull() ?: return
+
+        // check what has to be done
+        val newStartTime = sessionEntity.sleepTimes.sleepTimeStart != startTimeEpoch
+        val newEndTime = sessionEntity.sleepTimes.sleepTimeEnd != endTimeEpoch
+
+        val dateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli((sessionEntity.id * 1000).toLong()), ZoneOffset.UTC)
+
+        // remove before
+        if (newStartTime){
+
+            // get all api data before the sleep
+            val sleepDataBeforeSleep = getSleepApiRawDataBetweenTimestamps(sessionId, startTimeEpoch).first()
+
+            // Make all sleep data to awake before
+            sleepDataBeforeSleep?.forEach { sleepData ->
+
+                if(sleepData.sleepState != SleepState.AWAKE && sleepData.sleepState != SleepState.NONE){
+                    updateOldSleepApiRawDataSleepState(sleepData.timestampSeconds, sleepData.sleepState)
+                    updateSleepApiRawDataSleepState(sleepData.timestampSeconds, SleepState.AWAKE)
+                }
+            }
+
+        }
+        // check in between
+        if (newStartTime || newEndTime){
+
+            // get all api data in between the sleep
+            val sleepDataWhileSleep = getSleepApiRawDataBetweenTimestamps(startTimeEpoch, endTimeEpoch).first()
+
+            // Check if a old sleep state is now in between these times and retrieve it
+            sleepDataWhileSleep?.forEach { sleepData ->
+
+                if((sleepData.sleepState == SleepState.AWAKE || sleepData.sleepState == SleepState.NONE) && (sleepData.oldSleepState != SleepState.AWAKE && sleepData.oldSleepState != SleepState.NONE)){
+                    updateSleepApiRawDataSleepState(sleepData.timestampSeconds, sleepData.oldSleepState)
+                    updateOldSleepApiRawDataSleepState(sleepData.timestampSeconds, SleepState.NONE)
+                }
+            }
+
+        }
+        // remove after
+        if (newEndTime){
+
+            val sleptLonger = (endTimeEpoch > sessionEntity.sleepTimes.sleepTimeEnd)
+
+            if(sleptLonger){
+                // get all api data in between the sleep
+                val sleepDataAfter = getSleepApiRawDataBetweenTimestamps(sessionEntity.sleepTimes.sleepTimeEnd, endTimeEpoch).first()
+
+                // Check if a old sleep state is now in between these times and retrieve it
+                sleepDataAfter?.forEach { sleepData ->
+                    if(sleepData.sleepState == SleepState.AWAKE || sleepData.sleepState == SleepState.NONE){
+                        updateSleepApiRawDataSleepState(sleepData.timestampSeconds, SleepState.SLEEPING)
+                    }
+                }
+            }
+            else{
+                // get all api data in between the sleep
+                val sleepDataAfter = getSleepApiRawDataBetweenTimestamps(endTimeEpoch, sessionEntity.sleepTimes.sleepTimeEnd).first()
+
+                // Check if a old sleep state is now in between these times and retrieve it
+                sleepDataAfter?.forEach { sleepData ->
+                    if(sleepData.sleepState != SleepState.AWAKE && sleepData.sleepState != SleepState.NONE){
+                        updateOldSleepApiRawDataSleepState(sleepData.timestampSeconds, sleepData.sleepState)
+                        updateSleepApiRawDataSleepState(sleepData.timestampSeconds, SleepState.AWAKE)
+                    }
+                }
+            }
+        }
+
+        sleepHandler.defineUserWakeup(dateTime, false)
     }
 
     //endregion

@@ -299,7 +299,8 @@ class SleepCalculationHandler(val context: Context) {
                     )
 
                 }
-                else if (data.oldSleepState == SleepState.NONE){
+
+                if (data.sleepState != SleepState.NONE){
                     // get normed list
                     val (normedSleepApiDataBefore, frequency1) = createTimeNormedData(
                         1f,
@@ -318,11 +319,6 @@ class SleepCalculationHandler(val context: Context) {
 
                     if(frequency1 == SleepDataFrequency.NONE || frequency2 == SleepDataFrequency.NONE){
 
-                        dataBaseRepository.updateOldSleepApiRawDataSleepState(
-                            data.timestampSeconds,
-                            data.sleepState
-                        )
-
                         dataBaseRepository.updateSleepApiRawDataSleepState(
                             data.timestampSeconds,
                             data.sleepState
@@ -331,15 +327,9 @@ class SleepCalculationHandler(val context: Context) {
                         return@forEach
                     }
 
-                    data.oldSleepState = data.sleepState
-
                     // create features for ml model
                     val sleepClassifier = SleepClassifier.getHandler(context)
 
-                    dataBaseRepository.updateOldSleepApiRawDataSleepState(
-                        data.timestampSeconds,
-                        data.oldSleepState
-                    )
 
                     // call the ml model
                     data.sleepState = sleepClassifier.isUserSleeping(
@@ -429,7 +419,7 @@ class SleepCalculationHandler(val context: Context) {
                 sleepApiRawDataEntity.forEach()
                 {
                     // we take all sleep values that are not already defined as light or deep but sleeping
-                    if (it.sleepState == SleepState.SLEEPING && it.oldSleepState != SleepState.NONE) {
+                    if (it.sleepState == SleepState.SLEEPING) {
                         // we need to calculate the sleep state
                         // and then we update it in the sleep api raw data entity
                             dataBaseRepository.updateOldSleepApiRawDataSleepState(
