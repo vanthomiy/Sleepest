@@ -307,20 +307,25 @@
     <string name="onboarding_title_page_4">Calculating wakeup</string>
     <string name="onboarding_title_page_5">Illustration of sleep</string>
     <string name="onboarding_title_page_6">Phone position</string>
-    <string name="onboarding_title_page_7">Settings</string>
-    <string name="onboarding_title_page_8">Permissions</string>
-    <string name="onboarding_title_page_9">Battery optimization</string>
+    <string name="onboarding_title_page_7">Alarm status</string>
+    <string name="onboarding_title_page_8">Settings</string>
+    <string name="onboarding_title_page_9">Permissions</string>
+    <string name="onboarding_title_page_10">Battery optimization</string>
     <string name="onboarding_content_page_1">We want to give you the best possible sleep</string>
     <string name="onboarding_content_page_2">The app detects when you fall asleep</string>
     <string name="onboarding_content_page_3">The app tracks your sleep and differs awake and light or deep sleep</string>
     <string name="onboarding_content_page_4">The wake-up time is calculated based on the quality of sleep in order to achieve the set sleep duration</string>
     <string name="onboarding_content_page_5">You can look at your past sleep and analyze it</string>
     <string name="onboarding_content_page_6">To track your sleep correctly, you should position your phone in your bed, preferably next or under your pillow. The sleep is tracked with the help of your phone sensors</string>
-    <string name="onboarding_content_page_7">Set your ordinary sleep time and your preferred sleep duration\n
+    <string name="onboarding_content_page_7">In your set sleep time the notification above is shown. If not there is something wrong.\n
+                        This notification some useful things and guarantees, that the app is working in the background.\n
+                        With the left button you can easily diable your next alarm.\n
+                        With the right button you can correct a wrong sleep detection. </string>
+    <string name="onboarding_content_page_8">Set your ordinary sleep time and your preferred sleep duration.\n
                         You can change them later.\n
-                        Tip: Set your ordinary sleep time generously to achieve a good sleep detection</string>
-    <string name="onboarding_content_page_8">To guarantee that the app works correct you must accept the permissions above</string>
-    <string name="onboarding_content_page_9">The app must run in the background to track your sleep. That\'s why you must follow the instructions to disable battery optimization for your device model.\n Please read carefully</string>
+                        Tip: Set your ordinary sleep time generously to achieve a good sleep detection.</string>
+    <string name="onboarding_content_page_9">To guarantee that the app works correct you must accept the permissions above.</string>
+    <string name="onboarding_content_page_10">The app must run in the background to track your sleep. That\'s why you must follow the instructions to disable battery optimization for your device model.\n Please read carefully</string>
     <string name="onboarding_toast_permissions">Please grant all permissions</string>
     <string name="onboarding_toast_read_to_end">Please read the hole tutorial</string>
     <string name="onboarding_toast_permission_already_granted">This permission is already granted</string>

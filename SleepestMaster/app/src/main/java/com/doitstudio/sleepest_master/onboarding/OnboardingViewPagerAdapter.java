@@ -55,8 +55,6 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
     private String startTimeValueText;
     private String endTimeValueText;
 
-    private Thread thread = null;
-
     private List<ImageView> dots = new ArrayList<>();
 
     Timer timer;
@@ -87,7 +85,7 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
 
     @Override
     public int getCount() {
-        return 9;
+        return 10;
     }
 
     @Override
@@ -151,30 +149,11 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
         dots.add(view.findViewById(R.id.ivOnboardingIndicator7));
         dots.add(view.findViewById(R.id.ivOnboardingIndicator8));
         dots.add(view.findViewById(R.id.ivOnboardingIndicator9));
-
-        /*ImageView ivInditacor1 = view.findViewById(R.id.ivOnboardingIndicator1);
-        ImageView ivInditacor2 = view.findViewById(R.id.ivOnboardingIndicator2);
-        ImageView ivInditacor3 = view.findViewById(R.id.ivOnboardingIndicator3);
-        ImageView ivInditacor4 = view.findViewById(R.id.ivOnboardingIndicator4);
-        ImageView ivInditacor5 = view.findViewById(R.id.ivOnboardingIndicator5);
-        ImageView ivInditacor6 = view.findViewById(R.id.ivOnboardingIndicator6);
-        ImageView ivInditacor7 = view.findViewById(R.id.ivOnboardingIndicator7);
-        ImageView ivInditacor8 = view.findViewById(R.id.ivOnboardingIndicator8);
-        ImageView ivInditacor9 = view.findViewById(R.id.ivOnboardingIndicator9);*/
+        dots.add(view.findViewById(R.id.ivOnboardingIndicator10));
 
         for(int i = 0; i < dots.size(); i++) {
             dots.get(i).setImageResource(R.drawable.onboarding_indicator_unselected);
         }
-
-        /*ivInditacor1.setImageResource(R.drawable.onboarding_indicator_unselected);
-        ivInditacor2.setImageResource(R.drawable.onboarding_indicator_unselected);
-        ivInditacor3.setImageResource(R.drawable.onboarding_indicator_unselected);
-        ivInditacor4.setImageResource(R.drawable.onboarding_indicator_unselected);
-        ivInditacor5.setImageResource(R.drawable.onboarding_indicator_unselected);
-        ivInditacor6.setImageResource(R.drawable.onboarding_indicator_unselected);
-        ivInditacor7.setImageResource(R.drawable.onboarding_indicator_unselected);
-        ivInditacor8.setImageResource(R.drawable.onboarding_indicator_unselected);
-        ivInditacor9.setImageResource(R.drawable.onboarding_indicator_unselected);*/
 
         btnEndOnboarding.setOnClickListener(this);
         btnOnboardingNotificationPrivacyPermission.setOnClickListener(this);
@@ -185,25 +164,15 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
         ivNextPage.setVisibility(View.VISIBLE);
         ivPreviousPage.setVisibility(View.VISIBLE);
 
-        if (thread != null) {
-            thread.stop();
-        }
-
-        ivNextPage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (position < getCount()) {
-                    OnboardingActivity.viewPager.setCurrentItem(position+1);
-                }
+        ivNextPage.setOnClickListener(v -> {
+            if (position < getCount()) {
+                OnboardingActivity.viewPager.setCurrentItem(position+1);
             }
         });
 
-        ivPreviousPage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (position > 0) {
-                    OnboardingActivity.viewPager.setCurrentItem(position-1);
-                }
+        ivPreviousPage.setOnClickListener(v -> {
+            if (position > 0) {
+                OnboardingActivity.viewPager.setCurrentItem(position-1);
             }
         });
 
@@ -213,69 +182,46 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
             ivNextPage.setVisibility(View.INVISIBLE);
         }
 
-        frameLayoutStartTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(), new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        starttime = (hourOfDay * 60 + minute) * 60;
-                        startTimeText = "Start";
-                        startTimeValueText = TimeConverterUtil.toTimeFormat(hourOfDay, minute);
-                        tvOnboardingStartTime.setText(startTimeText);
-                        tvOnboardingStartTimeValue.setText(startTimeValueText);
+        frameLayoutStartTime.setOnClickListener(v -> {
+            TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(), (view1, hourOfDay, minute) -> {
+                starttime = (hourOfDay * 60 + minute) * 60;
+                startTimeText = "Start";
+                startTimeValueText = TimeConverterUtil.toTimeFormat(hourOfDay, minute);
+                tvOnboardingStartTime.setText(startTimeText);
+                tvOnboardingStartTimeValue.setText(startTimeValueText);
 
-                    }
-                }, 20, 0, true);
-                timePickerDialog.show();
-            }
+            }, 20, 0, true);
+            timePickerDialog.show();
         });
 
-        frameLayoutEndTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(), new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        endtime = (hourOfDay * 60 + minute) * 60;
-                        endTimeText = "End";
-                        endTimeValueText = TimeConverterUtil.toTimeFormat(hourOfDay, minute);
-                        tvOnboardingEndTime.setText(endTimeText);
-                        tvOnboardingEndTimeValue.setText(endTimeValueText);
-                    }
-                }, 9, 0, true);
-                timePickerDialog.show();
-            }
+        frameLayoutEndTime.setOnClickListener(v -> {
+            TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(), (view12, hourOfDay, minute) -> {
+                endtime = (hourOfDay * 60 + minute) * 60;
+                endTimeText = "End";
+                endTimeValueText = TimeConverterUtil.toTimeFormat(hourOfDay, minute);
+                tvOnboardingEndTime.setText(endTimeText);
+                tvOnboardingEndTimeValue.setText(endTimeValueText);
+            }, 9, 0, true);
+            timePickerDialog.show();
         });
 
-        npDurationHours.setOnValueChangedListener(new com.shawnlin.numberpicker.NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(com.shawnlin.numberpicker.NumberPicker picker, int oldVal, int newVal) {
-                durationHours = newVal;
-            }
-        });
+        npDurationHours.setOnValueChangedListener((picker, oldVal, newVal) -> durationHours = newVal);
 
-        npDurationMinutes.setOnValueChangedListener(new com.shawnlin.numberpicker.NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(com.shawnlin.numberpicker.NumberPicker picker, int oldVal, int newVal) {
-                durationMinutes = newVal;
-            }
-        });
+        npDurationMinutes.setOnValueChangedListener((picker, oldVal, newVal) -> durationMinutes = newVal);
 
         switch (position) {
             case 0:
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_1));
                 tvContent.setText(context.getString(R.string.onboarding_content_page_1));
+                imageView.setImageResource(R.drawable.logofullroundtransparent);
                 imageView.setVisibility(View.VISIBLE);
                 dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
-                //ivInditacor1.setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
             case 1:
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_2));
                 tvContent.setText(context.getString(R.string.onboarding_content_page_2));
                 lottieAnimationViewSearch.setVisibility(View.VISIBLE);
                 dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
-                //ivInditacor2.setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
             case 2:
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_3));
@@ -283,7 +229,6 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
                 imageView.setVisibility(View.VISIBLE);
                 imageView.setImageResource(R.drawable.analytics);
                 dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
-                //ivInditacor3.setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
             case 3:
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_4));
@@ -293,14 +238,12 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
                 ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) lottieAnimationViewSearch.getLayoutParams();
                 layoutParams.leftMargin = 80;
                 dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
-                //ivInditacor4.setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
             case 4:
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_5));
                 tvContent.setText(context.getString(R.string.onboarding_content_page_5));
                 imageView.setVisibility(View.VISIBLE);
                 dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
-                //ivInditacor5.setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
             case 5:
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_6));
@@ -308,11 +251,17 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
                 imageView.setImageResource(R.drawable.phone_position_tim);
                 imageView.setVisibility(View.VISIBLE);
                 dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
-                //ivInditacor6.setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
             case 6:
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_7));
                 tvContent.setText(context.getString(R.string.onboarding_content_page_7));
+                imageView.setImageResource(R.drawable.phone_position_tim);
+                imageView.setVisibility(View.VISIBLE);
+                dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
+                break;
+            case 7:
+                tvTitle.setText(context.getString(R.string.onboarding_title_page_8));
+                tvContent.setText(context.getString(R.string.onboarding_content_page_8));
                 linearLayoutSettings.setVisibility(View.VISIBLE);
                 tvOnboardingStartTime.setText(startTimeText);
                 tvOnboardingStartTimeValue.setText(startTimeValueText);
@@ -321,11 +270,10 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
                 npDurationHours.setValue(durationHours);
                 npDurationMinutes.setValue(durationMinutes);
                 dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
-                //ivInditacor7.setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
-            case 7:
-                tvTitle.setText(context.getString(R.string.onboarding_title_page_8));
-                tvContent.setText(context.getString(R.string.onboarding_content_page_8));
+            case 8:
+                tvTitle.setText(context.getString(R.string.onboarding_title_page_9));
+                tvContent.setText(context.getString(R.string.onboarding_content_page_9));
                 linearLayoutPermission.setVisibility(View.VISIBLE);
                 int colorError = ContextCompat.getColor(context, R.color.error_color);
                 int colorGood = ContextCompat.getColor(context, R.color.accent_text_color);
@@ -345,15 +293,13 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
                 }, 0, 1000);//wait 0 ms before doing the action and do it every 1000ms (1second)
 
                 dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
-                //ivInditacor8.setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
-            case 8:
-                tvTitle.setText(context.getString(R.string.onboarding_title_page_9));
-                tvContent.setText(context.getString(R.string.onboarding_content_page_9));
+            case 9:
+                tvTitle.setText(context.getString(R.string.onboarding_title_page_10));
+                tvContent.setText(context.getString(R.string.onboarding_content_page_10));
                 lottieAnimationViewSearch.setVisibility(View.VISIBLE);
                 lottieAnimationViewSearch.setAnimation(R.raw.animation_battery_optimization);
                 dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
-                //ivInditacor9.setImageResource(R.drawable.onboarding_indicator_selected);
 
                 enableStartApp = true;
                 break;

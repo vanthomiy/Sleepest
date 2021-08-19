@@ -429,7 +429,7 @@
             <View
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.35"/>
+                android:layout_weight="0.325"/>
 
             <ImageView
                 android:id="@+id/ivOnboardingIndicator1"
@@ -502,11 +502,18 @@
                 android:layout_weight="0.05"
                 android:layout_margin="4dp"
                 android:src="@drawable/onboarding_indicator_unselected"/>
+            <ImageView
+                android:id="@+id/ivOnboardingIndicator10"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.05"
+                android:layout_margin="4dp"
+                android:src="@drawable/onboarding_indicator_unselected"/>
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.35"/>
+                android:layout_weight="0.325"/>
 
         </LinearLayout>
 
