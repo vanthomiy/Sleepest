@@ -255,6 +255,11 @@ class SleepCalculationHandler(val context: Context) {
             // check for each sleepstate
             sleepApiRawDataEntity.forEach { data ->
                 // First definition without future data
+                if(data.timestampSeconds == 1629225684){
+                    val a = 1
+                    var b = a
+                }
+
                 if(data.sleepState == SleepState.NONE){
 
                     // get normed list
@@ -266,6 +271,12 @@ class SleepCalculationHandler(val context: Context) {
                     )
 
                     if(frequency == SleepDataFrequency.NONE) {
+
+                        dataBaseRepository.updateSleepApiRawDataSleepState(
+                            data.timestampSeconds,
+                            SleepState.AWAKE
+                        )
+
                         return@forEach
                     }
 
@@ -306,6 +317,17 @@ class SleepCalculationHandler(val context: Context) {
 
 
                     if(frequency1 == SleepDataFrequency.NONE || frequency2 == SleepDataFrequency.NONE){
+
+                        dataBaseRepository.updateOldSleepApiRawDataSleepState(
+                            data.timestampSeconds,
+                            data.sleepState
+                        )
+
+                        dataBaseRepository.updateSleepApiRawDataSleepState(
+                            data.timestampSeconds,
+                            data.sleepState
+                        )
+
                         return@forEach
                     }
 

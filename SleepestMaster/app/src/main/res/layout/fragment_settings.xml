@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/profile_header"
+            android:text="@string/settings_header"
             android:textColor="@color/primary_text_color"
             android:textSize="@dimen/headerSize"
             android:layout_margin="20dp"
@@ -74,7 +74,7 @@
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
                             android:textColor="@color/primary_text_color"
-                            android:text="@string/profile_design"/>
+                            android:text="@string/settings_design"/>
 
                         <ImageView
                             android:layout_width="25dp"
@@ -108,7 +108,7 @@
                                 android:textSize="@dimen/headerSize"
                                 android:layout_gravity="start"
                                 android:textColor="@color/primary_text_color"
-                                android:text="@string/profile_dark_mode"/>
+                                android:text="@string/settings_dark_mode"/>
 
                         </LinearLayout>
 
@@ -133,7 +133,7 @@
                                     android:layout_marginStart="10dp"
                                     android:textSize="@dimen/valueSize"
                                     android:textColor="@color/primary_text_color"
-                                    android:text="@string/profile_auto_dark_mode"
+                                    android:text="@string/settings_auto_dark_mode"
                                     />
 
                                 <androidx.appcompat.widget.SwitchCompat
@@ -356,7 +356,7 @@
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
                             android:textColor="@color/primary_text_color"
-                            android:text="@string/profile_help"/>
+                            android:text="@string/settings_help"/>
 
                         <ImageView
                             android:layout_width="25dp"
@@ -384,7 +384,7 @@
                             android:background="@drawable/bgrounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
-                            android:text="@string/profile_tutorial"
+                            android:text="@string/settings_tutorial"
                             android:textColor="@color/primary_text_color"
                             android:tag="tutorial"
                             android:id="@+id/btnTutorial">
@@ -397,7 +397,7 @@
                             android:background="@drawable/bgrounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
-                            android:text="@string/profile_neccessary_settings"
+                            android:text="@string/settings_neccessary_settings"
                             android:textColor="@color/primary_text_color"
                             android:tag="importantSettings"
                             android:id="@+id/btnImportantSettings">
@@ -433,7 +433,7 @@
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
                             android:textColor="@color/primary_text_color"
-                            android:text="@string/profile_app_info"/>
+                            android:text="@string/settings_app_info"/>
 
                         <ImageView
                             android:layout_width="25dp"
@@ -461,7 +461,7 @@
                             android:background="@drawable/bgrounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
-                            android:text="@string/profile_suggestions"
+                            android:text="@string/settings_suggestions"
                             android:textColor="@color/primary_text_color"
 
                             android:tag="improvement"
@@ -474,7 +474,7 @@
                             android:background="@drawable/bgrounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
-                            android:text="@string/profile_rate"
+                            android:text="@string/settings_rate"
                             android:textColor="@color/primary_text_color"
 
                             android:tag="rate"
@@ -487,7 +487,7 @@
                             android:background="@drawable/bgrounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
-                            android:text="@string/profile_report_error"
+                            android:text="@string/settings_report_error"
                             android:textColor="@color/primary_text_color"
                             android:tag="error"
                             android:onClick="@{profileViewModel::onAboutUsClicked}">
@@ -525,7 +525,7 @@
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
                             android:textColor="@color/primary_text_color"
-                            android:text="@string/profile_permissions"/>
+                            android:text="@string/settings_permissions"/>
 
                         <ImageView
                             android:layout_width="25dp"
@@ -559,7 +559,7 @@
                                 android:textSize="@dimen/valueSize"
                                 android:textColor="@color/primary_text_color"
                                 android:layout_marginVertical="5dp"
-                                android:text="@string/profile_sleepdata"
+                                android:text="@string/settings_sleepdata"
                                 android:tag="sleepActivity"
                                 android:id="@+id/sleepActivityPermission"
                                 android:onClick="onPermissionClicked">
@@ -590,7 +590,7 @@
                                 android:textSize="@dimen/headerSize"
                                 android:layout_gravity="start"
                                 android:textColor="@color/primary_text_color"
-                                android:text="@string/profile_permission_sleepdata"/>
+                                android:text="@string/settings_permission_sleepdata"/>
 
                         </LinearLayout>
 
@@ -608,7 +608,7 @@
                                 android:onClick="onPermissionClicked"
                                 android:tag="dailyActivity"
                                 android:id="@+id/dailyActivityPermission"
-                                android:text="@string/profile_daily_activity"
+                                android:text="@string/settings_daily_activity"
                                 android:textColor="@color/primary_text_color"
                                 android:textSize="@dimen/valueSize"></androidx.appcompat.widget.AppCompatButton>
 
@@ -637,7 +637,7 @@
                                 android:textSize="@dimen/headerSize"
                                 android:layout_gravity="start"
                                 android:textColor="@color/primary_text_color"
-                                android:text="@string/profile_permission_daily_activity"/>
+                                android:text="@string/settings_permission_daily_activity"/>
 
                         </LinearLayout>
 
@@ -653,7 +653,7 @@
                                 android:background="@drawable/bgrounded_button"
                                 android:textSize="@dimen/valueSize"
                                 android:layout_marginVertical="5dp"
-                                android:text="@string/profile_storage"
+                                android:text="@string/settings_storage"
                                 android:textColor="@color/primary_text_color"
 
                                 android:tag="storage"
@@ -687,7 +687,7 @@
                                 android:textSize="@dimen/headerSize"
                                 android:layout_gravity="start"
                                 android:textColor="@color/primary_text_color"
-                                android:text="@string/profile_permission_storage"/>
+                                android:text="@string/settings_permission_storage"/>
 
                         </LinearLayout>
 
@@ -703,7 +703,7 @@
                                 android:background="@drawable/bgrounded_button"
                                 android:textSize="@dimen/valueSize"
                                 android:layout_marginVertical="5dp"
-                                android:text="@string/profile_overlapp_app"
+                                android:text="@string/settings_overlapp_app"
                                 android:textColor="@color/primary_text_color"
 
                                 android:tag="overlay"
@@ -736,7 +736,7 @@
                                 android:textSize="@dimen/headerSize"
                                 android:layout_gravity="start"
                                 android:textColor="@color/primary_text_color"
-                                android:text="@string/profile_permission_overlapp_app"/>
+                                android:text="@string/settings_permission_overlapp_app"/>
 
                         </LinearLayout>
 
@@ -771,7 +771,7 @@
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
                             android:textColor="@color/primary_text_color"
-                            android:text="@string/profile_credits"/>
+                            android:text="@string/settings_credits"/>
 
                         <ImageView
                             android:layout_width="25dp"
@@ -801,7 +801,7 @@
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
                             android:textColor="@color/primary_text_color"
-                            android:text="@string/profile_flaticon_introduction"/>
+                            android:text="@string/settings_flaticon_introduction"/>
 
                     </LinearLayout>
 
@@ -834,7 +834,7 @@
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
                             android:textColor="@color/primary_text_color"
-                            android:text="@string/profile_data"/>
+                            android:text="@string/settings_data"/>
 
                         <ImageView
                             android:layout_width="25dp"
@@ -862,7 +862,7 @@
                             android:background="@drawable/bgrounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
-                            android:text="@string/profile_export_data"
+                            android:text="@string/settings_export_data"
                             android:textColor="@color/primary_text_color"
                             android:tag="export"
                             android:id="@+id/exportButton"/>
@@ -873,7 +873,7 @@
                             android:background="@drawable/bgrounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
-                            android:text="@string/profile_import_data"
+                            android:text="@string/settings_import_data"
                             android:textColor="@color/primary_text_color"
                             android:tag="import"
                             android:id="@+id/importButton" />
@@ -908,7 +908,7 @@
                                 android:textSize="@dimen/headerSize"
                                 android:layout_gravity="start"
                                 android:textColor="@color/primary_text_color"
-                                android:text="@string/profile_remove_data_warning"/>
+                                android:text="@string/settings_remove_data_warning"/>
 
                             <androidx.appcompat.widget.AppCompatButton
                                 android:layout_width="match_parent"
@@ -917,7 +917,7 @@
                                 android:backgroundTint="@color/error_color"
                                 android:textSize="@dimen/valueSize"
                                 android:layout_marginVertical="5dp"
-                                android:text="@string/profile_remove_data_ackn"
+                                android:text="@string/settings_remove_data_ackn"
                                 android:textColor="@color/primary_text_color"
 
                                 android:tag="removeAckn"
@@ -952,7 +952,7 @@
                         android:fontFamily="@font/salina"
                         android:layout_gravity="center_horizontal"
                         android:textColor="@color/primary_text_color"
-                        android:text="@string/profile_about_us"/>
+                        android:text="@string/settings_about_us"/>
 
                 </LinearLayout>
 

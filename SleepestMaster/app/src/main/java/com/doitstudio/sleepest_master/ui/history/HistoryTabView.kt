@@ -1,6 +1,7 @@
 package com.doitstudio.sleepest_master.ui.history
 
 import android.app.DatePickerDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -95,7 +96,7 @@ class HistoryTabView : Fragment() {
             val dpd = activity?.let { it ->
                 DatePickerDialog(
                     it,
-                    DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+                    { _, year, monthOfYear, dayOfMonth ->
                         viewModel.analysisDate.set(LocalDate.of(year, monthOfYear + 1, dayOfMonth))
                     },
                     year,

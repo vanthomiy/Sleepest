@@ -196,7 +196,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         actualExpand.set(if(actualExpand.get() == value.toIntOrNull()) -1 else value.toIntOrNull() )
     }
 
-    val phoneUsageValueString = ObservableField("Normal")
+    val phoneUsageValueString = ObservableField("")
     val phoneUsageValue = ObservableField<Int>(2)
     fun onPhoneUsageChanged(seekBar: SeekBar, progresValue: Int, fromUser: Boolean){
 

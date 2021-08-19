@@ -125,6 +125,8 @@ class SleepClassifier constructor(private val context: Context) {
         if(countSleeping <= 3){// || (startBorderListBefore[1].sleepState != SleepState.SLEEPING || startBorderListBefore[2].sleepState != SleepState.SLEEPING)){
             // check if user is started sleeping
 
+            val nextTimesBorder = 3
+
             val newListBefore = sortedSleepListBefore.dropLast(1)
 
             val actualThreshold = ThresholdParams()
@@ -141,9 +143,9 @@ class SleepClassifier constructor(private val context: Context) {
                 actualThreshold.light = (sortedSleepListAfter!!.sumOf { x-> x.light } / sortedSleepListAfter.count()).toFloat()
                 actualThreshold.motion = (sortedSleepListAfter!!.sumOf { x-> x.motion } / sortedSleepListAfter.count()).toFloat()
 
-                nextThreeTimes.confidence = (sortedSleepListAfter!!.take(3).sumOf { x-> x.confidence } / sortedSleepListAfter.take(3).count()).toFloat()
-                nextThreeTimes.light = (sortedSleepListAfter!!.take(3).sumOf { x-> x.light } / sortedSleepListAfter.take(3).count()).toFloat()
-                nextThreeTimes.motion = (sortedSleepListAfter!!.take(3).sumOf { x-> x.motion } / sortedSleepListAfter.take(3).count()).toFloat()
+                nextThreeTimes.confidence = (sortedSleepListAfter!!.take(nextTimesBorder).sumOf { x-> x.confidence } / sortedSleepListAfter.take(nextTimesBorder).count()).toFloat()
+                nextThreeTimes.light = (sortedSleepListAfter!!.take(nextTimesBorder).sumOf { x-> x.light } / sortedSleepListAfter.take(nextTimesBorder).count()).toFloat()
+                nextThreeTimes.motion = (sortedSleepListAfter!!.take(nextTimesBorder).sumOf { x-> x.motion } / sortedSleepListAfter.take(nextTimesBorder).count()).toFloat()
             }
 
             val avgStartThreshold = ThresholdParams()
@@ -158,7 +160,7 @@ class SleepClassifier constructor(private val context: Context) {
                 true,
                 3,
                 actualThreshold) &&
-                    (!prePrediction || actualParams.sleepStartThreshold.checkIfThreshold(
+                    (prePrediction || actualParams.sleepStartThreshold.checkIfThreshold(
                         true,
                         3,
                         nextThreeTimes)
