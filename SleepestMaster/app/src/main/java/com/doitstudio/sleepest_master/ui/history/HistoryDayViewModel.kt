@@ -129,23 +129,29 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
             )
         }
 
-        createPickerDialogue(view, time.hour, time.minute)
+        createPickerDialogue(view, time, view.tag == "BeginOfSleep")
         //Unterscheidung zwischen Einschlaf und Aufwachzeitpunkt.
     }
 
-    private fun createPickerDialogue(view: View, hour: Int, minute: Int) {
+    private fun createPickerDialogue(view: View, dateTime: LocalDateTime, startOfSleep:Boolean) {
         val tpd = TimePickerDialog(
             view.context,
             R.style.TimePickerTheme,
             { _, h, m ->
                 scope.launch {
                     val tempTime = LocalTime.of(h, m)
+                    val newDatTime = dateTime.toLocalDate().atTime(tempTime)
+                    val epochTime = newDatTime.toEpochSecond(ZoneOffset.UTC)
+
                     //TODO(Funktion, welche Thomas die UTC Zeiten (Epoch in Sekunden) des neuen Einschlaf und Aufwachzeitpunktes übergibt.)
-                    //dataBaseRepository.updateSleepSessionStartManuel(startTimeEpoch = 0, sessionId = 0)
+                    if(startOfSleep)
+                        dataBaseRepository.updateSleepSessionManually(context, epochTime.toInt(), (endOfSleepEpoch.get()!! / 1000).toInt(), sessionId = sessionId)
+                    else
+                        dataBaseRepository.updateSleepSessionManually(context, (beginOfSleepEpoch.get()!! / 1000).toInt(), epochTime.toInt(), sessionId = sessionId)
                 }
             },
-            hour,
-            minute,
+            dateTime.hour,
+            dateTime.minute,
             SleepTimeValidationUtil.Is24HourFormat(context)
         )
         tpd.show()

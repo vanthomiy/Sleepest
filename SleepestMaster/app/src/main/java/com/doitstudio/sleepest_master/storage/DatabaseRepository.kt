@@ -276,7 +276,7 @@ class DatabaseRepository(
         val newStartTime = sessionEntity.sleepTimes.sleepTimeStart != startTimeEpoch
         val newEndTime = sessionEntity.sleepTimes.sleepTimeEnd != endTimeEpoch
 
-        val dateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli((sessionEntity.id * 1000).toLong()), ZoneOffset.UTC)
+        val dateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli((sessionEntity.id.toLong() * 1000)), ZoneOffset.UTC)
 
         // remove before
         if (newStartTime){
