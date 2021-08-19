@@ -267,7 +267,7 @@ class DatabaseRepository(
         userSleepSessionDao.updateMoodAfterSleep(moodType, sessionId)
     }
 
-    suspend fun updateSleepSessionStartManuel(context : Context, startTimeEpoch: Int, endTimeEpoch: Int, sessionId: Int) {
+    suspend fun updateSleepSessionManually(context : Context, startTimeEpoch: Int, endTimeEpoch: Int, sessionId: Int) {
 
         val sleepHandler = SleepCalculationHandler.getHandler(context)
         val sessionEntity = getSleepSessionById(sessionId).first().firstOrNull() ?: return
