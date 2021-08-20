@@ -165,10 +165,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_marginStart="16dp"
-                                android:layout_marginTop="4dp"
                                 android:layout_gravity="end"
                                 android:gravity="center_vertical"
                                 android:layout_marginEnd="10dp"
+                                android:textSize="@dimen/headerSize"
                                 android:text="@{historyDayViewModel.beginOfSleep}"
                                 android:textColor="@color/accent_text_color"
                                 tools:text="22:00" />
@@ -203,10 +203,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_marginStart="16dp"
-                                android:layout_marginTop="4dp"
                                 android:layout_gravity="end"
                                 android:gravity="center_vertical"
                                 android:layout_marginEnd="10dp"
+                                android:textSize="@dimen/headerSize"
                                 android:text="@{historyDayViewModel.endOfSeep}"
                                 android:textColor="@color/accent_text_color"
                                 tools:text="6:00" />
