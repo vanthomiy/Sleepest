@@ -35,7 +35,6 @@ data class SleepTimes(
         var deepSleepDuration: Int = 0,
         /**
          * The [SleepState.REM] time of the user in minutes.
-         * TODO(Currently not supported. Because we cant detect REM sleep phases that good.)
          */
         var remSleepDuration: Int = 0,
         /**

@@ -143,7 +143,6 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
                     val newDatTime = dateTime.toLocalDate().atTime(tempTime)
                     val epochTime = newDatTime.toEpochSecond(ZoneOffset.UTC)
 
-                    //TODO(Funktion, welche Thomas die UTC Zeiten (Epoch in Sekunden) des neuen Einschlaf und Aufwachzeitpunktes übergibt.)
                     if(startOfSleep)
                         dataBaseRepository.updateSleepSessionManually(context, epochTime.toInt(), (endOfSleepEpoch.get()!! / 1000).toInt(), sessionId = sessionId)
                     else
