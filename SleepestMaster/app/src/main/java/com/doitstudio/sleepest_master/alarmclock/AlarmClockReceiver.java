@@ -64,6 +64,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
         switch (AlarmClockReceiverUsage.valueOf(intent.getStringExtra((context.getString(R.string.alarm_clock_intent_key))))) {
             case START_ALARMCLOCK: //Init Alarmclock
 
+<<<<<<< Updated upstream
                 PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
                 if (powerManager.isInteractive()) {
                     NotificationUtil notificationsUtil = new NotificationUtil(context.getApplicationContext(), NotificationUsage.NOTIFICATION_ALARM_CLOCK,null);
@@ -71,6 +72,22 @@ public class AlarmClockReceiver extends BroadcastReceiver {
                 } else {
                     showNotificationOnLockScreen(NotificationUsage.NOTIFICATION_ALARM_CLOCK);
                 }
+=======
+
+
+                //if (alarmEntity != null && !alarmEntity.getTempDisabled()) {
+                    PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+                    if (powerManager.isInteractive()) {
+                        NotificationUtil notificationsUtil = new NotificationUtil(context.getApplicationContext(), NotificationUsage.NOTIFICATION_ALARM_CLOCK,null);
+                        notificationsUtil.chooseNotification();
+                    } else {
+                        //showNotificationOnLockScreen(NotificationUsage.NOTIFICATION_ALARM_CLOCK);
+                        NotificationUtil notificationsUtil = new NotificationUtil(context.getApplicationContext(), NotificationUsage.NOTIFICATION_ALARM_CLOCK_LOCK_SCREEN,null);
+                        notificationsUtil.chooseNotification();
+                    }
+               // }
+
+>>>>>>> Stashed changes
                 break;
             case STOP_ALARMCLOCK: //Stop button of ScreenOn notification
                 BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).alarmClockRang(true);
@@ -85,7 +102,9 @@ public class AlarmClockReceiver extends BroadcastReceiver {
                         NotificationUtil notificationsUtil = new NotificationUtil(context.getApplicationContext(), NotificationUsage.NOTIFICATION_ALARM_CLOCK,null);
                         notificationsUtil.chooseNotification();
                     } else {
-                        showNotificationOnLockScreen(NotificationUsage.NOTIFICATION_ALARM_CLOCK);
+                        //showNotificationOnLockScreen(NotificationUsage.NOTIFICATION_ALARM_CLOCK);
+                        NotificationUtil notificationsUtil = new NotificationUtil(context.getApplicationContext(), NotificationUsage.NOTIFICATION_ALARM_CLOCK_LOCK_SCREEN,null);
+                        notificationsUtil.chooseNotification();
                     }
                 }
                 break;
@@ -209,7 +228,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
     private void showNotificationOnLockScreen(NotificationUsage notificationUsage) {
         createNotificationChannel();
 
-        Intent intent = new Intent(context, LockScreenAlarmActivity.class); /**TODO: Design a Lcokscreen view*/
+        Intent intent = new Intent(context, LockScreenAlarmActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, ActivityIntentUsage.Companion.getCount(ActivityIntentUsage.LOCKSCREEN_ACTIVITY), intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
