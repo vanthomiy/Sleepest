@@ -251,6 +251,9 @@
     <string name="settings_remove_data_warning">Ohje, alle daten werden gelöscht ok?</string>
     <string name="settings_remove_data_ackn">Verstanden und löschen</string>
     <string name="settings_about_us">Sleepest - App\nMade with &#10084; in Bavaria\n\n This app was created by 3 students as a students project and will be improved and maintained in the future</string>
+    <string name="settings_export_file_name">Schlafdaten.json</string>
+    <string name="settings_export_success">Export erfolgreich</string>
+    <string name="setting_export_sharing_intent">Datei senden ...</string>
 
     <string name="settings_return">Abbrechen</string>
     <string name="settings_delete_all_data">Alle Daten löschen</string>

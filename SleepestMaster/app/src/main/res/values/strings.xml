@@ -253,7 +253,9 @@
     <string name="settings_import_cant_write_db">Cant write to database</string>
 
     <string name="settings_about_us">Sleepest - App\nMade with &#10084; in Bavaria\n\n This app was created by 3 students as a students project and will be improved and maintained in the future</string>
-
+    <string name="settings_export_file_name">Sleepdata.json</string>
+    <string name="settings_export_success">Export successfully</string>
+    <string name="setting_export_sharing_intent">Sharing File...</string>
 
     <string name="settings_return">return</string>
     <string name="settings_delete_all_data">delete all data</string>
@@ -338,6 +340,7 @@
     <string name="onboarding_toast_permissions">Please grant all permissions</string>
     <string name="onboarding_toast_read_to_end">Please read the hole tutorial</string>
     <string name="onboarding_toast_permission_already_granted">This permission is already granted</string>
+
 
 
 </resources>

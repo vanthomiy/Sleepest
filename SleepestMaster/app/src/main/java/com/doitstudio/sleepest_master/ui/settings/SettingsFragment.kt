@@ -305,7 +305,7 @@ class SettingsFragment : Fragment() {
                 val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
                     addCategory(Intent.CATEGORY_OPENABLE)
                     type = "application/json"
-                    putExtra(Intent.EXTRA_TITLE, "Schlafdaten.json")
+                    putExtra(Intent.EXTRA_TITLE, getString(R.string.settings_export_file_name))
                 }
 
                 startActivityForResult(intent, Constants.EXPORT_REQUEST_CODE)
@@ -335,7 +335,7 @@ class SettingsFragment : Fragment() {
                 Manifest.permission.ACTIVITY_RECOGNITION
             ) else viewModel.showPermissionInfo("sleepActivity")
             "storage" -> if (viewModel.storagePermission.get() != true) requestPermissionLauncher.launch(
-                Manifest.permission.ANSWER_PHONE_CALLS
+                Manifest.permission.MANAGE_EXTERNAL_STORAGE
             ) else viewModel.showPermissionInfo("storage")
             "overlay" -> if (viewModel.overlayPermission.get() != true) {
                 // If not, form up an Intent to launch the permission request
@@ -436,7 +436,7 @@ class SettingsFragment : Fragment() {
             e.printStackTrace()
         }
 
-        Toast.makeText(actualContext, "Export successfully", Toast.LENGTH_SHORT).show()
+        Toast.makeText(actualContext, getString(R.string.settings_export_success), Toast.LENGTH_SHORT).show()
 
         val intentShareFile = Intent(Intent.ACTION_SEND)
 
@@ -444,10 +444,10 @@ class SettingsFragment : Fragment() {
         intentShareFile.putExtra(Intent.EXTRA_STREAM, uri)
         intentShareFile.putExtra(
             Intent.EXTRA_SUBJECT,
-            "Sharing File..."
+            getString(R.string.setting_export_sharing_intent)
         )
-        intentShareFile.putExtra(Intent.EXTRA_TEXT, "Sharing File...")
-        startActivity(Intent.createChooser(intentShareFile, "Share File"))
+        intentShareFile.putExtra(Intent.EXTRA_TEXT, getString(R.string.setting_export_sharing_intent))
+        startActivity(Intent.createChooser(intentShareFile, getString(R.string.setting_export_sharing_intent)))
     }
 
     private val contentResolver: ContentResolver by lazy { actualContext.contentResolver}

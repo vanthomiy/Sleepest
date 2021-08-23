@@ -1,6 +1,7 @@
 package com.doitstudio.sleepest_master.ui.sleep
 
 import android.R.attr.animation
+import android.annotation.SuppressLint
 import android.app.Application
 import android.app.TimePickerDialog
 import android.graphics.drawable.AnimatedVectorDrawable
@@ -40,6 +41,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
     private val scope: CoroutineScope = MainScope()
     private val context by lazy{ getApplication<Application>().applicationContext }
+    lateinit var transitionsContainer : ViewGroup
     private val dataStoreRepository: DataStoreRepository by lazy {
         (context as MainApplication).dataStoreRepository
     }
@@ -397,50 +399,5 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    //region animation
-
-    lateinit var transitionsContainer : ViewGroup
-    lateinit var animatedTopView : MotionLayout
-    lateinit var imageMoonView : AppCompatImageView
-
-    var lastScroll = 0
-    var progress = 0f
-    var newProgress = 0f
-    fun onScrollChanged(v: NestedScrollView, l: Int, t: Int, oldl: Int, oldt: Int) {
-        //Log.d(TAG, "scroll changed: " + this.getTop() + " "+t);
-        val scrollY: Int = v.scrollY // For ScrollView hprizontal use getScrollX()
-        val b = l
-        val c = t
-        val d  = oldl
-        //TransitionManager.beginDelayedTransition(transitionsContainerTop);
-
-        newProgress = (1f / 500f) * scrollY
-        //animatedTopView.progress = newProgress
-
-        if(abs(progress - newProgress) > 0.25 ) {
-            progress = newProgress
-        }
-
-        lastScroll = scrollY
-    }
-
-    val pictureScale = ObservableField(1.0f)
-
-
-    private fun animateTop(expand: Boolean){
-
-
-        if(expand)
-        {
-            pictureScale.set(0.25f)
-        }
-        else
-        {
-            pictureScale.set(1f)
-        }
-    }
-
-
-    //endregion
 }
 
