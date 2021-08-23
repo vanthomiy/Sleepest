@@ -119,7 +119,7 @@
                 android:scrollbars="none"
                 android:clipToPadding="true"
                 android:fillViewport="true"
-                android:onScrollChangeListener="@{sleepViewModel::onScrollChanged}">
+                >
 
 
 
