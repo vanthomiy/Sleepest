@@ -19,8 +19,6 @@ import java.time.LocalTime
 /**
  * This class provides all functionality that is necessary for predicting the users sleep
  * This class is called from the background an analyzes the [SleepApiRawDataEntity] from the database and stores the predicted values in the database
- * With this we can
- *  -(TODO(define funcitons)
  */
 class SleepCalculationHandler(val context: Context) {
 
@@ -51,7 +49,7 @@ class SleepCalculationHandler(val context: Context) {
 
     //endregion
 
-    //region private helpers
+    //region sleep calculation helpers
 
     /**
      * Gets seconds of day with local time
@@ -207,8 +205,12 @@ class SleepCalculationHandler(val context: Context) {
 
     // endregion
 
-    //region Sleep calculation functions
+    //region sleep calculation functions
 
+    /**
+     * workaround to call the suspend function from JAVA code
+     * calls [checkIsUserSleeping]
+     */
     fun checkIsUserSleepingJob(localTime: LocalDateTime? = null){
         scope.launch{
             checkIsUserSleeping(localTime)
@@ -255,11 +257,6 @@ class SleepCalculationHandler(val context: Context) {
             // check for each sleepstate
             sleepApiRawDataEntity.forEach { data ->
                 // First definition without future data
-                if(data.timestampSeconds == 1629225684){
-                    val a = 1
-                    var b = a
-                }
-
                 if(data.sleepState == SleepState.NONE){
 
                     // get normed list
@@ -393,14 +390,13 @@ class SleepCalculationHandler(val context: Context) {
             val sleepSessionEntity = dataBaseRepository.getOrCreateSleepSessionById(id)
 
             // only when unidentified
-            if(sleepSessionEntity.mobilePosition == MobilePosition.UNIDENTIFIED){
-                sleepSessionEntity.mobilePosition =
-                    if(MobilePosition.getCount(dataStoreRepository.sleepParameterFlow.first().standardMobilePosition) == MobilePosition.UNIDENTIFIED) // create features for ml model
-                    // call the model
-                        sleepClassifier.defineTableBed(sleepApiRawDataEntity)
-                    else
-                        MobilePosition.getCount(dataStoreRepository.sleepParameterFlow.first().standardMobilePosition)
-            }
+            sleepSessionEntity.mobilePosition =
+                if(MobilePosition.getCount(dataStoreRepository.sleepParameterFlow.first().standardMobilePosition) == MobilePosition.UNIDENTIFIED) // create features for ml model
+                    sleepClassifier.defineTableBed(sleepApiRawDataEntity)
+                else if(sleepSessionEntity.mobilePosition == MobilePosition.UNIDENTIFIED)
+                    MobilePosition.getCount(dataStoreRepository.sleepParameterFlow.first().standardMobilePosition)
+                else
+                    sleepSessionEntity.mobilePosition
 
             // only when unidentified
             if(sleepSessionEntity.lightConditions == LightConditions.UNIDENTIFIED){
@@ -559,12 +555,17 @@ class SleepCalculationHandler(val context: Context) {
     }
 
 
+    /**
+     * workaround to call the suspend function from JAVA code
+     * calls [userNotSleeping]
+     */
     fun userNotSleepingJob(){
+
         scope.launch { userNotSleeping(null) }
     }
 
     /**
-     * Defines that the user not fall asleep alredy and we should change the states of the passed data to [SleepState.AWAKE]
+     * Defines that the user not fall asleep already and we should change the states of the passed data to [SleepState.AWAKE]
      * Only call this at the first 1 to 2 hours of the sleep... because we overwriting all sleep data before
      * Later use the [userCurrentlyNotSleeping]
      */
@@ -606,12 +607,17 @@ class SleepCalculationHandler(val context: Context) {
         dataStoreRepository.updateIsUserSleeping(false)
         dataStoreRepository.updateUserSleepTime(0)
 
+        // workaround to prevent the sleep data.
+        // TODO(Check if necessary anymore?)
         sleepHandler.stopSleepHandler()
         sleepHandler.startSleepHandler()
 
-
     }
 
+    /**
+     * workaround to call the suspend function from JAVA code
+     * calls [userCurrentlyNotSleeping]
+     */
     fun userCurrentlyNotSleepingJob(){
         scope.launch { userCurrentlyNotSleeping(null) }
     }

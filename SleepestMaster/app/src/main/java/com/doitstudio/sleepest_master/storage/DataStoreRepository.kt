@@ -3,11 +3,9 @@ package com.doitstudio.sleepest_master.storage
 import android.content.Context
 import androidx.datastore.createDataStore
 import com.doitstudio.sleepest_master.*
-import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
+import com.doitstudio.sleepest_master.model.data.Constants.DAY_IN_SECONDS
 
 import com.doitstudio.sleepest_master.storage.datastorage.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -69,7 +67,7 @@ class DataStoreRepository(context: Context) {
         var times = sleepParameterFlow.first()
 
         val time = givenTime ?: LocalTime.now()
-        val maxTime = (24*60*60) + 1
+        val maxTime = DAY_IN_SECONDS + 1
         val seconds = time.toSecondOfDay()
 
         val overTwoDays = times.sleepTimeStart > times.sleepTimeEnd
@@ -105,24 +103,22 @@ class DataStoreRepository(context: Context) {
     suspend fun updateAutoSleepTime(time:Boolean) =
             sleepParameterStatus.updateAutoSleepTime(time)
     suspend fun updateSleepTimeEnd(time:Int){
-        val day = 24*60*60
         var newTime = time
-        if(time > day)
-            newTime -= day
+        if(time > DAY_IN_SECONDS)
+            newTime -= DAY_IN_SECONDS
 
         if(time < 0)
-            newTime += day
+            newTime += DAY_IN_SECONDS
         sleepParameterStatus.updateSleepTimeEnd(newTime)
 
     }
     suspend fun updateSleepTimeStart(time:Int){
-        val day = 24*60*60
         var newTime = time
-        if(time > day)
-            newTime -= day
+        if(time > DAY_IN_SECONDS)
+            newTime -= DAY_IN_SECONDS
 
         if(time < 0)
-            newTime += day
+            newTime += DAY_IN_SECONDS
         sleepParameterStatus.updateSleepTimeStart(newTime)
     }
     suspend fun updateUserWantedSleepTime(time:Int) =
@@ -136,7 +132,7 @@ class DataStoreRepository(context: Context) {
     suspend fun updateLigthConditionOverLastWeek(time:Int) =
         sleepParameterStatus.updateLigthConditionOverLastWeek(time)
     suspend fun updateUserMobileFequency(time:Int) =
-        sleepParameterStatus.updateUserMobileFequency(time)
+        sleepParameterStatus.updateUserMobileFrequency(time)
     suspend fun triggerObserver() =
         sleepParameterStatus.triggerObserver()
 

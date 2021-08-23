@@ -76,7 +76,7 @@ class SleepParameterStatus(private val dataStore: DataStore<SleepParameters>) {
         }
     }
 
-    suspend fun updateUserMobileFequency(frequency: Int){
+    suspend fun updateUserMobileFrequency(frequency: Int){
         dataStore.updateData{preference->
             preference.toBuilder().setMobileUseFrequency(frequency).build()
         }
