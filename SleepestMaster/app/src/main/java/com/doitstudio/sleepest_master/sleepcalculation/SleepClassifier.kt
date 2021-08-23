@@ -53,7 +53,8 @@ class SleepClassifier constructor(private val context: Context) {
         }
 
         // under 1.4 is on table and over is in bed
-        return if(sleepingData.sumBy { x -> x.motion } / sleepingData.count() > 1.4f){
+        val motionAverage = sleepingData.sumBy { x -> x.motion }.toFloat() / sleepingData.count()
+        return if(motionAverage > 1.05f){
             MobilePosition.INBED
         } else {
             MobilePosition.ONTABLE

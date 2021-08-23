@@ -390,14 +390,13 @@ class SleepCalculationHandler(val context: Context) {
             val sleepSessionEntity = dataBaseRepository.getOrCreateSleepSessionById(id)
 
             // only when unidentified
-            if(sleepSessionEntity.mobilePosition == MobilePosition.UNIDENTIFIED){
-                sleepSessionEntity.mobilePosition =
-                    if(MobilePosition.getCount(dataStoreRepository.sleepParameterFlow.first().standardMobilePosition) == MobilePosition.UNIDENTIFIED) // create features for ml model
-                    // call the model
-                        sleepClassifier.defineTableBed(sleepApiRawDataEntity)
-                    else
-                        MobilePosition.getCount(dataStoreRepository.sleepParameterFlow.first().standardMobilePosition)
-            }
+            sleepSessionEntity.mobilePosition =
+                if(MobilePosition.getCount(dataStoreRepository.sleepParameterFlow.first().standardMobilePosition) == MobilePosition.UNIDENTIFIED) // create features for ml model
+                    sleepClassifier.defineTableBed(sleepApiRawDataEntity)
+                else if(sleepSessionEntity.mobilePosition == MobilePosition.UNIDENTIFIED)
+                    MobilePosition.getCount(dataStoreRepository.sleepParameterFlow.first().standardMobilePosition)
+                else
+                    sleepSessionEntity.mobilePosition
 
             // only when unidentified
             if(sleepSessionEntity.lightConditions == LightConditions.UNIDENTIFIED){

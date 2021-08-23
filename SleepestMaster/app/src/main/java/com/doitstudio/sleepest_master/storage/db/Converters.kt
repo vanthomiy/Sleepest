@@ -5,7 +5,7 @@ import com.doitstudio.sleepest_master.model.data.*
 import java.time.DayOfWeek
 
 /**
- * Converters are beeing used to convert complex datatypes to single types
+ * Converters are being used to convert complex datatype to single type
  * E.g you have to implicit convert a enum to a int and back, to store the value in the DB
  */
 class Converters {
