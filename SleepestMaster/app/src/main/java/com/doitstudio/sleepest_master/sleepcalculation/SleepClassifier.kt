@@ -90,6 +90,58 @@ class SleepClassifier constructor(private val context: Context) {
 
     }
 
+
+    /**
+     * When future and past sleep data [SleepDataFrequency] don't match. We can match the frequency of one of the data to another by calling this function
+     */
+    fun switchToFrequency(list: List<SleepApiRawDataEntity>, fromCount: Int, toCount: Int): List<SleepApiRawDataEntity>
+    {
+        var timeNormedData = mutableListOf<SleepApiRawDataEntity>()
+
+        // 30 / 10 = 3 or 5 / 10 = 0.5
+        val frequenceFactor = toCount.toFloat() / fromCount.toFloat()
+
+
+        var sleepDataBuffer = mutableListOf<SleepApiRawDataEntity>()
+
+        for (i in 0 until list.count()){
+            if (frequenceFactor > 1){
+                for (j in 0 until frequenceFactor.toInt())
+                    timeNormedData.add(list[i])
+            }
+            else{
+                sleepDataBuffer.add(list[i])
+
+                if(sleepDataBuffer.count() >= (1/frequenceFactor).toInt()){
+                    timeNormedData.add(SleepApiRawDataEntity(
+                        timestampSeconds = sleepDataBuffer[0].timestampSeconds,
+                        confidence = sleepDataBuffer.sumBy {x -> x.confidence} / sleepDataBuffer.count(),
+                        motion = sleepDataBuffer.sumBy {x -> x.motion} / sleepDataBuffer.count(),
+                        light = sleepDataBuffer.sumBy {x -> x.light} / sleepDataBuffer.count(),
+                        sleepState = sleepDataBuffer[0].sleepState,
+                        oldSleepState = sleepDataBuffer[0].oldSleepState,
+                        wakeUpTime = sleepDataBuffer[0].wakeUpTime
+                    ))
+
+                    sleepDataBuffer.clear()
+                }
+            }
+        }
+
+        return timeNormedData
+    }
+
+
+    /**
+     * Checks if the user is Sleeping or not at the moment.
+     * It creates the actual parameters
+     * and then checks whether the user is sleeping or not
+     * It handles pre-prediction and after-prediction
+     *  1. It checks if the user already slept. Else it checks for the sleep start borders
+     *  2. When user already slept or sleep border is given. We check the sleep clean up borders
+     *  3. When sleep clean up is okay. We are checking if the acutal params are sleeping or not
+     *  returns [SleepState.AWAKE] or [SleepState.SLEEPING]
+     */
     fun isUserSleeping(
         normedSleepApiDataBefore: List<SleepApiRawDataEntity>,
         normedSleepApiDataAfter: List<SleepApiRawDataEntity>?,
@@ -220,152 +272,10 @@ class SleepClassifier constructor(private val context: Context) {
         return if(isSleeping) SleepState.SLEEPING else SleepState.AWAKE
     }
 
-    fun isUserSleepingTest(
-        normedSleepApiDataBefore: List<SleepApiRawDataEntity>,
-        normedSleepApiDataAfter: List<SleepApiRawDataEntity>?,
-        mobilePosition: MobilePosition,
-        lightConditions: LightConditions,
-        mobileUseFrequency: MobileUseFrequency
-    ) : SleepState {
-
-        // check for standard mobile position.
-        val actualParams =
-            ParamsHandler.createDefaultParams(mobilePosition, lightConditions, mobileUseFrequency)
-
-        // Now we are using the algorithm
-        val sortedSleepListBefore = normedSleepApiDataBefore.sortedBy { x->x.timestampSeconds }
-        val sortedSleepListAfter = normedSleepApiDataAfter?.sortedByDescending { x->x.timestampSeconds }
-
-        // now take the params and check the sleep
-        // first check if a sleep start detection is needed
-
-        val countSleeping = sortedSleepListBefore.filter{x->x.sleepState != SleepState.AWAKE && x.sleepState != SleepState.NONE}.count()
-        val prePrediction = sortedSleepListAfter.isNullOrEmpty()
-
-        var isSleepStarted = false
-        var isSleepingAllowed = false
-        var isSleeping = false
-
-        // Sleep start detection
-        if(countSleeping <= 3){// || (startBorderListBefore[1].sleepState != SleepState.SLEEPING || startBorderListBefore[2].sleepState != SleepState.SLEEPING)){
-            // check if user is started sleeping
-
-            val newListBefore = sortedSleepListBefore.dropLast(1)
-
-            val actualThreshold = ThresholdParams()
-
-            if(prePrediction) {
-                actualThreshold.confidence = sortedSleepListBefore.last().confidence.toFloat()
-                actualThreshold.light = sortedSleepListBefore.last().light.toFloat()
-                actualThreshold.motion = sortedSleepListBefore.last().motion.toFloat()
-            }
-            else{
-                actualThreshold.confidence = (sortedSleepListAfter!!.sumOf { x-> x.confidence } / sortedSleepListAfter.count()).toFloat()
-                actualThreshold.light = (sortedSleepListAfter!!.sumOf { x-> x.light } / sortedSleepListAfter.count()).toFloat()
-                actualThreshold.motion = (sortedSleepListAfter!!.sumOf { x-> x.motion } / sortedSleepListAfter.count()).toFloat()
-            }
-
-            val avgStartThreshold = ThresholdParams()
-
-            avgStartThreshold.confidence = (newListBefore.sumOf { x-> x.confidence } / newListBefore.count()).toFloat()
-            avgStartThreshold.light = (newListBefore.sumOf { x-> x.light } / newListBefore.count()).toFloat()
-            avgStartThreshold.motion = (newListBefore.sumOf { x-> x.motion } / newListBefore.count()).toFloat()
-
-            actualThreshold.absBetweenThresholds(avgStartThreshold)
-
-            isSleepStarted = actualParams.sleepStartBorder.checkIfDifferenceThreshold(true, 3, actualThreshold)
-        }
-
-        // Is Sleeping detection cleanup
-        if(isSleepStarted || countSleeping > 3){
-
-            val avgThreshold = ThresholdParams()
-
-            avgThreshold.confidence = 0f
-            avgThreshold.light = 0f
-            avgThreshold.motion = 0f
-
-            var factor = 0
-            val count = sortedSleepListBefore.count()-1
-            for (i in 0..count) {
-
-                factor += (i * i)
-
-                if(prePrediction){
-                    avgThreshold.confidence += ((sortedSleepListBefore[i].confidence)).toFloat() * i * i
-                    avgThreshold.light += ((sortedSleepListBefore[i].light)).toFloat() * i * i
-                    avgThreshold.motion += ((sortedSleepListBefore[i].motion)).toFloat() * i * i
-                }
-                else{
-                    avgThreshold.confidence += ((sortedSleepListBefore[i].confidence + sortedSleepListAfter!![i].confidence) / 2).toFloat() * i * i
-                    avgThreshold.light += ((sortedSleepListBefore[i].light + sortedSleepListAfter!![i].light) / 2).toFloat() * i * i
-                    avgThreshold.motion += ((sortedSleepListBefore[i].motion + sortedSleepListAfter!![i].motion) / 2).toFloat() * i * i
-                }
-            }
-
-            avgThreshold.confidence = avgThreshold.confidence / factor
-            avgThreshold.light = avgThreshold.light / factor
-            avgThreshold.motion = avgThreshold.motion / factor
-
-            isSleepingAllowed = avgThreshold.checkIfThreshold(false, 2, actualParams.sleepCleanUp)
-        }
-
-
-        // is user sleeping?
-        if(isSleepingAllowed){
-
-            val actualThreshold = ThresholdParams()
-
-            actualThreshold.confidence = sortedSleepListBefore.last().confidence.toFloat()
-            actualThreshold.light = sortedSleepListBefore.last().light.toFloat()
-            actualThreshold.motion = sortedSleepListBefore.last().motion.toFloat()
-
-            isSleeping = actualThreshold.checkIfThreshold(false, 3, actualParams.generalThreshold)
-        }
-
-        return if(isSleeping) SleepState.SLEEPING else SleepState.AWAKE
-    }
-
-
-    fun switchToFrequency(list: List<SleepApiRawDataEntity>, fromCount: Int, toCount: Int): List<SleepApiRawDataEntity>
-    {
-        var timeNormedData = mutableListOf<SleepApiRawDataEntity>()
-
-        // 30 / 10 = 3 or 5 / 10 = 0.5
-        val frequenceFactor = toCount.toFloat() / fromCount.toFloat()
-
-
-        var sleepDataBuffer = mutableListOf<SleepApiRawDataEntity>()
-
-        for (i in 0 until list.count()){
-            if (frequenceFactor > 1){
-                for (j in 0 until frequenceFactor.toInt())
-                    timeNormedData.add(list[i])
-            }
-            else{
-                sleepDataBuffer.add(list[i])
-
-                if(sleepDataBuffer.count() >= (1/frequenceFactor).toInt()){
-                    timeNormedData.add(SleepApiRawDataEntity(
-                        timestampSeconds = sleepDataBuffer[0].timestampSeconds,
-                        confidence = sleepDataBuffer.sumBy {x -> x.confidence} / sleepDataBuffer.count(),
-                        motion = sleepDataBuffer.sumBy {x -> x.motion} / sleepDataBuffer.count(),
-                        light = sleepDataBuffer.sumBy {x -> x.light} / sleepDataBuffer.count(),
-                        sleepState = sleepDataBuffer[0].sleepState,
-                        oldSleepState = sleepDataBuffer[0].oldSleepState,
-                        wakeUpTime = sleepDataBuffer[0].wakeUpTime
-                    ))
-
-                    sleepDataBuffer.clear()
-                }
-            }
-        }
-
-        return timeNormedData
-    }
-
-
-
+    /**
+     * Defines the actual [SleepState] of the users sleep
+     * It creates the actual parameters and then checks the [SleepState]
+     */
     fun defineUserSleep(
         normedSleepApiDataBefore: List<SleepApiRawDataEntity>,
         normedSleepApiDataAfter: List<SleepApiRawDataEntity>,

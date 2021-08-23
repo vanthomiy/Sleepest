@@ -9,7 +9,7 @@ import com.doitstudio.sleepest_master.storage.db.SleepingParams
 object ParamsHandler{
 
     /**
-     *
+     * Create the default params by the given conditions
      */
     fun createDefaultParams(
         mobilePosition: MobilePosition,
@@ -28,7 +28,7 @@ object ParamsHandler{
     }
 
     /**
-     *
+     * Create the default sleep state params by the given conditions
      */
     fun createSleepStateParams(
         lightConditions: LightConditions,

@@ -28,7 +28,8 @@ data class UserSleepRating (
         var moodOnNextDay	:MoodType = MoodType.NONE,
 
         /**
-         * TODO(What is this var for???)
+         * TODO(Not implemented yet)
+         * User can define wakeup times
          */
         var wakeTimes	:Int = 0,
 
