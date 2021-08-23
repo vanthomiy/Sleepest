@@ -191,6 +191,14 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
         {
             info = getStringXml(R.string.alarm_instance_daily)
         }
+        else if(selectedDays.count() == 2 && selectedDays.contains(5) && selectedDays.contains(6))
+        {
+            info = getStringXml(R.string.alarm_instance_weekend)
+        }
+        else if(selectedDays.count() == 5 && !selectedDays.contains(5) && !selectedDays.contains(6))
+        {
+            info = getStringXml(R.string.alarm_instance_working_day)
+        }
         else{
 
 

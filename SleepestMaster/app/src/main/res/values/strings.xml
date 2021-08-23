@@ -93,6 +93,8 @@
     <string name="alarm_instance_alarm">Alarm</string>
     <string name="alarm_instance_no_day_choosen">No day choosen</string>
     <string name="alarm_instance_daily">Daily</string>
+    <string name="alarm_instance_weekend">Weekend</string>
+    <string name="alarm_instance_working_day">Working days</string>
     <string name="alarm_instance_alarm_header">Sleep</string>
     <string name="alarm_instance_inbetween">between</string>
     <string name="alarm_instance_and">and</string>

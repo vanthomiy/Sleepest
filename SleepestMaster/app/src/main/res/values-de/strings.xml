@@ -94,6 +94,8 @@
     <string name="alarm_hours">Stunden</string>
     <string name="alarm_minutes">Minuten</string>
     <string name="alarm_instance_daily">Täglich</string>
+    <string name="alarm_instance_weekend">Wochenende</string>
+    <string name="alarm_instance_working_day">Werktags</string>
     <string name="alarm_instance_alarm_header">Schlaf</string>
     <string name="alarm_instance_inbetween">zwischen</string>
     <string name="alarm_instance_and">und</string>
