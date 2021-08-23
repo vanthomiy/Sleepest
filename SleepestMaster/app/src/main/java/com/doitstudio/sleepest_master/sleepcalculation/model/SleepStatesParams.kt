@@ -2,6 +2,7 @@ package com.doitstudio.sleepest_master.storage.db
 
 import androidx.room.Entity
 import com.doitstudio.sleepest_master.model.data.LightConditions
+import com.doitstudio.sleepest_master.model.data.SleepState
 import com.doitstudio.sleepest_master.sleepcalculation.model.ThresholdParams
 
 /**
@@ -12,23 +13,26 @@ import com.doitstudio.sleepest_master.sleepcalculation.model.ThresholdParams
 data class SleepStatesParams(
 
         /**
-         * The utc timestamp in seconds when the first user sleep of the sleep session is detected
+         * It is used to create a [ThresholdParams] to define a users [SleepState.LIGHT] phase
          */
         var lightSleepParams: ThresholdParams,
 
         /**
-         * The utc timestamp in seconds when the first user sleep of the sleep session is detected
+         * It is used to create a [ThresholdParams] to define a users [SleepState.DEEP] phase
          */
         var deepSleepParams: ThresholdParams,
 
         /**
-         * The utc timestamp in seconds when the first user sleep of the sleep session is detected
+         * It is used to create a [ThresholdParams] to define a users [SleepState.REM] phase
          */
         var remSleepParams: ThresholdParams,
 
         )
 {
 
+        /**
+         * Merge this [SleepStatesParams] with another factor [SleepStatesParams] by multiplying
+         */
         fun mergeParameters(factorParams:SleepStatesParams){
                 lightSleepParams.mergeParameters(factorParams = factorParams.lightSleepParams)
                 deepSleepParams.mergeParameters(factorParams = factorParams.deepSleepParams)
@@ -36,6 +40,10 @@ data class SleepStatesParams(
         }
 
         companion object{
+
+                /**
+                 * Helper function to create default [SleepStatesParams]
+                 */
                 fun createDefaultParams() : SleepStatesParams {
                         return SleepStatesParams(
                                 lightSleepParams = ThresholdParams.createLightSleepBorder(),
@@ -44,6 +52,9 @@ data class SleepStatesParams(
                         )
                 }
 
+                /**
+                 * Helper function to create light condition factor [LightConditions]
+                 */
                 fun createLightConditionParams(lightCondition : LightConditions ) : SleepStatesParams {
                         return SleepStatesParams(
                                 lightSleepParams = ThresholdParams.createLightSleepBorder(lightCondition),

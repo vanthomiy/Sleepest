@@ -8,7 +8,9 @@ import com.doitstudio.sleepest_master.storage.db.SleepingParams
 
 object ParamsHandler{
 
-
+    /**
+     *
+     */
     fun createDefaultParams(
         mobilePosition: MobilePosition,
         lightConditions: LightConditions,
@@ -25,6 +27,9 @@ object ParamsHandler{
         return algorithmParams
     }
 
+    /**
+     *
+     */
     fun createSleepStateParams(
         lightConditions: LightConditions,
     ): SleepStatesParams{

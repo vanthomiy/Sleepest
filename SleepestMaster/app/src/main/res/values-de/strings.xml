@@ -252,6 +252,9 @@
     <string name="settings_credits">Credits</string>
     <string name="settings_flaticon_introduction">Wir haben Bilder von der Seite Flaticon verwendet. Im folgenden sind die einzelnen Authoren der Bilder aufgelistet.</string>
     <string name="settings_from"> im </string>
+    <string name="settings_import_wrong_format">Falsches Datenformat</string>
+    <string name="settings_import_success">Daten erfolgreich importiert</string>
+    <string name="settings_import_cant_write_db">Datenbank konnte nicht beschrieben werden</string>
 
     <string name="settings_credits_flaticon">Flaticon Website</string>
 
