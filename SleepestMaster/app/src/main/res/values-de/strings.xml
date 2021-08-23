@@ -241,6 +241,9 @@
     <string name="settings_permission_overlapp_app">
         Wir benötigen diese Berechtigung, damit unsere App dich auch bei gesperrtem Handy richtig Wecken kann
     </string>
+    <string name="settings_permission_notification_privacy">
+        Diese Berechtigung wir benötigt damit du den Alarmton auch hörst wenn das Handy auf "nicht Stören" eingestellt ist
+    </string>
     <string name="settings_notification_privacy">Notification Privacy</string>
     <string name="settings_data">Daten</string>
     <string name="settings_export_data">Daten Exportieren</string>
@@ -249,8 +252,8 @@
     <string name="settings_remove_data_ackn">Verstanden und löschen</string>
     <string name="settings_about_us">Sleepest - App\nMade with &#10084; in Bavaria\n\n This app was created by 3 students as a students project and will be improved and maintained in the future</string>
 
-    <string name="settings_return">return</string>
-    <string name="settings_delete_all_data">delete all data</string>
+    <string name="settings_return">Abbrechen</string>
+    <string name="settings_delete_all_data">Alle Daten löschen</string>
     <string name="settings_credits">Credits</string>
     <string name="settings_flaticon_introduction">Wir haben Bilder von der Seite Flaticon verwendet. Im folgenden sind die einzelnen Authoren der Bilder aufgelistet.</string>
     <string name="settings_from"> im </string>
