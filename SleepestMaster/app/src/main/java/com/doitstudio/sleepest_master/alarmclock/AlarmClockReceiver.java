@@ -75,7 +75,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
                         notificationsUtil.chooseNotification();
                     }
                // }
-                
+
                 break;
             case STOP_ALARMCLOCK: //Stop button of ScreenOn notification
                 BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).alarmClockRang(true);
@@ -254,5 +254,4 @@ public class AlarmClockReceiver extends BroadcastReceiver {
     public static void cancelNotification(NotificationUsage notificationUsage) {
         NotificationManagerCompat.from(context).cancel(NotificationUsage.Companion.getCount(notificationUsage));
     }
-
 }

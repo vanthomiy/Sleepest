@@ -118,9 +118,13 @@ class SettingsFragment : Fragment() {
         }
         binding.btnImportantSettings.setOnClickListener() {
             //DontKillMyAppFragment.show(requireActivity())
-            val calendar = TimeConverterUtil.getAlarmDate(LocalTime.now().toSecondOfDay() + 120)
-            AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), actualContext, AlarmClockReceiverUsage.START_ALARMCLOCK)
-
+            scope.launch {
+                if (dataStoreRepository.getSleepSubscribeStatus()) {
+                    sleepHandler.stopSleepHandler()
+                } else {
+                    sleepHandler.startSleepHandler()
+                }
+            }
         }
 
         viewModel.actualExpand.set(caseOfEntrie)
@@ -131,7 +135,6 @@ class SettingsFragment : Fragment() {
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
         }
-
 
         //region Test
         val textVersion = "Version: $version\n"

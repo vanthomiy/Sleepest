@@ -49,10 +49,6 @@
     <string name="sleep_status_false">You are currently not sleeping</string>
     <string name="sleep_status_true">You are currently sleeping</string>
     <string name="wakelock_tag">Foregroundservice_lock</string>
-    <string name="title_activity_test">Test activity</string>
-    <string name="alarm_lockscreen_Button_1">Cancel Alarm</string>
-    <string name="alarm_lockscreen_Button_2">Snooze Alarm</string>
-    <string name="reactivate_alarm_message">Reactivated alarm</string>
 
     <!--endregion-->
 
@@ -93,7 +89,7 @@
     <string name="alarm_hours">Hours</string>
     <string name="alarm_minutes">Minutes</string>
     <string name="alarm_instance_alarm">Alarm</string>
-    <string name="alarm_instance_no_day_choosen">No day choosen</string>
+    <string name="alarm_instance_no_day_choosen">No day chosen</string>
     <string name="alarm_instance_daily">Daily</string>
     <string name="alarm_instance_alarm_header">Sleep</string>
     <string name="alarm_instance_inbetween">between</string>

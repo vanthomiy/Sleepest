@@ -4,41 +4,37 @@
     <string name="alarm_disabled">Alarm Disabled</string>
     <string name="insert_data">Alarm Disabled</string>
     <string name="sleep_segments">Alarm Disabled</string>
-    <string name="notice_dont_kill_my_app">Beachten</string>
+    <string name="notice_dont_kill_my_app">Bitte beachten</string>
     <string name="permission_activity_recognition_old">com.google.android.gms.permission.ACTIVITY_RECOGNITION</string>
 
     <!--region AlarmClock-->
     <string name="alarm_clock_channel">Alarmclock Notification Channel</string>
     <string name="alarm_clock_channel_name">Alarmclock Channel</string>
-    <string name="alarm_clock_channel_description">This channel is for all notifications in alarm clock actions</string>
+    <string name="alarm_clock_channel_description">Channel für alle Benachrichtigungen des Weckers</string>
     <string name="alarm_clock_intent_key">com.doitstudio.sleepest_master.alarmclock.AlarmClockIntentKey</string>
     <string name="alarm_notification_title">Zeit aufzustehen</string>
-    <string name="alarm_notification_text">Drücke Schlummern um den Alaum um 10 Minuten zu verzögern</string>
+    <string name="alarm_notification_text">Drücke Schlummern, um den Alaum um 10 Minuten zu verzögern</string>
     <string name="alarm_notification_button_1">Abbrechen</string>
     <string name="alarm_notification_button_2">Schlummern</string>
-    <string name="alarm_lockscreen_Button_1">"Cancel Alarm"</string>
-    <string name="alarm_lockscreen_Button_2">"Snooze Alarm"</string>
     <string name="alarm_clock_user_should_sleep">"Gute Nacht</string>
     <!--endregion-->
 
     <!--region Background-->
     <string name="foregroundservice_channel">Foregroundservice Notification Channel</string>
     <string name="foregroundservice_channel_name">Foregroundservice Channel</string>
-    <string name="foregroundservice_channel_description">This channel is for the notification banner of the foregroundservice</string>
+    <string name="foregroundservice_channel_description">Channel für die permanente Benachrichtigung</string>
     <string name="information_notification_channel">Information Notification Channel</string>
     <string name="information_notification_channel_name">Information Notification Channel</string>
     <string name="information_notification_channel_description">Dieser Channel zeigt dem Nutzer, dass er nun schlafen sollte.</string>
-    <string name="information_notification_text">Du kannst Deine eingestellte Schlafzeit nicht mehr erreichen</string>
-    <string name="foregroundservice_notification_title">Sleepest - The best sleep you ever had</string>
+    <string name="information_notification_text">Du kannst deine eingestellte Schlafzeit nicht mehr erreichen</string>
+    <string name="foregroundservice_notification_title">Sleepest - Produktivität und Schlaf vereinen</string>
     <string name="workmanager1_tag">Workmanager 1</string>
     <string name="workmanager2_tag">Workmanager 2</string>
     <string name="alarmmanager_key">com.doitstudio.sleepest_master.background.AlarmIntentKey</string>
-    <string name="title_activity_test">Testaktivität</string>
-    <string name="error_start_foreground">Etwas lief schief. Versuche alle Alarme zu starten.</string>
-    <string name="disable_alarm_message">Du kanns den Alarm jederzeit reaktivieren.</string>
-    <string name="reactivate_alarm_message">Reactivated alarm</string>
+    <string name="error_start_foreground">Etwas lief schief. Versuche alle Alarme neuzustarten.</string>
+    <string name="disable_alarm_message">Du kannst den Alarm jederzeit reaktivieren.</string>
     <string name="not_sleeping_message">Schlafenszeiten bis jetzt gelöscht.</string>
-    <string name="currently_not_sleeping_message">Die letzten paar Minuten wurden gelöscht.</string>
+    <string name="currently_not_sleeping_message">Die letzten Minuten an Schlaf wurden gelöscht.</string>
     <string name="btn_not_sleeping_text">Noch nicht geschlafen.</string>
     <string name="btn_currently_not_sleeping_text">Im Moment kein Schlaf.</string>
     <string name="btn_disable_alarm">Alarm deaktivieren.</string>
@@ -47,10 +43,10 @@
     <string name="alarm_status_true">Alarm aktiv.</string>
     <string name="wakelock_tag">Foregroundservice_lock</string>
     <string name="sleep_status_false">Du schläfst momentan nicht.</string>
-    <string name="sleep_status_true">Du schläfst im Moment.</string>
+    <string name="sleep_status_true">Du schläfst momentan.</string>
     <string name="description_dont_kill_my_app">Sicherstellen, dass die App auch im Hintergrund aktiv bleibt</string>
     <string name="information_notification_text_sleeptime_problem">Du solltest nun schlafen oder den Aufwachzeitpunkt aktualisieren, da Du deine eingestellte Schlafdauer nicht mehr erreichen wirst.</string>
-    <string name="information_notification_text_sleep_api_problem">Es liegt ein Fehler vor. Bitte starte den Alarm neu.</string>
+    <string name="information_notification_text_sleep_api_problem">Es liegt ein Fehler vor. Bitte starte den Alarm neu oder drücke auf die Schaltfläche</string>
     <string name="information_notification_title">Achtung</string>
     <!--endregion-->
 
