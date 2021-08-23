@@ -64,17 +64,6 @@ public class AlarmClockReceiver extends BroadcastReceiver {
         switch (AlarmClockReceiverUsage.valueOf(intent.getStringExtra((context.getString(R.string.alarm_clock_intent_key))))) {
             case START_ALARMCLOCK: //Init Alarmclock
 
-<<<<<<< Updated upstream
-                PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-                if (powerManager.isInteractive()) {
-                    NotificationUtil notificationsUtil = new NotificationUtil(context.getApplicationContext(), NotificationUsage.NOTIFICATION_ALARM_CLOCK,null);
-                    notificationsUtil.chooseNotification();
-                } else {
-                    showNotificationOnLockScreen(NotificationUsage.NOTIFICATION_ALARM_CLOCK);
-                }
-=======
-
-
                 //if (alarmEntity != null && !alarmEntity.getTempDisabled()) {
                     PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
                     if (powerManager.isInteractive()) {
@@ -86,8 +75,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
                         notificationsUtil.chooseNotification();
                     }
                // }
-
->>>>>>> Stashed changes
+                
                 break;
             case STOP_ALARMCLOCK: //Stop button of ScreenOn notification
                 BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).alarmClockRang(true);
