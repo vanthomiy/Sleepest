@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Parcelable
 import android.widget.Toast
+import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.model.data.LightConditions
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
@@ -17,6 +18,10 @@ import java.io.InputStreamReader
 
 object ImportUtil {
 
+    /**
+     * Read the imported data by uri.
+     * Check if its the right data format and then write to the database
+     */
     suspend fun getLoadFileFromUri(uri: Uri?, actualContext : Context, dataBaseRepository : DatabaseRepository){
 
         uri?.let {
@@ -31,7 +36,7 @@ object ImportUtil {
                 )
             } catch (ex: Exception) {
 
-                Toast.makeText(actualContext, "Wrong data format", Toast.LENGTH_SHORT).show()
+                Toast.makeText(actualContext, actualContext.getString(R.string.settings_import_wrong_format), Toast.LENGTH_SHORT).show()
                 return@let
 
             }

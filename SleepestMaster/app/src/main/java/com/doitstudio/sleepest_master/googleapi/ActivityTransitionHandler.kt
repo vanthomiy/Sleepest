@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import com.doitstudio.sleepest_master.googleapi.ActivityTransitionHandler.Companion.getHandler
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.model.data.ActivityTransitionUsage
+import com.doitstudio.sleepest_master.util.PermissionsUtil.isActivityRecognitionPermissionGranted
 import com.google.android.gms.location.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -22,8 +23,14 @@ import kotlinx.coroutines.launch
  */
 class ActivityTransitionHandler(private val context: Context) {
 
+    /**
+     * [CoroutineScope] provides the ability to write and read from the database/datastore async
+     */
     private val scope: CoroutineScope = MainScope()
 
+    /**
+     * The actual datastore
+     */
     private val dataStoreRepository by lazy { (context.applicationContext as MainApplication).dataStoreRepository }
 
     companion object {
@@ -31,6 +38,9 @@ class ActivityTransitionHandler(private val context: Context) {
         @Volatile
         private var INSTANCE: ActivityTransitionHandler? = null
 
+        /**
+         * Get a new or the actual instance of the [ActivityTransitionHandler]
+         */
         fun getHandler(context: Context): ActivityTransitionHandler {
             return INSTANCE ?: synchronized(this) {
                 val instance = ActivityTransitionHandler(context)
@@ -42,12 +52,15 @@ class ActivityTransitionHandler(private val context: Context) {
     }
 
     /**
-     * Listens to Activity data subscribed or not and subscribe or unsubscribe from it automatically
+     * Subscribes to activity data and listens to it automatically
      */
     fun startActivityHandler() {
         subscribeToActivitySegmentUpdates()
     }
 
+    /**
+     * Unsubscribes from the activity data
+     */
     fun stopActivityHandler(){
         unsubscribeToActivitySegmentUpdates()
     }
@@ -61,7 +74,7 @@ class ActivityTransitionHandler(private val context: Context) {
      */
     @SuppressLint("MissingPermission")
     private fun subscribeToActivitySegmentUpdates() {
-        if(activityRecognitionPermissionApproved(context)){
+        if(isActivityRecognitionPermissionGranted(context)){
 
             val request = ActivityTransitionUtil.getActivityTransitionRequest()
 
@@ -106,7 +119,9 @@ class ActivityTransitionHandler(private val context: Context) {
             }        }
     }
 
-
+    /**
+     * The actual intent for the subscription
+     */
     private fun getPendingIntent(): PendingIntent {
         val intent = Intent(context, ActivityTransitionReciver::class.java)
         return PendingIntent.getBroadcast(
@@ -114,16 +129,6 @@ class ActivityTransitionHandler(private val context: Context) {
                 ActivityTransitionUsage.getCount(ActivityTransitionUsage.REQUEST_CODE),
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT
-        )
-    }
-
-    private fun activityRecognitionPermissionApproved(context: Context): Boolean {
-        // Because this app targets 29 and above (recommendation for using the Activity APIs), we
-        // don't need to check if this is on a device before runtime permissions, that is, a device
-        // prior to 29 / Q.
-        return PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACTIVITY_RECOGNITION
         )
     }
 }

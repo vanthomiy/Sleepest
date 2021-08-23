@@ -15,13 +15,18 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 /**
- * Saves Sleep Events to Database.
+ * Receives and saves sleep events to database.
  */
 class SleepReceiver : BroadcastReceiver() {
 
-    // Used to launch coroutines (non-blocking way to insert data).
+    /**
+     * [CoroutineScope] provides the ability to write and read from the database/datastore async
+     */
     private val scope: CoroutineScope = MainScope()
 
+    /**
+     * Is called when new sleep data is available
+     */
     override fun onReceive(context: Context, intent: Intent) {
         val repository = (context.applicationContext as MainApplication).dataBaseRepository
         val sleepCalculationStoreRepository = (context.applicationContext as MainApplication).dataStoreRepository
@@ -32,7 +37,9 @@ class SleepReceiver : BroadcastReceiver() {
             addSleepClassifyEventsToDatabase(repository,sleepCalculationStoreRepository, sleepClassifyEvents)
        }
     }
-
+    /**
+     * Add the data to the database
+     */
     private fun addSleepClassifyEventsToDatabase(
         repository: DatabaseRepository,
         sleepCalculationStoreRepository: DataStoreRepository,
@@ -53,7 +60,9 @@ class SleepReceiver : BroadcastReceiver() {
     }
 
     companion object {
-        const val TAG = "SleepReceiver"
+        /**
+         * The actual intent for the subscription
+         */
         fun createSleepReceiverPendingIntent(context: Context): PendingIntent {
             val sleepIntent = Intent(context, SleepReceiver::class.java)
             return PendingIntent.getBroadcast(

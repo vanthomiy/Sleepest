@@ -236,7 +236,9 @@
     <string name="settings_import_data">Daten Importieren</string>
     <string name="settings_remove_data_warning">Ohje, alle daten werden gelöscht ok?</string>
     <string name="settings_remove_data_ackn">Verstanden und löschen</string>
-
+    <string name="settings_import_wrong_format">Wrong data format</string>
+    <string name="settings_import_success">Successful imported data</string>
+    <string name="settings_import_cant_write_db">Cant write to database</string>
 
     <string name="settings_about_us">Sleepest - App\nMade with &#10084; in Bavaria\n\n This app was created by 3 students as a students project and will be improved and maintained in the future</string>
 
@@ -324,5 +326,6 @@
     <string name="onboarding_toast_permissions">Please grant all permissions</string>
     <string name="onboarding_toast_read_to_end">Please read the hole tutorial</string>
     <string name="onboarding_toast_permission_already_granted">This permission is already granted</string>
+
 
 </resources>

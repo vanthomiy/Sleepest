@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import com.doitstudio.sleepest_master.MainApplication
+import com.doitstudio.sleepest_master.util.PermissionsUtil
 import com.google.android.gms.location.ActivityRecognition
 import com.google.android.gms.location.SleepSegmentRequest
 import kotlinx.coroutines.CoroutineScope
@@ -19,10 +20,16 @@ import kotlinx.coroutines.launch
  */
 class SleepHandler(private val context: Context) {
 
+    /**
+     * [CoroutineScope] provides the ability to write and read from the database/datastore async
+     */
     private val scope: CoroutineScope = MainScope()
 
     private var sleepPendingIntent: PendingIntent = SleepReceiver.createSleepReceiverPendingIntent(context = context)
 
+    /**
+     * The actual datastore
+     */
     private val dataStoreRepository by lazy { (context.applicationContext as MainApplication).dataStoreRepository }
 
     companion object {
@@ -30,6 +37,9 @@ class SleepHandler(private val context: Context) {
         @Volatile
         private var INSTANCE: SleepHandler? = null
 
+        /**
+         * Get a new or the actual instance of the [SleepHandler]
+         */
         fun getHandler(context: Context): SleepHandler {
             return INSTANCE ?: synchronized(this) {
                 val instance = SleepHandler(context)
@@ -41,12 +51,15 @@ class SleepHandler(private val context: Context) {
     }
 
     /**
-     * Listens to sleep data subscribed or not and subscribe or unsubscribe from it automatically
+     * Subscribes to sleep api data and listens to it automatically
      */
     fun startSleepHandler() {
         subscribeToSleepSegmentUpdates(context, sleepPendingIntent)
     }
 
+    /**
+     * Unsubscribes from the sleep api data
+     */
     fun stopSleepHandler(){
         unsubscribeToSleepSegmentUpdates(context, sleepPendingIntent)
     }
@@ -59,7 +72,7 @@ class SleepHandler(private val context: Context) {
      */
     @SuppressLint("MissingPermission")
     private fun subscribeToSleepSegmentUpdates(context: Context, pendingIntent: PendingIntent) {
-        if (activityRecognitionPermissionApproved(context)) {
+        if (PermissionsUtil.isActivityRecognitionPermissionGranted(context)) {
             val task =
                     ActivityRecognition.getClient(context).requestSleepSegmentUpdates(
                             pendingIntent,
@@ -102,16 +115,6 @@ class SleepHandler(private val context: Context) {
                 dataStoreRepository.updateSleepUnsubscribeFailed(true)
             }
         }
-    }
-
-    private fun activityRecognitionPermissionApproved(context: Context): Boolean {
-        // Because this app targets 29 and above (recommendation for using the Sleep APIs), we
-        // don't need to check if this is on a device before runtime permissions, that is, a device
-        // prior to 29 / Q.
-        return PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACTIVITY_RECOGNITION
-        )
     }
 
 }
