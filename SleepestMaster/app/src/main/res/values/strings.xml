@@ -7,6 +7,7 @@
     <string name="insert_data">Alarm Disabled</string>
     <string name="sleep_segments">Alarm Disabled</string>
     <string name="notice_dont_kill_my_app">Please notice</string>
+    <string name="permission_activity_recognition_old">com.google.android.gms.permission.ACTIVITY_RECOGNITION</string>
 
     <!--region AlarmClock-->
     <string name="alarm_clock_channel">Alarmclock Notification Channel</string>
@@ -17,6 +18,7 @@
     <string name="alarm_notification_text">"Tap Snooze to sleep for further 10 minutes"</string>
     <string name="alarm_notification_button_1">"Cancel"</string>
     <string name="alarm_notification_button_2">"Snooze"</string>
+    <string name="alarm_clock_user_should_sleep">"Good night</string>
     <!--endregion-->
 
     <!--region Background-->

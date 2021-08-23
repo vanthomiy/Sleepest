@@ -22,6 +22,11 @@ import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * This Workmanager calculates the alarm time depending on the tracked sleep API data.
+ * It is started 30 minutes before earliest wakeup and calculates until alarm rings
+ */
+
 public class WorkmanagerCalculation extends Worker {
 
     private static Context context;
@@ -44,6 +49,7 @@ public class WorkmanagerCalculation extends Worker {
          * problemlos möglich.
          */
 
+        //Defines the new wakeup
         BackgroundAlarmTimeHandler.Companion.getHandler(context).defineNewUserWakeup(null, true);
 
         Calendar calendar = Calendar.getInstance();
@@ -57,6 +63,11 @@ public class WorkmanagerCalculation extends Worker {
         return Result.success();
     }
 
+    /**
+     * Start the Workmanager for calculation
+     * @param duration Period time
+     * @param context1 Context
+     */
     public static void startPeriodicWorkmanager(int duration, Context context1) {
 
         AlarmCycleState alarmCycleState = new AlarmCycleState(context1);
@@ -77,6 +88,9 @@ public class WorkmanagerCalculation extends Worker {
         }
     }
 
+    /**
+     * Stops the Workmanager
+     */
     public static void stopPeriodicWorkmanager() {
 
         //Cancel periodic work by tag

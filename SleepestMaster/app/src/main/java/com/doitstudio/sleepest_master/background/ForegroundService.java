@@ -164,12 +164,6 @@ public class ForegroundService extends LifecycleService {
 
         Toast.makeText(getApplicationContext(), "Foregroundservice started", Toast.LENGTH_LONG).show();
 
-        //Set Alarm to start calculation
-        /**Calendar calenderCalculation = AlarmReceiver.getAlarmDate(alarmEntity.getWakeupEarly() - 1800);
-        AlarmReceiver.startAlarmManager(calenderCalculation.get(Calendar.DAY_OF_WEEK), calenderCalculation.get(Calendar.HOUR_OF_DAY), calenderCalculation.get(Calendar.MINUTE), getApplicationContext(), AlarmReceiverUsage.START_WORKMANAGER_CALCULATION);
-        **/
-
-
         //Call function with null to transfer actual(local) time for correct calculation
         sleepCalculationHandler.checkIsUserSleepingJob(null);
         userSleepTime = 0;
@@ -201,17 +195,6 @@ public class ForegroundService extends LifecycleService {
             isServiceStarted = false;
             foregroundObserver.setForegroundStatus(false);
 
-            /**if (alarmEntity != null) {
-                foregroundObserver.updateAlarmWasFired(true, alarmEntity.getId());
-            }*/
-
-
-            //Stop the workmanager for calculating wakeup time
-            /**WEEEGGG*
-            WorkmanagerCalculation.stopPeriodicWorkmanager();
-            //Cancel Alarm for starting Workmanager
-            AlarmReceiver.cancelAlarm(getApplicationContext(), AlarmReceiverUsage.START_WORKMANAGER_CALCULATION);**/
-
             Toast.makeText(getApplicationContext(), "Foregroundservice stopped", Toast.LENGTH_LONG).show();
 
             Calendar calendar = Calendar.getInstance();
@@ -242,10 +225,18 @@ public class ForegroundService extends LifecycleService {
 
     }
 
+    /**
+     * Set the start time of the foreground service.
+     * Needed to check if data are received.
+     */
     private static void setForegroundServiceStartTime() {
         foregroundServiceStartTime = LocalTime.now().toSecondOfDay();
     }
 
+    /**
+     * Get the foreground service duration since start time
+     * @return Duration since start
+     */
     public static int getForegroundServiceTime() {
 
         int time = 0;
@@ -262,6 +253,10 @@ public class ForegroundService extends LifecycleService {
 
     //region changing values
 
+    /**
+     * Alarm live data
+     * @param time Instance of next active alarm
+     */
     @RequiresApi(api = Build.VERSION_CODES.P)
     public void OnAlarmChanged(AlarmEntity time) {
 
@@ -486,6 +481,7 @@ public class ForegroundService extends LifecycleService {
     //endregion
 
     //region notification
+
     /**
      * Updates the notification banner with a new text
      */
@@ -500,6 +496,9 @@ public class ForegroundService extends LifecycleService {
 
     }
 
+    /**
+     * Sends information to the user like missing data or user should go to sleep
+     */
     @RequiresApi(api = Build.VERSION_CODES.P)
     private void sendUserInformation() {
 
@@ -517,6 +516,9 @@ public class ForegroundService extends LifecycleService {
         }
     }
 
+    /**
+     * Initiate and update the foreground service notification
+     */
     @RequiresApi(api = Build.VERSION_CODES.P)
     private void showForegroundNotification() {
         ArrayList<Object> arrayList = fillList();
@@ -542,6 +544,11 @@ public class ForegroundService extends LifecycleService {
         return arrayList;
     }
 
+    /**
+     * Workaround to show to correct alarm time in the notification
+     * @param actualTime Actual alarm time in seconds of day
+     * @return Real alarm time in seconds of day
+     */
     private int getRealAlarmTime(int actualTime) {
         if (alarmCycleState.getState() == AlarmCycleStates.BETWEEN_SLEEPTIME_START_AND_CALCULATION && alarmEntity != null) {
             return alarmEntity.getWakeupEarly();
@@ -753,9 +760,6 @@ public class ForegroundService extends LifecycleService {
 
         context.startForegroundService(intent);
     }
-
-
-
 
     //endregion
 

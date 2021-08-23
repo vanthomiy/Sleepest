@@ -114,7 +114,6 @@ public class AlarmClockAudio {
      * @return instance
      */
     private static Ringtone getRingtoneManager(String tone) {
-        /**TODO: Verschiedene Alarme einfügen, über Einstellungen anpassbar */
 
         if (ringtoneManager == null) {
             if (tone.equals("null")) {
@@ -177,7 +176,7 @@ public class AlarmClockAudio {
         }
 
         //Timer of 1 minute, which snoozes the alarm after finishing
-        countDownTimer = new CountDownTimer(Constants.MILLIS_UNTIL_SNOOZE, Constants.COUNTDOWN_TICK_INTERVAL) {
+        /*countDownTimer = new CountDownTimer(Constants.MILLIS_UNTIL_SNOOZE, Constants.COUNTDOWN_TICK_INTERVAL) {
 
             public void onTick(long millisUntilFinished) {
 
@@ -193,7 +192,7 @@ public class AlarmClockAudio {
 
             }
 
-        }.start();
+        }.start();*/
     }
 
     /**
@@ -290,7 +289,6 @@ public class AlarmClockAudio {
 
         if (restart) {
             //Snoozes the alarm for 10 minutes
-            //AlarmClockReceiver.restartAlarmManager(Constants.MILLIS_SNOOZE, getInstanceContext());
             Calendar calendar = TimeConverterUtil.getAlarmDate(LocalTime.now().toSecondOfDay() + Constants.MILLIS_SNOOZE/1000);
             AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
         }
@@ -301,7 +299,7 @@ public class AlarmClockAudio {
         if(notificationManager.isNotificationPolicyAccessGranted()) {
             audioManager.setRingerMode(ringerMode);
 
-
+            //Resets the ringtone or vibrator depending on the settings
             switch(dataStoreRepository.getAlarmArtJob()) {
                 case 0:
                     ringtoneManager = getRingtoneManager(dataStoreRepository.getAlarmToneJob());
@@ -330,7 +328,5 @@ public class AlarmClockAudio {
         //cancel countdown and notification
         countDownTimer.cancel();
         AlarmClockReceiver.cancelNotification(NotificationUsage.NOTIFICATION_ALARM_CLOCK);
-
-
     }
 }

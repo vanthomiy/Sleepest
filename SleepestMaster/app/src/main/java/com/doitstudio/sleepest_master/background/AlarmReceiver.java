@@ -46,6 +46,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
+        //Init repos
         DatabaseRepository databaseRepository = ((MainApplication)context.getApplicationContext()).getDataBaseRepository();
         SleepCalculationHandler sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(MainApplication.Companion.applicationContext());
 
@@ -67,7 +68,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).stopForegroundService(true);
                 break;
             case DISABLE_ALARM:
-                    //Disables the next active alarm temporarly
+                    //Disables the next active alarm temporary
                     if ((databaseRepository.getNextActiveAlarmJob() != null) && (!databaseRepository.getNextActiveAlarmJob().getTempDisabled())) {
                         BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, false);
                     } else {
@@ -75,7 +76,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                     }
                 break;
             case NOT_SLEEPING:
-                //Button not Sleeping
+                //Button not Sleeping, only in the first 2 hours of sleep
                 sleepCalculationHandler.userNotSleepingJob();
                 Toast.makeText(context.getApplicationContext(), context.getApplicationContext().getString(R.string.not_sleeping_message), Toast.LENGTH_LONG).show();
                 break;
@@ -87,22 +88,25 @@ public class AlarmReceiver extends BroadcastReceiver {
                 //Deprecated
                 break;
             case STOP_WORKMANAGER:
+                //Stops the workmanager outside sleep time
                 BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).endOfSleepTime(true);
                  break;
             case CURRENTLY_NOT_SLEEPING:
+                //Button currently not sleeping, only after 2 hours of sleep
                 sleepCalculationHandler.userCurrentlyNotSleepingJob();
                 Toast.makeText(context.getApplicationContext(), context.getApplicationContext().getString(R.string.currently_not_sleeping_message), Toast.LENGTH_LONG).show();
                 break;
             case SOLVE_API_PROBLEM:
+                //Restarts the subscribing of data in case of an receiving error
                 Toast.makeText(context.getApplicationContext(), "Restarted sleepdata tracking", Toast.LENGTH_LONG).show();
                 BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).startWorkmanager();
                 NotificationManager notificationManagerApi = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManagerApi.cancel(NotificationUsage.Companion.getCount(NotificationUsage.NOTIFICATION_NO_API_DATA));
             case GO_TO_SLEEP:
-                Toast.makeText(context.getApplicationContext(), "Good night", Toast.LENGTH_LONG).show();
+                //After clear notification, which informes the user that he should sleep now.
+                Toast.makeText(context.getApplicationContext(), context.getApplicationContext().getString(R.string.alarm_clock_user_should_sleep), Toast.LENGTH_LONG).show();
                 NotificationManager notificationManagerGoSleep = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManagerGoSleep.cancel(NotificationUsage.Companion.getCount(NotificationUsage.NOTIFICATION_NO_API_DATA));
-
         }
     }
 
@@ -144,6 +148,12 @@ public class AlarmReceiver extends BroadcastReceiver {
         Toast.makeText(cancelAlarmContext, "AlarmManager canceled: " + AlarmReceiverUsage.Companion.getCount(alarmReceiverUsage), Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * Checks if a specific alarm is active
+     * @param alarmActiveContext Context
+     * @param alarmReceiverUsage Usage of alarm
+     * @return true = active
+     */
     public static boolean isAlarmManagerActive(Context alarmActiveContext, AlarmReceiverUsage alarmReceiverUsage) {
         Intent intent = new Intent(alarmActiveContext, AlarmReceiver.class);
 
@@ -183,12 +193,11 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         return builder
                 .setContentTitle(context.getApplicationContext().getString(R.string.information_notification_title))
-                .setContentText(information) /**TODO: Textauswahl**/
+                .setContentText(information)
                 .setStyle(new Notification.DecoratedCustomViewStyle())
                 .setSmallIcon(R.drawable.logofulllinesoutlineround)
                 .setContentIntent(pendingIntent)
                 .setOnlyAlertOnce(true)
                 .build();
     }
-
 }

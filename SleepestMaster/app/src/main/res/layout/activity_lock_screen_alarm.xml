@@ -8,13 +8,14 @@
     android:id="@+id/layoutLockscreen"
     style="@style/Theme.AppCompat.DayNight">
 
-    <ImageView
-        android:id="@+id/ivSwipeUpArrow"
-        android:layout_width="wrap_content"
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animationSwipeUp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/arrow_swipe_up"
-        android:layout_above="@+id/tvSwipeUpText"/>
+        app:lottie_rawRes="@raw/animation_search"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"/>
 
     <TextView
         android:layout_width="match_parent"

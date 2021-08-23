@@ -17,6 +17,11 @@ import kotlinx.coroutines.launch
 import java.time.LocalTime
 import java.util.*
 
+/**
+ * This receiver is called after a reboot of the device. Sometimes there are some battery optimization
+ * settings necessary depending on different device models.
+ */
+
 class BootReceiver : BroadcastReceiver() {
 
     private val scope: CoroutineScope = MainScope()
