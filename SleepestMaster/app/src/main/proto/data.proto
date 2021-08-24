@@ -81,9 +81,9 @@ message  SleepParameters{
 
 
   /**
-   * The normal sleep time of the user
+   * The setup sleep duration of the user
    */
-  int32 normalSleepTime = 1;
+  int32 sleepDuration = 1;
 
   /**
   * Start of the sleep time for the user

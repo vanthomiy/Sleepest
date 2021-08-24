@@ -81,7 +81,7 @@ class SleepFragment : Fragment() {
             viewModel.sleepStartTime = LocalTime.ofSecondOfDay(it.sleepTimeStart.toLong())
             viewModel.sleepEndTime = LocalTime.ofSecondOfDay(it.sleepTimeEnd.toLong())
 
-            val sleepDuration = LocalTime.ofSecondOfDay(it.normalSleepTime.toLong())
+            val sleepDuration = LocalTime.ofSecondOfDay(it.sleepDuration.toLong())
             binding.npHours.value = sleepDuration.hour
             binding.npMinutes.value = (sleepDuration.minute / 15) + 1
             viewModel.sleepDuration = sleepDuration.toSecondOfDay()
