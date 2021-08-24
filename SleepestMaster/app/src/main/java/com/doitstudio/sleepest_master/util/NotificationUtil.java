@@ -327,6 +327,7 @@ public class NotificationUtil {
         createNotificationChannel(context.getString(R.string.alarm_clock_channel), context.getString(R.string.alarm_clock_channel_name), context.getString(R.string.alarm_clock_channel_description));
 
         Intent intent = new Intent(context, LockScreenAlarmActivity.class);
+        intent.putExtra(context.getString(R.string.alarm_clock_intent_key_lockscreen_activity), true);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, ActivityIntentUsage.Companion.getCount(ActivityIntentUsage.LOCKSCREEN_ACTIVITY), intent, PendingIntent.FLAG_UPDATE_CURRENT);
 

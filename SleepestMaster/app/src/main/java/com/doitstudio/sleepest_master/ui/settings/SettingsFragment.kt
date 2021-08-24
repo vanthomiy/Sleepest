@@ -117,14 +117,7 @@ class SettingsFragment : Fragment() {
 
         }
         binding.btnImportantSettings.setOnClickListener() {
-            //DontKillMyAppFragment.show(requireActivity())
-            scope.launch {
-                if (dataStoreRepository.getSleepSubscribeStatus()) {
-                    sleepHandler.stopSleepHandler()
-                } else {
-                    sleepHandler.startSleepHandler()
-                }
-            }
+            DontKillMyAppFragment.show(requireActivity())
         }
 
         viewModel.actualExpand.set(caseOfEntrie)

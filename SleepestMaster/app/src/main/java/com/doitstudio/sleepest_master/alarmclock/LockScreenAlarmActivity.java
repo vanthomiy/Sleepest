@@ -13,6 +13,7 @@ import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.app.KeyguardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Build;
@@ -29,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.doitstudio.sleepest_master.MainApplication;
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.background.AlarmReceiver;
 import com.doitstudio.sleepest_master.background.BackgroundAlarmTimeHandler;
@@ -37,6 +39,7 @@ import com.doitstudio.sleepest_master.model.data.Actions;
 import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage;
 import com.doitstudio.sleepest_master.model.data.Constants;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
+import com.doitstudio.sleepest_master.storage.DatabaseRepository;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -48,6 +51,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
     private TextView tvSwipeUp;
     private ImageView ivSwipeUpArrow;
     private DataStoreRepository dataStoreRepository;
+    private DatabaseRepository databaseRepository;
     private boolean isStarted = false;
 
     @RequiresApi(api = Build.VERSION_CODES.P)
@@ -58,6 +62,11 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
 
         //Init
         dataStoreRepository = DataStoreRepository.Companion.getRepo(getApplicationContext());
+
+        Intent intent = getIntent();
+        if (!(intent.getBooleanExtra(getString(R.string.alarm_clock_intent_key_lockscreen_activity), false))) {
+            finish();
+        }
 
         //Init Resources
         RelativeLayout relativeLayout = findViewById(R.id.layoutLockscreen);
