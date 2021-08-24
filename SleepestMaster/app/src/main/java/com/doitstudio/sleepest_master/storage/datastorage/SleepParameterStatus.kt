@@ -28,7 +28,7 @@ class SleepParameterStatus(private val dataStore: DataStore<SleepParameters>) {
             SleepParameters.newBuilder()
                     .setStandardMobilePosition(MobilePosition.UNIDENTIFIED.ordinal)
                     .setMobileUseFrequency(MobileUseFrequency.getValue(MobileUseFrequency.NONE))
-                    .setNormalSleepTime(32400)
+                    .setSleepDuration(32400)
                     .setSleepTimeStart(72000)
                     .setSleepTimeEnd(36000)
                     .build()
@@ -66,7 +66,7 @@ class SleepParameterStatus(private val dataStore: DataStore<SleepParameters>) {
 
     suspend fun updateUserWantedSleepTime(duration:Int){
         dataStore.updateData{preference->
-            preference.toBuilder().setNormalSleepTime(duration).build()
+            preference.toBuilder().setSleepDuration(duration).build()
         }
     }
 
