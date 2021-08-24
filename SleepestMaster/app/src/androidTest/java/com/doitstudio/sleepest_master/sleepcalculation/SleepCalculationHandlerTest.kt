@@ -899,6 +899,8 @@ class SleepCalculationHandlerTest
         val newNow = LocalDateTime.ofInstant(Instant.ofEpochMilli((session.id.toLong() * 1000).toLong()), ZoneOffset.UTC)
 
         sleepCalculationHandler.checkIsUserSleeping(newNow)
+        sleepCalculationHandler.checkIsUserSleeping(newNow)
+
         sleepCalculationHandler.defineUserWakeup(newNow)
 
     }
@@ -911,7 +913,7 @@ class SleepCalculationHandlerTest
 
         var sleepCalculationHandler = SleepCalculationHandler.getHandler(context)
 
-        val day = LocalDateTime.now().minusDays(-1)
+        val day = LocalDateTime.now().minusDays(1)
         val sleepApiRawDataEntityList = sleepDbRepository.getSleepApiRawDataFromDate(day).first()
 
         sleepApiRawDataEntityList?.forEach { data ->
@@ -920,7 +922,6 @@ class SleepCalculationHandlerTest
 
             sleepDbRepository.insertSleepApiRawData(data)
         }
-
 
         sleepCalculationHandler.checkIsUserSleeping(day)
         sleepCalculationHandler.checkIsUserSleeping(day)

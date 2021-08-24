@@ -12,7 +12,7 @@ import androidx.lifecycle.AndroidViewModel
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.model.data.MoodType
-import com.doitstudio.sleepest_master.storage.DatabaseRepository
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.util.IconAnimatorUtil
 import com.doitstudio.sleepest_master.util.SleepTimeValidationUtil
 import com.doitstudio.sleepest_master.util.SmileySelectorUtil
@@ -31,7 +31,7 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
 
     private val scope: CoroutineScope = MainScope()
 
-    val dataBaseRepository: DatabaseRepository by lazy { (context as MainApplication).dataBaseRepository }
+    val sleepCalculationHandler: SleepCalculationHandler by lazy { SleepCalculationHandler.getHandler(context) }
 
     /**  */
     var beginOfSleep = ObservableField("")
@@ -141,12 +141,15 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
                 scope.launch {
                     val tempTime = LocalTime.of(h, m)
                     val newDatTime = dateTime.toLocalDate().atTime(tempTime)
-                    val epochTime = newDatTime.toEpochSecond(ZoneOffset.UTC)
+                    //val epochTime = newDatTime.toEpochSecond(ZoneOffset.systemDefault())
+                    val epochTime =
+                        newDatTime.atZone(ZoneOffset.systemDefault()).toInstant().toEpochMilli()
+                            .div(1000)
 
                     if(startOfSleep)
-                        dataBaseRepository.updateSleepSessionManually(context, epochTime.toInt(), (endOfSleepEpoch.get()!! / 1000).toInt(), sessionId = sessionId)
+                        sleepCalculationHandler.updateSleepSessionManually(context, epochTime.toInt(), (endOfSleepEpoch.get()!! / 1000).toInt(), sessionId = sessionId)
                     else
-                        dataBaseRepository.updateSleepSessionManually(context, (beginOfSleepEpoch.get()!! / 1000).toInt(), epochTime.toInt(), sessionId = sessionId)
+                        sleepCalculationHandler.updateSleepSessionManually(context, (beginOfSleepEpoch.get()!! / 1000).toInt(), epochTime.toInt(), sessionId = sessionId)
                 }
             },
             dateTime.hour,

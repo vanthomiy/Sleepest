@@ -54,7 +54,10 @@ class SleepClassifier constructor(private val context: Context) {
 
         // under 1.4 is on table and over is in bed
         val motionAverage = sleepingData.sumBy { x -> x.motion }.toFloat() / sleepingData.count()
-        return if(motionAverage > 1.05f){
+        val confidenceAverage = sleepingData.sumBy { x -> x.confidence }.toFloat() / sleepingData.count()
+        val a = motionAverage
+        val b = confidenceAverage
+        return if(motionAverage > 1.05f && confidenceAverage < 91f){
             MobilePosition.INBED
         } else {
             MobilePosition.ONTABLE
@@ -196,9 +199,9 @@ class SleepClassifier constructor(private val context: Context) {
                 actualThreshold.light = (sortedSleepListAfter!!.sumOf { x-> x.light } / sortedSleepListAfter.count()).toFloat()
                 actualThreshold.motion = (sortedSleepListAfter!!.sumOf { x-> x.motion } / sortedSleepListAfter.count()).toFloat()
 
-                nextThreeTimes.confidence = (sortedSleepListAfter!!.take(nextTimesBorder).sumOf { x-> x.confidence } / sortedSleepListAfter.take(nextTimesBorder).count()).toFloat()
-                nextThreeTimes.light = (sortedSleepListAfter!!.take(nextTimesBorder).sumOf { x-> x.light } / sortedSleepListAfter.take(nextTimesBorder).count()).toFloat()
-                nextThreeTimes.motion = (sortedSleepListAfter!!.take(nextTimesBorder).sumOf { x-> x.motion } / sortedSleepListAfter.take(nextTimesBorder).count()).toFloat()
+                nextThreeTimes.confidence = (sortedSleepListAfter!!.takeLast(nextTimesBorder).sumOf { x-> x.confidence } / sortedSleepListAfter.takeLast(nextTimesBorder).count()).toFloat()
+                nextThreeTimes.light = (sortedSleepListAfter!!.takeLast(nextTimesBorder).sumOf { x-> x.light } / sortedSleepListAfter.takeLast(nextTimesBorder).count()).toFloat()
+                nextThreeTimes.motion = (sortedSleepListAfter!!.takeLast(nextTimesBorder).sumOf { x-> x.motion } / sortedSleepListAfter.takeLast(nextTimesBorder).count()).toFloat()
             }
 
             val avgStartThreshold = ThresholdParams()
