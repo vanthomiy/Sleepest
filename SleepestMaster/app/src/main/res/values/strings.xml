@@ -92,6 +92,8 @@
     <string name="alarm_instance_alarm">Alarm</string>
     <string name="alarm_instance_no_day_choosen">No day chosen</string>
     <string name="alarm_instance_daily">Daily</string>
+    <string name="alarm_instance_weekend">Weekend</string>
+    <string name="alarm_instance_working_day">Working days</string>
     <string name="alarm_instance_alarm_header">Sleep</string>
     <string name="alarm_instance_inbetween">between</string>
     <string name="alarm_instance_and">and</string>
@@ -221,24 +223,38 @@
     <string name="settings_report_error">Fehler melden</string>
     <string name="settings_permissions">Berechtigungen</string>
     <string name="settings_sleepdata">Schlafdaten</string>
-    <string name="settings_permission_sleepdata">ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk</string>
+    <string name="settings_permission_sleepdata">
+                Wir benötigen diese Berechtigung um den Schlaf mit Hilfe deines Handys zu überwachen. Ohne diese Berechtigung funktioniert unsere App nicht!
+    </string>
     <string name="settings_daily_activity">Tägliche Aktivität</string>
-    <string name="settings_permission_daily_activity">ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk</string>
+    <string name="settings_permission_daily_activity">
+                Wir benötigen diese Berechtigung um deine Aktivität am Tag aufzuzeichnen
+    </string>
     <string name="settings_storage">Speicherzugriff</string>
-    <string name="settings_permission_storage">ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk</string>
+    <string name="settings_permission_storage">
+                Um deine Daten zu exportieren oder vorhandene Daten in die App zu laden brauchen wir diese Berechtigung
+    </string>
     <string name="settings_overlapp_app">App Überlappen</string>
-    <string name="settings_permission_notification_privacy">ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk</string>
+    <string name="settings_permission_notification_privacy">
+        Diese Berechtigung wir benötigt damit du den Alarmton auch hörst wenn das Handy auf "nicht Stören" eingestellt ist
+    </string>
     <string name="settings_notification_privacy">Notification Privacy</string>
-    <string name="settings_permission_overlapp_app">ashdasldj laskdj aslkdja klsjdaklsdaskldj wkljasdlkajsd lkasjdlkawdjlkasdja slkdjasldk</string>
+    <string name="settings_permission_overlapp_app">
+                Wir benötigen diese Berechtigung, damit unsere App dich auch bei gesperrtem Handy richtig Wecken kann
+    </string>
     <string name="settings_data">Daten</string>
     <string name="settings_export_data">Daten Exportieren</string>
     <string name="settings_import_data">Daten Importieren</string>
     <string name="settings_remove_data_warning">Ohje, alle daten werden gelöscht ok?</string>
     <string name="settings_remove_data_ackn">Verstanden und löschen</string>
-
+    <string name="settings_import_wrong_format">Wrong data format</string>
+    <string name="settings_import_success">Successful imported data</string>
+    <string name="settings_import_cant_write_db">Cant write to database</string>
 
     <string name="settings_about_us">Sleepest - App\nMade with &#10084; in Bavaria\n\n This app was created by 3 students as a students project and will be improved and maintained in the future</string>
-
+    <string name="settings_export_file_name">Sleepdata.json</string>
+    <string name="settings_export_success">Export successfully</string>
+    <string name="setting_export_sharing_intent">Sharing File...</string>
 
     <string name="settings_return">return</string>
     <string name="settings_delete_all_data">delete all data</string>
@@ -328,5 +344,7 @@
     <string name="onboarding_toast_permissions">Please grant all permissions</string>
     <string name="onboarding_toast_read_to_end">Please read the hole tutorial</string>
     <string name="onboarding_toast_permission_already_granted">This permission is already granted</string>
+
+
 
 </resources>

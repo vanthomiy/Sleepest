@@ -1,19 +1,20 @@
 package com.doitstudio.sleepest_master.storage
 
 
+import android.content.Context
 import com.doitstudio.sleepest_master.model.data.MoodType
 import com.doitstudio.sleepest_master.model.data.Constants
+import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.SleepState
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionDao
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
 import com.doitstudio.sleepest_master.storage.db.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.runBlocking
-import java.time.DayOfWeek
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.ZoneOffset
+import java.time.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -38,6 +39,9 @@ class DatabaseRepository(
         @Volatile
         private var INSTANCE: DatabaseRepository? = null
 
+        /**
+         * Get the actual [DatabaseRepository]. Should be used to provide singleton behaviour
+         */
         fun getRepo(
             sleepApiRawDataDao: SleepApiRawDataDao,
             userSleepSessionDao: UserSleepSessionDao,
@@ -53,12 +57,14 @@ class DatabaseRepository(
         }
     }
 
+    /**
     // Link to the documentation https://developer.android.com/training/data-storage/room/#kotlin
 
     // Why Suspend!
     // By default Room runs suspend queries off the main thread. Therefore, we don't need to
     // implement anything else to ensure we're not doing long-running database work off the
     // main thread.
+    */
 
     //region Sleep API Data
 
@@ -70,7 +76,7 @@ class DatabaseRepository(
     /**
      * [time] the duration in seconds eg. 86200 would be from 24hours ago to now the data
      */
-    suspend fun getSleepApiRawDataSince(time:Int): Flow<List<SleepApiRawDataEntity>?>
+    fun getSleepApiRawDataSince(time:Int): Flow<List<SleepApiRawDataEntity>?>
     {
         val now = LocalDateTime.now(ZoneOffset.systemDefault())
         val seconds = now.atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
@@ -111,31 +117,52 @@ class DatabaseRepository(
         return sleepApiRawDataDao.getBetween(startTime,endTime)
     }
 
+    /**
+     * Gets the sleep api data between to timestamps (UTC seconds)
+     */
     fun getSleepApiRawDataBetweenTimestamps(startTime: Int, endTime: Int): Flow<List<SleepApiRawDataEntity>?>
     {
         return sleepApiRawDataDao.getBetween(startTime, endTime)
     }
 
+    /**
+     * Insert or update [SleepApiRawDataEntity]
+     */
     suspend fun insertSleepApiRawData(sleepClassifyEventEntity: SleepApiRawDataEntity) {
         sleepApiRawDataDao.insert(sleepClassifyEventEntity)
     }
 
+    /**
+     * Delete all [SleepApiRawDataEntity]
+     */
     suspend fun deleteSleepApiRawData() {
         sleepApiRawDataDao.deleteAll()
     }
 
+    /**
+     * Insert or update list of [SleepApiRawDataEntity]
+     */
     suspend fun insertSleepApiRawData(sleepClassifyEventEntities: List<SleepApiRawDataEntity>) {
         sleepApiRawDataDao.insertAll(sleepClassifyEventEntities)
     }
 
+    /**
+     * Update [SleepState] of [SleepApiRawDataEntity]
+     */
     suspend fun updateSleepApiRawDataSleepState(id: Int, sleepState: SleepState){
         sleepApiRawDataDao.updateSleepState(id,sleepState )
     }
 
+    /**
+     * Update old [SleepState] of [SleepApiRawDataEntity]
+     */
     suspend fun updateOldSleepApiRawDataSleepState(id: Int, sleepState: SleepState){
         sleepApiRawDataDao.updateOldSleepState(id,sleepState )
     }
 
+    /**
+     * Update wakeup point of [SleepApiRawDataEntity]
+     */
     suspend fun updateSleepApiRawDataWakeUp(id: Int, wakeup: Int){
         sleepApiRawDataDao.updateWakeUp(id,wakeup )
     }
@@ -144,29 +171,20 @@ class DatabaseRepository(
     //region Activity API Data
 
     // Methods for ActivityApiRawDataDao
-// Observed Flow will notify the observer when the data has changed.
+    // Observed Flow will notify the observer when the data has changed.
     val allActivityApiRawData: Flow<List<ActivityApiRawDataEntity>> =
             activityApiRawDataDao.getAll()
 
     /**
      * [time] the duration in seconds eg. 86200 would be from 24hours ago to now the data
      */
-    suspend fun getActivityApiRawDataSince(time:Int): Flow<List<ActivityApiRawDataEntity>>
+    fun getActivityApiRawDataSince(time:Int): Flow<List<ActivityApiRawDataEntity>>
     {
         val now = LocalDateTime.now(ZoneOffset.UTC)
         val seconds = now.atZone(ZoneOffset.UTC).toEpochSecond().toInt()
         return activityApiRawDataDao.getSince(seconds-time)
     }
 
-    /**
-     * [time] the duration in seconds eg. 86200 would be from 24hours ago to now the data
-     */
-    suspend fun getActivityApiRawDataSinceSeconds(time:Int): Flow<List<ActivityApiRawDataEntity>>
-    {
-        val now = LocalDateTime.now(ZoneOffset.UTC)
-        val seconds = now.atZone(ZoneOffset.UTC).toEpochSecond().toInt()
-        return activityApiRawDataDao.getSince(time)
-    }
 
     /**
      * Gets the activity api data from a specific state from a date in life time.
@@ -197,14 +215,23 @@ class DatabaseRepository(
         return activityApiRawDataDao.getBetween(startTime,endTime)
     }
 
+    /**
+     * Insert or update [ActivityApiRawDataEntity]
+     */
     suspend fun insertActivityApiRawData(activityClassifyEventEntity: ActivityApiRawDataEntity) {
         activityApiRawDataDao.insert(activityClassifyEventEntity)
     }
 
+    /**
+     * Delete all [ActivityApiRawDataEntity]
+     */
     suspend fun deleteActivityApiRawData() {
         activityApiRawDataDao.deleteAll()
     }
 
+    /**
+     * Insert or update list of [ActivityApiRawDataEntity]
+     */
     suspend fun insertActivityApiRawData(activityClassifyEventEntities: List<ActivityApiRawDataEntity>) {
         activityApiRawDataDao.insertAll(activityClassifyEventEntities)
     }
@@ -213,15 +240,22 @@ class DatabaseRepository(
 
     //region User Sleep Sessions
 
+    // Methods for ActivityApiRawDataDao
+    // Observed Flow will notify the observer when the data has changed.
     val allUserSleepSessions: Flow<List<UserSleepSessionEntity>> =
             userSleepSessionDao.getAll()
 
+    /**
+     * returns a specific [UserSleepSessionEntity] by its ID
+     */
     fun getSleepSessionById(id: Int): Flow<List<UserSleepSessionEntity?>> =
             userSleepSessionDao.getById(id)
 
+    /**
+     * Returns a specific [UserSleepSessionEntity] by its ID
+     * If not present, it creates a new session by this ID
+     */
     suspend fun getOrCreateSleepSessionById(id: Int): UserSleepSessionEntity {
-        //val allData = allUserSleepSessions.first()
-
 
         var userSession = userSleepSessionDao.getById(id).first().firstOrNull()
         //val userSession = allData.firstOrNull { x -> x.id == id }
@@ -239,39 +273,46 @@ class DatabaseRepository(
     /**
      * [time] the duration in seconds eg. 86200 would be from 24hours ago to now the data
      */
-    suspend fun getUserSleepSessionSinceDays(days:Long): Flow<List<UserSleepSessionEntity>>
+    fun getUserSleepSessionSinceDays(days:Long): Flow<List<UserSleepSessionEntity>>
     {
         val now = LocalDateTime.now(ZoneOffset.systemDefault()).minusDays(days)
         val seconds = now.atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
         return userSleepSessionDao.getSince(seconds)
     }
 
+    /**
+     * Inserts or updates a [UserSleepSessionEntity]
+     */
     suspend fun insertUserSleepSession(userSleepSession: UserSleepSessionEntity) {
         userSleepSessionDao.insert(userSleepSession)
     }
 
+    /**
+     * Inserts or updates a list of [UserSleepSessionEntity]
+     */
     suspend fun insertUserSleepSessions(userSleepSession: List<UserSleepSessionEntity>) {
         userSleepSessionDao.insertAll(userSleepSession)
     }
 
+    /**
+     * Deletes all [UserSleepSessionEntity]
+     */
     suspend fun deleteAllUserSleepSessions() {
         userSleepSessionDao.deleteAll()
     }
 
+    /**
+     * Delete a specific [UserSleepSessionEntity]
+     */
     suspend fun deleteUserSleepSession(sleepSessionEntity: UserSleepSessionEntity) {
         userSleepSessionDao.delete(sleepSessionEntity)
     }
 
+    /**
+     * Updates [MoodType] in a  [UserSleepSessionEntity]
+     */
     suspend fun updateMoodAfterSleep(moodType: MoodType, sessionId: Int) {
         userSleepSessionDao.updateMoodAfterSleep(moodType, sessionId)
-    }
-
-    suspend fun updateSleepSessionStartManuel(startTimeEpoch: Int, sessionId: Int) {
-        //TODO(Implement, StartTime in epoch seconds)
-    }
-
-    suspend fun updateSleepSessionEndManuel(endTimeEpoch: Int, sessionId: Int) {
-        //TODO(Implement, StartTime in epoch seconds)
     }
 
     //endregion
@@ -294,8 +335,15 @@ class DatabaseRepository(
         return alarmDao.getAllActiveOnDay(dayOfWeek.toString())
     }
 
+    /**
+     * Returns an [AlarmEntity] by its ID
+     */
     fun getAlarmById(alarmId: Int): Flow<AlarmEntity> = alarmDao.getAlarmById(alarmId)
 
+    /**
+     * Workaround to call function from JAVA code
+     * calls [getNextActiveAlarm]
+     */
     fun getNextActiveAlarmJob() : AlarmEntity? = runBlocking{
         return@runBlocking getNextActiveAlarm()
     }
@@ -319,33 +367,54 @@ class DatabaseRepository(
         return list.isNotEmpty()
     }
 
-
+    /**
+     * Inserts or updates a [AlarmEntity]
+     */
     suspend fun insertAlarm(alarm: AlarmEntity) {
         alarmDao.insert(alarm)
     }
 
-
+    /**
+     * Updates alarm was fired by id of a [AlarmEntity]
+     */
     suspend fun updateAlarmWasFired(alarmFired: Boolean, alarmId: Int) {
         alarmDao.updateAlarmWasFired(alarmFired, alarmId)
     }
 
-    suspend fun updateAlarmTempDisabled(alarmDisabled: Boolean, alarmId: Int) {
-        alarmDao.updateAlarmTempDisabled(alarmDisabled, alarmId)
-    }
-
+    /**
+     * Workaround to call function from JAVA code
+     * calls [updateAlarmTempDisabled]
+     */
     fun updateAlarmTempDisabledJob(alarmDisabled: Boolean, alarmId: Int) = runBlocking {
         updateAlarmTempDisabled(alarmDisabled, alarmId)
     }
 
+    /**
+     * Updates alarm temp disabled by id of a [AlarmEntity]
+     */
+    suspend fun updateAlarmTempDisabled(alarmDisabled: Boolean, alarmId: Int) {
+        alarmDao.updateAlarmTempDisabled(alarmDisabled, alarmId)
+    }
+
+
+    /**
+     * Updates alarm sleep duration by id of a [AlarmEntity]
+     */
     suspend fun updateSleepDuration(sleepDuration: Int, alarmId: Int) {
         alarmDao.updateSleepDuration(sleepDuration, alarmId)
     }
 
+    /**
+     * Updates alarm wakeup early by id of a [AlarmEntity]
+     */
     suspend fun updateWakeupEarly(wakeupEarly: Int, alarmId: Int) {
         alarmDao.updateWakeupEarly(wakeupEarly, alarmId)
         updateWakeupTime(wakeupEarly, alarmId)
     }
 
+    /**
+     * Updates alarm wakeup late by id of a [AlarmEntity]
+     */
     suspend fun updateWakeupLate(wakeupLate: Int, alarmId: Int) {
         val day = Constants.DAY_IN_SECONDS
         var newTime = wakeupLate
@@ -357,6 +426,9 @@ class DatabaseRepository(
         alarmDao.updateWakeupLate(newTime, alarmId)
     }
 
+    /**
+     * Updates alarm wakeup time by id of a [AlarmEntity]
+     */
     suspend fun updateWakeupTime(wakeupTime: Int, alarmId: Int) {
         val day = Constants.DAY_IN_SECONDS
         var newTime = wakeupTime
@@ -368,35 +440,52 @@ class DatabaseRepository(
         alarmDao.updateWakeupTime(newTime, alarmId)
     }
 
+    /**
+     * Updates alarm is active by id of a [AlarmEntity]
+     */
     suspend fun updateIsActive(isActive: Boolean, alarmId: Int) {
         alarmDao.updateIsActive(isActive, alarmId)
     }
 
+    /**
+     * Updates alarm day of week by id of a [AlarmEntity]
+     */
     suspend fun updateActiveDayOfWeek(activeDayOfWeek: ArrayList<DayOfWeek>, alarmId: Int) {
         alarmDao.updateActiveDayOfWeek(activeDayOfWeek, alarmId)
     }
 
-    suspend fun deleteAlarm(alarm: AlarmEntity) {
-        alarmDao.delete(alarm)
-    }
-
+    /**
+     * Deletes alarm by
+     */
     suspend fun deleteAlarmById(alarmId: Int) {
         alarmDao.deleteById(alarmId)
     }
 
+    /**
+     * Deletes all alarms
+     */
     suspend fun deleteAllAlarms() {
         alarmDao.deleteAll()
     }
 
+    /**
+     * Updates alarm name by id of a [AlarmEntity]
+     */
     suspend fun updateAlarmName(alarmName: String, alarmId: Int) {
         alarmDao.updateAlarmName(alarmName, alarmId)
     }
 
+    /**
+     * Resets alarm temp disabled by id of a [AlarmEntity]
+     */
     suspend fun resetAlarmTempDisabledWasFired() {
         alarmDao.resetTempDisabled()
         alarmDao.resetWasFired()
     }
 
+    /**
+     * Resets alarm actual wakeup time by id of a [AlarmEntity]
+     */
     suspend fun resetActualWakeupTime(time : Int) {
         alarmDao.resetActualWakeup(time)
     }

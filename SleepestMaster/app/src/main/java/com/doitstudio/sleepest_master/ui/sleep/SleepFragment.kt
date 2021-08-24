@@ -50,9 +50,6 @@ class SleepFragment : Fragment() {
 
         binding = FragmentSleepBinding.inflate(inflater, container, false)
         viewModel.transitionsContainer = (binding.linearAnimationlayout)
-        //viewModel.transitionsContainerTop = (binding.animatedTopView)
-        //viewModel.imageMoonView = binding.animHeaderLogo
-        //viewModel.animatedTopView = binding.animatedTopView
         binding.sleepViewModel = viewModel
 
         val minData = SleepTimeValidationUtil.createMinutePickerHelper()

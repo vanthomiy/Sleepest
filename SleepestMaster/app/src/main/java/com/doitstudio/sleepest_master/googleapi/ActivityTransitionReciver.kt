@@ -12,10 +12,20 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
+/**
+ * Receives and saves activity events to database.
+ */
 class ActivityTransitionReciver : BroadcastReceiver() {
 
+
+    /**
+     * [CoroutineScope] provides the ability to write and read from the database/datastore async
+     */
     private val scope: CoroutineScope = MainScope()
 
+    /**
+     * Is called when new activity data is available
+     */
     override fun onReceive(context: Context, intent: Intent) {
 
         val repository = (context.applicationContext as MainApplication).dataBaseRepository

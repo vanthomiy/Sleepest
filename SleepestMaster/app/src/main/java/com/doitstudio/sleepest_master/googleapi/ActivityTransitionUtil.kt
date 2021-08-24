@@ -79,10 +79,4 @@ object ActivityTransitionUtil {
 
     fun getActivityTransitionRequest() = ActivityTransitionRequest(getTransitions())
 
-    @RequiresApi(Build.VERSION_CODES.Q)
-    fun hasActivityTransitionPermissions(context: Context): Boolean =
-            EasyPermissions.hasPermissions(
-                context,
-                Manifest.permission.ACTIVITY_RECOGNITION
-            )
 }

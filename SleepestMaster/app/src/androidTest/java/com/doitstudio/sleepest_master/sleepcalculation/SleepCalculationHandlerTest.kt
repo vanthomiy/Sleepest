@@ -896,9 +896,11 @@ class SleepCalculationHandlerTest
 
         sleepDbRepository.deleteUserSleepSession(session)
 
-        val newNow = LocalDateTime.ofInstant(Instant.ofEpochMilli((session.id * 1000).toLong()), ZoneOffset.UTC)
+        val newNow = LocalDateTime.ofInstant(Instant.ofEpochMilli((session.id.toLong() * 1000).toLong()), ZoneOffset.UTC)
 
         sleepCalculationHandler.checkIsUserSleeping(newNow)
+        sleepCalculationHandler.checkIsUserSleeping(newNow)
+
         sleepCalculationHandler.defineUserWakeup(newNow)
 
     }
@@ -920,7 +922,6 @@ class SleepCalculationHandlerTest
 
             sleepDbRepository.insertSleepApiRawData(data)
         }
-
 
         sleepCalculationHandler.checkIsUserSleeping(day)
         sleepCalculationHandler.checkIsUserSleeping(day)

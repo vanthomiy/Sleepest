@@ -5,6 +5,9 @@ import com.doitstudio.sleepest_master.model.data.Websites
 import java.time.LocalDate
 import java.time.LocalDateTime
 
+/**
+ * Credits site model for handling the different sites
+ */
 data class CreditsSites(
     val authors:List<CreditsAuthors>,
     val site: Websites,
@@ -14,6 +17,9 @@ data class CreditsSites(
 
     companion object{
 
+        /**
+         * Create a new site
+         */
         fun createCreditSites() : List<CreditsSites>{
             val list =  mutableListOf<CreditsSites>()
 
@@ -31,6 +37,9 @@ data class CreditsSites(
     }
 }
 
+/**
+ * Credits author model for handling the different authors of a site
+ */
 data class CreditsAuthors(
     val author:String,
     val usage: Info
@@ -38,8 +47,13 @@ data class CreditsAuthors(
 
     companion object{
 
+        /**
+         * Create a new author
+         */
         fun createCreditsAuthors(site:Websites) : List<CreditsAuthors>{
-
+            /**
+             * The actual used authors and sites
+             */
             return when(site) {
                 Websites.FLATICON -> listOf(
                     CreditsAuthors("Eucalyp", Info.SLEEP),

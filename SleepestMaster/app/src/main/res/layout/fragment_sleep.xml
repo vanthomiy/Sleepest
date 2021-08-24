@@ -119,7 +119,7 @@
                 android:scrollbars="none"
                 android:clipToPadding="true"
                 android:fillViewport="true"
-                android:onScrollChangeListener="@{sleepViewModel::onScrollChanged}">
+                >
 
 
 
@@ -232,7 +232,6 @@
                                     android:layout_marginRight="10dp"
                                     android:textSize="@dimen/valueSize"
                                     android:textColor="@color/primary_text_color"
-
                                     android:text="@{sleepViewModel.sleepStartValue}"
                                     />
 

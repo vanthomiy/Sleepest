@@ -12,8 +12,9 @@ import androidx.lifecycle.AndroidViewModel
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.model.data.MoodType
-import com.doitstudio.sleepest_master.storage.DatabaseRepository
+import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.util.IconAnimatorUtil
+import com.doitstudio.sleepest_master.util.SleepTimeValidationUtil
 import com.doitstudio.sleepest_master.util.SmileySelectorUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -30,7 +31,7 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
 
     private val scope: CoroutineScope = MainScope()
 
-    val dataBaseRepository: DatabaseRepository by lazy { (context as MainApplication).dataBaseRepository }
+    val sleepCalculationHandler: SleepCalculationHandler by lazy { SleepCalculationHandler.getHandler(context) }
 
     /**  */
     var beginOfSleep = ObservableField("")
@@ -128,24 +129,32 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
             )
         }
 
-        createPickerDialogue(view, time.hour, time.minute)
+        createPickerDialogue(view, time, view.tag == "BeginOfSleep")
         //Unterscheidung zwischen Einschlaf und Aufwachzeitpunkt.
     }
 
-    private fun createPickerDialogue(view: View, hour: Int, minute: Int) {
+    private fun createPickerDialogue(view: View, dateTime: LocalDateTime, startOfSleep:Boolean) {
         val tpd = TimePickerDialog(
             view.context,
             R.style.TimePickerTheme,
             { _, h, m ->
                 scope.launch {
                     val tempTime = LocalTime.of(h, m)
-                    //TODO(Funktion, welche Thomas die UTC Zeiten (Epoch in Sekunden) des neuen Einschlaf und Aufwachzeitpunktes übergibt.)
-                    //dataBaseRepository.updateSleepSessionStartManuel(startTimeEpoch = 0, sessionId = 0)
+                    val newDatTime = dateTime.toLocalDate().atTime(tempTime)
+                    //val epochTime = newDatTime.toEpochSecond(ZoneOffset.systemDefault())
+                    val epochTime =
+                        newDatTime.atZone(ZoneOffset.systemDefault()).toInstant().toEpochMilli()
+                            .div(1000)
+
+                    if(startOfSleep)
+                        sleepCalculationHandler.updateSleepSessionManually(context, epochTime.toInt(), (endOfSleepEpoch.get()!! / 1000).toInt(), sessionId = sessionId)
+                    else
+                        sleepCalculationHandler.updateSleepSessionManually(context, (beginOfSleepEpoch.get()!! / 1000).toInt(), epochTime.toInt(), sessionId = sessionId)
                 }
             },
-            hour,
-            minute,
-            true
+            dateTime.hour,
+            dateTime.minute,
+            SleepTimeValidationUtil.Is24HourFormat(context)
         )
         tpd.show()
     }

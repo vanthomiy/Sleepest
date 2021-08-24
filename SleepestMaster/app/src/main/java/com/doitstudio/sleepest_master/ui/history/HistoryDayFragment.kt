@@ -173,7 +173,7 @@ class HistoryDayFragment : Fragment() {
     private fun setTimeStamps() {
 
         // Initial setting necessary in case asynchronous demand of the sleep session (sleepValues) isn`t ready.
-        var time = LocalDateTime.of(1970, 1, 1, 0, 0, 0).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+        var time = LocalDateTime.of(1970, 1, 1, 0, 0, 0).format(DateTimeFormatter.ISO_TIME)
         viewModelDay.beginOfSleep.set(time)
         viewModelDay.endOfSeep.set(time)
 
@@ -200,7 +200,7 @@ class HistoryDayFragment : Fragment() {
                 ZoneOffset.systemDefault()
             )
 
-            time = tempTime.dayOfMonth.toString() + "." + tempTime.monthValue + " " + tempTime.hour + ":" + tempTime.minute
+            time = tempTime.hour.toString() + ":" + tempTime.minute.toString()//tempTime.dayOfMonth.toString() + "." + tempTime.monthValue + " " + tempTime.hour + ":" + tempTime.minute
             viewModelDay.beginOfSleep.set(time)
             viewModelDay.sessionId = it.third.id
             viewModelDay.beginOfSleepEpoch.set(it.third.sleepTimes.sleepTimeStart.toLong() * 1000)
@@ -210,7 +210,7 @@ class HistoryDayFragment : Fragment() {
                 ZoneOffset.systemDefault()
             )
 
-            time = tempTime.dayOfMonth.toString() + "." + tempTime.monthValue + " " + tempTime.hour + ":" + tempTime.minute
+            time = tempTime.hour.toString() + ":" + tempTime.minute.toString()//tempTime.dayOfMonth.toString() + "." + tempTime.monthValue + " " + tempTime.hour + ":" + tempTime.minute
             viewModelDay.endOfSeep.set(time)
             viewModelDay.endOfSleepEpoch.set(it.third.sleepTimes.sleepTimeEnd.toLong() * 1000)
 

@@ -7,7 +7,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 private const val DATABASE_NAME = "sleepest_database"
 
 /**
- * Stores all sleep segment data.
+ * The database data that we store in a sql database with room
  */
 
 @Database(
@@ -31,6 +31,9 @@ abstract class SleepDatabase : RoomDatabase() {
         private var INSTANCE: SleepDatabase? = null
         lateinit var instance:SleepDatabase
 
+        /**
+         * This should only once be called by the [MainApplication] to provide a singleton database
+         */
         fun getDatabase(context: Context): SleepDatabase {
             return INSTANCE ?: synchronized(this) {
                 instance = Room.databaseBuilder(

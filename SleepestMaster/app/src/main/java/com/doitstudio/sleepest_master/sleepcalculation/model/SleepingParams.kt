@@ -14,28 +14,30 @@ import com.doitstudio.sleepest_master.sleepcalculation.model.ThresholdParams
 data class SleepingParams(
 
         /**
-         * The utc timestamp in seconds when the first user sleep of the sleep session is detected
+         * It is used to create a [ThresholdParams] to detect a users sleep started
          */
         var sleepStartBorder: ThresholdParams,
 
         /**
-         * The utc timestamp in seconds when the first user sleep of the sleep session is detected
+         * It is used to create a [ThresholdParams] to detect a users sleep started by comparing the data before and after the actual time
          */
         var sleepStartThreshold: ThresholdParams,
 
         /**
-         * The utc timestamp in seconds when the first user sleep of the sleep session is detected
+         * It is used to create a [ThresholdParams] to check if the data over a specific time is over a specific threshold
          */
         var sleepCleanUp: ThresholdParams,
 
         /**
-         * The utc timestamp in seconds when the first user sleep of the sleep session is detected
+         * It is used to create a [ThresholdParams] to check if the actual data is over a specific threshold
          */
         var generalThreshold: ThresholdParams,
 
         )
 {
-
+        /**
+         * Merge this [SleepingParams] with another factor [SleepingParams] by multiplying
+         */
         fun mergeParameters(factorParams:SleepingParams){
                 sleepStartBorder.mergeParameters(factorParams = factorParams.sleepStartBorder)
                 sleepStartThreshold.mergeParameters(factorParams = factorParams.sleepStartThreshold)
@@ -44,6 +46,10 @@ data class SleepingParams(
         }
 
         companion object{
+
+                /**
+                 * Helper function to create default [SleepingParams]
+                 */
                 fun createDefaultParams(mobilePosition: MobilePosition) : SleepingParams {
                         return SleepingParams(
                                 sleepStartBorder = ThresholdParams.createSleepStartBorder(mobilePosition),
@@ -53,6 +59,9 @@ data class SleepingParams(
                         )
                 }
 
+                /**
+                 * Helper function to create light condition factor [SleepingParams]
+                 */
                 fun createLightConditionParams(lightCondition : LightConditions ) : SleepingParams {
                         return SleepingParams(
                                 sleepStartBorder = ThresholdParams.createSleepStartBorder(lightCondition),
@@ -62,6 +71,9 @@ data class SleepingParams(
                         )
                 }
 
+                /**
+                 * Helper function to create mobile use frequency factor [SleepingParams]
+                 */
                 fun createMobileUseFrequencyParams(mobileUseFrequency: MobileUseFrequency) : SleepingParams {
                         return SleepingParams(
                                 sleepStartBorder = ThresholdParams.createSleepStartBorder(mobileUseFrequency),
