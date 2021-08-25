@@ -368,9 +368,6 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
         scope.launch {
             var sleepParams = dataStoreRepository.sleepParameterFlow.first()
-            val time = LocalTime.ofSecondOfDay(sleepParams.sleepDuration.toLong())
-
-            //sleepDurationString.set(time.toString())
 
             sleepStartTime = LocalTime.ofSecondOfDay(sleepParams.sleepTimeStart.toLong())
             sleepEndTime = LocalTime.ofSecondOfDay(sleepParams.sleepTimeEnd.toLong())
