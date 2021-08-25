@@ -63,11 +63,6 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
         //Init
         dataStoreRepository = DataStoreRepository.Companion.getRepo(getApplicationContext());
 
-        Intent intent = getIntent();
-        if (!(intent.getBooleanExtra(getString(R.string.alarm_clock_intent_key_lockscreen_activity), false))) {
-            finish();
-        }
-
         //Init Resources
         RelativeLayout relativeLayout = findViewById(R.id.layoutLockscreen);
         //ivSwipeUpArrow = findViewById(R.id.ivSwipeUpArrow);

@@ -2,6 +2,7 @@ package com.doitstudio.sleepest_master.ui.settings
 
 
 import android.Manifest
+import android.app.ActivityManager
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
@@ -110,7 +111,7 @@ class SettingsFragment : Fragment() {
                 intent.putExtra(getString(R.string.onboarding_intent_not_first_app_start), true)
                 intent.putExtra(getString(R.string.onboarding_intent_starttime), dataStoreRepository.getSleepTimeBegin())
                 intent.putExtra(getString(R.string.onboarding_intent_endtime), dataStoreRepository.getSleepTimeEnd())
-                intent.putExtra(getString(R.string.onboarding_intent_duration), 25200) /**TODO: Dynamic sleep duration (DataStore repo)*/
+                intent.putExtra(getString(R.string.onboarding_intent_duration), dataStoreRepository.getSleepDuration()) /**TODO: Dynamic sleep duration (DataStore repo)*/
 
                 startActivity(intent)
             }

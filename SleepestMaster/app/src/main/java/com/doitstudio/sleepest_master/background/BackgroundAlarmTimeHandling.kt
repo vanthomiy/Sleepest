@@ -26,6 +26,15 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.*
 import java.util.concurrent.TimeUnit
+import android.content.ComponentName
+
+import android.app.ActivityManager
+import android.app.ActivityManager.RunningTaskInfo
+
+import android.content.Context.ACTIVITY_SERVICE
+
+
+
 
 /**
  * This class handles the hole alarm cycle and is the interface to the data set.
@@ -247,7 +256,26 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
             if (!checkForegroundStatus()) {
                 //Starts the foreground service depending on the screen status (on/off)
-                if (inActivity) {
+
+                val am = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
+                val tasks = am.getRunningTasks(1)
+                val task = tasks[0] // current task
+
+                val rootActivity = task.baseActivity
+
+
+                val currentPackageName = rootActivity!!.packageName
+                if (currentPackageName == "com.doitstudio.sleepest_master") {
+                    ForegroundService.startOrStopForegroundService(Actions.START, context)
+                } else {
+                    val startForegroundIntent = Intent(context, ForegroundActivity::class.java)
+                    startForegroundIntent.flags =
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startForegroundIntent.putExtra("intent", 1)
+                    context.startActivity(startForegroundIntent)
+                }
+
+                /*if (inActivity) {
                     val startForegroundIntent = Intent(context, ForegroundActivity::class.java)
                     startForegroundIntent.flags =
                         Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
@@ -255,7 +283,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                     context.startActivity(startForegroundIntent)
                 } else {
                     ForegroundService.startOrStopForegroundService(Actions.START, context)
-                }
+                }*/
 
 
                 //Set Alarm to start calculation or start it immediately

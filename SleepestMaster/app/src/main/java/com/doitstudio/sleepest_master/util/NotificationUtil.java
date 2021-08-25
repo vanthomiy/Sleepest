@@ -326,10 +326,14 @@ public class NotificationUtil {
     private Notification createAlarmClockLockScreen() {
         createNotificationChannel(context.getString(R.string.alarm_clock_channel), context.getString(R.string.alarm_clock_channel_name), context.getString(R.string.alarm_clock_channel_description));
 
-        Intent intent = new Intent(context, LockScreenAlarmActivity.class);
-        intent.putExtra(context.getString(R.string.alarm_clock_intent_key_lockscreen_activity), true);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        Intent fullScreenIntent = new Intent(context, LockScreenAlarmActivity.class);
+        fullScreenIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent fullScreenPendingIntent = PendingIntent.getActivity(context, ActivityIntentUsage.Companion.getCount(ActivityIntentUsage.LOCKSCREEN_ACTIVITY), fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent intent = new Intent(context, MainActivity.class);
+        fullScreenIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, ActivityIntentUsage.Companion.getCount(ActivityIntentUsage.LOCKSCREEN_ACTIVITY), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
 
         NotificationCompat.Builder builder;
         builder = new NotificationCompat.Builder(context, context.getString(R.string.alarm_clock_channel));
@@ -341,7 +345,7 @@ public class NotificationUtil {
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setContentIntent(pendingIntent)
-                .setFullScreenIntent(pendingIntent, true)
+                .setFullScreenIntent(fullScreenPendingIntent, true)
                 .build();
     }
 }
