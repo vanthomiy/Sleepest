@@ -2,6 +2,7 @@ package com.doitstudio.sleepest_master.ui.settings
 
 
 import android.Manifest
+import android.app.ActivityManager
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
@@ -110,17 +111,14 @@ class SettingsFragment : Fragment() {
                 intent.putExtra(getString(R.string.onboarding_intent_not_first_app_start), true)
                 intent.putExtra(getString(R.string.onboarding_intent_starttime), dataStoreRepository.getSleepTimeBegin())
                 intent.putExtra(getString(R.string.onboarding_intent_endtime), dataStoreRepository.getSleepTimeEnd())
-                intent.putExtra(getString(R.string.onboarding_intent_duration), 25200) /**TODO: Dynamic sleep duration (DataStore repo)*/
+                intent.putExtra(getString(R.string.onboarding_intent_duration), dataStoreRepository.getSleepDuration()) /**TODO: Dynamic sleep duration (DataStore repo)*/
 
                 startActivity(intent)
             }
 
         }
         binding.btnImportantSettings.setOnClickListener() {
-            //DontKillMyAppFragment.show(requireActivity())
-            val calendar = TimeConverterUtil.getAlarmDate(LocalTime.now().toSecondOfDay() + 120)
-            AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), actualContext, AlarmClockReceiverUsage.START_ALARMCLOCK)
-
+            DontKillMyAppFragment.show(requireActivity())
         }
 
         viewModel.actualExpand.set(caseOfEntrie)
@@ -131,7 +129,6 @@ class SettingsFragment : Fragment() {
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
         }
-
 
         //region Test
         val textVersion = "Version: $version\n"

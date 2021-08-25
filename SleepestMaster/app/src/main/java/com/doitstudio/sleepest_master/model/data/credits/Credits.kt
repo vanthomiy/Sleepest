@@ -57,7 +57,10 @@ data class CreditsAuthors(
             return when(site) {
                 Websites.FLATICON -> listOf(
                     CreditsAuthors("Eucalyp", Info.SLEEP),
-                    CreditsAuthors("Freepik", Info.SLEEP)
+                    CreditsAuthors("Freepik", Info.SLEEP), //Pillow, Analytics
+                    CreditsAuthors("Nikita Golubev", Info.SLEEP), //Mattress
+                    CreditsAuthors("prettycons", Info.SLEEP), //Smartphone
+                    CreditsAuthors("xnimrodx", Info.SLEEP), //Snooze
                 )
                 Websites.LOTTIEFILES -> listOf(
                     CreditsAuthors("asjadnaqvi", Info.SLEEP),
@@ -65,7 +68,11 @@ data class CreditsAuthors(
                     CreditsAuthors("motionstk.studio", Info.SLEEP),
                     CreditsAuthors("Beecher", Info.SLEEP),
                     CreditsAuthors("lpdesign", Info.ALARM),
-                    CreditsAuthors("DarkMuzishn", Info.SETTINGS)
+                    CreditsAuthors("DarkMuzishn", Info.SETTINGS),
+                    CreditsAuthors("Miti", Info.SETTINGS), //Search
+                    CreditsAuthors("Nemoyu", Info.SETTINGS), //Alarm clock
+                    CreditsAuthors("Vijay Pawar", Info.SETTINGS) //Battery
+                /**TODO: Swipe up is missing*/
                 )
                 else -> listOf()
             }

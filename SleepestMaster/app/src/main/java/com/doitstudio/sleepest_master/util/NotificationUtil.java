@@ -6,29 +6,25 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.view.View;
 import android.widget.RemoteViews;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import com.doitstudio.sleepest_master.MainActivity;
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockAudio;
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver;
+import com.doitstudio.sleepest_master.alarmclock.LockScreenAlarmActivity;
 import com.doitstudio.sleepest_master.background.AlarmReceiver;
 import com.doitstudio.sleepest_master.model.data.ActivityIntentUsage;
 import com.doitstudio.sleepest_master.model.data.AlarmClockReceiverUsage;
 import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage;
-import com.doitstudio.sleepest_master.model.data.Constants;
 import com.doitstudio.sleepest_master.model.data.NotificationUsage;
 import com.doitstudio.sleepest_master.storage.db.AlarmEntity;
-
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 
@@ -61,7 +57,12 @@ public class NotificationUtil {
                 notification = createInformationNotification(smileySelectorUtil.getSmileyAttention() + context.getString(R.string.information_notification_text_sleep_api_problem), NotificationUsage.Companion.getCount(NotificationUsage.NOTIFICATION_NO_API_DATA));
                 break;
             case NOTIFICATION_ALARM_CLOCK:
-                notification = createAlarmClockNotification();
+                if ((Boolean) arrayList.get(0)) {
+                    notification = createAlarmClockNotification();
+                } else {
+                    notification = createAlarmClockLockScreen();
+                }
+
                 break;
         }
 
@@ -298,12 +299,6 @@ public class NotificationUtil {
         snoozeAlarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent snoozeAlarmPendingIntent = PendingIntent.getBroadcast(context, AlarmClockReceiverUsage.Companion.getCount(AlarmClockReceiverUsage.SNOOZE_ALARMCLOCK), snoozeAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Intent autoCancelIntent = new Intent("NOTIFICATION_DELETED");
-        autoCancelIntent.putExtra(context.getString(R.string.alarm_clock_intent_key), AlarmClockReceiverUsage.STOP_ALARMCLOCK.name());
-        autoCancelIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent autoCancelPendingIntent = PendingIntent.getBroadcast(context, AlarmClockReceiverUsage.Companion.getCount(AlarmClockReceiverUsage.STOP_ALARMCLOCK), autoCancelIntent, PendingIntent.FLAG_ONE_SHOT);
-
-
         //Starts a new singleton audio class and init it, if not init yet
         AlarmClockAudio.getInstance().init(context);
         AlarmClockAudio.getInstance().startAlarm();
@@ -326,9 +321,31 @@ public class NotificationUtil {
                 .addAction(R.drawable.logofullroundtransparentwhite, context.getString(R.string.alarm_notification_button_1), cancelAlarmPendingIntent)
                 .addAction(R.drawable.logofullroundtransparentwhite, context.getString(R.string.alarm_notification_button_2), snoozeAlarmPendingIntent)
                 .build();
+    }
 
-        //NotificationManagerCompat.from(context).notify(Constants.ALARM_CLOCK_NOTIFICATION_ID, notificationBuilder.build());
+    private Notification createAlarmClockLockScreen() {
+        createNotificationChannel(context.getString(R.string.alarm_clock_channel), context.getString(R.string.alarm_clock_channel_name), context.getString(R.string.alarm_clock_channel_description));
+
+        Intent fullScreenIntent = new Intent(context, LockScreenAlarmActivity.class);
+        fullScreenIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent fullScreenPendingIntent = PendingIntent.getActivity(context, ActivityIntentUsage.Companion.getCount(ActivityIntentUsage.LOCKSCREEN_ACTIVITY), fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent intent = new Intent(context, MainActivity.class);
+        fullScreenIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, ActivityIntentUsage.Companion.getCount(ActivityIntentUsage.LOCKSCREEN_ACTIVITY), intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
+        NotificationCompat.Builder builder;
+        builder = new NotificationCompat.Builder(context, context.getString(R.string.alarm_clock_channel));
+
+        return builder
+                .setSmallIcon(R.drawable.logofullroundtransparentwhite)
+                .setContentTitle(context.getString(R.string.alarm_notification_title))
+                .setContentText(context.getString(R.string.alarm_notification_text))
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setCategory(NotificationCompat.CATEGORY_ALARM)
+                .setContentIntent(pendingIntent)
+                .setFullScreenIntent(fullScreenPendingIntent, true)
+                .build();
     }
 }

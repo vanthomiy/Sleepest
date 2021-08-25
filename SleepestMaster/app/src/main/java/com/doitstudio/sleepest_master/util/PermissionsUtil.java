@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.background.ForegroundActivity;
 import com.doitstudio.sleepest_master.onboarding.OnboardingActivity;
 import com.doitstudio.sleepest_master.onboarding.PermissionActivity;
@@ -58,7 +59,7 @@ public class PermissionsUtil {
         }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            if ((PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(context, "com.google.android.gms.permission.ACTIVITY_RECOGNITION"))) {
+            if ((PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(context, context.getString(R.string.permission_activity_recognition_old)))) {
                 return true;
             }
         }

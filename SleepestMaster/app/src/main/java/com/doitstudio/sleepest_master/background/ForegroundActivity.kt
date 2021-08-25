@@ -24,6 +24,12 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.*
 
+/**
+ * This Activity is a workaround. If the app is not opened and only in the background, the foreground service
+ * was not started or stopped correctly. With the help of this overlay invisible Activity it starts and
+ * stops the service correctly.
+ */
+
 class ForegroundActivity : Activity() {
 
     private val scope: CoroutineScope = MainScope()
@@ -47,8 +53,8 @@ class ForegroundActivity : Activity() {
 
                         // next alarm or null
                         if (databaseRepository.isAlarmActiv()) {
-                            // start foreground if not null
 
+                            // start foreground if not null
                             if (!dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
                                 ForegroundService.startOrStopForegroundService(
                                     Actions.START,
@@ -62,38 +68,12 @@ class ForegroundActivity : Activity() {
                                 ).show()
                             }
 
-                        } else {
-                            //Next foreground start at next day
-                            val calendarAlarm = Calendar.getInstance()
-                            calendarAlarm[Calendar.HOUR_OF_DAY] = 0
-                            calendarAlarm[Calendar.MINUTE] = 0
-                            calendarAlarm[Calendar.SECOND] = 0
-                            calendarAlarm.add(
-                                Calendar.SECOND,
-                                dataStoreRepository.getSleepTimeBeginJob()
-                            )
-                            calendarAlarm.add(Calendar.DAY_OF_YEAR, 1)
-
-                            //Start a alarm for the new foregroundservice start time
-                            AlarmReceiver.startAlarmManager(
-                                calendarAlarm[Calendar.DAY_OF_WEEK],
-                                calendarAlarm[Calendar.HOUR_OF_DAY],
-                                calendarAlarm[Calendar.MINUTE],
-                                applicationContext,
-                                AlarmReceiverUsage.START_FOREGROUND
-                            )
-                            val pref = getSharedPreferences("AlarmReceiver1", 0)
-                            val ed = pref.edit()
-                            ed.putString("usage", "ForegroundActivity")
-                            ed.putInt("day", calendarAlarm[Calendar.DAY_OF_WEEK])
-                            ed.putInt("hour", calendarAlarm[Calendar.HOUR_OF_DAY])
-                            ed.putInt("minute", calendarAlarm[Calendar.MINUTE])
-                            ed.apply()
                         }
                     }
                 }
 
                 2 -> {
+                    //Stops the foreground service2
                     ForegroundService.startOrStopForegroundService(Actions.STOP, applicationContext)
                     val calendarAlarm = TimeConverterUtil.getAlarmDate(dataStoreRepository.getSleepTimeBeginJob())
                     AlarmReceiver.startAlarmManager(
@@ -110,6 +90,7 @@ class ForegroundActivity : Activity() {
             }
         }
 
+        //End Activity
         finish()
 
     }

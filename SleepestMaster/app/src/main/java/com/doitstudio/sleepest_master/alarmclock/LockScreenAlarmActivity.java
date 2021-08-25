@@ -13,6 +13,7 @@ import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.app.KeyguardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Build;
@@ -29,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.doitstudio.sleepest_master.MainApplication;
 import com.doitstudio.sleepest_master.R;
 import com.doitstudio.sleepest_master.background.AlarmReceiver;
 import com.doitstudio.sleepest_master.background.BackgroundAlarmTimeHandler;
@@ -37,6 +39,7 @@ import com.doitstudio.sleepest_master.model.data.Actions;
 import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage;
 import com.doitstudio.sleepest_master.model.data.Constants;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
+import com.doitstudio.sleepest_master.storage.DatabaseRepository;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -48,6 +51,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
     private TextView tvSwipeUp;
     private ImageView ivSwipeUpArrow;
     private DataStoreRepository dataStoreRepository;
+    private DatabaseRepository databaseRepository;
     private boolean isStarted = false;
 
     @RequiresApi(api = Build.VERSION_CODES.P)
@@ -56,14 +60,13 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lock_screen_alarm);
 
+        //Init
         dataStoreRepository = DataStoreRepository.Companion.getRepo(getApplicationContext());
 
+        //Init Resources
         RelativeLayout relativeLayout = findViewById(R.id.layoutLockscreen);
-
-        ivSwipeUpArrow = findViewById(R.id.ivSwipeUpArrow);
+        //ivSwipeUpArrow = findViewById(R.id.ivSwipeUpArrow);
         tvSwipeUp = findViewById(R.id.tvSwipeUpText);
-
-        // Init buttons
         btnSnoozeAlarmLockScreen = (Button) findViewById(R.id.btnSnoozeAlarmLockScreen);
         btnSnoozeAlarmLockScreen.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,9 +84,8 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
         KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
         keyguardManager.requestDismissKeyguard(LockScreenAlarmActivity.this, null);
 
+        //Init swipe listener
         swipeListener = new SwipeListener(relativeLayout);
-
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.P)
@@ -92,30 +94,32 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
         super.onResume();
 
         if (!isStarted) {
-            isStarted = true;
+            isStarted = true; //Workaround because OnResume is sometimes calling twice (Android bug)
             fadeColor(tvSwipeUp);
 
+            //Start the ring tone
             AlarmClockAudio.getInstance().init(getApplicationContext());
             AlarmClockAudio.getInstance().startAlarm();
 
 
-
+            //Delay for motion, workaround
             new CountDownTimer(Constants.DELAY, Constants.COUNTDOWN_TICK_INTERVAL) {
 
                 public void onTick(long millisUntilFinished) { }
 
                 public void onFinish() {
-                    moveView(ivSwipeUpArrow);
+                    //moveView(ivSwipeUpArrow);
                 }
 
             }.start();
 
-
+            //Countdown for going into snooze mode if not action is detected
             new CountDownTimer(Constants.MILLIS_UNTIL_SNOOZE, Constants.COUNTDOWN_TICK_INTERVAL) {
 
                 public void onTick(long millisUntilFinished) { }
 
                 public void onFinish() {
+                    AlarmClockAudio.getInstance().stopAlarm(true);
                     finish();
                 }
 
@@ -129,12 +133,16 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        //Lock screen again after finishing actions
+        //Locks the screen again after finishing actions
         setShowWhenLocked(false);
         setTurnScreenOn(false);
 
     }
 
+    /**
+     * Moves a view up and reset it after reaching a special point
+     * @param view View to be moved
+     */
     private void moveView(View view )
     {
         RelativeLayout root = findViewById(R.id.layoutLockscreen);
@@ -156,6 +164,10 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
         view.startAnimation(translateAnimation);
     }
 
+    /**
+     * Fades the color of text
+     * @param textView TextView to be faded
+     */
     private void fadeColor(TextView textView) {
 
         int colorFrom = getResources().getColor(R.color.accent_text_color, getTheme());
@@ -186,6 +198,9 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
         colorAnimation.start();
     }
 
+    /**
+     * Class to detect swiping on the lockscreen
+     */
     private class SwipeListener implements View.OnTouchListener {
 
         GestureDetector gestureDetector;
@@ -221,29 +236,8 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
                                 if (yDiff > 0) {
                                     //Swipe down
                                 } else {
-
+                                    //Swipe up -> Cancel alarm
                                     BackgroundAlarmTimeHandler.Companion.getHandler(getApplicationContext()).alarmClockRang(false);
-
-                                    /**AlarmClockAudio.getInstance().stopAlarm(false);
-
-                                    Calendar calendarAlarm = AlarmReceiver.getAlarmDate(dataStoreRepository.getSleepTimeBeginJob());
-                                    AlarmReceiver.startAlarmManager(calendarAlarm.get(Calendar.DAY_OF_WEEK), calendarAlarm.get(Calendar.HOUR_OF_DAY), calendarAlarm.get(Calendar.MINUTE), getApplicationContext(), AlarmReceiverUsage.START_FOREGROUND);
-                                    ForegroundService.startOrStopForegroundService(Actions.STOP, getApplicationContext());
-
-                                    Calendar calendar = Calendar.getInstance();
-                                    SharedPreferences pref = getSharedPreferences("AlarmClock", 0);
-                                    SharedPreferences.Editor ed = pref.edit();
-                                    ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
-                                    ed.putInt("minute", calendar.get(Calendar.MINUTE));
-                                    ed.apply();
-
-                                    pref = getSharedPreferences("AlarmReceiver1", 0);
-                                    ed = pref.edit();
-                                    ed.putString("usage", "LockScreenAlarmActivity");
-                                    ed.putInt("day", calendarAlarm.get(Calendar.DAY_OF_WEEK));
-                                    ed.putInt("hour", calendarAlarm.get(Calendar.HOUR_OF_DAY));
-                                    ed.putInt("minute", calendarAlarm.get(Calendar.MINUTE));
-                                    ed.apply();**/
 
                                     finish();
                                 }
@@ -251,7 +245,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
                             }
                         }
                     } catch (Exception e) {
-
+                        //Not needed, after countdown alarm will snooze
                     }
                     return false;
 
@@ -261,8 +255,6 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
             gestureDetector = new GestureDetector(listener);
             view.setOnTouchListener(this);
         }
-
-
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {

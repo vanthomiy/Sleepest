@@ -28,6 +28,10 @@ import java.time.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 
+/**
+ * Thr Workmanager is called periodically. It checks the user sleep state and the correct receive of
+ * sleep data
+ */
 
 class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
 
@@ -49,17 +53,22 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
 
         scope.launch {
 
+            // Check if foreground is active
             if (dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
+
+                //Get sleep data table
                 val sleepApiRawDataEntity =
                     dataBaseRepository.getSleepApiRawDataFromDateLive(LocalDateTime.now()).first()
                         ?.sortedByDescending { x -> x.timestampSeconds }
 
+                //Check if data are in table
                 if (sleepApiRawDataEntity != null && sleepApiRawDataEntity.count() > 0) {
                     val lastTimestampInSeconds = sleepApiRawDataEntity.first().timestampSeconds
                     val actualTimestampSeconds = System.currentTimeMillis()/1000
                     Toast.makeText(applicationContext, (actualTimestampSeconds - lastTimestampInSeconds).toString(), Toast.LENGTH_LONG).show()
                     Toast.makeText(applicationContext, ForegroundService.getForegroundServiceTime().toString(), Toast.LENGTH_LONG).show()
 
+                    // Check if data were received regularly
                     if (ForegroundService.getForegroundServiceTime() >= 1200 && ((actualTimestampSeconds - lastTimestampInSeconds) > 600) && dataStoreRepository.isInSleepTime(null)) {
                         val notificationsUtil = NotificationUtil(applicationContext, NotificationUsage.NOTIFICATION_NO_API_DATA,null)
                         notificationsUtil.chooseNotification()

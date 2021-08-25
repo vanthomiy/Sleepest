@@ -60,10 +60,9 @@ public class AlarmClockReceiver extends BroadcastReceiver {
         DatabaseRepository databaseRepository = ((MainApplication)context.getApplicationContext()).getDataBaseRepository();
         AlarmEntity alarmEntity = databaseRepository.getNextActiveAlarmJob();
 
+        //Different actions for the alarm clock depending on the usage
         switch (AlarmClockReceiverUsage.valueOf(intent.getStringExtra((context.getString(R.string.alarm_clock_intent_key))))) {
             case START_ALARMCLOCK: //Init Alarmclock
-
-
 
                 //if (alarmEntity != null && !alarmEntity.getTempDisabled()) {
                     PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -71,7 +70,9 @@ public class AlarmClockReceiver extends BroadcastReceiver {
                         NotificationUtil notificationsUtil = new NotificationUtil(context.getApplicationContext(), NotificationUsage.NOTIFICATION_ALARM_CLOCK,null);
                         notificationsUtil.chooseNotification();
                     } else {
-                        showNotificationOnLockScreen(NotificationUsage.NOTIFICATION_ALARM_CLOCK);
+                        //showNotificationOnLockScreen(NotificationUsage.NOTIFICATION_ALARM_CLOCK);
+                        NotificationUtil notificationsUtil = new NotificationUtil(context.getApplicationContext(), NotificationUsage.NOTIFICATION_ALARM_CLOCK_LOCK_SCREEN,null);
+                        notificationsUtil.chooseNotification();
                     }
                // }
 
@@ -82,15 +83,16 @@ public class AlarmClockReceiver extends BroadcastReceiver {
             case SNOOZE_ALARMCLOCK: //Snooze button of ScreenOn notification
                 AlarmClockAudio.getInstance().stopAlarm(true);
                 break;
-            case LATEST_WAKEUP_ALARMCLOCK:
-
-                if (alarmEntity != null && !alarmEntity.getTempDisabled()) {
+            case LATEST_WAKEUP_ALARMCLOCK: //Latest wakeup action
+                if (alarmEntity != null && !alarmEntity.getTempDisabled() && !alarmEntity.getWasFired()) {
                     PowerManager powerManagerLate = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
                     if (powerManagerLate.isInteractive()) {
                         NotificationUtil notificationsUtil = new NotificationUtil(context.getApplicationContext(), NotificationUsage.NOTIFICATION_ALARM_CLOCK,null);
                         notificationsUtil.chooseNotification();
                     } else {
-                        showNotificationOnLockScreen(NotificationUsage.NOTIFICATION_ALARM_CLOCK);
+                        //showNotificationOnLockScreen(NotificationUsage.NOTIFICATION_ALARM_CLOCK);
+                        NotificationUtil notificationsUtil = new NotificationUtil(context.getApplicationContext(), NotificationUsage.NOTIFICATION_ALARM_CLOCK_LOCK_SCREEN,null);
+                        notificationsUtil.chooseNotification();
                     }
                 }
                 break;
@@ -106,12 +108,14 @@ public class AlarmClockReceiver extends BroadcastReceiver {
      */
     public static void startAlarmManager(int day, int hour, int min, Context alarmClockContext, AlarmClockReceiverUsage alarmClockReceiverUsage) {
 
+        //Resets the latest wakeup if the alarm clock rings earlier
         if (AlarmClockReceiver.isAlarmClockActive(alarmClockContext, AlarmClockReceiverUsage.LATEST_WAKEUP_ALARMCLOCK) && (alarmClockReceiverUsage == AlarmClockReceiverUsage.START_ALARMCLOCK)) {
             AlarmClockReceiver.cancelAlarm(alarmClockContext, AlarmClockReceiverUsage.LATEST_WAKEUP_ALARMCLOCK);
         }
 
         Calendar calendar = TimeConverterUtil.getAlarmDate(day, hour, min);
 
+        //Starts the alarm with a new intent
         Intent intent = new Intent(alarmClockContext, AlarmClockReceiver.class);
         intent.putExtra(alarmClockContext.getString(R.string.alarm_clock_intent_key), alarmClockReceiverUsage.name());
         PendingIntent pendingIntent = PendingIntent.getBroadcast(alarmClockContext, AlarmClockReceiverUsage.Companion.getCount(alarmClockReceiverUsage), intent, 0);
@@ -133,13 +137,14 @@ public class AlarmClockReceiver extends BroadcastReceiver {
         Intent intent = new Intent(restartAlarmContext, AlarmClockReceiver.class);
         intent.putExtra(context.getString(R.string.alarm_clock_intent_key), AlarmClockReceiverUsage.START_ALARMCLOCK.name());
         PendingIntent pendingIntent = PendingIntent.getBroadcast(restartAlarmContext, AlarmClockReceiverUsage.Companion.getCount(AlarmClockReceiverUsage.SNOOZE_ALARMCLOCK), intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmManager = (AlarmManager) restartAlarmContext.getSystemService(ALARM_SERVICE);
 
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + snoozeTime, pendingIntent);
+        //AlarmManager alarmManager = (AlarmManager) restartAlarmContext.getSystemService(ALARM_SERVICE);
+
+        //alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + snoozeTime, pendingIntent);
     }
 
     /**
-     * Cancel a running alarm
+     * Cancel a running alarm with a pending intent generated with usage
      * @param cancelAlarmContext Context
      */
     public static void cancelAlarm(Context cancelAlarmContext, AlarmClockReceiverUsage alarmClockReceiverUsage) {
@@ -150,6 +155,12 @@ public class AlarmClockReceiver extends BroadcastReceiver {
         pendingIntent.cancel();
     }
 
+    /**
+     * Detects the status of a alarm
+     * @param alarmActiveContext Context
+     * @param alarmClockReceiverUsage Usage of AlarmClockReceiver
+     * @return Alarm clock active status
+     */
     public static boolean isAlarmClockActive(Context alarmActiveContext, AlarmClockReceiverUsage alarmClockReceiverUsage) {
         Intent intent = new Intent(alarmActiveContext, AlarmClockReceiver.class);
 
@@ -198,10 +209,14 @@ public class AlarmClockReceiver extends BroadcastReceiver {
         AlarmClockAudio.getInstance().startAlarm();
     }
 
+    /**
+     * A full screen notification is build with the help of Notification Builder. It is shown on the lockscreen.
+     * @param notificationUsage Usage of the lock screen notification
+     */
     private void showNotificationOnLockScreen(NotificationUsage notificationUsage) {
         createNotificationChannel();
 
-        Intent intent = new Intent(context, LockScreenAlarmActivity.class); /**TODO: Design a Lcokscreen view*/
+        Intent intent = new Intent(context, LockScreenAlarmActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, ActivityIntentUsage.Companion.getCount(ActivityIntentUsage.LOCKSCREEN_ACTIVITY), intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -217,6 +232,9 @@ public class AlarmClockReceiver extends BroadcastReceiver {
         NotificationManagerCompat.from(context).notify(NotificationUsage.Companion.getCount(notificationUsage), notificationBuilder.build());
     }
 
+    /**
+     * Creates a new channel for notifications
+     */
     private void createNotificationChannel() {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
@@ -229,8 +247,11 @@ public class AlarmClockReceiver extends BroadcastReceiver {
         }
     }
 
+    /**
+     * Cancel an existing notification
+     * @param notificationUsage Usage of notification to be canceled
+     */
     public static void cancelNotification(NotificationUsage notificationUsage) {
         NotificationManagerCompat.from(context).cancel(NotificationUsage.Companion.getCount(notificationUsage));
     }
-
 }
