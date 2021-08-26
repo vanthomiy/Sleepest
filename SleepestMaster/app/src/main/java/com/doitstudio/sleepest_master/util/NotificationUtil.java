@@ -57,13 +57,12 @@ public class NotificationUtil {
                 notification = createInformationNotification(smileySelectorUtil.getSmileyAttention() + context.getString(R.string.information_notification_text_sleep_api_problem), NotificationUsage.Companion.getCount(NotificationUsage.NOTIFICATION_NO_API_DATA));
                 break;
             case NOTIFICATION_ALARM_CLOCK:
-                if ((Boolean) arrayList.get(0)) {
-                    notification = createAlarmClockNotification();
-                } else {
-                    notification = createAlarmClockLockScreen();
-                }
-
+                notification = createAlarmClockNotification();
                 break;
+            case NOTIFICATION_ALARM_CLOCK_LOCK_SCREEN:
+                notification = createAlarmClockLockScreen();
+                break;
+
         }
 
         if (notification != null && notificationUsage == NotificationUsage.NOTIFICATION_FOREGROUND_SERVICE) {
@@ -301,7 +300,7 @@ public class NotificationUtil {
 
         //Starts a new singleton audio class and init it, if not init yet
         AlarmClockAudio.getInstance().init(context);
-        AlarmClockAudio.getInstance().startAlarm();
+        AlarmClockAudio.getInstance().startAlarm(true);
 
         NotificationCompat.Builder builder;
         builder = new NotificationCompat.Builder(context, context.getString(R.string.alarm_clock_channel));
@@ -331,7 +330,7 @@ public class NotificationUtil {
         PendingIntent fullScreenPendingIntent = PendingIntent.getActivity(context, ActivityIntentUsage.Companion.getCount(ActivityIntentUsage.LOCKSCREEN_ACTIVITY), fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Intent intent = new Intent(context, MainActivity.class);
-        fullScreenIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, ActivityIntentUsage.Companion.getCount(ActivityIntentUsage.LOCKSCREEN_ACTIVITY), intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 

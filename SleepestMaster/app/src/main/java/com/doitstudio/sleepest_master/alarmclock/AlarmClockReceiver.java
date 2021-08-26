@@ -81,7 +81,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
                 BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).alarmClockRang(true);
                 break;
             case SNOOZE_ALARMCLOCK: //Snooze button of ScreenOn notification
-                AlarmClockAudio.getInstance().stopAlarm(true);
+                AlarmClockAudio.getInstance().stopAlarm(true, true);
                 break;
             case LATEST_WAKEUP_ALARMCLOCK: //Latest wakeup action
                 if (alarmEntity != null && !alarmEntity.getTempDisabled() && !alarmEntity.getWasFired()) {
@@ -206,7 +206,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
 
         //Starts a new singleton audio class and init it, if not init yet
         AlarmClockAudio.getInstance().init(context);
-        AlarmClockAudio.getInstance().startAlarm();
+        AlarmClockAudio.getInstance().startAlarm(true);
     }
 
     /**
