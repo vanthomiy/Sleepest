@@ -71,7 +71,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
         btnSnoozeAlarmLockScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlarmClockAudio.getInstance().stopAlarm(true);
+                AlarmClockAudio.getInstance().stopAlarm(true, false);
                 finish();
             }
         });
@@ -99,7 +99,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
 
             //Start the ring tone
             AlarmClockAudio.getInstance().init(getApplicationContext());
-            AlarmClockAudio.getInstance().startAlarm();
+            AlarmClockAudio.getInstance().startAlarm(false);
 
 
             //Delay for motion, workaround
@@ -119,7 +119,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
                 public void onTick(long millisUntilFinished) { }
 
                 public void onFinish() {
-                    AlarmClockAudio.getInstance().stopAlarm(true);
+                    AlarmClockAudio.getInstance().stopAlarm(true, false);
                     finish();
                 }
 

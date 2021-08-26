@@ -177,7 +177,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
             //The screen is not locked
             if (isScreenOn) {
                 //Stops the ringtone
-                AlarmClockAudio.getInstance().stopAlarm(false)
+                AlarmClockAudio.getInstance().stopAlarm(false, isScreenOn)
 
                 //Stops the foreground service
                 stopForegroundService(true)
@@ -190,7 +190,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                 ed.apply()
             } else {
                 //Stops the ringtone
-                AlarmClockAudio.getInstance().stopAlarm(false)
+                AlarmClockAudio.getInstance().stopAlarm(false, false)
 
                 //Stops the foreground service
                 stopForegroundService(false)

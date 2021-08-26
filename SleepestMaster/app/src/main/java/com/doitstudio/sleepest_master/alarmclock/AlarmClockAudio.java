@@ -153,7 +153,7 @@ public class AlarmClockAudio {
      * Start the alarm and check the settings for the alarm
      */
     @RequiresApi(api = Build.VERSION_CODES.P)
-    public void startAlarm() {
+    public void startAlarm(boolean screenOn) {
         NotificationManager notificationManager = (NotificationManager) appContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
         //Check for do not disturb permission, otherwise play sound with help of music stream
@@ -175,24 +175,28 @@ public class AlarmClockAudio {
             startRingtoneWithoutPermission();
         }
 
-        //Timer of 1 minute, which snoozes the alarm after finishing
-        /*countDownTimer = new CountDownTimer(Constants.MILLIS_UNTIL_SNOOZE, Constants.COUNTDOWN_TICK_INTERVAL) {
+        if (screenOn) {
 
-            public void onTick(long millisUntilFinished) {
 
-            }
+            //Timer of 1 minute, which snoozes the alarm after finishing
+            countDownTimer = new CountDownTimer(Constants.MILLIS_UNTIL_SNOOZE, Constants.COUNTDOWN_TICK_INTERVAL) {
 
-            public void onFinish() {
+                public void onTick(long millisUntilFinished) {
 
-                if (ringtoneManager.isPlaying()) {
-                    stopAlarm(true);
-                } else {
-                    stopAlarm(true);
                 }
 
-            }
+                public void onFinish() {
 
-        }.start();*/
+                    if (ringtoneManager.isPlaying()) {
+                        stopAlarm(true, screenOn);
+                    } else {
+                        stopAlarm(true, screenOn);
+                    }
+
+                }
+
+            }.start();
+        }
     }
 
     /**
@@ -285,7 +289,7 @@ public class AlarmClockAudio {
      * Stop and restart the alarm if necessary
      * @param restart True = restart, False = no restart
      */
-    public void stopAlarm(boolean restart) {
+    public void stopAlarm(boolean restart, boolean screenOn) {
 
         if (restart) {
             //Snoozes the alarm for 10 minutes
@@ -326,7 +330,10 @@ public class AlarmClockAudio {
         }
 
         //cancel countdown and notification
-        countDownTimer.cancel();
+        if (screenOn) {
+            countDownTimer.cancel();
+        }
+
         AlarmClockReceiver.cancelNotification(NotificationUsage.NOTIFICATION_ALARM_CLOCK);
     }
 }

@@ -28,13 +28,11 @@ import com.doitstudio.sleepest_master.MainActivity
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
+import com.doitstudio.sleepest_master.background.AlarmReceiver
 import com.doitstudio.sleepest_master.background.ForegroundActivity
 import com.doitstudio.sleepest_master.databinding.FragmentSettingsBinding
 import com.doitstudio.sleepest_master.googleapi.SleepHandler
-import com.doitstudio.sleepest_master.model.data.AlarmClockReceiverUsage
-import com.doitstudio.sleepest_master.model.data.Constants
-import com.doitstudio.sleepest_master.model.data.Info
-import com.doitstudio.sleepest_master.model.data.Websites
+import com.doitstudio.sleepest_master.model.data.*
 import com.doitstudio.sleepest_master.model.data.credits.CreditsSites
 import com.doitstudio.sleepest_master.model.data.export.ImportUtil
 import com.doitstudio.sleepest_master.model.data.export.UserSleepExportData
@@ -118,7 +116,20 @@ class SettingsFragment : Fragment() {
 
         }
         binding.btnImportantSettings.setOnClickListener() {
-            DontKillMyAppFragment.show(requireActivity())
+            //DontKillMyAppFragment.show(requireActivity())
+
+
+            //Try stopping foregroundservice after 1 minute again if an error occurs
+            val calendar = Calendar.getInstance()
+            calendar.add(Calendar.SECOND, 60)
+            AlarmClockReceiver.startAlarmManager(
+                calendar[Calendar.DAY_OF_WEEK],
+                calendar[Calendar.HOUR_OF_DAY],
+                calendar[Calendar.MINUTE],
+                actualContext,
+                AlarmClockReceiverUsage.START_ALARMCLOCK
+            )
+
         }
 
         viewModel.actualExpand.set(caseOfEntrie)
@@ -211,8 +222,13 @@ class SettingsFragment : Fragment() {
             Actual State: ${pref.getString("state", "XX")}
             
             """.trimIndent()
+        pref = actualContext.getSharedPreferences("ForegroundServiceTime", 0)
+        val textForegroundServiceTime= """
+            Foreground Service Time: ${pref.getInt("time", 0)}
+            
+            """.trimIndent()
 
-        var textGesamt = textVersion + textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation + textCalc1 + textCalc2 + textAlarmReceiver + textSleepTime + textBooReceiver1 + textStopException + textAlarmReceiver1 + textActualState
+        var textGesamt = textVersion + textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation + textCalc1 + textCalc2 + textAlarmReceiver + textSleepTime + textBooReceiver1 + textStopException + textAlarmReceiver1 + textActualState + textForegroundServiceTime
 
 
         binding.testText.text = textGesamt

@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        app:lottie_rawRes="@raw/animation_search"
+        app:lottie_rawRes="@raw/animation_swipe_up"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"/>
 

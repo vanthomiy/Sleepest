@@ -56,6 +56,11 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
             // Check if foreground is active
             if (dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
 
+                val pref: SharedPreferences = applicationContext.getSharedPreferences("ForegroundServiceTime", 0)
+                val ed = pref.edit()
+                ed.putInt("time", ForegroundService.getForegroundServiceTime())
+                ed.apply()
+
                 //Get sleep data table
                 val sleepApiRawDataEntity =
                     dataBaseRepository.getSleepApiRawDataFromDateLive(LocalDateTime.now()).first()
