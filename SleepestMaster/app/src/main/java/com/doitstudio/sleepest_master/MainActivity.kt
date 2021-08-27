@@ -256,12 +256,22 @@ class MainActivity : AppCompatActivity() {
 
         val bundle :Bundle ?=intent.extras
 
+        //Get default settings of tutorial and save it in datastore
         if (bundle != null) {
             if( bundle.getBoolean(getString(R.string.onboarding_intent_show_dontkillmyapp))) {
                 DontKillMyAppFragment.show(this@MainActivity)
+
+                //Start a alarm for the new foregroundservice start time
+                val calendar = TimeConverterUtil.getAlarmDate(bundle.getInt(getString(R.string.onboarding_intent_starttime)))
+                AlarmReceiver.startAlarmManager(
+                    calendar[Calendar.DAY_OF_WEEK],
+                    calendar[Calendar.HOUR_OF_DAY],
+                    calendar[Calendar.MINUTE],
+                    applicationContext, AlarmReceiverUsage.START_FOREGROUND)
             }
 
             scope.launch {
+
                 SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
                     dataStoreRepository,
                     dataBaseRepository,
@@ -271,6 +281,28 @@ class MainActivity : AppCompatActivity() {
                     bundle.getInt(getString(R.string.onboarding_intent_duration)),
                     false,
                     SleepSleepChangeFrom.DURATION
+                )
+
+                SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
+                    dataStoreRepository,
+                    dataBaseRepository,
+                    applicationContext,
+                    bundle.getInt(getString(R.string.onboarding_intent_starttime)),
+                    bundle.getInt(getString(R.string.onboarding_intent_endtime)),
+                    bundle.getInt(getString(R.string.onboarding_intent_duration)),
+                    false,
+                    SleepSleepChangeFrom.SLEEPTIMEEND
+                )
+
+                SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
+                    dataStoreRepository,
+                    dataBaseRepository,
+                    applicationContext,
+                    bundle.getInt(getString(R.string.onboarding_intent_starttime)),
+                    bundle.getInt(getString(R.string.onboarding_intent_endtime)),
+                    bundle.getInt(getString(R.string.onboarding_intent_duration)),
+                    false,
+                    SleepSleepChangeFrom.SLEEPTIMESTART
                 )
             }
         }

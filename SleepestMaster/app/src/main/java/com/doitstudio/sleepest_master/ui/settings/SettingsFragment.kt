@@ -2,6 +2,7 @@ package com.doitstudio.sleepest_master.ui.settings
 
 
 import android.Manifest
+import android.app.ActivityManager
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
@@ -27,13 +28,11 @@ import com.doitstudio.sleepest_master.MainActivity
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
 import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
+import com.doitstudio.sleepest_master.background.AlarmReceiver
 import com.doitstudio.sleepest_master.background.ForegroundActivity
 import com.doitstudio.sleepest_master.databinding.FragmentSettingsBinding
 import com.doitstudio.sleepest_master.googleapi.SleepHandler
-import com.doitstudio.sleepest_master.model.data.AlarmClockReceiverUsage
-import com.doitstudio.sleepest_master.model.data.Constants
-import com.doitstudio.sleepest_master.model.data.Info
-import com.doitstudio.sleepest_master.model.data.Websites
+import com.doitstudio.sleepest_master.model.data.*
 import com.doitstudio.sleepest_master.model.data.credits.CreditsSites
 import com.doitstudio.sleepest_master.model.data.export.ImportUtil
 import com.doitstudio.sleepest_master.model.data.export.UserSleepExportData
@@ -110,7 +109,7 @@ class SettingsFragment : Fragment() {
                 intent.putExtra(getString(R.string.onboarding_intent_not_first_app_start), true)
                 intent.putExtra(getString(R.string.onboarding_intent_starttime), dataStoreRepository.getSleepTimeBegin())
                 intent.putExtra(getString(R.string.onboarding_intent_endtime), dataStoreRepository.getSleepTimeEnd())
-                intent.putExtra(getString(R.string.onboarding_intent_duration), 25200) /**TODO: Dynamic sleep duration (DataStore repo)*/
+                intent.putExtra(getString(R.string.onboarding_intent_duration), dataStoreRepository.getSleepDuration()) /**TODO: Dynamic sleep duration (DataStore repo)*/
 
                 startActivity(intent)
             }
@@ -118,8 +117,18 @@ class SettingsFragment : Fragment() {
         }
         binding.btnImportantSettings.setOnClickListener() {
             //DontKillMyAppFragment.show(requireActivity())
-            val calendar = TimeConverterUtil.getAlarmDate(LocalTime.now().toSecondOfDay() + 120)
-            AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), actualContext, AlarmClockReceiverUsage.START_ALARMCLOCK)
+
+
+            //Try stopping foregroundservice after 1 minute again if an error occurs
+            val calendar = Calendar.getInstance()
+            calendar.add(Calendar.SECOND, 60)
+            AlarmClockReceiver.startAlarmManager(
+                calendar[Calendar.DAY_OF_WEEK],
+                calendar[Calendar.HOUR_OF_DAY],
+                calendar[Calendar.MINUTE],
+                actualContext,
+                AlarmClockReceiverUsage.START_ALARMCLOCK
+            )
 
         }
 
@@ -131,7 +140,6 @@ class SettingsFragment : Fragment() {
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
         }
-
 
         //region Test
         val textVersion = "Version: $version\n"
@@ -214,8 +222,13 @@ class SettingsFragment : Fragment() {
             Actual State: ${pref.getString("state", "XX")}
             
             """.trimIndent()
+        pref = actualContext.getSharedPreferences("ForegroundServiceTime", 0)
+        val textForegroundServiceTime= """
+            Foreground Service Time: ${pref.getInt("time", 0)}
+            
+            """.trimIndent()
 
-        var textGesamt = textVersion + textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation + textCalc1 + textCalc2 + textAlarmReceiver + textSleepTime + textBooReceiver1 + textStopException + textAlarmReceiver1 + textActualState
+        var textGesamt = textVersion + textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation + textCalc1 + textCalc2 + textAlarmReceiver + textSleepTime + textBooReceiver1 + textStopException + textAlarmReceiver1 + textActualState + textForegroundServiceTime
 
 
         binding.testText.text = textGesamt

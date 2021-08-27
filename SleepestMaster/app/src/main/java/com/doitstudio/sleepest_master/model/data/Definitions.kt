@@ -64,7 +64,8 @@ enum class NotificationUsage {
     NOTIFICATION_FOREGROUND_SERVICE,
     NOTIFICATION_USER_SHOULD_SLEEP,
     NOTIFICATION_NO_API_DATA,
-    NOTIFICATION_ALARM_CLOCK;
+    NOTIFICATION_ALARM_CLOCK,
+    NOTIFICATION_ALARM_CLOCK_LOCK_SCREEN;
 
     companion object {
         fun getCount(type : NotificationUsage) : Int {
@@ -73,6 +74,7 @@ enum class NotificationUsage {
                 NOTIFICATION_USER_SHOULD_SLEEP -> 2
                 NOTIFICATION_NO_API_DATA -> 3
                 NOTIFICATION_ALARM_CLOCK -> 4
+                NOTIFICATION_ALARM_CLOCK_LOCK_SCREEN -> 5
             }
         }
     }

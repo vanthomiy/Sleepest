@@ -24,13 +24,17 @@ import androidx.annotation.RequiresApi;
 
 import com.doitstudio.sleepest_master.MainApplication;
 import com.doitstudio.sleepest_master.R;
+import com.doitstudio.sleepest_master.model.data.AlarmClockReceiverUsage;
 import com.doitstudio.sleepest_master.model.data.Constants;
 import com.doitstudio.sleepest_master.model.data.NotificationUsage;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
+import com.doitstudio.sleepest_master.util.TimeConverterUtil;
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog;
 import com.kevalpatel.ringtonepicker.RingtonePickerListener;
 
 import java.io.IOException;
+import java.time.LocalTime;
+import java.util.Calendar;
 import java.util.stream.Stream;
 
 public class AlarmClockAudio {
@@ -110,7 +114,6 @@ public class AlarmClockAudio {
      * @return instance
      */
     private static Ringtone getRingtoneManager(String tone) {
-        /**TODO: Verschiedene Alarme einfügen, über Einstellungen anpassbar */
 
         if (ringtoneManager == null) {
             if (tone.equals("null")) {
@@ -150,7 +153,7 @@ public class AlarmClockAudio {
      * Start the alarm and check the settings for the alarm
      */
     @RequiresApi(api = Build.VERSION_CODES.P)
-    public void startAlarm() {
+    public void startAlarm(boolean screenOn) {
         NotificationManager notificationManager = (NotificationManager) appContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
         //Check for do not disturb permission, otherwise play sound with help of music stream
@@ -172,21 +175,28 @@ public class AlarmClockAudio {
             startRingtoneWithoutPermission();
         }
 
-        //Timer of 1 minute, which snoozes the alarm after finishing
-        countDownTimer = new CountDownTimer(Constants.MILLIS_UNTIL_SNOOZE, Constants.COUNTDOWN_TICK_INTERVAL) {
+        if (screenOn) {
 
-            public void onTick(long millisUntilFinished) {
 
-            }
+            //Timer of 1 minute, which snoozes the alarm after finishing
+            countDownTimer = new CountDownTimer(Constants.MILLIS_UNTIL_SNOOZE, Constants.COUNTDOWN_TICK_INTERVAL) {
 
-            public void onFinish() {
+                public void onTick(long millisUntilFinished) {
 
-                if (ringtoneManager.isPlaying()) {
-                    stopAlarm(true);
                 }
-            }
 
-        }.start();
+                public void onFinish() {
+
+                    if (ringtoneManager.isPlaying()) {
+                        stopAlarm(true, screenOn);
+                    } else {
+                        stopAlarm(true, screenOn);
+                    }
+
+                }
+
+            }.start();
+        }
     }
 
     /**
@@ -279,11 +289,12 @@ public class AlarmClockAudio {
      * Stop and restart the alarm if necessary
      * @param restart True = restart, False = no restart
      */
-    public void stopAlarm(boolean restart) {
+    public void stopAlarm(boolean restart, boolean screenOn) {
 
         if (restart) {
             //Snoozes the alarm for 10 minutes
-            AlarmClockReceiver.restartAlarmManager(Constants.MILLIS_SNOOZE, getInstanceContext());
+            Calendar calendar = TimeConverterUtil.getAlarmDate(LocalTime.now().toSecondOfDay() + Constants.MILLIS_SNOOZE/1000);
+            AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
         }
 
         NotificationManager notificationManager = (NotificationManager) appContext.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -292,7 +303,7 @@ public class AlarmClockAudio {
         if(notificationManager.isNotificationPolicyAccessGranted()) {
             audioManager.setRingerMode(ringerMode);
 
-
+            //Resets the ringtone or vibrator depending on the settings
             switch(dataStoreRepository.getAlarmArtJob()) {
                 case 0:
                     ringtoneManager = getRingtoneManager(dataStoreRepository.getAlarmToneJob());
@@ -319,9 +330,10 @@ public class AlarmClockAudio {
         }
 
         //cancel countdown and notification
-        countDownTimer.cancel();
+        if (screenOn) {
+            countDownTimer.cancel();
+        }
+
         AlarmClockReceiver.cancelNotification(NotificationUsage.NOTIFICATION_ALARM_CLOCK);
-
-
     }
 }
