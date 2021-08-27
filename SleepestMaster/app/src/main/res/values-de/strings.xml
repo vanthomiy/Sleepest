@@ -18,6 +18,7 @@
     <string name="alarm_notification_button_2">Schlummern</string>
     <string name="alarm_clock_user_should_sleep">"Gute Nacht</string>
     <string name="alarm_clock_intent_key_lockscreen_activity">LockscreenAlreadyCalled</string>
+    <string name="alarm_clock_snooze">Schlummern</string>
     <!--endregion-->
 
     <!--region Background-->
@@ -36,8 +37,8 @@
     <string name="disable_alarm_message">Du kannst den Alarm jederzeit reaktivieren.</string>
     <string name="not_sleeping_message">Schlafenszeiten bis jetzt gelöscht.</string>
     <string name="currently_not_sleeping_message">Die letzten Minuten an Schlaf wurden gelöscht.</string>
-    <string name="btn_not_sleeping_text">Noch nicht geschlafen.</string>
-    <string name="btn_currently_not_sleeping_text">Im Moment kein Schlaf.</string>
+    <string name="btn_not_sleeping_text">Kein Schlaf</string>
+    <string name="btn_currently_not_sleeping_text">Aktuell wach</string>
     <string name="btn_disable_alarm">Alarm deaktivieren.</string>
     <string name="btn_reactivate_alarm">Alarm reaktivieren.</string>
     <string name="alarm_status_false">Alarm inaktiv.</string>
@@ -46,9 +47,16 @@
     <string name="sleep_status_false">Du schläfst momentan nicht.</string>
     <string name="sleep_status_true">Du schläfst momentan.</string>
     <string name="description_dont_kill_my_app">Sicherstellen, dass die App auch im Hintergrund aktiv bleibt</string>
-    <string name="information_notification_text_sleeptime_problem">Du solltest nun schlafen oder den Aufwachzeitpunkt aktualisieren, da Du deine eingestellte Schlafdauer nicht mehr erreichen wirst.</string>
-    <string name="information_notification_text_sleep_api_problem">Es liegt ein Fehler vor. Bitte starte den Alarm neu oder drücke auf die Schaltfläche</string>
+    <string name="information_notification_text_sleeptime_problem">Schlafdauer kann nicht erreicht werden.</string>
+    <string name="information_notification_text_sleep_api_problem">Schlafdaten können nicht empfangen werden.</string>
     <string name="information_notification_title">Achtung</string>
+    <string name="notification_information_api_problem_btn">Problem lösen</string>
+    <string name="notification_information_user_should_sleep_btn_left">Gute Nacht</string>
+    <string name="notification_information_user_should_sleep_btn_right">Zeit ändern</string>
+    <string name="notification_information_user_should_sleep_content_expanded">Du kannst deine eingestellte Schlafdauer bis zum spätesten Weckzeitpunkt nichtmehr erreichen.
+                Du kannst mit den Schaltflächen entscheiden, ob du am spätesten Weckzeitpunkt geweckt werden oder deine Schlafenszeit anpassen willst.</string>
+    <string name="notification_information_api_problem_content_expanded">Es gibt ein Problem beim Empfangen der Schlafdaten.
+                Mithilfe der Schaltfläche wird versucht, das Problem zu lösen. Wird das Problem nicht gelöst, erhälst du weitere Informationen.</string>
     <!--endregion-->
 
     <!--region SleepSettings-->
@@ -313,6 +321,7 @@
     <!--endregion-->
 
     <!--region onboarding-->
+    <string name="onboarding_intent_data_available">OnboardingDataAvailable</string>
     <string name="onboarding_intent_show_dontkillmyapp">ShowDontKillMyApp</string>
     <string name="onboarding_intent_starttime">StartTime</string>
     <string name="onboarding_intent_endtime">EndTime</string>
