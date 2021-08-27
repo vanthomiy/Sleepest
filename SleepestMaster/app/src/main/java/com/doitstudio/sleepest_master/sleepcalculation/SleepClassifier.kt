@@ -178,7 +178,7 @@ class SleepClassifier constructor(private val context: Context) {
 
 
         // Sleep start detection
-        if(countSleeping <= 3){// || (startBorderListBefore[1].sleepState != SleepState.SLEEPING || startBorderListBefore[2].sleepState != SleepState.SLEEPING)){
+        if(countSleeping <= 2){// || (startBorderListBefore[1].sleepState != SleepState.SLEEPING || startBorderListBefore[2].sleepState != SleepState.SLEEPING)){
             // check if user is started sleeping
 
             val nextTimesBorder = 3
@@ -210,12 +210,12 @@ class SleepClassifier constructor(private val context: Context) {
             avgStartThreshold.light = (newListBefore.sumOf { x-> x.light } / newListBefore.count()).toFloat()
             avgStartThreshold.motion = (newListBefore.sumOf { x-> x.motion } / newListBefore.count()).toFloat()
 
-            actualThreshold.absBetweenThresholds(avgStartThreshold)
+            avgStartThreshold.absBetweenThresholds(actualThreshold)
 
             isSleepStarted = (actualParams.sleepStartBorder.checkIfDifferenceThreshold(
                 true,
                 3,
-                actualThreshold) &&
+                avgStartThreshold) &&
                     (prePrediction || actualParams.sleepStartThreshold.checkIfThreshold(
                         true,
                         3,
@@ -225,7 +225,7 @@ class SleepClassifier constructor(private val context: Context) {
         }
 
         // Is Sleeping detection cleanup
-        if(isSleepStarted || countSleeping > 3){
+        if(isSleepStarted || countSleeping > 2){
 
             val avgThreshold = ThresholdParams()
 
