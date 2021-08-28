@@ -357,9 +357,10 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
             case R.id.btnEndOnboarding:
                 if (!checkAllPermissions()) {
                     Toast.makeText(context, context.getString(R.string.onboarding_toast_permissions), Toast.LENGTH_LONG).show();
-                    OnboardingActivity.viewPager.setCurrentItem(7);
+                    OnboardingActivity.viewPager.setCurrentItem(8);
                 } else if (enableStartApp) {
                     Intent intent=new Intent(context , MainActivity.class);
+                    intent.putExtra(context.getString(R.string.onboarding_intent_data_available), true);
                     intent.putExtra(context.getString(R.string.onboarding_intent_show_dontkillmyapp), !notFirstAppStart);
                     intent.putExtra(context.getString(R.string.onboarding_intent_starttime), starttime);
                     intent.putExtra(context.getString(R.string.onboarding_intent_endtime), endtime);

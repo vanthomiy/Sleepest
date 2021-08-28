@@ -61,6 +61,7 @@ data class CreditsAuthors(
                     CreditsAuthors("Nikita Golubev", Info.SLEEP), //Mattress
                     CreditsAuthors("prettycons", Info.SLEEP), //Smartphone
                     CreditsAuthors("xnimrodx", Info.SLEEP), //Snooze
+                    CreditsAuthors("Roundicons", Info.SLEEP), //Warning
                 )
                 Websites.LOTTIEFILES -> listOf(
                     CreditsAuthors("asjadnaqvi", Info.SLEEP),

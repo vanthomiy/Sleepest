@@ -30,10 +30,17 @@
 
     <Button
         android:id="@+id/btnSnoozeAlarmLockScreen"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/snooze" />
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/alarm_clock_snooze"
+        android:background="@drawable/bgrounded_button"
+        android:backgroundTint="@color/error_color"
+        android:layout_gravity="center_horizontal"
+        android:textSize="15sp"
+        android:textColor="@color/primary_text_color"/>
 
 </RelativeLayout>

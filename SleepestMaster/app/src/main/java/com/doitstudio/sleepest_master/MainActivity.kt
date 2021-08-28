@@ -257,7 +257,7 @@ class MainActivity : AppCompatActivity() {
         val bundle :Bundle ?=intent.extras
 
         //Get default settings of tutorial and save it in datastore
-        if (bundle != null) {
+        if (bundle != null && bundle.getBoolean(getString(R.string.onboarding_intent_data_available))) {
             if( bundle.getBoolean(getString(R.string.onboarding_intent_show_dontkillmyapp))) {
                 DontKillMyAppFragment.show(this@MainActivity)
 

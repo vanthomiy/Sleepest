@@ -40,6 +40,7 @@ import com.doitstudio.sleepest_master.onboarding.OnboardingActivity
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
 import com.doitstudio.sleepest_master.storage.DatabaseRepository
 import com.doitstudio.sleepest_master.util.IconAnimatorUtil.isDarkThemeOn
+import com.doitstudio.sleepest_master.util.NotificationUtil
 import com.doitstudio.sleepest_master.util.SmileySelectorUtil
 import com.doitstudio.sleepest_master.util.TimeConverterUtil
 import com.google.gson.Gson
@@ -117,18 +118,8 @@ class SettingsFragment : Fragment() {
         }
         binding.btnImportantSettings.setOnClickListener() {
             //DontKillMyAppFragment.show(requireActivity())
-
-
-            //Try stopping foregroundservice after 1 minute again if an error occurs
-            val calendar = Calendar.getInstance()
-            calendar.add(Calendar.SECOND, 60)
-            AlarmClockReceiver.startAlarmManager(
-                calendar[Calendar.DAY_OF_WEEK],
-                calendar[Calendar.HOUR_OF_DAY],
-                calendar[Calendar.MINUTE],
-                actualContext,
-                AlarmClockReceiverUsage.START_ALARMCLOCK
-            )
+            val notificationsUtil = NotificationUtil(actualContext, NotificationUsage.NOTIFICATION_USER_SHOULD_SLEEP,null)
+            notificationsUtil.chooseNotification()
 
         }
 

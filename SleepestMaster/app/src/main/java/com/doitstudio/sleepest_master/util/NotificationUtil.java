@@ -43,18 +43,16 @@ public class NotificationUtil {
     @RequiresApi(api = Build.VERSION_CODES.P)
     public void chooseNotification() {
 
-        SmileySelectorUtil smileySelectorUtil = new SmileySelectorUtil();
-
         Notification notification = null;
         switch (notificationUsage) {
             case NOTIFICATION_FOREGROUND_SERVICE:
                 notification = createForegroundNotification();
                 break;
             case NOTIFICATION_USER_SHOULD_SLEEP:
-                notification = createInformationNotification(smileySelectorUtil.getSmileyAttention() + context.getString(R.string.information_notification_text_sleeptime_problem), NotificationUsage.Companion.getCount(NotificationUsage.NOTIFICATION_USER_SHOULD_SLEEP));
+                notification = createInformationNotification(NotificationUsage.Companion.getCount(NotificationUsage.NOTIFICATION_USER_SHOULD_SLEEP));
                 break;
             case NOTIFICATION_NO_API_DATA:
-                notification = createInformationNotification(smileySelectorUtil.getSmileyAttention() + context.getString(R.string.information_notification_text_sleep_api_problem), NotificationUsage.Companion.getCount(NotificationUsage.NOTIFICATION_NO_API_DATA));
+                notification = createInformationNotification(NotificationUsage.Companion.getCount(NotificationUsage.NOTIFICATION_NO_API_DATA));
                 break;
             case NOTIFICATION_ALARM_CLOCK:
                 notification = createAlarmClockNotification();
@@ -90,29 +88,58 @@ public class NotificationUtil {
         }
     }
 
-    private Notification createInformationNotification(String information, int usage) {
+    private Notification createInformationNotification(int usage) {
         //Get Channel id
         String notificationChannelId = context.getApplicationContext().getString(R.string.information_notification_channel);
 
-        Intent informationIntent;
-        PendingIntent informationPendingIntent;
+        Intent informationIntent = new Intent(context.getApplicationContext(), AlarmReceiver.class);
         String buttonText;
+        String information;
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notification_remote_view_template);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), AlarmReceiverUsage.Companion.getCount(AlarmReceiverUsage.GO_TO_SLEEP), informationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntentLeft;
+        SmileySelectorUtil smileySelectorUtil = new SmileySelectorUtil();
 
         if (usage == NotificationUsage.Companion.getCount(NotificationUsage.NOTIFICATION_NO_API_DATA)) {
 
-            informationIntent = new Intent(context.getApplicationContext(), AlarmReceiver.class);
+            information = smileySelectorUtil.getSmileyAttention() + context.getString(R.string.information_notification_text_sleep_api_problem);
+
             informationIntent.putExtra(context.getString(R.string.alarmmanager_key), AlarmReceiverUsage.SOLVE_API_PROBLEM.name());
             informationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            informationPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), AlarmReceiverUsage.Companion.getCount(AlarmReceiverUsage.SOLVE_API_PROBLEM), informationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            buttonText = "Solve it";
+            pendingIntentLeft = PendingIntent.getBroadcast(context.getApplicationContext(), AlarmReceiverUsage.Companion.getCount(AlarmReceiverUsage.SOLVE_API_PROBLEM), informationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            remoteViews.setViewVisibility(R.id.btnRemoteViewLeft, View.VISIBLE);
+            remoteViews.setViewVisibility(R.id.btnRemoteViewRight, View.GONE);
+
+            remoteViews.setTextViewText(R.id.tvContentRemoteView, context.getString(R.string.notification_information_api_problem_content_expanded));
+            remoteViews.setTextViewText(R.id.btnRemoteViewLeft, context.getString(R.string.notification_information_api_problem_btn));
+
+            remoteViews.setOnClickPendingIntent(R.id.btnRemoteViewLeft, pendingIntentLeft);
 
         } else  {
 
-            informationIntent = new Intent(context.getApplicationContext(), AlarmReceiver.class);
-            informationIntent.putExtra(context.getString(R.string.alarmmanager_key), AlarmReceiverUsage.SOLVE_API_PROBLEM.name());
+            information = smileySelectorUtil.getSmileyAttention() + context.getString(R.string.information_notification_text_sleeptime_problem);
+
+            informationIntent.putExtra(context.getString(R.string.alarmmanager_key), AlarmReceiverUsage.GO_TO_SLEEP.name());
             informationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            informationPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), AlarmReceiverUsage.Companion.getCount(AlarmReceiverUsage.SOLVE_API_PROBLEM), informationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            buttonText = "Good night";
+            pendingIntentLeft = PendingIntent.getBroadcast(context.getApplicationContext(), AlarmReceiverUsage.Companion.getCount(AlarmReceiverUsage.GO_TO_SLEEP), informationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+            remoteViews.setViewVisibility(R.id.btnRemoteViewLeft, View.VISIBLE);
+            remoteViews.setViewVisibility(R.id.btnRemoteViewRight, View.VISIBLE);
+
+            remoteViews.setTextViewText(R.id.tvContentRemoteView, context.getString(R.string.notification_information_user_should_sleep_content_expanded));
+            remoteViews.setTextViewText(R.id.btnRemoteViewLeft, context.getString(R.string.notification_information_user_should_sleep_btn_left));
+            remoteViews.setTextViewText(R.id.btnRemoteViewRight, context.getString(R.string.notification_information_user_should_sleep_btn_right));
+
+            remoteViews.setOnClickPendingIntent(R.id.btnRemoteViewLeft, pendingIntentLeft);
+
+            informationIntent = new Intent(context.getApplicationContext(), MainActivity.class);
+            informationIntent.putExtra(context.getString(R.string.alarmmanager_key), AlarmReceiverUsage.GO_TO_SLEEP.name());
+            informationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+            pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), AlarmReceiverUsage.Companion.getCount(AlarmReceiverUsage.GO_TO_SLEEP), informationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            remoteViews.setOnClickPendingIntent(R.id.btnRemoteViewRight, pendingIntent);
         }
 
 
@@ -128,14 +155,14 @@ public class NotificationUtil {
                 .setContentTitle(context.getApplicationContext().getString(R.string.information_notification_title))
                 .setContentText(information)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
+                .setCustomBigContentView(remoteViews)
                 .setSmallIcon(R.drawable.logofullroundtransparentwhite)
                 .setColor(ContextCompat.getColor(context.getApplicationContext(), R.color.accent_text_color))
                 .setAutoCancel(true)
-                .setContentIntent(informationPendingIntent)
-                .setDeleteIntent(informationPendingIntent)
+                .setContentIntent(pendingIntent)
+                .setDeleteIntent(pendingIntentLeft)
                 .setOnlyAlertOnce(true)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .addAction(R.drawable.logofullroundtransparentwhite, buttonText, informationPendingIntent)
                 .build();
     }
 
@@ -218,8 +245,13 @@ public class NotificationUtil {
             sleepStateText = smileySelectorUtil.getSmileySleep() + context.getString(R.string.sleep_status_false);
         }
 
-        String sleeptimeText = smileySelectorUtil.getSmileyTime() + "Sleep time: " + TimeConverterUtil.minuteToTimeFormat((int) arrayList.get(1))[0] + "h " + TimeConverterUtil.minuteToTimeFormat((int) arrayList.get(1))[1] + "min";
-        String alarmtimeText = smileySelectorUtil.getSmileyAlarmClock() + "Alarm time: " + TimeConverterUtil.millisToTimeFormat((int) arrayList.get(4))[0] + ":" + TimeConverterUtil.millisToTimeFormat((int) arrayList.get(4))[1];
+        String sleeptimeText;
+        if ((int) arrayList.get(1) >= 1200) {
+            sleeptimeText = smileySelectorUtil.getSmileyTime() + "Sleep time: " + TimeConverterUtil.minuteToTimeFormat((int) arrayList.get(1))[0] + "h " + TimeConverterUtil.minuteToTimeFormat((int) arrayList.get(1))[1] + "min";
+        } else {
+            sleeptimeText = smileySelectorUtil.getSmileyTime() + "Sleep time: " + 0 + "h " + "00" + "min";
+        }
+            String alarmtimeText = smileySelectorUtil.getSmileyAlarmClock() + "Alarm time: " + TimeConverterUtil.millisToTimeFormat((int) arrayList.get(4))[0] + ":" + TimeConverterUtil.millisToTimeFormat((int) arrayList.get(4))[1];
 
         //Set the text in textview of the expanded notification view
         boolean[] bannerConfig = (boolean[]) arrayList.get(5);

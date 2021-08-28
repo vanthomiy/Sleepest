@@ -20,6 +20,7 @@
     <string name="alarm_notification_button_2">"Snooze"</string>
     <string name="alarm_clock_user_should_sleep">"Good night</string>
     <string name="alarm_clock_intent_key_lockscreen_activity">LockscreenAlreadyCalled</string>
+    <string name="alarm_clock_snooze">Snooze</string>
     <!--endregion-->
 
     <!--region Background-->
@@ -31,8 +32,8 @@
     <string name="foregroundservice_notification_title">Sleepest - The best sleep you ever had</string>
     <string name="information_notification_channel">Information Notification Channel</string>
     <string name="information_notification_channel_description">This channel is for the notification to show the user that it is time to sleep</string>
-    <string name="information_notification_text_sleeptime_problem">You cannot reach your sleep time anymore</string>
-    <string name="information_notification_text_sleep_api_problem">There is something wrong with receiving sleep data. Please restart your alarm.</string>
+    <string name="information_notification_text_sleeptime_problem">You cannot reach your sleep time anymore.</string>
+    <string name="information_notification_text_sleep_api_problem">There is something wrong with receiving sleep data.</string>
     <string name="information_notification_title">Attention</string>
     <string name="workmanager1_tag">Workmanager 1</string>
     <string name="workmanager2_tag">Workmanager 2</string>
@@ -42,7 +43,7 @@
     <string name="not_sleeping_message">Sleep time until now deleted</string>
     <string name="currently_not_sleeping_message">Last few minutes of sleep deleted</string>
     <string name="btn_not_sleeping_text">Not slept yet</string>
-    <string name="btn_currently_not_sleeping_text">Currently not sleeping</string>
+    <string name="btn_currently_not_sleeping_text">No sleep currently</string>
     <string name="btn_disable_alarm">Disable alarm</string>
     <string name="btn_reactivate_alarm">Reactivate alarm</string>
     <string name="alarm_status_false">Alarm not active</string>
@@ -50,6 +51,13 @@
     <string name="sleep_status_false">You are currently not sleeping</string>
     <string name="sleep_status_true">You are currently sleeping</string>
     <string name="wakelock_tag">Foregroundservice_lock</string>
+    <string name="notification_information_api_problem_btn">Solve problem</string>
+    <string name="notification_information_user_should_sleep_btn_left">Good night</string>
+    <string name="notification_information_user_should_sleep_btn_right">Change time</string>
+    <string name="notification_information_user_should_sleep_content_expanded">You cannot reach your set sleep duration anymore.
+                With the buttons you can choose, whether you want to be woken up at the latest wakeup time or change sleep time settings.</string>
+    <string name="notification_information_api_problem_content_expanded">There is a problem receiving sleep data.
+                Click the button to try to solve the problem. You will get further information if the problem isn\'t solved.</string>
 
     <!--endregion-->
 
@@ -58,7 +66,7 @@
     <string-array name="phonePosition">
         <item>Im Bett</item>
         <item>Neben dem Bett</item>
-        <item>Auto erkennung</item>
+        <item>Auto Erkennung</item>
     </string-array>
 
     <!--endregion-->
@@ -311,6 +319,7 @@
     <!--endregion-->
 
     <!--region onboarding-->
+    <string name="onboarding_intent_data_available">OnboardingDataAvailable</string>
     <string name="onboarding_intent_show_dontkillmyapp">ShowDontKillMyApp</string>
     <string name="onboarding_intent_starttime">StartTime</string>
     <string name="onboarding_intent_endtime">EndTime</string>
