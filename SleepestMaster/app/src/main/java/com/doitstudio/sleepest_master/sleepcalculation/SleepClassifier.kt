@@ -51,7 +51,7 @@ class SleepClassifier constructor(private val context: Context) {
         val confidenceAverage = sleepingData.sumBy { x -> x.confidence }.toFloat() / sleepingData.count()
         val a = motionAverage
         val b = confidenceAverage
-        return if(motionAverage > 1.05f && confidenceAverage < 91f || motionAverage > 1.25f){
+        return if(motionAverage > 1.05f && confidenceAverage < 91f || motionAverage > 1.2f){
             MobilePosition.INBED
         } else {
             MobilePosition.ONTABLE
