@@ -103,11 +103,13 @@ class SleepCalculationHandler(val context: Context) {
         val futureItems = list.filter { x -> x.timestampSeconds > seconds+1 }.sortedByDescending { x->x.timestampSeconds }
 
         if((filteredList.count() <= 1 && !isAfter) ||
-            (isAfter && futureItems.count() == 0) ||
-            (isAfter && futureItems.first().timestampSeconds < secondsFuture))
+            (isAfter && futureItems.count() == 0))
         {
             return Pair(listOf<SleepApiRawDataEntity>(),SleepDataFrequency.NONE)
         }
+
+        if (isAfter && list.last().timestampSeconds < secondsFuture)
+            return Pair(listOf<SleepApiRawDataEntity>(),SleepDataFrequency.NONE)
 
         val frequencyType = getFrequencyFromListByHours(hours, false, seconds, filteredList)
 
