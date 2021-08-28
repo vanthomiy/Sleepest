@@ -22,12 +22,6 @@ import kotlinx.coroutines.flow.first
  */
 class SleepClassifier constructor(private val context: Context) {
 
-    /**
-     * With [dataBaseRepository] we can access all the data from the database
-     */
-    private val dataBaseRepository: DatabaseRepository by lazy {
-        (context.applicationContext as MainApplication).dataBaseRepository
-    }
 
     /**
      * With [dataStoreRepository] we can access all the data from the proto store
@@ -57,7 +51,7 @@ class SleepClassifier constructor(private val context: Context) {
         val confidenceAverage = sleepingData.sumBy { x -> x.confidence }.toFloat() / sleepingData.count()
         val a = motionAverage
         val b = confidenceAverage
-        return if(motionAverage > 1.05f && confidenceAverage < 91f){
+        return if(motionAverage > 1.05f && confidenceAverage < 91f || motionAverage > 1.25f){
             MobilePosition.INBED
         } else {
             MobilePosition.ONTABLE
@@ -91,7 +85,6 @@ class SleepClassifier constructor(private val context: Context) {
         } else {
             LightConditions.DARK
         }
-
     }
 
 

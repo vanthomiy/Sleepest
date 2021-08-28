@@ -24,7 +24,7 @@ data class SleepingParams(
         var sleepStartThreshold: ThresholdParams,
 
         /**
-         * It is used to create a [ThresholdParams] to check if the data over a specific time is over a specific threshold
+         * It is used to create Sa [ThresholdParams] to check if the data over a specific time is over a specific threshold
          */
         var sleepCleanUp: ThresholdParams,
 
