@@ -21,6 +21,7 @@
     <string name="alarm_clock_user_should_sleep">"Good night</string>
     <string name="alarm_clock_intent_key_lockscreen_activity">LockscreenAlreadyCalled</string>
     <string name="alarm_clock_snooze">Snooze</string>
+    <string name="alarm_clock_swipe_up">Swipe up to cancel</string>
     <!--endregion-->
 
     <!--region Background-->

@@ -72,8 +72,8 @@ data class CreditsAuthors(
                     CreditsAuthors("DarkMuzishn", Info.SETTINGS),
                     CreditsAuthors("Miti", Info.SETTINGS), //Search
                     CreditsAuthors("Nemoyu", Info.SETTINGS), //Alarm clock
-                    CreditsAuthors("Vijay Pawar", Info.SETTINGS) //Battery
-                /**TODO: Swipe up is missing*/
+                    CreditsAuthors("Vijay Pawar", Info.SETTINGS), //Battery
+                    CreditsAuthors("Cate Silva", Info.SETTINGS) //Swipe up alarm clock
                 )
                 else -> listOf()
             }
