@@ -3,7 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/fabii/OneDrive/Dokumente/GitHub/Sleepest/SleepestMaster/app/src/main/res/drawable/background_alarmentity.xml" value="0.20833333333333334" />
+        <entry key="..\:/Users/fabii/OneDrive/Dokumente/GitHub/Sleepest/SleepestMaster/app/src/main/res/drawable/bgrounded_button.xml" value="0.20833333333333334" />
+        <entry key="..\:/Users/fabii/OneDrive/Dokumente/GitHub/Sleepest/SleepestMaster/app/src/main/res/drawable/bgroundedchoosen.xml" value="0.20833333333333334" />
+        <entry key="..\:/Users/fabii/OneDrive/Dokumente/GitHub/Sleepest/SleepestMaster/app/src/main/res/layout/activity_lock_screen_alarm.xml" value="0.15989583333333332" />
+        <entry key="..\:/Users/fabii/OneDrive/Dokumente/GitHub/Sleepest/SleepestMaster/app/src/main/res/layout/alarm_entity.xml" value="0.23333333333333334" />
         <entry key="..\:/Users/fabii/OneDrive/Dokumente/GitHub/Sleepest/SleepestMaster/app/src/main/res/layout/foreground_service_notification.xml" value="0.1" />
+        <entry key="..\:/Users/fabii/OneDrive/Dokumente/GitHub/Sleepest/SleepestMaster/app/src/main/res/layout/fragment_alarms.xml" value="0.23333333333333334" />
         <entry key="..\:/Users/fabii/OneDrive/Dokumente/GitHub/Sleepest/SleepestMaster/app/src/main/res/layout/notification_remote_view_template.xml" value="0.25" />
         <entry key="..\:/Users/vanth/Documents/Projekte/Sleepest/SleepestMaster/app/src/main/res/drawable/add_anim.xml" value="0.38333333333333336" />
         <entry key="..\:/Users/vanth/Documents/Projekte/Sleepest/SleepestMaster/app/src/main/res/drawable/dark_to_light_anim.xml" value="0.38333333333333336" />

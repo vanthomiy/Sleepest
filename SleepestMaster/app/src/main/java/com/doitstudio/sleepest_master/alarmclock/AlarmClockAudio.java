@@ -335,5 +335,6 @@ public class AlarmClockAudio {
         }
 
         AlarmClockReceiver.cancelNotification(NotificationUsage.NOTIFICATION_ALARM_CLOCK);
+        AlarmClockReceiver.cancelNotification(NotificationUsage.NOTIFICATION_ALARM_CLOCK_LOCK_SCREEN);
     }
 }

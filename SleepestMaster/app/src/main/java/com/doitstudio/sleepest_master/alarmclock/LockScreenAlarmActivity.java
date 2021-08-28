@@ -27,6 +27,7 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -38,6 +39,7 @@ import com.doitstudio.sleepest_master.background.ForegroundService;
 import com.doitstudio.sleepest_master.model.data.Actions;
 import com.doitstudio.sleepest_master.model.data.AlarmReceiverUsage;
 import com.doitstudio.sleepest_master.model.data.Constants;
+import com.doitstudio.sleepest_master.model.data.NotificationUsage;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 import com.doitstudio.sleepest_master.storage.DatabaseRepository;
 
@@ -53,6 +55,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
     private DataStoreRepository dataStoreRepository;
     private DatabaseRepository databaseRepository;
     private boolean isStarted = false;
+    private CountDownTimer countDownTimer = null;
 
     @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
@@ -64,7 +67,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
         dataStoreRepository = DataStoreRepository.Companion.getRepo(getApplicationContext());
 
         //Init Resources
-        RelativeLayout relativeLayout = findViewById(R.id.layoutLockscreen);
+        LinearLayout layout = findViewById(R.id.layoutLockscreen);
         //ivSwipeUpArrow = findViewById(R.id.ivSwipeUpArrow);
         tvSwipeUp = findViewById(R.id.tvSwipeUpText);
         btnSnoozeAlarmLockScreen = (Button) findViewById(R.id.btnSnoozeAlarmLockScreen);
@@ -85,7 +88,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
         keyguardManager.requestDismissKeyguard(LockScreenAlarmActivity.this, null);
 
         //Init swipe listener
-        swipeListener = new SwipeListener(relativeLayout);
+        swipeListener = new SwipeListener(layout);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.P)
@@ -114,7 +117,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
             }.start();
 
             //Countdown for going into snooze mode if not action is detected
-            new CountDownTimer(Constants.MILLIS_UNTIL_SNOOZE, Constants.COUNTDOWN_TICK_INTERVAL) {
+            countDownTimer = new CountDownTimer(Constants.MILLIS_UNTIL_SNOOZE, Constants.COUNTDOWN_TICK_INTERVAL) {
 
                 public void onTick(long millisUntilFinished) { }
 
@@ -145,7 +148,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
      */
     private void moveView(View view )
     {
-        RelativeLayout root = findViewById(R.id.layoutLockscreen);
+        LinearLayout root = findViewById(R.id.layoutLockscreen);
         DisplayMetrics dm = new DisplayMetrics();
         this.getWindowManager().getDefaultDisplay().getMetrics( dm );
 
@@ -170,8 +173,8 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
      */
     private void fadeColor(TextView textView) {
 
-        int colorFrom = getResources().getColor(R.color.accent_text_color, getTheme());
-        int colorTo = getResources().getColor(R.color.primary_app_background, getTheme());
+        int colorFrom = getResources().getColor(R.color.primary_text_color, getTheme());
+        int colorTo = getResources().getColor(R.color.error_color, getTheme());
 
         ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
 
@@ -238,7 +241,9 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
                                 } else {
                                     //Swipe up -> Cancel alarm
                                     BackgroundAlarmTimeHandler.Companion.getHandler(getApplicationContext()).alarmClockRang(false);
-
+                                    if (countDownTimer != null) {
+                                        countDownTimer.cancel();
+                                    }
                                     finish();
                                 }
                                 return true;
