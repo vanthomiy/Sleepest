@@ -114,6 +114,9 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                     ed.putInt("hour", calendarAlarm[Calendar.HOUR_OF_DAY])
                     ed.putInt("minute", calendarAlarm[Calendar.MINUTE])
                     ed.apply()
+
+                    endOfSleepTime(false)
+
                 }
             }
 
@@ -125,6 +128,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
     /**
      * This function will be called if the user change the settings of the next existing alarm
+     * @param listEmpty True, if alarm list is empty
      */
     fun changeOfAlarmEntity(listEmpty : Boolean) {
         scope.launch {
@@ -170,6 +174,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
     /**
      * If the alarmclock is canceled, this function will be called
+     * @param isScreenOn User interactive = true
      */
     fun alarmClockRang(isScreenOn : Boolean) {
 
@@ -222,6 +227,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
     /**
      * This function stops the foreground service and do all things to restart it on a specific time
+     * @param inActivity true, if user is not in app
      */
     fun stopForegroundService(inActivity : Boolean) = runBlocking{
 
@@ -250,6 +256,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
     /**
      * This function starts the foreground service
+     * @param inActivity true, if user is not in app
      */
     private suspend fun startForegroundService(inActivity : Boolean) {
 
@@ -347,6 +354,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
     /**
      * Sequence at the start of sleep time
+     * @param inActivity true, if user is not in app
      */
     fun beginOfSleepTime(inActivity: Boolean) {
         scope.launch {
@@ -371,6 +379,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
     /**
      * Sequence at the end of sleep time
+     * @param inTheMorning true, if alarm clock calls this function
      */
     fun endOfSleepTime(inTheMorning : Boolean) {
 
@@ -409,6 +418,8 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
     /**
      * Sequence if alarm is disabled temporary
+     * @param fromApp true, if button was detected in alarm fragment, false if from banner
+     * @param reactivate Is already disabled and should be reactivated?
      */
     fun disableAlarmTemporaryInApp(fromApp : Boolean, reactivate : Boolean) {
 
@@ -552,7 +563,8 @@ class BackgroundAlarmTimeHandler(val context: Context) {
     }
 
     /**
-     * Execute the choosen state, states 1-6 are in Excel file.
+     * Execute the chosen state, states 1-6 are in Excel file.
+     * @param state The state which was chosen and should be executed
      */
     private fun executeStateAfterReboot(state : Int) {
 
@@ -596,6 +608,8 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
     /**
      * Defines a new wakeup
+     * @param localTime Localtime, null is actual time
+     * @param setAlarm in sleep time
      */
     fun defineNewUserWakeup(localTime: LocalDateTime?, setAlarm:Boolean) {
         scope.launch {
