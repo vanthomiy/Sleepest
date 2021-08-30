@@ -19,6 +19,8 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import java.time.LocalDate
 import java.time.Month
+import java.time.temporal.ChronoField
+import java.time.temporal.WeekFields
 import java.util.*
 import kotlin.time.milliseconds
 
@@ -170,19 +172,13 @@ class HistoryTabView : Fragment() {
     }
 
     private fun createCalendarWeekInformation(): String {
-        var analysisWeekOfYear: Int
-        val actualDate = LocalDate.now()
-        val actualWeekOfYear: Int
         var information = getString(R.string.history_failure_title)
-
-        val actualCalendar = Calendar.getInstance()
-        actualCalendar.set(actualDate.year, actualDate.monthValue, actualDate.dayOfMonth)
-        actualWeekOfYear = actualCalendar.get(Calendar.WEEK_OF_YEAR)
+        val actualDate = LocalDate.now()
+        val actualWeekOfYear = actualDate.get(WeekFields.of(Locale.GERMANY).weekOfYear())
 
         viewModel.analysisDate.get()?.let {
-            val analysisCalendar = Calendar.getInstance()
-            analysisCalendar.set(it.year, it.monthValue, it.dayOfMonth)
-            analysisWeekOfYear = analysisCalendar.get(Calendar.WEEK_OF_YEAR)
+            val analysisDate = LocalDate.of(it.year, it.monthValue, it.dayOfMonth)
+            val analysisWeekOfYear = analysisDate.get(WeekFields.of(Locale.GERMANY).weekOfYear())
 
             information = when {
                 actualWeekOfYear == analysisWeekOfYear -> {
