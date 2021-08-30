@@ -913,7 +913,7 @@ class SleepCalculationHandlerTest
 
         var sleepCalculationHandler = SleepCalculationHandler.getHandler(context)
 
-        val day = LocalDateTime.now().minusDays(0)
+        val day = LocalDateTime.now().minusDays(2)
         val sleepApiRawDataEntityList = sleepDbRepository.getSleepApiRawDataFromDate(day).first()
 
         sleepApiRawDataEntityList?.forEach { data ->

@@ -108,7 +108,7 @@ class SleepCalculationHandler(val context: Context) {
             return Pair(listOf<SleepApiRawDataEntity>(),SleepDataFrequency.NONE)
         }
 
-        if (isAfter && list.last().timestampSeconds < secondsFuture)
+        if (isAfter && list.first().timestampSeconds < secondsFuture)
             return Pair(listOf<SleepApiRawDataEntity>(),SleepDataFrequency.NONE)
 
         val frequencyType = getFrequencyFromListByHours(hours, false, seconds, filteredList)
