@@ -300,7 +300,7 @@ class HistoryDayFragment : Fragment() {
                 1f -> colorList.add(ContextCompat.getColor(viewModel.context, R.color.awake_sleep_color))
                 2f -> colorList.add(ContextCompat.getColor(viewModel.context, R.color.light_sleep_color))
                 3f -> colorList.add(ContextCompat.getColor(viewModel.context, R.color.deep_sleep_color))
-                4f -> colorList.add(ContextCompat.getColor(viewModel.context, R.color.error_color))
+                4f -> colorList.add(ContextCompat.getColor(viewModel.context, R.color.rem_sleep_color))
                 5f -> colorList.add(ContextCompat.getColor(viewModel.context, R.color.sleep_sleep_color))
                 else -> colorList.add(ContextCompat.getColor(viewModel.context, R.color.warning_color))
             }
@@ -390,7 +390,7 @@ class HistoryDayFragment : Fragment() {
                     8f,
                     8f,
                     null,
-                    ContextCompat.getColor(viewModel.context, R.color.error_color)
+                    ContextCompat.getColor(viewModel.context, R.color.rem_sleep_color)
                 ),
                 LegendEntry(
                     StringUtil.getStringXml(R.string.history_day_timeInPhase_awake, viewModel.getApplication()),
@@ -527,12 +527,12 @@ class HistoryDayFragment : Fragment() {
         else if (sleepTypes[2] && sleepTypes[3] && sleepTypes[4] && !sleepTypes[0]) {
             listColors.add(ContextCompat.getColor(viewModel.context, R.color.light_sleep_color))
             listColors.add(ContextCompat.getColor(viewModel.context, R.color.deep_sleep_color))
-            listColors.add(ContextCompat.getColor(viewModel.context, R.color.error_color))
+            listColors.add(ContextCompat.getColor(viewModel.context, R.color.rem_sleep_color))
         }
         else {
             listColors.add(ContextCompat.getColor(viewModel.context, R.color.light_sleep_color))
             listColors.add(ContextCompat.getColor(viewModel.context, R.color.deep_sleep_color))
-            listColors.add(ContextCompat.getColor(viewModel.context, R.color.error_color))
+            listColors.add(ContextCompat.getColor(viewModel.context, R.color.rem_sleep_color))
             listColors.add(ContextCompat.getColor(viewModel.context, R.color.awake_sleep_color))
         }
 

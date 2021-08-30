@@ -283,7 +283,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         barDataSet.setColors(
             ContextCompat.getColor(context, R.color.light_sleep_color),
             ContextCompat.getColor(context, R.color.deep_sleep_color),
-            ContextCompat.getColor(context, R.color.error_color),
+            ContextCompat.getColor(context, R.color.rem_sleep_color),
             ContextCompat.getColor(context, R.color.sleep_sleep_color),
             ContextCompat.getColor(context, R.color.awake_sleep_color)
         )
@@ -445,7 +445,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                     8f,
                     8f,
                     null,
-                    ContextCompat.getColor(context, R.color.error_color)
+                    ContextCompat.getColor(context, R.color.rem_sleep_color)
                 ),
                 LegendEntry(
                     StringUtil.getStringXml(R.string.history_day_timeInPhase_sleepSum, getApplication()),
@@ -547,7 +547,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         lineDataSet.lineWidth = 2f
         lineDataSet.fillColor = ContextCompat.getColor(context, R.color.sleep_sleep_color)
         lineDataSet.fillAlpha = 255
-        lineDataSet.color = ContextCompat.getColor(context, R.color.awake_sleep_color)
+        lineDataSet.color = ContextCompat.getColor(context, R.color.sleep_sleep_color)
         lineDataSet.fillDrawable = ContextCompat.getDrawable(context, R.drawable.bg_spark_line)
 
         val yAxisValues = ArrayList<String>()
