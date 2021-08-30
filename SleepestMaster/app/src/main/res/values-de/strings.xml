@@ -356,6 +356,7 @@
     <string name="onboarding_toast_permissions">Bitte akzeptiere alle Berechtigungen</string>
     <string name="onboarding_toast_read_to_end">Bitte lies das ganze Tutorial</string>
     <string name="onboarding_toast_permission_already_granted">Diese Berechtigung wurde schon akzeptiert</string>
+    <string name="history_day_timeInPhase_remSleep">Traumschlaf</string>
     <!--endregion-->
 
 

@@ -189,6 +189,10 @@ class HistoryDayFragment : Fragment() {
             getString(R.string.history_day_timeInPhase_deepSleep) + " " + generateSleepValueInformation(0)
         )
 
+        viewModelDay.remSleepTime.set(
+            getString(R.string.history_day_timeInPhase_remSleep) + " " + generateSleepValueInformation(0)
+        )
+
         viewModelDay.sleepTime.set(
             getString(R.string.history_day_timeInPhase_sleepSum) + " " + generateSleepValueInformation(0)
         )
@@ -226,6 +230,10 @@ class HistoryDayFragment : Fragment() {
                 getString(R.string.history_day_timeInPhase_deepSleep) + " " + generateSleepValueInformation(it.third.sleepTimes.deepSleepDuration)
             )
 
+            viewModelDay.remSleepTime.set(
+                getString(R.string.history_day_timeInPhase_remSleep) + " " + generateSleepValueInformation(it.third.sleepTimes.remSleepDuration)
+            )
+
             viewModelDay.sleepTime.set(
                 getString(R.string.history_day_timeInPhase_sleepSum) + " " + generateSleepValueInformation(it.third.sleepTimes.sleepDuration)
             )
@@ -252,10 +260,13 @@ class HistoryDayFragment : Fragment() {
                             SleepState.DEEP -> {
                                 entries.add(BarEntry(xIndex, 3f))
                             }
-                            SleepState.SLEEPING -> {
+                            SleepState.REM -> {
                                 entries.add(BarEntry(xIndex, 4f))
                             }
-                            else -> entries.add(BarEntry(xIndex, 5f))
+                            SleepState.SLEEPING -> {
+                                entries.add(BarEntry(xIndex, 5f))
+                            }
+                            else -> entries.add(BarEntry(xIndex, 6f))
                         }
                         xIndex += 1f
                     }
@@ -289,7 +300,8 @@ class HistoryDayFragment : Fragment() {
                 1f -> colorList.add(ContextCompat.getColor(viewModel.context, R.color.awake_sleep_color))
                 2f -> colorList.add(ContextCompat.getColor(viewModel.context, R.color.light_sleep_color))
                 3f -> colorList.add(ContextCompat.getColor(viewModel.context, R.color.deep_sleep_color))
-                4f -> colorList.add(ContextCompat.getColor(viewModel.context, R.color.sleep_sleep_color))
+                4f -> colorList.add(ContextCompat.getColor(viewModel.context, R.color.error_color))
+                5f -> colorList.add(ContextCompat.getColor(viewModel.context, R.color.sleep_sleep_color))
                 else -> colorList.add(ContextCompat.getColor(viewModel.context, R.color.warning_color))
             }
         }
@@ -373,6 +385,14 @@ class HistoryDayFragment : Fragment() {
                     ContextCompat.getColor(viewModel.context, R.color.deep_sleep_color)
                 ),
                 LegendEntry(
+                    StringUtil.getStringXml(R.string.history_day_timeInPhase_remSleep, viewModel.getApplication()),
+                    Legend.LegendForm.SQUARE,
+                    8f,
+                    8f,
+                    null,
+                    ContextCompat.getColor(viewModel.context, R.color.error_color)
+                ),
+                LegendEntry(
                     StringUtil.getStringXml(R.string.history_day_timeInPhase_awake, viewModel.getApplication()),
                     Legend.LegendForm.SQUARE,
                     8f,
@@ -420,7 +440,7 @@ class HistoryDayFragment : Fragment() {
     /** Generates the data needed for the [PieChart]. */
     private fun generateDataPieChart() : Pair<ArrayList<PieEntry>, BooleanArray> {
         val entries = ArrayList<PieEntry>()
-        val sleepTypes = booleanArrayOf(false, false, false, false)
+        val sleepTypes = booleanArrayOf(false, false, false, false, false)  //awake, sleep, light, deep, rem
 
         viewModel.analysisDate.get()?.let {
             if (viewModel.checkId(it)) {
@@ -428,6 +448,7 @@ class HistoryDayFragment : Fragment() {
                 val sleep = sleepValues.third.sleepTimes.sleepDuration
                 val lightSleep = sleepValues.third.sleepTimes.lightSleepDuration
                 val deepSleep = sleepValues.third.sleepTimes.deepSleepDuration
+                val remSleep = sleepValues.third.sleepTimes.remSleepDuration
 
                 if (sleepValues.third.mobilePosition == MobilePosition.ONTABLE) {
                     if (awake == 0) {
@@ -442,11 +463,13 @@ class HistoryDayFragment : Fragment() {
                     }
                 }
                 else if (sleepValues.third.mobilePosition == MobilePosition.INBED) {
-                    if (lightSleep != 0 && deepSleep != 0 && awake == 0) {
+                    if (lightSleep != 0 && deepSleep != 0 && remSleep != 0 && awake == 0) {
                         entries.add(PieEntry(lightSleep.toFloat(), getString(R.string.history_day_timeInPhase_lightSleep)))
                         sleepTypes[2] = true
                         entries.add(PieEntry(deepSleep.toFloat(), getString(R.string.history_day_timeInPhase_deepSleep)))
                         sleepTypes[3] = true
+                        entries.add(PieEntry(remSleep.toFloat(), getString(R.string.history_day_timeInPhase_remSleep)))
+                        sleepTypes[4] = true
                     }
                     else if (lightSleep != 0 && deepSleep == 0 && awake != 0) {
                         entries.add(PieEntry(lightSleep.toFloat(), getString(R.string.history_day_timeInPhase_lightSleep)))
@@ -459,6 +482,8 @@ class HistoryDayFragment : Fragment() {
                         sleepTypes[2] = true
                         entries.add(PieEntry(deepSleep.toFloat(), getString(R.string.history_day_timeInPhase_deepSleep)))
                         sleepTypes[3] = true
+                        entries.add(PieEntry(remSleep.toFloat(), getString(R.string.history_day_timeInPhase_remSleep)))
+                        sleepTypes[4] = true
                         entries.add(PieEntry(awake.toFloat(), getString(R.string.history_day_timeInPhase_awake)))
                         sleepTypes[0] = true
                     }
@@ -490,7 +515,7 @@ class HistoryDayFragment : Fragment() {
     /**  */
     private fun visualSetUpPieChart(chart: PieChart, pieDataSet: PieDataSet, sleepTypes: BooleanArray) {
         val listColors = ArrayList<Int>()
-        //sleepTypes[0] = awake, sleepTypes[1] = sleep, sleepTypes[2] = light, sleepTypes[3] = deep
+        //sleepTypes[0] = awake, sleepTypes[1] = sleep, sleepTypes[2] = light, sleepTypes[3] = deep, sleepTypes[4] = rem
 
         if (sleepTypes[0] && sleepTypes[1]) {
             listColors.add(ContextCompat.getColor(viewModel.context, R.color.awake_sleep_color))
@@ -499,13 +524,15 @@ class HistoryDayFragment : Fragment() {
         else if (!sleepTypes[0] && sleepTypes[1]) {
             listColors.add(ContextCompat.getColor(viewModel.context, R.color.sleep_sleep_color))
         }
-        else if (sleepTypes[2] && sleepTypes[3] && !sleepTypes[0]) {
+        else if (sleepTypes[2] && sleepTypes[3] && sleepTypes[4] && !sleepTypes[0]) {
             listColors.add(ContextCompat.getColor(viewModel.context, R.color.light_sleep_color))
             listColors.add(ContextCompat.getColor(viewModel.context, R.color.deep_sleep_color))
+            listColors.add(ContextCompat.getColor(viewModel.context, R.color.error_color))
         }
         else {
             listColors.add(ContextCompat.getColor(viewModel.context, R.color.light_sleep_color))
             listColors.add(ContextCompat.getColor(viewModel.context, R.color.deep_sleep_color))
+            listColors.add(ContextCompat.getColor(viewModel.context, R.color.error_color))
             listColors.add(ContextCompat.getColor(viewModel.context, R.color.awake_sleep_color))
         }
 
@@ -516,11 +543,13 @@ class HistoryDayFragment : Fragment() {
         chart.setCenterTextColor(Color.WHITE)
         chart.setHoleColor(Color.BLACK)
         chart.setEntryLabelColor(Color.WHITE)
+
         chart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+        chart.legend.isEnabled = false
+        chart.legend.textColor = viewModel.checkDarkMode()
 
         chart.isDrawHoleEnabled = true
         chart.description.isEnabled = false
-        chart.legend.textColor = viewModel.checkDarkMode()
         chart.setTouchEnabled(false)
         chart.animateY(500, Easing.EaseInOutQuad)
     }

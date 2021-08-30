@@ -236,18 +236,20 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                 val sleep = values.third.sleepTimes.sleepDuration / 60f
                 val lightSleep = values.third.sleepTimes.lightSleepDuration / 60f
                 val deepSleep = values.third.sleepTimes.deepSleepDuration / 60f
+                val remSleep = values.third.sleepTimes.remSleepDuration / 60f
 
                 if (((sleep + awake) * 60f) > maxSleepTime) {
                     maxSleepTime = (sleep + awake) * 60f
                 }
 
-                if (lightSleep != 0f && deepSleep != 0f) {
+                if (lightSleep != 0f && deepSleep != 0f && remSleep != 0f) {
                     entries.add(
                         BarEntry(
                             xIndex, floatArrayOf(
                                 lightSleep,
                                 deepSleep,
-                                0.toFloat(),
+                                remSleep,
+                                0F,
                                 awake
                             )
                         )
@@ -257,8 +259,9 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                     entries.add(
                         BarEntry(
                             xIndex, floatArrayOf(
-                                0.toFloat(),
-                                0.toFloat(),
+                                0F,
+                                0F,
+                                0F,
                                 sleep,
                                 awake
                             )
@@ -266,7 +269,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                     )
                 }
 
-            } else { entries.add(BarEntry(xIndex, floatArrayOf(0F, 0F, 0F, 0F))) }
+            } else { entries.add(BarEntry(xIndex, floatArrayOf(0F, 0F, 0F, 0F, 0F))) }
             xAxisLabels.add(id)
             xIndex += 1
         }
@@ -280,6 +283,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         barDataSet.setColors(
             ContextCompat.getColor(context, R.color.light_sleep_color),
             ContextCompat.getColor(context, R.color.deep_sleep_color),
+            ContextCompat.getColor(context, R.color.error_color),
             ContextCompat.getColor(context, R.color.sleep_sleep_color),
             ContextCompat.getColor(context, R.color.awake_sleep_color)
         )
@@ -434,6 +438,14 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                     8f,
                     null,
                     ContextCompat.getColor(context, R.color.deep_sleep_color)
+                ),
+                LegendEntry(
+                    StringUtil.getStringXml(R.string.history_day_timeInPhase_remSleep, getApplication()),
+                    Legend.LegendForm.SQUARE,
+                    8f,
+                    8f,
+                    null,
+                    ContextCompat.getColor(context, R.color.error_color)
                 ),
                 LegendEntry(
                     StringUtil.getStringXml(R.string.history_day_timeInPhase_sleepSum, getApplication()),

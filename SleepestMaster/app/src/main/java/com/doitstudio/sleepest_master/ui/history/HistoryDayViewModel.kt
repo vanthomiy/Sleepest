@@ -54,6 +54,8 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
     /**  */
     var deepSleepTime = ObservableField("")
 
+    var remSleepTime = ObservableField("")
+
     /**  */
     var sleepTime = ObservableField("")
 
