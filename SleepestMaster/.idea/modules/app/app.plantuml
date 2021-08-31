@@ -1,0 +1,534 @@
+@startuml
+
+title __SLEEPEST-MASTER.APP's Class Diagram__\n
+
+  namespace androidx.databinding {
+    class androidx.databinding.DataBinderMapperImpl {
+    }
+  }
+  
+
+  namespace androidx.databinding {
+    interface androidx.databinding.DataBindingComponent {
+    }
+  }
+  
+
+  namespace androidx.databinding {
+    namespace library.baseAdapters {
+      class androidx.databinding.library.baseAdapters.BR {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    class com.doitstudio.sleepest_master.ActivityApiData {
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    interface com.doitstudio.sleepest_master.ActivityApiDataOrBuilder {
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    class com.doitstudio.sleepest_master.ActualSleepUserParameter {
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    interface com.doitstudio.sleepest_master.ActualSleepUserParameterOrBuilder {
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    class com.doitstudio.sleepest_master.Alarm {
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    interface com.doitstudio.sleepest_master.AlarmOrBuilder {
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    class com.doitstudio.sleepest_master.AlarmParameters {
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    interface com.doitstudio.sleepest_master.AlarmParametersOrBuilder {
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    class com.doitstudio.sleepest_master.BR {
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    class com.doitstudio.sleepest_master.BackgroundService {
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    interface com.doitstudio.sleepest_master.BackgroundServiceOrBuilder {
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    class com.doitstudio.sleepest_master.BuildConfig {
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    class com.doitstudio.sleepest_master.Data {
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    class com.doitstudio.sleepest_master.DataBinderMapperImpl {
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    class com.doitstudio.sleepest_master.LiveUserSleepActivity {
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    interface com.doitstudio.sleepest_master.LiveUserSleepActivityOrBuilder {
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    class com.doitstudio.sleepest_master.Settings {
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    class com.doitstudio.sleepest_master.SettingsData {
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    interface com.doitstudio.sleepest_master.SettingsDataOrBuilder {
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    interface com.doitstudio.sleepest_master.SettingsOrBuilder {
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    class com.doitstudio.sleepest_master.SleepApiData {
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    interface com.doitstudio.sleepest_master.SleepApiDataOrBuilder {
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    class com.doitstudio.sleepest_master.SleepParameters {
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    interface com.doitstudio.sleepest_master.SleepParametersOrBuilder {
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace alarmclock {
+      class com.doitstudio.sleepest_master.alarmclock.AlarmClockAudio {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace alarmclock {
+      class com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace alarmclock {
+      class com.doitstudio.sleepest_master.alarmclock.LockScreenAlarmActivity {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace background {
+      class com.doitstudio.sleepest_master.background.AlarmReceiver {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace background {
+      class com.doitstudio.sleepest_master.background.ForegroundService {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace background {
+      class com.doitstudio.sleepest_master.background.WorkmanagerCalculation {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace databinding {
+      class com.doitstudio.sleepest_master.databinding.AlarmEntityBindingImpl {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace databinding {
+      class com.doitstudio.sleepest_master.databinding.FragmentAlarmsBindingImpl {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace databinding {
+      class com.doitstudio.sleepest_master.databinding.FragmentHistoryDayBindingImpl {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace databinding {
+      class com.doitstudio.sleepest_master.databinding.FragmentHistoryMonthBindingImpl {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace databinding {
+      class com.doitstudio.sleepest_master.databinding.FragmentHistoryTabviewBindingImpl {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace databinding {
+      class com.doitstudio.sleepest_master.databinding.FragmentHistoryWeekBindingImpl {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace databinding {
+      class com.doitstudio.sleepest_master.databinding.FragmentInfoBindingImpl {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace databinding {
+      class com.doitstudio.sleepest_master.databinding.FragmentInfoEntityBindingImpl {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace databinding {
+      class com.doitstudio.sleepest_master.databinding.FragmentSettingsBindingImpl {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace databinding {
+      class com.doitstudio.sleepest_master.databinding.FragmentSleepBindingImpl {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace databinding {
+      class com.doitstudio.sleepest_master.databinding.OnboardingNoticeScreenBindingImpl {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace model.data {
+      class com.doitstudio.sleepest_master.model.data.Constants {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace onboarding {
+      class com.doitstudio.sleepest_master.onboarding.OnboardingActivity {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace onboarding {
+      class com.doitstudio.sleepest_master.onboarding.OnboardingViewPagerAdapter {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace storage.db {
+      class com.doitstudio.sleepest_master.storage.db.ActivityApiRawDataDao_Impl {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace storage.db {
+      class com.doitstudio.sleepest_master.storage.db.AlarmDao_Impl {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace storage.db {
+      class com.doitstudio.sleepest_master.storage.db.SleepApiRawDataDao_Impl {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace storage.db {
+      class com.doitstudio.sleepest_master.storage.db.SleepDatabase_Impl {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace storage.db {
+      class com.doitstudio.sleepest_master.storage.db.SleepSegmentDao_Impl {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace storage.db {
+      class com.doitstudio.sleepest_master.storage.db.UserSleepSessionDao_Impl {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace ui.charts {
+      class com.doitstudio.sleepest_master.ui.charts.SparkLineStyle_Factory {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace util {
+      class com.doitstudio.sleepest_master.util.NotificationUtil {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace util {
+      class com.doitstudio.sleepest_master.util.PermissionsUtil {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace util {
+      class com.doitstudio.sleepest_master.util.SleepUtil {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace util {
+      class com.doitstudio.sleepest_master.util.SmileySelectorUtil {
+      }
+    }
+  }
+  
+
+  namespace com.doitstudio.sleepest_master {
+    namespace util {
+      class com.doitstudio.sleepest_master.util.TimeConverterUtil {
+      }
+    }
+  }
+  
+
+  androidx.databinding.DataBinderMapperImpl -up-|> androidx.databinding.MergedDataBinderMapper
+  com.doitstudio.sleepest_master.ActivityApiData .up.|> com.doitstudio.sleepest_master.ActivityApiDataOrBuilder
+  com.doitstudio.sleepest_master.ActivityApiData -up-|> com.google.protobuf.GeneratedMessageLite
+  com.doitstudio.sleepest_master.ActualSleepUserParameter .up.|> com.doitstudio.sleepest_master.ActualSleepUserParameterOrBuilder
+  com.doitstudio.sleepest_master.ActualSleepUserParameter -up-|> com.google.protobuf.GeneratedMessageLite
+  com.doitstudio.sleepest_master.Alarm .up.|> com.doitstudio.sleepest_master.AlarmOrBuilder
+  com.doitstudio.sleepest_master.Alarm -up-|> com.google.protobuf.GeneratedMessageLite
+  com.doitstudio.sleepest_master.AlarmParameters .up.|> com.doitstudio.sleepest_master.AlarmParametersOrBuilder
+  com.doitstudio.sleepest_master.AlarmParameters -up-|> com.google.protobuf.GeneratedMessageLite
+  com.doitstudio.sleepest_master.BackgroundService .up.|> com.doitstudio.sleepest_master.BackgroundServiceOrBuilder
+  com.doitstudio.sleepest_master.BackgroundService -up-|> com.google.protobuf.GeneratedMessageLite
+  com.doitstudio.sleepest_master.DataBinderMapperImpl -up-|> androidx.databinding.DataBinderMapper
+  com.doitstudio.sleepest_master.LiveUserSleepActivity .up.|> com.doitstudio.sleepest_master.LiveUserSleepActivityOrBuilder
+  com.doitstudio.sleepest_master.LiveUserSleepActivity -up-|> com.google.protobuf.GeneratedMessageLite
+  com.doitstudio.sleepest_master.Settings .up.|> com.doitstudio.sleepest_master.SettingsOrBuilder
+  com.doitstudio.sleepest_master.Settings -up-|> com.google.protobuf.GeneratedMessageLite
+  com.doitstudio.sleepest_master.SettingsData .up.|> com.doitstudio.sleepest_master.SettingsDataOrBuilder
+  com.doitstudio.sleepest_master.SettingsData -up-|> com.google.protobuf.GeneratedMessageLite
+  com.doitstudio.sleepest_master.SleepApiData .up.|> com.doitstudio.sleepest_master.SleepApiDataOrBuilder
+  com.doitstudio.sleepest_master.SleepApiData -up-|> com.google.protobuf.GeneratedMessageLite
+  com.doitstudio.sleepest_master.SleepParameters .up.|> com.doitstudio.sleepest_master.SleepParametersOrBuilder
+  com.doitstudio.sleepest_master.SleepParameters -up-|> com.google.protobuf.GeneratedMessageLite
+  com.doitstudio.sleepest_master.alarmclock.AlarmClockAudio o-- com.doitstudio.sleepest_master.storage.DataStoreRepository : dataStoreRepository
+  com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver -up-|> android.content.BroadcastReceiver
+  com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver o-- com.doitstudio.sleepest_master.storage.DataStoreRepository : dataStoreRepository
+  com.doitstudio.sleepest_master.alarmclock.LockScreenAlarmActivity -up-|> androidx.appcompat.app.AppCompatActivity
+  com.doitstudio.sleepest_master.alarmclock.LockScreenAlarmActivity o-- com.doitstudio.sleepest_master.storage.DataStoreRepository : dataStoreRepository
+  com.doitstudio.sleepest_master.alarmclock.LockScreenAlarmActivity o-- com.doitstudio.sleepest_master.storage.DatabaseRepository : databaseRepository
+  com.doitstudio.sleepest_master.alarmclock.LockScreenAlarmActivity o-- com.doitstudio.sleepest_master.alarmclock.LockScreenAlarmActivity.SwipeListener : swipeListener
+  com.doitstudio.sleepest_master.background.AlarmReceiver -up-|> android.content.BroadcastReceiver
+  com.doitstudio.sleepest_master.background.ForegroundService -up-|> androidx.lifecycle.LifecycleService
+  com.doitstudio.sleepest_master.background.ForegroundService o-- com.doitstudio.sleepest_master.background.ForegroundObserver : foregroundObserver
+  com.doitstudio.sleepest_master.background.ForegroundService o-- com.doitstudio.sleepest_master.background.AlarmCycleState : alarmCycleState
+  com.doitstudio.sleepest_master.background.ForegroundService o-- com.doitstudio.sleepest_master.storage.db.AlarmEntity : alarmEntity
+  com.doitstudio.sleepest_master.background.ForegroundService o-- com.doitstudio.sleepest_master.storage.DataStoreRepository : dataStoreRepository
+  com.doitstudio.sleepest_master.background.ForegroundService o-- com.doitstudio.sleepest_master.storage.DatabaseRepository : databaseRepository
+  com.doitstudio.sleepest_master.background.ForegroundService o-- com.doitstudio.sleepest_master.util.NotificationUtil : notificationUtil
+  com.doitstudio.sleepest_master.background.ForegroundService o-- com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler : sleepCalculationHandler
+  com.doitstudio.sleepest_master.background.ForegroundService o-- com.doitstudio.sleepest_master.googleapi.SleepHandler : sleepHandler
+  com.doitstudio.sleepest_master.background.WorkmanagerCalculation -up-|> androidx.work.Worker
+  com.doitstudio.sleepest_master.background.WorkmanagerCalculation o-- com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler : sleepCalculationHandler
+  com.doitstudio.sleepest_master.databinding.AlarmEntityBindingImpl -up-|> com.doitstudio.sleepest_master.databinding.AlarmEntityBinding
+  com.doitstudio.sleepest_master.databinding.AlarmEntityBindingImpl o-- com.doitstudio.sleepest_master.databinding.AlarmEntityBindingImpl.OnClickListenerImpl1 : mAlarmInstanceViewModelOnAlarmActiveToggledAndroidViewViewOnClickListener
+  com.doitstudio.sleepest_master.databinding.AlarmEntityBindingImpl o-- com.doitstudio.sleepest_master.databinding.AlarmEntityBindingImpl.OnClickListenerImpl3 : mAlarmInstanceViewModelOnDayChangedAndroidViewViewOnClickListener
+  com.doitstudio.sleepest_master.databinding.AlarmEntityBindingImpl o-- com.doitstudio.sleepest_master.databinding.AlarmEntityBindingImpl.OnClickListenerImpl2 : mAlarmInstanceViewModelOnWakeUpEarlyClickedAndroidViewViewOnClickListener
+  com.doitstudio.sleepest_master.databinding.AlarmEntityBindingImpl o-- com.doitstudio.sleepest_master.databinding.AlarmEntityBindingImpl.OnClickListenerImpl : mAlarmInstanceViewModelOnWakeUpLateClickedAndroidViewViewOnClickListener
+  com.doitstudio.sleepest_master.databinding.FragmentAlarmsBindingImpl -up-|> com.doitstudio.sleepest_master.databinding.FragmentAlarmsBinding
+  com.doitstudio.sleepest_master.databinding.FragmentAlarmsBindingImpl o-- com.doitstudio.sleepest_master.databinding.FragmentAlarmsBindingImpl.OnItemSelectedImpl : mAlarmsViewModelOnAlarmArtChangedAndroidxDatabindingAdaptersAdapterViewBindingAdapterOnItemSelected
+  com.doitstudio.sleepest_master.databinding.FragmentAlarmsBindingImpl o-- com.doitstudio.sleepest_master.databinding.FragmentAlarmsBindingImpl.OnClickListenerImpl : mAlarmsViewModelOnEndAlarmAfterFiredChangedAndroidViewViewOnClickListener
+  com.doitstudio.sleepest_master.databinding.FragmentAlarmsBindingImpl o-- com.doitstudio.sleepest_master.databinding.FragmentAlarmsBindingImpl.OnClickListenerImpl1 : mAlarmsViewModelOnExpandClickedAndroidViewViewOnClickListener
+  com.doitstudio.sleepest_master.databinding.FragmentHistoryDayBindingImpl -up-|> com.doitstudio.sleepest_master.databinding.FragmentHistoryDayBinding
+  com.doitstudio.sleepest_master.databinding.FragmentHistoryDayBindingImpl o-- com.doitstudio.sleepest_master.databinding.FragmentHistoryDayBindingImpl.OnClickListenerImpl1 : mHistoryDayViewModelManualChangeSleepTimesAndroidViewViewOnClickListener
+  com.doitstudio.sleepest_master.databinding.FragmentHistoryDayBindingImpl o-- com.doitstudio.sleepest_master.databinding.FragmentHistoryDayBindingImpl.OnClickListenerImpl : mHistoryDayViewModelOnInfoClickedAndroidViewViewOnClickListener
+  com.doitstudio.sleepest_master.databinding.FragmentHistoryDayBindingImpl o-- com.doitstudio.sleepest_master.databinding.FragmentHistoryDayBindingImpl.OnClickListenerImpl2 : mHistoryDayViewModelSleepRatingAndroidViewViewOnClickListener
+  com.doitstudio.sleepest_master.databinding.FragmentHistoryMonthBindingImpl -up-|> com.doitstudio.sleepest_master.databinding.FragmentHistoryMonthBinding
+  com.doitstudio.sleepest_master.databinding.FragmentHistoryMonthBindingImpl o-- com.doitstudio.sleepest_master.databinding.FragmentHistoryMonthBindingImpl.OnClickListenerImpl : mHistoryMonthViewModelOnInfoClickedAndroidViewViewOnClickListener
+  com.doitstudio.sleepest_master.databinding.FragmentHistoryTabviewBindingImpl -up-|> com.doitstudio.sleepest_master.databinding.FragmentHistoryTabviewBinding
+  com.doitstudio.sleepest_master.databinding.FragmentHistoryWeekBindingImpl -up-|> com.doitstudio.sleepest_master.databinding.FragmentHistoryWeekBinding
+  com.doitstudio.sleepest_master.databinding.FragmentHistoryWeekBindingImpl o-- com.doitstudio.sleepest_master.databinding.FragmentHistoryWeekBindingImpl.OnClickListenerImpl : mHistoryWeekViewModelOnInfoClickedAndroidViewViewOnClickListener
+  com.doitstudio.sleepest_master.databinding.FragmentInfoBindingImpl -up-|> com.doitstudio.sleepest_master.databinding.FragmentInfoBinding
+  com.doitstudio.sleepest_master.databinding.FragmentInfoEntityBindingImpl -up-|> com.doitstudio.sleepest_master.databinding.FragmentInfoEntityBinding
+  com.doitstudio.sleepest_master.databinding.FragmentSettingsBindingImpl -up-|> com.doitstudio.sleepest_master.databinding.FragmentSettingsBinding
+  com.doitstudio.sleepest_master.databinding.FragmentSettingsBindingImpl o-- com.doitstudio.sleepest_master.databinding.FragmentSettingsBindingImpl.OnClickListenerImpl5 : mProfileViewModelAutoDarkModeToggledAndroidViewViewOnClickListener
+  com.doitstudio.sleepest_master.databinding.FragmentSettingsBindingImpl o-- com.doitstudio.sleepest_master.databinding.FragmentSettingsBindingImpl.OnClickListenerImpl2 : mProfileViewModelBannerSettingsToggledAndroidViewViewOnClickListener
+  com.doitstudio.sleepest_master.databinding.FragmentSettingsBindingImpl o-- com.doitstudio.sleepest_master.databinding.FragmentSettingsBindingImpl.OnClickListenerImpl1 : mProfileViewModelDarkModeToggledAndroidViewViewOnClickListener
+  com.doitstudio.sleepest_master.databinding.FragmentSettingsBindingImpl o-- com.doitstudio.sleepest_master.databinding.FragmentSettingsBindingImpl.OnClickListenerImpl : mProfileViewModelOnAboutUsClickedAndroidViewViewOnClickListener
+  com.doitstudio.sleepest_master.databinding.FragmentSettingsBindingImpl o-- com.doitstudio.sleepest_master.databinding.FragmentSettingsBindingImpl.OnClickListenerImpl3 : mProfileViewModelOnDataClickedAndroidViewViewOnClickListener
+  com.doitstudio.sleepest_master.databinding.FragmentSettingsBindingImpl o-- com.doitstudio.sleepest_master.databinding.FragmentSettingsBindingImpl.OnClickListenerImpl4 : mProfileViewModelOnExpandClickedAndroidViewViewOnClickListener
+  com.doitstudio.sleepest_master.databinding.FragmentSleepBindingImpl -up-|> com.doitstudio.sleepest_master.databinding.FragmentSleepBinding
+  com.doitstudio.sleepest_master.databinding.FragmentSleepBindingImpl o-- com.doitstudio.sleepest_master.databinding.FragmentSleepBindingImpl.OnClickListenerImpl5 : mSleepViewModelOnActivityInCalcChangedAndroidViewViewOnClickListener
+  com.doitstudio.sleepest_master.databinding.FragmentSleepBindingImpl o-- com.doitstudio.sleepest_master.databinding.FragmentSleepBindingImpl.OnClickListenerImpl : mSleepViewModelOnActivityTrackingChangedAndroidViewViewOnClickListener
+  com.doitstudio.sleepest_master.databinding.FragmentSleepBindingImpl o-- com.doitstudio.sleepest_master.databinding.FragmentSleepBindingImpl.OnClickListenerImpl4 : mSleepViewModelOnAlarmEndClickedAndroidViewViewOnClickListener
+  com.doitstudio.sleepest_master.databinding.FragmentSleepBindingImpl o-- com.doitstudio.sleepest_master.databinding.FragmentSleepBindingImpl.OnClickListenerImpl1 : mSleepViewModelOnAlarmStartClickedAndroidViewViewOnClickListener
+  com.doitstudio.sleepest_master.databinding.FragmentSleepBindingImpl o-- com.doitstudio.sleepest_master.databinding.FragmentSleepBindingImpl.OnClickListenerImpl3 : mSleepViewModelOnInfoClickedAndroidViewViewOnClickListener
+  com.doitstudio.sleepest_master.databinding.FragmentSleepBindingImpl o-- com.doitstudio.sleepest_master.databinding.FragmentSleepBindingImpl.OnItemSelectedImpl : mSleepViewModelOnLightConditionChangedAndroidxDatabindingAdaptersAdapterViewBindingAdapterOnItemSelected
+  com.doitstudio.sleepest_master.databinding.FragmentSleepBindingImpl o-- com.doitstudio.sleepest_master.databinding.FragmentSleepBindingImpl.OnItemSelectedImpl1 : mSleepViewModelOnMobilePositionChangedAndroidxDatabindingAdaptersAdapterViewBindingAdapterOnItemSelected
+  com.doitstudio.sleepest_master.databinding.FragmentSleepBindingImpl o-- com.doitstudio.sleepest_master.databinding.FragmentSleepBindingImpl.OnProgressChangedImpl : mSleepViewModelOnPhoneUsageChangedAndroidxDatabindingAdaptersSeekBarBindingAdapterOnProgressChanged
+  com.doitstudio.sleepest_master.databinding.FragmentSleepBindingImpl o-- com.doitstudio.sleepest_master.databinding.FragmentSleepBindingImpl.OnClickListenerImpl2 : mSleepViewModelSleepTimeToogledAndroidViewViewOnClickListener
+  com.doitstudio.sleepest_master.databinding.OnboardingNoticeScreenBindingImpl -up-|> com.doitstudio.sleepest_master.databinding.OnboardingNoticeScreenBinding
+  com.doitstudio.sleepest_master.onboarding.OnboardingActivity -up-|> androidx.appcompat.app.AppCompatActivity
+  com.doitstudio.sleepest_master.onboarding.OnboardingActivity o-- com.doitstudio.sleepest_master.onboarding.OnboardingViewPagerAdapter : onboardingViewPagerAdapter
+  com.doitstudio.sleepest_master.onboarding.OnboardingViewPagerAdapter .up.|> android.view.View.OnClickListener
+  com.doitstudio.sleepest_master.onboarding.OnboardingViewPagerAdapter -up-|> androidx.viewpager.widget.PagerAdapter
+  com.doitstudio.sleepest_master.storage.db.ActivityApiRawDataDao_Impl .up.|> com.doitstudio.sleepest_master.storage.db.ActivityApiRawDataDao
+  com.doitstudio.sleepest_master.storage.db.AlarmDao_Impl .up.|> com.doitstudio.sleepest_master.storage.db.AlarmDao
+  com.doitstudio.sleepest_master.storage.db.AlarmDao_Impl o-- com.doitstudio.sleepest_master.storage.db.Converters : __converters
+  com.doitstudio.sleepest_master.storage.db.SleepApiRawDataDao_Impl .up.|> com.doitstudio.sleepest_master.storage.db.SleepApiRawDataDao
+  com.doitstudio.sleepest_master.storage.db.SleepApiRawDataDao_Impl o-- com.doitstudio.sleepest_master.storage.db.Converters : __converters
+  com.doitstudio.sleepest_master.storage.db.SleepDatabase_Impl -up-|> com.doitstudio.sleepest_master.storage.db.SleepDatabase
+  com.doitstudio.sleepest_master.storage.db.SleepDatabase_Impl o-- com.doitstudio.sleepest_master.storage.db.ActivityApiRawDataDao : _activityApiRawDataDao
+  com.doitstudio.sleepest_master.storage.db.SleepDatabase_Impl o-- com.doitstudio.sleepest_master.storage.db.AlarmDao : _alarmDao
+  com.doitstudio.sleepest_master.storage.db.SleepDatabase_Impl o-- com.doitstudio.sleepest_master.storage.db.SleepApiRawDataDao : _sleepApiRawDataDao
+  com.doitstudio.sleepest_master.storage.db.SleepDatabase_Impl o-- com.doitstudio.sleepest_master.storage.db.SleepSegmentDao : _sleepSegmentDao
+  com.doitstudio.sleepest_master.storage.db.SleepDatabase_Impl o-- com.doitstudio.sleepest_master.storage.db.UserSleepSessionDao : _userSleepSessionDao
+  com.doitstudio.sleepest_master.storage.db.SleepSegmentDao_Impl .up.|> com.doitstudio.sleepest_master.storage.db.SleepSegmentDao
+  com.doitstudio.sleepest_master.storage.db.SleepSegmentDao_Impl o-- com.doitstudio.sleepest_master.storage.db.Converters : __converters
+  com.doitstudio.sleepest_master.storage.db.UserSleepSessionDao_Impl .up.|> com.doitstudio.sleepest_master.storage.db.UserSleepSessionDao
+  com.doitstudio.sleepest_master.storage.db.UserSleepSessionDao_Impl o-- com.doitstudio.sleepest_master.storage.db.Converters : __converters
+  com.doitstudio.sleepest_master.ui.charts.SparkLineStyle_Factory .up.|> dagger.internal.Factory
+  com.doitstudio.sleepest_master.util.NotificationUtil o-- com.doitstudio.sleepest_master.model.data.NotificationUsage : notificationUsage
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml

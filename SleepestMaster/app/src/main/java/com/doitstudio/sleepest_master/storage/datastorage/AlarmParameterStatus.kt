@@ -37,7 +37,7 @@ class AlarmParameterStatus(private val dataStore: DataStore<AlarmParameters>) {
             preference.toBuilder().setEndAlarmAfterFired(duration).build()
         }
     }
-    suspend fun updateAlarmArt(art:Int){
+    suspend fun updateAlarmType(art:Int){
         dataStore.updateData{preference->
             preference.toBuilder().setAlarmArt(art).build()
         }
