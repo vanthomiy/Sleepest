@@ -1,11 +1,7 @@
 <resources>
-    <string name="app_name">Sleepest - Best way to sleep</string>
+    <string name="app_name">Sleepest - Combine productivity and sleep</string>
     <string name="description_dont_kill_my_app">To ensure that the app stays active in the background
         and wakes you up safely, follow the instructions below for your device model and Android version</string>
-    <string name="alarm_active">Alarm Active</string>
-    <string name="alarm_disabled">Alarm Disabled</string>
-    <string name="insert_data">Alarm Disabled</string>
-    <string name="sleep_segments">Alarm Disabled</string>
     <string name="notice_dont_kill_my_app">Please notice</string>
     <string name="permission_activity_recognition_old">com.google.android.gms.permission.ACTIVITY_RECOGNITION</string>
 
@@ -73,18 +69,8 @@
     <!--endregion-->
 
     <!--region AlarmSettings-->
-    <string name="alarm_sleep_duration">Schlafdauer:</string>
-    <string name="alarm_wake_up_timespan">Aufweckzeitpunkt:</string>
     <string name="alarm_fragment_btn_disable_alarm_disable">Disable next alarm</string>
     <string name="alarm_fragment_btn_disable_alarm_reactivate">Reactivate next alarm</string>
-
-    <string name="alarm_monday_dayname">Montag</string>
-    <string name="alarm_tuesday_dayname">Dienstag</string>
-    <string name="alarm_wednesday_dayname">Mittwoch</string>
-    <string name="alarm_thursday_dayname">Donnerstag</string>
-    <string name="alarm_friday_dayname">Freitag</string>
-    <string name="alarm_saturday_dayname">Samstag</string>
-    <string name="alarm_sunday_dayname">Sonntag</string>
 
     <string name="alarm_entity_day_fr">Fr</string>
     <string name="alarm_entity_day_sa">Sa</string>
@@ -107,104 +93,104 @@
     <string name="alarm_instance_inbetween">between</string>
     <string name="alarm_instance_and">and</string>
     <string name="alarm_instance_alarm_remove">Remove alarm</string>
-    <string name="alarm_instance_days_a_week">Week days:</string>
+    <string name="alarm_instance_days_a_week">Weekdays:</string>
     <string name="alarm_instance_wake_up_range">Wake-Up window:</string>
     <string name="alarm_instance_sleep_duration">Sleep duration:</string>
-    <string name="alarms_alarme">&#9200; Alarme</string>
-    <string name="alarms_no_alarms">Keine Alarme. Füge über den + Button einen neuen Alarm hinzu!</string>
+    <string name="alarms_alarme">&#9200; Alarms</string>
+    <string name="alarms_no_alarms">No active alarms. Add a new alarm with the + button!</string>
 
-    <string name="alarms_type_selection_only_alarm">Nur Alarm</string>
-    <string name="alarms_type_selection_alarm_vibration">Alarm und Vibration</string>
-    <string name="alarms_type_selection_only_vibration">Nur Vibration</string>
-    <string name="alarms_type_selection_default">Standard</string>
+    <string name="alarms_type_selection_only_alarm">Only sound</string>
+    <string name="alarms_type_selection_alarm_vibration">Sound and vibration</string>
+    <string name="alarms_type_selection_only_vibration">Only vibration</string>
+    <string name="alarms_type_selection_default">Default</string>
 
     <!--endregion-->
 
     <!--region Sleep Fragment texts -->
-    <string name="sleep_show_tips">Tipps anzeigen</string>
+    <string name="sleep_show_tips">Show tips</string>
     <string name="sleep_general_info_1">
-        Du kannst allgemeine parameter zu deinem Schlaf einstellen
+        You can set general parameter of your sleep
     </string>
     <string name="sleep_general_info_2">
-        Die Punktzahl zwischen 50 und 100 gibt an, wie gut wir deinen Schlaf überwachen können.
+        The score between 50 and 100 indicates how well we can monitor your sleep.
     </string>
     <string name="sleep_general_info_3">
-        Umso höher der Wert ist, umso besser können wir nur mit deinem Handy deinen Schlaf bestimmen.
+        The higher the value, the better we can determine your sleep only with your mobile phone.
     </string>
-    <string name="sleep_sleeptimes_header">Schlafzeiten</string>
+    <string name="sleep_sleeptimes_header">Sleep times</string>
     <string name="sleep_sleeptimes_info_1">
-        Die Schlafzeit sollte immer die komplette Zeit erfassen, in der du schläfst.
+        Sleep time should always capture the entire time you sleep
     </string>
     <string name="sleep_sleeptimes_info_2">
-        Die App zeichnet nur in dieser Zeit die Daten auf und kann damit deinen Schlaf erkennen.
+        The app only track sleep data during this time and can thus recognize your sleep.
     </string>
     <string name="sleep_sleeptimes_info_3">
-        Im Auto-Modus wird die Schlafenszeit automatisch von der App an deine Wecker angepasst.
+        In auto mode, the app automatically adjusts the bedtime to your alarm clock.
     </string>
     <string name="sleep_sleeptime_start">Start:</string>
-    <string name="sleep_sleeptime_end">Ende:</string>
-    <string name="sleep_sleepduration_header">Schlafdauer</string>
+    <string name="sleep_sleeptime_end">End:</string>
+    <string name="sleep_sleepduration_header">Sleep duration</string>
     <string name="sleep_sleepduration_info_1">
-        Über die Schlafdauer kannst du einstellen, wie lange du standardmäßig schlafen willst.
+        You can use the sleep duration to set how long you want to sleep by default
     </string>
     <string name="sleep_sleepduration_info_2">
-        Du kannst für jeden Alarm die Schlafdauer noch einmal zusätzlich anpassen.
+        You can also adjust the sleep duration for each alarm.
     </string>
-    <string name="sleep_lightcondition_header">Lichtverhältnisse</string>
+    <string name="sleep_lightcondition_header">Light conditions</string>
     <string name="sleep_lightcondition_info_1">
-        Ob du im dunkeln oder im hellen schläfst beeinträchtigt wie gut die App deinen Schlaf bestimmen kann.
+        Whether you sleep in the dark or in the light affects how well the app can determine your sleep.
     </string>
     <string name="sleep_lightcondition_info_2">
-        Wenn du eine richtig gute Schlafüberwachung haben willst solltest du im Dunkeln schlafen.
+        If you want to have a very good sleep monitor, you should sleep in the dark.
     </string>
-    <string name="sleep_phoneposition_header">Handyposition</string>
+    <string name="sleep_phoneposition_header">Phone position</string>
     <string name="sleep_phoneposition_info_1">
-        Für eine gute Schlafbestimmung sollte das Handy beim Schlafen mit im Bett liegen.
+        For a good sleep determination, the mobile phone should be in bed while sleeping.
     </string>
     <string name="sleep_phoneposition_info_2">
-        Du kannst das Handy aber auch nur neben das Bett oder im Raum haben, dementsprechend versuchen wir nur deine Schlafzeiten zu bestimmen.
+        You can also have the cell phone next to the bed or in the room, so we only try to determine your sleep times.
     </string>
-    <string name="sleep_phoneusage_header">Handynutzung</string>
+    <string name="sleep_phoneusage_header">Phone usage</string>
     <string name="sleep_phoneusage_info_1">
-        Umso öfter du dein Handy regulär verwendest, umso genauer können wir deinen Einschlafzeitpunkt bestimmen.
+        The more you regularly use your mobile phone, the more precisely we can determine when you fall asleep.
     </string>
     <string name="sleep_phoneusage_info_2">
-        Wenn du dein Handy wirklich nie benutzt kann die App keine zuverlässige bestimmung des Einschlafzeitpunkts treffen.
+        If you use your mobile phone very rarely, the app cannot reliably determine when to fall asleep.
     </string>
-    <string name="sleep_phoneusage_less">Wenig</string>
-    <string name="sleep_phoneusage_often">Häufig</string>
-    <string name="sleep_activitytracking_header">Aktivitätsverfolgung</string>
+    <string name="sleep_phoneusage_less">Little</string>
+    <string name="sleep_phoneusage_often">Often</string>
+    <string name="sleep_activitytracking_header">Activity tracking</string>
     <string name="sleep_activitytracking_info_1">
-        Aktivierst du die Aktivitätsverfolgung bestimmen wir deine Aktivität über den Tag und zeigen diese in Verlauf für die einzelnen Tage an.
+        If you activate the activity tracking, we determine your activity over the day and show the progress for the individual days.
     </string>
     <string name="sleep_activitytracking_info_2">
-        Mit "In Schlafenszeit einbeziehen" gibt dir die App mehr oder weniger Schlaf, je nach dem wie viel Bewegung du am Tag hattest.
+        With "Include in bedtime" the app gives you more or less sleep, depending on how much exercise you had during the day.
     </string>
-    <string name="sleep_trackactivity_header">Tägliche aktivitäten aufzeichnen</string>
-    <string name="sleep_trackactivity_include_in_wakeup">In Schlafzeit einbeziehen</string>
+    <string name="sleep_trackactivity_header">Track daily activity tracking</string>
+    <string name="sleep_trackactivity_include_in_wakeup">Include in bedtime</string>
     <string name="sleep_alarm_header">Alarm</string>
 
-    <string name="sleep_alarm_auto_cancel_alarm">Alarm automatisch ausschalten</string>
-    <string name="sleep_alarm_sound">Alarm ton</string>
+    <string name="sleep_alarm_auto_cancel_alarm">Turn off the alarm automatically</string>
+    <string name="sleep_alarm_sound">Alarm sound</string>
 
-    <string name="sleep_score_text_60">Sehr schlechte Schlaferkennung</string>
-    <string name="sleep_score_text_70">Schlechte Schlaferkennung</string>
-    <string name="sleep_score_text_80">Schlaferkennung möglich</string>
-    <string name="sleep_score_text_90">Gute Schlaferkennung möglich</string>
-    <string name="sleep_score_text_100">Sehr gute Schlaferkennung möglich</string>
+    <string name="sleep_score_text_60">Very bad sleep detection possible</string>
+    <string name="sleep_score_text_70">Bad sleep detection possible</string>
+    <string name="sleep_score_text_80">Sleep detection possible</string>
+    <string name="sleep_score_text_90">Good sleep detection possible</string>
+    <string name="sleep_score_text_100">Very good sleep detection possible</string>
 
-    <string name="sleep_phoneposition_inbed">Im Bett</string>
-    <string name="sleep_phoneposition_ontable">Neben dem Bett</string>
-    <string name="sleep_phoneposition_auto">Auto erkennung</string>
+    <string name="sleep_phoneposition_inbed">In bed</string>
+    <string name="sleep_phoneposition_ontable">Next to the bed</string>
+    <string name="sleep_phoneposition_auto">Auto detection</string>
 
-    <string name="sleep_lightcondidition_dark">Dunkel</string>
-    <string name="sleep_lightcondidition_light">Hell</string>
-    <string name="sleep_lightcondidition_auto">Auto erkennung</string>
+    <string name="sleep_lightcondidition_dark">Dark</string>
+    <string name="sleep_lightcondidition_light">Light</string>
+    <string name="sleep_lightcondidition_auto">Auto detection</string>
 
-    <string name="sleep_sleeptimes_timecombine"> bis </string>
+    <string name="sleep_sleeptimes_timecombine"> until </string>
 
-    <string name="sleep_sleeptimes_autoOn">Auto erkennung</string>
-    <string name="sleep_sleeptimes_autoOff">Benutzerdefiniert</string>
+    <string name="sleep_sleeptimes_autoOn">Auto detection</string>
+    <string name="sleep_sleeptimes_autoOff">Costum</string>
     <string name="sleep_sleep_header">&#128564; Sleep</string>
 
 
@@ -214,74 +200,72 @@
 
     <!--region Profile Fragment texts -->
     <string name="settings_remove_button_text_normal">Delete data</string>
-    <string name="settings_remove_button_text_choosen">Abbrechen</string>
+    <string name="settings_remove_button_text_choosen">Cancel</string>
     <string name="settings_language_german">German</string>
     <string name="settings_language_english">English</string>
     <string name="settings_header">&#128241; Settings</string>
-    <string name="settings_app_function">Wie funktioniert die App?</string>
+    <string name="settings_app_function">How does the app work?</string>
     <string name="settings_design">Design</string>
     <string name="settings_dark_mode">Dark Mode</string>
     <string name="settings_auto_dark_mode">Use system settings</string>
-    <string name="settings_language">Sprache</string>
-    <string name="settings_help">Hilfe</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_help">Help</string>
     <string name="settings_tutorial">Tutorial</string>
-    <string name="settings_neccessary_settings">Wichtige Einstellungen</string>
-    <string name="settings_app_info">Die App</string>
-    <string name="settings_suggestions">Verbesserungen vorschlagen</string>
-    <string name="settings_rate">App Bewerten</string>
-    <string name="settings_report_error">Fehler melden</string>
-    <string name="settings_permissions">Berechtigungen</string>
-    <string name="settings_sleepdata">Schlafdaten</string>
+    <string name="settings_neccessary_settings">Energy settings</string>
+    <string name="settings_app_info">The app</string>
+    <string name="settings_suggestions">Suggest improvements</string>
+    <string name="settings_rate">Rate app</string>
+    <string name="settings_report_error">Report an error</string>
+    <string name="settings_permissions">Permissions</string>
+    <string name="settings_sleepdata">Sleep data</string>
     <string name="settings_permission_sleepdata">
-                Wir benötigen diese Berechtigung um den Schlaf mit Hilfe deines Handys zu überwachen. Ohne diese Berechtigung funktioniert unsere App nicht!
+                The app needs this permission to monitor sleep with the help of your mobile phone. The app will not work without this permission!
     </string>
-    <string name="settings_daily_activity">Tägliche Aktivität</string>
+    <string name="settings_daily_activity">Daily activities</string>
     <string name="settings_permission_daily_activity">
-                Wir benötigen diese Berechtigung um deine Aktivität am Tag aufzuzeichnen
+                The app needs this permission to record your activity during the day
     </string>
-    <string name="settings_storage">Speicherzugriff</string>
+    <string name="settings_storage">Memory access</string>
     <string name="settings_permission_storage">
-                Um deine Daten zu exportieren oder vorhandene Daten in die App zu laden brauchen wir diese Berechtigung
+                This authorization is required to export your data or load existing data into the app
     </string>
-    <string name="settings_overlapp_app">App Überlappen</string>
+    <string name="settings_overlapp_app">App overlay</string>
+    <string name="settings_permission_overlapp_app">
+                The app needs this authorization so that it can wake you up even if your mobile phone is locked
+    </string>
     <string name="settings_permission_notification_privacy">
-        Diese Berechtigung wir benötigt damit du den Alarmton auch hörst wenn das Handy auf "nicht Stören" eingestellt ist
+        This permission is required so that you can also hear the alarm tone when the mobile phone is set to "Do not disturb"
     </string>
     <string name="settings_notification_privacy">Notification Privacy</string>
-    <string name="settings_permission_overlapp_app">
-                Wir benötigen diese Berechtigung, damit unsere App dich auch bei gesperrtem Handy richtig Wecken kann
-    </string>
+
     <string name="settings_data">Daten</string>
-    <string name="settings_export_data">Daten Exportieren</string>
-    <string name="settings_import_data">Daten Importieren</string>
-    <string name="settings_remove_data_warning">Ohje, alle daten werden gelöscht ok?</string>
-    <string name="settings_remove_data_ackn">Verstanden und löschen</string>
+    <string name="settings_export_data">Export data</string>
+    <string name="settings_import_data">Import data</string>
+    <string name="settings_remove_data_warning">All data will be deleted. Sure?</string>
+    <string name="settings_remove_data_ackn">Yes and delete</string>
     <string name="settings_import_wrong_format">Wrong data format</string>
-    <string name="settings_import_success">Successful imported data</string>
-    <string name="settings_import_cant_write_db">Cant write to database</string>
-
-    <string name="settings_about_us">Sleepest - App\nMade with &#10084; in Bavaria\n\n This app was created by 3 students as a students project and will be improved and maintained in the future</string>
+    <string name="settings_import_success">Successfully imported data</string>
+    <string name="settings_import_cant_write_db">Can\'t write to database</string>
+    <string name="settings_about_us">Sleepest - App\nMade with &#10084; in Bavaria\n\n This app was created by 3 students as a students project and will be improved and maintained in the future.</string>
     <string name="settings_export_file_name">Sleepdata.json</string>
-    <string name="settings_export_success">Export successfully</string>
-    <string name="setting_export_sharing_intent">Sharing File...</string>
-
-    <string name="settings_return">return</string>
-    <string name="settings_delete_all_data">delete all data</string>
+    <string name="settings_export_success">Export successful</string>
+    <string name="setting_export_sharing_intent">Sharing File…</string>
+    <string name="settings_return">Cancel</string>
+    <string name="settings_delete_all_data">Delete all data</string>
     <string name="settings_credits">Credits</string>
     <string name="settings_credits_flaticon">Flaticon Website</string>
-    <string name="settings_flaticon_introduction">Wir haben Bilder von der Seite Flaticon verwendet. Im folgenden sind die einzelnen Authoren der Bilder aufgelistet.</string>
+    <string name="settings_flaticon_introduction">We\'ve used pictures of Flaticon. You can see all authors below.</string>
     <string name="settings_from"> at </string>
 
     <!--endregion-->
 
     <!--region History Fragment texts -->
-
+    <string name="history_day_information_noDataAvailable">No data found to show here.</string>
     <string name="history_sleepPhases_title">Sleep phases:</string>
     <string name="history_day_sleepPhases_time_in_phase_title">Time in phase:</string>
     <string name="history_fragment_title">&#128197; History</string>
     <string name="history_button_analysisDate_previous">Previous</string>
     <string name="history_button_analysisDate_next">Next</string>
-    <string name="history_day_information_noDataAvailable">Nothing here. Go to bed to generate data.</string>
     <string name="history_day_information_sleepPhases_lineChart">This diagram shows your sleep phases of the last night. On the left and right above the diagram you can see the times when you fell asleep and woke up, as detected by the app. The night is divided into two or three sleep stages, depending on where your phone was that night. If the device was next to the bed, you can see the phases \"awake\" and \"sleep\". If it was in bed, the night is divided into the phases \"deep sleep\", \"light sleep\" and \"awake\". The diagram is divided linearly over the night.</string>
     <string name="history_day_sleep_quality_rating_title">Sleep quality rating:</string>
     <string name="history_activity_title">Activity:</string>
