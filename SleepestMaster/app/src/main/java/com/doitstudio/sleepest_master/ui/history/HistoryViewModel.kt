@@ -44,16 +44,16 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
     /**  */
     private val dataStoreRepository: DataStoreRepository by lazy { (context as MainApplication).dataStoreRepository }
 
-    /**  */
+    /** Contains the current date which will be displayed at the history fragment. */
     var analysisDate = ObservableField(LocalDate.now())
 
-    /**  */
+    /** Indicates whether darkmode is on or off. */
     var darkMode = false
 
     /**  */
     var autoDarkMode = false
 
-    /**  */
+    /** Indicates if the sleep phase assessment algorithm is currently working. */
     var onWork = false
 
     /**  */
@@ -77,7 +77,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
     }
 
-    /**  */
+    /** Onclick handler for altering the [analysisDate] based on the currently selected analysis Range. */
     fun onPreviousDateClick(range: Int) {
         analysisDate.let {
             when (range) {
@@ -88,7 +88,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    /**  */
+    /** Onclick handler for altering the [analysisDate] based on the currently selected analysis Range. */
     fun onNextDateClick(range: Int) {
         analysisDate.let {
             when (range) {
@@ -196,7 +196,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return sleepSessionData.containsKey(UserSleepSessionEntity.getIdByDateTime(time))
     }
 
-    /**  */
+    /** Auxiliary function the determine if the device is currently in dark mode. */
     fun checkDarkMode() : Int {
         var color = Color.BLACK
         if (autoDarkMode) {
@@ -209,7 +209,9 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return color
     }
 
-    /**  */
+    /** Generates all the relevant information for the Bar Charts by searching the database for the correct period of time.
+     * TODO(Check this)
+     * */
     fun generateDataBarChart(range: Int, endDateOfDiagram: LocalDate): Triple<ArrayList<BarEntry>, List<Int>, Int> {
         val entries = ArrayList<BarEntry>()
         val xAxisLabels = mutableListOf<Int>()
@@ -277,7 +279,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return Triple(entries, xAxisLabels, maxSleepTime.toInt())
     }
 
-    /**  */
+    /** Auxiliary function for creating a BarDataSet. */
     private fun generateBarDataSet(barEntries: ArrayList<BarEntry>) : BarDataSet {
         val barDataSet = BarDataSet(barEntries, "")
         barDataSet.setColors(
@@ -292,7 +294,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return barDataSet
     }
 
-    /**  */
+    /** Auxiliary function for setting the correct size of the chart. */
     private fun getBarChartYAxisProportion(sleepAmount: Int) : Float {
         return if ((sleepAmount >= 540) && (sleepAmount < 660)) {
             12F
@@ -307,7 +309,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    /**  */
+    /** Create a new Bar Chart entity. */
     fun setBarChart(range: Int, endDateOfDiagram: LocalDate) : BarChart {
         //http://developine.com/android-grouped-stacked-bar-chart-using-mpchart-kotlin/
         val barChart = BarChart(context)
@@ -318,7 +320,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return barChart
     }
 
-    /**  */
+    /** Update an existing Bar Chart entity. */
     fun updateBarChart(barChart: BarChart, range: Int, endDateOfDiagram: LocalDate) {
         val diagramData = generateDataBarChart(range, endDateOfDiagram)
         val barData = BarData(generateBarDataSet(diagramData.first))
@@ -327,7 +329,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         barChart.invalidate()
     }
 
-    /**  */
+    /** Visual setup for Bar Chart entities. With separation between monthly and weekly bar charts. */
     private fun visualSetUpBarChart(barChart: BarChart,
                                     diagramData: Triple<ArrayList<BarEntry>, List<Int>, Int>,
                                     range: Int) {
