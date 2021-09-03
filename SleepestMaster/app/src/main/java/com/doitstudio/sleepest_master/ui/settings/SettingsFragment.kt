@@ -44,7 +44,6 @@ import com.doitstudio.sleepest_master.util.NotificationUtil
 import com.doitstudio.sleepest_master.util.SmileySelectorUtil
 import com.doitstudio.sleepest_master.util.TimeConverterUtil
 import com.google.gson.Gson
-import com.judemanutd.autostarter.AutoStartPermissionHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -97,8 +96,7 @@ class SettingsFragment : Fragment() {
             onPermissionClicked(it)
         }
         binding.overlayPermission.setOnClickListener {
-            //onPermissionClicked(it)
-            AutoStartPermissionHelper.getInstance().getAutoStartPermission(actualContext, true, true)
+            onPermissionClicked(it)
         }
         binding.importButton.setOnClickListener {
             onDataClicked(it)
