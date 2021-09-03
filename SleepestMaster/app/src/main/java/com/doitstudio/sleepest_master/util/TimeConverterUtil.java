@@ -25,7 +25,6 @@ public class TimeConverterUtil {
 
     public static String toTimeFormat(int hour, int minute) {
 
-        //wakeUpEarlyValue.set((if (wakeUpEarly.hour < 10) "0" else "") + wakeUpEarly.hour.toString() + ":" + (if (wakeUpEarly.minute < 10) "0" else "") + (wakeUpEarly.minute.toString()))
         String hourText = null, minuteText = null;
 
         if(hour < 10) {

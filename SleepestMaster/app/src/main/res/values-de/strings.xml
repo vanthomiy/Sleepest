@@ -102,6 +102,7 @@
     <string name="alarms_type_selection_alarm_vibration">Ton und Vibration</string>
     <string name="alarms_type_selection_only_vibration">Nur Vibration</string>
     <string name="alarms_type_selection_default">Standard</string>
+    <string name="alarms_information_temporary_disabled">Nächster Alarm ist temporär ausgeschalten</string>
 
     <!--endregion-->
 

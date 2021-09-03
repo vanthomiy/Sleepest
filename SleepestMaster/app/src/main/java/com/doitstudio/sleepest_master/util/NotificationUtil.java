@@ -248,17 +248,18 @@ public class NotificationUtil {
 
         String sleeptimeText;
         if ((int) arrayList.get(1) >= Constants.FOREGROUNDSERVICE_NOTIFICATION_DELAY_SLEEPTIME) {
-            sleeptimeText = smileySelectorUtil.getSmileyTime() + "Sleep time: " + TimeConverterUtil.minuteToTimeFormat((int) arrayList.get(1))[0] + "h " + TimeConverterUtil.minuteToTimeFormat((int) arrayList.get(1))[1] + "min";
+            sleeptimeText = smileySelectorUtil.getSmileyTime() + "Sleep time: " + TimeConverterUtil.toTimeFormat(TimeConverterUtil.minuteToTimeFormat((int) arrayList.get(1))[0], TimeConverterUtil.minuteToTimeFormat((int) arrayList.get(1))[1]);
         } else {
             sleeptimeText = smileySelectorUtil.getSmileyTime() + "Sleep time: " + 0 + "h " + "00" + "min";
         }
-            String alarmtimeText = smileySelectorUtil.getSmileyAlarmClock() + "Alarm time: " + TimeConverterUtil.millisToTimeFormat((int) arrayList.get(4))[0] + ":" + TimeConverterUtil.millisToTimeFormat((int) arrayList.get(4))[1];
+
+        String alarmtimeText = smileySelectorUtil.getSmileyAlarmClock() + "Alarm time: " + TimeConverterUtil.millisToTimeFormat((int) arrayList.get(4))[0] + ":" + TimeConverterUtil.millisToTimeFormat((int) arrayList.get(4))[1];
 
         //Set the text in textview of the expanded notification view
         boolean[] bannerConfig = (boolean[]) arrayList.get(5);
 
         if (bannerConfig[0]) {
-            remoteViews.setTextViewText(R.id.tvBannerAlarmActive, contentText + " sub:" + arrayList.get(6) + ",VA:" + arrayList.get(7));
+            remoteViews.setTextViewText(R.id.tvBannerAlarmActive, contentText);
             remoteViews.setViewVisibility(R.id.tvBannerAlarmActive, View.VISIBLE);
         } else {
             remoteViews.setViewVisibility(R.id.tvBannerAlarmActive, View.GONE);

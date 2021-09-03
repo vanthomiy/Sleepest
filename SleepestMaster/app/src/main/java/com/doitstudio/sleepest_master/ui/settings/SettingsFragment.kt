@@ -219,8 +219,13 @@ class SettingsFragment : Fragment() {
             Foreground Service Time: ${pref.getInt("time", 0)}
             
             """.trimIndent()
+        pref = actualContext.getSharedPreferences("SleepValue", 0)
+        val textSleepValue= """
+            Sleep value amount: ${pref.getInt("value", 0)},${pref.getBoolean("status",false)}
+            
+            """.trimIndent()
 
-        var textGesamt = textVersion + textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation + textCalc1 + textCalc2 + textAlarmReceiver + textSleepTime + textBooReceiver1 + textStopException + textAlarmReceiver1 + textActualState + textForegroundServiceTime
+        var textGesamt = textVersion + textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation + textCalc1 + textCalc2 + textAlarmReceiver + textSleepTime + textBooReceiver1 + textStopException + textAlarmReceiver1 + textActualState + textForegroundServiceTime + textSleepValue
 
 
         binding.testText.text = textGesamt

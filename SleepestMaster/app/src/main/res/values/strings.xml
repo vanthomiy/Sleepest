@@ -103,6 +103,7 @@
     <string name="alarms_type_selection_alarm_vibration">Sound and vibration</string>
     <string name="alarms_type_selection_only_vibration">Only vibration</string>
     <string name="alarms_type_selection_default">Default</string>
+    <string name="alarms_information_temporary_disabled">Next alarm is temporary disabled</string>
 
     <!--endregion-->
 

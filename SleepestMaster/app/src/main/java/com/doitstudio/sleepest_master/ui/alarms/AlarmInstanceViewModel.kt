@@ -4,6 +4,7 @@ import android.app.Application
 import android.app.TimePickerDialog
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
@@ -48,6 +49,9 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
         scope.launch {
             isAlarmActive.get()?.let {
                 dataBaseRepository.updateIsActive(it, alarmId)
+                if (dataBaseRepository.getAlarmById(alarmId).first().isActive && dataBaseRepository.getAlarmById(alarmId).first().tempDisabled) {
+                    Toast.makeText(context, context.getString(R.string.alarms_information_temporary_disabled), Toast.LENGTH_LONG).show()
+                }
             }
         }
 
