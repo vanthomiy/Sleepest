@@ -440,6 +440,12 @@ public class ForegroundService extends LifecycleService {
         updateNotification();
         sendUserInformation();
 
+        SharedPreferences pref = getSharedPreferences("SleepValue", 0);
+        SharedPreferences.Editor ed = pref.edit();
+        ed.putInt("value", sleepValueAmount);
+        ed.putBoolean("status", isSubscribed);
+        ed.apply();
+
     }
 
     /**

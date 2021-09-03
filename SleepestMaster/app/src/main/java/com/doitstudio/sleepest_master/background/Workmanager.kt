@@ -7,11 +7,14 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationManagerCompat
 import androidx.work.*
 import com.doitstudio.sleepest_master.MainApplication
 import com.doitstudio.sleepest_master.R
+import com.doitstudio.sleepest_master.alarmclock.AlarmClockReceiver
 import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.NotificationUsage
+import com.doitstudio.sleepest_master.model.data.NotificationUsage.Companion.getCount
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler
 import com.doitstudio.sleepest_master.sleepcalculation.SleepCalculationHandler.Companion.getHandler
 import com.doitstudio.sleepest_master.storage.DataStoreRepository
@@ -77,10 +80,14 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
                     if (ForegroundService.getForegroundServiceTime() >= 1200 && ((actualTimestampSeconds - lastTimestampInSeconds) > 600) && dataStoreRepository.isInSleepTime(null)) {
                         val notificationsUtil = NotificationUtil(applicationContext, NotificationUsage.NOTIFICATION_NO_API_DATA,null)
                         notificationsUtil.chooseNotification()
+                    } else {
+                        AlarmClockReceiver.cancelNotification(NotificationUsage.NOTIFICATION_NO_API_DATA)
                     }
                 } else if (ForegroundService.getForegroundServiceTime() >= 1200 && (sleepApiRawDataEntity == null || sleepApiRawDataEntity.count() == 0)) {
                     val notificationsUtil = NotificationUtil(applicationContext, NotificationUsage.NOTIFICATION_NO_API_DATA,null)
                     notificationsUtil.chooseNotification()
+                } else {
+                    AlarmClockReceiver.cancelNotification(NotificationUsage.NOTIFICATION_NO_API_DATA)
                 }
             }
         }
@@ -94,11 +101,11 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
         ed.putInt("minute", calendar.get(Calendar.MINUTE))
         ed.apply()
 
-        /*scope.launch {
+        scope.launch {
             sleepCalculationHandler.checkIsUserSleeping(null)
-        }*/
+        }
 
-        sleepCalculationHandler.checkIsUserSleepingJob(null)
+        //sleepCalculationHandler.checkIsUserSleepingJob(null)
 
         return Result.success()
     }
