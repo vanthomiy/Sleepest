@@ -50,18 +50,16 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
     /** Indicates whether darkmode is on or off. */
     var darkMode = false
 
-    /**  */
+    /** Indicates whether the user has set the app up for automatically detect the devices dark mode settings. */
     var autoDarkMode = false
 
     /** Indicates if the sleep phase assessment algorithm is currently working. */
     var onWork = false
 
-    /**  */
+    /** Container for the x-axis values of the bar Charts. */
     private val xAxisValues = ArrayList<String>()
 
-    /**  */
-    private val idsListener = ObservableInt()
-
+    /** Indicates that [getSleepData] has finished and fresh data was received from the database. */
     val dataReceived = ObservableBoolean(false)
 
     /** <Int: Sleep session id, Triple<List<[SleepApiRawDataEntity]>, Int: Sleep duration, [UserSleepSessionEntity]>> */
@@ -112,7 +110,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
     }
 
-    /**  */
+    /** Starts the process of requesting data from the database. */
     fun getSleepData() {
         val ids = mutableSetOf<Int>()
         analysisDate.get()?.let {
@@ -145,15 +143,14 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                         session
                     ) as Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>
                 }
-
-                idsListener.set(id)
             }
             checkSessionIntegrity()
             dataReceived.set(true)
         }
     }
 
-    /**  */
+    /** Checks if the previously received sleep session data is correct and contains no errors.
+     * If unusual data was received, the sleep phase determination algorithm ist triggered again to interpret the api data. */
     private fun checkSessionIntegrity() {
         onWork = true
         for (key in sleepSessionData.keys) {
@@ -191,7 +188,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         onWork = false
     }
 
-    /**  */
+    /** Checks if the passed date has an entry in the [sleepSessionData]. */
     fun checkId(time: LocalDate) : Boolean {
         return sleepSessionData.containsKey(UserSleepSessionEntity.getIdByDateTime(time))
     }
@@ -494,7 +491,9 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         barChart.isDoubleTapToZoomEnabled = false
     }
 
-    /**  */
+    /** Generates all the relevant information for the activity chart by searching the [sleepSessionData] for the correct period of time.
+     * TODO(Check this)
+     * */
     private fun generateDataActivityChart(range: Int, endDateOfDiagram: LocalDate): ArrayList<Entry> {
         val entries = ArrayList<Entry>()
         var xValue = 0
@@ -525,7 +524,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return entries
     }
 
-    /**  */
+    /** Create a new Activity Chart [LineChart] entity. */
     fun setActivityChart(range: Int, endDateOfDiagram: LocalDate) : LineChart {
         val chart = LineChart(context)
         val lineDataSet = LineDataSet(generateDataActivityChart(range, endDateOfDiagram), "")
@@ -534,14 +533,14 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return chart
     }
 
-    /**  */
+    /** Updates the information in an existing Activity Chart. */
     fun updateActivityChart(chart: LineChart, range: Int, endDateOfDiagram: LocalDate) {
         val lineDataSet = LineDataSet(generateDataActivityChart(range, endDateOfDiagram), "")
         visualSetUpActivityChart(chart, lineDataSet, range)
         chart.data = LineData(lineDataSet)
     }
 
-    /**  */
+    /** Visual setup for the Activity Chart. With separation between monthly and weekly bar charts. */
     private fun visualSetUpActivityChart(chart: LineChart, lineDataSet: LineDataSet, range: Int) {
         lineDataSet.setDrawValues(false)
         lineDataSet.setDrawFilled(true)

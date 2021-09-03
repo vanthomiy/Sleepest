@@ -136,7 +136,6 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
         }
 
         createPickerDialogue(view, time, view.tag == "BeginOfSleep")
-        //Unterscheidung zwischen Einschlaf und Aufwachzeitpunkt.
     }
 
     private fun createPickerDialogue(view: View, dateTime: LocalDateTime, startOfSleep:Boolean) {

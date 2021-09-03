@@ -65,6 +65,7 @@ class HistoryDayFragment : Fragment() {
     /** [PieChart] for the daily sleep analysis. */
     private lateinit var pieChartSleepAnalysis: PieChart
 
+    /** [BarChart] for the daily sleep analysis. */
     private lateinit var barChartSleepAnalysis: BarChart
 
     override fun onCreateView(
@@ -132,6 +133,7 @@ class HistoryDayFragment : Fragment() {
         return binding.root
     }
 
+    /** Updates all existing charts on the fragment. */
     private fun updateCharts() {
         updateBarChart(barChartSleepAnalysis)
         barChartSleepAnalysis.invalidate()
@@ -240,7 +242,7 @@ class HistoryDayFragment : Fragment() {
         }
     }
 
-    /** */
+    /**  */
     fun generateDataBarChart(): ArrayList<BarEntry> {
         val entries = ArrayList<BarEntry>()
         var xIndex = 0.5f
