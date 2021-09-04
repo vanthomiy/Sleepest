@@ -117,11 +117,7 @@ class SettingsFragment : Fragment() {
 
         }
         binding.btnImportantSettings.setOnClickListener() {
-            //DontKillMyAppFragment.show(requireActivity())
-            val calendar = TimeConverterUtil.getAlarmDate(LocalTime.now().toSecondOfDay() + 61);
-            AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), actualContext, AlarmClockReceiverUsage.LATEST_WAKEUP_ALARMCLOCK);
-
-
+            DontKillMyAppFragment.show(requireActivity())
         }
 
         viewModel.actualExpand.set(caseOfEntrie)

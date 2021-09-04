@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Sleepest - Produktivität und Schlaf vereinen</string>
     <string name="description_dont_kill_my_app">Um sicherzustellen, dass die App im Hintergrund aktiv bleibt und dich sicher aufweckt, solltest du die
-        nachfolgenden Anweisungen für deine Gerätemodell und Android Version befolgen.</string>
+        nachfolgenden Anweisungen für dein Gerätemodell und Android Version befolgen.</string>
     <string name="notice_dont_kill_my_app">Bitte beachten</string>
     <string name="permission_activity_recognition_old">com.google.android.gms.permission.ACTIVITY_RECOGNITION</string>
 
@@ -29,6 +29,8 @@
     <string name="information_notification_channel_description">Dieser Channel zeigt dem Nutzer, dass er nun schlafen sollte.</string>
     <string name="information_notification_text">Du kannst deine eingestellte Schlafzeit nicht mehr erreichen</string>
     <string name="foregroundservice_notification_title">Sleepest - Produktivität und Schlaf vereinen</string>
+    <string name="foregroundservice_notification_sleeptime">Schlafdauer: </string>
+    <string name="foregroundservice_notification_alarmtime">Weckzeit: </string>
     <string name="workmanager1_tag">Workmanager 1</string>
     <string name="workmanager2_tag">Workmanager 2</string>
     <string name="alarmmanager_key">com.doitstudio.sleepest_master.background.AlarmIntentKey</string>
@@ -339,7 +341,7 @@
                         Du kannst diese zu einem späteren Zeitpunkt jederzeit anpassen.\n
                         Tipp: Setze deine ungefähre Schlafzeit großzügig, um eine gute Schlaferkennung zu ermöglichen</string>
     <string name="onboarding_content_page_9">Um eine korrekte Ausführung der App zu gewährleisten, musst du die oben stehenden Berechtigungen akzeptieren</string>
-    <string name="onboarding_content_page_10">Die App muss im Hintergrund aktiv bleiben, um deinen Schlaf aufzuzeichnen. Deshalb solltest du die nachfolgenden Anweisungen zur Akku Optimierung befolgen.\n Bitte lies die ANweisungen sorgfältig.</string>
+    <string name="onboarding_content_page_10">Die App muss im Hintergrund aktiv bleiben, um deinen Schlaf aufzuzeichnen. Deshalb solltest du die nachfolgenden Anweisungen zur Akku Optimierung befolgen.\n Bitte lies die Anweisungen sorgfältig.</string>
     <string name="onboarding_toast_permissions">Bitte akzeptiere alle Berechtigungen</string>
     <string name="onboarding_toast_read_to_end">Bitte lies das ganze Tutorial</string>
     <string name="onboarding_toast_permission_already_granted">Diese Berechtigung wurde schon akzeptiert</string>

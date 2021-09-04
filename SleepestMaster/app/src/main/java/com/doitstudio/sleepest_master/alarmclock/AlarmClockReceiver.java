@@ -247,11 +247,5 @@ public class AlarmClockReceiver extends BroadcastReceiver {
         }
     }
 
-    /**
-     * Cancel an existing notification
-     * @param notificationUsage Usage of notification to be canceled
-     */
-    public static void cancelNotification(NotificationUsage notificationUsage) {
-        NotificationManagerCompat.from(context).cancel(NotificationUsage.Companion.getCount(notificationUsage));
-    }
+
 }

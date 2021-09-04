@@ -1,5 +1,7 @@
 package com.doitstudio.sleepest_master.util;
 
+import static android.content.Context.NOTIFICATION_SERVICE;
+
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -7,11 +9,13 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.service.notification.StatusBarNotification;
 import android.view.View;
 import android.widget.RemoteViews;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import com.doitstudio.sleepest_master.MainActivity;
@@ -65,10 +69,10 @@ public class NotificationUtil {
         }
 
         if (notification != null && notificationUsage == NotificationUsage.NOTIFICATION_FOREGROUND_SERVICE) {
-            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
             notificationManager.notify(1, notification);
         } else if (notification != null) {
-            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
             notificationManager.notify(notificationUsage.Companion.getCount(notificationUsage), notification);
         }
 
@@ -76,7 +80,7 @@ public class NotificationUtil {
 
 
     private void createNotificationChannel(String channelId, String channelName, String channelDescription) {
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
         NotificationChannel channel = new NotificationChannel(
                 channelId,
                 channelName,
@@ -248,12 +252,12 @@ public class NotificationUtil {
 
         String sleeptimeText;
         if ((int) arrayList.get(1) >= Constants.FOREGROUNDSERVICE_NOTIFICATION_DELAY_SLEEPTIME) {
-            sleeptimeText = smileySelectorUtil.getSmileyTime() + "Sleep time: " + TimeConverterUtil.toTimeFormat(TimeConverterUtil.minuteToTimeFormat((int) arrayList.get(1))[0], TimeConverterUtil.minuteToTimeFormat((int) arrayList.get(1))[1]);
+            sleeptimeText = smileySelectorUtil.getSmileyTime() + context.getString(R.string.foregroundservice_notification_sleeptime)+ " " + TimeConverterUtil.toTimeFormat(TimeConverterUtil.minuteToTimeFormat((int) arrayList.get(1))[0], TimeConverterUtil.minuteToTimeFormat((int) arrayList.get(1))[1]);
         } else {
-            sleeptimeText = smileySelectorUtil.getSmileyTime() + "Sleep time: " + 0 + "h " + "00" + "min";
+            sleeptimeText = smileySelectorUtil.getSmileyTime() + context.getString(R.string.foregroundservice_notification_sleeptime)+ " " + 0 + "h " + "00" + "min";
         }
 
-        String alarmtimeText = smileySelectorUtil.getSmileyAlarmClock() + "Alarm time: " + TimeConverterUtil.millisToTimeFormat((int) arrayList.get(4))[0] + ":" + TimeConverterUtil.millisToTimeFormat((int) arrayList.get(4))[1];
+        String alarmtimeText = smileySelectorUtil.getSmileyAlarmClock() + context.getString(R.string.foregroundservice_notification_alarmtime)+ " " + TimeConverterUtil.millisToTimeFormat((int) arrayList.get(4))[0] + ":" + TimeConverterUtil.millisToTimeFormat((int) arrayList.get(4))[1];
 
         //Set the text in textview of the expanded notification view
         boolean[] bannerConfig = (boolean[]) arrayList.get(5);
@@ -380,5 +384,26 @@ public class NotificationUtil {
                 .setContentIntent(pendingIntent)
                 .setFullScreenIntent(fullScreenPendingIntent, true)
                 .build();
+    }
+
+    /**
+     * Cancel an existing notification
+     * @param notificationUsage Usage of notification to be canceled
+     */
+    public static void cancelNotification(NotificationUsage notificationUsage, Context context) {
+        NotificationManagerCompat.from(context).cancel(NotificationUsage.Companion.getCount(notificationUsage));
+    }
+
+    public static boolean isNotificationActive(NotificationUsage notificationUsage, Context context) {
+
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+        StatusBarNotification[] notifications = notificationManager.getActiveNotifications();
+        for (StatusBarNotification notification : notifications) {
+            if (notification.getId() == NotificationUsage.Companion.getCount(notificationUsage)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

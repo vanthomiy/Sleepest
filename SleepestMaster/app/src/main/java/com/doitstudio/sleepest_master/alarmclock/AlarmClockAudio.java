@@ -28,6 +28,7 @@ import com.doitstudio.sleepest_master.model.data.AlarmClockReceiverUsage;
 import com.doitstudio.sleepest_master.model.data.Constants;
 import com.doitstudio.sleepest_master.model.data.NotificationUsage;
 import com.doitstudio.sleepest_master.storage.DataStoreRepository;
+import com.doitstudio.sleepest_master.util.NotificationUtil;
 import com.doitstudio.sleepest_master.util.TimeConverterUtil;
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog;
 import com.kevalpatel.ringtonepicker.RingtonePickerListener;
@@ -334,7 +335,7 @@ public class AlarmClockAudio {
             countDownTimer.cancel();
         }
 
-        AlarmClockReceiver.cancelNotification(NotificationUsage.NOTIFICATION_ALARM_CLOCK);
-        AlarmClockReceiver.cancelNotification(NotificationUsage.NOTIFICATION_ALARM_CLOCK_LOCK_SCREEN);
+        NotificationUtil.cancelNotification(NotificationUsage.NOTIFICATION_ALARM_CLOCK, appContext);
+        NotificationUtil.cancelNotification(NotificationUsage.NOTIFICATION_ALARM_CLOCK_LOCK_SCREEN, appContext);
     }
 }

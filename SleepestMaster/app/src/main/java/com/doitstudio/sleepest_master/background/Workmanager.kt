@@ -81,13 +81,17 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
                         val notificationsUtil = NotificationUtil(applicationContext, NotificationUsage.NOTIFICATION_NO_API_DATA,null)
                         notificationsUtil.chooseNotification()
                     } else {
-                        AlarmClockReceiver.cancelNotification(NotificationUsage.NOTIFICATION_NO_API_DATA)
+                        if (NotificationUtil.isNotificationActive(NotificationUsage.NOTIFICATION_NO_API_DATA, applicationContext)) {
+                            NotificationUtil.cancelNotification(NotificationUsage.NOTIFICATION_NO_API_DATA, applicationContext)
+                        }
                     }
                 } else if (ForegroundService.getForegroundServiceTime() >= 1200 && (sleepApiRawDataEntity == null || sleepApiRawDataEntity.count() == 0)) {
                     val notificationsUtil = NotificationUtil(applicationContext, NotificationUsage.NOTIFICATION_NO_API_DATA,null)
                     notificationsUtil.chooseNotification()
                 } else {
-                    AlarmClockReceiver.cancelNotification(NotificationUsage.NOTIFICATION_NO_API_DATA)
+                    if (NotificationUtil.isNotificationActive(NotificationUsage.NOTIFICATION_NO_API_DATA, applicationContext)) {
+                        NotificationUtil.cancelNotification(NotificationUsage.NOTIFICATION_NO_API_DATA, applicationContext)
+                    }
                 }
             }
         }
