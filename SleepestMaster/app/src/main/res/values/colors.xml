@@ -40,4 +40,14 @@
 
     <color name="white">#FFFFFF</color>
 
+    <!--region DontKillMyApp dialog-->
+    <color name="light_gray">#bdc3c7</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="blue_chill">#0f7fa0</color>
+    <color name="gray_blue">#34495e</color>
+    <color name="dark_gray">#2c3e50</color>
+    <color name="dark_green">#27ae60</color>
+    <color name="yellow">#FFFF00</color>
+    <!--endregion-->
+
 </resources>

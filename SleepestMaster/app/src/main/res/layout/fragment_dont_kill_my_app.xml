@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/dark_gray"
     android:orientation="vertical"
-    android:background="@color/primary_app_background"
     tools:context=".DontKillMyAppFragment">
 
     <TextView
@@ -13,9 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:textColor="@color/secondary_text_color"
-        android:textSize="20sp"
-        />
+        android:textColor="@color/error_color"
+        android:textSize="20sp"/>
 
     <TextView
         android:id="@+id/tvDescriptionDontKillMyApp"
@@ -23,18 +22,22 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:textSize="17sp"
-        android:textColor="@color/secondary_text_color"/>
+        android:textColor="@color/light_gray"/>
 
     <dev.doubledot.doki.views.DokiContentView
         android:id="@+id/doki_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:dokiPrimaryTextColor="@color/primary_text_color"
-        app:dokiSecondaryTextColor="@color/secondary_text_color"
-        app:dokiButtonsTextColor="@color/primary_button_color"
+        app:dokiPrimaryTextColor="@color/white"
+        app:dokiSecondaryTextColor="@color/light_gray"
+        app:dokiButtonsTextColor="@color/error_color"
+        app:dokiActiveIconsColor="@color/error_color"
+        app:dokiInactiveIconsColor="@color/blue_chill"
         app:dokiExplanationTitle="The Explanation"
         app:dokiSolutionTitle="The Solution"
-        app:dokiBackgroundColor="@color/secondary_app_background"
-        app:dokiHeaderBackgroundColor="@color/tertiary_app_background"/>
+        app:dokiBackgroundColor="@color/gray_blue"
+        app:dokiHeaderBackgroundColor="@color/dark_gray"
+        app:dokiDividerColor="@color/yellow"
+        app:dokiImgBorderColor="@color/dark_green"/>
 
 </LinearLayout>
