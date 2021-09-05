@@ -301,7 +301,7 @@ class SleepCalculationHandler(val context: Context) {
 
                 }
 
-                if (data.sleepState != SleepState.NONE){
+                if (data.sleepState != SleepState.NONE && data.oldSleepState != SleepState.NONE){
                     // get normed list
                     val (normedSleepApiDataBefore, frequency1) = createTimeNormedData(
                         1f,
@@ -328,7 +328,6 @@ class SleepCalculationHandler(val context: Context) {
                         return@forEach
                     }
 
-                    // create features for ml model
                     val sleepClassifier = SleepClassifier.getHandler(context)
 
 
@@ -345,9 +344,14 @@ class SleepCalculationHandler(val context: Context) {
                         data.timestampSeconds,
                         data.sleepState
                     )
+
+                    dataBaseRepository.updateOldSleepApiRawDataSleepState(
+                        data.timestampSeconds,
+                        data.sleepState
+                    )
                 }
 
-
+                // Workaround to prevent NONE Sleep States
                 if(finalCalc && data.sleepState == SleepState.NONE){
                     dataBaseRepository.updateSleepApiRawDataSleepState(
                         data.timestampSeconds,

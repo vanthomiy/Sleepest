@@ -10,15 +10,8 @@ import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import kotlinx.coroutines.flow.first
 
 /**
- * This class is used to use the functionality of the imported ml models.
- * In the app are used different types of ml models for specific use-cases.
- * With this we can
- *  - load input assignments [loadInputAssignmentFile]
- *  - create features of an actual sleep api raw data list [createFeatures]
- *  - create features for indicating table/bed of an actual sleep api raw data list [createTableFeatures]
- *  - defining if user is sleeping [isUserSleeping]
- *  - defining if phone is in bed [defineTableBed]
- *  - defining the actual state of sleeping [defineUserSleep]
+ * This class contains the actual algorithms and functions that classifies the user sleep
+ * Gets called from the [SleepCalculationHandler]
  */
 class SleepClassifier constructor(private val context: Context) {
 

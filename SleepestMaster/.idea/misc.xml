@@ -3,8 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/GitHub/Sleepest/SleepestMaster/app/src/main/res/layout/fragment_history_day.xml" value="0.32657657657657657" />
-        <entry key="..\:/GitHub/Sleepest/SleepestMaster/app/src/main/res/layout/fragment_sleep.xml" value="0.32657657657657657" />
+        <entry key="..\:/GitHub/Sleepest/SleepestMaster/app/src/main/res/layout/fragment_dont_kill_my_app.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/fabii/OneDrive/Dokumente/GitHub/Sleepest/SleepestMaster/app/src/main/res/drawable/background_alarmentity.xml" value="0.20833333333333334" />
         <entry key="..\:/Users/fabii/OneDrive/Dokumente/GitHub/Sleepest/SleepestMaster/app/src/main/res/drawable/bgrounded_button.xml" value="0.20833333333333334" />
         <entry key="..\:/Users/fabii/OneDrive/Dokumente/GitHub/Sleepest/SleepestMaster/app/src/main/res/drawable/bgroundedchoosen.xml" value="0.20833333333333334" />
@@ -40,7 +39,10 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
