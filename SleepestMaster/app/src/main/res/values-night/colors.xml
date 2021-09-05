@@ -24,7 +24,7 @@
     <color name="warning_color">#FF5722</color>
     <color name="error_color">#E91E63</color>
 
-    <color name="awake_sleep_color">#4EE4f5</color>
+    <color name="awake_sleep_color">#27ae60</color>
     <color name="light_sleep_color">#7380F5</color>
     <color name="deep_sleep_color">#272EB0</color>
     <color name="rem_sleep_color">#911BAC</color>

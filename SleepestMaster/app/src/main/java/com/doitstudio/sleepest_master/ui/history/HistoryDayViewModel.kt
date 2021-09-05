@@ -121,7 +121,6 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     fun manualChangeSleepTimes(view: View) {
-
         val time : LocalDateTime = if (view.tag == "BeginOfSleep") {
             //Set the fall asleep time.
             LocalDateTime.ofInstant(
@@ -145,11 +144,9 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
             { _, h, m ->
                 scope.launch {
                     val tempTime = LocalTime.of(h, m)
-                    val newDatTime = dateTime.toLocalDate().atTime(tempTime)
+                    val newDateTime = dateTime.toLocalDate().atTime(tempTime)
                     //val epochTime = newDatTime.toEpochSecond(ZoneOffset.systemDefault())
-                    val epochTime =
-                        newDatTime.atZone(ZoneOffset.systemDefault()).toInstant().toEpochMilli()
-                            .div(1000)
+                    val epochTime = newDateTime.atZone(ZoneOffset.systemDefault()).toInstant().toEpochMilli().div(1000)
 
                     if(startOfSleep)
                         sleepCalculationHandler.updateSleepSessionManually(context, epochTime.toInt(), (endOfSleepEpoch.get()!! / 1000).toInt(), sessionId = sessionId)
