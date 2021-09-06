@@ -22,6 +22,7 @@ import com.doitstudio.sleepest_master.storage.db.SleepApiRawDataEntity
 import com.doitstudio.sleepest_master.storage.db.UserSleepSessionEntity
 import com.doitstudio.sleepest_master.util.SmileySelectorUtil
 import com.doitstudio.sleepest_master.util.StringUtil
+import com.doitstudio.sleepest_master.util.TimeConverterUtil
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
@@ -206,7 +207,7 @@ class HistoryDayFragment : Fragment() {
                 ZoneOffset.systemDefault()
             )
 
-            time = tempTime.hour.toString() + ":" + tempTime.minute.toString()//tempTime.dayOfMonth.toString() + "." + tempTime.monthValue + " " + tempTime.hour + ":" + tempTime.minute
+            time = TimeConverterUtil.toTimeFormat(tempTime.hour, tempTime.minute) //tempTime.hour.toString() + ":" + tempTime.minute.toString()
             viewModelDay.beginOfSleep.set(time)
             viewModelDay.sessionId = it.third.id
             viewModelDay.beginOfSleepEpoch.set(it.third.sleepTimes.sleepTimeStart.toLong() * 1000)
@@ -216,7 +217,7 @@ class HistoryDayFragment : Fragment() {
                 ZoneOffset.systemDefault()
             )
 
-            time = tempTime.hour.toString() + ":" + tempTime.minute.toString()//tempTime.dayOfMonth.toString() + "." + tempTime.monthValue + " " + tempTime.hour + ":" + tempTime.minute
+            time = TimeConverterUtil.toTimeFormat(tempTime.hour, tempTime.minute) //tempTime.hour.toString() + ":" + tempTime.minute.toString()
             viewModelDay.endOfSeep.set(time)
             viewModelDay.endOfSleepEpoch.set(it.third.sleepTimes.sleepTimeEnd.toLong() * 1000)
 
@@ -459,17 +460,6 @@ class HistoryDayFragment : Fragment() {
                     if (sleep > 0)
                         entries.add(PieEntry(sleep.toFloat(), getString(R.string.history_day_timeInPhase_sleepSum)))
                         sleepTypes[1] = true
-
-                    """if (awake == 0) {
-                        entries.add(PieEntry(sleep.toFloat(), getString(R.string.history_day_timeInPhase_sleepSum)))
-                        sleepTypes[1] = true
-                    }
-                    else {
-                        entries.add(PieEntry(awake.toFloat(), getString(R.string.history_day_timeInPhase_awake)))
-                        sleepTypes[0] = true
-                        entries.add(PieEntry(sleep.toFloat(), getString(R.string.history_day_timeInPhase_sleepSum)))
-                        sleepTypes[1] = true
-                    }"""
                 }
                 else if (sleepValues.third.mobilePosition == MobilePosition.INBED) {
                     if (awake > 0)
@@ -484,31 +474,6 @@ class HistoryDayFragment : Fragment() {
                     if (remSleep > 0)
                         entries.add(PieEntry(remSleep.toFloat(), getString(R.string.history_day_timeInPhase_remSleep)))
                         sleepTypes[4] = true
-
-                    """if (lightSleep != 0 && deepSleep != 0 && remSleep != 0 && awake == 0) {
-                        entries.add(PieEntry(lightSleep.toFloat(), getString(R.string.history_day_timeInPhase_lightSleep)))
-                        sleepTypes[2] = true
-                        entries.add(PieEntry(deepSleep.toFloat(), getString(R.string.history_day_timeInPhase_deepSleep)))
-                        sleepTypes[3] = true
-                        entries.add(PieEntry(remSleep.toFloat(), getString(R.string.history_day_timeInPhase_remSleep)))
-                        sleepTypes[4] = true
-                    }
-                    else if (lightSleep != 0 && deepSleep == 0 && awake != 0) {
-                        entries.add(PieEntry(lightSleep.toFloat(), getString(R.string.history_day_timeInPhase_lightSleep)))
-                        sleepTypes[2] = true
-                        entries.add(PieEntry(awake.toFloat(), getString(R.string.history_day_timeInPhase_awake)))
-                        sleepTypes[0] = true
-                    }
-                    else {
-                        entries.add(PieEntry(lightSleep.toFloat(), getString(R.string.history_day_timeInPhase_lightSleep)))
-                        sleepTypes[2] = true
-                        entries.add(PieEntry(deepSleep.toFloat(), getString(R.string.history_day_timeInPhase_deepSleep)))
-                        sleepTypes[3] = true
-                        entries.add(PieEntry(remSleep.toFloat(), getString(R.string.history_day_timeInPhase_remSleep)))
-                        sleepTypes[4] = true
-                        entries.add(PieEntry(awake.toFloat(), getString(R.string.history_day_timeInPhase_awake)))
-                        sleepTypes[0] = true
-                    }"""
                 }
             }
         }
@@ -549,26 +514,6 @@ class HistoryDayFragment : Fragment() {
             listColors.add(ContextCompat.getColor(viewModel.context, R.color.deep_sleep_color))
         if (sleepTypes[4])
             listColors.add(ContextCompat.getColor(viewModel.context, R.color.rem_sleep_color))
-        
-
-        """if (sleepTypes[0] && sleepTypes[1]) {
-            listColors.add(ContextCompat.getColor(viewModel.context, R.color.awake_sleep_color))
-            listColors.add(ContextCompat.getColor(viewModel.context, R.color.sleep_sleep_color))
-        }
-        else if (!sleepTypes[0] && sleepTypes[1]) {
-            listColors.add(ContextCompat.getColor(viewModel.context, R.color.sleep_sleep_color))
-        }
-        else if (sleepTypes[2] && sleepTypes[3] && sleepTypes[4] && !sleepTypes[0]) {
-            listColors.add(ContextCompat.getColor(viewModel.context, R.color.light_sleep_color))
-            listColors.add(ContextCompat.getColor(viewModel.context, R.color.deep_sleep_color))
-            listColors.add(ContextCompat.getColor(viewModel.context, R.color.rem_sleep_color))
-        }
-        else {
-            listColors.add(ContextCompat.getColor(viewModel.context, R.color.light_sleep_color))
-            listColors.add(ContextCompat.getColor(viewModel.context, R.color.deep_sleep_color))
-            listColors.add(ContextCompat.getColor(viewModel.context, R.color.rem_sleep_color))
-            listColors.add(ContextCompat.getColor(viewModel.context, R.color.awake_sleep_color))
-        }"""
 
         pieDataSet.colors = listColors
         pieDataSet.setDrawValues(false)
@@ -604,8 +549,6 @@ class HistoryDayFragment : Fragment() {
                         else -> 0
                     }
                 }
-                // Update sleepRating Bar
-                //binding.rBSleepRatingBarDaily.rating = sleepValues.third.userSleepRating.moodAfterSleep.ordinal.toFloat()
                 viewModelDay.sleepMoodSmileyTag.set(sleepValues.third.userSleepRating.moodAfterSleep.ordinal)
             }
         }
