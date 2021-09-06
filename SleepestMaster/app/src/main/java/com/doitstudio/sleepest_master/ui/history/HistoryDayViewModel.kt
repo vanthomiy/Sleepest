@@ -145,7 +145,6 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
                 scope.launch {
                     val tempTime = LocalTime.of(h, m)
                     val newDateTime = dateTime.toLocalDate().atTime(tempTime)
-                    //val epochTime = newDatTime.toEpochSecond(ZoneOffset.systemDefault())
                     val epochTime = newDateTime.atZone(ZoneOffset.systemDefault()).toInstant().toEpochMilli().div(1000)
 
                     if(startOfSleep)
