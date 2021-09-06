@@ -44,24 +44,22 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
     /**  */
     private val dataStoreRepository: DataStoreRepository by lazy { (context as MainApplication).dataStoreRepository }
 
-    /**  */
+    /** Contains the current date which will be displayed at the history fragment. */
     var analysisDate = ObservableField(LocalDate.now())
 
-    /**  */
+    /** Indicates whether darkmode is on or off. */
     var darkMode = false
 
-    /**  */
+    /** Indicates whether the user has set the app up for automatically detect the devices dark mode settings. */
     var autoDarkMode = false
 
-    /**  */
+    /** Indicates if the sleep phase assessment algorithm is currently working. */
     var onWork = false
 
-    /**  */
+    /** Container for the x-axis values of the bar Charts. */
     private val xAxisValues = ArrayList<String>()
 
-    /**  */
-    private val idsListener = ObservableInt()
-
+    /** Indicates that [getSleepData] has finished and fresh data was received from the database. */
     val dataReceived = ObservableBoolean(false)
 
     /** <Int: Sleep session id, Triple<List<[SleepApiRawDataEntity]>, Int: Sleep duration, [UserSleepSessionEntity]>> */
@@ -77,7 +75,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
     }
 
-    /**  */
+    /** Onclick handler for altering the [analysisDate] based on the currently selected analysis Range. */
     fun onPreviousDateClick(range: Int) {
         analysisDate.let {
             when (range) {
@@ -88,7 +86,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    /**  */
+    /** Onclick handler for altering the [analysisDate] based on the currently selected analysis Range. */
     fun onNextDateClick(range: Int) {
         analysisDate.let {
             when (range) {
@@ -112,7 +110,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
     }
 
-    /**  */
+    /** Starts the process of requesting data from the database. */
     fun getSleepData() {
         val ids = mutableSetOf<Int>()
         analysisDate.get()?.let {
@@ -145,15 +143,14 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                         session
                     ) as Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>
                 }
-
-                idsListener.set(id)
             }
             checkSessionIntegrity()
             dataReceived.set(true)
         }
     }
 
-    /**  */
+    /** Checks if the previously received sleep session data is correct and contains no errors.
+     * If unusual data was received, the sleep phase determination algorithm ist triggered again to interpret the api data. */
     private fun checkSessionIntegrity() {
         onWork = true
         for (key in sleepSessionData.keys) {
@@ -191,12 +188,12 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         onWork = false
     }
 
-    /**  */
+    /** Checks if the passed date has an entry in the [sleepSessionData]. */
     fun checkId(time: LocalDate) : Boolean {
         return sleepSessionData.containsKey(UserSleepSessionEntity.getIdByDateTime(time))
     }
 
-    /**  */
+    /** Auxiliary function the determine if the device is currently in dark mode. */
     fun checkDarkMode() : Int {
         var color = Color.BLACK
         if (autoDarkMode) {
@@ -209,7 +206,9 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return color
     }
 
-    /**  */
+    /** Generates all the relevant information for the Bar Charts by searching the database for the correct period of time.
+     * TODO(Check this)
+     * */
     fun generateDataBarChart(range: Int, endDateOfDiagram: LocalDate): Triple<ArrayList<BarEntry>, List<Int>, Int> {
         val entries = ArrayList<BarEntry>()
         val xAxisLabels = mutableListOf<Int>()
@@ -236,18 +235,20 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                 val sleep = values.third.sleepTimes.sleepDuration / 60f
                 val lightSleep = values.third.sleepTimes.lightSleepDuration / 60f
                 val deepSleep = values.third.sleepTimes.deepSleepDuration / 60f
+                val remSleep = values.third.sleepTimes.remSleepDuration / 60f
 
                 if (((sleep + awake) * 60f) > maxSleepTime) {
                     maxSleepTime = (sleep + awake) * 60f
                 }
 
-                if (lightSleep != 0f && deepSleep != 0f) {
+                if (lightSleep != 0f && deepSleep != 0f && remSleep != 0f) {
                     entries.add(
                         BarEntry(
                             xIndex, floatArrayOf(
                                 lightSleep,
                                 deepSleep,
-                                0.toFloat(),
+                                remSleep,
+                                0F,
                                 awake
                             )
                         )
@@ -257,8 +258,9 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                     entries.add(
                         BarEntry(
                             xIndex, floatArrayOf(
-                                0.toFloat(),
-                                0.toFloat(),
+                                0F,
+                                0F,
+                                0F,
                                 sleep,
                                 awake
                             )
@@ -266,7 +268,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                     )
                 }
 
-            } else { entries.add(BarEntry(xIndex, floatArrayOf(0F, 0F, 0F, 0F))) }
+            } else { entries.add(BarEntry(xIndex, floatArrayOf(0F, 0F, 0F, 0F, 0F))) }
             xAxisLabels.add(id)
             xIndex += 1
         }
@@ -274,12 +276,13 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return Triple(entries, xAxisLabels, maxSleepTime.toInt())
     }
 
-    /**  */
+    /** Auxiliary function for creating a BarDataSet. */
     private fun generateBarDataSet(barEntries: ArrayList<BarEntry>) : BarDataSet {
         val barDataSet = BarDataSet(barEntries, "")
         barDataSet.setColors(
             ContextCompat.getColor(context, R.color.light_sleep_color),
             ContextCompat.getColor(context, R.color.deep_sleep_color),
+            ContextCompat.getColor(context, R.color.rem_sleep_color),
             ContextCompat.getColor(context, R.color.sleep_sleep_color),
             ContextCompat.getColor(context, R.color.awake_sleep_color)
         )
@@ -288,7 +291,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return barDataSet
     }
 
-    /**  */
+    /** Auxiliary function for setting the correct size of the chart. */
     private fun getBarChartYAxisProportion(sleepAmount: Int) : Float {
         return if ((sleepAmount >= 540) && (sleepAmount < 660)) {
             12F
@@ -303,7 +306,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    /**  */
+    /** Create a new Bar Chart entity. */
     fun setBarChart(range: Int, endDateOfDiagram: LocalDate) : BarChart {
         //http://developine.com/android-grouped-stacked-bar-chart-using-mpchart-kotlin/
         val barChart = BarChart(context)
@@ -314,7 +317,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return barChart
     }
 
-    /**  */
+    /** Update an existing Bar Chart entity. */
     fun updateBarChart(barChart: BarChart, range: Int, endDateOfDiagram: LocalDate) {
         val diagramData = generateDataBarChart(range, endDateOfDiagram)
         val barData = BarData(generateBarDataSet(diagramData.first))
@@ -323,7 +326,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         barChart.invalidate()
     }
 
-    /**  */
+    /** Visual setup for Bar Chart entities. With separation between monthly and weekly bar charts. */
     private fun visualSetUpBarChart(barChart: BarChart,
                                     diagramData: Triple<ArrayList<BarEntry>, List<Int>, Int>,
                                     range: Int) {
@@ -436,6 +439,14 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                     ContextCompat.getColor(context, R.color.deep_sleep_color)
                 ),
                 LegendEntry(
+                    StringUtil.getStringXml(R.string.history_day_timeInPhase_remSleep, getApplication()),
+                    Legend.LegendForm.SQUARE,
+                    8f,
+                    8f,
+                    null,
+                    ContextCompat.getColor(context, R.color.rem_sleep_color)
+                ),
+                LegendEntry(
                     StringUtil.getStringXml(R.string.history_day_timeInPhase_sleepSum, getApplication()),
                     Legend.LegendForm.SQUARE,
                     8f,
@@ -480,7 +491,9 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         barChart.isDoubleTapToZoomEnabled = false
     }
 
-    /**  */
+    /** Generates all the relevant information for the activity chart by searching the [sleepSessionData] for the correct period of time.
+     * TODO(Check this)
+     * */
     private fun generateDataActivityChart(range: Int, endDateOfDiagram: LocalDate): ArrayList<Entry> {
         val entries = ArrayList<Entry>()
         var xValue = 0
@@ -511,7 +524,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return entries
     }
 
-    /**  */
+    /** Create a new Activity Chart [LineChart] entity. */
     fun setActivityChart(range: Int, endDateOfDiagram: LocalDate) : LineChart {
         val chart = LineChart(context)
         val lineDataSet = LineDataSet(generateDataActivityChart(range, endDateOfDiagram), "")
@@ -520,14 +533,14 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return chart
     }
 
-    /**  */
+    /** Updates the information in an existing Activity Chart. */
     fun updateActivityChart(chart: LineChart, range: Int, endDateOfDiagram: LocalDate) {
         val lineDataSet = LineDataSet(generateDataActivityChart(range, endDateOfDiagram), "")
         visualSetUpActivityChart(chart, lineDataSet, range)
         chart.data = LineData(lineDataSet)
     }
 
-    /**  */
+    /** Visual setup for the Activity Chart. With separation between monthly and weekly bar charts. */
     private fun visualSetUpActivityChart(chart: LineChart, lineDataSet: LineDataSet, range: Int) {
         lineDataSet.setDrawValues(false)
         lineDataSet.setDrawFilled(true)
@@ -535,7 +548,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         lineDataSet.lineWidth = 2f
         lineDataSet.fillColor = ContextCompat.getColor(context, R.color.sleep_sleep_color)
         lineDataSet.fillAlpha = 255
-        lineDataSet.color = ContextCompat.getColor(context, R.color.awake_sleep_color)
+        lineDataSet.color = ContextCompat.getColor(context, R.color.sleep_sleep_color)
         lineDataSet.fillDrawable = ContextCompat.getDrawable(context, R.drawable.bg_spark_line)
 
         val yAxisValues = ArrayList<String>()

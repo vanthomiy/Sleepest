@@ -325,6 +325,15 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="4dp"
                                 android:layout_marginTop="4dp"
+                                android:text="@{historyDayViewModel.remSleepTime}"
+                                android:textColor="@color/primary_text_color"
+                                android:textSize="16sp"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:layout_marginTop="4dp"
                                 android:text="@{historyDayViewModel.sleepTime}"
                                 android:textColor="@color/primary_text_color"
                                 android:textSize="16sp"/>

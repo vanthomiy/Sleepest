@@ -33,34 +33,40 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
 
     val sleepCalculationHandler: SleepCalculationHandler by lazy { SleepCalculationHandler.getHandler(context) }
 
-    /**  */
+    /** Contains information about the fall asleep time. */
     var beginOfSleep = ObservableField("")
 
+    /** Contains information about the fall asleep time in epoch seconds. */
     var beginOfSleepEpoch = ObservableField(0L)
 
-    /**  */
+    /** Contains information about the wakeup time. */
     var endOfSeep = ObservableField("")
 
+    /** Contains information about the wakeup time in epoch seconds. */
     var endOfSleepEpoch = ObservableField(0L)
 
+    /** */
     var sessionId = 0
 
-    /**  */
+    /** Contains information about the amount of time the user spend awake. */
     var awakeTime = ObservableField("")
 
-    /**  */
+    /** Contains information about the amount of time the user spend in light sleep phase. */
     var lightSleepTime = ObservableField("")
 
-    /**  */
+    /** Contains information about the amount of time the user spend in deep sleep phase. */
     var deepSleepTime = ObservableField("")
 
-    /**  */
+    /** Contains information about the amount of time the user spend in rem sleep phase. */
+    var remSleepTime = ObservableField("")
+
+    /** Contains information about the amount of time the user slept. */
     var sleepTime = ObservableField("")
 
-    /**  */
+    /** Contains the current smiley used to indicate the users activity level. */
     var activitySmiley = ObservableField(SmileySelectorUtil.getSmileyActivity(0))
 
-    /** */
+    /** Contains the smiley which was picked by the user to assess it's mood. */
     var sleepMoodSmiley = ObservableField(MoodType.NONE)
 
     /** */
@@ -115,7 +121,6 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     fun manualChangeSleepTimes(view: View) {
-
         val time : LocalDateTime = if (view.tag == "BeginOfSleep") {
             //Set the fall asleep time.
             LocalDateTime.ofInstant(
@@ -130,7 +135,6 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
         }
 
         createPickerDialogue(view, time, view.tag == "BeginOfSleep")
-        //Unterscheidung zwischen Einschlaf und Aufwachzeitpunkt.
     }
 
     private fun createPickerDialogue(view: View, dateTime: LocalDateTime, startOfSleep:Boolean) {
@@ -140,11 +144,8 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
             { _, h, m ->
                 scope.launch {
                     val tempTime = LocalTime.of(h, m)
-                    val newDatTime = dateTime.toLocalDate().atTime(tempTime)
-                    //val epochTime = newDatTime.toEpochSecond(ZoneOffset.systemDefault())
-                    val epochTime =
-                        newDatTime.atZone(ZoneOffset.systemDefault()).toInstant().toEpochMilli()
-                            .div(1000)
+                    val newDateTime = dateTime.toLocalDate().atTime(tempTime)
+                    val epochTime = newDateTime.atZone(ZoneOffset.systemDefault()).toInstant().toEpochMilli().div(1000)
 
                     if(startOfSleep)
                         sleepCalculationHandler.updateSleepSessionManually(context, epochTime.toInt(), (endOfSleepEpoch.get()!! / 1000).toInt(), sessionId = sessionId)

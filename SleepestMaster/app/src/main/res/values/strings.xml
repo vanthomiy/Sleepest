@@ -341,7 +341,7 @@
     <string name="onboarding_toast_permissions">Please grant all permissions</string>
     <string name="onboarding_toast_read_to_end">Please read the hole tutorial</string>
     <string name="onboarding_toast_permission_already_granted">This permission is already granted</string>
-
+    <string name="history_day_timeInPhase_remSleep">REM sleep</string>
 
 
 </resources>
