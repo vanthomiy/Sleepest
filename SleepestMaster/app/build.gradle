@@ -14,13 +14,8 @@ android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
-    aaptOptions {
-        noCompress "tflite"
-        noCompress "lite"
-    }
-
     defaultConfig {
-        applicationId "com.doitstudio.sleepest_master"
+        applicationId "com.sleepestapp.sleepest"
         minSdkVersion 28
         targetSdkVersion 30
         versionCode 1

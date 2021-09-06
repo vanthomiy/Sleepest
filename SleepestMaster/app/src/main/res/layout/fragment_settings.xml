@@ -7,7 +7,7 @@
     <data>
         <variable
             name="profileViewModel"
-            type="com.doitstudio.sleepest_master.ui.settings.SettingsViewModel" />
+            type="com.sleepestapp.sleepest.ui.settings.SettingsViewModel" />
     </data>
 
 

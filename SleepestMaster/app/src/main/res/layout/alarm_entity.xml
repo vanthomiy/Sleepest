@@ -7,10 +7,10 @@
     <data>
         <variable
             name="alarmInstanceViewModel"
-            type="com.doitstudio.sleepest_master.ui.alarms.AlarmInstanceViewModel"/>
+            type="com.sleepestapp.sleepest.ui.alarms.AlarmInstanceViewModel"/>
         <variable
             name="alarmsViewModel"
-            type="com.doitstudio.sleepest_master.ui.alarms.AlarmsViewModel"/>
+            type="com.sleepestapp.sleepest.ui.alarms.AlarmsViewModel"/>
 
     </data>
 

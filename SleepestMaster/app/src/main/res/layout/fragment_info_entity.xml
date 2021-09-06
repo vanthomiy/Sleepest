@@ -7,7 +7,7 @@
     <data>
             <variable
             name="infoViewModel"
-            type="com.doitstudio.sleepest_master.ui.info.InfoEntityViewModel"/>
+            type="com.sleepestapp.sleepest.ui.info.InfoEntityViewModel"/>
 
     </data>
 
