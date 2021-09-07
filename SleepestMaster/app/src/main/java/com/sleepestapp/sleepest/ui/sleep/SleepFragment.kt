@@ -17,11 +17,22 @@ import java.time.LocalTime
 
 class SleepFragment : Fragment() {
 
-
+    /**
+     * View model of the [SleepFragment]
+     */
     private val viewModel by lazy { ViewModelProvider(this).get(SleepViewModel::class.java)}
+    /**
+     * Binding XML Code to Fragment
+     */
     private lateinit var binding: FragmentSleepBinding
+    /**
+     * Get actual context
+     */
     private val actualContext: Context by lazy {requireActivity().applicationContext}
 
+    /**
+     * The datastore Repository
+     */
     private val dataStoreRepository: DataStoreRepository by lazy {
         (actualContext as MainApplication).dataStoreRepository
     }
@@ -51,12 +62,14 @@ class SleepFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Hours changed from the duration changer
         binding.npHours.setOnValueChangedListener { _, _, newVal -> viewModel.onDurationChange(
             newVal,
             binding.npMinutes.value
         )
         }
 
+        // Minutes changed from the duration changer
         binding.npMinutes.setOnValueChangedListener { _, _, newVal -> viewModel.onDurationChange(
             binding.npHours.value,
             newVal

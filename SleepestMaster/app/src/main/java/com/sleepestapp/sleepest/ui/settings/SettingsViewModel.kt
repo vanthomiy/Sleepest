@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
 
-    //region binding values
+    //region Init
 
 
     private val scope: CoroutineScope = MainScope()
@@ -33,8 +33,18 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         (context as MainApplication).dataBaseRepository
     }
 
+    //endregion
+
+
+    //region binding values
+
+
     // region Design
     val darkMode = ObservableField(true)
+
+    /**
+     * Dark mode toggled handler
+     */
     fun darkModeToggled(view: View) {
         scope.launch {
             darkMode.get()?.let {
@@ -52,6 +62,10 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     val autoDarkMode = ObservableField(true)
     val showDarkModeSetting = ObservableField(View.GONE)
+
+    /**
+     * Auto dark mode toggled handler
+     */
     fun autoDarkModeToggled(view: View) {
         TransitionManager.beginDelayedTransition(transitionsContainer);
 
@@ -82,6 +96,10 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     val showActualSleepTime = ObservableField(true)
     val showDetailedSleepTime = ObservableField(true)
     val showSleepState = ObservableField(true)
+
+    /**
+     * Banner settings changed by the user
+     */
     fun bannerSettingsToggled(view: View) {
 
         scope.launch {
@@ -102,6 +120,10 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     // region About us
 
+    /**
+     * About us clicked
+     * TODO("Not implemented yet")
+     */
     fun onAboutUsClicked(view: View) {
         updateExpandChanged(view.tag.toString(), true)
         when (view.tag.toString()) {
@@ -126,6 +148,10 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     val overlayPermissionDescription = ObservableField(View.GONE)
 
 
+
+    /**
+     * Show permission info for each permission
+     */
     fun showPermissionInfo(permission: String){
         TransitionManager.beginDelayedTransition(transitionsContainer);
 
@@ -135,6 +161,9 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         overlayPermissionDescription.set(if (permission == "overlay") if (overlayPermissionDescription.get() != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
     }
 
+    /**
+     * Check if permissions are granted
+     */
     fun checkPermissions(){
 
         activityPermission.set(
@@ -160,11 +189,11 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     val removeButtonText = ObservableField(context.getString(R.string.settings_delete_all_data))
 
+    /**
+     * Remove data clicked
+     */
     fun onDataClicked(view: View) {
         when(view.tag.toString()){
-            "export" -> {
-
-            }
             "remove" -> {
                 TransitionManager.beginDelayedTransition(transitionsContainer);
 
@@ -198,11 +227,16 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     val normalRotationState = ObservableField(0)
     val rotatedState = ObservableField(180)
 
-
+    /**
+     * Expand a topic is clicked
+     */
     fun onExpandClicked(view: View) {
         updateExpandChanged(view.tag.toString(), true)
     }
 
+    /**
+     * Expand the actual topic and hide all other topics
+     */
     private fun updateExpandChanged(value: String, toggle: Boolean = false) {
 
         TransitionManager.beginDelayedTransition(transitionsContainer);
@@ -216,6 +250,9 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     init {
 
+        /**
+         * Loads all the init values from the datastore and passes the values to the bindings
+         */
         scope.launch {
 
             var settingsParams = dataStoreRepository.settingsDataFlow.first()

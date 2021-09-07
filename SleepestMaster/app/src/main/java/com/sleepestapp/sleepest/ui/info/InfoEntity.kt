@@ -5,6 +5,11 @@ import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.model.data.Info
 import com.sleepestapp.sleepest.model.data.InfoEntityStlye
 
+/**
+ * This is used to display information to the user in the
+ * [SleepFragment], and in all [HistoryFragment] tabs
+ * We can handle the information at one point and it provides the same layout for all sites.
+ */
 data class InfoEntity (
     val image : Int?,
     val lottie : Int?,
@@ -15,6 +20,9 @@ data class InfoEntity (
 {
     companion object{
 
+        /**
+         * Returns a list of all Info segments that are stored for a specific [Info] and [id]
+         */
         fun getInfo(info: Info, id:Int, context: Context) : List<InfoEntity>{
             return when(info){
                 Info.MONTH_HISTORY -> monthHistoryInfo(id, context)
@@ -22,10 +30,13 @@ data class InfoEntity (
                 Info.WEEK_HISTORY -> weekHistoryInfo(id, context)
                 Info.SETTINGS -> settingsInfo(id, context)
                 Info.SLEEP -> sleepInfo(id, context)
-                else -> noInfo()
+                else -> noInfo(context)
             }
         }
 
+        /**
+         * Actual information for the [Info.DAY_HISTORY]
+         */
         private fun dayHistoryInfo(id:Int, context: Context) : List<InfoEntity>{
             return when(id){
                 0 ->  listOf(
@@ -64,10 +75,13 @@ data class InfoEntity (
                         infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
                     )
                 )
-                else -> noInfo()
+                else -> noInfo(context)
             }
         }
 
+        /**
+         * Actual information for the [Info.WEEK_HISTORY]
+         */
         private fun weekHistoryInfo(id:Int, context: Context) : List<InfoEntity>{
             return when(id){
                 0 ->  listOf(
@@ -88,10 +102,13 @@ data class InfoEntity (
                         infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
                     )
                 )
-                else -> noInfo()
+                else -> noInfo(context)
             }
         }
 
+        /**
+         * Actual information for the [Info.MONTH_HISTORY]
+         */
         private fun monthHistoryInfo(id:Int, context: Context) : List<InfoEntity>{
             return when(id){
                 0 ->  listOf(
@@ -112,11 +129,13 @@ data class InfoEntity (
                         infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
                     )
                 )
-                else -> noInfo()
+                else -> noInfo(context)
             }
         }
 
-
+        /**
+         * Actual information for the [Info.SETTINGS]
+         */
         private fun settingsInfo(id:Int, context: Context) : List<InfoEntity>{
             return when(id){
                 0 ->  listOf(InfoEntity(
@@ -127,10 +146,13 @@ data class InfoEntity (
                     infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
                     )
                 )
-                else -> noInfo()
+                else -> noInfo(context)
             }
         }
 
+        /**
+         * Actual information for the [Info.SLEEP]
+         */
         private fun sleepInfo(id:Int, context: Context) : List<InfoEntity>{
             return when(id){
                 7 ->  listOf(
@@ -255,15 +277,18 @@ data class InfoEntity (
                         infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
                     )
                 )
-                else -> noInfo()
+                else -> noInfo(context)
             }
         }
 
-        private fun noInfo() : List<InfoEntity>{
+        /**
+         * Handler if no information is found
+         */
+        private fun noInfo(context:Context) : List<InfoEntity>{
             return listOf(InfoEntity(
                 image = R.drawable.empty_alarms,
                 lottie = R.raw.empty,
-                textHeader = "Wrong",
+                textHeader = context.getString(R.string.info_no_info_found),
                 textDescription = null
                 )
             )

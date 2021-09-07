@@ -11,10 +11,21 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.sleepestapp.sleepest.databinding.FragmentInfoEntityBinding
 import com.sleepestapp.sleepest.model.data.InfoEntityStlye
+import com.sleepestapp.sleepest.ui.sleep.SleepFragment
 
+/**
+ * An actual Information entity which is child of the [InfoFragment]
+ */
 class InfoEntityFragment(val applicationContext: Context, private val infoEntity: InfoEntity, private val style: InfoEntityStlye) : Fragment() {
 
+    /**
+     * Binding XML Code to Fragment
+     */
     private lateinit var binding: FragmentInfoEntityBinding
+
+    /**
+     * View model of the [SleepFragment]
+     */
     private val viewModel by lazy { ViewModelProvider(this).get(InfoEntityViewModel::class.java) }
 
     override fun onCreateView(
@@ -26,6 +37,7 @@ class InfoEntityFragment(val applicationContext: Context, private val infoEntity
         binding = FragmentInfoEntityBinding.inflate(inflater, container, false)
         binding.infoViewModel = viewModel
 
+        // Setup the layout for the actual Info Entity
         if(style == InfoEntityStlye.PICTURE_LEFT || style == InfoEntityStlye.PICTURE_TOP){
             viewModel.layoutFormat.set(
                 LayoutDirection.LTR)

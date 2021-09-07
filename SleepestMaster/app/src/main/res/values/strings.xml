@@ -342,6 +342,7 @@
     <string name="onboarding_toast_read_to_end">Please read the hole tutorial</string>
     <string name="onboarding_toast_permission_already_granted">This permission is already granted</string>
     <string name="history_day_timeInPhase_remSleep">REM sleep</string>
+    <string name="info_no_info_found">No Information found</string>
 
 
 </resources>

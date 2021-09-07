@@ -261,14 +261,14 @@ data class ThresholdParams(
                 fun createSleepStartBorder(mobileUseFrequency: MobileUseFrequency) : ThresholdParams{
                         return ThresholdParams(
                                 confidence = when(mobileUseFrequency){
-                                        MobileUseFrequency.VERYLESS -> 0.6f
+                                        MobileUseFrequency.VERYLESS -> 0.5f
                                         MobileUseFrequency.LESS -> 0.7f
                                         MobileUseFrequency.OFTEN -> 0.9f
                                         MobileUseFrequency.VERYOFTEN -> 1f
                                         else -> 1f
                                 },
                                 motion = when(mobileUseFrequency){
-                                        MobileUseFrequency.VERYLESS -> 0.6f
+                                        MobileUseFrequency.VERYLESS -> 0.5f
                                         MobileUseFrequency.LESS -> 0.7f
                                         MobileUseFrequency.OFTEN -> 0.9f
                                         MobileUseFrequency.VERYOFTEN -> 1f

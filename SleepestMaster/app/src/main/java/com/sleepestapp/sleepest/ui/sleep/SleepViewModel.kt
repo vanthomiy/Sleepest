@@ -29,9 +29,8 @@ import java.util.*
 
 class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
-    //region binding values
-
-    private val scope: CoroutineScope = MainScope()
+    //region Init
+    private val scope = MainScope()
     private val context by lazy{ getApplication<Application>().applicationContext }
     lateinit var transitionsContainer : ViewGroup
     private val dataStoreRepository: DataStoreRepository by lazy {
@@ -41,8 +40,15 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         (context as MainApplication).dataBaseRepository
     }
 
+    //endregion
+
+    //region binding values
+
     var sleepDuration : Int = 0
 
+    /**
+     * Sleep duration changed handler
+     */
     fun onDurationChange(hour: Int, minute: Int) {
 
         var hourSetter = hour
@@ -71,6 +77,9 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     var sleepEndTime = LocalTime.now()
 
 
+    /**
+     * Alarm start time changed click
+     */
     fun onAlarmStartClicked(view: View){
 
         val hour = (sleepStartTime.hour)
@@ -105,6 +114,9 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         tpd.show()
     }
 
+    /**
+     * Alarm end time changed click
+     */
     fun onAlarmEndClicked(view: View){
         val hour = (sleepEndTime.hour)
         val minute = (sleepEndTime.minute)
@@ -143,6 +155,9 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     val manualSleepTime = ObservableField(true)
     val manualSleepTimeVisibility = ObservableField(View.GONE)
 
+    /**
+     * Auto sleep time toggled
+     */
     fun SleepTimeToogled(view: View) {
         scope.launch{
             autoSleepTime.get()?.let {
@@ -163,6 +178,10 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     val goneState = ObservableField(View.GONE)
     val visibleState = ObservableField(View.VISIBLE)
     private var lastView: ImageView? = null
+
+    /**
+     * Info button click by tag
+     */
     fun onInfoClicked(view: View){
         updateInfoChanged(view.tag.toString())
 
@@ -183,6 +202,9 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    /**
+     * Update the info layouts hide/show
+     */
     private fun updateInfoChanged(value: String) {
 
         TransitionManager.beginDelayedTransition(transitionsContainer);
@@ -193,6 +215,10 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
     val phoneUsageValueString = ObservableField("")
     val phoneUsageValue = ObservableField<Int>(2)
+
+    /**
+     * Phone usage value of slider changed
+     */
     fun onPhoneUsageChanged(seekBar: SeekBar, progresValue: Int, fromUser: Boolean){
 
         val mf = MobileUseFrequency.getCount(progresValue)
@@ -210,6 +236,9 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     val phonePositionSelections = ObservableArrayList<String>()
     val mobilePosition = ObservableField(0)
 
+    /**
+     * Mobile position selected
+     */
     fun onMobilePositionChanged(
         parent: AdapterView<*>?,
         selectedItemView: View,
@@ -225,6 +254,9 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     val lightConditionSelections = ObservableArrayList<String>()
     val lightCondition = ObservableField(0)
 
+    /**
+     * Light condition selected
+     */
     fun onLightConditionChanged(
             parent: AdapterView<*>?,
             selectedItemView: View,
@@ -244,7 +276,9 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     val includeActivityInCalculation = ObservableField(false)
     val activityTrackingView = ObservableField(View.GONE)
 
-
+    /**
+     * Activity tracking switched
+     */
     fun onActivityTrackingChanged(view:View) {
         TransitionManager.beginDelayedTransition(transitionsContainer);
 
@@ -271,6 +305,9 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    /**
+     * Activity tracking use in calculation switched
+     */
     fun onActivityInCalcChanged(view:View) {
         scope.launch {
             includeActivityInCalculation.get()?.let { dataStoreRepository.updateActivityInCalculation(
@@ -357,7 +394,9 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     //endregion
 
     init {
-
+        /**
+         * Loads all the init values from the datastore and passes the values to the bindings
+         */
         scope.launch {
             var sleepParams = dataStoreRepository.sleepParameterFlow.first()
 

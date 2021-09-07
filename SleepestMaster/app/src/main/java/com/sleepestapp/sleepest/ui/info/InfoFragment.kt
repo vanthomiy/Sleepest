@@ -12,6 +12,10 @@ import com.sleepestapp.sleepest.databinding.FragmentInfoBinding
 import com.sleepestapp.sleepest.model.data.Info
 import com.sleepestapp.sleepest.model.data.InfoEntityStlye
 
+/**
+ * Info Fragment that can host x [InfoEntityFragment] elements
+ * It is used in the XML layout
+ */
 class InfoFragment : Fragment() {
 
     private lateinit var binding: FragmentInfoBinding
@@ -62,6 +66,7 @@ class InfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Get the actual information from the [InfoEntity]
         val infoEntity = infoId?.let { info?.let { Info.getById(it) }?.let { it1 ->
             InfoEntity.getInfo(
                 it1, it, view.context)
@@ -69,6 +74,7 @@ class InfoFragment : Fragment() {
 
         var actualStlye = direction?.let { InfoEntityStlye.getById(it) }
 
+        // Create all information entities that are used for this information
         infoEntity?.forEach{ info ->
             val transactions = childFragmentManager.beginTransaction()
             //transactions.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);

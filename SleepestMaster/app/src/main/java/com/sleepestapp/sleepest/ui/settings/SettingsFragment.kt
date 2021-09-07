@@ -37,6 +37,7 @@ import com.sleepestapp.sleepest.util.IconAnimatorUtil.isDarkThemeOn
 import com.sleepestapp.sleepest.util.SmileySelectorUtil
 import com.google.gson.Gson
 import com.sleepestapp.sleepest.model.data.Constants
+import com.sleepestapp.sleepest.ui.sleep.SleepFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -47,22 +48,45 @@ import java.util.*
 
 class SettingsFragment : Fragment() {
 
+    /**
+     * View model of the [SettingsFragment]
+     */
     private val viewModel by lazy { ViewModelProvider(this).get(SettingsViewModel::class.java) }
+    /**
+     * Binding XML Code to Fragment
+     */
     private lateinit var binding: FragmentSettingsBinding
+    /**
+     * Get actual context
+     */
     private val actualContext: Context by lazy { requireActivity().applicationContext }
+    /**
+     * Scope is used to call datastore async
+     */
     private val scope: CoroutineScope = MainScope()
+    /**
+     * The datastore Repository
+     */
     private val dataBaseRepository: DatabaseRepository by lazy {
         (actualContext as MainApplication).dataBaseRepository
     }
-    private val sleepHandler : SleepHandler by lazy {
-        SleepHandler.getHandler(actualContext)
-    }
+
+    /**
+     * The datasbase Repository
+     */
     private val dataStoreRepository: DataStoreRepository by lazy {
         (actualContext as MainApplication).dataStoreRepository
     }
 
+    /**
+     * actual case of entrie
+     * e.g. after switching dark mode the case of entrie changes
+     */
     private var caseOfEntrie = -1
 
+    /**
+     * Open the selected information view if [caseOfEntrie] is not -1
+     */
     fun setCaseOfEntrie(case: Int){
         caseOfEntrie = case
         if(this::binding.isInitialized)
@@ -77,6 +101,8 @@ class SettingsFragment : Fragment() {
         binding = FragmentSettingsBinding.inflate(inflater, container, false)
         viewModel.transitionsContainer = (binding.linearAnimationlayout)
         binding.profileViewModel = viewModel
+
+        //region On Click Listeners
 
         binding.sleepActivityPermission.setOnClickListener {
             onPermissionClicked(it)
@@ -111,8 +137,11 @@ class SettingsFragment : Fragment() {
         binding.btnImportantSettings.setOnClickListener() {
             DontKillMyAppFragment.show(requireActivity())
         }
+        //endregion
 
         viewModel.actualExpand.set(caseOfEntrie)
+
+
         var version : String = "XX"
         try {
             val packageInfo = actualContext.packageManager.getPackageInfo(actualContext.packageName, 0)
@@ -228,6 +257,7 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // check dark mode settings for lottie animation
         scope.launch {
 
             val settings = dataStoreRepository.settingsDataFlow.first()
@@ -244,6 +274,9 @@ class SettingsFragment : Fragment() {
         createCredits()
     }
 
+    /**
+     * create the credits for the credtis view
+     */
     private fun createCredits(){
         val creditsSites = CreditsSites.createCreditSites()
 
@@ -288,6 +321,10 @@ class SettingsFragment : Fragment() {
         }
     }
 
+    /**
+     * A website url was clicked
+     * Navigate to it with default browser
+     */
     private fun onWebsiteClicked(view: View) {
         val websiteUrl = Websites.getWebsite(view.tag as Websites)
 
@@ -296,6 +333,9 @@ class SettingsFragment : Fragment() {
 
     }
 
+    /**
+     * Data export or import was clicked
+     */
     private fun onDataClicked(view: View) {
         when (view.tag.toString()) {
             "export" -> {
@@ -324,6 +364,9 @@ class SettingsFragment : Fragment() {
         }
     }
 
+    /**
+     * Request permissions clicked
+     */
     private fun onPermissionClicked(view: View) {
         when (view.tag.toString()) {
             "dailyActivity" -> if (viewModel.dailyPermission.get() != true) requestPermissionLauncher.launch(
@@ -350,6 +393,9 @@ class SettingsFragment : Fragment() {
         }
     }
 
+    /**
+     * Load/Save file result handler and also share intent
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -417,7 +463,9 @@ class SettingsFragment : Fragment() {
         }
     }
 
-
+    /**
+     * Text to URI Function, used to write text to a file
+     */
     private fun writeTextToUri(uri: Uri, text: String) {
         try {
             contentResolver.openFileDescriptor(uri, "w")?.use {

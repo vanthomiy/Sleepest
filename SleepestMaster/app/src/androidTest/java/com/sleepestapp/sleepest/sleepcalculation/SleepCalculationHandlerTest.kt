@@ -2,6 +2,7 @@ package com.sleepestapp.sleepest.sleepcalculation
 
 import org.junit.Assert.*
 import android.content.Context
+import android.util.Log
 import androidx.test.platform.app.InstrumentationRegistry
 import com.sleepestapp.sleepest.model.data.LightConditions
 import com.sleepestapp.sleepest.model.data.MobilePosition
@@ -596,9 +597,9 @@ class SleepCalculationHandlerTest
      * We test the complete sleep calculation with a few sleeps and check if the sleep amount and the alarm is setup right
      */
     @Test
-    fun sleepCalculationTest() = runBlocking {
+    fun sleepCalculationTest(): Unit = runBlocking {
 
-        var sleepCalculationHandler = SleepCalculationHandler.getHandler(context)
+        val sleepCalculationHandler = SleepCalculationHandler.getHandler(context)
 
         sleepDbRepository.deleteAllUserSleepSessions()
         sleepDbRepository.deleteSleepApiRawData()
@@ -692,7 +693,7 @@ class SleepCalculationHandlerTest
             SleepState.DEEP to 0,
             SleepState.REM to 0)
 
-        for (i in 52 until 63)
+        for (i in 1 until 49)
         {
             val data = dataUnPred[i]
 
@@ -869,21 +870,28 @@ class SleepCalculationHandlerTest
         var e = sleepingState
         var f = predCounts
         var g = realCounts
-        
-        if(awakeState[SleepState.LIGHT] == 1){
-            var s: Int = 1
-        }
 
-        if(lightState[SleepState.LIGHT] == 1){
-            var s: Int = 1
-        }
+        var TAG = "msg:"
 
-        if(deepState[SleepState.LIGHT] == 1){
-            var s: Int = 1
-        }
-        if(remState[SleepState.LIGHT] == 1){
-            var s: Int = 1
-        }
+        Log.v(TAG, "Awake, Awake:" + awakeState[SleepState.AWAKE])
+        Log.v(TAG, "Awake, Sleep:" + awakeState[SleepState.SLEEPING])
+        Log.v(TAG, "Awake, Light:" + awakeState[SleepState.LIGHT])
+        Log.v(TAG, "Awake, Deep:" + awakeState[SleepState.DEEP])
+        Log.v(TAG, "Awake, REM:" + awakeState[SleepState.REM])
+        Log.v(TAG, "Sleep, Awake:" + sleepingState[SleepState.AWAKE])
+        Log.v(TAG, "Sleep, Sleep:" + sleepingState[SleepState.SLEEPING])
+        Log.v(TAG, "Sleep, Light:" + sleepingState[SleepState.LIGHT])
+        Log.v(TAG, "Sleep, Deep:" + sleepingState[SleepState.DEEP])
+        Log.v(TAG, "Sleep, REM:" + sleepingState[SleepState.REM])
+        Log.v(TAG, "Light, Light:" + lightState[SleepState.LIGHT])
+        Log.v(TAG, "Light, Deep:" + lightState[SleepState.DEEP])
+        Log.v(TAG, "Light, REM:" + lightState[SleepState.REM])
+        Log.v(TAG, "Deep, Light:" + deepState[SleepState.LIGHT])
+        Log.v(TAG, "Deep, Deep:" + deepState[SleepState.DEEP])
+        Log.v(TAG, "Deep, REM:" + deepState[SleepState.REM])
+        Log.v(TAG, "REM, Light:" + remState[SleepState.LIGHT])
+        Log.v(TAG, "REM, Deep:" + remState[SleepState.DEEP])
+        Log.v(TAG, "REM, REM:" + remState[SleepState.REM])
 
     }
 

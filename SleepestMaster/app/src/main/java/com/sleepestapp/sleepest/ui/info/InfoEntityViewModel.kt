@@ -11,7 +11,8 @@ import androidx.lifecycle.AndroidViewModel
 class InfoEntityViewModel(application: Application) : AndroidViewModel(application) {
 
 
-    //val backgroundColor = ObservableField(R.color.transparent_overlay_tertiary)
+    //region Binding Values
+
     val textHeader = ObservableField("")
     val textDescription = ObservableField("")
     val orientation = ObservableField(LinearLayout.HORIZONTAL)
