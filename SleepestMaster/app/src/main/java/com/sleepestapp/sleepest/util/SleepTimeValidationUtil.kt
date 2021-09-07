@@ -19,7 +19,7 @@ object SleepTimeValidationUtil {
 
         val secondsOfDay = 60 * 60 * 24
 
-        var timeOnDay = 0
+        var timeOnDay: Int
         var timeNextDay = 0
 
         if(startTime > endTime)
@@ -156,7 +156,7 @@ object SleepTimeValidationUtil {
         var newSleepDuration = sleepDuration
 
         //check if the possible sleep time is big enough for the sleep time
-        val possibleSleepTime =
+        var possibleSleepTime =
             getTimeBetweenSecondsOfDay(newSleepTimeEnd, newSleepTimeStart)
 
         // Check sleep params itself
@@ -205,7 +205,7 @@ object SleepTimeValidationUtil {
 
 
             //check if the possible sleep time is big enough for the sleep time
-            val possibleSleepTime =
+            possibleSleepTime =
                 getTimeBetweenSecondsOfDay(alarm.wakeupLate, newSleepTimeStart)
 
             val timeDiff = kotlin.math.abs(possibleSleepTime - (alarm.sleepDuration + minTimeBuffer))

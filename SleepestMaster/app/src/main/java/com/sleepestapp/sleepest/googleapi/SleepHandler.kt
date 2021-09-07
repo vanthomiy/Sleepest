@@ -81,7 +81,7 @@ class SleepHandler(private val context: Context) {
                     dataStoreRepository.updateSleepIsSubscribed(true)
                     dataStoreRepository.updateSleepSubscribeFailed(false)
                 }            }
-            task.addOnFailureListener { exception ->
+            task.addOnFailureListener {
                 scope.launch {
                     dataStoreRepository.updateSleepIsSubscribed(false)
                     dataStoreRepository.updateSleepSubscribeFailed(true)
@@ -107,7 +107,7 @@ class SleepHandler(private val context: Context) {
                 dataStoreRepository.updateSleepUnsubscribeFailed(false)
             }
         }
-        task.addOnFailureListener { exception ->
+        task.addOnFailureListener {
             scope.launch {
                 dataStoreRepository.updateSleepUnsubscribeFailed(true)
             }

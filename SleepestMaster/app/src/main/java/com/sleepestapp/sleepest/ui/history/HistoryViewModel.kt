@@ -527,7 +527,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
     fun setActivityChart(range: Int, endDateOfDiagram: LocalDate) : LineChart {
         val chart = LineChart(context)
         val lineDataSet = LineDataSet(generateDataActivityChart(range, endDateOfDiagram), "")
-        visualSetUpActivityChart(chart, lineDataSet, range)
+        visualSetUpActivityChart(chart, lineDataSet)
         chart.data = LineData(lineDataSet)
         return chart
     }
@@ -535,12 +535,12 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
     /** Updates the information in an existing Activity Chart. */
     fun updateActivityChart(chart: LineChart, range: Int, endDateOfDiagram: LocalDate) {
         val lineDataSet = LineDataSet(generateDataActivityChart(range, endDateOfDiagram), "")
-        visualSetUpActivityChart(chart, lineDataSet, range)
+        visualSetUpActivityChart(chart, lineDataSet)
         chart.data = LineData(lineDataSet)
     }
 
     /** Visual setup for the Activity Chart. With separation between monthly and weekly bar charts. */
-    private fun visualSetUpActivityChart(chart: LineChart, lineDataSet: LineDataSet, range: Int) {
+    private fun visualSetUpActivityChart(chart: LineChart, lineDataSet: LineDataSet) {
         lineDataSet.setDrawValues(false)
         lineDataSet.setDrawFilled(true)
         lineDataSet.setDrawCircles(false)

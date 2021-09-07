@@ -123,7 +123,7 @@ data class SleepApiRawDataEntity(
                 fun getSleepStartTime(sleepApiRawDataEntity:List<SleepApiRawDataEntity>) : Int{
                         val sleepList = sleepApiRawDataEntity.filter { x-> x.sleepState != SleepState.NONE && x.sleepState != SleepState.AWAKE }
 
-                        if(sleepList == null || sleepList.count() == 0){
+                        if(sleepList.count() == 0){
                                 return 0
                         }
 
@@ -136,7 +136,7 @@ data class SleepApiRawDataEntity(
                 fun getSleepEndTime(sleepApiRawDataEntity:List<SleepApiRawDataEntity>) : Int{
                         val sleepList = sleepApiRawDataEntity.filter { x-> x.sleepState != SleepState.NONE && x.sleepState != SleepState.AWAKE }
 
-                        if(sleepList == null || sleepList.count() == 0){
+                        if(sleepList.count() == 0){
                                 return 0
                         }
 

@@ -39,10 +39,9 @@ class SleepClassifier constructor(private val context: Context) {
         }
 
         // under 1.4 is on table and over is in bed
-        val motionAverage = sleepingData.sumBy { x -> x.motion }.toFloat() / sleepingData.count()
-        val confidenceAverage = sleepingData.sumBy { x -> x.confidence }.toFloat() / sleepingData.count()
-        val a = motionAverage
-        val b = confidenceAverage
+        val motionAverage = sleepingData.sumOf { x -> x.motion }.toFloat() / sleepingData.count()
+        val confidenceAverage = sleepingData.sumOf { x -> x.confidence }.toFloat() / sleepingData.count()
+
         return if(motionAverage > 1.05f && confidenceAverage < 91f || motionAverage > 1.2f){
             MobilePosition.INBED
         } else {
@@ -104,9 +103,9 @@ class SleepClassifier constructor(private val context: Context) {
                 if(sleepDataBuffer.count() >= (1/frequenceFactor).toInt()){
                     timeNormedData.add(SleepApiRawDataEntity(
                         timestampSeconds = sleepDataBuffer[0].timestampSeconds,
-                        confidence = sleepDataBuffer.sumBy {x -> x.confidence} / sleepDataBuffer.count(),
-                        motion = sleepDataBuffer.sumBy {x -> x.motion} / sleepDataBuffer.count(),
-                        light = sleepDataBuffer.sumBy {x -> x.light} / sleepDataBuffer.count(),
+                        confidence = sleepDataBuffer.sumOf {x -> x.confidence} / sleepDataBuffer.count(),
+                        motion = sleepDataBuffer.sumOf {x -> x.motion} / sleepDataBuffer.count(),
+                        light = sleepDataBuffer.sumOf {x -> x.light} / sleepDataBuffer.count(),
                         sleepState = sleepDataBuffer[0].sleepState,
                         oldSleepState = sleepDataBuffer[0].oldSleepState,
                         wakeUpTime = sleepDataBuffer[0].wakeUpTime
@@ -179,14 +178,15 @@ class SleepClassifier constructor(private val context: Context) {
                 actualThreshold.light = sortedSleepListBefore.last().light.toFloat()
                 actualThreshold.motion = sortedSleepListBefore.last().motion.toFloat()
             }
-            else{
-                actualThreshold.confidence = (sortedSleepListAfter!!.sumOf { x-> x.confidence } / sortedSleepListAfter.count()).toFloat()
-                actualThreshold.light = (sortedSleepListAfter!!.sumOf { x-> x.light } / sortedSleepListAfter.count()).toFloat()
-                actualThreshold.motion = (sortedSleepListAfter!!.sumOf { x-> x.motion } / sortedSleepListAfter.count()).toFloat()
+            else if (sortedSleepListAfter != null){
+                actualThreshold.confidence = (sortedSleepListAfter.sumOf { x-> x.confidence } / sortedSleepListAfter.count()).toFloat()
+                actualThreshold.light = (sortedSleepListAfter.sumOf { x-> x.light } / sortedSleepListAfter.count()).toFloat()
+                actualThreshold.motion = (sortedSleepListAfter.sumOf { x-> x.motion } / sortedSleepListAfter.count()).toFloat()
 
-                nextThreeTimes.confidence = (sortedSleepListAfter!!.takeLast(nextTimesBorder).sumOf { x-> x.confidence } / sortedSleepListAfter.takeLast(nextTimesBorder).count()).toFloat()
-                nextThreeTimes.light = (sortedSleepListAfter!!.takeLast(nextTimesBorder).sumOf { x-> x.light } / sortedSleepListAfter.takeLast(nextTimesBorder).count()).toFloat()
-                nextThreeTimes.motion = (sortedSleepListAfter!!.takeLast(nextTimesBorder).sumOf { x-> x.motion } / sortedSleepListAfter.takeLast(nextTimesBorder).count()).toFloat()
+                nextThreeTimes.confidence = (sortedSleepListAfter.takeLast(nextTimesBorder)
+                    .sumOf { x-> x.confidence } / sortedSleepListAfter.takeLast(nextTimesBorder).count()).toFloat()
+                nextThreeTimes.light = (sortedSleepListAfter.takeLast(nextTimesBorder).sumOf { x-> x.light } / sortedSleepListAfter.takeLast(nextTimesBorder).count()).toFloat()
+                nextThreeTimes.motion = (sortedSleepListAfter.takeLast(nextTimesBorder).sumOf { x-> x.motion } / sortedSleepListAfter.takeLast(nextTimesBorder).count()).toFloat()
             }
 
             val avgStartThreshold = ThresholdParams()

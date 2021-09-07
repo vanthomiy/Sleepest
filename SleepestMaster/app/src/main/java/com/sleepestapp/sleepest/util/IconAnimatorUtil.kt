@@ -28,21 +28,6 @@ object IconAnimatorUtil {
         }
     }
 
-    fun changeImageAndStartAnimation(view: ImageView, imageId:Int, resources:Resources) {
-
-        val drawable: Drawable? = ResourcesCompat.getDrawable(resources, imageId, null)
-        view.setImageDrawable(drawable)
-
-        when (val drawable = view.drawable) {
-            is AnimatedVectorDrawableCompat -> {
-                drawable.start()
-            }
-            is AnimatedVectorDrawable -> {
-                drawable.start()
-            }
-        }
-    }
-
     fun resetView(view: ImageView?) {
         when (val drawable = view?.drawable) {
             is AnimatedVectorDrawableCompat -> {

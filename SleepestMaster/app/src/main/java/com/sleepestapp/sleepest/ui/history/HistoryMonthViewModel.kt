@@ -24,7 +24,7 @@ class HistoryMonthViewModel(application: Application) : AndroidViewModel(applica
 
     private var lastView: ImageView? = null
     fun onInfoClicked(view: View){
-        updateInfoChanged(view.tag.toString(), true)
+        updateInfoChanged(view.tag.toString())
 
         // Check if its an image view
         IconAnimatorUtil.animateView(view as ImageView)
@@ -32,12 +32,12 @@ class HistoryMonthViewModel(application: Application) : AndroidViewModel(applica
         IconAnimatorUtil.resetView(lastView)
 
         lastView = if(lastView != view)
-            (view as ImageView)
+            view
         else
             null
     }
 
-    private fun updateInfoChanged(value: String, toggle: Boolean = false) {
+    private fun updateInfoChanged(value: String) {
         TransitionManager.beginDelayedTransition(transitionsContainer)
         actualExpand.set(if(actualExpand.get() == value.toIntOrNull()) -1 else value.toIntOrNull())
     }

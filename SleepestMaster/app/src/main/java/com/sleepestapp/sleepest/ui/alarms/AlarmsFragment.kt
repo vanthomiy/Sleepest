@@ -233,7 +233,7 @@ class AlarmsFragment() : Fragment() {
         }
 
         binding.lLAlarmSoundSettings.onFocusChangeListener =
-            View.OnFocusChangeListener { v, hasFocus ->
+            View.OnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
                     viewModel.actualExpand.set(View.GONE)
                     viewModel.rotateState.set(0)

@@ -92,9 +92,9 @@ class HistoryTabView : Fragment() {
             val month = c.get(Calendar.MONTH)
             val day = c.get(Calendar.DAY_OF_MONTH)
 
-            val dpd = activity?.let { it ->
+            val dpd = activity?.let { picker ->
                 DatePickerDialog(
-                    it,
+                    picker,
                     { _, year, monthOfYear, dayOfMonth ->
                         viewModel.analysisDate.set(LocalDate.of(year, monthOfYear + 1, dayOfMonth))
                     },

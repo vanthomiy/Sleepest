@@ -38,7 +38,7 @@ class InfoFragment : Fragment() {
 
     override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
         super.onInflate(context, attrs, savedInstanceState)
-        if (context != null && attrs != null && infoId == null && info == null) {
+        if (infoId == null && info == null) {
             val styledAttributes = context.obtainStyledAttributes(attrs, R.styleable.InfoFragment_MembersInjector)
             infoId = styledAttributes.getInt(R.styleable.InfoFragment_MembersInjector_infoId, 0)
             info = styledAttributes.getInt(R.styleable.InfoFragment_MembersInjector_info, 0)
@@ -76,15 +76,15 @@ class InfoFragment : Fragment() {
             val infoFragment = if(info.infoEntityStlye != InfoEntityStlye.RANDOM)
             {
                 actualStlye = info.infoEntityStlye
-                InfoEntityFragment(view?.context, info, info.infoEntityStlye)
+                InfoEntityFragment(view.context, info, info.infoEntityStlye)
 
             }
             else{
-                actualStlye?.let { InfoEntityFragment(view?.context, info, it) }
+                actualStlye?.let { InfoEntityFragment(view.context, info, it) }
             }
 
             if (infoFragment != null) {
-                transactions?.add(binding.lLInfo.id, infoFragment)?.commit()
+                transactions.add(binding.lLInfo.id, infoFragment).commit()
             }
 
 

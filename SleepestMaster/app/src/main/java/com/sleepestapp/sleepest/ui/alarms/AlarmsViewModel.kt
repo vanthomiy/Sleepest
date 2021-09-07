@@ -5,6 +5,7 @@ import android.transition.TransitionManager
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.SeekBar
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
@@ -78,14 +79,15 @@ class AlarmsViewModel(application: Application) : AndroidViewModel(application) 
         parent: AdapterView<*>?,
         selectedItemView: View,
         art: Int,
-        id: Long
-    ){
+        id: Long)
+    {
+
         scope.launch {
             dataStoreRepository.updateAlarmType(art)
         }
     }
 
-    fun onEndAlarmAfterFiredChanged(buttonView: View) {
+    fun onEndAlarmAfterFiredChanged(view: View) {
         scope.launch {
             cancelAlarmWhenAwake.get()?.let { dataStoreRepository.updateEndAlarmAfterFired(it) }
         }

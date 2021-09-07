@@ -51,13 +51,13 @@ class SleepFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.npHours.setOnValueChangedListener { picker, oldVal, newVal -> viewModel.onDurationChange(
+        binding.npHours.setOnValueChangedListener { _, _, newVal -> viewModel.onDurationChange(
             newVal,
             binding.npMinutes.value
         )
         }
 
-        binding.npMinutes.setOnValueChangedListener { picker, oldVal, newVal -> viewModel.onDurationChange(
+        binding.npMinutes.setOnValueChangedListener { _, _, newVal -> viewModel.onDurationChange(
             binding.npHours.value,
             newVal
         )

@@ -24,6 +24,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalTime
+import java.util.*
 
 
 class SleepViewModel(application: Application) : AndroidViewModel(application) {
@@ -78,7 +79,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         val tpd = TimePickerDialog(
                 view.context,
             R.style.TimePickerTheme,
-                { view, h, m ->
+                { _, h, m ->
 
                     val tempWakeup = LocalTime.of(h, m)
 
@@ -111,7 +112,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         val tpd = TimePickerDialog(
             view.context,
             R.style.TimePickerTheme,
-            { view, h, m ->
+            { _, h, m ->
 
                 val tempWakeup = LocalTime.of(h, m)
 
@@ -142,7 +143,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     val manualSleepTime = ObservableField(true)
     val manualSleepTimeVisibility = ObservableField(View.GONE)
 
-    fun SleepTimeToogled(view: View){
+    fun SleepTimeToogled(view: View) {
         scope.launch{
             autoSleepTime.get()?.let {
                 dataStoreRepository.updateAutoSleepTime(it)
@@ -163,7 +164,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     val visibleState = ObservableField(View.VISIBLE)
     private var lastView: ImageView? = null
     fun onInfoClicked(view: View){
-        updateInfoChanged(view.tag.toString(), true)
+        updateInfoChanged(view.tag.toString())
 
         // Check if its an image view
         if(view.tag.toString() != "7"){
@@ -182,7 +183,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private fun updateInfoChanged(value: String, toggle: Boolean = false) {
+    private fun updateInfoChanged(value: String) {
 
         TransitionManager.beginDelayedTransition(transitionsContainer);
 
@@ -195,7 +196,8 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     fun onPhoneUsageChanged(seekBar: SeekBar, progresValue: Int, fromUser: Boolean){
 
         val mf = MobileUseFrequency.getCount(progresValue)
-        phoneUsageValueString.set(mf.toString().toLowerCase().capitalize())
+        phoneUsageValueString.set(mf.toString().lowercase(Locale.getDefault())
+            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
         phoneUsageValue.set(progresValue)
         scope.launch {
             dataStoreRepository.updateUserMobileFequency(mf.ordinal)
@@ -209,16 +211,15 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     val mobilePosition = ObservableField(0)
 
     fun onMobilePositionChanged(
-            parent: AdapterView<*>?,
-            selectedItemView: View,
-            position: Int,
-            id: Long
+        parent: AdapterView<*>?,
+        selectedItemView: View,
+        position: Int,
+        id: Long
     ){
         scope.launch {
             dataStoreRepository.updateStandardMobilePosition(position)
             sleepCalculateFactorCalculation()
         }
-
     }
 
     val lightConditionSelections = ObservableArrayList<String>()
@@ -244,7 +245,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     val activityTrackingView = ObservableField(View.GONE)
 
 
-    fun onActivityTrackingChanged(buttonView: View) {
+    fun onActivityTrackingChanged(view:View) {
         TransitionManager.beginDelayedTransition(transitionsContainer);
 
         scope.launch {
@@ -270,7 +271,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun onActivityInCalcChanged(buttonView: View) {
+    fun onActivityInCalcChanged(view:View) {
         scope.launch {
             includeActivityInCalculation.get()?.let { dataStoreRepository.updateActivityInCalculation(
                 it

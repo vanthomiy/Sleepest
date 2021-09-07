@@ -360,7 +360,6 @@ enum class Websites {
             return when (type) {
                 Websites.FLATICON -> "https://flaticon.com/"
                 Websites.LOTTIEFILES -> "https://lottiefiles.com/"
-                else -> ""
             }
         }
 
@@ -368,7 +367,6 @@ enum class Websites {
             return when (type) {
                 Websites.FLATICON -> "Flaticon"
                 Websites.LOTTIEFILES -> "Lottifiles"
-                else -> ""
             }
         }
     }
@@ -391,9 +389,9 @@ enum class Info {
             return when(id){
                 0 -> SLEEP
                 1 -> DAY_HISTORY
-                1 -> WEEK_HISTORY
-                1 -> MONTH_HISTORY
-                2 -> SETTINGS
+                2 -> WEEK_HISTORY
+                3 -> MONTH_HISTORY
+                4 -> SETTINGS
                 else -> ALARM
             }
         }
@@ -406,7 +404,6 @@ enum class Info {
                 WEEK_HISTORY -> context.resources.getString(R.string.history_week_title)
                 MONTH_HISTORY -> context.resources.getString(R.string.history_month_title)
                 ALARM -> context.resources.getString(R.string.sleep_alarm_header)
-                else -> ""
             }
         }
 

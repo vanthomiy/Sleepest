@@ -22,7 +22,7 @@ data class InfoEntity (
                 Info.WEEK_HISTORY -> weekHistoryInfo(id, context)
                 Info.SETTINGS -> settingsInfo(id, context)
                 Info.SLEEP -> sleepInfo(id, context)
-                else -> noInfo(context)
+                else -> noInfo()
             }
         }
 
@@ -64,7 +64,7 @@ data class InfoEntity (
                         infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
                     )
                 )
-                else -> noInfo(context)
+                else -> noInfo()
             }
         }
 
@@ -88,7 +88,7 @@ data class InfoEntity (
                         infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
                     )
                 )
-                else -> noInfo(context)
+                else -> noInfo()
             }
         }
 
@@ -112,7 +112,7 @@ data class InfoEntity (
                         infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
                     )
                 )
-                else -> noInfo(context)
+                else -> noInfo()
             }
         }
 
@@ -127,7 +127,7 @@ data class InfoEntity (
                     infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
                     )
                 )
-                else -> noInfo(context)
+                else -> noInfo()
             }
         }
 
@@ -255,11 +255,11 @@ data class InfoEntity (
                         infoEntityStlye = InfoEntityStlye.PICTURE_LEFT
                     )
                 )
-                else -> noInfo(context)
+                else -> noInfo()
             }
         }
 
-        private fun noInfo(context: Context) : List<InfoEntity>{
+        private fun noInfo() : List<InfoEntity>{
             return listOf(InfoEntity(
                 image = R.drawable.empty_alarms,
                 lottie = R.raw.empty,

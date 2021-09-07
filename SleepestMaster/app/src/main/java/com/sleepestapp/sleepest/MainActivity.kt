@@ -206,7 +206,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // observe sleeptime changes
-        sleepParametersLiveData.observe(this) { livedata ->
+        sleepParametersLiveData.observe(this) {
             BackgroundAlarmTimeHandler.getHandler(applicationContext).changeSleepTime()
         }
 
@@ -313,33 +313,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-
-        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-
-        if (!notificationManager.isNotificationPolicyAccessGranted){
-            //Toast.makeText(this,"Alarm could be silence without this permission", Toast.LENGTH_SHORT).show()
-            val snack = Snackbar.make(
-                findViewById(android.R.id.content),
-                "This is a simple Snackbar",
-                Snackbar.LENGTH_INDEFINITE
-            )
-            //snack.show()
-        } else if(!Settings.canDrawOverlays(this)) {
-            //Toast.makeText(this,"Sorry. Can't draw overlays without permission...", Toast.LENGTH_SHORT).show()
-            val snack = Snackbar.make(
-                findViewById(android.R.id.content),
-                "This is a simple Snackbar",
-                Snackbar.LENGTH_INDEFINITE
-            )
-            //snack.show()
-        } else if(!activityRecognitionPermissionApproved()) {
-            val snack = Snackbar.make(
-                findViewById(android.R.id.content),
-                "This is a simple Snackbar",
-                Snackbar.LENGTH_INDEFINITE
-            )
-            //snack.show()
-        }
 
     }
 

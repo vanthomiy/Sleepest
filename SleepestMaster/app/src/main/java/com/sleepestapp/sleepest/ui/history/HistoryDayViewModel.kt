@@ -101,7 +101,7 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
 
     private var lastView: ImageView? = null
     fun onInfoClicked(view: View){
-        updateInfoChanged(view.tag.toString(), true)
+        updateInfoChanged(view.tag.toString())
 
         // Check if its an image view
         IconAnimatorUtil.animateView(view as ImageView)
@@ -109,12 +109,12 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
         IconAnimatorUtil.resetView(lastView)
 
         lastView = if(lastView != view)
-            (view as ImageView)
+            view
         else
             null
     }
 
-    private fun updateInfoChanged(value: String, toggle: Boolean = false) {
+    private fun updateInfoChanged(value: String) {
         TransitionManager.beginDelayedTransition(transitionsContainer)
         actualExpand.set(if(actualExpand.get() == value.toIntOrNull()) -1 else value.toIntOrNull())
     }
@@ -147,9 +147,9 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
                     val epochTime = newDateTime.atZone(ZoneOffset.systemDefault()).toInstant().toEpochMilli().div(1000)
 
                     if(startOfSleep)
-                        sleepCalculationHandler.updateSleepSessionManually(context, epochTime.toInt(), (endOfSleepEpoch.get()!! / 1000).toInt(), sessionId = sessionId)
+                        sleepCalculationHandler.updateSleepSessionManually(epochTime.toInt(), (endOfSleepEpoch.get()!! / 1000).toInt(), sessionId = sessionId)
                     else
-                        sleepCalculationHandler.updateSleepSessionManually(context, (beginOfSleepEpoch.get()!! / 1000).toInt(), epochTime.toInt(), sessionId = sessionId)
+                        sleepCalculationHandler.updateSleepSessionManually((beginOfSleepEpoch.get()!! / 1000).toInt(), epochTime.toInt(), sessionId = sessionId)
                 }
             },
             dateTime.hour,

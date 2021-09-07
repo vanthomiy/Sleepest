@@ -12,6 +12,7 @@ import com.sleepestapp.sleepest.storage.DatabaseRepository
 import com.sleepestapp.sleepest.storage.db.*
 import com.google.gson.Gson
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import org.hamcrest.CoreMatchers
 import org.junit.Before
 import org.junit.Test
@@ -66,7 +67,7 @@ class SleepCalculationHandlerTest
 
 
         // no data available
-        var result = sleepCalculationHandler.getFrequencyFromListByHours(2f, false, actualtime, sleepList.toList())
+        var result = sleepCalculationHandler.getFrequencyFromListByHours(2f, sleepList.toList())
         assertThat(result, CoreMatchers.equalTo(SleepDataFrequency.NONE))
 
 
@@ -79,7 +80,7 @@ class SleepCalculationHandlerTest
             sleepList.add(data)
         }
 
-        result = sleepCalculationHandler.getFrequencyFromListByHours(2f, false, actualtime, sleepList.toList())
+        result = sleepCalculationHandler.getFrequencyFromListByHours(2f, sleepList.toList())
         assertThat(result, CoreMatchers.equalTo(SleepDataFrequency.THIRTY))
 
         sleepList.clear()
@@ -91,7 +92,7 @@ class SleepCalculationHandlerTest
             sleepList.add(data)
         }
 
-        result = sleepCalculationHandler.getFrequencyFromListByHours(2f, false, actualtime, sleepList.toList())
+        result = sleepCalculationHandler.getFrequencyFromListByHours(2f, sleepList.toList())
         assertThat(result, CoreMatchers.equalTo(SleepDataFrequency.TEN))
 
         sleepList.clear()
@@ -103,7 +104,7 @@ class SleepCalculationHandlerTest
             sleepList.add(data)
         }
 
-        result = sleepCalculationHandler.getFrequencyFromListByHours(2f, false, actualtime, sleepList.toList())
+        result = sleepCalculationHandler.getFrequencyFromListByHours(2f, sleepList.toList())
         assertThat(result, CoreMatchers.equalTo(SleepDataFrequency.FIVE))
 
         sleepList.clear()
@@ -115,7 +116,7 @@ class SleepCalculationHandlerTest
             sleepList.add(data)
         }
 
-        result = sleepCalculationHandler.getFrequencyFromListByHours(2f, true, actualtime, sleepList.toList())
+        result = sleepCalculationHandler.getFrequencyFromListByHours(2f, sleepList.toList())
         assertThat(result, CoreMatchers.equalTo(SleepDataFrequency.FIVE))
 
     }
@@ -868,6 +869,22 @@ class SleepCalculationHandlerTest
         var e = sleepingState
         var f = predCounts
         var g = realCounts
+        
+        if(awakeState[SleepState.LIGHT] == 1){
+            var s: Int = 1
+        }
+
+        if(lightState[SleepState.LIGHT] == 1){
+            var s: Int = 1
+        }
+
+        if(deepState[SleepState.LIGHT] == 1){
+            var s: Int = 1
+        }
+        if(remState[SleepState.LIGHT] == 1){
+            var s: Int = 1
+        }
+
     }
 
     /**
