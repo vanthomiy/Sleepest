@@ -256,6 +256,13 @@ class DataStoreRepository(context: Context) {
         alarmParameterStatus.updateEndAlarmAfterFired(value)
 
     /**
+     * Get propertie to alarm end after awake automatically
+     */
+    suspend fun getEndAlarmAfterFired() : Boolean {
+        return alarmParameterFlow.first().endAlarmAfterFired
+    }
+
+    /**
      * Updates the alarm type (vibration, sound or both)
      */
     suspend fun updateAlarmType(value:Int) =

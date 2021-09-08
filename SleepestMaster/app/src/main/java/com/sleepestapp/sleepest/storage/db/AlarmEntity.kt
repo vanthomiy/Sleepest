@@ -21,6 +21,9 @@ data class AlarmEntity(
         @ColumnInfo(name = "tempDisabled")
         val tempDisabled: Boolean = false,
 
+        @ColumnInfo(name = "alreadyAwake")
+        val alreadyAwake: Boolean = false,
+
         @ColumnInfo(name = "sleepDuration")
         val sleepDuration: Int = Int.MIN_VALUE,
 

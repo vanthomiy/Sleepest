@@ -58,7 +58,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case STOP_FOREGROUND:
                 //Stops the foregroundservice after a sleep session or if sleep time changes to out of sleep time
-                BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).stopForegroundService(true);
+                BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).stopForegroundService();
                 break;
             case DISABLE_ALARM:
                     //Disables the next active alarm temporary

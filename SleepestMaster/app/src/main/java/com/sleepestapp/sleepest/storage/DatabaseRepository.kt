@@ -378,6 +378,13 @@ class DatabaseRepository(
     }
 
     /**
+     * Updates alarm was fired by id of a [AlarmEntity]
+     */
+    suspend fun updateAlreadyAwake(alreadyAwake: Boolean, alarmId: Int) {
+        alarmDao.updateAlreadyAwake(alreadyAwake, alarmId)
+    }
+
+    /**
      * Workaround to call function from JAVA code
      * calls [updateAlarmTempDisabled]
      */
@@ -477,6 +484,7 @@ class DatabaseRepository(
     suspend fun resetAlarmTempDisabledWasFired() {
         alarmDao.resetTempDisabled()
         alarmDao.resetWasFired()
+        alarmDao.resetAlreadyAwake()
     }
 
     /**

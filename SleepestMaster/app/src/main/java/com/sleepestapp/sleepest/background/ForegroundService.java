@@ -257,6 +257,11 @@ public class ForegroundService extends LifecycleService {
     @RequiresApi(api = Build.VERSION_CODES.P)
     public void OnAlarmChanged(AlarmEntity time) {
 
+        if (time.getAlreadyAwake()) {
+            BackgroundAlarmTimeHandler.Companion.getHandler(getApplicationContext()).stopForegroundService();
+            return;
+        }
+
         //Recheck, if alarm already set but AlarmClockReceiver is not active because of an error
         checkAlarmSet();
 

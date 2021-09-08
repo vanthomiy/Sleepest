@@ -135,7 +135,7 @@
                             android:layout_marginStart="100dp"
                             android:text="@{alarmsViewModel.alarmSoundName}"
                             android:textColor="@color/primary_text_color"
-                            android:textSize="@dimen/valueSize"></androidx.appcompat.widget.AppCompatButton>
+                            android:textSize="@dimen/valueSize" />
 
                     </FrameLayout>
 

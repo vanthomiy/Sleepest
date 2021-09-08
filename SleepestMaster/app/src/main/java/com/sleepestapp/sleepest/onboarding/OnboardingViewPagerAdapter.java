@@ -29,6 +29,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -94,7 +96,7 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
     @Override
     public Object instantiateItem(@NonNull @NotNull ViewGroup container, int position) {
 
-        LayoutInflater layoutInflater= (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater layoutInflater= (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.onboarding_notice_screen,container,false);
 
         LinearLayout linearLayoutPermission = view.findViewById(R.id.layoutOnboardingPermissionsPage8);
@@ -239,6 +241,11 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_5));
                 tvContent.setText(context.getString(R.string.onboarding_content_page_5));
                 imageView.setVisibility(View.VISIBLE);
+                if (Locale.getDefault().getLanguage().equals("de")) {
+                    imageView.setImageResource(R.drawable.history_fragment_german);
+                } else {
+                    imageView.setImageResource(R.drawable.history_fragment_english);
+                }
                 dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
             case 5:
@@ -253,6 +260,11 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
                 tvContent.setText(context.getString(R.string.onboarding_content_page_7));
                 imageView.setImageResource(R.drawable.phone_position_tim);
                 imageView.setVisibility(View.VISIBLE);
+                if (Locale.getDefault().getLanguage().equals("de")) {
+                    imageView.setImageResource(R.drawable.banner_foregroundservice_german);
+                } else {
+                    imageView.setImageResource(R.drawable.banner_foregroundservice_german);
+                }
                 dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
             case 7:

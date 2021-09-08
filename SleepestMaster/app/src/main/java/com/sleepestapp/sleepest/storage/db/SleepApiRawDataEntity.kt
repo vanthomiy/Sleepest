@@ -103,6 +103,28 @@ data class SleepApiRawDataEntity(
                 }
 
                 /**
+                 * Returns the actual awake time the user has been awake. 0 if sleeping
+                 * In Seconds
+                 */
+                fun getActualAwakeTime(sleepApiRawDataEntity:List<SleepApiRawDataEntity>) : Int {
+                        val sortedList = sleepApiRawDataEntity.sortedByDescending { x-> x.timestampSeconds }
+
+                        if (sortedList.first().sleepState != SleepState.AWAKE)
+                                return 0
+
+                        val endTime = sortedList.first().timestampSeconds
+
+                        for (i  in 1 until sortedList.count()){
+
+                                if (sortedList[i].sleepState != SleepState.AWAKE) {
+                                        return endTime - sortedList[i].timestampSeconds
+                                }
+                        }
+
+                        return endTime - sortedList.last().timestampSeconds
+                }
+
+                /**
                  * Returns the sleep time by a sleep state by minutes
                  */
                 fun getSleepTimeByState(sleepApiRawDataEntity:List<SleepApiRawDataEntity>, sleepState: SleepState) : Int {
