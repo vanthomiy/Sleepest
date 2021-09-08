@@ -7,6 +7,7 @@ import com.doitstudio.sleepest_master.model.data.Constants.DAY_IN_SECONDS
 
 import com.doitstudio.sleepest_master.storage.datastorage.*
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import java.time.LocalTime
@@ -63,7 +64,7 @@ class DataStoreRepository(context: Context) {
     /**
      * Sleep parameter flow
      */
-    val sleepParameterFlow: Flow<SleepParameters> = sleepParameterStatus.sleepParameters
+    val sleepParameterFlow: Flow<SleepParameters> = sleepParameterStatus.sleepParameters.distinctUntilChanged()
 
     /**
      * Returns if the time is in actual sleep time
@@ -220,7 +221,7 @@ class DataStoreRepository(context: Context) {
     /**
      * Alarm parameter flow
      */
-    val alarmParameterFlow: Flow<AlarmParameters> = alarmParameterStatus.alarmParameters
+    val alarmParameterFlow: Flow<AlarmParameters> = alarmParameterStatus.alarmParameters.distinctUntilChanged()
 
     /**
      * Helper function to call [getAlarmType] from Java code
@@ -297,7 +298,7 @@ class DataStoreRepository(context: Context) {
     /**
      * Sleep api data flow
      */
-    val sleepApiDataFlow: Flow<SleepApiData> = sleepApiDataStatus.sleepApiData
+    val sleepApiDataFlow: Flow<SleepApiData> = sleepApiDataStatus.sleepApiData.distinctUntilChanged()
 
     /**
      * Returns sleep api subscription status
@@ -365,7 +366,7 @@ class DataStoreRepository(context: Context) {
     /**
      * Settings flow
      */
-    val settingsDataFlow: Flow<SettingsData> = settingsDataStatus.settingsData
+    val settingsDataFlow: Flow<SettingsData> = settingsDataStatus.settingsData.distinctUntilChanged()
 
     /**
      * Update settings banner show alarm active
@@ -450,7 +451,7 @@ class DataStoreRepository(context: Context) {
     /**
      * Activity api flow
      */
-    val activityApiDataFlow: Flow<ActivityApiData> = activityApiDataStatus.activityApiData
+    val activityApiDataFlow: Flow<ActivityApiData> = activityApiDataStatus.activityApiData.distinctUntilChanged()
 
     /**
      * Returns activity api subscription status
@@ -517,7 +518,7 @@ class DataStoreRepository(context: Context) {
     /**
      * Live user sleep activity flow
      */
-    val liveUserSleepActivityFlow: Flow<LiveUserSleepActivity> = liveUserSleepActivityStatus.liveUserSleepActivity
+    val liveUserSleepActivityFlow: Flow<LiveUserSleepActivity> = liveUserSleepActivityStatus.liveUserSleepActivity.distinctUntilChanged()
 
     /**
      * Update live is user sleeping
@@ -552,7 +553,7 @@ class DataStoreRepository(context: Context) {
     /**
      * Background service flow
      */
-    val backgroundServiceFlow: Flow<BackgroundService> = backgroundServiceStatus.backgroundService
+    val backgroundServiceFlow: Flow<BackgroundService> = backgroundServiceStatus.backgroundService.distinctUntilChanged()
 
     /**
      * Update background service is active
