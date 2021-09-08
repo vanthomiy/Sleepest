@@ -12,7 +12,7 @@
             android:id="@+id/layoutOnboardingSettingsPage7"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.42"
+            android:layout_weight="0.4"
             android:layout_margin="10dp"
             android:layout_gravity="center_horizontal"
             android:orientation="vertical"
@@ -216,7 +216,7 @@
             android:id="@+id/layoutOnboardingPermissionsPage8"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.42"
+            android:layout_weight="0.4"
             android:layout_margin="10dp"
             android:layout_gravity="center_horizontal"
             android:orientation="vertical"
@@ -352,7 +352,7 @@
             android:id="@+id/animationSearch"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.42"
+            android:layout_weight="0.4"
             android:layout_margin="10dp"
             android:visibility="gone"
             android:layout_gravity="center"
@@ -365,7 +365,7 @@
             android:id="@+id/ivOnboadingNoticeImage"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.42"
+            android:layout_weight="0.4"
             android:layout_margin="10dp"
             android:visibility="gone"
             android:layout_gravity="center_horizontal"
@@ -408,7 +408,7 @@
             android:layout_weight="0.1"
             android:gravity="center"
             android:text="Title"
-            android:textSize="30dp"/>
+            android:textSize="26dp"/>
 
         <TextView
             android:id="@+id/tvOnboardingContent"
@@ -526,7 +526,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginRight="30dp"
             android:layout_marginBottom="10dp"
-            android:layout_weight="0.07"
+            android:layout_weight="0.09"
             android:backgroundTint="@color/primary_button_color"
             android:text="Get started"
             app:cornerRadius="20sp" />

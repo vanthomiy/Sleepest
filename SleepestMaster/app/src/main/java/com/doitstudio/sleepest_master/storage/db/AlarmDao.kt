@@ -39,6 +39,9 @@ interface AlarmDao {
     @Query("UPDATE alarm_properties_table SET tempDisabled =:tempDisabled Where id LIKE :alarmId")
     suspend fun updateAlarmTempDisabled(tempDisabled: Boolean, alarmId:Int)
 
+    @Query("UPDATE alarm_properties_table SET alreadyAwake =:alreadyAwake Where id LIKE :alarmId")
+    suspend fun updateAlreadyAwake(alreadyAwake: Boolean, alarmId:Int)
+
     @Query("UPDATE alarm_properties_table SET wakeupEarly =:wakeupEarly Where id LIKE :alarmId")
     suspend fun updateWakeupEarly(wakeupEarly: Int, alarmId:Int)
 
