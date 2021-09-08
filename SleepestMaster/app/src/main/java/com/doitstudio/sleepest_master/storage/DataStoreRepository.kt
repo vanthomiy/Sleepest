@@ -44,6 +44,7 @@ class DataStoreRepository(context: Context) {
         settingsDataStatus.loadDefault()
         sleepApiDataStatus.loadDefault()
         sleepParameterStatus.loadDefault()
+        tutorialStatus.loadDefault()
 
         updateRestartApp(true)
         updateAfterRestartApp(true)
@@ -93,6 +94,13 @@ class DataStoreRepository(context: Context) {
      */
     fun getSleepTimeEndJob() : Int = runBlocking{
         return@runBlocking getSleepTimeEnd()
+    }
+
+    /**
+     * Returns the sleep duration of the user-defined sleep parameters
+     */
+    fun getSleepDurationJob() : Int = runBlocking {
+        return@runBlocking getSleepDuration()
     }
 
     /**
@@ -565,6 +573,54 @@ class DataStoreRepository(context: Context) {
      */
     suspend fun backgroundUpdateShouldBeActive(value:Boolean) =
         backgroundServiceStatus.updateShouldBeActive(value)
+
+    //endregion
+
+    //region Tutorial
+
+    /**
+     * Tutorial status
+     */
+    private val tutorialStatus by lazy{ TutorialStatus(context.createDataStore(
+        TUTORIAL_STATUS_NAME,
+        serializer = TutorialStatusSerializer())
+    )
+    }
+
+    val tutorialStatusFlow: Flow<Tutorial> = tutorialStatus.tutorialData
+
+    /**
+     * Helper function to call [updateTutorialCompleted] from Java code
+     */
+    fun updateTutorialCompletedJob(value:Boolean) = runBlocking {
+        updateTutorialCompleted(value)
+    }
+
+    /**
+     * Update tutorial completed
+     */
+    suspend fun updateTutorialCompleted(value:Boolean) =
+        tutorialStatus.updateTutorialCompleted(value)
+
+    /**
+     * Helper function to call [updateEnergyOptionsShown] from Java code
+     */
+    fun updateEnergyOptionsShownJob(value:Boolean) = runBlocking {
+        updateEnergyOptionsShown(value)
+    }
+
+    /**
+     * Update energy options shown
+     */
+    suspend fun updateEnergyOptionsShown(value:Boolean) =
+        tutorialStatus.updateEnergyOptionsShown(value)
+
+    /**
+     * Helper function to call [tutorialStatusFlow] property from Java code
+     */
+    fun getTutorialCompletedJob() : Boolean = runBlocking{
+        return@runBlocking tutorialStatusFlow.first().tutorialCompleted
+    }
 
     //endregion
 

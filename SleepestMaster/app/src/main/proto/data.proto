@@ -271,4 +271,17 @@ message SettingsData{
 
 }
 
+message Tutorial{
+  /**
+* Defines is user completed the hole tutorial ang granted all permissions
+*/
+  bool tutorialCompleted = 1;
+
+  /**
+* Defines is user completed the hole tutorial ang granted all permissions
+*/
+  bool energyOptionsShown = 2;
+
+}
+
 

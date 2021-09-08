@@ -9,8 +9,16 @@ import androidx.fragment.app.FragmentActivity
 import dev.doubledot.doki.views.DokiContentView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
+import com.doitstudio.sleepest_master.storage.DataStoreRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 class DontKillMyAppFragment : DialogFragment() {
+
+    private lateinit var dataStoreRepository : DataStoreRepository
+
+    private val scope: CoroutineScope = MainScope()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dokiCustomView = View.inflate(context, R.layout.fragment_dont_kill_my_app, null)
@@ -18,6 +26,10 @@ class DontKillMyAppFragment : DialogFragment() {
             it.setButtonsVisibility(false)
             it.loadContent()
         }
+
+        dataStoreRepository = (requireContext().applicationContext as MainApplication).dataStoreRepository
+
+
 
         val tvNoticeDontKillMyApp : TextView = dokiCustomView.findViewById(R.id.tvNoticeDontKillMyApp)
         tvNoticeDontKillMyApp.setText(getString(R.string.notice_dont_kill_my_app))
@@ -29,9 +41,15 @@ class DontKillMyAppFragment : DialogFragment() {
         return MaterialDialog(requireContext()).show {
             customView(view = dokiCustomView)
             positiveButton(R.string.doki_close) {
+                dataStoreRepository.updateEnergyOptionsShownJob(true)
                 dismiss()
             }
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        //dataStoreRepository.updateEnergyOptionsShownJob(true)
     }
 
     fun show(context: FragmentActivity, tag: String = DOKI_DIALOG_TAG) {

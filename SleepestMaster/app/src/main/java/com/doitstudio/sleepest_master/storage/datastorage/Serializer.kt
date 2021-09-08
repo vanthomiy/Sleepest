@@ -3,6 +3,7 @@ package com.doitstudio.sleepest_master.storage.datastorage
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
 import com.doitstudio.sleepest_master.*
+import com.doitstudio.sleepest_master.Tutorial.parseFrom
 import com.doitstudio.sleepest_master.model.data.MobilePosition
 import com.doitstudio.sleepest_master.model.data.MobileUseFrequency
 import com.google.protobuf.InvalidProtocolBufferException
@@ -150,5 +151,25 @@ class BackgroundServiceSerializer() : Serializer<BackgroundService> {
     override val defaultValue: BackgroundService = BackgroundService.newBuilder()
         .setIsForegroundActive(false)
         .setIsBackgroundActive(false)
+        .build()
+}
+
+class TutorialStatusSerializer() : Serializer<Tutorial> {
+
+    override fun readFrom(input: InputStream): Tutorial {
+        try {
+            return Tutorial.parseFrom(input)
+        } catch (exception: InvalidProtocolBufferException) {
+            throw CorruptionException("Cannot read proto.", exception)
+        }
+    }
+
+    override fun writeTo(t: Tutorial, output: OutputStream) {
+        t.writeTo(output)
+    }
+
+    override val defaultValue: Tutorial = Tutorial.newBuilder()
+        .setEnergyOptionsShown(false)
+        .setTutorialCompleted(false)
         .build()
 }
