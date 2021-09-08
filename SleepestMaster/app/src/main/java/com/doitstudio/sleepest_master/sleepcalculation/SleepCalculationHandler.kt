@@ -500,11 +500,14 @@ class SleepCalculationHandler(val context: Context) {
             }
 
             // now check if user actually awake, and how long user has been awake in one time
-            val actualAwakeTime =
-                SleepApiRawDataEntity.getActualAwakeTime(sleepApiRawDataEntity) / 60
 
-            // set user can wakeup
-            dataBaseRepository.updateAlreadyAwake(alreadyAwake = (actualAwakeTime > 60), alarm.id)
+            if (dataStoreRepository.getEndAlarmAfterFired()) {
+                val actualAwakeTime =
+                    SleepApiRawDataEntity.getActualAwakeTime(sleepApiRawDataEntity) / 60
+
+                // set user can wakeup
+                dataBaseRepository.updateAlreadyAwake(alreadyAwake = (actualAwakeTime > 60), alarm.id)
+            }
 
             // store in the alarm...!!!
             dataBaseRepository.updateWakeupTime(wakeupTime = wakeUpTime, alarm.id)

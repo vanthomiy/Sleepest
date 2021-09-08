@@ -488,6 +488,7 @@ class DatabaseRepository(
     suspend fun resetAlarmTempDisabledWasFired() {
         alarmDao.resetTempDisabled()
         alarmDao.resetWasFired()
+        alarmDao.resetAlreadyAwake()
     }
 
     /**
