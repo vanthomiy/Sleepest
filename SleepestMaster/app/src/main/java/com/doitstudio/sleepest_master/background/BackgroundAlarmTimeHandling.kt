@@ -134,11 +134,11 @@ class BackgroundAlarmTimeHandler(val context: Context) {
         scope.launch {
             //Starts the foreground service if the user is in sleeptime and an alarm is active
             if (checkInSleepTime() && checkAlarmActive() && !checkForegroundStatus() && !checkAlarmFired() && !checkAlarmTempDisabled() && !listEmpty) {
-                startForegroundService(false)
+                startForegroundService()
             }
             //Stops the foreground service if no alarm is active for the next day
             else if (listEmpty) {
-                stopForegroundService(false)
+                stopForegroundService()
             }
 
             //Alarm is already active and user is already in sleep time
@@ -184,7 +184,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
             AlarmClockAudio.getInstance().stopAlarm(false, isScreenOn)
 
             //Stops the foreground service
-            stopForegroundService(isScreenOn)
+            stopForegroundService()
             Toast.makeText(context, "Alarmclock stopped", Toast.LENGTH_LONG).show()
             val calendar = Calendar.getInstance()
             val pref: SharedPreferences = context.getSharedPreferences("AlarmClock", 0)
@@ -347,9 +347,9 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
                 //Start the foregroundservice
                 if (!inActivity) {
-                    startForegroundService(false)
+                    startForegroundService()
                 } else {
-                    startForegroundService(true)
+                    startForegroundService()
                 }
 
                 sleepCalculationHandler.checkIsUserSleeping(null)
@@ -387,7 +387,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
             //Reset alarm fired
             if (checkForegroundStatus()) {
-                stopForegroundService(false)
+                stopForegroundService()
             }
 
             //Reset alarm temporary disabled and alarm fired property
@@ -410,7 +410,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
         scope.launch {
             //Alarm was disabled in AlarmFragment
             if (fromApp && !reactivate) {
-                stopForegroundService(false)
+                stopForegroundService()
                 dataBaseRepository.updateAlarmTempDisabled(true, dataBaseRepository.getNextActiveAlarm()!!.id)
             }
             //Alarm was disabled in notification
@@ -433,7 +433,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
             //Alarm was reactivated in AlarmFragment
             else if (fromApp && reactivate) {
                 dataBaseRepository.updateAlarmTempDisabled(false, dataBaseRepository.getNextActiveAlarm()!!.id)
-                startForegroundService(false)
+                startForegroundService()
             }
         }
 
@@ -574,7 +574,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                 }
                 3 -> {
                     setForegroundStatus(false)
-                    startForegroundService(true)
+                    startForegroundService()
                     AlarmReceiver.cancelAlarm(context, AlarmReceiverUsage.START_WORKMANAGER_CALCULATION)
                     WorkmanagerCalculation.startPeriodicWorkmanager(Constants.WORKMANAGER_CALCULATION_DURATION, context)
                 }
