@@ -94,13 +94,14 @@ class SleepCalculationHandler(val context: Context) {
         // check the frequency
         val secondsPast = (seconds - (hours * 3600)).toInt()
         val secondsFuture = (seconds + (hours * 3600)).toInt()
+        val fullList = list.sortedByDescending { x->x.timestampSeconds }
 
         var filteredList = if(!isAfter)
-            list.filter { x -> x.timestampSeconds in secondsPast-1 until seconds+1 }.toList().sortedByDescending { x-> x.timestampSeconds }
+            fullList.filter { x -> x.timestampSeconds in secondsPast-1 until seconds+1 }.toList().sortedByDescending { x-> x.timestampSeconds }
         else
-            list.filter { x -> x.timestampSeconds in seconds-1 until secondsFuture+1 }.toList().sortedBy { x-> x.timestampSeconds }
+            fullList.filter { x -> x.timestampSeconds in seconds-1 until secondsFuture+1 }.toList().sortedBy { x-> x.timestampSeconds }
 
-        val futureItems = list.filter { x -> x.timestampSeconds > seconds+1 }.sortedByDescending { x->x.timestampSeconds }
+        val futureItems = fullList.filter { x -> x.timestampSeconds > seconds+1 }.sortedByDescending { x->x.timestampSeconds }
 
         if((filteredList.count() <= 1 && !isAfter) ||
             (isAfter && futureItems.count() == 0))
@@ -108,7 +109,7 @@ class SleepCalculationHandler(val context: Context) {
             return Pair(listOf<SleepApiRawDataEntity>(),SleepDataFrequency.NONE)
         }
 
-        if (isAfter && list.first().timestampSeconds < secondsFuture)
+        if (isAfter && fullList.first().timestampSeconds < secondsFuture)
             return Pair(listOf<SleepApiRawDataEntity>(),SleepDataFrequency.NONE)
 
         val frequencyType = getFrequencyFromListByHours(hours, false, seconds, filteredList)
@@ -301,7 +302,7 @@ class SleepCalculationHandler(val context: Context) {
 
                 }
 
-                if (data.sleepState != SleepState.NONE && data.oldSleepState != SleepState.NONE){
+                if (data.sleepState != SleepState.NONE && data.oldSleepState == SleepState.NONE){
                     // get normed list
                     val (normedSleepApiDataBefore, frequency1) = createTimeNormedData(
                         1f,
