@@ -530,9 +530,9 @@ class HistoryDayFragment : Fragment() {
         pieDataSet.setDrawValues(false)
         pieDataSet.label
 
-        chart.setCenterTextColor(Color.WHITE)
-        chart.setHoleColor(Color.BLACK)
-        chart.setEntryLabelColor(Color.WHITE)
+        chart.setCenterTextColor(viewModel.checkDarkMode())
+        chart.setHoleColor(viewModel.checkDarkModeInverse())
+        chart.setEntryLabelColor(viewModel.checkDarkMode())
 
         chart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
         chart.legend.isEnabled = false
