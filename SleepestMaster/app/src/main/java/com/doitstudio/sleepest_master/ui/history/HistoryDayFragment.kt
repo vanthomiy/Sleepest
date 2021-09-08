@@ -148,6 +148,21 @@ class HistoryDayFragment : Fragment() {
         updateActivitySmiley()
     }
 
+    private fun maintainVisibilityDayHistory(setVisibility: Boolean) {
+        if (setVisibility) {
+            binding.iVNoDataAvailable.visibility = View.GONE
+            binding.tVNoDataAvailable.visibility = View.GONE
+            binding.tVActivitySmileyNoSleepDataAvailable.visibility = View.GONE
+            binding.sVSleepAnalysisChartsDays.visibility = View.VISIBLE
+        }
+        else {
+            binding.sVSleepAnalysisChartsDays.visibility = View.GONE
+            binding.iVNoDataAvailable.visibility = View.VISIBLE
+            binding.tVNoDataAvailable.visibility = View.VISIBLE
+            binding.tVActivitySmileyNoSleepDataAvailable.visibility = View.VISIBLE
+        }
+    }
+
     /** Save users input of the [UserSleepRating.moodAfterSleep] into database. */
     private fun saveSleepRatingDaily() {
         scope.launch {
@@ -255,6 +270,10 @@ class HistoryDayFragment : Fragment() {
 
         viewModel.analysisDate.get()?.let {
             if (viewModel.checkId(it)) {
+
+                setTimeStamps()
+                maintainVisibilityDayHistory(true)
+
                 sleepValues?.let {
                     for (rawData in it.first) {
                         for (minute in 0..((it.second / 60).toDouble()).roundToInt()) {
@@ -279,20 +298,15 @@ class HistoryDayFragment : Fragment() {
                             xIndex += 1f
                         }
                     }
+
+                    if (it.third.sleepTimes.sleepTimeStart == 0)
+                        maintainVisibilityDayHistory(false)
+                } ?: kotlin.run {
+                    maintainVisibilityDayHistory(false)
                 }
-
-                setTimeStamps()
-
-                binding.iVNoDataAvailable.visibility = View.GONE
-                binding.tVNoDataAvailable.visibility = View.GONE
-                binding.tVActivitySmileyNoSleepDataAvailable.visibility = View.GONE
-                binding.sVSleepAnalysisChartsDays.visibility = View.VISIBLE
             }
             else {
-                binding.sVSleepAnalysisChartsDays.visibility = View.GONE
-                binding.iVNoDataAvailable.visibility = View.VISIBLE
-                binding.tVNoDataAvailable.visibility = View.VISIBLE
-                binding.tVActivitySmileyNoSleepDataAvailable.visibility = View.VISIBLE
+                maintainVisibilityDayHistory(false)
             }
         }
 
