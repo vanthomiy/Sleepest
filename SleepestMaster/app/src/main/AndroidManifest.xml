@@ -24,7 +24,7 @@
         android:roundIcon="@drawable/logov4round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SleepestMaster">
-        <activity android:name="com.sleepestapp.sleepest.onboarding.PermissionActivity"></activity>
+        <activity android:name="com.sleepestapp.sleepest.onboarding.PermissionActivity" />
         <activity
             android:name="com.sleepestapp.sleepest.onboarding.OnboardingActivity"
             android:configChanges="orientation"
