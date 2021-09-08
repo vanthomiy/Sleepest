@@ -17,7 +17,7 @@ import kotlin.collections.ArrayList
 
 /**
  * This contains the interface for each SQL-Database and for DataStore.
- * ROOM API for SQL Database is used for storing large datasets like [SleepApiRawDataEntity] or [SleepSegmentEntity].
+ * ROOM API for SQL Database is used for storing large datasets like [SleepApiRawDataEntity]
  * DataStore is used for storing single classes or single values like {later} [AlarmPreferences] (Containing Alarm Time and Alarm Active etc.) and [AlgorithmPreferences] and other key values.
  * More information about DataStore @see [link](https://developer.android.com/topic/libraries/architecture/datastore) and about ROOM SQL @see [link](https://developer.android.com/training/data-storage/room/#kotlin).
  *

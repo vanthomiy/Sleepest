@@ -11,7 +11,7 @@ private const val DATABASE_NAME = "sleepest_database"
  */
 
 @Database(
-        entities = [SleepApiRawDataEntity::class, SleepSegmentEntity::class, UserSleepSessionEntity::class, AlarmEntity::class, ActivityApiRawDataEntity::class],
+        entities = [SleepApiRawDataEntity::class, UserSleepSessionEntity::class, AlarmEntity::class, ActivityApiRawDataEntity::class],
         version = 6,
         exportSchema = false
 )
@@ -20,7 +20,6 @@ private const val DATABASE_NAME = "sleepest_database"
 abstract class SleepDatabase : RoomDatabase() {
 
     abstract fun sleepApiRawDataDao(): SleepApiRawDataDao
-    abstract fun sleepDataDao(): SleepSegmentDao
     abstract fun userSleepSessionDao(): UserSleepSessionDao
     abstract fun alarmDao(): AlarmDao
     abstract fun activityApiRawDataDao(): ActivityApiRawDataDao

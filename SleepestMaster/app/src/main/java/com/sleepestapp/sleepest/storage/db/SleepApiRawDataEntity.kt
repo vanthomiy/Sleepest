@@ -13,7 +13,6 @@ import com.google.android.gms.location.SleepClassifyEvent
  * reported regularly.
  *
  * This is only used for storing in the SQL Database. We use other classes later for better handling.
- * E.g the [SleepSegmentEntity] for display sleep states
  */
 @Entity(tableName = "sleep_api_raw_data_table")
 data class SleepApiRawDataEntity(
