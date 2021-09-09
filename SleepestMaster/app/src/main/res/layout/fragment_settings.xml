@@ -501,8 +501,7 @@
                             android:text="@string/privacy_police"
                             android:textColor="@color/primary_text_color"
                             android:id="@+id/btnPolice"
-                            android:tag="police"
-                            android:onClick="@{profileViewModel::onAboutUsClicked}">
+                            android:tag="police">
                         </androidx.appcompat.widget.AppCompatButton>
 
                     </LinearLayout>

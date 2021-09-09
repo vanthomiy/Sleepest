@@ -129,7 +129,6 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
      * TODO("Not implemented yet")
      */
     fun onAboutUsClicked(view: View) {
-        updateExpandChanged(view.tag.toString(), true)
         when (view.tag.toString()) {
             "improvement" -> "asd"
             "rate" -> "asd"

@@ -73,6 +73,7 @@ data class CreditsAuthors(
                     CreditsAuthors("Vijay Pawar", Info.SETTINGS), //Battery
                     CreditsAuthors("Cate Silva", Info.SETTINGS) //Swipe up alarm clock
                 )
+                else -> listOf()
             }
         }
     }

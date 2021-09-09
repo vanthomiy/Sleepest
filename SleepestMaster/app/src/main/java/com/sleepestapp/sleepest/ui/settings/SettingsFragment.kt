@@ -139,7 +139,7 @@ class SettingsFragment : Fragment() {
         }
 
         binding.btnPolice.setOnClickListener() {
-            onWebsiteClicked(it)
+            onWebsiteClicked(Websites.PRIVACY_POLICE)
         }
 
         //endregion
@@ -332,6 +332,12 @@ class SettingsFragment : Fragment() {
      */
     private fun onWebsiteClicked(view: View) {
         val websiteUrl = Websites.getWebsite(view.tag as Websites)
+
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(websiteUrl)))
+    }
+
+    private fun onWebsiteClicked(website: Websites) {
+        val websiteUrl = Websites.getWebsite(website)
 
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(websiteUrl)))
     }
