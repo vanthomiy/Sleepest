@@ -258,9 +258,10 @@ class MainActivity : AppCompatActivity() {
 
         //Get default settings of tutorial and save it in datastore
         if (bundle != null && bundle.getBoolean(getString(R.string.onboarding_intent_data_available))) {
-            if( bundle.getBoolean(getString(R.string.onboarding_intent_show_dontkillmyapp))) {
-                DontKillMyAppFragment.show(this@MainActivity)
-
+            scope.launch {
+                if (dataStoreRepository.tutorialStatusFlow.first().tutorialCompleted && !dataStoreRepository.tutorialStatusFlow.first().energyOptionsShown) {
+                    DontKillMyAppFragment.show(this@MainActivity)
+                }
                 //Start a alarm for the new foregroundservice start time
                 val calendar = TimeConverterUtil.getAlarmDate(bundle.getInt(getString(R.string.onboarding_intent_starttime)))
                 AlarmReceiver.startAlarmManager(
@@ -268,9 +269,6 @@ class MainActivity : AppCompatActivity() {
                     calendar[Calendar.HOUR_OF_DAY],
                     calendar[Calendar.MINUTE],
                     applicationContext, AlarmReceiverUsage.START_FOREGROUND)
-            }
-
-            scope.launch {
 
                 SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
                     dataStoreRepository,
@@ -304,7 +302,9 @@ class MainActivity : AppCompatActivity() {
                     false,
                     SleepSleepChangeFrom.SLEEPTIMESTART
                 )
+
             }
+
         }
 
         val alarmCycleState = AlarmCycleState(applicationContext)

@@ -24,6 +24,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.doitstudio.sleepest_master.DontKillMyAppFragment;
 import com.doitstudio.sleepest_master.MainActivity;
 import com.doitstudio.sleepest_master.R;
+import com.doitstudio.sleepest_master.storage.DataStoreRepository;
 import com.doitstudio.sleepest_master.util.PermissionsUtil;
 import com.doitstudio.sleepest_master.util.TimeConverterUtil;
 
@@ -370,9 +371,11 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
                     Toast.makeText(context, context.getString(R.string.onboarding_toast_permissions), Toast.LENGTH_LONG).show();
                     OnboardingActivity.viewPager.setCurrentItem(8);
                 } else if (enableStartApp) {
+                    DataStoreRepository dataStoreRepository = DataStoreRepository.Companion.getRepo(context);
+                    dataStoreRepository.updateTutorialCompletedJob(true);
                     Intent intent=new Intent(context , MainActivity.class);
                     intent.putExtra(context.getString(R.string.onboarding_intent_data_available), true);
-                    intent.putExtra(context.getString(R.string.onboarding_intent_show_dontkillmyapp), !notFirstAppStart);
+                    //intent.putExtra(context.getString(R.string.onboarding_intent_show_dontkillmyapp), !notFirstAppStart);
                     intent.putExtra(context.getString(R.string.onboarding_intent_starttime), starttime);
                     intent.putExtra(context.getString(R.string.onboarding_intent_endtime), endtime);
                     intent.putExtra(context.getString(R.string.onboarding_intent_duration), (durationHours * 60 + durationMinutes) * 60);

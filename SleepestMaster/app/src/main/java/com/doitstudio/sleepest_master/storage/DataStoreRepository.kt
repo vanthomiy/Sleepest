@@ -7,6 +7,7 @@ import com.doitstudio.sleepest_master.model.data.Constants.DAY_IN_SECONDS
 
 import com.doitstudio.sleepest_master.storage.datastorage.*
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import java.time.LocalTime
@@ -44,6 +45,7 @@ class DataStoreRepository(context: Context) {
         settingsDataStatus.loadDefault()
         sleepApiDataStatus.loadDefault()
         sleepParameterStatus.loadDefault()
+        tutorialStatus.loadDefault()
 
         updateRestartApp(true)
         updateAfterRestartApp(true)
@@ -63,7 +65,7 @@ class DataStoreRepository(context: Context) {
     /**
      * Sleep parameter flow
      */
-    val sleepParameterFlow: Flow<SleepParameters> = sleepParameterStatus.sleepParameters
+    val sleepParameterFlow: Flow<SleepParameters> = sleepParameterStatus.sleepParameters.distinctUntilChanged()
 
     /**
      * Returns if the time is in actual sleep time
@@ -93,6 +95,13 @@ class DataStoreRepository(context: Context) {
      */
     fun getSleepTimeEndJob() : Int = runBlocking{
         return@runBlocking getSleepTimeEnd()
+    }
+
+    /**
+     * Returns the sleep duration of the user-defined sleep parameters
+     */
+    fun getSleepDurationJob() : Int = runBlocking {
+        return@runBlocking getSleepDuration()
     }
 
     /**
@@ -220,7 +229,7 @@ class DataStoreRepository(context: Context) {
     /**
      * Alarm parameter flow
      */
-    val alarmParameterFlow: Flow<AlarmParameters> = alarmParameterStatus.alarmParameters
+    val alarmParameterFlow: Flow<AlarmParameters> = alarmParameterStatus.alarmParameters.distinctUntilChanged()
 
     /**
      * Helper function to call [getAlarmType] from Java code
@@ -297,7 +306,7 @@ class DataStoreRepository(context: Context) {
     /**
      * Sleep api data flow
      */
-    val sleepApiDataFlow: Flow<SleepApiData> = sleepApiDataStatus.sleepApiData
+    val sleepApiDataFlow: Flow<SleepApiData> = sleepApiDataStatus.sleepApiData.distinctUntilChanged()
 
     /**
      * Returns sleep api subscription status
@@ -365,7 +374,7 @@ class DataStoreRepository(context: Context) {
     /**
      * Settings flow
      */
-    val settingsDataFlow: Flow<SettingsData> = settingsDataStatus.settingsData
+    val settingsDataFlow: Flow<SettingsData> = settingsDataStatus.settingsData.distinctUntilChanged()
 
     /**
      * Update settings banner show alarm active
@@ -450,7 +459,7 @@ class DataStoreRepository(context: Context) {
     /**
      * Activity api flow
      */
-    val activityApiDataFlow: Flow<ActivityApiData> = activityApiDataStatus.activityApiData
+    val activityApiDataFlow: Flow<ActivityApiData> = activityApiDataStatus.activityApiData.distinctUntilChanged()
 
     /**
      * Returns activity api subscription status
@@ -517,7 +526,7 @@ class DataStoreRepository(context: Context) {
     /**
      * Live user sleep activity flow
      */
-    val liveUserSleepActivityFlow: Flow<LiveUserSleepActivity> = liveUserSleepActivityStatus.liveUserSleepActivity
+    val liveUserSleepActivityFlow: Flow<LiveUserSleepActivity> = liveUserSleepActivityStatus.liveUserSleepActivity.distinctUntilChanged()
 
     /**
      * Update live is user sleeping
@@ -552,7 +561,7 @@ class DataStoreRepository(context: Context) {
     /**
      * Background service flow
      */
-    val backgroundServiceFlow: Flow<BackgroundService> = backgroundServiceStatus.backgroundService
+    val backgroundServiceFlow: Flow<BackgroundService> = backgroundServiceStatus.backgroundService.distinctUntilChanged()
 
     /**
      * Update background service is active
@@ -565,6 +574,54 @@ class DataStoreRepository(context: Context) {
      */
     suspend fun backgroundUpdateShouldBeActive(value:Boolean) =
         backgroundServiceStatus.updateShouldBeActive(value)
+
+    //endregion
+
+    //region Tutorial
+
+    /**
+     * Tutorial status
+     */
+    private val tutorialStatus by lazy{ TutorialStatus(context.createDataStore(
+        TUTORIAL_STATUS_NAME,
+        serializer = TutorialStatusSerializer())
+    )
+    }
+
+    val tutorialStatusFlow: Flow<Tutorial> = tutorialStatus.tutorialData
+
+    /**
+     * Helper function to call [updateTutorialCompleted] from Java code
+     */
+    fun updateTutorialCompletedJob(value:Boolean) = runBlocking {
+        updateTutorialCompleted(value)
+    }
+
+    /**
+     * Update tutorial completed
+     */
+    suspend fun updateTutorialCompleted(value:Boolean) =
+        tutorialStatus.updateTutorialCompleted(value)
+
+    /**
+     * Helper function to call [updateEnergyOptionsShown] from Java code
+     */
+    fun updateEnergyOptionsShownJob(value:Boolean) = runBlocking {
+        updateEnergyOptionsShown(value)
+    }
+
+    /**
+     * Update energy options shown
+     */
+    suspend fun updateEnergyOptionsShown(value:Boolean) =
+        tutorialStatus.updateEnergyOptionsShown(value)
+
+    /**
+     * Helper function to call [tutorialStatusFlow] property from Java code
+     */
+    fun getTutorialCompletedJob() : Boolean = runBlocking{
+        return@runBlocking tutorialStatusFlow.first().tutorialCompleted
+    }
 
     //endregion
 
