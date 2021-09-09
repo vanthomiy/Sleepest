@@ -213,7 +213,8 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
             if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
                 color = Color.BLACK
             }
-        } else if (darkMode) {
+        }
+        if (darkMode) {
             color = Color.BLACK
         }
         return color
