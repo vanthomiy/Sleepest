@@ -206,6 +206,21 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         return color
     }
 
+    /** Auxiliary function the determine if the device is currently in dark mode and invert colors. */
+    fun checkDarkModeInverse() : Int {
+        var color = Color.WHITE
+        if (autoDarkMode) {
+            if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+                color = Color.BLACK
+            }
+        }
+        if (darkMode) {
+            color = Color.BLACK
+        }
+        return color
+    }
+
+
     /** Generates all the relevant information for the Bar Charts by searching the database for the correct period of time.
      * TODO(Check this)
      * */
