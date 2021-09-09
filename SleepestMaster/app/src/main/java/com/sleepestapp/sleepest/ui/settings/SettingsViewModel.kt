@@ -1,15 +1,19 @@
 package com.sleepestapp.sleepest.ui.settings
 
 import android.app.Application
+import android.content.Intent
+import android.net.Uri
 import android.transition.TransitionManager
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.core.content.ContextCompat.startActivity
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.R
+import com.sleepestapp.sleepest.model.data.Websites
 import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
 import com.sleepestapp.sleepest.util.PermissionsUtil
@@ -130,6 +134,10 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             "improvement" -> "asd"
             "rate" -> "asd"
             "error" -> "asd"
+            "police" -> {
+
+            }
+
         }
     }
 

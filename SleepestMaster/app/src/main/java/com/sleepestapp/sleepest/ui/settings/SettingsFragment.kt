@@ -137,6 +137,11 @@ class SettingsFragment : Fragment() {
         binding.btnImportantSettings.setOnClickListener() {
             DontKillMyAppFragment.show(requireActivity())
         }
+
+        binding.btnPolice.setOnClickListener() {
+            onWebsiteClicked(it)
+        }
+
         //endregion
 
         viewModel.actualExpand.set(caseOfEntrie)
@@ -329,8 +334,6 @@ class SettingsFragment : Fragment() {
         val websiteUrl = Websites.getWebsite(view.tag as Websites)
 
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(websiteUrl)))
-
-
     }
 
     /**

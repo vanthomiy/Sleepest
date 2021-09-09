@@ -352,7 +352,8 @@ enum class SleepSleepChangeFrom {
  */
 enum class Websites {
     FLATICON,
-    LOTTIEFILES;
+    LOTTIEFILES,
+    PRIVACY_POLICE;
 
     companion object {
 
@@ -360,6 +361,7 @@ enum class Websites {
             return when (type) {
                 Websites.FLATICON -> "https://flaticon.com/"
                 Websites.LOTTIEFILES -> "https://lottiefiles.com/"
+                Websites.PRIVACY_POLICE -> "https://sleepest.flycricket.io/privacy.html"
             }
         }
 
@@ -367,6 +369,7 @@ enum class Websites {
             return when (type) {
                 Websites.FLATICON -> "Flaticon"
                 Websites.LOTTIEFILES -> "Lottifiles"
+                Websites.PRIVACY_POLICE -> "POLICE"
             }
         }
     }
