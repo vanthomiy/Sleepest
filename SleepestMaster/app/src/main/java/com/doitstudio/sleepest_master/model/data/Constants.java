@@ -23,5 +23,6 @@ public class Constants {
     public static final int LOCKSCREEN_ANIMATION_DURATION = 1000;
     public static final int LOCKSCREEN_COLOR_ANIMATION_DURATION = 2000;
     public static final int FOREGROUNDSERVICE_NOTIFICATION_DELAY_SLEEPTIME = 20;
+    public static final int DELAY_USER_ALREADY_AWAKE = 60;
 
 }

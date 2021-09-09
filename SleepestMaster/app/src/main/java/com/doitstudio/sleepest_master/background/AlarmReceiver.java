@@ -48,6 +48,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         //Init repos
         DatabaseRepository databaseRepository = ((MainApplication)context.getApplicationContext()).getDataBaseRepository();
+        DataStoreRepository dataStoreRepository = ((MainApplication)context.getApplicationContext()).getDataStoreRepository();
         SleepCalculationHandler sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(MainApplication.Companion.applicationContext());
 
         Calendar calendar = Calendar.getInstance();
@@ -89,7 +90,16 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case STOP_WORKMANAGER:
                 //Stops the workmanager outside sleep time
-                BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).endOfSleepTime(true);
+                if (databaseRepository.getNextActiveAlarmJob() != null && !databaseRepository.getNextActiveAlarmJob().getWasFired()) {
+                    Calendar calendarNewAlarm = TimeConverterUtil.getAlarmDate(LocalTime.now().toSecondOfDay() + 600);
+                    AlarmReceiver.startAlarmManager(
+                            calendarNewAlarm.get(Calendar.DAY_OF_WEEK),
+                            calendarNewAlarm.get(Calendar.HOUR_OF_DAY),
+                            calendarNewAlarm.get(Calendar.MINUTE), context, AlarmReceiverUsage.STOP_WORKMANAGER);
+                } else {
+                    BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).endOfSleepTime(true);
+                }
+
                  break;
             case CURRENTLY_NOT_SLEEPING:
                 //Button currently not sleeping, only after 2 hours of sleep

@@ -94,7 +94,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                 //User changes sleep time end and is still in sleep time
                 else if (checkInSleepTime() && (sleepTimeEndTemp != getSleepTimeEndValue())) {
                     //Change the end of sleep time alarm
-                    val calendar = TimeConverterUtil.getAlarmDate(getSleepTimeEndValue())
+                    val calendar = TimeConverterUtil.getAlarmDate(getSleepTimeEndValue() + 60)
                     AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context.applicationContext, AlarmReceiverUsage.STOP_WORKMANAGER);
                 }
 
@@ -328,7 +328,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
         sleepHandler.startSleepHandler()
         scope.launch {
             //Set AlarmManager to stop Workmanager at end of sleeptime
-            val calendar = TimeConverterUtil.getAlarmDate(getSleepTimeEndValue())
+            val calendar = TimeConverterUtil.getAlarmDate(getSleepTimeEndValue() + 60)
             AlarmReceiver.startAlarmManager(
                 calendar.get(Calendar.DAY_OF_WEEK),
                 calendar.get(Calendar.HOUR_OF_DAY),
