@@ -5,6 +5,11 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.sleepestapp.sleepest.onboarding.OnboardingActivity
+import com.sleepestapp.sleepest.storage.DataStoreRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class SplashScreen : AppCompatActivity() {
 

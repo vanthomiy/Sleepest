@@ -9,41 +9,54 @@ import androidx.fragment.app.FragmentActivity
 import dev.doubledot.doki.views.DokiContentView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
+import com.sleepestapp.sleepest.storage.DataStoreRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
 
 class DontKillMyAppFragment : DialogFragment() {
 
+    private lateinit var dataStoreRepository : DataStoreRepository
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dokiCustomView = View.inflate(context,
-            com.sleepestapp.sleepest.R.layout.fragment_dont_kill_my_app, null)
-        dokiCustomView?.findViewById<DokiContentView?>(com.sleepestapp.sleepest.R.id.doki_content)?.let {
+        val dokiCustomView = View.inflate(context, R.layout.fragment_dont_kill_my_app, null)
+        dokiCustomView?.findViewById<DokiContentView?>(R.id.doki_content)?.let {
             it.setButtonsVisibility(false)
             it.loadContent()
         }
 
-        val tvNoticeDontKillMyApp : TextView = dokiCustomView.findViewById(com.sleepestapp.sleepest.R.id.tvNoticeDontKillMyApp)
-        tvNoticeDontKillMyApp.setText(getString(com.sleepestapp.sleepest.R.string.notice_dont_kill_my_app))
+        dataStoreRepository = (requireContext().applicationContext as MainApplication).dataStoreRepository
 
 
-        val tvDescriptionDontKillMyApp : TextView = dokiCustomView.findViewById(com.sleepestapp.sleepest.R.id.tvDescriptionDontKillMyApp)
-        tvDescriptionDontKillMyApp.setText(getString(com.sleepestapp.sleepest.R.string.description_dont_kill_my_app))
+
+        val tvNoticeDontKillMyApp : TextView = dokiCustomView.findViewById(R.id.tvNoticeDontKillMyApp)
+        tvNoticeDontKillMyApp.setText(getString(R.string.notice_dont_kill_my_app))
+
+
+        val tvDescriptionDontKillMyApp : TextView = dokiCustomView.findViewById(R.id.tvDescriptionDontKillMyApp)
+        tvDescriptionDontKillMyApp.setText(getString(R.string.description_dont_kill_my_app))
 
         return MaterialDialog(requireContext()).show {
             customView(view = dokiCustomView)
-            positiveButton(com.sleepestapp.sleepest.R.string.doki_close) {
+            positiveButton(R.string.doki_close) {
+                dataStoreRepository.updateEnergyOptionsShownJob(true)
                 dismiss()
             }
         }
     }
 
-    fun show(context: FragmentActivity, tag: String = com.sleepestapp.sleepest.DontKillMyAppFragment.Companion.DOKI_DIALOG_TAG) {
+    override fun onStop() {
+        super.onStop()
+        //dataStoreRepository.updateEnergyOptionsShownJob(true)
+    }
+
+    fun show(context: FragmentActivity, tag: String = DOKI_DIALOG_TAG) {
         show(context.supportFragmentManager, tag)
     }
 
     companion object {
         private const val DOKI_DIALOG_TAG = "doki_dialog"
-        fun show(context: FragmentActivity, tag: String = com.sleepestapp.sleepest.DontKillMyAppFragment.Companion.DOKI_DIALOG_TAG) {
-            com.sleepestapp.sleepest.DontKillMyAppFragment()
-                .show(context, tag)
+        fun show(context: FragmentActivity, tag: String = DOKI_DIALOG_TAG) {
+           DontKillMyAppFragment().show(context, tag)
         }
     }
 }

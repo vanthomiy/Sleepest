@@ -3,11 +3,9 @@ package com.doitstudio.sleepest_master.storage.datastorage
 import androidx.datastore.core.DataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.first
 import java.io.IOException
 import android.util.Log
-import com.doitstudio.sleepest_master.ActivityApiData
-import com.doitstudio.sleepest_master.Tutorial
+import com.sleepestapp.sleepest.Tutorial
 
 
 const val TUTORIAL_STATUS_NAME = "tutorial_status_repo"

@@ -221,20 +221,20 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        /*
+
         // check permission
         if (!PermissionsUtil.isActivityRecognitionPermissionGranted(applicationContext)) {
-            //requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
+            requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
         }
 
         if(!PermissionsUtil.isOverlayPermissionGranted(applicationContext)) {
-            //PermissionsUtil.setOverlayPermission(this@MainActivity)
+            PermissionsUtil.setOverlayPermission(this@MainActivity)
         }
 
         if (!PermissionsUtil.isNotificationPolicyAccessGranted(applicationContext)) {
-            //PermissionsUtil.setOverlayPermission(this@MainActivity)
+            PermissionsUtil.setOverlayPermission(this@MainActivity)
         }
-    */
+
         when (intent?.action) {
             Intent.ACTION_SEND -> {
                 if ("application/json" == intent.type) {
