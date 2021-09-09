@@ -7,7 +7,7 @@
     <data>
         <variable
             name="sleepViewModel"
-            type="com.doitstudio.sleepest_master.ui.sleep.SleepViewModel" />
+            type="com.sleepestapp.sleepest.ui.sleep.SleepViewModel" />
     </data>
 
     <androidx.constraintlayout.motion.widget.MotionLayout
@@ -139,7 +139,7 @@
                         <fragment
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
+                            android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
                             android:layout_gravity="center_horizontal"
                             android:tag="7"
                             app:infoId = "7"
@@ -193,7 +193,7 @@
                             <fragment
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
+                                android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
                                 android:layout_gravity="center_horizontal"
                                 android:tag="0"
                                 app:infoId = "0"
@@ -334,7 +334,7 @@
                             <fragment
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
+                                android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
                                 android:layout_gravity="center_horizontal"
                                 android:tag="1"
                                 app:infoId = "1"
@@ -472,7 +472,7 @@
                             <fragment
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
+                                android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
                                 android:layout_gravity="center_horizontal"
                                 android:tag="6"
                                 app:infoId = "6"
@@ -543,7 +543,7 @@
                             <fragment
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
+                                android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
                                 android:layout_gravity="center_horizontal"
                                 android:tag="2"
                                 app:infoId = "2"
@@ -613,7 +613,7 @@
                             <fragment
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
+                                android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
                                 android:layout_gravity="center_horizontal"
                                 android:tag="3"
                                 app:infoId = "3"
@@ -720,7 +720,7 @@
                             <fragment
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
+                                android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
                                 android:layout_gravity="center_horizontal"
                                 android:tag="4"
                                 app:infoId = "4"

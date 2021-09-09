@@ -7,7 +7,7 @@
     <data>
         <variable
             name="historyWeekViewModel"
-            type="com.doitstudio.sleepest_master.ui.history.HistoryWeekViewModel" />
+            type="com.sleepestapp.sleepest.ui.history.HistoryWeekViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -78,7 +78,7 @@
                         <fragment
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
+                            android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
                             android:layout_gravity="center_horizontal"
                             android:tag="0"
                             app:infoId = "0"
@@ -142,7 +142,7 @@
                         <fragment
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:name="com.doitstudio.sleepest_master.ui.info.InfoFragment"
+                            android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
                             android:layout_gravity="center_horizontal"
                             android:tag="1"
                             app:infoId = "1"

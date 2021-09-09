@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "265503992549",
+    "project_id": "sleepest-234a0",
+    "storage_bucket": "sleepest-234a0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:265503992549:android:a2a3da4b458ee20ffd020c",
+        "android_client_info": {
+          "package_name": "com.sleepestapp.sleepest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "265503992549-el6cefelgfmvrlcrmgfmdf4teo19kip5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtknNtWEA-QbW8UQm3xuYiPgBJhWI6xgU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "265503992549-el6cefelgfmvrlcrmgfmdf4teo19kip5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

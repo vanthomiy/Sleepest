@@ -1,7 +1,7 @@
 //https://developers.google.com/protocol-buffers/docs/proto3
 syntax = "proto3";
 
-option java_package = "com.doitstudio.sleepest_master";
+option java_package = "com.sleepestapp.sleepest";
 option java_multiple_files = true;
 
 

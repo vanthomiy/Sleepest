@@ -9,7 +9,7 @@
     <string name="alarm_clock_channel">Alarmclock Notification Channel</string>
     <string name="alarm_clock_channel_name">Alarmclock Channel</string>
     <string name="alarm_clock_channel_description">This channel is for all notifications in alarm clock actions</string>
-    <string name="alarm_clock_intent_key">com.doitstudio.sleepest_master.alarmclock.AlarmClockIntentKey</string>
+    <string name="alarm_clock_intent_key">com.sleepestapp.sleepest.alarmclock.AlarmClockIntentKey</string>
     <string name="alarm_notification_title">"It's time to wake up"</string>
     <string name="alarm_notification_text">"Tap Snooze to sleep for further 10 minutes"</string>
     <string name="alarm_notification_button_1">"Cancel"</string>
@@ -36,7 +36,7 @@
     <string name="information_notification_title">Attention</string>
     <string name="workmanager1_tag">Workmanager 1</string>
     <string name="workmanager2_tag">Workmanager 2</string>
-    <string name="alarmmanager_key">com.doitstudio.sleepest_master.background.AlarmIntentKey</string>
+    <string name="alarmmanager_key">com.sleepestapp.sleepest.background.AlarmIntentKey</string>
     <string name="error_start_foreground">Something went wrong, try to start the alarms</string>
     <string name="disable_alarm_message">You can reactivate the alarm in Sleepest at any time</string>
     <string name="not_sleeping_message">Sleep time until now deleted</string>
@@ -342,6 +342,7 @@
     <string name="onboarding_toast_read_to_end">Please read the hole tutorial</string>
     <string name="onboarding_toast_permission_already_granted">This permission is already granted</string>
     <string name="history_day_timeInPhase_remSleep">REM sleep</string>
+    <string name="info_no_info_found">No Information found</string>
 
 
 </resources>

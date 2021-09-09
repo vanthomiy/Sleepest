@@ -7,7 +7,7 @@
     <data>
         <variable
             name="historyTabView"
-            type="com.doitstudio.sleepest_master.ui.history.HistoryViewModel" />
+            type="com.sleepestapp.sleepest.ui.history.HistoryViewModel" />
     </data>
 
     <LinearLayout

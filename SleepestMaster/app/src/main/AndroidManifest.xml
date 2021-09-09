@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.doitstudio.sleepest_master">
+    package="com.sleepestapp.sleepest">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
@@ -17,46 +17,46 @@
     <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
 
     <application
-        android:name=".MainApplication"
+        android:name="com.sleepestapp.sleepest.MainApplication"
         android:allowBackup="true"
         android:icon="@drawable/logov4"
         android:label="@string/app_name"
         android:roundIcon="@drawable/logov4round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SleepestMaster">
-        <activity android:name=".onboarding.PermissionActivity"></activity>
+        <activity android:name="com.sleepestapp.sleepest.onboarding.PermissionActivity" />
         <activity
-            android:name=".onboarding.OnboardingActivity"
+            android:name="com.sleepestapp.sleepest.onboarding.OnboardingActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".background.ForegroundActivity"
+            android:name="com.sleepestapp.sleepest.background.ForegroundActivity"
             android:excludeFromRecents="true"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
-            android:name=".alarmclock.LockScreenAlarmActivity"
+            android:name="com.sleepestapp.sleepest.alarmclock.LockScreenAlarmActivity"
             android:configChanges="orientation"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait" />
 
         <service
-            android:name=".background.ForegroundService"
+            android:name="com.sleepestapp.sleepest.background.ForegroundService"
             android:enabled="true"
             android:exported="false" />
 
         <activity
-            android:name=".SplashScreen"
+            android:name="com.sleepestapp.sleepest.SplashScreen"
             android:configChanges="orientation"
             android:screenOrientation="portrait">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.sleepestapp.sleepest.MainActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait">
 
@@ -76,19 +76,30 @@
                 <data android:scheme="file" />
                 <data android:mimeType="application/json" />
             </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="sleepest.page.link"
+                    android:pathPattern="/main" />
+            </intent-filter>
         </activity>
 
         <service
-            android:name=".background.ForegroundService"
+            android:name="com.sleepestapp.sleepest.background.ForegroundService"
             android:enabled="true"
             android:exported="false" />
 
         <receiver
-            android:name=".background.AlarmReceiver"
+            android:name="com.sleepestapp.sleepest.background.AlarmReceiver"
             android:enabled="true"
             android:exported="true" />
         <receiver
-            android:name=".background.BootReceiver"
+            android:name="com.sleepestapp.sleepest.background.BootReceiver"
             android:directBootAware="true"
             android:enabled="true"
             android:exported="true"
@@ -107,15 +118,15 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".alarmclock.AlarmClockReceiver"
+            android:name="com.sleepestapp.sleepest.alarmclock.AlarmClockReceiver"
             android:enabled="true"
             android:exported="true" />
         <receiver
-            android:name=".googleapi.SleepReceiver"
+            android:name="com.sleepestapp.sleepest.googleapi.SleepReceiver"
             android:enabled="true"
             android:exported="true" />
         <receiver
-            android:name=".googleapi.ActivityTransitionReciver"
+            android:name="com.sleepestapp.sleepest.googleapi.ActivityTransitionReciver"
             android:enabled="true"
             android:exported="true" />
 
