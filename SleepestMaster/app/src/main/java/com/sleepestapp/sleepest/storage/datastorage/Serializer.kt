@@ -152,3 +152,23 @@ class BackgroundServiceSerializer() : Serializer<BackgroundService> {
         .setIsBackgroundActive(false)
         .build()
 }
+
+class TutorialStatusSerializer() : Serializer<Tutorial> {
+
+    override fun readFrom(input: InputStream): Tutorial {
+        try {
+            return Tutorial.parseFrom(input)
+        } catch (exception: InvalidProtocolBufferException) {
+            throw CorruptionException("Cannot read proto.", exception)
+        }
+    }
+
+    override fun writeTo(t: Tutorial, output: OutputStream) {
+        t.writeTo(output)
+    }
+
+    override val defaultValue: Tutorial = Tutorial.newBuilder()
+        .setEnergyOptionsShown(false)
+        .setTutorialCompleted(false)
+        .build()
+}

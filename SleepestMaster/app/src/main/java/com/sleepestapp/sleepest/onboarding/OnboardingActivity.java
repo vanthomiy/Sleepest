@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class OnboardingActivity extends AppCompatActivity {
 
     public static ViewPager viewPager;
+    private DataStoreRepository dataStoreRepository; //Instance of DataStoreRepo
     OnboardingViewPagerAdapter onboardingViewPagerAdapter;
 
     @Override
@@ -21,29 +22,19 @@ public class OnboardingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
 
-        Bundle bundle = getIntent().getExtras();
-
-        boolean fromApp = false;
-
-        if (bundle != null && bundle.getBoolean(getString(R.string.onboarding_intent_not_first_app_start))) {
-            fromApp = true;
-        }
-
+        dataStoreRepository = DataStoreRepository.Companion.getRepo(getApplicationContext());
         ArrayList<Object> arrayList = new ArrayList<>();
 
-        if (bundle != null) {
-            if(bundle.getBoolean(getString(R.string.onboarding_intent_not_first_app_start))) {
-
-                arrayList.add(bundle.getInt(getString(R.string.onboarding_intent_starttime)));
-                arrayList.add(bundle.getInt(getString(R.string.onboarding_intent_endtime)));
-                arrayList.add(TimeConverterUtil.millisToTimeFormat(bundle.getInt(getString(R.string.onboarding_intent_duration)))[0]);
-                arrayList.add(TimeConverterUtil.millisToTimeFormat(bundle.getInt(getString(R.string.onboarding_intent_duration)))[1]);
-                arrayList.add(TimeConverterUtil.toTimeFormat(TimeConverterUtil.millisToTimeFormat(bundle.getInt(getString(R.string.onboarding_intent_starttime)))[0],
-                        TimeConverterUtil.millisToTimeFormat(bundle.getInt(getString(R.string.onboarding_intent_starttime)))[1]));
-                arrayList.add(TimeConverterUtil.toTimeFormat(TimeConverterUtil.millisToTimeFormat(bundle.getInt(getString(R.string.onboarding_intent_endtime)))[0],
-                        TimeConverterUtil.millisToTimeFormat(bundle.getInt(getString(R.string.onboarding_intent_endtime)))[1]));
-                arrayList.add(true);
-            }
+        if (dataStoreRepository.getTutorialCompletedJob()) {
+            arrayList.add(dataStoreRepository.getSleepTimeBeginJob());
+            arrayList.add(dataStoreRepository.getSleepTimeEndJob());
+            arrayList.add(TimeConverterUtil.millisToTimeFormat(dataStoreRepository.getSleepDurationJob())[0]);
+            arrayList.add(TimeConverterUtil.millisToTimeFormat(dataStoreRepository.getSleepDurationJob())[1]);
+            arrayList.add(TimeConverterUtil.toTimeFormat(TimeConverterUtil.millisToTimeFormat(dataStoreRepository.getSleepTimeBeginJob())[0],
+                    TimeConverterUtil.millisToTimeFormat(dataStoreRepository.getSleepTimeBeginJob())[1]));
+            arrayList.add(TimeConverterUtil.toTimeFormat(TimeConverterUtil.millisToTimeFormat(dataStoreRepository.getSleepTimeEndJob())[0],
+                    TimeConverterUtil.millisToTimeFormat(dataStoreRepository.getSleepTimeEndJob())[1]));
+            arrayList.add(true);
         }
 
         viewPager = findViewById(R.id.onboarding_viewpager);

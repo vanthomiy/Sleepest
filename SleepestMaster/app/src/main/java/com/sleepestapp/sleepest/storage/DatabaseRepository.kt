@@ -8,6 +8,7 @@ import com.sleepestapp.sleepest.storage.db.UserSleepSessionDao
 import com.sleepestapp.sleepest.storage.db.UserSleepSessionEntity
 import com.sleepestapp.sleepest.storage.db.*
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import java.time.*
@@ -67,7 +68,7 @@ class DatabaseRepository(
     // Methods for SleepApiRawDataDao
     // Observed Flow will notify the observer when the data has changed.
     val allSleepApiRawData: Flow<List<SleepApiRawDataEntity>?> =
-        sleepApiRawDataDao.getAll()
+        sleepApiRawDataDao.getAll().distinctUntilChanged()
 
     /**
      * [time] the duration in seconds eg. 86200 would be from 24hours ago to now the data
@@ -76,7 +77,7 @@ class DatabaseRepository(
     {
         val now = LocalDateTime.now(ZoneOffset.systemDefault())
         val seconds = now.atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
-        return sleepApiRawDataDao.getSince(seconds-time)
+        return sleepApiRawDataDao.getSince(seconds-time).distinctUntilChanged()
     }
 
     /**
@@ -92,7 +93,7 @@ class DatabaseRepository(
 
         val endTime = actualTime.atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
 
-        return sleepApiRawDataDao.getBetween(startTime,endTime)
+        return sleepApiRawDataDao.getBetween(startTime,endTime).distinctUntilChanged()
     }
 
     /**
@@ -110,7 +111,7 @@ class DatabaseRepository(
             actualTime.toLocalDate().plusDays(1).atTime(15,0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
         else actualTime.toLocalDate().atTime(15,0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
 
-        return sleepApiRawDataDao.getBetween(startTime,endTime)
+        return sleepApiRawDataDao.getBetween(startTime,endTime).distinctUntilChanged()
     }
 
     /**
@@ -118,7 +119,7 @@ class DatabaseRepository(
      */
     fun getSleepApiRawDataBetweenTimestamps(startTime: Int, endTime: Int): Flow<List<SleepApiRawDataEntity>?>
     {
-        return sleepApiRawDataDao.getBetween(startTime, endTime)
+        return sleepApiRawDataDao.getBetween(startTime, endTime).distinctUntilChanged()
     }
 
     /**
@@ -169,7 +170,7 @@ class DatabaseRepository(
     // Methods for ActivityApiRawDataDao
     // Observed Flow will notify the observer when the data has changed.
     val allActivityApiRawData: Flow<List<ActivityApiRawDataEntity>> =
-            activityApiRawDataDao.getAll()
+            activityApiRawDataDao.getAll().distinctUntilChanged()
 
     /**
      * [time] the duration in seconds eg. 86200 would be from 24hours ago to now the data
@@ -178,7 +179,7 @@ class DatabaseRepository(
     {
         val now = LocalDateTime.now(ZoneOffset.UTC)
         val seconds = now.atZone(ZoneOffset.UTC).toEpochSecond().toInt()
-        return activityApiRawDataDao.getSince(seconds-time)
+        return activityApiRawDataDao.getSince(seconds-time).distinctUntilChanged()
     }
 
 
@@ -195,7 +196,7 @@ class DatabaseRepository(
 
         val endTime = actualTime.atZone(ZoneOffset.UTC).toEpochSecond().toInt()
 
-        return activityApiRawDataDao.getBetween(startTime,endTime)
+        return activityApiRawDataDao.getBetween(startTime,endTime).distinctUntilChanged()
     }
 
     /**
@@ -208,7 +209,7 @@ class DatabaseRepository(
         val startTime = actualTime.toLocalDate().minusDays(1).atTime(0,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
         val endTime = actualTime.toLocalDate().minusDays(1).atTime(23,59).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
 
-        return activityApiRawDataDao.getBetween(startTime,endTime)
+        return activityApiRawDataDao.getBetween(startTime,endTime).distinctUntilChanged()
     }
 
     /**
@@ -239,13 +240,13 @@ class DatabaseRepository(
     // Methods for ActivityApiRawDataDao
     // Observed Flow will notify the observer when the data has changed.
     val allUserSleepSessions: Flow<List<UserSleepSessionEntity>> =
-            userSleepSessionDao.getAll()
+            userSleepSessionDao.getAll().distinctUntilChanged()
 
     /**
      * returns a specific [UserSleepSessionEntity] by its ID
      */
     fun getSleepSessionById(id: Int): Flow<List<UserSleepSessionEntity?>> =
-            userSleepSessionDao.getById(id)
+            userSleepSessionDao.getById(id).distinctUntilChanged()
 
     /**
      * Returns a specific [UserSleepSessionEntity] by its ID
@@ -273,7 +274,7 @@ class DatabaseRepository(
     {
         val now = LocalDateTime.now(ZoneOffset.systemDefault()).minusDays(days)
         val seconds = now.atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
-        return userSleepSessionDao.getSince(seconds)
+        return userSleepSessionDao.getSince(seconds).distinctUntilChanged()
     }
 
     /**
@@ -318,7 +319,7 @@ class DatabaseRepository(
     // Methods for Alarm
     // Observed Flow will notify the observer when the data has changed.
     val alarmFlow: Flow<List<AlarmEntity>> =
-            alarmDao.getAll()
+            alarmDao.getAll().distinctUntilChanged()
 
     /**
      * All active alarms and on that specific day
@@ -328,13 +329,14 @@ class DatabaseRepository(
         val date = if(ldt.hour > 15) ldt.plusDays(1).toLocalDate() else ldt.toLocalDate()
         val dayOfWeek = "%" + date.dayOfWeek + "%"
 
-        return alarmDao.getAllActiveOnDay(dayOfWeek.toString())
+        return alarmDao.getAllActiveOnDay(dayOfWeek.toString()).distinctUntilChanged()
     }
 
     /**
      * Returns an [AlarmEntity] by its ID
      */
-    fun getAlarmById(alarmId: Int): Flow<AlarmEntity> = alarmDao.getAlarmById(alarmId)
+    fun getAlarmById(alarmId: Int): Flow<AlarmEntity> =
+        alarmDao.getAlarmById(alarmId).distinctUntilChanged()
 
     /**
      * Workaround to call function from JAVA code
