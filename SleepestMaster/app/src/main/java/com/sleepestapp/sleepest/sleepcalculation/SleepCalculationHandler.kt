@@ -488,8 +488,8 @@ class SleepCalculationHandler(val context: Context) {
             var wakeUpTime = actualTimeSeconds + (restSleepTime)
 
             // if time is greater then 1 day
-            if (wakeUpTime > 86400) {
-                wakeUpTime -= 86400
+            if (wakeUpTime > Constants.DAY_IN_SECONDS) {
+                wakeUpTime -= Constants.DAY_IN_SECONDS
             }
 
             // now check if user actually awake, and how long user has been awake in one time
@@ -499,7 +499,7 @@ class SleepCalculationHandler(val context: Context) {
                     SleepApiRawDataEntity.getActualAwakeTime(sleepApiRawDataEntity) / 60
 
                 // set user can wakeup
-                dataBaseRepository.updateAlreadyAwake(alreadyAwake = (actualAwakeTime > 60), alarm.id)
+                dataBaseRepository.updateAlreadyAwake(alreadyAwake = (actualAwakeTime > Constants.DELAY_USER_ALREADY_AWAKE), alarm.id)
             }
 
             // store in the alarm...!!!

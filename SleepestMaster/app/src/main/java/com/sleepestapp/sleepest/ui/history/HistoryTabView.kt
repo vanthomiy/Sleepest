@@ -1,6 +1,8 @@
 package com.sleepestapp.sleepest.ui.history
 
 import android.app.DatePickerDialog
+import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,6 +27,7 @@ class HistoryTabView : Fragment() {
     private lateinit var adapter: HistoryTabViewAdapter
     private lateinit var viewPager: ViewPager2
 
+    private val actualContext: Context by lazy { requireActivity().applicationContext }
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(HistoryViewModel::class.java) }
     private lateinit var binding: FragmentHistoryTabviewBinding
     private lateinit var btnPrevious: Button
@@ -148,16 +151,16 @@ class HistoryTabView : Fragment() {
 
     private fun createCalendarDayInformation(): String {
         val actualDay = LocalDate.now()
-        var information = getString(R.string.history_failure_title)
+        var information = actualContext.getString(R.string.history_failure_title)
 
         viewModel.analysisDate.get()?.let {
 
             information = when {
                 actualDay.dayOfYear == it.dayOfYear -> {
-                    getString(R.string.history_today_title)
+                    actualContext.getString(R.string.history_today_title)
                 }
                 (actualDay.dayOfYear - 1) == it.dayOfYear -> {
-                    getString(R.string.history_yesterday_title)
+                    actualContext.getString(R.string.history_yesterday_title)
                 }
                 else -> {
                     ("${it.dayOfMonth}.${it.monthValue}.${it.year}")

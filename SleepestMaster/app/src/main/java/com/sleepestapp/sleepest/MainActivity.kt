@@ -314,7 +314,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-
     }
 
     // region get permission for sleep api at first start etc.
