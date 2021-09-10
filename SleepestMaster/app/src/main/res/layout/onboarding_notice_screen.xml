@@ -528,6 +528,7 @@
             android:layout_marginBottom="10dp"
             android:layout_weight="0.09"
             android:backgroundTint="@color/primary_button_color"
+            android:textColor="@color/primary_text_color"
             android:text="Get started"
             app:cornerRadius="20sp" />
 
