@@ -64,6 +64,7 @@ class SettingsDataSerializer() : Serializer<SettingsData> {
         .setBannerShowActualWakeUpPoint(true)
         .setBannerShowSleepState(true)
         .setBannerShowAlarmActiv(true)
+        .setDesignAutoDarkMode(true)
         .build()
 }
 
@@ -110,6 +111,7 @@ class SleepParameterSerializer() : Serializer<SleepParameters> {
         .setStandardLightConditionOverLastWeek(0)
         .setStandardMobilePosition(0)
         .setStandardMobilePositionOverLastWeek(0)
+        .setUserActivityTracking(true)
         .build()
 }
 

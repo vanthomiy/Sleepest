@@ -2,6 +2,7 @@ package com.sleepestapp.sleepest.ui.settings
 
 
 import android.Manifest
+import android.content.ActivityNotFoundException
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
@@ -21,11 +22,11 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.gson.Gson
 import com.sleepestapp.sleepest.DontKillMyAppFragment
 import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.databinding.FragmentSettingsBinding
-import com.sleepestapp.sleepest.googleapi.SleepHandler
 import com.sleepestapp.sleepest.model.data.*
 import com.sleepestapp.sleepest.model.data.credits.CreditsSites
 import com.sleepestapp.sleepest.model.data.export.ImportUtil
@@ -35,9 +36,6 @@ import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
 import com.sleepestapp.sleepest.util.IconAnimatorUtil.isDarkThemeOn
 import com.sleepestapp.sleepest.util.SmileySelectorUtil
-import com.google.gson.Gson
-import com.sleepestapp.sleepest.model.data.Constants
-import com.sleepestapp.sleepest.ui.sleep.SleepFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -136,10 +134,6 @@ class SettingsFragment : Fragment() {
         }
         binding.btnImportantSettings.setOnClickListener() {
             DontKillMyAppFragment.show(requireActivity())
-        }
-
-        binding.btnPolice.setOnClickListener() {
-            onWebsiteClicked(Websites.PRIVACY_POLICE)
         }
 
         //endregion
@@ -286,43 +280,51 @@ class SettingsFragment : Fragment() {
         val creditsSites = CreditsSites.createCreditSites()
 
         creditsSites.forEach{ site ->
-            var creditsText = ""
 
-            site.authors.forEach{ author ->
-                creditsText += "\n      " + SmileySelectorUtil.getSmileyIteration() + " " + author.author + " " +
-                        actualContext.getString(R.string.settings_from) + " " +
-                        Info.getName(author.usage, actualContext)
+            if(site.site != Websites.PRIVACY_POLICE) {
+
+                var creditsText = ""
+
+                site.authors.forEach { author ->
+                    creditsText += "\n      " + SmileySelectorUtil.getSmileyIteration() + " " + author.author + " " +
+                            actualContext.getString(R.string.settings_from) + " " +
+                            Info.getName(author.usage, actualContext)
+                }
+
+
+                // creating the button
+                val button = Button(actualContext)
+                // setting layout_width and layout_height using layout parameters
+                button.layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    resources.getDimension(R.dimen.valuesHeight).toInt()
+                )
+                var marginParams = button.layoutParams as ViewGroup.MarginLayoutParams
+                marginParams.setMargins(10, 50, 10, 5)
+                button.setTextColor(resources.getColor(R.color.accent_text_color))
+                button.setBackgroundDrawable(resources.getDrawable(R.drawable.transparentrounded))
+                button.textAlignment = TEXT_ALIGNMENT_CENTER
+                button.text = site.name
+                button.tag = site.site
+                button.textSize = 14f
+                button.setOnClickListener { onWebsiteClicked(it) }
+                // add Button to LinearLayout
+                binding.llCredits.addView(button)
+
+                // creating the text
+                val textView = TextView(actualContext)
+                // setting layout_width and layout_height using layout parameters
+                textView.layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+                textView.setPadding(40, 5, 0, 30)
+                textView.textSize = 16f
+                textView.setTextColor(resources.getColor(R.color.primary_text_color))
+                textView.text = creditsText
+                // add text to LinearLayout
+                binding.llCredits.addView(textView)
             }
-
-
-
-
-            // creating the button
-            val button = Button(actualContext)
-            // setting layout_width and layout_height using layout parameters
-            button.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, resources.getDimension(R.dimen.valuesHeight).toInt())
-            var marginParams = button.layoutParams as ViewGroup.MarginLayoutParams
-            marginParams.setMargins(10,50,10,5)
-            button.setTextColor(resources.getColor(R.color.accent_text_color))
-            button.setBackgroundDrawable(resources.getDrawable(R.drawable.transparentrounded))
-            button.textAlignment = TEXT_ALIGNMENT_CENTER
-            button.text = site.name
-            button.tag = site.site
-            button.textSize = 14f
-            button.setOnClickListener { onWebsiteClicked(it) }
-            // add Button to LinearLayout
-            binding.llCredits.addView(button)
-
-            // creating the text
-            val textView = TextView(actualContext)
-            // setting layout_width and layout_height using layout parameters
-            textView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            textView.setPadding(40,5,0,30)
-            textView.textSize = 16f
-            textView.setTextColor(resources.getColor(R.color.primary_text_color))
-            textView.text = creditsText
-            // add text to LinearLayout
-            binding.llCredits.addView(textView)
         }
     }
 
@@ -332,12 +334,6 @@ class SettingsFragment : Fragment() {
      */
     private fun onWebsiteClicked(view: View) {
         val websiteUrl = Websites.getWebsite(view.tag as Websites)
-
-        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(websiteUrl)))
-    }
-
-    private fun onWebsiteClicked(website: Websites) {
-        val websiteUrl = Websites.getWebsite(website)
 
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(websiteUrl)))
     }

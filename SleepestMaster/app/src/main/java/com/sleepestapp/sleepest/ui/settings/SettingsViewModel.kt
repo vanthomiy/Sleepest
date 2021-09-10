@@ -1,11 +1,13 @@
 package com.sleepestapp.sleepest.ui.settings
 
 import android.app.Application
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.transition.TransitionManager
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.ContextCompat.startActivity
@@ -21,6 +23,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -131,12 +134,21 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     fun onAboutUsClicked(view: View) {
         when (view.tag.toString()) {
             "improvement" -> "asd"
-            "rate" -> "asd"
-            "error" -> "asd"
-            "police" -> {
-
+            "rate" -> {
+                val uri = Uri.parse("market://details?id=" + context.packageName)
+                val myAppLinkToMarket = Intent(Intent.ACTION_VIEW, uri)
+                try {
+                    context.startActivity(myAppLinkToMarket)
+                } catch (e: ActivityNotFoundException) {
+                    Toast.makeText(context, " unable to find market app", Toast.LENGTH_LONG).show()
+                }
             }
+            "error" -> "asd"
+            "PRIVACY_POLICE" -> {
+                val websiteUrl = Websites.getWebsite(view.tag as Websites)
 
+                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(websiteUrl)))
+            }
         }
     }
 

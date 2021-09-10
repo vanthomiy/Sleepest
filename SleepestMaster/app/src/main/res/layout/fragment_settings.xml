@@ -459,6 +459,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
                             android:background="@drawable/bgrounded_button"
+                            android:backgroundTint="@color/rem_sleep_color"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/settings_suggestions"
@@ -471,11 +472,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
                             android:background="@drawable/bgrounded_button"
+                            android:backgroundTint="@color/sleep_sleep_color"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/settings_rate"
                             android:textColor="@color/primary_text_color"
-
                             android:tag="rate"
                             android:onClick="@{profileViewModel::onAboutUsClicked}">
                         </androidx.appcompat.widget.AppCompatButton>
@@ -484,6 +485,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
                             android:background="@drawable/bgrounded_button"
+                            android:backgroundTint="@color/warning_color"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/settings_report_error"
@@ -496,12 +498,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
                             android:background="@drawable/bgrounded_button"
+                            android:backgroundTint="@color/light_sleep_color"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/privacy_police"
                             android:textColor="@color/primary_text_color"
                             android:id="@+id/btnPolice"
-                            android:tag="police">
+                            android:tag="PRIVACY_POLICE">
                         </androidx.appcompat.widget.AppCompatButton>
 
                     </LinearLayout>
@@ -804,14 +807,14 @@
                         android:visibility="@{profileViewModel.actualExpand == 5 ? profileViewModel.visibleState:profileViewModel.goneState, default=gone}"
                         >
 
-                        <TextView
+                        <!--TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="40dp"
                             android:textSize="@dimen/headerSize"
                             android:layout_gravity="start"
                             android:textColor="@color/primary_text_color"
-                            android:text="@string/settings_flaticon_introduction"/>
+                            android:text="@string/settings_flaticon_introduction"/!-->
 
                     </LinearLayout>
 
