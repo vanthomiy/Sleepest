@@ -25,6 +25,7 @@ import com.sleepestapp.sleepest.storage.db.AlarmEntity
 import com.sleepestapp.sleepest.util.IconAnimatorUtil
 import com.sleepestapp.sleepest.util.PermissionsUtil
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog
+import com.sleepestapp.sleepest.ui.settings.SettingsFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -36,22 +37,67 @@ import kotlinx.coroutines.launch
  */
 class AlarmsFragment() : Fragment() {
 
+    // region init
 
-    //private lateinit var binding: FragmentAlarmsBinding
+    /**
+     * The database Repository
+     */
     private val databaseRepository by lazy { (actualContext as MainApplication).dataBaseRepository }
+
+    /**
+     * The datastore Repository
+     */
     private val dataStoreRepository by lazy { (actualContext as MainApplication).dataStoreRepository }
+
+    /**
+     * Scope is used to call datastore async
+     */
     private val scope: CoroutineScope = MainScope()
+
+    /**
+     * Get actual context
+     */
     private val actualContext: Context by lazy { requireActivity().applicationContext }
+
+    /**
+     * Observable live data of the alarms flow
+     */
     private val activeAlarmsLiveData by lazy {  databaseRepository.activeAlarmsFlow().asLiveData() }
 
+    /**
+     * Binding XML Code to Fragment
+     */
     private lateinit var binding: FragmentAlarmsBinding
+
+    /**
+     * View model of the [AlarmsFragment]
+     */
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(AlarmsViewModel::class.java) }
 
+    /**
+     * All actual setup alarms
+     */
     lateinit var allAlarms: MutableList<AlarmEntity>
+    /**
+     * All ids of the setup alarms
+     */
     lateinit var usedIds: MutableSet<Int>
+    /**
+     * All transactions for each id of the setup alarms
+     */
     lateinit var transactions: MutableMap<Int, FragmentTransaction>
+    /**
+     * All fragments for each id of the setup alarms
+     */
     lateinit var fragments: MutableMap<Int, AlarmInstanceFragment>
 
+    // endregion
+
+    // region alarms setup
+
+    /**
+     * Load all alarms and then add them to the lists
+     */
     private fun setupAlarms() {
         allAlarms = mutableListOf()
         scope.launch {
@@ -68,6 +114,9 @@ class AlarmsFragment() : Fragment() {
         }
     }
 
+    /**
+     * When a new alarm is added by the user
+     */
     private fun onAddAlarm(view: View) {
         var newId = 0
         for (id in usedIds.indices) {
@@ -87,6 +136,9 @@ class AlarmsFragment() : Fragment() {
         IconAnimatorUtil.animateView(view as ImageView)
     }
 
+    /**
+     * Add the alarm to the view and the stored lists
+     */
     private fun addAlarmEntity(context: Context, alarmId: Int) {
 
         transactions[alarmId] = childFragmentManager.beginTransaction()
@@ -95,6 +147,9 @@ class AlarmsFragment() : Fragment() {
         transactions[alarmId]?.add(R.id.lL_containerAlarmEntities, fragments[alarmId]!!)?.commit()
     }
 
+    /**
+     * Remove an alarm by id and then remove it from the lists
+     */
     fun removeAlarmEntity(alarmId: Int) {
 
         TransitionManager.beginDelayedTransition(viewModel.transitionsContainer);
@@ -112,6 +167,9 @@ class AlarmsFragment() : Fragment() {
         viewModel.noAlarmsView.set(if(usedIds.count() > 0) View.GONE else View.VISIBLE)
     }
 
+    /**
+     * When alarm sound changed is clicked in the settings view
+     */
     private fun onAlarmSoundChange() {
         //check if audio volume is 0
 
@@ -154,11 +212,7 @@ class AlarmsFragment() : Fragment() {
 
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-
-    }
+    //endregion
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -175,7 +229,8 @@ class AlarmsFragment() : Fragment() {
         transactions = mutableMapOf()
         fragments = mutableMapOf()
 
-        activeAlarmsLiveData.observe(requireActivity()){
+        // Update the disable next alarm button by checking the settings of all alarms
+        this.activeAlarmsLiveData.observe(requireActivity()){
             activeAlarms ->
             if (activeAlarms.isNotEmpty()){
                 val nextAlarm = activeAlarms.minByOrNull { x-> x.wakeupEarly }
@@ -197,24 +252,9 @@ class AlarmsFragment() : Fragment() {
             else{
                 binding.btnTemporaryDisableAlarm.isVisible = false
             }
-
-            /*
-            scope.launch {
-                if (databaseRepository.getNextActiveAlarm() != null) {
-                    if (databaseRepository.getNextActiveAlarm()!!.tempDisabled) {
-                        binding.btnTemporaryDisableAlarm.text = getString(R.string.alarm_fragment_btn_disable_alarm_disable)
-                        /**TODO: Change color**/
-                    } else {
-                        binding.btnTemporaryDisableAlarm.text = getString(R.string.alarm_fragment_btn_disable_alarm_reactivate)
-                        /**TODO: Change color**/
-                    }
-                } else {
-                    binding.btnTemporaryDisableAlarm.isVisible = false
-                }
-
-            }*/
         }
 
+        // new alarm is added
         binding.btnAddAlarmEntity.setOnClickListener {
 
             if (PermissionsUtil.checkAllNeccessaryPermissions(actualContext)) {
@@ -228,10 +268,12 @@ class AlarmsFragment() : Fragment() {
             }
         }
 
+        // new click on alarm entity
         binding.sVAlarmEntities.setOnClickListener {
             viewModel.actualExpand.set(View.GONE)
         }
 
+        // new click on alarm sound settings
         binding.lLAlarmSoundSettings.onFocusChangeListener =
             View.OnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
@@ -241,11 +283,12 @@ class AlarmsFragment() : Fragment() {
                 }
             }
 
+        // sound was changed click
         binding.soundChange.setOnClickListener{
             onAlarmSoundChange()
         }
 
-
+        // temp disable alarm was clicked
         binding.btnTemporaryDisableAlarm.setOnClickListener {
             scope.launch {
                 if (databaseRepository.getNextActiveAlarm() != null) {
@@ -263,7 +306,7 @@ class AlarmsFragment() : Fragment() {
             }
         }
 
-
+        // setup the alarms
         setupAlarms()
 
         return binding.root

@@ -25,26 +25,53 @@ import java.time.LocalTime
 
 class AlarmInstanceViewModel(application: Application) : AndroidViewModel(application) {
 
+    // region init
+
+    /**
+     * Helper function to get the strings from ressources
+     */
     private fun getStringXml(id:Int): String {
         return getApplication<Application>().resources.getString(id)
     }
 
+    /**
+     * Scope is used to call datastore async
+     */
     private val scope: CoroutineScope = MainScope()
+
+    /**
+     * Get actual context
+     */
     private val context by lazy{ getApplication<Application>().applicationContext }
 
+    /**
+     * The database Repository
+     */
     private val dataBaseRepository: DatabaseRepository by lazy {
         (context as MainApplication).dataBaseRepository
     }
+
+    /**
+     * The datastore Repository
+     */
     private val dataStoreRepository: DataStoreRepository by lazy {
         (context as MainApplication).dataStoreRepository
     }
 
-    var alarmId = 1
+
+
+    // endregion
 
     //region Alarm Instance
 
+    // The actual id of the alarm instance
+    var alarmId = 1
     val isAlarmActive = ObservableField(false)
     val alarmName = ObservableField(getStringXml(R.string.alarm_instance_alarm))
+
+    /**
+     * Alarm active/disabled is toggled
+     */
     fun onAlarmActiveToggled(view: View) {
         scope.launch {
             isAlarmActive.get()?.let {
@@ -61,6 +88,10 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
     val visibleState = ObservableField(View.VISIBLE)
     val goneState = ObservableField(View.GONE)
 
+    /**
+     * Alarm name can be changed here
+     * TODO(Not implemented yet)
+     */
     fun onAlarmNameClick(view: View) {
         extendedAlarmEntity.set(extendedAlarmEntity.get() == false)
     }
@@ -70,6 +101,9 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
     var wakeUpEarly: LocalTime = LocalTime.now()
     var wakeUpLate: LocalTime = LocalTime.now()
 
+    /**
+     * Wake Up early clicked
+     */
     fun onWakeUpEarlyClicked(view: View){
 
         val hour = (wakeUpEarly.hour)
@@ -103,6 +137,9 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
         tpd.show()
     }
 
+    /**
+     * Wake Up late clicked
+     */
     fun onWakeUpLateClicked(view: View){
         val hour = (wakeUpLate.hour)
         val minute = (wakeUpLate.minute)
@@ -138,6 +175,9 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
     var sleepDuration : Int = 0
     val sleepDurationString = ObservableField("07:00")
 
+    /**
+     * Sleep duration changed by user
+     */
     fun onDurationChange(hour: Int, minute: Int) {
 
         var hourSetter = hour
@@ -162,6 +202,10 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
 
     val selectedDays = ObservableArrayList<Int>()
     val selectedDaysInfo = ObservableField("")
+
+    /**
+     * Day selection changed
+     */
     fun onDayChanged(view: View){
 
         val day = view.tag.toString().toInt()
@@ -185,6 +229,9 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
         }
     }
 
+    /**
+     * Update the selected days string
+     */
     private fun setDaysSelectedString(){
         var info = ""
 
@@ -225,6 +272,10 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
     //endregion
 
     init {
+
+        /**
+         * Loads all the init values from the datastore and passes the values to the bindings for the alarm by id
+         */
         scope.launch {
 
             var alarmSettings = dataBaseRepository.getAlarmById(alarmId).first()

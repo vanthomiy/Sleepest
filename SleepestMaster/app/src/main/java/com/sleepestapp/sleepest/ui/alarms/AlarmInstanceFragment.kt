@@ -18,14 +18,21 @@ import java.time.LocalTime
 
 class AlarmInstanceFragment(val applicationContext: Context, private var alarmId: Int) : Fragment() {
 
+    // region init
+
     private val databaseRepository by lazy { (applicationContext as MainApplication).dataBaseRepository }
 
     private lateinit var binding: AlarmEntityBinding
     private val viewModel by lazy { ViewModelProvider(this).get(AlarmInstanceViewModel::class.java) }
     private val alarmsViewModel by lazy { ViewModelProvider(requireActivity()).get(AlarmsViewModel::class.java) }
 
+    // endregion
+
     private lateinit var usedIds : MutableSet<Int>
 
+    /**
+     * Delete the alarm, for that we have to call the function in the alarms fragment
+     */
     private fun deleteAlarmEntity() {
         AlarmsFragment.getAlarmFragment().removeAlarmEntity(alarmId)
     }
@@ -55,15 +62,18 @@ class AlarmInstanceFragment(val applicationContext: Context, private var alarmId
 
         usedIds = mutableSetOf()
 
+        // delete alarm click
         binding.btnDeleteAlarm.setOnClickListener {
             deleteAlarmEntity()
         }
 
+        // hours of alarm changed
         binding.npHours.setOnValueChangedListener { _, _, newVal -> viewModel.onDurationChange(
             newVal,
             binding.npMinutes.value
         ) }
 
+        // minutes of alarm changed
         binding.npMinutes.setOnValueChangedListener { _, _, newVal -> viewModel.onDurationChange(
             binding.npHours.value,
             newVal
@@ -97,6 +107,7 @@ class AlarmInstanceFragment(val applicationContext: Context, private var alarmId
 
         }
 
+        // Expand an alarm view
         alarmsViewModel.alarmExpandId.addOnPropertyChangedCallback(object : OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable, propertyId: Int) {
                 if(alarmsViewModel.alarmExpandId.get() != alarmId)

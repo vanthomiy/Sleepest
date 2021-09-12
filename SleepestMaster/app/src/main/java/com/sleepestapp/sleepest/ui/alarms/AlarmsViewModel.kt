@@ -21,11 +21,14 @@ import kotlinx.coroutines.launch
 
 class AlarmsViewModel(application: Application) : AndroidViewModel(application) {
 
+    //region Init
+
     private val scope: CoroutineScope = MainScope()
     private val context by lazy{ getApplication<Application>().applicationContext }
     private val dataStoreRepository: DataStoreRepository by lazy {
         (context as MainApplication).dataStoreRepository
     }
+    // endregion
 
     //region Alarms Settings
 
@@ -37,6 +40,9 @@ class AlarmsViewModel(application: Application) : AndroidViewModel(application) 
 
     var lottie : LottieAnimationView? = null
 
+    /**
+     * Expands the alarm settings of the alarms view
+     */
     fun onExpandClicked(view: View) {
         TransitionManager.beginDelayedTransition(transitionsContainer);
 
@@ -47,7 +53,6 @@ class AlarmsViewModel(application: Application) : AndroidViewModel(application) 
 
         lottie = view as LottieAnimationView
 
-        //lottie.loop(actualExpand.get() == View.GONE)
         if(actualExpand.get() == View.GONE)
             lottie?.playAnimation()
         else
@@ -55,6 +60,9 @@ class AlarmsViewModel(application: Application) : AndroidViewModel(application) 
 
     }
 
+    /**
+     * When another expand is clicked, we also update the lottie animation to start again
+     */
     fun updateExpandChanged(isExpaned : Boolean) {
 
         TransitionManager.beginDelayedTransition(transitionsContainer);
@@ -75,6 +83,9 @@ class AlarmsViewModel(application: Application) : AndroidViewModel(application) 
     val alarmArtSelections = ObservableArrayList<String>()
     val alarmArt = ObservableField(0)
 
+    /**
+     * When the alarm type has changed (Vibration/Sound etc.)
+     */
     fun onAlarmTypeChanged(
         parent: AdapterView<*>?,
         selectedItemView: View,
@@ -87,6 +98,9 @@ class AlarmsViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    /**
+     * When the alarm end after awake was changed
+     */
     fun onEndAlarmAfterFiredChanged(view: View) {
         scope.launch {
             cancelAlarmWhenAwake.get()?.let { dataStoreRepository.updateEndAlarmAfterFired(it) }
@@ -98,6 +112,10 @@ class AlarmsViewModel(application: Application) : AndroidViewModel(application) 
 
 
     init {
+
+        /**
+         * Loads all the init values from the datastore and passes the values to the bindings
+         */
         scope.launch {
             var settings = dataStoreRepository.alarmParameterFlow.first()
 
