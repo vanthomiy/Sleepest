@@ -31,13 +31,13 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
 
     //region Init
     private val scope = MainScope()
-    private val context by lazy{ getApplication<Application>().applicationContext }
+    private val actualContext by lazy{ getApplication<Application>().applicationContext }
     lateinit var transitionsContainer : ViewGroup
     val dataStoreRepository: DataStoreRepository by lazy {
-        (context as MainApplication).dataStoreRepository
+        (actualContext as MainApplication).dataStoreRepository
     }
     private val dataBaseRepository: DatabaseRepository by lazy {
-        (context as MainApplication).dataBaseRepository
+        (actualContext as MainApplication).dataBaseRepository
     }
 
     //endregion
@@ -61,7 +61,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
             SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
                 dataStoreRepository,
                 dataBaseRepository,
-                context,
+                actualContext,
                 sleepStartTime.toSecondOfDay(),
                 sleepEndTime.toSecondOfDay(),
                 time.toSecondOfDay(),
@@ -108,7 +108,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
                 },
                 hour,
                 minute,
-            Is24HourFormat(context)
+            Is24HourFormat(actualContext)
         )
 
         tpd.show()
@@ -144,7 +144,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
             },
                 hour,
                 minute,
-            Is24HourFormat(context)
+            Is24HourFormat(actualContext)
         )
 
         tpd.show()

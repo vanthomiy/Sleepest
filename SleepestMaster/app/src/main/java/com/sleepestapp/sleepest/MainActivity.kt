@@ -16,6 +16,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 
 import com.sleepestapp.sleepest.background.AlarmCycleState
@@ -37,6 +38,7 @@ import com.sleepestapp.sleepest.util.SleepTimeValidationUtil
 import com.sleepestapp.sleepest.util.TimeConverterUtil
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
+import com.sleepestapp.sleepest.ui.sleep.SleepViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -48,23 +50,10 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    // region Databases
-
-    private val scope: CoroutineScope = MainScope()
-
-    private val dataBaseRepository: DatabaseRepository by lazy {
-        (applicationContext as MainApplication).dataBaseRepository
-    }
-
-    private val dataStoreRepository: DataStoreRepository by lazy {
-        (applicationContext as MainApplication).dataStoreRepository
-    }
-
-    private val activeAlarmsLiveData by lazy {  dataBaseRepository.activeAlarmsFlow().asLiveData() }
-    private val sleepParametersLiveData by lazy {  dataStoreRepository.sleepParameterFlow.asLiveData() }
-    private val settingsLiveData by lazy {  dataStoreRepository.settingsDataFlow.asLiveData() }
-
-    // endregion
+    /**
+     * View model of the [SleepFragment]
+     */
+    private val viewModel by lazy { ViewModelProvider(this).get(MainActivityViewModel::class.java)}
 
     // region fragments
 
@@ -74,9 +63,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var settingsFragment : SettingsFragment
 
     private fun setupFragments(isStart:Boolean){
-        scope.launch {
+        viewModel.scope.launch {
 
-            val settings = dataStoreRepository.settingsDataFlow.first()
+            val settings = viewModel.dataStoreRepository.settingsDataFlow.first()
 
             alarmsFragment = AlarmsFragment()
             historyFragment = HistoryTabView()
@@ -88,7 +77,7 @@ class MainActivity : AppCompatActivity() {
             }
             else{
                 if(settings.designDarkModeAckn)
-                    dataStoreRepository.updateAutoDarkModeAckn(false)
+                    viewModel.dataStoreRepository.updateAutoDarkModeAckn(false)
 
                 supportFragmentManager.beginTransaction().replace(
                     R.id.navigationFrame,
@@ -99,7 +88,7 @@ class MainActivity : AppCompatActivity() {
 
                 if(settings.afterRestartApp){
                     settingsFragment.setCaseOfEntrie(4)
-                    dataStoreRepository.updateAfterRestartApp(false)
+                    viewModel.dataStoreRepository.updateAfterRestartApp(false)
                 }
                 else{
 
@@ -176,8 +165,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(null)
         binding = ActivityMainBinding.inflate(layoutInflater)
 
-        scope.launch {
-            val settings = dataStoreRepository.settingsDataFlow.first()
+        viewModel.scope.launch {
+            val settings = viewModel.dataStoreRepository.settingsDataFlow.first()
 
             if (!settings.designAutoDarkMode && (AppCompatDelegate.getDefaultNightMode() != if (settings.designDarkMode) AppCompatDelegate.MODE_NIGHT_YES
                 else AppCompatDelegate.MODE_NIGHT_NO)
@@ -198,22 +187,22 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         // observe alarm changes
-        activeAlarmsLiveData.observe(this){ list ->
+        viewModel.activeAlarmsLiveData.observe(this){ list ->
             // check the list if empty or not
             BackgroundAlarmTimeHandler.getHandler(applicationContext).changeOfAlarmEntity(list.isEmpty())
         }
 
         // observe sleeptime changes
-        sleepParametersLiveData.observe(this) {
+        viewModel.sleepParametersLiveData.observe(this) {
             BackgroundAlarmTimeHandler.getHandler(applicationContext).changeSleepTime()
         }
 
-        settingsLiveData.observe(this) { settings ->
+        viewModel.settingsLiveData.observe(this) { settings ->
 
             if(settings.restartApp && settings.afterRestartApp)
             {
-                scope.launch {
-                    dataStoreRepository.updateRestartApp(false)
+                viewModel.scope.launch {
+                    viewModel.dataStoreRepository.updateRestartApp(false)
                     recreate()
                 }
             }
@@ -236,15 +225,15 @@ class MainActivity : AppCompatActivity() {
         when (intent?.action) {
             Intent.ACTION_SEND -> {
                 if ("application/json" == intent.type) {
-                    scope.launch {
-                        ImportUtil.getLoadFileFromIntent(intent, applicationContext, dataBaseRepository)
+                    viewModel.scope.launch {
+                        ImportUtil.getLoadFileFromIntent(intent, applicationContext, viewModel.dataBaseRepository)
                     }
                 }
             }
             Intent.ACTION_VIEW -> {
                 if ("application/json" == intent.type) {
-                    scope.launch {
-                        ImportUtil.getLoadFileFromIntent(intent, applicationContext, dataBaseRepository)
+                    viewModel.scope.launch {
+                        ImportUtil.getLoadFileFromIntent(intent, applicationContext, viewModel.dataBaseRepository)
                     }
                 }
             }
@@ -255,8 +244,8 @@ class MainActivity : AppCompatActivity() {
         //Get default settings of tutorial and save it in datastore
         //TODO("Shared prefs!")
         if (bundle != null && bundle.getBoolean(getString(R.string.onboarding_intent_data_available))) {
-            scope.launch {
-                if (dataStoreRepository.tutorialStatusFlow.first().tutorialCompleted && !dataStoreRepository.tutorialStatusFlow.first().energyOptionsShown) {
+            viewModel.scope.launch {
+                if (viewModel.dataStoreRepository.tutorialStatusFlow.first().tutorialCompleted && !viewModel.dataStoreRepository.tutorialStatusFlow.first().energyOptionsShown) {
                     DontKillMyAppFragment.show(this@MainActivity)
                 }
                 //Start a alarm for the new foregroundservice start time
@@ -268,8 +257,8 @@ class MainActivity : AppCompatActivity() {
                     applicationContext, AlarmReceiverUsage.START_FOREGROUND)
 
                 SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
-                    dataStoreRepository,
-                    dataBaseRepository,
+                    viewModel.dataStoreRepository,
+                    viewModel.dataBaseRepository,
                     applicationContext,
                     bundle.getInt(getString(R.string.onboarding_intent_starttime)),
                     bundle.getInt(getString(R.string.onboarding_intent_endtime)),
@@ -279,8 +268,8 @@ class MainActivity : AppCompatActivity() {
                 )
 
                 SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
-                    dataStoreRepository,
-                    dataBaseRepository,
+                    viewModel.dataStoreRepository,
+                    viewModel.dataBaseRepository,
                     applicationContext,
                     bundle.getInt(getString(R.string.onboarding_intent_starttime)),
                     bundle.getInt(getString(R.string.onboarding_intent_endtime)),
@@ -290,8 +279,8 @@ class MainActivity : AppCompatActivity() {
                 )
 
                 SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
-                    dataStoreRepository,
-                    dataBaseRepository,
+                    viewModel.dataStoreRepository,
+                    viewModel.dataBaseRepository,
                     applicationContext,
                     bundle.getInt(getString(R.string.onboarding_intent_starttime)),
                     bundle.getInt(getString(R.string.onboarding_intent_endtime)),
@@ -324,8 +313,8 @@ class MainActivity : AppCompatActivity() {
 
                 com.sleepestapp.sleepest.DontKillMyAppFragment.show(this@MainActivity)
 
-                scope.launch {
-                    val calendar = TimeConverterUtil.getAlarmDate(dataStoreRepository.getSleepTimeBegin())
+                viewModel.scope.launch {
+                    val calendar = TimeConverterUtil.getAlarmDate(viewModel.dataStoreRepository.getSleepTimeBegin())
 
                     //Start a alarm for the new foregroundservice start time
                     AlarmReceiver.startAlarmManager(
