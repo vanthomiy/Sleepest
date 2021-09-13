@@ -62,19 +62,7 @@ class SettingsFragment : Fragment() {
      * Scope is used to call datastore async
      */
     private val scope: CoroutineScope = MainScope()
-    /**
-     * The datastore Repository
-     */
-    private val dataBaseRepository: DatabaseRepository by lazy {
-        (actualContext as MainApplication).dataBaseRepository
-    }
 
-    /**
-     * The datasbase Repository
-     */
-    private val dataStoreRepository: DataStoreRepository by lazy {
-        (actualContext as MainApplication).dataStoreRepository
-    }
 
     /**
      * actual case of entrie
@@ -124,9 +112,9 @@ class SettingsFragment : Fragment() {
             scope.launch {
                 val intent = Intent(activity, OnboardingActivity::class.java)
                 intent.putExtra(getString(R.string.onboarding_intent_not_first_app_start), true)
-                intent.putExtra(getString(R.string.onboarding_intent_starttime), dataStoreRepository.getSleepTimeBegin())
-                intent.putExtra(getString(R.string.onboarding_intent_endtime), dataStoreRepository.getSleepTimeEnd())
-                intent.putExtra(getString(R.string.onboarding_intent_duration), dataStoreRepository.getSleepDuration()) /**TODO: Dynamic sleep duration (DataStore repo)*/
+                intent.putExtra(getString(R.string.onboarding_intent_starttime), viewModel.dataStoreRepository.getSleepTimeBegin())
+                intent.putExtra(getString(R.string.onboarding_intent_endtime), viewModel.dataStoreRepository.getSleepTimeEnd())
+                intent.putExtra(getString(R.string.onboarding_intent_duration), viewModel.dataStoreRepository.getSleepDuration()) /**TODO: Dynamic sleep duration (DataStore repo)*/
 
                 startActivity(intent)
             }
@@ -259,7 +247,7 @@ class SettingsFragment : Fragment() {
         // check dark mode settings for lottie animation
         scope.launch {
 
-            val settings = dataStoreRepository.settingsDataFlow.first()
+            val settings = viewModel.dataStoreRepository.settingsDataFlow.first()
 
 
             if ((settings.designAutoDarkMode  && actualContext.isDarkThemeOn()) || !settings.designAutoDarkMode && settings.designDarkMode)
@@ -422,7 +410,7 @@ class SettingsFragment : Fragment() {
         }
         else if (requestCode == Constants.LOAD_FILE_REQUEST_CODE) {
             scope.launch {
-                ImportUtil.getLoadFileFromUri(data?.data, actualContext, dataBaseRepository)
+                ImportUtil.getLoadFileFromUri(data?.data, actualContext, viewModel.dataBaseRepository)
             }
         }
         else if (requestCode == Constants.EXPORT_REQUEST_CODE) {
@@ -431,13 +419,13 @@ class SettingsFragment : Fragment() {
                 scope.launch {
                     var gson = Gson()
 
-                    val userSessions = dataBaseRepository.allUserSleepSessions.first()
+                    val userSessions = viewModel.dataBaseRepository.allUserSleepSessions.first()
 
                     val userExporSessions = mutableListOf<UserSleepExportData>()
 
                     userSessions.forEach { session ->
 
-                        val sessionSleepData = dataBaseRepository.getSleepApiRawDataBetweenTimestamps(
+                        val sessionSleepData = viewModel.dataBaseRepository.getSleepApiRawDataBetweenTimestamps(
                             session.sleepTimes.sleepTimeStart,
                             session.sleepTimes.sleepTimeEnd
                         ).first()

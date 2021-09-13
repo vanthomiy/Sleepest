@@ -25,17 +25,6 @@ class SleepFragment : Fragment() {
      * Binding XML Code to Fragment
      */
     private lateinit var binding: FragmentSleepBinding
-    /**
-     * Get actual context
-     */
-    private val actualContext: Context by lazy {requireActivity().applicationContext}
-
-    /**
-     * The datastore Repository
-     */
-    private val dataStoreRepository: DataStoreRepository by lazy {
-        (actualContext as MainApplication).dataStoreRepository
-    }
 
     companion object {
         fun newInstance() = SleepFragment()
@@ -77,7 +66,7 @@ class SleepFragment : Fragment() {
         }
 
         // Used to update the sleep end and start time if it changes from the alarms fragments
-        dataStoreRepository.sleepParameterFlow.asLiveData().observe(viewLifecycleOwner){
+        viewModel.dataStoreRepository.sleepParameterFlow.asLiveData().observe(viewLifecycleOwner){
 
             viewModel.sleepStartTime = LocalTime.ofSecondOfDay(it.sleepTimeStart.toLong())
             viewModel.sleepEndTime = LocalTime.ofSecondOfDay(it.sleepTimeEnd.toLong())

@@ -33,7 +33,7 @@ class SleepViewModel(application: Application) : AndroidViewModel(application) {
     private val scope = MainScope()
     private val context by lazy{ getApplication<Application>().applicationContext }
     lateinit var transitionsContainer : ViewGroup
-    private val dataStoreRepository: DataStoreRepository by lazy {
+    val dataStoreRepository: DataStoreRepository by lazy {
         (context as MainApplication).dataStoreRepository
     }
     private val dataBaseRepository: DatabaseRepository by lazy {

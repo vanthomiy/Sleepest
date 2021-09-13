@@ -47,7 +47,7 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
     /**
      * The database Repository
      */
-    private val dataBaseRepository: DatabaseRepository by lazy {
+    val dataBaseRepository: DatabaseRepository by lazy {
         (context as MainApplication).dataBaseRepository
     }
 

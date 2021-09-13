@@ -22,23 +22,6 @@ class SplashScreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-       /* binding = SplashScreenBinding.inflate(layoutInflater)
-
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
-        setContentView(R.layout.splash_screen)
-
-        Handler().postDelayed({
-            val intent = Intent(
-                this,
-                MainActivity::class.java
-            )
-            startActivity(intent)
-            finish()
-        }, SPLASH_SCREEN.toLong())*/
-
         window.setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN

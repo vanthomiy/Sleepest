@@ -5,15 +5,14 @@ import android.transition.TransitionManager
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.SeekBar
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.asLiveData
 import com.airbnb.lottie.LottieAnimationView
 import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.R
-import com.sleepestapp.sleepest.storage.DataStoreRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -24,13 +23,26 @@ class AlarmsViewModel(application: Application) : AndroidViewModel(application) 
     //region Init
 
     private val scope: CoroutineScope = MainScope()
-    private val context by lazy{ getApplication<Application>().applicationContext }
-    private val dataStoreRepository: DataStoreRepository by lazy {
-        (context as MainApplication).dataStoreRepository
-    }
+    private val actualContext by lazy{ getApplication<Application>().applicationContext }
+    /**
+     * The database Repository
+     */
+    val databaseRepository by lazy { (actualContext as MainApplication).dataBaseRepository }
+
+    /**
+     * The datastore Repository
+     */
+    val dataStoreRepository by lazy { (actualContext as MainApplication).dataStoreRepository }
+
     // endregion
 
     //region Alarms Settings
+
+    /**
+     * Observable live data of the alarms flow
+     */
+    val activeAlarmsLiveData by lazy {  databaseRepository.activeAlarmsFlow().asLiveData() }
+
 
     val alarmExpandId = ObservableInt(0)
     val noAlarmsView = ObservableField(View.GONE)
@@ -120,13 +132,13 @@ class AlarmsViewModel(application: Application) : AndroidViewModel(application) 
             var settings = dataStoreRepository.alarmParameterFlow.first()
 
             cancelAlarmWhenAwake.set(settings.endAlarmAfterFired)
-            alarmArtSelections.addAll(arrayListOf<String>((context.getString(R.string.alarms_type_selection_only_alarm)), (context.getString(R.string.alarms_type_selection_alarm_vibration)), (context.getString(R.string.alarms_type_selection_only_vibration))))
+            alarmArtSelections.addAll(arrayListOf<String>((actualContext.getString(R.string.alarms_type_selection_only_alarm)), (actualContext.getString(R.string.alarms_type_selection_alarm_vibration)), (actualContext.getString(R.string.alarms_type_selection_only_vibration))))
             alarmArt.set(settings.alarmArt)
 
             if(settings.alarmName != "") {
                 alarmSoundName.set(settings.alarmName)
             } else{
-                alarmSoundName.set(context.getString(R.string.alarms_type_selection_default))
+                alarmSoundName.set(actualContext.getString(R.string.alarms_type_selection_default))
             }
 
         }

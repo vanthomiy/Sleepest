@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.motion.widget.MotionLayout
-import androidx.core.content.ContextCompat.startActivity
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import com.sleepestapp.sleepest.MainApplication
@@ -31,13 +30,13 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
 
     private val scope: CoroutineScope = MainScope()
-    private val context by lazy { getApplication<Application>().applicationContext }
-    private val dataStoreRepository: DataStoreRepository by lazy {
-        (context as MainApplication).dataStoreRepository
+    private val actualContext by lazy { getApplication<Application>().applicationContext }
+    public val dataStoreRepository: DataStoreRepository by lazy {
+        (actualContext as MainApplication).dataStoreRepository
     }
 
-    private val dataBaseRepository: DatabaseRepository by lazy {
-        (context as MainApplication).dataBaseRepository
+    public val dataBaseRepository: DatabaseRepository by lazy {
+        (actualContext as MainApplication).dataBaseRepository
     }
 
     //endregion
@@ -129,25 +128,45 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     /**
      * About us clicked
-     * TODO("Not implemented yet")
      */
     fun onAboutUsClicked(view: View) {
         when (view.tag.toString()) {
-            "improvement" -> "asd"
+            "improvement" -> {
+                val intent = Intent(Intent.ACTION_SENDTO)
+                intent.data = Uri.parse("mailto: sleepestapp@gmail.com")
+                val packageInfo = actualContext.packageManager.getPackageInfo(actualContext.packageName, 0)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(Intent.EXTRA_EMAIL, "Improvement")
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Version: " + packageInfo.versionName)
+
+                actualContext.startActivity(intent)
+
+            }
             "rate" -> {
-                val uri = Uri.parse("market://details?id=" + context.packageName)
+                val uri = Uri.parse("market://details?id=" + actualContext.packageName)
                 val myAppLinkToMarket = Intent(Intent.ACTION_VIEW, uri)
+                myAppLinkToMarket.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 try {
-                    context.startActivity(myAppLinkToMarket)
+                    actualContext.startActivity(myAppLinkToMarket)
                 } catch (e: ActivityNotFoundException) {
-                    Toast.makeText(context, " unable to find market app", Toast.LENGTH_LONG).show()
+                    Toast.makeText(actualContext, " unable to find market app", Toast.LENGTH_LONG).show()
                 }
             }
-            "error" -> "asd"
+            "error" -> {
+                val intent = Intent(Intent.ACTION_SENDTO)
+                intent.data = Uri.parse("mailto: sleepestapp@gmail.com")
+                val packageInfo = actualContext.packageManager.getPackageInfo(actualContext.packageName, 0)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(Intent.EXTRA_EMAIL, "Error")
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Version: " + packageInfo.versionName)
+
+                actualContext.startActivity(intent)
+
+            }
             "PRIVACY_POLICE" -> {
                 val websiteUrl = Websites.getWebsite(view.tag as Websites)
 
-                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(websiteUrl)))
+                actualContext.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(websiteUrl)))
             }
         }
     }
@@ -186,18 +205,18 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     fun checkPermissions(){
 
         activityPermission.set(
-            PermissionsUtil.isActivityRecognitionPermissionGranted(context)
+            PermissionsUtil.isActivityRecognitionPermissionGranted(actualContext)
         )
 
         dailyPermission.set(
-            PermissionsUtil.isActivityRecognitionPermissionGranted(context)
+            PermissionsUtil.isActivityRecognitionPermissionGranted(actualContext)
         )
 
         storagePermission.set(
-            PermissionsUtil.isNotificationPolicyAccessGranted(context)
+            PermissionsUtil.isNotificationPolicyAccessGranted(actualContext)
         )
 
-        overlayPermission.set(PermissionsUtil.isOverlayPermissionGranted(context))
+        overlayPermission.set(PermissionsUtil.isOverlayPermissionGranted(actualContext))
 
     }
 
@@ -206,7 +225,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     // region Data
 
-    val removeButtonText = ObservableField(context.getString(R.string.settings_delete_all_data))
+    val removeButtonText = ObservableField(actualContext.getString(R.string.settings_delete_all_data))
 
     /**
      * Remove data clicked
@@ -218,7 +237,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
                 removeExpand.set(removeExpand.get() != true)
                 removeButtonText.set(if (removeExpand.get() == false)
-                    context.getString(R.string.settings_delete_all_data) else context.getString(
+                    actualContext.getString(R.string.settings_delete_all_data) else actualContext.getString(
                                     R.string.settings_return))
             }
             "removeAckn" -> {

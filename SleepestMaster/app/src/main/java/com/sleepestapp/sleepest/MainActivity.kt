@@ -47,7 +47,6 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var bottomBar: BottomNavigationView
 
     // region Databases
 
@@ -79,7 +78,6 @@ class MainActivity : AppCompatActivity() {
 
             val settings = dataStoreRepository.settingsDataFlow.first()
 
-            bottomBar = binding.bottomBar
             alarmsFragment = AlarmsFragment()
             historyFragment = HistoryTabView()
             sleepFragment = SleepFragment()
@@ -97,7 +95,7 @@ class MainActivity : AppCompatActivity() {
                     settingsFragment
                 ).commit()
 
-                bottomBar.selectedItemId = R.id.profile
+                binding.bottomBar.selectedItemId = R.id.profile
 
                 if(settings.afterRestartApp){
                     settingsFragment.setCaseOfEntrie(4)
@@ -109,7 +107,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            bottomBar.setOnNavigationItemSelectedListener { item->
+            binding.bottomBar.setOnNavigationItemSelectedListener { item->
 
                 val ft = supportFragmentManager.beginTransaction()
 
@@ -167,7 +165,7 @@ class MainActivity : AppCompatActivity() {
 
     fun switchToMenu(itemId: Int, changeType:Int = -1) {
         settingsFragment.setCaseOfEntrie(changeType)
-        bottomBar.selectedItemId = itemId;
+        binding.bottomBar.selectedItemId = itemId;
     }
 
     // endregion
@@ -255,6 +253,7 @@ class MainActivity : AppCompatActivity() {
         val bundle :Bundle ?=intent.extras
 
         //Get default settings of tutorial and save it in datastore
+        //TODO("Shared prefs!")
         if (bundle != null && bundle.getBoolean(getString(R.string.onboarding_intent_data_available))) {
             scope.launch {
                 if (dataStoreRepository.tutorialStatusFlow.first().tutorialCompleted && !dataStoreRepository.tutorialStatusFlow.first().energyOptionsShown) {
@@ -312,20 +311,6 @@ class MainActivity : AppCompatActivity() {
         ed.apply()
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
-
-    // region get permission for sleep api at first start etc.
-    private fun activityRecognitionPermissionApproved(): Boolean {
-        // Because this app targets 29 and above (recommendation for using the Sleep APIs), we
-        // don't need to check if this is on a device before runtime permissions, that is, a device
-        // prior to 29 / Q.
-        return PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACTIVITY_RECOGNITION
-        )
-    }
 
     private val requestPermissionLauncher: ActivityResultLauncher<String> =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->

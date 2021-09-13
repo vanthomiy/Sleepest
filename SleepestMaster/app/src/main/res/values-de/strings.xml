@@ -15,7 +15,6 @@
     <string name="alarm_notification_button_1">Abbrechen</string>
     <string name="alarm_notification_button_2">Schlummern</string>
     <string name="alarm_clock_user_should_sleep">"Gute Nacht</string>
-    <string name="alarm_clock_intent_key_lockscreen_activity">LockscreenAlreadyCalled</string>
     <string name="alarm_clock_snooze">Schlummern</string>
     <string name="alarm_clock_swipe_up">Hoch wischen, um Alarm abzubrechen</string>
     <!--endregion-->
@@ -27,7 +26,6 @@
     <string name="information_notification_channel">Information Notification Channel</string>
     <string name="information_notification_channel_name">Information Notification Channel</string>
     <string name="information_notification_channel_description">Dieser Channel zeigt dem Nutzer, dass er nun schlafen sollte.</string>
-    <string name="information_notification_text">Du kannst deine eingestellte Schlafzeit nicht mehr erreichen</string>
     <string name="foregroundservice_notification_title">Sleepest - Produktivität und Schlaf vereinen</string>
     <string name="foregroundservice_notification_sleeptime">Schlafdauer: </string>
     <string name="foregroundservice_notification_alarmtime">Weckzeit: </string>
@@ -60,12 +58,6 @@
     <!--endregion-->
 
     <!--region SleepSettings-->
-
-    <string-array name="phonePosition">
-        <item>In bed</item>
-        <item>On table</item>
-        <item>Auto detection</item>
-    </string-array>
 
     <!--endregion-->
 
@@ -191,8 +183,6 @@
     <string name="sleep_lightcondidition_light">Hell</string>
     <string name="sleep_lightcondidition_auto">Auto Erkennung</string>
 
-    <string name="sleep_sleeptimes_timecombine"> bis </string>
-
     <string name="sleep_sleeptimes_autoOn">Auto Erkennung</string>
     <string name="sleep_sleeptimes_autoOff">Benutzerdefiniert</string>
     <string name="sleep_sleep_header">&#128564; Schlaf</string>
@@ -200,20 +190,13 @@
     <!--endregion-->
 
     <!--region Splashscreen-->
-    <string name="splash_screen_with_love">Made with &#10084; in Bavaria</string>
     <!--endregion-->
 
     <!--region Settings Fragment texts -->
-    <string name="settings_remove_button_text_normal">Daten Löschen</string>
-    <string name="settings_remove_button_text_choosen">Abbrechen</string>
-    <string name="settings_language_german">Deutsch</string>
-    <string name="settings_language_english">Englisch</string>
     <string name="settings_header">&#128241; Einstellungen</string>
-    <string name="settings_app_function">Wie funktioniert die App?</string>
     <string name="settings_design">Design</string>
     <string name="settings_dark_mode">Dunkel Modus</string>
     <string name="settings_auto_dark_mode">Systemeinstellungen nutzen</string>
-    <string name="settings_language">Sprache</string>
     <string name="settings_help">Hilfe</string>
     <string name="settings_tutorial">Tutorial</string>
     <string name="settings_neccessary_settings">Energieeinstellungen</string>
@@ -238,9 +221,6 @@
     <string name="settings_permission_overlapp_app">
         Die App benötigt diese Berechtigung, damit sie dich auch bei gesperrtem Handy wecken kann
     </string>
-    <string name="settings_permission_notification_privacy">
-        Diese Berechtigung wir benötigt, damit du den Alarmton auch hörst, wenn das Handy auf "Nicht Stören" eingestellt ist
-    </string>
     <string name="settings_notification_privacy">Nicht stören ausschalten</string>
     <string name="settings_data">Daten</string>
     <string name="settings_export_data">Daten Exportieren</string>
@@ -257,11 +237,8 @@
     <string name="settings_return">Abbrechen</string>
     <string name="settings_delete_all_data">Alle Daten löschen</string>
     <string name="settings_credits">Credits</string>
-    <string name="settings_flaticon_introduction">Wir haben Bilder von Flaticon verwendet. Im folgenden sind die einzelnen Authoren der Bilder aufgelistet.</string>
     <string name="settings_from"> im </string>
 
-
-    <string name="settings_credits_flaticon">Flaticon Website</string>
 
     <!--endregion-->
 
@@ -312,7 +289,6 @@
 
     <!--region onboarding-->
     <string name="onboarding_intent_data_available">OnboardingDataAvailable</string>
-    <string name="onboarding_intent_show_dontkillmyapp">ShowDontKillMyApp</string>
     <string name="onboarding_intent_starttime">StartTime</string>
     <string name="onboarding_intent_endtime">EndTime</string>
     <string name="onboarding_intent_duration">Duration</string>

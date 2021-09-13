@@ -40,16 +40,6 @@ class AlarmsFragment() : Fragment() {
     // region init
 
     /**
-     * The database Repository
-     */
-    private val databaseRepository by lazy { (actualContext as MainApplication).dataBaseRepository }
-
-    /**
-     * The datastore Repository
-     */
-    private val dataStoreRepository by lazy { (actualContext as MainApplication).dataStoreRepository }
-
-    /**
      * Scope is used to call datastore async
      */
     private val scope: CoroutineScope = MainScope()
@@ -59,10 +49,6 @@ class AlarmsFragment() : Fragment() {
      */
     private val actualContext: Context by lazy { requireActivity().applicationContext }
 
-    /**
-     * Observable live data of the alarms flow
-     */
-    private val activeAlarmsLiveData by lazy {  databaseRepository.activeAlarmsFlow().asLiveData() }
 
     /**
      * Binding XML Code to Fragment
@@ -101,7 +87,7 @@ class AlarmsFragment() : Fragment() {
     private fun setupAlarms() {
         allAlarms = mutableListOf()
         scope.launch {
-            val alarmList = databaseRepository.alarmFlow.first().reversed()
+            val alarmList = viewModel.databaseRepository.alarmFlow.first().reversed()
 
             for (i in alarmList.indices) {
                 usedIds.add(alarmList[i].id)
@@ -125,8 +111,8 @@ class AlarmsFragment() : Fragment() {
             }
         }
         scope.launch {
-            var sleepTime = dataStoreRepository.getSleepDuration()
-            databaseRepository.insertAlarm(AlarmEntity(newId, sleepDuration = sleepTime))
+            var sleepTime = viewModel.dataStoreRepository.getSleepDuration()
+            viewModel.databaseRepository.insertAlarm(AlarmEntity(newId, sleepDuration = sleepTime))
         }
         addAlarmEntity(actualContext, newId)
         usedIds.add(newId)
@@ -161,7 +147,7 @@ class AlarmsFragment() : Fragment() {
         fragments.remove(alarmId)
         usedIds.remove(alarmId)
         scope.launch {
-            databaseRepository.deleteAlarmById(alarmId)
+            viewModel.databaseRepository.deleteAlarmById(alarmId)
         }
 
         viewModel.noAlarmsView.set(if(usedIds.count() > 0) View.GONE else View.VISIBLE)
@@ -179,9 +165,9 @@ class AlarmsFragment() : Fragment() {
                 .show()
         }
 
-        var savedRingtoneUri = Uri.parse(dataStoreRepository.getAlarmToneJob())
+        var savedRingtoneUri = Uri.parse(viewModel.dataStoreRepository.getAlarmToneJob())
 
-        if (dataStoreRepository.getAlarmToneJob() == "null") {
+        if (viewModel.dataStoreRepository.getAlarmToneJob() == "null") {
             savedRingtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
         }
 
@@ -195,10 +181,10 @@ class AlarmsFragment() : Fragment() {
                 .setPlaySampleWhileSelection(true)
                 .setListener { ringtoneName, ringtoneUri ->
                     scope.launch {
-                        dataStoreRepository.updateAlarmTone(
+                        viewModel.dataStoreRepository.updateAlarmTone(
                             ringtoneUri.toString()
                         )
-                        dataStoreRepository.updateAlarmName(
+                        viewModel.dataStoreRepository.updateAlarmName(
                             ringtoneName
                         )
                     }
@@ -230,7 +216,7 @@ class AlarmsFragment() : Fragment() {
         fragments = mutableMapOf()
 
         // Update the disable next alarm button by checking the settings of all alarms
-        this.activeAlarmsLiveData.observe(requireActivity()){
+        viewModel.activeAlarmsLiveData.observe(requireActivity()){
             activeAlarms ->
             if (activeAlarms.isNotEmpty()){
                 val nextAlarm = activeAlarms.minByOrNull { x-> x.wakeupEarly }
@@ -291,11 +277,11 @@ class AlarmsFragment() : Fragment() {
         // temp disable alarm was clicked
         binding.btnTemporaryDisableAlarm.setOnClickListener {
             scope.launch {
-                if (databaseRepository.getNextActiveAlarm() != null) {
-                    if (databaseRepository.getNextActiveAlarm()!!.tempDisabled && !dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
+                if (viewModel.databaseRepository.getNextActiveAlarm() != null) {
+                    if (viewModel.databaseRepository.getNextActiveAlarm()!!.tempDisabled && !viewModel.dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
                         BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(true, true)
                     }
-                    else if (databaseRepository.getNextActiveAlarm()!!.tempDisabled && dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
+                    else if (viewModel.databaseRepository.getNextActiveAlarm()!!.tempDisabled && viewModel.dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
                         BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(false, true)
                     }
                     else  {

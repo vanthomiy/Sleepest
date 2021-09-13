@@ -20,7 +20,6 @@ class AlarmInstanceFragment(val applicationContext: Context, private var alarmId
 
     // region init
 
-    private val databaseRepository by lazy { (applicationContext as MainApplication).dataBaseRepository }
 
     private lateinit var binding: AlarmEntityBinding
     private val viewModel by lazy { ViewModelProvider(this).get(AlarmInstanceViewModel::class.java) }
@@ -80,7 +79,7 @@ class AlarmInstanceFragment(val applicationContext: Context, private var alarmId
         )  }
 
         // Used to update the sleep end and start time if it changes from the alarms fragments
-        databaseRepository.getAlarmById(viewModel.alarmId).asLiveData().observe(viewLifecycleOwner){
+        viewModel.dataBaseRepository.getAlarmById(viewModel.alarmId).asLiveData().observe(viewLifecycleOwner){
 
             viewModel.wakeUpEarly = LocalTime.ofSecondOfDay(it.wakeupEarly.toLong())
             viewModel.wakeUpLate = LocalTime.ofSecondOfDay(it.wakeupLate.toLong())
