@@ -357,6 +357,15 @@ enum class Websites {
 
     companion object {
 
+        fun getWebsiteByString(name:String) : Websites {
+            return when (name) {
+                "PRIVACY_POLICE" -> PRIVACY_POLICE
+                "FLATICON" -> FLATICON
+                "LOTTIEFILES" -> LOTTIEFILES
+                else -> FLATICON
+            }
+        }
+
         fun getWebsite(type:Websites) : String {
             return when (type) {
                 Websites.FLATICON -> "https://flaticon.com/"

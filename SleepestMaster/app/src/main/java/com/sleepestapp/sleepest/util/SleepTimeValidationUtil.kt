@@ -9,6 +9,7 @@ import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
 import kotlinx.coroutines.flow.first
 import java.time.LocalTime
+import kotlin.coroutines.CoroutineContext
 
 object SleepTimeValidationUtil {
 
@@ -38,7 +39,7 @@ object SleepTimeValidationUtil {
      * This is used to check if the alarm settings that are made are in relation to the sleep settings.
      * If we can find any problems we return the new values if necessary that will notify the user
      */
-    suspend fun checkAlarmActionIsAllowedAndDoAction(alarmId:Int,dataBaseRepository:DatabaseRepository, dataStoreRepository: DataStoreRepository, context: Context, wakeUpEarly: Int, wakeUpLate: Int, sleepDuration: Int, changeFrom: AlarmSleepChangeFrom) {
+    suspend fun checkAlarmActionIsAllowedAndDoAction(alarmId:Int,dataBaseRepository:DatabaseRepository, dataStoreRepository: DataStoreRepository, wakeUpEarly: Int, wakeUpLate: Int, sleepDuration: Int, changeFrom: AlarmSleepChangeFrom) {
 
 
         val minTimeBuffer = 7200 // 2 hours
@@ -75,8 +76,8 @@ object SleepTimeValidationUtil {
             }
             else{
                 newWakeUpEarly = sleepSettings.sleepTimeEnd
-                Toast.makeText(context, "Out of sleep time! Change the sleep time end", Toast.LENGTH_SHORT)
-                    .show()
+                /*Toast.makeText(context, "Out of sleep time! Change the sleep time end", Toast.LENGTH_SHORT)
+                    .show()*/
             }
         }
 
@@ -93,8 +94,8 @@ object SleepTimeValidationUtil {
             }
             else{
                 newWakeUpLate = sleepSettings.sleepTimeEnd
-                Toast.makeText(context, "Out of sleep time! Change the sleep time end", Toast.LENGTH_SHORT)
-                    .show()
+                /*Toast.makeText(context, "Out of sleep time! Change the sleep time end", Toast.LENGTH_SHORT)
+                    .show()*/
             }
         }
 
@@ -113,10 +114,10 @@ object SleepTimeValidationUtil {
                 dataStoreRepository.updateSleepTimeStart(newSleepTimeStart)
             }
             else{
-                Toast.makeText(context,
+                /*Toast.makeText(context,
                     "Not possible! Change the sleep time window or the latest wakeup point",
                     Toast.LENGTH_SHORT)
-                    .show()
+                    .show()*/
 
                 if(changeFrom == AlarmSleepChangeFrom.DURATION){
                     newSleepDuration = (possibleSleepTime - minTimeBuffer)
@@ -147,7 +148,7 @@ object SleepTimeValidationUtil {
      * This is used to check if the sleep settings that are made are in relation to the alarms.
      * If we can find any problems we set the values in the database (they will be the setup by the observer) and make a toast if necessary that will notify the user
      */
-    suspend fun checkSleepActionIsAllowedAndDoAction(dataStoreRepository: DataStoreRepository, dataBaseRepository:DatabaseRepository, context: Context, sleepTimeStart : Int, sleepTimeEnd : Int, sleepDuration : Int, autoSleepTime : Boolean, changeFrom: SleepSleepChangeFrom){
+    suspend fun checkSleepActionIsAllowedAndDoAction(dataStoreRepository: DataStoreRepository, dataBaseRepository:DatabaseRepository, sleepTimeStart : Int, sleepTimeEnd : Int, sleepDuration : Int, autoSleepTime : Boolean, changeFrom: SleepSleepChangeFrom){
 
         val minTimeBuffer = 7200 // 2 hours
 
@@ -176,16 +177,16 @@ object SleepTimeValidationUtil {
 
                 newSleepTimeStart = when (changeFrom) {
                     SleepSleepChangeFrom.SLEEPTIMESTART -> {
-                        Toast.makeText(context, "Conflicts with set sleep duration. Latest sleep time start is set", Toast.LENGTH_SHORT)
-                            .show()
+                        /*Toast.makeText(context, "Conflicts with set sleep duration. Latest sleep time start is set", Toast.LENGTH_SHORT)
+                            .show()*/
                         (newSleepTimeStart - timeDiff)
                         }
                     else -> newSleepTimeStart
                 }
                 newSleepTimeEnd = when (changeFrom) {
                     SleepSleepChangeFrom.SLEEPTIMEEND -> {
-                        Toast.makeText(context, "Conflicts with set sleep duration. Earliest sleep time end is set", Toast.LENGTH_SHORT)
-                            .show()
+                        /*Toast.makeText(context., "Conflicts with set sleep duration. Earliest sleep time end is set", Toast.LENGTH_SHORT)
+                            .show()*/
                         (newSleepTimeEnd + timeDiff)
                     }
                     else -> newSleepTimeEnd
@@ -199,8 +200,8 @@ object SleepTimeValidationUtil {
         allAlarms.forEach{ alarm ->
             if(alarm.wakeupLate > (newSleepTimeEnd - minTimeBuffer/2)){
                 newSleepTimeEnd = alarm.wakeupLate + minTimeBuffer/2
-                Toast.makeText(context, "Conflicts with an alarm! Latest possible sleep end time is set", Toast.LENGTH_SHORT)
-                    .show()
+                /*Toast.makeText(this, "Conflicts with an alarm! Latest possible sleep end time is set", Toast.LENGTH_SHORT)
+                    .show()*/
             }
 
 
@@ -214,8 +215,8 @@ object SleepTimeValidationUtil {
             {
                 newSleepTimeStart = when (changeFrom) {
                     SleepSleepChangeFrom.SLEEPTIMESTART -> {
-                        Toast.makeText(context, "Conflicts with an alarm! Earliest possible sleep start time is set", Toast.LENGTH_SHORT)
-                            .show()
+                        /*Toast.makeText(context, "Conflicts with an alarm! Earliest possible sleep start time is set", Toast.LENGTH_SHORT)
+                            .show()*/
 
                         newSleepTimeStart - timeDiff
                     }

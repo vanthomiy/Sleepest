@@ -36,43 +36,44 @@ class InfoEntityFragment(val applicationContext: Context, private val infoEntity
 
         binding = FragmentInfoEntityBinding.inflate(inflater, container, false)
         binding.infoViewModel = viewModel
+        binding.lifecycleOwner = this;
 
         // Setup the layout for the actual Info Entity
         if(style == InfoEntityStlye.PICTURE_LEFT || style == InfoEntityStlye.PICTURE_TOP){
-            viewModel.layoutFormat.set(
+            viewModel.layoutFormat.value = (
                 LayoutDirection.LTR)
         }
         else if(style == InfoEntityStlye.PICTURE_RIGHT || style == InfoEntityStlye.PICTURE_BOTTOM) {
-            viewModel.layoutFormat.set(
+            viewModel.layoutFormat.value = (
                 LayoutDirection.RTL)
         }
 
         if(style == InfoEntityStlye.PICTURE_LEFT || style == InfoEntityStlye.PICTURE_RIGHT){
-            viewModel.orientation.set(
+            viewModel.orientation.value = (
                 LinearLayout.HORIZONTAL)
         }
         else if(style == InfoEntityStlye.PICTURE_BOTTOM || style == InfoEntityStlye.PICTURE_TOP) {
-            viewModel.orientation.set(
+            viewModel.orientation.value = (
                 LinearLayout.VERTICAL)
         }
 
         if (infoEntity.textHeader != null && infoEntity.textHeader != "") {
-            viewModel.headerVisible.set(View.VISIBLE)
-            viewModel.textHeader.set(infoEntity.textHeader)
+            viewModel.headerVisible.value = (View.VISIBLE)
+            viewModel.textHeader.value = (infoEntity.textHeader)
         }
 
         if (infoEntity.textDescription != null && infoEntity.textDescription != "") {
-            viewModel.descrriptionVisible.set(View.VISIBLE)
-            viewModel.textDescription.set(infoEntity.textDescription)
+            viewModel.descrriptionVisible.value = (View.VISIBLE)
+            viewModel.textDescription.value = (infoEntity.textDescription)
         }
 
         if (infoEntity.lottie != null) {
-            viewModel.lottieVisible.set(View.VISIBLE)
+            viewModel.lottieVisible.value = (View.VISIBLE)
             binding.lottieAnim.setAnimation(infoEntity.lottie)
         }
 
         if (infoEntity.image != null) {
-            viewModel.imageVisible.set(View.VISIBLE)
+            viewModel.imageVisible.value = (View.VISIBLE)
             binding.imageView.setImageDrawable(resources.getDrawable(infoEntity.image))
         }
 

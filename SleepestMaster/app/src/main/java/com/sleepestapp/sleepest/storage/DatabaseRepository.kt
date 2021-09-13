@@ -335,7 +335,7 @@ class DatabaseRepository(
     /**
      * Returns an [AlarmEntity] by its ID
      */
-    fun getAlarmById(alarmId: Int): Flow<AlarmEntity> =
+    fun getAlarmById(alarmId: Int): Flow<AlarmEntity?> =
         alarmDao.getAlarmById(alarmId).distinctUntilChanged()
 
     /**

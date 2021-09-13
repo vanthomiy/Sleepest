@@ -5,29 +5,51 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.Observable
-import androidx.databinding.Observable.OnPropertyChangedCallback
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.databinding.AlarmEntityBinding
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil
+import com.sleepestapp.sleepest.util.StringUtil
+import com.sleepestapp.sleepest.util.WeekDaysUtil
 import java.time.LocalTime
 
 class AlarmInstanceFragment(val applicationContext: Context, private var alarmId: Int) : Fragment() {
 
     // region init
 
+    var factory = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            return  AlarmsViewModel(
+                (actualContext as MainApplication).dataStoreRepository,
+                (actualContext as MainApplication).dataBaseRepository
+            ) as T
+        }
+    }
+    var instanceFactory = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            return  AlarmInstanceViewModel(
+                (actualContext as MainApplication).dataStoreRepository,
+                (actualContext as MainApplication).dataBaseRepository,
+                alarmId
+            ) as T
+        }
+    }
 
     private lateinit var binding: AlarmEntityBinding
-    private val viewModel by lazy { ViewModelProvider(this).get(AlarmInstanceViewModel::class.java) }
-    private val alarmsViewModel by lazy { ViewModelProvider(requireActivity()).get(AlarmsViewModel::class.java) }
+    private val viewModel by lazy { ViewModelProvider(this, instanceFactory).get(AlarmInstanceViewModel::class.java) }
+    private val alarmsViewModel by lazy { ViewModelProvider(requireActivity(), factory).get(AlarmsViewModel::class.java) }
+
+    /**
+     * Get actual context
+     */
+    private val actualContext: Context by lazy { requireActivity().applicationContext }
 
     // endregion
 
-    private lateinit var usedIds : MutableSet<Int>
 
     /**
      * Delete the alarm, for that we have to call the function in the alarms fragment
@@ -45,7 +67,8 @@ class AlarmInstanceFragment(val applicationContext: Context, private var alarmId
         binding = AlarmEntityBinding.inflate(inflater, container, false)
         binding.alarmInstanceViewModel = viewModel
         binding.alarmsViewModel = alarmsViewModel
-        viewModel.alarmId = alarmId
+        binding.lifecycleOwner = this;
+
         viewModel.transitionsContainer = (binding.cLAlarmEntityInnerLayer)
 
         val minData = SleepTimeValidationUtil.createMinutePickerHelper()
@@ -58,8 +81,6 @@ class AlarmInstanceFragment(val applicationContext: Context, private var alarmId
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        usedIds = mutableSetOf()
 
         // delete alarm click
         binding.btnDeleteAlarm.setOnClickListener {
@@ -80,39 +101,83 @@ class AlarmInstanceFragment(val applicationContext: Context, private var alarmId
 
         // Used to update the sleep end and start time if it changes from the alarms fragments
         viewModel.dataBaseRepository.getAlarmById(viewModel.alarmId).asLiveData().observe(viewLifecycleOwner){
+            it?.let{
+                viewModel.wakeUpEarly = LocalTime.ofSecondOfDay(it.wakeupEarly.toLong())
+                viewModel.wakeUpLate = LocalTime.ofSecondOfDay(it.wakeupLate.toLong())
 
-            viewModel.wakeUpEarly = LocalTime.ofSecondOfDay(it.wakeupEarly.toLong())
-            viewModel.wakeUpLate = LocalTime.ofSecondOfDay(it.wakeupLate.toLong())
+                val sleepDuration = LocalTime.ofSecondOfDay(it.sleepDuration.toLong())
 
-            val sleepDuration = LocalTime.ofSecondOfDay(it.sleepDuration.toLong())
+                binding.npHours.value = sleepDuration.hour
+                binding.npMinutes.value = (sleepDuration.minute / 15) + 1
+                viewModel.sleepDuration = sleepDuration.toSecondOfDay()
+                viewModel.sleepDurationString.value = (sleepDuration.toString() + " " + getString(R.string.alarm_instance_alarm_header))
 
-            binding.npHours.value = sleepDuration.hour
-            binding.npMinutes.value = (sleepDuration.minute / 15) + 1
-            viewModel.sleepDuration = sleepDuration.toSecondOfDay()
-            viewModel.sleepDurationString.set(sleepDuration.toString() + " " + getString(R.string.alarm_instance_alarm_header))
+                viewModel.wakeUpEarlyValue.value = ((if (viewModel.wakeUpEarly.hour < 10) "0" else "") + viewModel.wakeUpEarly.hour.toString() + ":" + (if (viewModel.wakeUpEarly.minute < 10) "0" else "") + viewModel.wakeUpEarly.minute.toString())
+                viewModel.wakeUpLateValue.value = ((if (viewModel.wakeUpLate.hour < 10) "0" else "") + viewModel.wakeUpLate.hour.toString() + ":" + (if (viewModel.wakeUpLate.minute < 10) "0" else "") + viewModel.wakeUpLate.minute.toString())
 
-            viewModel.wakeUpEarlyValue.set((if (viewModel.wakeUpEarly.hour < 10) "0" else "") + viewModel.wakeUpEarly.hour.toString() + ":" + (if (viewModel.wakeUpEarly.minute < 10) "0" else "") + viewModel.wakeUpEarly.minute.toString())
-            viewModel.wakeUpLateValue.set((if (viewModel.wakeUpLate.hour < 10) "0" else "") + viewModel.wakeUpLate.hour.toString() + ":" + (if (viewModel.wakeUpLate.minute < 10) "0" else "") + viewModel.wakeUpLate.minute.toString())
-
+            }
         }
 
         binding.cLAlarmEntityInnerLayer.setOnClickListener{
 
             viewModel.onAlarmNameClick(it)
 
-            alarmsViewModel.alarmExpandId.set(alarmId)
+            alarmsViewModel.alarmExpandId.value = (alarmId)
 
-            alarmsViewModel.updateExpandChanged(viewModel.extendedAlarmEntity.get() == true)
+            alarmsViewModel.updateExpandChanged(viewModel.extendedAlarmEntity.value == true)
 
         }
 
         // Expand an alarm view
-        alarmsViewModel.alarmExpandId.addOnPropertyChangedCallback(object : OnPropertyChangedCallback() {
-            override fun onPropertyChanged(sender: Observable, propertyId: Int) {
-                if(alarmsViewModel.alarmExpandId.get() != alarmId)
-                    viewModel.extendedAlarmEntity.set(false)
+        alarmsViewModel.alarmExpandId.observe(this){
+            if(it != alarmId)
+                viewModel.extendedAlarmEntity.value = (false)
+        }
+
+        viewModel.alarmName.value = StringUtil.getStringXml(R.string.alarm_instance_alarm, requireActivity().application)
+        viewModel.is24HourFormat = SleepTimeValidationUtil.Is24HourFormat(actualContext)
+
+        viewModel.selectedDays.observe(this){
+            setDaysSelectedString(it)
+        }
+    }
+
+    /**
+     * Update the selected days string
+     */
+    private fun setDaysSelectedString(selectedDays:MutableList<Int>){
+        var info = ""
+
+        if(selectedDays.isEmpty()){
+            info = StringUtil.getStringXml(R.string.alarm_instance_no_day_choosen, requireActivity().application)
+        }
+        else if(selectedDays.count() >= 7)
+        {
+            info = StringUtil.getStringXml(R.string.alarm_instance_daily, requireActivity().application)
+        }
+        else if(selectedDays.count() == 2 && selectedDays.contains(5) && selectedDays.contains(6))
+        {
+            info = StringUtil.getStringXml(R.string.alarm_instance_weekend, requireActivity().application)
+        }
+        else if(selectedDays.count() == 5 && !selectedDays.contains(5) && !selectedDays.contains(6))
+        {
+            info = StringUtil.getStringXml(R.string.alarm_instance_working_day, requireActivity().application)
+        }
+        else{
+
+
+
+            selectedDays.toList().sorted().forEach{
+                if(info == ""){
+                    info = WeekDaysUtil.getWeekDayByNumber(it)
+                }
+                else{
+                    info +=  ", "+ WeekDaysUtil.getWeekDayByNumber(it)
+                }
             }
-        })
+        }
+
+        viewModel.selectedDaysInfo.value = (info)
     }
 }
 

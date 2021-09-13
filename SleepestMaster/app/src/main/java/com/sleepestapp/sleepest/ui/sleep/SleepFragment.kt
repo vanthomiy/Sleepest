@@ -6,24 +6,40 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import com.sleepestapp.sleepest.MainApplication
+import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.databinding.FragmentSleepBinding
-import com.sleepestapp.sleepest.storage.DataStoreRepository
+import com.sleepestapp.sleepest.googleapi.ActivityTransitionHandler
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil
+import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.Is24HourFormat
+import com.sleepestapp.sleepest.util.StringUtil
 import java.time.LocalTime
 
 
 class SleepFragment : Fragment() {
 
+    var factory = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            return  SleepViewModel(
+                (actualContext as MainApplication).dataStoreRepository,
+                (actualContext as MainApplication).dataBaseRepository
+            ) as T
+        }
+    }
+
     /**
      * View model of the [SleepFragment]
      */
-    private val viewModel by lazy { ViewModelProvider(this).get(SleepViewModel::class.java)}
+    private val viewModel:SleepViewModel by lazy { ViewModelProvider(this, factory).get(SleepViewModel::class.java)}
+
     /**
-     * Binding XML Code to Fragment
+     * Get actual context
      */
+    private val actualContext: Context by lazy { requireActivity().applicationContext }
+
     private lateinit var binding: FragmentSleepBinding
 
     companion object {
@@ -39,12 +55,13 @@ class SleepFragment : Fragment() {
         binding = FragmentSleepBinding.inflate(inflater, container, false)
         viewModel.transitionsContainer = (binding.linearAnimationlayout)
         binding.sleepViewModel = viewModel
+        binding.lifecycleOwner = this;
 
         val minData = SleepTimeValidationUtil.createMinutePickerHelper()
         binding.npMinutes.minValue = 1;
         binding.npMinutes.maxValue = minData.size;
         binding.npMinutes.displayedValues = minData;
-
+        viewModel.is24HourFormat = Is24HourFormat(actualContext)
         return binding.root
     }
 
@@ -76,11 +93,54 @@ class SleepFragment : Fragment() {
             binding.npMinutes.value = (sleepDuration.minute / 15) + 1
             viewModel.sleepDuration = sleepDuration.toSecondOfDay()
 
-            viewModel.sleepStartValue.set((if (viewModel.sleepStartTime.hour < 10) "0" else "") + viewModel.sleepStartTime.hour.toString() + ":" + (if (viewModel.sleepStartTime.minute < 10) "0" else "") + viewModel.sleepStartTime.minute.toString())
-            viewModel.sleepEndValue.set((if (viewModel.sleepEndTime.hour < 10) "0" else "") + viewModel.sleepEndTime.hour.toString() + ":" + (if (viewModel.sleepEndTime.minute < 10) "0" else "") + viewModel.sleepEndTime.minute.toString())
+            viewModel.sleepStartValue.value = ((if (viewModel.sleepStartTime.hour < 10) "0" else "") + viewModel.sleepStartTime.hour.toString() + ":" + (if (viewModel.sleepStartTime.minute < 10) "0" else "") + viewModel.sleepStartTime.minute.toString())
+            viewModel.sleepEndValue.value = ((if (viewModel.sleepEndTime.hour < 10) "0" else "") + viewModel.sleepEndTime.hour.toString() + ":" + (if (viewModel.sleepEndTime.minute < 10) "0" else "") + viewModel.sleepEndTime.minute.toString())
         }
 
+        viewModel.activityTracking.observe(this){
+            if(it)
+                ActivityTransitionHandler.getHandler(actualContext).startActivityHandler()
+            else
+                ActivityTransitionHandler.getHandler(actualContext).stopActivityHandler()
+        }
+
+        viewModel.sleepScoreValue.observe(this){
+
+            val score = it.toInt()
+
+            viewModel.sleepScoreText.value = (when {
+                score < 60 -> {
+                    StringUtil.getStringXml(R.string.sleep_score_text_60, requireActivity().application)
+                }
+                score < 70 -> {
+                    StringUtil.getStringXml(R.string.sleep_score_text_70, requireActivity().application)
+                }
+                score < 80 -> {
+                    StringUtil.getStringXml(R.string.sleep_score_text_80, requireActivity().application)
+                }
+                score < 90 -> {
+                    StringUtil.getStringXml(R.string.sleep_score_text_90, requireActivity().application)
+                }
+                else -> {
+                    StringUtil.getStringXml(R.string.sleep_score_text_100, requireActivity().application)
+                }
+            })
+        }
+
+        viewModel.phonePositionSelections.value = (mutableListOf(
+            StringUtil.getStringXml(R.string.sleep_phoneposition_inbed,requireActivity().application),
+            StringUtil.getStringXml(R.string.sleep_phoneposition_ontable, requireActivity().application),
+            StringUtil.getStringXml(R.string.sleep_phoneposition_auto, requireActivity().application)
+        ))
+        viewModel.lightConditionSelections.value = (mutableListOf(
+            StringUtil.getStringXml(R.string.sleep_lightcondidition_dark,requireActivity().application),
+            StringUtil.getStringXml(R.string.sleep_lightcondidition_light, requireActivity().application),
+            StringUtil.getStringXml(R.string.sleep_lightcondidition_auto, requireActivity().application)
+        ))
+
+
     }
+
 
 
 }

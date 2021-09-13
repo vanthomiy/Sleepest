@@ -4,24 +4,24 @@ import android.app.Application
 import android.util.LayoutDirection
 import android.view.View
 import android.widget.LinearLayout
-import androidx.databinding.ObservableField
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 
 
-class InfoEntityViewModel(application: Application) : AndroidViewModel(application) {
+class InfoEntityViewModel : ViewModel() {
 
 
     //region Binding Values
 
-    val textHeader = ObservableField("")
-    val textDescription = ObservableField("")
-    val orientation = ObservableField(LinearLayout.HORIZONTAL)
-    val layoutFormat = ObservableField(LayoutDirection.LTR)
+    val textHeader = MutableLiveData("")
+    val textDescription = MutableLiveData("")
+    val orientation = MutableLiveData(LinearLayout.HORIZONTAL)
+    val layoutFormat = MutableLiveData(LayoutDirection.LTR)
 
-    val imageVisible = ObservableField(View.GONE)
-    val lottieVisible = ObservableField(View.GONE)
-    val headerVisible = ObservableField(View.GONE)
-    val descrriptionVisible = ObservableField(View.GONE)
+    val imageVisible = MutableLiveData(View.GONE)
+    val lottieVisible = MutableLiveData(View.GONE)
+    val headerVisible = MutableLiveData(View.GONE)
+    val descrriptionVisible = MutableLiveData(View.GONE)
 
     //endregion
 

@@ -259,7 +259,6 @@ class MainActivity : AppCompatActivity() {
                 SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
                     viewModel.dataStoreRepository,
                     viewModel.dataBaseRepository,
-                    applicationContext,
                     bundle.getInt(getString(R.string.onboarding_intent_starttime)),
                     bundle.getInt(getString(R.string.onboarding_intent_endtime)),
                     bundle.getInt(getString(R.string.onboarding_intent_duration)),
@@ -270,7 +269,6 @@ class MainActivity : AppCompatActivity() {
                 SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
                     viewModel.dataStoreRepository,
                     viewModel.dataBaseRepository,
-                    applicationContext,
                     bundle.getInt(getString(R.string.onboarding_intent_starttime)),
                     bundle.getInt(getString(R.string.onboarding_intent_endtime)),
                     bundle.getInt(getString(R.string.onboarding_intent_duration)),
@@ -281,7 +279,6 @@ class MainActivity : AppCompatActivity() {
                 SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
                     viewModel.dataStoreRepository,
                     viewModel.dataBaseRepository,
-                    applicationContext,
                     bundle.getInt(getString(R.string.onboarding_intent_starttime)),
                     bundle.getInt(getString(R.string.onboarding_intent_endtime)),
                     bundle.getInt(getString(R.string.onboarding_intent_duration)),
