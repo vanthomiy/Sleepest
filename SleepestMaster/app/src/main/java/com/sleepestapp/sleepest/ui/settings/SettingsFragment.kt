@@ -23,6 +23,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
 import com.sleepestapp.sleepest.DontKillMyAppFragment
 import com.sleepestapp.sleepest.MainApplication
@@ -70,11 +71,6 @@ class SettingsFragment : Fragment() {
      * Get actual context
      */
     private val actualContext: Context by lazy { requireActivity().applicationContext }
-    /**
-     * Scope is used to call datastore async
-     */
-    private val scope: CoroutineScope = MainScope()
-
 
     /**
      * actual case of entrie
@@ -122,7 +118,7 @@ class SettingsFragment : Fragment() {
             onDataClicked(it)
         }
         binding.btnTutorial.setOnClickListener() {
-            scope.launch {
+            lifecycleScope.launch {
                 val intent = Intent(activity, OnboardingActivity::class.java)
                 intent.putExtra(getString(R.string.onboarding_intent_not_first_app_start), true)
                 intent.putExtra(getString(R.string.onboarding_intent_starttime), viewModel.dataStoreRepository.getSleepTimeBegin())
@@ -261,7 +257,7 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // check dark mode settings for lottie animation
-        scope.launch {
+        lifecycleScope.launch {
 
             val settings = viewModel.dataStoreRepository.settingsDataFlow.first()
 
@@ -274,8 +270,10 @@ class SettingsFragment : Fragment() {
             binding.lottieDarkMode.playAnimation()
 
         }
+
         viewModel.removeTextNormal = actualContext.getString(R.string.settings_delete_all_data)
         viewModel.removeTextSpecific = actualContext.getString(R.string.settings_return)
+        viewModel.removeButtonText.value = viewModel.removeTextNormal
 
         checkPermissions()
         createCredits()
@@ -477,14 +475,14 @@ class SettingsFragment : Fragment() {
             startActivityForResult(intent, Constants.LOAD_FILE_REQUEST_CODE)
         }
         else if (requestCode == Constants.LOAD_FILE_REQUEST_CODE) {
-            scope.launch {
+            lifecycleScope.launch {
                 ImportUtil.getLoadFileFromUri(data?.data, actualContext, viewModel.dataBaseRepository)
             }
         }
         else if (requestCode == Constants.EXPORT_REQUEST_CODE) {
 
             try {
-                scope.launch {
+                lifecycleScope.launch {
                     var gson = Gson()
 
                     val userSessions = viewModel.dataBaseRepository.allUserSleepSessions.first()

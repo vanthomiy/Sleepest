@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.lifecycleScope
 import com.sleepestapp.sleepest.MainActivity
 import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.R
@@ -50,12 +51,6 @@ class AlarmsFragment() : Fragment() {
         }
     }
 
-
-    /**
-     * Scope is used to call datastore async
-     */
-    private val scope: CoroutineScope = MainScope()
-
     /**
      * Get actual context
      */
@@ -82,7 +77,7 @@ class AlarmsFragment() : Fragment() {
      */
     private fun setupAlarms() {
         viewModel.allAlarms = mutableListOf()
-        scope.launch {
+        lifecycleScope.launch {
             val alarmList = viewModel.dataBaseRepository.alarmFlow.first().reversed()
 
             for (i in alarmList.indices) {
@@ -106,7 +101,7 @@ class AlarmsFragment() : Fragment() {
                 newId += 1
             }
         }
-        scope.launch {
+        lifecycleScope.launch {
             var sleepTime = viewModel.dataStoreRepository.getSleepDuration()
             viewModel.dataBaseRepository.insertAlarm(AlarmEntity(newId, sleepDuration = sleepTime))
         }
@@ -142,7 +137,7 @@ class AlarmsFragment() : Fragment() {
         viewModel.transactions.remove(alarmId)
         viewModel.fragments.remove(alarmId)
         viewModel.usedIds.remove(alarmId)
-        scope.launch {
+        lifecycleScope.launch {
             viewModel.dataBaseRepository.deleteAlarmById(alarmId)
         }
 
@@ -157,7 +152,7 @@ class AlarmsFragment() : Fragment() {
 
         val audioManager = actualContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         if (audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) <= 0) {
-            Toast.makeText(actualContext, "Increase volume to hear sounds", Toast.LENGTH_LONG)
+            Toast.makeText(actualContext, getString(R.string.alarms_ringtone_information), Toast.LENGTH_LONG)
                 .show()
         }
 
@@ -169,14 +164,14 @@ class AlarmsFragment() : Fragment() {
 
         val ringtonePickerBuilder =
             RingtonePickerDialog.Builder(actualContext, parentFragmentManager)
-                .setTitle("Select your ringtone")
+                .setTitle(getString(R.string.alarms_ringtone_header))
                 .displayDefaultRingtone(true)
                 .setCurrentRingtoneUri(savedRingtoneUri)
-                .setPositiveButtonText("Set")
-                .setCancelButtonText("Cancel")
+                .setPositiveButtonText(getString(R.string.alarms_ringtone_set))
+                .setCancelButtonText(getString(R.string.alarms_ringtone_cancel))
                 .setPlaySampleWhileSelection(true)
                 .setListener { ringtoneName, ringtoneUri ->
-                    scope.launch {
+                    lifecycleScope.launch {
                         viewModel.dataStoreRepository.updateAlarmTone(
                             ringtoneUri.toString()
                         )
@@ -273,7 +268,7 @@ class AlarmsFragment() : Fragment() {
 
         // temp disable alarm was clicked
         binding.btnTemporaryDisableAlarm.setOnClickListener {
-            scope.launch {
+            lifecycleScope.launch {
                 if (viewModel.dataBaseRepository.getNextActiveAlarm() != null) {
                     if (viewModel.dataBaseRepository.getNextActiveAlarm()!!.tempDisabled && !viewModel.dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
                         BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(true, true)

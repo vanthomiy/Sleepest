@@ -160,7 +160,7 @@ class SettingsViewModel(
 
                 removeExpand.value = (removeExpand.value != true)
                 removeButtonText.value = (if (removeExpand.value == false)
-                    removeTextSpecific else removeTextSpecific)
+                    removeTextNormal else removeTextSpecific)
             }
             "removeAckn" -> {
 

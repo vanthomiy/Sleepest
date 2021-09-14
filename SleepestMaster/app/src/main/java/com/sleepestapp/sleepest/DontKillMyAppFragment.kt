@@ -1,21 +1,42 @@
 package com.sleepestapp.sleepest
 
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import dev.doubledot.doki.views.DokiContentView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
+import com.sleepestapp.sleepest.databinding.FragmentDontKillMyAppBinding
+import com.sleepestapp.sleepest.databinding.FragmentSleepBinding
 import com.sleepestapp.sleepest.storage.DataStoreRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 
 class DontKillMyAppFragment : DialogFragment() {
 
-    private lateinit var dataStoreRepository : DataStoreRepository
+    /**
+     * Get actual context
+     */
+    private val actualContext: Context by lazy {
+        requireActivity().applicationContext }
+
+    private val dataStoreRepository by lazy {
+        (actualContext as MainApplication).dataStoreRepository}
+
+    private lateinit var binding: FragmentDontKillMyAppBinding
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+        binding = FragmentDontKillMyAppBinding.inflate(inflater, container, false)
+
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dokiCustomView = View.inflate(context, R.layout.fragment_dont_kill_my_app, null)
@@ -24,16 +45,9 @@ class DontKillMyAppFragment : DialogFragment() {
             it.loadContent()
         }
 
-        dataStoreRepository = (requireContext().applicationContext as MainApplication).dataStoreRepository
+        binding.tvNoticeDontKillMyApp.text = getString(R.string.notice_dont_kill_my_app)
 
-
-
-        val tvNoticeDontKillMyApp : TextView = dokiCustomView.findViewById(R.id.tvNoticeDontKillMyApp)
-        tvNoticeDontKillMyApp.setText(getString(R.string.notice_dont_kill_my_app))
-
-
-        val tvDescriptionDontKillMyApp : TextView = dokiCustomView.findViewById(R.id.tvDescriptionDontKillMyApp)
-        tvDescriptionDontKillMyApp.setText(getString(R.string.description_dont_kill_my_app))
+        binding.tvDescriptionDontKillMyApp.text = getString(R.string.description_dont_kill_my_app)
 
         return MaterialDialog(requireContext()).show {
             customView(view = dokiCustomView)

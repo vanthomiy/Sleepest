@@ -226,7 +226,8 @@ class SleepViewModel(
     }
 
     val phonePositionSelections = MutableLiveData<MutableList<String>>()
-    val mobilePosition = MutableLiveData(0)
+    val mobilePosition = MutableLiveData(-1)
+    var mobilePositionStart = -1
 
 
     /**
@@ -238,14 +239,26 @@ class SleepViewModel(
         position: Int,
         id: Long
     ){
-        viewModelScope.launch {
-            mobilePosition.value?.let { dataStoreRepository.updateStandardMobilePosition(it) }
-            sleepCalculateFactorCalculation()
+        // Bad workaround... we should find a better solution for that..
+        // Its always called once with default values = 0.
+        if(mobilePositionStart > 0 && mobilePositionStart != position)
+        {
+            mobilePosition.value = mobilePositionStart
+            mobilePositionStart = -1
+
+        }
+        else{
+            viewModelScope.launch {
+                mobilePosition.value = position
+                dataStoreRepository.updateStandardMobilePosition(position)
+                sleepCalculateFactorCalculation()
+            }
         }
     }
 
     val lightConditionSelections = MutableLiveData<MutableList<String>>()
     val lightCondition = MutableLiveData(0)
+    var lightConditionStart = -1
 
     /**
      * Light condition selected
@@ -255,14 +268,23 @@ class SleepViewModel(
             selectedItemView: View,
             position: Int,
             id: Long
-    ){
-        viewModelScope.launch {
-            lightCondition.value?.let { dataStoreRepository.updateLigthCondition(it) }
-            sleepCalculateFactorCalculation()
+    ) {
+        // Bad workaround... we should find a better solution for that..
+        // Its always called once with default values = 0.
+        if (lightConditionStart > 0 && lightConditionStart != position) {
+            lightCondition.value = lightConditionStart
+            lightConditionStart = -1
 
+        } else {
+            viewModelScope.launch {
+                lightCondition.value = position
+                dataStoreRepository.updateLigthCondition(position)
+                sleepCalculateFactorCalculation()
+            }
         }
-
     }
+
+
 
     val activityTracking = MutableLiveData(false)
     val includeActivityInCalculation = MutableLiveData(false)
@@ -370,8 +392,10 @@ class SleepViewModel(
             manualSleepTimeVisibility.value =(if (sleepParams.autoSleepTime) View.GONE else View.VISIBLE)
 
             mobilePosition.value = (sleepParams.standardMobilePosition)
+            mobilePositionStart = (sleepParams.standardMobilePosition)
 
             lightCondition.value = (sleepParams.standardLightCondition)
+            lightConditionStart = (sleepParams.standardLightCondition)
 
             activityTracking.value = (sleepParams.userActivityTracking)
             includeActivityInCalculation.value = (sleepParams.implementUserActivityInSleepTime)

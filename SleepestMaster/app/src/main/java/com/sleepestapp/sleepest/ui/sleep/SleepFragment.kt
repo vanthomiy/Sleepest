@@ -16,6 +16,7 @@ import com.sleepestapp.sleepest.googleapi.ActivityTransitionHandler
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.Is24HourFormat
 import com.sleepestapp.sleepest.util.StringUtil
+import kotlinx.coroutines.launch
 import java.time.LocalTime
 
 
@@ -62,6 +63,19 @@ class SleepFragment : Fragment() {
         binding.npMinutes.maxValue = minData.size;
         binding.npMinutes.displayedValues = minData;
         viewModel.is24HourFormat = Is24HourFormat(actualContext)
+
+        viewModel.phonePositionSelections.value = (mutableListOf(
+            StringUtil.getStringXml(R.string.sleep_phoneposition_inbed,requireActivity().application),
+            StringUtil.getStringXml(R.string.sleep_phoneposition_ontable, requireActivity().application),
+            StringUtil.getStringXml(R.string.sleep_phoneposition_auto, requireActivity().application)
+        ))
+        viewModel.lightConditionSelections.value = (mutableListOf(
+            StringUtil.getStringXml(R.string.sleep_lightcondidition_dark,requireActivity().application),
+            StringUtil.getStringXml(R.string.sleep_lightcondidition_light, requireActivity().application),
+            StringUtil.getStringXml(R.string.sleep_lightcondidition_auto, requireActivity().application)
+        ))
+
+
         return binding.root
     }
 
@@ -127,20 +141,6 @@ class SleepFragment : Fragment() {
             })
         }
 
-        viewModel.phonePositionSelections.value = (mutableListOf(
-            StringUtil.getStringXml(R.string.sleep_phoneposition_inbed,requireActivity().application),
-            StringUtil.getStringXml(R.string.sleep_phoneposition_ontable, requireActivity().application),
-            StringUtil.getStringXml(R.string.sleep_phoneposition_auto, requireActivity().application)
-        ))
-        viewModel.lightConditionSelections.value = (mutableListOf(
-            StringUtil.getStringXml(R.string.sleep_lightcondidition_dark,requireActivity().application),
-            StringUtil.getStringXml(R.string.sleep_lightcondidition_light, requireActivity().application),
-            StringUtil.getStringXml(R.string.sleep_lightcondidition_auto, requireActivity().application)
-        ))
-
 
     }
-
-
-
 }

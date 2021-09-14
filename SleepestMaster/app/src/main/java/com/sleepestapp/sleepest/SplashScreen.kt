@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.sleepestapp.sleepest.onboarding.OnboardingActivity
 import com.sleepestapp.sleepest.storage.DataStoreRepository
 import kotlinx.coroutines.CoroutineScope
@@ -16,8 +17,6 @@ class SplashScreen : AppCompatActivity() {
     private val dataStoreRepository: DataStoreRepository by lazy {
         (applicationContext as MainApplication).dataStoreRepository
     }
-    private val scope: CoroutineScope = MainScope()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +29,7 @@ class SplashScreen : AppCompatActivity() {
         // Send user to MainActivity or OnboardingActivity as soon as this activity loads
         // remove this activity from the stack
 
-        scope.launch {
+        lifecycleScope.launch {
             if (dataStoreRepository.tutorialStatusFlow.first().tutorialCompleted) {
                 startMain()
             } else {

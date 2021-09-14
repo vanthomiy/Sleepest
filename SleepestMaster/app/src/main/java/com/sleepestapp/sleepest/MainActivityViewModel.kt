@@ -9,6 +9,7 @@ import android.widget.*
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.R
@@ -30,16 +31,10 @@ import java.time.LocalTime
 import java.util.*
 
 
-class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
-
-    val scope = MainScope()
-    val actualContext by lazy{ getApplication<Application>().applicationContext }
-    val dataStoreRepository: DataStoreRepository by lazy {
-        (actualContext as MainApplication).dataStoreRepository
-    }
-    val dataBaseRepository: DatabaseRepository by lazy {
-        (actualContext as MainApplication).dataBaseRepository
-    }
+class MainActivityViewModel(
+    val dataStoreRepository: DataStoreRepository,
+    val dataBaseRepository: DatabaseRepository
+) : ViewModel() {
 
     val activeAlarmsLiveData by lazy {
         dataBaseRepository.activeAlarmsFlow().asLiveData()

@@ -246,4 +246,13 @@ object SleepTimeValidationUtil {
     fun Is24HourFormat(context:Context) : Boolean{
         return DateFormat.is24HourFormat(context)
     }
+
+    /**
+     * Gets seconds of day with local time
+     */
+    fun getSecondsOfDay() : Int{
+
+        return LocalTime.now().toSecondOfDay()
+
+    }
 }
