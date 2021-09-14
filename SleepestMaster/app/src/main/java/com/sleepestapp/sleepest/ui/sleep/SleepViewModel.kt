@@ -7,10 +7,7 @@ import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.SeekBar
 import androidx.databinding.ObservableField
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.model.data.LightConditions
 import com.sleepestapp.sleepest.model.data.MobilePosition
@@ -32,6 +29,10 @@ class SleepViewModel(
 ) : ViewModel() {
 
     //region Init
+
+    val sleepParameterLiveData by lazy{
+        dataStoreRepository.sleepParameterFlow.asLiveData()
+    }
 
     lateinit var transitionsContainer : ViewGroup
 

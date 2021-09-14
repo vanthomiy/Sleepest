@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.R
@@ -31,6 +32,10 @@ class AlarmInstanceViewModel(
     //region Alarm Instance
 
     // The actual id of the alarm instance
+
+    val actualAlarmLiveData by lazy{
+        dataBaseRepository.getAlarmById(alarmId).asLiveData()
+    }
 
     val isAlarmActive = MutableLiveData(false)
     val alarmName = MutableLiveData("")

@@ -100,7 +100,7 @@ class AlarmInstanceFragment(val applicationContext: Context, private var alarmId
         )  }
 
         // Used to update the sleep end and start time if it changes from the alarms fragments
-        viewModel.dataBaseRepository.getAlarmById(viewModel.alarmId).asLiveData().observe(viewLifecycleOwner){
+        viewModel.actualAlarmLiveData.observe(viewLifecycleOwner){
             it?.let{
                 viewModel.wakeUpEarly = LocalTime.ofSecondOfDay(it.wakeupEarly.toLong())
                 viewModel.wakeUpLate = LocalTime.ofSecondOfDay(it.wakeupLate.toLong())

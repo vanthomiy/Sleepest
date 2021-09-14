@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.asLiveData
 import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.databinding.FragmentSleepBinding
@@ -97,7 +96,7 @@ class SleepFragment : Fragment() {
         }
 
         // Used to update the sleep end and start time if it changes from the alarms fragments
-        viewModel.dataStoreRepository.sleepParameterFlow.asLiveData().observe(viewLifecycleOwner){
+        viewModel.sleepParameterLiveData.observe(viewLifecycleOwner){
 
             viewModel.sleepStartTime = LocalTime.ofSecondOfDay(it.sleepTimeStart.toLong())
             viewModel.sleepEndTime = LocalTime.ofSecondOfDay(it.sleepTimeEnd.toLong())
@@ -140,7 +139,5 @@ class SleepFragment : Fragment() {
                 }
             })
         }
-
-
     }
 }

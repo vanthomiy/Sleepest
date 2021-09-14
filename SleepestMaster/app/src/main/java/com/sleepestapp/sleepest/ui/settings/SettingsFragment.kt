@@ -123,7 +123,7 @@ class SettingsFragment : Fragment() {
                 intent.putExtra(getString(R.string.onboarding_intent_not_first_app_start), true)
                 intent.putExtra(getString(R.string.onboarding_intent_starttime), viewModel.dataStoreRepository.getSleepTimeBegin())
                 intent.putExtra(getString(R.string.onboarding_intent_endtime), viewModel.dataStoreRepository.getSleepTimeEnd())
-                intent.putExtra(getString(R.string.onboarding_intent_duration), viewModel.dataStoreRepository.getSleepDuration()) /**TODO: Dynamic sleep duration (DataStore repo)*/
+                intent.putExtra(getString(R.string.onboarding_intent_duration), viewModel.dataStoreRepository.getSleepDuration())
 
                 startActivity(intent)
             }

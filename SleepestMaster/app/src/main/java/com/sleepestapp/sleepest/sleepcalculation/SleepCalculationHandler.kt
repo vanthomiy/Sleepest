@@ -469,6 +469,7 @@ class SleepCalculationHandler(val context: Context) {
             val alarm = dataBaseRepository.getNextActiveAlarm() ?: return
 
             var sleepDuration = alarm.sleepDuration
+
             // If include then add the factors to it
             if (dataStoreRepository.sleepParameterFlow.first().implementUserActivityInSleepTime)
                 sleepDuration = (sleepDuration.toFloat() * ActivityOnDay.getFactor(activity)).toInt()

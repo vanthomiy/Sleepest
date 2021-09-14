@@ -155,7 +155,7 @@ enum class SleepState {
 
 
 /**
- * Defines where the mobile phone is places at sleep time
+ * Defines where the mobile phone is placed at sleep time
  */
 enum class MobilePosition{
     INBED,
