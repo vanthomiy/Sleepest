@@ -54,6 +54,7 @@ class SleepFragment : Fragment() {
 
         binding = FragmentSleepBinding.inflate(inflater, container, false)
         viewModel.transitionsContainer = (binding.linearAnimationlayout)
+
         binding.sleepViewModel = viewModel
         binding.lifecycleOwner = this;
 
@@ -61,6 +62,7 @@ class SleepFragment : Fragment() {
         binding.npMinutes.minValue = 1;
         binding.npMinutes.maxValue = minData.size;
         binding.npMinutes.displayedValues = minData;
+
         viewModel.is24HourFormat = Is24HourFormat(actualContext)
 
         viewModel.phonePositionSelections.value = (mutableListOf(
@@ -68,6 +70,7 @@ class SleepFragment : Fragment() {
             StringUtil.getStringXml(R.string.sleep_phoneposition_ontable, requireActivity().application),
             StringUtil.getStringXml(R.string.sleep_phoneposition_auto, requireActivity().application)
         ))
+
         viewModel.lightConditionSelections.value = (mutableListOf(
             StringUtil.getStringXml(R.string.sleep_lightcondidition_dark,requireActivity().application),
             StringUtil.getStringXml(R.string.sleep_lightcondidition_light, requireActivity().application),

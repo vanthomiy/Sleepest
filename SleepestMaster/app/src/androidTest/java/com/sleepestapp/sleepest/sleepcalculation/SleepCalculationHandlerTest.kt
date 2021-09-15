@@ -252,68 +252,6 @@ class SleepCalculationHandlerTest
         assertThat(newSleepList?.count(), CoreMatchers.equalTo(sleepList.count()-1))
     }
 
-    /*
-    @Test
-    fun findLightUserWakeupTest() = runBlocking {
-
-        val sleepCalculationHandler = SleepCalculationHandler.getHandler(context)
-
-        // get actual time
-        val actualTimeSeconds =  sleepCalculationHandler.getSecondsOfDay()
-
-        var sleepList5 = mutableListOf<SleepApiRawDataEntity>()
-        var sleepList30 = mutableListOf<SleepApiRawDataEntity>()
-
-        for(i in 0..20) // 2 hours / 20  < 10
-        {
-            val data = SleepApiRawDataEntity(actualTimeSeconds-(i*5*60), 1,2,3,sleepState = SleepState.SLEEPING)
-            sleepList5.add(data)
-        }
-
-        for(i in 0..2) // 2 hours / 20  < 10
-        {
-            val data = SleepApiRawDataEntity(actualTimeSeconds-(i*30*60), 1,2,3,sleepState = SleepState.SLEEPING)
-            sleepList30.add(data)
-        }
-
-        // wakeuptime to far away from now ( 3 times frequency or more)
-        var wakeuptime = actualTimeSeconds + (60 * 3 * 5) + 1
-        var calcTime = sleepCalculationHandler.findLightUserWakeup(sleepList5, wakeuptime)
-
-        assertThat(wakeuptime, CoreMatchers.equalTo(calcTime))
-
-        // wakeuptime to far away from now ( 3 times frequency or more)
-        wakeuptime = actualTimeSeconds + (60 * 3 * 30) + 1
-        calcTime = sleepCalculationHandler.findLightUserWakeup(sleepList30, wakeuptime)
-
-        assertThat(wakeuptime, CoreMatchers.equalTo(calcTime))
-
-        // wakeuptime in the past ( 3 times frequency or more)
-        wakeuptime = actualTimeSeconds - (60 * 3 * 5 + 1)
-        calcTime = sleepCalculationHandler.findLightUserWakeup(sleepList5, wakeuptime)
-
-        assertThat((calcTime) , CoreMatchers.equalTo(wakeuptime))
-
-        // wakeuptime in the past ( 3 times frequency or more)
-        wakeuptime = actualTimeSeconds - (60 * 3 * 30 + 1)
-        calcTime = sleepCalculationHandler.findLightUserWakeup(sleepList30, wakeuptime)
-
-        assertThat((calcTime), CoreMatchers.equalTo(wakeuptime))
-
-        // wakuptime okay
-        wakeuptime = actualTimeSeconds + (60 * 3)
-        calcTime = sleepCalculationHandler.findLightUserWakeup(sleepList5, wakeuptime)
-
-        assertThat((calcTime != wakeuptime), CoreMatchers.equalTo(true))
-
-        // wakeuptime okay
-        wakeuptime = actualTimeSeconds - (60 * 3)
-        calcTime = sleepCalculationHandler.findLightUserWakeup(sleepList5, wakeuptime)
-
-        assertThat((calcTime != wakeuptime), CoreMatchers.equalTo(true))
-
-    }
-     */
 
     @Test
     fun checkPhonePositionTest() = runBlocking{
