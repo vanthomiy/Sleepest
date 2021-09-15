@@ -145,8 +145,6 @@ class SleepViewModel(
 
 
     val autoSleepTime = MutableLiveData(true)
-    val manualSleepTime = MutableLiveData(true)
-    val manualSleepTimeVisibility = MutableLiveData(View.GONE)
 
     /**
      * Auto sleep time toggled
@@ -155,21 +153,15 @@ class SleepViewModel(
         viewModelScope.launch{
             autoSleepTime.value?.let {
                 dataStoreRepository.updateAutoSleepTime(it)
-                manualSleepTime.value = (!it)
             }
         }
 
         TransitionManager.beginDelayedTransition(transitionsContainer);
 
-        autoSleepTime.value?.let {
-            manualSleepTimeVisibility.value = (if (it) View.GONE else View.VISIBLE)
-        }
     }
 
 
     val actualExpand = MutableLiveData(-1)
-    val goneState = MutableLiveData(View.GONE)
-    val visibleState = MutableLiveData(View.VISIBLE)
     private var lastView: ImageView? = null
 
     /**
@@ -388,9 +380,7 @@ class SleepViewModel(
 
             phoneUsageValue.value = (sleepParams.mobileUseFrequency)
 
-            manualSleepTime.value =(!sleepParams.autoSleepTime)
             autoSleepTime.value =(sleepParams.autoSleepTime)
-            manualSleepTimeVisibility.value =(if (sleepParams.autoSleepTime) View.GONE else View.VISIBLE)
 
             mobilePosition.value = (sleepParams.standardMobilePosition)
             mobilePositionStart = (sleepParams.standardMobilePosition)

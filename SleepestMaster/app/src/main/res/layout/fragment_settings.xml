@@ -5,6 +5,7 @@
     tools:context=".ui.settings.SettingsFragment">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="profileViewModel"
             type="com.sleepestapp.sleepest.ui.settings.SettingsViewModel" />
@@ -93,7 +94,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="10dp"
                         android:orientation="vertical"
-                        android:visibility="@{profileViewModel.actualExpand == 0 ? profileViewModel.visibleState:profileViewModel.goneState, default=gone}"
+                        android:visibility="@{profileViewModel.actualExpand == 0 ? View.VISIBLE:View.GONE, default=gone}"
                         >
 
                         <LinearLayout
@@ -159,7 +160,7 @@
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:textColor="@color/primary_text_color"
-                            android:visibility="@{profileViewModel.autoDarkMode ? profileViewModel.goneState : profileViewModel.visibleState}"
+                            android:visibility="@{profileViewModel.autoDarkMode ? View.VISIBLE:View.GONE}"
                             android:textOn="Dark Mode"
                             android:textOff="Light Mode"
                             android:layout_marginBottom="10dp"
@@ -375,7 +376,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="10dp"
                         android:orientation="vertical"
-                        android:visibility="@{profileViewModel.actualExpand == 1 ? profileViewModel.visibleState:profileViewModel.goneState, default=gone}"
+                        android:visibility="@{profileViewModel.actualExpand == 1 ? View.VISIBLE:View.GONE, default=gone}"
                         >
 
                         <androidx.appcompat.widget.AppCompatButton
@@ -452,7 +453,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="10dp"
                         android:orientation="vertical"
-                        android:visibility="@{profileViewModel.actualExpand == 2 ? profileViewModel.visibleState:profileViewModel.goneState, default=gone}"
+                        android:visibility="@{profileViewModel.actualExpand == 2 ? View.VISIBLE:View.GONE, default=gone}"
                         >
 
                         <androidx.appcompat.widget.AppCompatButton
@@ -557,7 +558,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="10dp"
                         android:orientation="vertical"
-                        android:visibility="@{profileViewModel.actualExpand == 3 ? profileViewModel.visibleState:profileViewModel.goneState, default=gone}"
+                        android:visibility="@{profileViewModel.actualExpand == 3 ? View.VISIBLE:View.GONE, default=gone}"
                         >
 
                         <FrameLayout
@@ -804,7 +805,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="10dp"
                         android:orientation="vertical"
-                        android:visibility="@{profileViewModel.actualExpand == 5 ? profileViewModel.visibleState:profileViewModel.goneState, default=gone}"
+                        android:visibility="@{profileViewModel.actualExpand == 5 ? View.VISIBLE:View.GONE, default=gone}"
                         >
 
                         <!--TextView
@@ -866,7 +867,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="10dp"
                         android:orientation="vertical"
-                        android:visibility="@{profileViewModel.actualExpand == 4 ? profileViewModel.visibleState:profileViewModel.goneState, default=gone}"
+                        android:visibility="@{profileViewModel.actualExpand == 4 ? View.VISIBLE:View.GONE, default=gone}"
                         >
 
                         <androidx.appcompat.widget.AppCompatButton
@@ -911,7 +912,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginVertical="10dp"
                             android:orientation="vertical"
-                            android:visibility="@{profileViewModel.removeExpand ? profileViewModel.visibleState:profileViewModel.goneState, default=gone}"
+                            android:visibility="@{profileViewModel.removeExpand ? View.VISIBLE:View.GONE, default=gone}"
                             >
 
                             <TextView

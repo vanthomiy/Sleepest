@@ -5,6 +5,7 @@
     tools:context=".ui.sleep.SleepFragment">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="sleepViewModel"
             type="com.sleepestapp.sleepest.ui.sleep.SleepViewModel" />
@@ -135,7 +136,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="10dp"
-                        android:visibility="@{sleepViewModel.actualExpand == 7 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}">
+                        android:visibility="@{sleepViewModel.actualExpand == 7 ? View.VISIBLE:View.GONE, default=gone}">
                         <fragment
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -189,7 +190,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
-                            android:visibility="@{sleepViewModel.actualExpand == 0 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}">
+                            android:visibility="@{sleepViewModel.actualExpand == 0 ? View.VISIBLE:View.GONE, default=gone}">
                             <fragment
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -204,14 +205,14 @@
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:visibility="@{sleepViewModel.manualSleepTimeVisibility}"
+                            android:visibility="@{sleepViewModel.autoSleepTime ? View.VISIBLE:View.GONE, default=gone}"
                             >
 
                             <FrameLayout
                                 android:layout_width="150dp"
                                 android:layout_height="match_parent"
                                 android:layout_gravity="start"
-                                android:clickable="@{sleepViewModel.manualSleepTime}"
+                                android:clickable="@{sleepViewModel.autoSleepTime == false}"
                                 android:onClick="@{sleepViewModel::onAlarmStartClicked}"
                                 android:background="@drawable/bgrounded_button">
                                 <TextView
@@ -242,7 +243,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_gravity="end"
                                 android:background="@drawable/bgrounded_button"
-                                android:clickable="@{sleepViewModel.manualSleepTime}"
+                                android:clickable="@{sleepViewModel.autoSleepTime == false}"
                                 android:onClick="@{sleepViewModel::onAlarmEndClicked}">
 
                                 <TextView
@@ -330,7 +331,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
-                            android:visibility="@{sleepViewModel.actualExpand == 1 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}">
+                            android:visibility="@{sleepViewModel.actualExpand == 1 ? View.VISIBLE:View.GONE, default=gone}">
                             <fragment
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -468,7 +469,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
-                            android:visibility="@{sleepViewModel.actualExpand == 6 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}">
+                            android:visibility="@{sleepViewModel.actualExpand == 6 ? View.VISIBLE:View.GONE, default=gone}">
                             <fragment
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -538,7 +539,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
-                            android:visibility="@{sleepViewModel.actualExpand == 2 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}">
+                            android:visibility="@{sleepViewModel.actualExpand == 2 ? View.VISIBLE:View.GONE, default=gone}">
                             <fragment
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -609,7 +610,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
-                            android:visibility="@{sleepViewModel.actualExpand == 3 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}">
+                            android:visibility="@{sleepViewModel.actualExpand == 3 ? View.VISIBLE:View.GONE, default=gone}">
                             <fragment
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -716,7 +717,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
-                            android:visibility="@{sleepViewModel.actualExpand == 4 ? sleepViewModel.visibleState:sleepViewModel.goneState, default=gone}">
+                            android:visibility="@{sleepViewModel.actualExpand == 4 ? View.VISIBLE:View.GONE, default=gone}">
                             <fragment
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"

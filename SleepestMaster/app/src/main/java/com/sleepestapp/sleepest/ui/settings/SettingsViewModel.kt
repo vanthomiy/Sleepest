@@ -43,7 +43,6 @@ class SettingsViewModel(
     }
 
     val autoDarkMode = MutableLiveData(true)
-    val showDarkModeSetting = MutableLiveData(View.GONE)
 
     /**
      * Auto dark mode toggled handler
@@ -59,7 +58,6 @@ class SettingsViewModel(
         }
 
         autoDarkMode.value?.let { auto ->
-            showDarkModeSetting.value = (if (auto) View.GONE else View.VISIBLE)
             AppCompatDelegate
                     .setDefaultNightMode(if (auto)
                         AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM else
@@ -180,8 +178,6 @@ class SettingsViewModel(
     // endregion
 
     val actualExpand = MutableLiveData(-1)
-    val goneState = MutableLiveData(View.GONE)
-    val visibleState = MutableLiveData(View.VISIBLE)
     val removeExpand = MutableLiveData(false)
 
     val normalRotationState = MutableLiveData(0)
@@ -218,7 +214,6 @@ class SettingsViewModel(
             var settingsParams = dataStoreRepository.settingsDataFlow.first()
             darkMode.value = (settingsParams.designDarkMode)
             autoDarkMode.value = (settingsParams.designAutoDarkMode)
-            showDarkModeSetting.value = (if (settingsParams.designAutoDarkMode) View.GONE else View.VISIBLE)
 
             showAlarmActiv.value = (settingsParams.bannerShowAlarmActiv)
             showActualWakeUpPoint.value = (settingsParams.bannerShowActualWakeUpPoint)
