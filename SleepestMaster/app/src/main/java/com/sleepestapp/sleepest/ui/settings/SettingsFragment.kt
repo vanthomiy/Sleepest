@@ -21,7 +21,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
 import com.sleepestapp.sleepest.DontKillMyAppFragment
 import com.sleepestapp.sleepest.MainApplication
@@ -34,7 +36,9 @@ import com.sleepestapp.sleepest.model.data.export.UserSleepExportData
 import com.sleepestapp.sleepest.onboarding.OnboardingActivity
 import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
+import com.sleepestapp.sleepest.ui.sleep.SleepViewModel
 import com.sleepestapp.sleepest.util.IconAnimatorUtil.isDarkThemeOn
+import com.sleepestapp.sleepest.util.PermissionsUtil
 import com.sleepestapp.sleepest.util.SmileySelectorUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -46,10 +50,19 @@ import java.util.*
 
 class SettingsFragment : Fragment() {
 
+    var factory = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            return  SettingsViewModel(
+                (actualContext as MainApplication).dataStoreRepository,
+                (actualContext as MainApplication).dataBaseRepository
+            ) as T
+        }
+    }
+
     /**
      * View model of the [SettingsFragment]
      */
-    private val viewModel by lazy { ViewModelProvider(this).get(SettingsViewModel::class.java) }
+    private val viewModel by lazy { ViewModelProvider(this, factory).get(SettingsViewModel::class.java) }
     /**
      * Binding XML Code to Fragment
      */
@@ -58,11 +71,6 @@ class SettingsFragment : Fragment() {
      * Get actual context
      */
     private val actualContext: Context by lazy { requireActivity().applicationContext }
-    /**
-     * Scope is used to call datastore async
-     */
-    private val scope: CoroutineScope = MainScope()
-
 
     /**
      * actual case of entrie
@@ -76,7 +84,7 @@ class SettingsFragment : Fragment() {
     fun setCaseOfEntrie(case: Int){
         caseOfEntrie = case
         if(this::binding.isInitialized)
-            viewModel.actualExpand.set(caseOfEntrie)
+            viewModel.actualExpand.value = (caseOfEntrie)
     }
 
     override fun onCreateView(
@@ -87,6 +95,7 @@ class SettingsFragment : Fragment() {
         binding = FragmentSettingsBinding.inflate(inflater, container, false)
         viewModel.transitionsContainer = (binding.linearAnimationlayout)
         binding.profileViewModel = viewModel
+        binding.lifecycleOwner = this;
 
         //region On Click Listeners
 
@@ -109,12 +118,12 @@ class SettingsFragment : Fragment() {
             onDataClicked(it)
         }
         binding.btnTutorial.setOnClickListener() {
-            scope.launch {
+            lifecycleScope.launch {
                 val intent = Intent(activity, OnboardingActivity::class.java)
                 intent.putExtra(getString(R.string.onboarding_intent_not_first_app_start), true)
                 intent.putExtra(getString(R.string.onboarding_intent_starttime), viewModel.dataStoreRepository.getSleepTimeBegin())
                 intent.putExtra(getString(R.string.onboarding_intent_endtime), viewModel.dataStoreRepository.getSleepTimeEnd())
-                intent.putExtra(getString(R.string.onboarding_intent_duration), viewModel.dataStoreRepository.getSleepDuration()) /**TODO: Dynamic sleep duration (DataStore repo)*/
+                intent.putExtra(getString(R.string.onboarding_intent_duration), viewModel.dataStoreRepository.getSleepDuration())
 
                 startActivity(intent)
             }
@@ -124,9 +133,13 @@ class SettingsFragment : Fragment() {
             DontKillMyAppFragment.show(requireActivity())
         }
 
+        viewModel.aboutUsSelection.observe(this){
+            onAboutUsClicked(it)
+        }
+
         //endregion
 
-        viewModel.actualExpand.set(caseOfEntrie)
+        viewModel.actualExpand.value = (caseOfEntrie)
 
 
         var version : String = "XX"
@@ -240,12 +253,11 @@ class SettingsFragment : Fragment() {
     }
 
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         // check dark mode settings for lottie animation
-        scope.launch {
+        lifecycleScope.launch {
 
             val settings = viewModel.dataStoreRepository.settingsDataFlow.first()
 
@@ -258,6 +270,12 @@ class SettingsFragment : Fragment() {
             binding.lottieDarkMode.playAnimation()
 
         }
+
+        viewModel.removeTextNormal = actualContext.getString(R.string.settings_delete_all_data)
+        viewModel.removeTextSpecific = actualContext.getString(R.string.settings_return)
+        viewModel.removeButtonText.value = viewModel.removeTextNormal
+
+        checkPermissions()
         createCredits()
     }
 
@@ -327,6 +345,54 @@ class SettingsFragment : Fragment() {
     }
 
     /**
+     * About us clicked
+     * Improvement, Rate, Error or Police
+     */
+    fun onAboutUsClicked(tag:String) {
+        when (tag) {
+            "improvement" -> {
+                val intent = Intent(Intent.ACTION_SENDTO)
+                intent.data = Uri.parse("mailto: sleepestapp@gmail.com")
+                val packageInfo = actualContext.packageManager.getPackageInfo(actualContext.packageName, 0)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(Intent.EXTRA_EMAIL, "Improvement")
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Version: " + packageInfo.versionName)
+
+                actualContext.startActivity(intent)
+
+            }
+            "rate" -> {
+                val uri = Uri.parse("market://details?id=" + actualContext.packageName)
+                val intent = Intent(Intent.ACTION_VIEW, uri)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                try {
+                    actualContext.startActivity(intent)
+                } catch (e: ActivityNotFoundException) {
+                    Toast.makeText(actualContext, " unable to find market app", Toast.LENGTH_LONG).show()
+                }
+            }
+            "error" -> {
+                val intent = Intent(Intent.ACTION_SENDTO)
+                intent.data = Uri.parse("mailto: sleepestapp@gmail.com")
+                val packageInfo = actualContext.packageManager.getPackageInfo(actualContext.packageName, 0)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(Intent.EXTRA_EMAIL, "Error")
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Version: " + packageInfo.versionName)
+
+                actualContext.startActivity(intent)
+
+            }
+            "PRIVACY_POLICE" -> {
+                val websiteUrl = Websites.getWebsite(Websites.getWebsiteByString(tag))
+
+                actualContext.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(websiteUrl)))
+            }
+        }
+    }
+
+
+    /**
      * Data export or import was clicked
      */
     private fun onDataClicked(view: View) {
@@ -362,16 +428,16 @@ class SettingsFragment : Fragment() {
      */
     private fun onPermissionClicked(view: View) {
         when (view.tag.toString()) {
-            "dailyActivity" -> if (viewModel.dailyPermission.get() != true) requestPermissionLauncher.launch(
+            "dailyActivity" -> if (viewModel.dailyPermission.value != true) requestPermissionLauncher.launch(
                 Manifest.permission.ACTIVITY_RECOGNITION
             ) else viewModel.showPermissionInfo("dailyActivity")
-            "sleepActivity" -> if (viewModel.activityPermission.get() != true) requestPermissionLauncher.launch(
+            "sleepActivity" -> if (viewModel.activityPermission.value != true) requestPermissionLauncher.launch(
                 Manifest.permission.ACTIVITY_RECOGNITION
             ) else viewModel.showPermissionInfo("sleepActivity")
-            "storage" -> if (viewModel.storagePermission.get() != true) requestPermissionLauncher.launch(
+            "storage" -> if (viewModel.storagePermission.value != true) requestPermissionLauncher.launch(
                 Manifest.permission.MANAGE_EXTERNAL_STORAGE
             ) else viewModel.showPermissionInfo("storage")
-            "overlay" -> if (viewModel.overlayPermission.get() != true) {
+            "overlay" -> if (viewModel.overlayPermission.value != true) {
                 // If not, form up an Intent to launch the permission request
                 val intent = Intent(
                     Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse(
@@ -395,7 +461,7 @@ class SettingsFragment : Fragment() {
 
         // Check if a request code is received that matches that which we provided for the overlay draw request
         if (requestCode == Constants.ACTIVITY_RECOGNITION_PERMISSION_REQUEST_CODE) {
-            viewModel.checkPermissions()
+            checkPermissions()
         }
         else if (requestCode == Constants.IMPORT_REQUEST_CODE) {
 
@@ -409,14 +475,14 @@ class SettingsFragment : Fragment() {
             startActivityForResult(intent, Constants.LOAD_FILE_REQUEST_CODE)
         }
         else if (requestCode == Constants.LOAD_FILE_REQUEST_CODE) {
-            scope.launch {
+            lifecycleScope.launch {
                 ImportUtil.getLoadFileFromUri(data?.data, actualContext, viewModel.dataBaseRepository)
             }
         }
         else if (requestCode == Constants.EXPORT_REQUEST_CODE) {
 
             try {
-                scope.launch {
+                lifecycleScope.launch {
                     var gson = Gson()
 
                     val userSessions = viewModel.dataBaseRepository.allUserSleepSessions.first()
@@ -491,6 +557,26 @@ class SettingsFragment : Fragment() {
 
     private val contentResolver: ContentResolver by lazy { actualContext.contentResolver}
 
+    /**
+     * Check if permissions are granted
+     */
+    fun checkPermissions(){
+
+        viewModel.activityPermission.value = (
+                PermissionsUtil.isActivityRecognitionPermissionGranted(actualContext)
+                )
+
+        viewModel.dailyPermission.value = (
+                PermissionsUtil.isActivityRecognitionPermissionGranted(actualContext)
+                )
+
+        viewModel.storagePermission.value = (
+                PermissionsUtil.isNotificationPolicyAccessGranted(actualContext)
+                )
+
+        viewModel.overlayPermission.value = (PermissionsUtil.isOverlayPermissionGranted(actualContext))
+
+    }
 
     private val requestPermissionLauncher =
             registerForActivityResult(
@@ -499,14 +585,14 @@ class SettingsFragment : Fragment() {
                 if (isGranted) {
                     // Permission is granted. Continue the action or workflow in your
                     // app.
-                    viewModel.checkPermissions()
+                    checkPermissions()
                 } else {
                     // Explain to the user that the feature is unavailable because the
                     // features requires a permission that the user has denied. At the
                     // same time, respect the user's decision. Don't link to system
                     // settings in an effort to convince the user to change their
                     // decision.
-                    viewModel.checkPermissions()
+                    checkPermissions()
                 }
             }
 

@@ -59,6 +59,7 @@ class InfoFragment : Fragment() {
     ): View? {
 
         binding = FragmentInfoBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this;
 
         return binding.root
     }

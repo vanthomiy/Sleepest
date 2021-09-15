@@ -9,6 +9,7 @@ import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
 import com.sleepestapp.sleepest.storage.db.SleepApiRawDataEntity
 import com.google.android.gms.location.DetectedActivity
+import com.sleepestapp.sleepest.util.SleepTimeValidationUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -52,15 +53,6 @@ class SleepCalculationHandler(val context: Context) {
     //endregion
 
     //region sleep calculation helpers
-
-    /**
-     * Gets seconds of day with local time
-     */
-    fun getSecondsOfDay() : Int{
-
-        return LocalTime.now().toSecondOfDay()
-
-    }
 
     /**
      * Get the frequency of the list ...its whether 5, 10 or 30 min type of [SleepDataFrequency]
@@ -477,6 +469,7 @@ class SleepCalculationHandler(val context: Context) {
             val alarm = dataBaseRepository.getNextActiveAlarm() ?: return
 
             var sleepDuration = alarm.sleepDuration
+
             // If include then add the factors to it
             if (dataStoreRepository.sleepParameterFlow.first().implementUserActivityInSleepTime)
                 sleepDuration = (sleepDuration.toFloat() * ActivityOnDay.getFactor(activity)).toInt()
@@ -484,7 +477,7 @@ class SleepCalculationHandler(val context: Context) {
             var restSleepTime = sleepDuration - (sleepSessionEntity.sleepTimes.sleepDuration * 60)
 
             val actualTimeSeconds = localTime?.toLocalTime()?.toSecondOfDay()
-                ?: getSecondsOfDay()
+                ?: SleepTimeValidationUtil.getSecondsOfDay()
             var wakeUpTime = actualTimeSeconds + (restSleepTime)
 
             // if time is greater then 1 day

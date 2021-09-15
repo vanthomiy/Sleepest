@@ -155,7 +155,7 @@ enum class SleepState {
 
 
 /**
- * Defines where the mobile phone is places at sleep time
+ * Defines where the mobile phone is placed at sleep time
  */
 enum class MobilePosition{
     INBED,
@@ -356,6 +356,15 @@ enum class Websites {
     PRIVACY_POLICE;
 
     companion object {
+
+        fun getWebsiteByString(name:String) : Websites {
+            return when (name) {
+                "PRIVACY_POLICE" -> PRIVACY_POLICE
+                "FLATICON" -> FLATICON
+                "LOTTIEFILES" -> LOTTIEFILES
+                else -> FLATICON
+            }
+        }
 
         fun getWebsite(type:Websites) : String {
             return when (type) {

@@ -489,9 +489,8 @@
                             android:textColor="@color/primary_text_color"
                             android:backgroundTint="@{sleepViewModel.lightCondition == 0 ? @color/sleep_indicator_perfect : sleepViewModel.lightCondition == 1 ? @color/sleep_indicator_worst : @color/semi_transparent_button_color}"
                             android:entries="@{sleepViewModel.lightConditionSelections}"
-                            android:selectedItemPosition="@={sleepViewModel.lightCondition}"
                             android:onItemSelected = "@{sleepViewModel::onLightConditionChanged}"
-                            tools:ignore="RtlCompat">
+                            android:selectedItemPosition="@{sleepViewModel.lightCondition}">
 
                         </androidx.appcompat.widget.AppCompatSpinner>
 
@@ -560,8 +559,9 @@
                             android:background="@drawable/bgroundedchoosen"
                             android:backgroundTint="@{sleepViewModel.mobilePosition == 0 ? @color/sleep_indicator_perfect : sleepViewModel.mobilePosition == 1 ? @color/sleep_indicator_worst : @color/semi_transparent_button_color}"
                             android:entries="@{sleepViewModel.phonePositionSelections}"
-                            android:selectedItemPosition="@={sleepViewModel.mobilePosition}"
-                            android:onItemSelected = "@{sleepViewModel::onMobilePositionChanged}">
+                            android:onItemSelected = "@{sleepViewModel::onMobilePositionChanged}"
+                            android:selectedItemPosition="@{sleepViewModel.mobilePosition}"
+                            >
 
                         </androidx.appcompat.widget.AppCompatSpinner>
 

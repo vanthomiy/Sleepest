@@ -47,15 +47,6 @@
                         android:textSize="@dimen/headerSize"
                         android:textStyle="bold" />
 
-                    <!--ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="end|center"
-                        android:onClick="@{alarmsViewModel::onExpandClicked}"
-                        android:rotation="@{alarmsViewModel.rotateState}"
-                        android:src="@drawable/ic_baseline_settings_24"
-                        android:tag="0"
-                        app:tint="@color/primary_text_color" /!-->
 
                     <com.airbnb.lottie.LottieAnimationView
                         android:layout_width="50dp"
@@ -99,7 +90,7 @@
 
                         <androidx.appcompat.widget.SwitchCompat
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
+                            android:layout_height="@dimen/valuesHeight"
                             android:layout_gravity="end"
                             android:layout_marginEnd="10dp"
                             android:checked="@={alarmsViewModel.cancelAlarmWhenAwake}"
@@ -129,9 +120,9 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:id="@+id/soundChange"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="@dimen/valuesHeight"
                             android:layout_gravity="end"
-                            android:background="@drawable/bgroundedchoosen"
+                            android:background="@drawable/bgrounded_button"
                             android:layout_marginStart="100dp"
                             android:text="@{alarmsViewModel.alarmSoundName}"
                             android:textColor="@color/primary_text_color"
@@ -158,9 +149,10 @@
 
                         <androidx.appcompat.widget.AppCompatSpinner
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="@dimen/valuesHeight"
                             android:layout_gravity="start"
                             android:background="@drawable/bgroundedchoosen"
+                            android:backgroundTint="@color/semi_transparent_button_color"
                             android:layout_marginStart="100dp"
                             android:entries="@{alarmsViewModel.alarmArtSelections}"
                             android:onItemSelected="@{alarmsViewModel::onAlarmTypeChanged}"
@@ -174,12 +166,12 @@
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_temporaryDisableAlarm"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/valuesHeight"
                     android:background="@drawable/bgroundedchoosen"
-                    android:backgroundTint="@color/accent_text_color"
+                    android:backgroundTint="@color/warning_color"
                     android:text=""
                     android:layout_marginVertical="10dp"
-                    android:textColor="@color/secondary_button_color" />
+                    android:textColor="@color/primary_text_color" />
 
             </LinearLayout>
 

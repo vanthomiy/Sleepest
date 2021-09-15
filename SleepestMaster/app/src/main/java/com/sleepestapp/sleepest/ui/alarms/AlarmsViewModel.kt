@@ -5,50 +5,55 @@ import android.transition.TransitionManager
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import androidx.databinding.ObservableArrayList
-import androidx.databinding.ObservableField
-import androidx.databinding.ObservableInt
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.asLiveData
+import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.*
 import com.airbnb.lottie.LottieAnimationView
 import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.R
+import com.sleepestapp.sleepest.storage.DataStoreRepository
+import com.sleepestapp.sleepest.storage.DatabaseRepository
+import com.sleepestapp.sleepest.storage.db.AlarmEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class AlarmsViewModel(application: Application) : AndroidViewModel(application) {
+class AlarmsViewModel(
+    val dataStoreRepository: DataStoreRepository,
+    val dataBaseRepository: DatabaseRepository
+    ) : ViewModel() {
 
-    //region Init
-
-    private val scope: CoroutineScope = MainScope()
-    private val actualContext by lazy{ getApplication<Application>().applicationContext }
-    /**
-     * The database Repository
-     */
-    val databaseRepository by lazy { (actualContext as MainApplication).dataBaseRepository }
-
-    /**
-     * The datastore Repository
-     */
-    val dataStoreRepository by lazy { (actualContext as MainApplication).dataStoreRepository }
-
-    // endregion
 
     //region Alarms Settings
 
     /**
+     * All actual setup alarms
+     */
+    lateinit var allAlarms: MutableList<AlarmEntity>
+    /**
+     * All ids of the setup alarms
+     */
+    lateinit var usedIds: MutableSet<Int>
+    /**
+     * All transactions for each id of the setup alarms
+     */
+    lateinit var transactions: MutableMap<Int, FragmentTransaction>
+    /**
+     * All fragments for each id of the setup alarms
+     */
+    lateinit var fragments: MutableMap<Int, AlarmInstanceFragment>
+
+    /**
      * Observable live data of the alarms flow
      */
-    val activeAlarmsLiveData by lazy {  databaseRepository.activeAlarmsFlow().asLiveData() }
+    val activeAlarmsLiveData by lazy {  dataBaseRepository.activeAlarmsFlow().asLiveData() }
 
 
-    val alarmExpandId = ObservableInt(0)
-    val noAlarmsView = ObservableField(View.GONE)
+    val alarmExpandId = MutableLiveData(0)
+    val noAlarmsView = MutableLiveData(View.GONE)
 
-    val actualExpand = ObservableField(View.GONE)
-    val rotateState = ObservableField(0)
+    val actualExpand = MutableLiveData(View.GONE)
+    val rotateState = MutableLiveData(0)
 
     var lottie : LottieAnimationView? = null
 
@@ -58,14 +63,14 @@ class AlarmsViewModel(application: Application) : AndroidViewModel(application) 
     fun onExpandClicked(view: View) {
         TransitionManager.beginDelayedTransition(transitionsContainer);
 
-        actualExpand.set(if (actualExpand.get() == View.GONE) View.VISIBLE else View.GONE)
-        rotateState.set(if (actualExpand.get() == View.GONE) 0 else 180)
+        actualExpand.value = (if (actualExpand.value == View.GONE) View.VISIBLE else View.GONE)
+        rotateState.value = (if (actualExpand.value == View.GONE) 0 else 180)
 
-        alarmExpandId.set(-1)
+        alarmExpandId.value = (-1)
 
         lottie = view as LottieAnimationView
 
-        if(actualExpand.get() == View.GONE)
+        if(actualExpand.value == View.GONE)
             lottie?.playAnimation()
         else
             lottie?.pauseAnimation()
@@ -81,19 +86,19 @@ class AlarmsViewModel(application: Application) : AndroidViewModel(application) 
 
         if(isExpaned)
         {
-            actualExpand.set(View.GONE)
-            rotateState.set(0)
+            actualExpand.value = (View.GONE)
+            rotateState.value = (0)
         }
 
-        if(actualExpand.get() == View.GONE)
+        if(actualExpand.value == View.GONE)
             lottie?.playAnimation()
         else
             lottie?.pauseAnimation()
     }
 
-    val cancelAlarmWhenAwake = ObservableField(false)
-    val alarmArtSelections = ObservableArrayList<String>()
-    val alarmArt = ObservableField(0)
+    val cancelAlarmWhenAwake = MutableLiveData(false)
+    val alarmArtSelections = MutableLiveData<MutableList<String>>()
+    val alarmArt = MutableLiveData(0)
 
     /**
      * When the alarm type has changed (Vibration/Sound etc.)
@@ -105,7 +110,7 @@ class AlarmsViewModel(application: Application) : AndroidViewModel(application) 
         id: Long)
     {
 
-        scope.launch {
+        viewModelScope.launch {
             dataStoreRepository.updateAlarmType(art)
         }
     }
@@ -114,11 +119,11 @@ class AlarmsViewModel(application: Application) : AndroidViewModel(application) 
      * When the alarm end after awake was changed
      */
     fun onEndAlarmAfterFiredChanged(view: View) {
-        scope.launch {
-            cancelAlarmWhenAwake.get()?.let { dataStoreRepository.updateEndAlarmAfterFired(it) }
+        viewModelScope.launch {
+            cancelAlarmWhenAwake.value?.let { dataStoreRepository.updateEndAlarmAfterFired(it) }
         }
     }
-    val alarmSoundName = ObservableField("")
+    val alarmSoundName = MutableLiveData("")
 
     //endregion
 
@@ -128,19 +133,15 @@ class AlarmsViewModel(application: Application) : AndroidViewModel(application) 
         /**
          * Loads all the init values from the datastore and passes the values to the bindings
          */
-        scope.launch {
+        viewModelScope.launch {
             var settings = dataStoreRepository.alarmParameterFlow.first()
 
-            cancelAlarmWhenAwake.set(settings.endAlarmAfterFired)
-            alarmArtSelections.addAll(arrayListOf<String>((actualContext.getString(R.string.alarms_type_selection_only_alarm)), (actualContext.getString(R.string.alarms_type_selection_alarm_vibration)), (actualContext.getString(R.string.alarms_type_selection_only_vibration))))
-            alarmArt.set(settings.alarmArt)
+            cancelAlarmWhenAwake.value = (settings.endAlarmAfterFired)
+            alarmArt.value = (settings.alarmArt)
 
             if(settings.alarmName != "") {
-                alarmSoundName.set(settings.alarmName)
-            } else{
-                alarmSoundName.set(actualContext.getString(R.string.alarms_type_selection_default))
+                alarmSoundName.value = (settings.alarmName)
             }
-
         }
     }
 

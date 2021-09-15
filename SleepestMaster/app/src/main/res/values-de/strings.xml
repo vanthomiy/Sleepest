@@ -97,6 +97,10 @@
     <string name="alarms_type_selection_only_vibration">Nur Vibration</string>
     <string name="alarms_type_selection_default">Standard</string>
     <string name="alarms_information_temporary_disabled">Nächster Alarm ist temporär ausgeschalten</string>
+    <string name="alarms_ringtone_set">Weiter</string>
+    <string name="alarms_ringtone_cancel">Abbrechen</string>
+    <string name="alarms_ringtone_header">Wähle einen Ton</string>
+    <string name="alarms_ringtone_information">Erhöhe die Lautstärke um den Ton zu hören</string>
 
     <!--endregion-->
 
@@ -323,6 +327,11 @@
     <string name="onboarding_toast_permission_already_granted">Diese Berechtigung wurde schon akzeptiert</string>
     <string name="history_day_timeInPhase_remSleep">Traumschlaf</string>
     <string name="privacy_police">Datenschutzerklärung</string>
+
+    <!--endregion-->
+
+    <!--region info-->
+        <string name="info_no_info_found">Keine Informationen gefunden</string>
     <!--endregion-->
 
 

@@ -4,10 +4,10 @@ import android.app.Application
 import android.app.TimePickerDialog
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.databinding.ObservableArrayList
-import androidx.databinding.ObservableField
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.model.data.AlarmSleepChangeFrom
@@ -23,81 +23,52 @@ import java.time.DayOfWeek
 import java.time.LocalTime
 
 
-class AlarmInstanceViewModel(application: Application) : AndroidViewModel(application) {
-
-    // region init
-
-    /**
-     * Helper function to get the strings from ressources
-     */
-    private fun getStringXml(id:Int): String {
-        return getApplication<Application>().resources.getString(id)
-    }
-
-    /**
-     * Scope is used to call datastore async
-     */
-    private val scope: CoroutineScope = MainScope()
-
-    /**
-     * Get actual context
-     */
-    private val context by lazy{ getApplication<Application>().applicationContext }
-
-    /**
-     * The database Repository
-     */
-    val dataBaseRepository: DatabaseRepository by lazy {
-        (context as MainApplication).dataBaseRepository
-    }
-
-    /**
-     * The datastore Repository
-     */
-    private val dataStoreRepository: DataStoreRepository by lazy {
-        (context as MainApplication).dataStoreRepository
-    }
-
-
-
-    // endregion
+class AlarmInstanceViewModel(
+    val dataStoreRepository: DataStoreRepository,
+    val dataBaseRepository: DatabaseRepository,
+    val alarmId : Int
+) : ViewModel() {
 
     //region Alarm Instance
 
     // The actual id of the alarm instance
-    var alarmId = 1
-    val isAlarmActive = ObservableField(false)
-    val alarmName = ObservableField(getStringXml(R.string.alarm_instance_alarm))
 
+    val actualAlarmLiveData by lazy{
+        dataBaseRepository.getAlarmById(alarmId).asLiveData()
+    }
+
+    val isAlarmActive = MutableLiveData(false)
+    val alarmName = MutableLiveData("")
+    var is24HourFormat = false
     /**
      * Alarm active/disabled is toggled
      */
     fun onAlarmActiveToggled(view: View) {
-        scope.launch {
-            isAlarmActive.get()?.let {
+        viewModelScope.launch {
+            isAlarmActive.value?.let {
                 dataBaseRepository.updateIsActive(it, alarmId)
-                if (dataBaseRepository.getAlarmById(alarmId).first().isActive && dataBaseRepository.getAlarmById(alarmId).first().tempDisabled) {
+                /*if (dataBaseRepository.getAlarmById(alarmId).first().isActive && dataBaseRepository.getAlarmById(alarmId).first().tempDisabled) {
                     Toast.makeText(context, context.getString(R.string.alarms_information_temporary_disabled), Toast.LENGTH_LONG).show()
-                }
+                }*/
             }
         }
 
     }
 
-    val extendedAlarmEntity = ObservableField(false)
-    val visibleState = ObservableField(View.VISIBLE)
-    val goneState = ObservableField(View.GONE)
+    val extendedAlarmEntity = MutableLiveData(false)
+    val visibleState = MutableLiveData(View.VISIBLE)
+    val goneState = MutableLiveData(View.GONE)
 
     /**
      * Alarm name can be changed here
      * TODO(Not implemented yet)
      */
     fun onAlarmNameClick(view: View) {
-        extendedAlarmEntity.set(extendedAlarmEntity.get() == false)
+        extendedAlarmEntity.value = (extendedAlarmEntity.value == false)
     }
 
-    val wakeUpEarlyValue = ObservableField("07:30")
-    val wakeUpLateValue = ObservableField("07:30")
+    val wakeUpEarlyValue = MutableLiveData("07:30")
+    val wakeUpLateValue = MutableLiveData("07:30")
     var wakeUpEarly: LocalTime = LocalTime.now()
     var wakeUpLate: LocalTime = LocalTime.now()
 
@@ -116,13 +87,12 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
 
                 val tempWakeup = LocalTime.of(h, m)
 
-                scope.launch {
+                viewModelScope.launch {
 
                     SleepTimeValidationUtil.checkAlarmActionIsAllowedAndDoAction(
                         alarmId,
                         dataBaseRepository,
                         dataStoreRepository,
-                        pickerView.context,
                         tempWakeup.toSecondOfDay(),
                         wakeUpLate.toSecondOfDay(),
                         sleepDuration,
@@ -132,7 +102,7 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
             },
             hour,
             minute,
-            SleepTimeValidationUtil.Is24HourFormat(context)
+            is24HourFormat
         )
         tpd.show()
     }
@@ -150,13 +120,12 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
             { view, h, m ->
                 val tempWakeup = LocalTime.of(h, m)
 
-                scope.launch {
+                viewModelScope.launch {
 
                     SleepTimeValidationUtil.checkAlarmActionIsAllowedAndDoAction(
                         alarmId,
                         dataBaseRepository,
                         dataStoreRepository,
-                        view.context,
                         wakeUpEarly.toSecondOfDay(),
                         tempWakeup.toSecondOfDay(),
                         sleepDuration,
@@ -166,14 +135,14 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
             },
             hour,
             minute,
-            SleepTimeValidationUtil.Is24HourFormat(context)
+            is24HourFormat
         )
 
         tpd.show()
     }
 
     var sleepDuration : Int = 0
-    val sleepDurationString = ObservableField("07:00")
+    val sleepDurationString = MutableLiveData("07:00")
 
     /**
      * Sleep duration changed by user
@@ -186,12 +155,11 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
 
         val time = LocalTime.of(hourSetter, (minute-1) * 15)
 
-        scope.launch {
+        viewModelScope.launch {
             SleepTimeValidationUtil.checkAlarmActionIsAllowedAndDoAction(
                 alarmId,
                 dataBaseRepository,
                 dataStoreRepository,
-                context,
                 wakeUpEarly.toSecondOfDay(),
                 wakeUpLate.toSecondOfDay(),
                 time.toSecondOfDay(),
@@ -200,8 +168,8 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
         }
     }
 
-    val selectedDays = ObservableArrayList<Int>()
-    val selectedDaysInfo = ObservableField("")
+    val selectedDays = MutableLiveData<MutableList<Int>>()
+    val selectedDaysInfo = MutableLiveData("")
 
     /**
      * Day selection changed
@@ -209,65 +177,27 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
     fun onDayChanged(view: View){
 
         val day = view.tag.toString().toInt()
-        if(selectedDays.contains(day)){
-            selectedDays.remove(day)
+        if(selectedDays.value?.contains(day) == true){
+            val list = selectedDays.value?.toMutableList()
+            list?.remove(day)
+            selectedDays.value = list?: mutableListOf()
         }
         else{
-            selectedDays.add(day)
+            val list = selectedDays.value?.toMutableList()
+            list?.add(day)
+            selectedDays.value  = list?: mutableListOf()
         }
 
         val dayOfWeekValues = DayOfWeek.values()
         val daysOfWeek = ArrayList<DayOfWeek>()
-        selectedDays.forEach{
+        selectedDays.value?.forEach{
             daysOfWeek.add(dayOfWeekValues[it])
         }
 
-        setDaysSelectedString()
-
-        scope.launch {
+        viewModelScope.launch {
             dataBaseRepository.updateActiveDayOfWeek(daysOfWeek, alarmId)
         }
     }
-
-    /**
-     * Update the selected days string
-     */
-    private fun setDaysSelectedString(){
-        var info = ""
-
-        if(selectedDays.isEmpty()){
-            info = getStringXml(R.string.alarm_instance_no_day_choosen)
-        }
-        else if(selectedDays.count() >= 7)
-        {
-            info = getStringXml(R.string.alarm_instance_daily)
-        }
-        else if(selectedDays.count() == 2 && selectedDays.contains(5) && selectedDays.contains(6))
-        {
-            info = getStringXml(R.string.alarm_instance_weekend)
-        }
-        else if(selectedDays.count() == 5 && !selectedDays.contains(5) && !selectedDays.contains(6))
-        {
-            info = getStringXml(R.string.alarm_instance_working_day)
-        }
-        else{
-
-
-
-            selectedDays.toList().sorted().forEach{
-                if(info == ""){
-                    info = getWeekDayByNumber(it)
-                }
-                else{
-                    info +=  ", "+ getWeekDayByNumber(it)
-                }
-            }
-        }
-
-        selectedDaysInfo.set(info)
-
-    }
-
 
     //endregion
 
@@ -276,25 +206,31 @@ class AlarmInstanceViewModel(application: Application) : AndroidViewModel(applic
         /**
          * Loads all the init values from the datastore and passes the values to the bindings for the alarm by id
          */
-        scope.launch {
+        viewModelScope.launch {
 
             var alarmSettings = dataBaseRepository.getAlarmById(alarmId).first()
 
-            val wakeupEarly = LocalTime.ofSecondOfDay(alarmSettings.wakeupEarly.toLong())
-            val wakeupLate = LocalTime.ofSecondOfDay(alarmSettings.wakeupLate.toLong())
-            isAlarmActive.set(alarmSettings.isActive)
-            alarmName.set(alarmSettings.alarmName)
+            alarmSettings?.let{
+                val wakeupEarly = LocalTime.ofSecondOfDay(alarmSettings.wakeupEarly.toLong())
+                val wakeupLate = LocalTime.ofSecondOfDay(alarmSettings.wakeupLate.toLong())
+                isAlarmActive.value = (alarmSettings.isActive)
+                alarmName.value = (alarmSettings.alarmName)
 
-            wakeUpEarly = wakeupEarly
-            wakeUpLate = wakeupLate
-            wakeUpEarlyValue.set((if (wakeUpEarly.hour < 10) "0" else "") + wakeUpEarly.hour.toString() + ":" + (if (wakeUpEarly.minute < 10) "0" else "") + (wakeUpEarly.minute.toString()))
-            wakeUpLateValue.set((if (wakeUpLate.hour < 10) "0" else "") + wakeUpLate.hour.toString() + ":" + (if (wakeUpLate.minute < 10) "0" else "") + (wakeUpLate.minute.toString()))
+                wakeUpEarly = wakeupEarly
+                wakeUpLate = wakeupLate
+                wakeUpEarlyValue.value = ((if (wakeUpEarly.hour < 10) "0" else "") + wakeUpEarly.hour.toString() + ":" + (if (wakeUpEarly.minute < 10) "0" else "") + (wakeUpEarly.minute.toString()))
+                wakeUpLateValue.value = ((if (wakeUpLate.hour < 10) "0" else "") + wakeUpLate.hour.toString() + ":" + (if (wakeUpLate.minute < 10) "0" else "") + (wakeUpLate.minute.toString()))
 
-            alarmSettings.activeDayOfWeek.forEach{
-                selectedDays.add(it.ordinal)
+
+                val dayOfWeek = mutableListOf<Int>()
+
+                alarmSettings.activeDayOfWeek.forEach{
+                    dayOfWeek.add(it.ordinal)
+                }
+
+                selectedDays.value = dayOfWeek
+
             }
-
-            setDaysSelectedString()
         }
     }
 
