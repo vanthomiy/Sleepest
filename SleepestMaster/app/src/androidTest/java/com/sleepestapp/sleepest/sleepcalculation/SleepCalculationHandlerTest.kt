@@ -12,6 +12,7 @@ import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
 import com.sleepestapp.sleepest.storage.db.*
 import com.google.gson.Gson
+import com.sleepestapp.sleepest.util.SleepTimeValidationUtil
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import org.hamcrest.CoreMatchers
@@ -381,7 +382,7 @@ class SleepCalculationHandlerTest
 
         var time = LocalTime.now()
 
-        var seconds = sleepCalculationHandler.getSecondsOfDay()
+        var seconds = SleepTimeValidationUtil.getSecondsOfDay()
 
         assertThat(time.toSecondOfDay(), CoreMatchers.equalTo(seconds))
     }
@@ -392,7 +393,6 @@ class SleepCalculationHandlerTest
         val actualTimeSeconds = 100000
         val sleepCalculationHandler = SleepCalculationHandler.getHandler(context)
         var sleepList5 = mutableListOf<SleepApiRawDataEntity>()
-        var sleepList30 = mutableListOf<SleepApiRawDataEntity>()
 
         // keine daten
         var sleepState = sleepCalculationHandler.defineSleepStates(actualTimeSeconds, sleepList5, LightConditions.DARK)
