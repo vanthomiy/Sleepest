@@ -125,6 +125,9 @@ class AlarmsViewModel(
     }
     val alarmSoundName = MutableLiveData("")
 
+    val tempDisabledVisible = MutableLiveData(false)
+    val isTempDisabled = MutableLiveData(false)
+
     //endregion
 
 

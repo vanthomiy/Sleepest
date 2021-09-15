@@ -11,7 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -25,10 +24,6 @@ import com.sleepestapp.sleepest.storage.db.AlarmEntity
 import com.sleepestapp.sleepest.util.IconAnimatorUtil
 import com.sleepestapp.sleepest.util.PermissionsUtil
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog
-import com.sleepestapp.sleepest.ui.settings.SettingsFragment
-import com.sleepestapp.sleepest.ui.sleep.SleepViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -194,7 +189,9 @@ class AlarmsFragment() : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         binding = FragmentAlarmsBinding.inflate(inflater, container, false)
+
         viewModel.transitionsContainer = (binding.cLParent)
         binding.alarmsViewModel = viewModel
         binding.lifecycleOwner = this;
@@ -206,27 +203,18 @@ class AlarmsFragment() : Fragment() {
         viewModel.fragments = mutableMapOf()
 
         // Update the disable next alarm button by checking the settings of all alarms
-        viewModel.activeAlarmsLiveData.observe(requireActivity()){
+        viewModel.activeAlarmsLiveData.observe(this){
             activeAlarms ->
+
+            TransitionManager.beginDelayedTransition(viewModel.transitionsContainer);
+
             if (activeAlarms.isNotEmpty()){
                 val nextAlarm = activeAlarms.minByOrNull { x-> x.wakeupEarly }
-                if(nextAlarm?.tempDisabled == true){
-                    binding.btnTemporaryDisableAlarm.text = getString(R.string.alarm_fragment_btn_disable_alarm_reactivate)
-                    binding.btnTemporaryDisableAlarm.isVisible = true
-                    /**TODO: Change color**/
-                }
-                else{
-                    binding.btnTemporaryDisableAlarm.text = getString(R.string.alarm_fragment_btn_disable_alarm_disable)
-                    binding.btnTemporaryDisableAlarm.isVisible = true
-                    /**TODO: Change color**/
-                }
-
-                if (nextAlarm?.wasFired == true) {
-                    binding.btnTemporaryDisableAlarm.isVisible = false
-                }
+                viewModel.tempDisabledVisible.value = nextAlarm?.wasFired == false
+                viewModel.isTempDisabled.value = nextAlarm?.tempDisabled
             }
             else{
-                binding.btnTemporaryDisableAlarm.isVisible = false
+                viewModel.tempDisabledVisible.value = false
             }
         }
 
@@ -270,15 +258,17 @@ class AlarmsFragment() : Fragment() {
                 if (viewModel.dataBaseRepository.getNextActiveAlarm() != null) {
                     if (viewModel.dataBaseRepository.getNextActiveAlarm()!!.tempDisabled && !viewModel.dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
                         BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(true, true)
+                        viewModel.isTempDisabled.value = false
                     }
                     else if (viewModel.dataBaseRepository.getNextActiveAlarm()!!.tempDisabled && viewModel.dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
                         BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(false, true)
+                        viewModel.isTempDisabled.value = false
                     }
                     else  {
                         BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(true, false)
+                        viewModel.isTempDisabled.value = true
                     }
                 }
-
             }
         }
 

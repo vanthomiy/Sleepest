@@ -5,6 +5,7 @@
     tools:context=".ui.alarms.AlarmsFragment">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="alarmsViewModel"
             type="com.sleepestapp.sleepest.ui.alarms.AlarmsViewModel"/>
@@ -168,8 +169,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/valuesHeight"
                     android:background="@drawable/bgroundedchoosen"
-                    android:backgroundTint="@color/warning_color"
-                    android:text=""
+                    android:backgroundTint="@{alarmsViewModel.isTempDisabled ? @color/warning_color : @color/accent_button_color}"
+                    android:text="@{alarmsViewModel.isTempDisabled ? @string/btn_reactivate_alarm : @string/btn_disable_alarm}"
+                    android:visibility="@{alarmsViewModel.tempDisabledVisible ? View.VISIBLE : View.GONE}"
                     android:layout_marginVertical="10dp"
                     android:textColor="@color/primary_text_color" />
 
