@@ -30,6 +30,7 @@ import android.widget.TextView;
 import com.sleepestapp.sleepest.MainApplication;
 import com.sleepestapp.sleepest.R;
 import com.sleepestapp.sleepest.background.BackgroundAlarmTimeHandler;
+import com.sleepestapp.sleepest.databinding.ActivityLockScreenAlarmBinding;
 import com.sleepestapp.sleepest.model.data.Actions;
 import com.sleepestapp.sleepest.model.data.AlarmReceiverUsage;
 import com.sleepestapp.sleepest.model.data.Constants;
@@ -40,14 +41,10 @@ import com.sleepestapp.sleepest.background.BackgroundAlarmTimeHandler;
 
 public class LockScreenAlarmActivity extends AppCompatActivity {
 
-    private Button btnSnoozeAlarmLockScreen;
     private SwipeListener swipeListener;
-    private TextView tvSwipeUp;
-    private ImageView ivSwipeUpArrow;
-    private DataStoreRepository dataStoreRepository;
-    private DatabaseRepository databaseRepository;
     private boolean isStarted = false;
     private CountDownTimer countDownTimer = null;
+    private ActivityLockScreenAlarmBinding binding;
 
     @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
@@ -55,20 +52,13 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lock_screen_alarm);
 
-        //Init
-        dataStoreRepository = DataStoreRepository.Companion.getRepo(getApplicationContext());
+        binding = ActivityLockScreenAlarmBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
 
-        //Init Resources
-        LinearLayout layout = findViewById(R.id.layoutLockscreen);
-        //ivSwipeUpArrow = findViewById(R.id.ivSwipeUpArrow);
-        tvSwipeUp = findViewById(R.id.tvSwipeUpText);
-        btnSnoozeAlarmLockScreen = (Button) findViewById(R.id.btnSnoozeAlarmLockScreen);
-        btnSnoozeAlarmLockScreen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlarmClockAudio.getInstance().stopAlarm(true, false);
-                finish();
-            }
+        binding.btnSnoozeAlarmLockScreen.setOnClickListener(v -> {
+            AlarmClockAudio.getInstance().stopAlarm(true, false);
+            finish();
         });
 
         //Enable view when screen is locked
@@ -80,7 +70,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
         keyguardManager.requestDismissKeyguard(LockScreenAlarmActivity.this, null);
 
         //Init swipe listener
-        swipeListener = new SwipeListener(layout);
+        swipeListener = new SwipeListener(binding.layoutLockscreen);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.P)
@@ -90,7 +80,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
 
         if (!isStarted) {
             isStarted = true; //Workaround because OnResume is sometimes calling twice (Android bug)
-            fadeColor(tvSwipeUp);
+            fadeColor(binding.tvSwipeUpText);
 
             //Start the ring tone
             AlarmClockAudio.getInstance().init(getApplicationContext());
@@ -135,31 +125,6 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
     }
 
     /**
-     * Moves a view up and reset it after reaching a special point
-     * @param view View to be moved
-     */
-    private void moveView(View view )
-    {
-        LinearLayout root = findViewById(R.id.layoutLockscreen);
-        DisplayMetrics dm = new DisplayMetrics();
-        this.getWindowManager().getDefaultDisplay().getMetrics( dm );
-
-        int[] originalPos = new int[2];
-        view.getLocationOnScreen(originalPos);
-
-        int xDest = dm.widthPixels / 2;
-        xDest -= view.getMeasuredWidth() / 2;
-        int yDest = view.getMeasuredHeight();
-
-        TranslateAnimation translateAnimation = new TranslateAnimation( 0, xDest - originalPos[0] , 0, yDest - originalPos[1] );
-        translateAnimation.setDuration(Constants.LOCKSCREEN_ANIMATION_DURATION);
-        translateAnimation.setRepeatCount(Animation.INFINITE);
-        translateAnimation.setRepeatMode(Animation.RESTART);
-        translateAnimation.setFillAfter( true );
-        view.startAnimation(translateAnimation);
-    }
-
-    /**
      * Fades the color of text
      * @param textView TextView to be faded
      */
@@ -175,7 +140,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
             @Override
             public void onAnimationUpdate(ValueAnimator animator) {
 
-                tvSwipeUp.setTextColor((Integer)animator.getAnimatedValue());
+                binding.tvSwipeUpText.setTextColor((Integer)animator.getAnimatedValue());
 
             }
         });
@@ -184,7 +149,6 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
             @Override
             public void onAnimationRepeat(Animator animation) {
                 super.onAnimationRepeat(animation);
-                //moveViewToScreenCenter(imageView);
             }
         });
         colorAnimation.setDuration(Constants.LOCKSCREEN_COLOR_ANIMATION_DURATION);

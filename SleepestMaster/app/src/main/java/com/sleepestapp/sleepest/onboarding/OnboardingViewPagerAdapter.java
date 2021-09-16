@@ -18,9 +18,16 @@ import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.sleepestapp.sleepest.DontKillMyAppFragment;
 import com.sleepestapp.sleepest.MainActivity;
 import com.sleepestapp.sleepest.R;
+import com.sleepestapp.sleepest.databinding.ActivityLockScreenAlarmBinding;
+import com.sleepestapp.sleepest.databinding.ActivityOnboardingBinding;
+import com.sleepestapp.sleepest.databinding.OnboardingNoticeScreenBinding;
 import com.sleepestapp.sleepest.storage.DataStoreRepository;
 import com.sleepestapp.sleepest.util.PermissionsUtil;
 import com.sleepestapp.sleepest.util.TimeConverterUtil;
@@ -36,6 +43,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnClickListener {
+
+    private OnboardingNoticeScreenBinding binding;
 
     private Context context;
     private List<ImageView> indicators = new ArrayList<>();
@@ -59,6 +68,7 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
     Timer timer;
 
     public OnboardingViewPagerAdapter(Context context, ArrayList<Object> arrayList) {
+
         this.context = context;
 
         timer = new Timer();
@@ -107,6 +117,8 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
         FrameLayout frameLayoutEndTime = view.findViewById(R.id.frameLayoutEndTime);
 
         ImageView imageView = view.findViewById(R.id.ivOnboadingNoticeImage);
+        LinearLayout sleepBanner = view.findViewById(R.id.sleepBanner);
+        BarChart barChart = view.findViewById(R.id.barChart);
         ImageView ivPermission1 = view.findViewById(R.id.ivPermission1);
         ImageView ivPermission2 = view.findViewById(R.id.ivPermission2);
         ImageView ivPermission3 = view.findViewById(R.id.ivPermission3);
@@ -241,12 +253,38 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
             case 4:
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_5));
                 tvContent.setText(context.getString(R.string.onboarding_content_page_5));
-                imageView.setVisibility(View.VISIBLE);
+                /*imageView.setVisibility(View.VISIBLE);
                 if (Locale.getDefault().getLanguage().equals("de")) {
                     imageView.setImageResource(R.drawable.history_fragment_german);
                 } else {
                     imageView.setImageResource(R.drawable.history_fragment_english);
-                }
+                }*/
+
+                barChart.setVisibility(View.VISIBLE);
+                ArrayList<BarEntry> barEntries = new ArrayList<BarEntry>();
+                barEntries.add(new BarEntry(0.5f, 1f));
+                barEntries.add(new BarEntry(1.5f, 1f));
+                barEntries.add(new BarEntry(2.5f, 2f));
+                barEntries.add(new BarEntry(3.5f, 1f));
+                barEntries.add(new BarEntry(4.5f, 2f));
+                barEntries.add(new BarEntry(5.5f, 1f));
+
+                BarDataSet barDataSet = new BarDataSet(barEntries, "");
+                List<Integer> colorList = new ArrayList<Integer>();
+                colorList.add(ContextCompat.getColor(context, R.color.light_sleep_color));
+                colorList.add(ContextCompat.getColor(context, R.color.light_sleep_color));
+                colorList.add(ContextCompat.getColor(context, R.color.deep_sleep_color));
+                colorList.add(ContextCompat.getColor(context, R.color.light_sleep_color));
+                colorList.add(ContextCompat.getColor(context, R.color.deep_sleep_color));
+                colorList.add(ContextCompat.getColor(context, R.color.light_sleep_color));
+
+                barDataSet.setColors(colorList);
+                barDataSet.setDrawValues(false);
+
+                barChart.setData(new BarData(barDataSet));
+                barChart.setFitBars(true);
+
+
                 dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
             case 5:
@@ -259,13 +297,15 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
             case 6:
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_7));
                 tvContent.setText(context.getString(R.string.onboarding_content_page_7));
-                imageView.setImageResource(R.drawable.phone_position_tim);
+                sleepBanner.setVisibility(View.VISIBLE);
+
+                /*imageView.setImageResource(R.drawable.phone_position_tim);
                 imageView.setVisibility(View.VISIBLE);
                 if (Locale.getDefault().getLanguage().equals("de")) {
                     imageView.setImageResource(R.drawable.banner_foregroundservice_german);
                 } else {
                     imageView.setImageResource(R.drawable.banner_foregroundservice_german);
-                }
+                }*/
                 dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
             case 7:

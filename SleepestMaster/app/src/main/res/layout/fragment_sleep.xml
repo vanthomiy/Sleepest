@@ -205,7 +205,7 @@
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:visibility="@{sleepViewModel.autoSleepTime ? View.VISIBLE:View.GONE, default=gone}"
+                            android:visibility="@{sleepViewModel.autoSleepTime ? View.GONE:View.VISIBLE, default=gone}"
                             >
 
                             <FrameLayout

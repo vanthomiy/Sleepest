@@ -1,5 +1,6 @@
 package com.sleepestapp.sleepest.onboarding;
 
+import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
@@ -7,6 +8,9 @@ import android.os.Bundle;
 
 import com.sleepestapp.sleepest.MainActivity;
 import com.sleepestapp.sleepest.R;
+import com.sleepestapp.sleepest.databinding.ActivityLockScreenAlarmBinding;
+import com.sleepestapp.sleepest.databinding.ActivityOnboardingBinding;
+import com.sleepestapp.sleepest.databinding.OnboardingNoticeScreenBinding;
 import com.sleepestapp.sleepest.storage.DataStoreRepository;
 import com.sleepestapp.sleepest.util.TimeConverterUtil;
 
@@ -16,12 +20,17 @@ public class OnboardingActivity extends AppCompatActivity {
 
     public static ViewPager viewPager;
     private DataStoreRepository dataStoreRepository; //Instance of DataStoreRepo
+    private ActivityOnboardingBinding binding;
     OnboardingViewPagerAdapter onboardingViewPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
+
+        binding = ActivityOnboardingBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
 
         dataStoreRepository = DataStoreRepository.Companion.getRepo(getApplicationContext());
         ArrayList<Object> arrayList = new ArrayList<>();
@@ -38,8 +47,7 @@ public class OnboardingActivity extends AppCompatActivity {
             arrayList.add(true);
         }
 
-        viewPager = findViewById(R.id.onboarding_viewpager);
         onboardingViewPagerAdapter = new OnboardingViewPagerAdapter(OnboardingActivity.this, arrayList);
-        viewPager.setAdapter(onboardingViewPagerAdapter);
+        binding.onboardingViewpager.setAdapter(onboardingViewPagerAdapter);
     }
 }
