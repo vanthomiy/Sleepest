@@ -32,7 +32,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="1dp"
                     android:textSize="13sp"
-                    android:text="Sample Text"
+                    android:text="@string/alarm_status_false"
                     android:textColor="@color/primary_text_color"/>
 
                 <TextView
@@ -41,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="1dp"
                     android:textSize="13sp"
-                    android:text="Sample Text"
+                    android:text="@string/foregroundservice_notification_alarmtime"
                     android:textColor="@color/primary_text_color"/>
 
                 <TextView
@@ -50,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="1dp"
                     android:textSize="13sp"
-                    android:text="Sample Text"
+                    android:text="@string/foregroundservice_notification_sleeptime"
                     android:textColor="@color/primary_text_color"/>
 
                 <TextView
@@ -59,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="1dp"
                     android:textSize="13sp"
-                    android:text="Sample Text"
+                    android:text="@string/sleep_status_false"
                     android:textColor="@color/primary_text_color"/>
 
             </LinearLayout>
@@ -83,7 +83,7 @@
                 android:background="@drawable/bgrounded_button"
                 android:backgroundTint="@color/error_color"
                 android:layout_gravity="center_horizontal"
-                android:text="Sample Text"
+                android:text="@string/btn_disable_alarm"
                 android:textSize="15sp"
                 android:textColor="@color/primary_text_color"
                 >
@@ -98,7 +98,7 @@
                 android:background="@drawable/bgrounded_button"
                 android:backgroundTint="@color/warning_color"
                 android:layout_gravity="center_horizontal"
-                android:text="Sample Text"
+                android:text="@string/btn_not_sleeping_text"
                 android:textSize="15sp"
                 android:textColor="@color/primary_text_color"
                 >

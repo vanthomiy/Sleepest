@@ -19,6 +19,8 @@ import androidx.viewpager.widget.PagerAdapter;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -110,14 +112,15 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
         LayoutInflater layoutInflater= (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.onboarding_notice_screen,container,false);
 
-        LinearLayout linearLayoutPermission = view.findViewById(R.id.layoutOnboardingPermissionsPage8);
-        LinearLayout linearLayoutSettings = view.findViewById(R.id.layoutOnboardingSettingsPage7);
+        FrameLayout linearLayoutPermission = view.findViewById(R.id.layoutOnboardingPermissionsPage8);
+        FrameLayout linearLayoutSettings = view.findViewById(R.id.layoutOnboardingSettingsPage7);
 
         FrameLayout frameLayoutStartTime = view.findViewById(R.id.frameLayoutStartTime);
         FrameLayout frameLayoutEndTime = view.findViewById(R.id.frameLayoutEndTime);
 
         ImageView imageView = view.findViewById(R.id.ivOnboadingNoticeImage);
-        LinearLayout sleepBanner = view.findViewById(R.id.sleepBanner);
+        FrameLayout sleepBanner = view.findViewById(R.id.sleepBanner);
+        FrameLayout barChartFrame = view.findViewById(R.id.barChartFrame);
         BarChart barChart = view.findViewById(R.id.barChart);
         ImageView ivPermission1 = view.findViewById(R.id.ivPermission1);
         ImageView ivPermission2 = view.findViewById(R.id.ivPermission2);
@@ -260,30 +263,56 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
                     imageView.setImageResource(R.drawable.history_fragment_english);
                 }*/
 
-                barChart.setVisibility(View.VISIBLE);
                 ArrayList<BarEntry> barEntries = new ArrayList<BarEntry>();
-                barEntries.add(new BarEntry(0.5f, 1f));
-                barEntries.add(new BarEntry(1.5f, 1f));
-                barEntries.add(new BarEntry(2.5f, 2f));
-                barEntries.add(new BarEntry(3.5f, 1f));
-                barEntries.add(new BarEntry(4.5f, 2f));
-                barEntries.add(new BarEntry(5.5f, 1f));
+                barEntries.add(new BarEntry(0f, 1f));
+                barEntries.add(new BarEntry(1f, 1f));
+                barEntries.add(new BarEntry(2f, 2f));
+                barEntries.add(new BarEntry(3f, 2f));
+                barEntries.add(new BarEntry(4f, 1f));
+                barEntries.add(new BarEntry(5f, 1f));
+                barEntries.add(new BarEntry(6f, 1f));
+                barEntries.add(new BarEntry(7f, 2f));
+                barEntries.add(new BarEntry(8f, 2f));
+                barEntries.add(new BarEntry(9f, 1f));
+                barEntries.add(new BarEntry(10f, 1f));
 
                 BarDataSet barDataSet = new BarDataSet(barEntries, "");
                 List<Integer> colorList = new ArrayList<Integer>();
                 colorList.add(ContextCompat.getColor(context, R.color.light_sleep_color));
                 colorList.add(ContextCompat.getColor(context, R.color.light_sleep_color));
                 colorList.add(ContextCompat.getColor(context, R.color.deep_sleep_color));
+                colorList.add(ContextCompat.getColor(context, R.color.deep_sleep_color));
+                colorList.add(ContextCompat.getColor(context, R.color.light_sleep_color));
+                colorList.add(ContextCompat.getColor(context, R.color.light_sleep_color));
                 colorList.add(ContextCompat.getColor(context, R.color.light_sleep_color));
                 colorList.add(ContextCompat.getColor(context, R.color.deep_sleep_color));
+                colorList.add(ContextCompat.getColor(context, R.color.deep_sleep_color));
+                colorList.add(ContextCompat.getColor(context, R.color.light_sleep_color));
                 colorList.add(ContextCompat.getColor(context, R.color.light_sleep_color));
 
                 barDataSet.setColors(colorList);
                 barDataSet.setDrawValues(false);
+                BarData barData = new BarData(barDataSet);
+                barChart.setDrawGridBackground(false);
+                barData.setHighlightEnabled(false);
+                barData.setBarWidth(1.1f);
+                barChart.getXAxis().setDrawGridLines(false);
+                barChart.getAxisRight().setDrawGridLines(false);
+                barChart.getAxisLeft().setDrawGridLines(false);
+                barChart.getAxisRight().setDrawLabels(false);
+                barChart.getAxisLeft().setAxisMinimum(0f);
+                barChart.getAxisLeft().setAxisMaximum(3f);
+                barChart.getAxisLeft().setDrawLabels(false);
+                barChart.getXAxis().setEnabled(false);
 
-                barChart.setData(new BarData(barDataSet));
                 barChart.setFitBars(true);
 
+                // set bar label
+                barChart.getLegend().setEnabled(false);
+                barChart.setBorderWidth(0f);
+                barChart.setData(barData);
+                barChart.setFitBars(true);
+                barChartFrame.setVisibility(View.VISIBLE);
 
                 dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
                 break;

@@ -20,7 +20,6 @@ public class OnboardingActivity extends AppCompatActivity {
 
     public static ViewPager viewPager;
     private DataStoreRepository dataStoreRepository; //Instance of DataStoreRepo
-    private ActivityOnboardingBinding binding;
     OnboardingViewPagerAdapter onboardingViewPagerAdapter;
 
     @Override
@@ -28,9 +27,7 @@ public class OnboardingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
 
-        binding = ActivityOnboardingBinding.inflate(getLayoutInflater());
-        View view = binding.getRoot();
-        setContentView(view);
+        viewPager = findViewById(R.id.onboarding_viewpager);
 
         dataStoreRepository = DataStoreRepository.Companion.getRepo(getApplicationContext());
         ArrayList<Object> arrayList = new ArrayList<>();
@@ -48,6 +45,6 @@ public class OnboardingActivity extends AppCompatActivity {
         }
 
         onboardingViewPagerAdapter = new OnboardingViewPagerAdapter(OnboardingActivity.this, arrayList);
-        binding.onboardingViewpager.setAdapter(onboardingViewPagerAdapter);
+        viewPager.setAdapter(onboardingViewPagerAdapter);
     }
 }

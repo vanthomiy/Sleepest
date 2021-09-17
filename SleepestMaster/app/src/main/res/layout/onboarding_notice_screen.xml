@@ -6,342 +6,347 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="0dp">
 
-        <LinearLayout
+        <FrameLayout
             android:id="@+id/layoutOnboardingSettingsPage7"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.4"
-            android:layout_marginHorizontal="10dp"
-            android:layout_gravity="center_horizontal"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_vertical"
             android:orientation="vertical"
-            android:layout_marginTop="30dp"
             android:visibility="gone">
-            <FrameLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp">
-
-
-                <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_gravity="start"
-                    android:src="@drawable/ic_baseline_bedtime_24"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="40dp"
-                    android:textSize="@dimen/headerSize"
-                    android:layout_gravity="start"
-                    android:textColor="@color/primary_text_color"
-                    android:text="@string/sleep_sleeptimes_header"/>
-
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_marginHorizontal="10dp"
-                android:layout_height="@dimen/valuesHeight">
-
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical">
                 <FrameLayout
-                    android:id="@+id/frameLayoutStartTime"
-                    android:layout_width="150dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="start"
-                    android:background="@drawable/bgrounded_button">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp">
+
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="start"
+                        android:src="@drawable/ic_baseline_bedtime_24"/>
                     <TextView
-                        android:id="@+id/tvOnboardingStartTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="10dp"
-                        android:textSize="@dimen/valueSize"
+                        android:layout_marginLeft="40dp"
+                        android:textSize="@dimen/headerSize"
+                        android:layout_gravity="start"
                         android:textColor="@color/primary_text_color"
-                        android:textStyle="bold"
-                        android:text="Select start time"/>
-                    <TextView
-                        android:id="@+id/tvOnboardingStartTimeValue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="end"
-                        android:gravity="center_vertical"
-                        android:layout_marginRight="10dp"
-                        android:textSize="@dimen/valueSize"
-                        android:textColor="@color/primary_text_color"/>
+                        android:text="@string/sleep_sleeptimes_header"/>
 
                 </FrameLayout>
 
                 <FrameLayout
-                    android:id="@+id/frameLayoutEndTime"
-                    android:layout_width="150dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="end"
-                    android:background="@drawable/bgrounded_button">
+                    android:layout_width="match_parent"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_height="@dimen/valuesHeight">
 
-                    <TextView
-                        android:id="@+id/tvOnboardingEndTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="10dp"
-                        android:textSize="@dimen/valueSize"
-                        android:textColor="@color/primary_text_color"
-                        android:textStyle="bold"
-                        android:text="Select end time"/>
-                    <TextView
-                        android:id="@+id/tvOnboardingEndTimeValue"
-                        android:layout_width="wrap_content"
+                    <FrameLayout
+                        android:id="@+id/frameLayoutStartTime"
+                        android:layout_width="150dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="start"
+                        android:background="@drawable/bgrounded_button">
+                        <TextView
+                            android:id="@+id/tvOnboardingStartTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="10dp"
+                            android:textSize="@dimen/valueSize"
+                            android:textColor="@color/primary_text_color"
+                            android:textStyle="bold"
+                            android:text="Select start time"/>
+                        <TextView
+                            android:id="@+id/tvOnboardingStartTimeValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end"
+                            android:gravity="center_vertical"
+                            android:layout_marginRight="10dp"
+                            android:textSize="@dimen/valueSize"
+                            android:textColor="@color/primary_text_color"/>
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/frameLayoutEndTime"
+                        android:layout_width="150dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="end"
-                        android:gravity="center_vertical"
-                        android:layout_marginRight="10dp"
-                        android:textSize="@dimen/valueSize"
-                        android:textColor="@color/primary_text_color"/>
+                        android:background="@drawable/bgrounded_button">
+
+                        <TextView
+                            android:id="@+id/tvOnboardingEndTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="10dp"
+                            android:textSize="@dimen/valueSize"
+                            android:textColor="@color/primary_text_color"
+                            android:textStyle="bold"
+                            android:text="Select end time"/>
+                        <TextView
+                            android:id="@+id/tvOnboardingEndTimeValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end"
+                            android:gravity="center_vertical"
+                            android:layout_marginRight="10dp"
+                            android:textSize="@dimen/valueSize"
+                            android:textColor="@color/primary_text_color"/>
+
+                    </FrameLayout>
 
                 </FrameLayout>
 
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp">
-
-                <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_gravity="start"
-                    android:src="@drawable/ic_baseline_night_shelter_24"/>
-                <TextView
-                    android:layout_width="wrap_content"
+                <FrameLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="40dp"
-                    android:textSize="@dimen/headerSize"
-                    android:layout_gravity="start"
-                    android:textColor="@color/primary_text_color"
-                    android:text="@string/sleep_sleepduration_header"/>
+                    android:layout_margin="10dp">
 
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:background="@drawable/bgroundedchoosen"
-                android:backgroundTint="@color/transparent">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="start"
-                    android:layout_marginHorizontal="10dp"
-                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="start"
+                        android:src="@drawable/ic_baseline_night_shelter_24"/>
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="20dp"
-                        android:layout_gravity="left|top"
-                        android:textSize="@dimen/valueSize"
-                        android:textColor="@color/accent_text_color"
-                        android:textStyle="bold"
-                        android:text="@string/alarm_hours"/>
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="40dp"
+                        android:textSize="@dimen/headerSize"
+                        android:layout_gravity="start"
+                        android:textColor="@color/primary_text_color"
+                        android:text="@string/sleep_sleepduration_header"/>
 
-                    <FrameLayout
-                        android:layout_width="150dp"
-                        android:layout_height="50dp"
-                        android:background="@drawable/transparentrounded">
-                        <com.shawnlin.numberpicker.NumberPicker
-                            android:id="@+id/npDurationHour"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            app:np_dividerColor="@color/colorPrimary"
-                            app:np_height="50dp"
-                            app:np_max="24"
-                            app:np_min="0"
-                            app:np_orientation="horizontal"
-                            app:np_selectedTextColor="@color/tertiary_text_color"
-                            app:np_textColor="@color/secondary_button_color"
-                            app:np_value="7"
-                            app:np_width="150dp" />
-                    </FrameLayout>
+                </FrameLayout>
 
-                </LinearLayout>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:background="@drawable/bgroundedchoosen"
+                    android:backgroundTint="@color/transparent">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_gravity="end"
-                    android:orientation="vertical">
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="20dp"
-                        android:layout_gravity="left|top"
-                        android:textSize="@dimen/valueSize"
-                        android:textColor="@color/accent_text_color"
-                        android:textStyle="bold"
-                        android:text="@string/alarm_minutes"/>
-
-                    <FrameLayout
-                        android:layout_width="150dp"
-                        android:layout_height="50dp"
-                        android:background="@drawable/transparentrounded">
-                        <com.shawnlin.numberpicker.NumberPicker
-                            android:id="@+id/npDurationMinutes"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="start"
+                        android:layout_marginHorizontal="10dp"
+                        android:orientation="vertical">
+                        <TextView
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            app:np_dividerColor="@color/colorPrimary"
-                            app:np_height="50dp"
-                            app:np_max="59"
-                            app:np_min="0"
-                            app:np_orientation="horizontal"
-                            app:np_selectedTextColor="@color/tertiary_text_color"
-                            app:np_textColor="@color/secondary_button_color"
-                            app:np_width="150dp" />
-                    </FrameLayout>
-                </LinearLayout>
-            </FrameLayout>
+                            android:layout_height="20dp"
+                            android:layout_gravity="left|top"
+                            android:textSize="@dimen/valueSize"
+                            android:textColor="@color/accent_text_color"
+                            android:textStyle="bold"
+                            android:text="@string/alarm_hours"/>
 
-        </LinearLayout>
+                        <FrameLayout
+                            android:layout_width="150dp"
+                            android:layout_height="50dp"
+                            android:background="@drawable/transparentrounded">
+                            <com.shawnlin.numberpicker.NumberPicker
+                                android:id="@+id/npDurationHour"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                app:np_dividerColor="@color/colorPrimary"
+                                app:np_height="50dp"
+                                app:np_max="24"
+                                app:np_min="0"
+                                app:np_orientation="horizontal"
+                                app:np_selectedTextColor="@color/tertiary_text_color"
+                                app:np_textColor="@color/secondary_button_color"
+                                app:np_value="7"
+                                app:np_width="150dp" />
+                        </FrameLayout>
 
-        <LinearLayout
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_gravity="end"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"
+                            android:layout_gravity="left|top"
+                            android:textSize="@dimen/valueSize"
+                            android:textColor="@color/accent_text_color"
+                            android:textStyle="bold"
+                            android:text="@string/alarm_minutes"/>
+
+                        <FrameLayout
+                            android:layout_width="150dp"
+                            android:layout_height="50dp"
+                            android:background="@drawable/transparentrounded">
+                            <com.shawnlin.numberpicker.NumberPicker
+                                android:id="@+id/npDurationMinutes"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                app:np_dividerColor="@color/colorPrimary"
+                                app:np_height="50dp"
+                                app:np_max="59"
+                                app:np_min="0"
+                                app:np_orientation="horizontal"
+                                app:np_selectedTextColor="@color/tertiary_text_color"
+                                app:np_textColor="@color/secondary_button_color"
+                                app:np_width="150dp" />
+                        </FrameLayout>
+                    </LinearLayout>
+                </FrameLayout>
+            </LinearLayout>
+        </FrameLayout>
+
+        <FrameLayout
             android:id="@+id/layoutOnboardingPermissionsPage8"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.4"
             android:layout_margin="10dp"
-            android:layout_gravity="center_horizontal"
-            android:orientation="vertical"
             android:visibility="gone">
-
-            <FrameLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
-                android:orientation="horizontal">
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical">
 
-                <androidx.appcompat.widget.AppCompatButton
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/valuesHeight"
-                    android:layout_marginEnd="50dp"
-                    android:background="@drawable/bgroundedchoosen"
-                    android:textSize="@dimen/valueSize"
-                    android:layout_marginVertical="5dp"
-                    android:text="@string/settings_sleepdata"
-                    android:textColor="@color/primary_text_color"
-                    android:layout_gravity="start"
-                    android:id="@+id/btnOnboardingSleepdataPermission"
-                    android:onClick="onPermissionClicked">
-                </androidx.appcompat.widget.AppCompatButton>
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/ivPermission1"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_gravity="end"
-                    android:foregroundGravity="center_vertical"
-                    android:src="@drawable/ic_baseline_gpp_bad_24"
-                    android:tint="@color/error_color"/>
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/valuesHeight"
+                        android:layout_marginEnd="50dp"
+                        android:background="@drawable/bgroundedchoosen"
+                        android:textSize="@dimen/valueSize"
+                        android:layout_marginVertical="5dp"
+                        android:text="@string/settings_sleepdata"
+                        android:textColor="@color/primary_text_color"
+                        android:layout_gravity="start"
+                        android:id="@+id/btnOnboardingSleepdataPermission"
+                        android:onClick="onPermissionClicked">
+                    </androidx.appcompat.widget.AppCompatButton>
 
-            </FrameLayout>
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/ivPermission1"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_gravity="end"
+                        android:foregroundGravity="center_vertical"
+                        android:src="@drawable/ic_baseline_gpp_bad_24"
+                        android:tint="@color/error_color"/>
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                </FrameLayout>
 
-                <androidx.appcompat.widget.AppCompatButton
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/valuesHeight"
-                    android:layout_marginEnd="50dp"
-                    android:background="@drawable/bgroundedchoosen"
-                    android:textSize="@dimen/valueSize"
-                    android:layout_marginVertical="5dp"
-                    android:text="@string/settings_overlapp_app"
-                    android:textColor="@color/primary_text_color"
-                    android:layout_gravity="start"
-                    android:id="@+id/btnOnboardingOverlayPermission"
-                    android:onClick="onPermissionClicked">
-                </androidx.appcompat.widget.AppCompatButton>
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/ivPermission2"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_gravity="end"
-                    android:foregroundGravity="center_vertical"
-                    android:src="@drawable/ic_baseline_gpp_bad_24"
-                    android:tint="@color/error_color"/>
-            </FrameLayout>
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/valuesHeight"
+                        android:layout_marginEnd="50dp"
+                        android:background="@drawable/bgroundedchoosen"
+                        android:textSize="@dimen/valueSize"
+                        android:layout_marginVertical="5dp"
+                        android:text="@string/settings_overlapp_app"
+                        android:textColor="@color/primary_text_color"
+                        android:layout_gravity="start"
+                        android:id="@+id/btnOnboardingOverlayPermission"
+                        android:onClick="onPermissionClicked">
+                    </androidx.appcompat.widget.AppCompatButton>
 
-                <androidx.appcompat.widget.AppCompatButton
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/ivPermission2"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_gravity="end"
+                        android:foregroundGravity="center_vertical"
+                        android:src="@drawable/ic_baseline_gpp_bad_24"
+                        android:tint="@color/error_color"/>
+                </FrameLayout>
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/valuesHeight"
-                    android:layout_marginEnd="50dp"
-                    android:background="@drawable/bgroundedchoosen"
-                    android:textSize="@dimen/valueSize"
-                    android:layout_marginVertical="5dp"
-                    android:text="@string/settings_daily_activity"
-                    android:textColor="@color/primary_text_color"
-                    android:layout_gravity="start"
-                    android:id="@+id/btnOnboardingDailyActivityPermission"
-                    android:onClick="onPermissionClicked">
-                </androidx.appcompat.widget.AppCompatButton>
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/ivPermission3"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_gravity="end"
-                    android:foregroundGravity="center_vertical"
-                    android:src="@drawable/ic_baseline_gpp_bad_24"
-                    android:tint="@color/error_color"/>
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/valuesHeight"
+                        android:layout_marginEnd="50dp"
+                        android:background="@drawable/bgroundedchoosen"
+                        android:textSize="@dimen/valueSize"
+                        android:layout_marginVertical="5dp"
+                        android:text="@string/settings_daily_activity"
+                        android:textColor="@color/primary_text_color"
+                        android:layout_gravity="start"
+                        android:id="@+id/btnOnboardingDailyActivityPermission"
+                        android:onClick="onPermissionClicked">
+                    </androidx.appcompat.widget.AppCompatButton>
 
-            </FrameLayout>
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/ivPermission3"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_gravity="end"
+                        android:foregroundGravity="center_vertical"
+                        android:src="@drawable/ic_baseline_gpp_bad_24"
+                        android:tint="@color/error_color"/>
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnOnboardingNotificationPrivacyPermission"
+                </FrameLayout>
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/valuesHeight"
-                    android:layout_marginEnd="50dp"
-                    android:background="@drawable/bgroundedchoosen"
-                    android:textSize="@dimen/valueSize"
-                    android:layout_marginVertical="5dp"
-                    android:text="@string/settings_notification_privacy"
-                    android:textColor="@color/primary_text_color"
-                    android:layout_gravity="start">
-                </androidx.appcompat.widget.AppCompatButton>
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/ivPermission4"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_gravity="end"
-                    android:foregroundGravity="center_vertical"
-                    android:src="@drawable/ic_baseline_gpp_bad_24"
-                    android:tint="@color/error_color"/>
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btnOnboardingNotificationPrivacyPermission"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/valuesHeight"
+                        android:layout_marginEnd="50dp"
+                        android:background="@drawable/bgroundedchoosen"
+                        android:textSize="@dimen/valueSize"
+                        android:layout_marginVertical="5dp"
+                        android:text="@string/settings_notification_privacy"
+                        android:textColor="@color/primary_text_color"
+                        android:layout_gravity="start">
+                    </androidx.appcompat.widget.AppCompatButton>
 
-            </FrameLayout>
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/ivPermission4"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_gravity="end"
+                        android:foregroundGravity="center_vertical"
+                        android:src="@drawable/ic_baseline_gpp_bad_24"
+                        android:tint="@color/error_color"/>
 
+                </FrameLayout>
 
-
-        </LinearLayout>
+            </LinearLayout>
+        </FrameLayout>
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/animationSearch"
@@ -355,31 +360,45 @@
             app:lottie_autoPlay="true"
             app:lottie_loop="true"/>
 
-        <LinearLayout
-            android:layout_marginTop="30dp"
+        <FrameLayout
             android:layout_marginHorizontal="10dp"
-            android:background="@drawable/bgrounded_button"
-            android:backgroundTint="@color/secondary_app_background"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.4"
             android:visibility="gone"
             android:id="@+id/sleepBanner"
                       >
-            <include
-                android:layout_margin="10dp"
-                layout="@layout/foreground_service_notification"
+            <FrameLayout
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="10dp"
+                android:background="@drawable/bgrounded_button"
+                android:backgroundTint="@color/secondary_app_background"
                 android:layout_height="wrap_content"
-                android:layout_width="match_parent"/>
-        </LinearLayout>
+                android:layout_width="match_parent">
+                <include
+                    layout="@layout/foreground_service_notification"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"/>
+            </FrameLayout>
 
-        <com.github.mikephil.charting.charts.BarChart
-            android:layout_marginTop="30dp"
-            android:visibility="gone"
-            android:id="@+id/barChart"
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_margin="10dp"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:layout_margin="20dp"
-        />
+            android:layout_height="0dp"
+            android:layout_weight="0.4"
+            android:visibility="gone"
+            android:id="@+id/barChartFrame">
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/barChart"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                />
+
+        </FrameLayout>
 
         <ImageView
             android:id="@+id/ivOnboadingNoticeImage"
@@ -404,10 +423,17 @@
                 android:layout_weight="0.2"
                 android:gravity="start"
                 android:src="@drawable/arrow_left"/>
-            <View
+
+            <TextView
+                android:id="@+id/tvOnboardingTitle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.6"/>
+                android:layout_weight="0.6"
+                android:layout_marginHorizontal="10dp"
+                android:gravity="center"
+                android:text="Title"
+                android:textSize="23dp"/>
+
 
             <ImageView
                 android:id="@+id/ivOnboardingNextPage"
@@ -418,16 +444,6 @@
                 android:src="@drawable/arrow_right"/>
 
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/tvOnboardingTitle"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.1"
-            android:layout_marginHorizontal="10dp"
-            android:gravity="center"
-            android:text="Title"
-            android:textSize="26dp"/>
 
         <TextView
             android:id="@+id/tvOnboardingContent"
@@ -546,6 +562,4 @@
             android:text="Get started"/>
 
     </LinearLayout>
-
-
 </layout>
