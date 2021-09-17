@@ -890,4 +890,5 @@ class SleepCalculationHandlerTest
         sleepCalculationHandler.defineUserWakeup(day)
 
     }
+
 }

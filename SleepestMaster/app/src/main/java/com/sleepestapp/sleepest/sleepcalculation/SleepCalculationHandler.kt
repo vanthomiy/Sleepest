@@ -436,10 +436,9 @@ class SleepCalculationHandler(val context: Context) {
             SleepApiRawDataEntity.getSleepStartTime(sleepApiRawDataEntity)
         sleepSessionEntity.sleepTimes.lightSleepDuration =
             SleepApiRawDataEntity.getSleepTimeByState(sleepApiRawDataEntity, SleepState.LIGHT)
-        sleepSessionEntity.sleepTimes.lightSleepDuration += SleepApiRawDataEntity.getSleepTimeByState(
-            sleepApiRawDataEntity,
-            SleepState.SLEEPING
-        )
+        // also take SLEEPING state into account
+        sleepSessionEntity.sleepTimes.lightSleepDuration +=
+            SleepApiRawDataEntity.getSleepTimeByState(sleepApiRawDataEntity, SleepState.SLEEPING)
         sleepSessionEntity.sleepTimes.deepSleepDuration =
             SleepApiRawDataEntity.getSleepTimeByState(sleepApiRawDataEntity, SleepState.DEEP)
         sleepSessionEntity.sleepTimes.remSleepDuration =
