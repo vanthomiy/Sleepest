@@ -23,6 +23,7 @@
         <entry key="..\:/Users/vanth/Documents/Projekte/Sleepest/SleepestMaster/app/src/main/res/drawable/info_to_question_full_anim.xml" value="0.38333333333333336" />
         <entry key="..\:/Users/vanth/Documents/Projekte/Sleepest/SleepestMaster/app/src/main/res/drawable/transparent.xml" value="0.38333333333333336" />
         <entry key="..\:/Users/vanth/Documents/Projekte/Sleepest/SleepestMaster/app/src/main/res/drawable/transparentrounded.xml" value="0.38333333333333336" />
+        <entry key="..\:/Users/vanth/Documents/Projekte/Sleepest/SleepestMaster/app/src/main/res/layout/activity_lock_screen_alarm.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/vanth/Documents/Projekte/Sleepest/SleepestMaster/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/vanth/Documents/Projekte/Sleepest/SleepestMaster/app/src/main/res/layout/activity_onboarding.xml" value="0.20989583333333334" />
         <entry key="..\:/Users/vanth/Documents/Projekte/Sleepest/SleepestMaster/app/src/main/res/layout/alarm_entity.xml" value="0.1" />
@@ -48,7 +49,7 @@
   <component name="JavadocGenerationManager">
     <option name="OUTPUT_DIRECTORY" value="$USER_HOME$/OneDrive/Studium/6. Semester/Projektarbeit/04_Code/Klassendiagramme/Documentation" />
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

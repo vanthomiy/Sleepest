@@ -360,46 +360,6 @@
             app:lottie_autoPlay="true"
             app:lottie_loop="true"/>
 
-        <FrameLayout
-            android:layout_marginHorizontal="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.4"
-            android:visibility="gone"
-            android:id="@+id/sleepBanner"
-                      >
-            <FrameLayout
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="10dp"
-                android:background="@drawable/bgrounded_button"
-                android:backgroundTint="@color/secondary_app_background"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent">
-                <include
-                    layout="@layout/foreground_service_notification"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"/>
-            </FrameLayout>
-
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_margin="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.4"
-            android:visibility="gone"
-            android:id="@+id/barChartFrame">
-
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/barChart"
-                android:layout_gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                />
-
-        </FrameLayout>
-
         <ImageView
             android:id="@+id/ivOnboadingNoticeImage"
             android:layout_width="match_parent"

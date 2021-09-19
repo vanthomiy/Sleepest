@@ -119,9 +119,6 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
         FrameLayout frameLayoutEndTime = view.findViewById(R.id.frameLayoutEndTime);
 
         ImageView imageView = view.findViewById(R.id.ivOnboadingNoticeImage);
-        FrameLayout sleepBanner = view.findViewById(R.id.sleepBanner);
-        FrameLayout barChartFrame = view.findViewById(R.id.barChartFrame);
-        BarChart barChart = view.findViewById(R.id.barChart);
         ImageView ivPermission1 = view.findViewById(R.id.ivPermission1);
         ImageView ivPermission2 = view.findViewById(R.id.ivPermission2);
         ImageView ivPermission3 = view.findViewById(R.id.ivPermission3);
@@ -256,63 +253,12 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
             case 4:
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_5));
                 tvContent.setText(context.getString(R.string.onboarding_content_page_5));
-                /*imageView.setVisibility(View.VISIBLE);
+                imageView.setVisibility(View.VISIBLE);
                 if (Locale.getDefault().getLanguage().equals("de")) {
                     imageView.setImageResource(R.drawable.history_fragment_german);
                 } else {
-                    imageView.setImageResource(R.drawable.history_fragment_english);
-                }*/
-
-                ArrayList<BarEntry> barEntries = new ArrayList<BarEntry>();
-                barEntries.add(new BarEntry(0f, 1f));
-                barEntries.add(new BarEntry(1f, 1f));
-                barEntries.add(new BarEntry(2f, 2f));
-                barEntries.add(new BarEntry(3f, 2f));
-                barEntries.add(new BarEntry(4f, 1f));
-                barEntries.add(new BarEntry(5f, 1f));
-                barEntries.add(new BarEntry(6f, 1f));
-                barEntries.add(new BarEntry(7f, 2f));
-                barEntries.add(new BarEntry(8f, 2f));
-                barEntries.add(new BarEntry(9f, 1f));
-                barEntries.add(new BarEntry(10f, 1f));
-
-                BarDataSet barDataSet = new BarDataSet(barEntries, "");
-                List<Integer> colorList = new ArrayList<Integer>();
-                colorList.add(ContextCompat.getColor(context, R.color.light_sleep_color));
-                colorList.add(ContextCompat.getColor(context, R.color.light_sleep_color));
-                colorList.add(ContextCompat.getColor(context, R.color.deep_sleep_color));
-                colorList.add(ContextCompat.getColor(context, R.color.deep_sleep_color));
-                colorList.add(ContextCompat.getColor(context, R.color.light_sleep_color));
-                colorList.add(ContextCompat.getColor(context, R.color.light_sleep_color));
-                colorList.add(ContextCompat.getColor(context, R.color.light_sleep_color));
-                colorList.add(ContextCompat.getColor(context, R.color.deep_sleep_color));
-                colorList.add(ContextCompat.getColor(context, R.color.deep_sleep_color));
-                colorList.add(ContextCompat.getColor(context, R.color.light_sleep_color));
-                colorList.add(ContextCompat.getColor(context, R.color.light_sleep_color));
-
-                barDataSet.setColors(colorList);
-                barDataSet.setDrawValues(false);
-                BarData barData = new BarData(barDataSet);
-                barChart.setDrawGridBackground(false);
-                barData.setHighlightEnabled(false);
-                barData.setBarWidth(1.1f);
-                barChart.getXAxis().setDrawGridLines(false);
-                barChart.getAxisRight().setDrawGridLines(false);
-                barChart.getAxisLeft().setDrawGridLines(false);
-                barChart.getAxisRight().setDrawLabels(false);
-                barChart.getAxisLeft().setAxisMinimum(0f);
-                barChart.getAxisLeft().setAxisMaximum(3f);
-                barChart.getAxisLeft().setDrawLabels(false);
-                barChart.getXAxis().setEnabled(false);
-
-                barChart.setFitBars(true);
-
-                // set bar label
-                barChart.getLegend().setEnabled(false);
-                barChart.setBorderWidth(0f);
-                barChart.setData(barData);
-                barChart.setFitBars(true);
-                barChartFrame.setVisibility(View.VISIBLE);
+                    imageView.setImageResource(R.drawable.history_fragment_german);
+                }
 
                 dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
@@ -326,15 +272,14 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
             case 6:
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_7));
                 tvContent.setText(context.getString(R.string.onboarding_content_page_7));
-                sleepBanner.setVisibility(View.VISIBLE);
 
-                /*imageView.setImageResource(R.drawable.phone_position_tim);
+                imageView.setImageResource(R.drawable.phone_position_tim);
                 imageView.setVisibility(View.VISIBLE);
                 if (Locale.getDefault().getLanguage().equals("de")) {
                     imageView.setImageResource(R.drawable.banner_foregroundservice_german);
                 } else {
                     imageView.setImageResource(R.drawable.banner_foregroundservice_german);
-                }*/
+                }
                 dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
             case 7:
