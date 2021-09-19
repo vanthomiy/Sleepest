@@ -74,6 +74,9 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
                                 null
                             )
                         notificationsUtil.chooseNotification()
+                        //Restarts the subscribing of data in case of an receiving error
+                        Toast.makeText(applicationContext,"Restarted sleepdata tracking", Toast.LENGTH_LONG).show()
+                        BackgroundAlarmTimeHandler.getHandler(applicationContext.getApplicationContext()).startWorkmanager()
                     } else {
                         if (NotificationUtil.isNotificationActive(NotificationUsage.NOTIFICATION_NO_API_DATA, applicationContext)) {
                             NotificationUtil.cancelNotification(NotificationUsage.NOTIFICATION_NO_API_DATA, applicationContext)
@@ -87,6 +90,8 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
                             null
                         )
                     notificationsUtil.chooseNotification()
+                    Toast.makeText(applicationContext,"Restarted sleepdata tracking", Toast.LENGTH_LONG).show()
+                    BackgroundAlarmTimeHandler.getHandler(applicationContext.getApplicationContext()).startWorkmanager()
                 } else {
                     if (NotificationUtil.isNotificationActive(NotificationUsage.NOTIFICATION_NO_API_DATA, applicationContext)) {
                         NotificationUtil.cancelNotification(NotificationUsage.NOTIFICATION_NO_API_DATA, applicationContext)
