@@ -82,7 +82,7 @@ class SleepViewModel(
 
         val tpd = TimePickerDialog(
                 view.context,
-            R.style.TimePickerTheme,
+                R.style.TimePickerTheme,
                 { _, h, m ->
 
                     val tempWakeup = LocalTime.of(h, m)
