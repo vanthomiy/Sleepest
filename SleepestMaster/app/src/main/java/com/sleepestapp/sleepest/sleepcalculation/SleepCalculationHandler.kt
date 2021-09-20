@@ -18,6 +18,7 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneOffset
+import java.util.stream.IntStream.range
 
 /**
  * This class provides all functionality that is necessary for predicting the users sleep
@@ -154,12 +155,10 @@ class SleepCalculationHandler(val context: Context) {
 
         if(userActivity.isEmpty())
             return ActivityOnDay.NONE
-
-        for (i in userActivity.indices-1){
+        for (i in range(0,(userActivity.count()-2))){
             if(userActivity[i].activity == DetectedActivity.WALKING || userActivity[i].activity == DetectedActivity.ON_FOOT){
 
                 activityCount += (userActivity[i+1].timestampSeconds - userActivity[i].timestampSeconds) / 60
-
             }
             else if(userActivity[i].activity == DetectedActivity.ON_BICYCLE || userActivity[i].activity == DetectedActivity.RUNNING){
 
