@@ -1,5 +1,6 @@
 package com.sleepestapp.sleepest.onboarding;
 
+import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -49,6 +50,7 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
     private OnboardingNoticeScreenBinding binding;
 
     private Context context;
+    private Activity activityContext;
     private List<ImageView> indicators = new ArrayList<>();
 
     private boolean notFirstAppStart = false;
@@ -69,9 +71,10 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
 
     Timer timer;
 
-    public OnboardingViewPagerAdapter(Context context, ArrayList<Object> arrayList) {
+    public OnboardingViewPagerAdapter(Context context, Activity activityContext, ArrayList<Object> arrayList) {
 
         this.context = context;
+        this.activityContext = activityContext;
 
         timer = new Timer();
 
@@ -357,18 +360,20 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
                 }
                 break;
             case R.id.btnOnboardingNotificationPrivacyPermission:
-                if (!PermissionsUtil.isNotificationPolicyAccessGranted(context)) {
-                    PermissionsUtil.setNotificationPolicyAccess(context);
+                /*if (!PermissionsUtil.isNotificationPolicyAccessGranted(context)) {
+                    PermissionsUtil.setNotificationPolicyAccess(activityContext);
                 } else {
                     Toast.makeText(context, context.getString(R.string.onboarding_toast_permission_already_granted), Toast.LENGTH_LONG).show();
-                }
+                }*/
+                PermissionsUtil.setNotificationPolicyAccess(activityContext);
                 break;
             case R.id.btnOnboardingOverlayPermission:
-                if (!PermissionsUtil.isOverlayPermissionGranted(context)) {
-                    PermissionsUtil.setOverlayPermission(context);
+                /*if (!PermissionsUtil.isOverlayPermissionGranted(context)) {
+                    PermissionsUtil.setOverlayPermission(activityContext);
                 } else {
                     Toast.makeText(context, context.getString(R.string.onboarding_toast_permission_already_granted), Toast.LENGTH_LONG).show();
-                }
+                }*/
+                PermissionsUtil.setOverlayPermission(activityContext);
                 break;
             case R.id.btnOnboardingSleepdataPermission:
                 if (!PermissionsUtil.isActivityRecognitionPermissionGranted(context)) {

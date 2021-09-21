@@ -44,7 +44,7 @@ public class OnboardingActivity extends AppCompatActivity {
             arrayList.add(true);
         }
 
-        onboardingViewPagerAdapter = new OnboardingViewPagerAdapter(OnboardingActivity.this, arrayList);
+        onboardingViewPagerAdapter = new OnboardingViewPagerAdapter(OnboardingActivity.this, OnboardingActivity.this, arrayList);
         viewPager.setAdapter(onboardingViewPagerAdapter);
     }
 }
