@@ -60,6 +60,7 @@ data class CreditsAuthors(
                     CreditsAuthors("prettycons", Info.SLEEP), //Smartphone
                     CreditsAuthors("xnimrodx", Info.SLEEP), //Snooze
                     CreditsAuthors("Roundicons", Info.SLEEP), //Warning
+                    CreditsAuthors("Vector Market", Info.HISTORY), //History
                 )
                 Websites.LOTTIEFILES -> listOf(
                     CreditsAuthors("asjadnaqvi", Info.SLEEP),

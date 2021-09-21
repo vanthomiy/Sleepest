@@ -394,6 +394,7 @@ enum class Info {
     WEEK_HISTORY,
     MONTH_HISTORY,
     SETTINGS,
+    HISTORY,
     ALARM;
     companion object{
 
@@ -404,6 +405,7 @@ enum class Info {
                 2 -> WEEK_HISTORY
                 3 -> MONTH_HISTORY
                 4 -> SETTINGS
+                5 -> HISTORY
                 else -> ALARM
             }
         }
@@ -415,6 +417,7 @@ enum class Info {
                 DAY_HISTORY -> context.resources.getString(R.string.history_day_title)
                 WEEK_HISTORY -> context.resources.getString(R.string.history_week_title)
                 MONTH_HISTORY -> context.resources.getString(R.string.history_month_title)
+                HISTORY -> context.resources.getString((R.string.history_fragment_title))
                 ALARM -> context.resources.getString(R.string.sleep_alarm_header)
             }
         }
