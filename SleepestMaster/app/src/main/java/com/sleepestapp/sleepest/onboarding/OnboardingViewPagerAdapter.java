@@ -194,7 +194,7 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
         }
 
         frameLayoutStartTime.setOnClickListener(v -> {
-            TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(), (view1, hourOfDay, minute) -> {
+            TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(), R.style.TimePickerTheme, (view1, hourOfDay, minute) -> {
                 starttime = (hourOfDay * 60 + minute) * 60;
                 startTimeText = "Start";
                 startTimeValueText = TimeConverterUtil.toTimeFormat(hourOfDay, minute);
@@ -206,7 +206,7 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
         });
 
         frameLayoutEndTime.setOnClickListener(v -> {
-            TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(), (view12, hourOfDay, minute) -> {
+            TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(), R.style.TimePickerTheme, (view12, hourOfDay, minute) -> {
                 endtime = (hourOfDay * 60 + minute) * 60;
                 endTimeText = "End";
                 endTimeValueText = TimeConverterUtil.toTimeFormat(hourOfDay, minute);

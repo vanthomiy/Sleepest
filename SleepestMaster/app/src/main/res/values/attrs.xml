@@ -6,9 +6,9 @@
         <attr name="info" format="enum">
             <enum name="SLEEP" value="0"/>
             <enum name="DAY_HISTORY" value="1"/>
-            <enum name="WEEK_HISTORY" value="1"/>
-            <enum name="MONTH_HISTORY" value="1"/>
-            <enum name="SETTINGS" value="2"/>
+            <enum name="WEEK_HISTORY" value="2"/>
+            <enum name="MONTH_HISTORY" value="3"/>
+            <enum name="SETTINGS" value="4"/>
         </attr>
         <attr name="direction" format="enum">
             <enum name="PICTURE_LEFT" value="0"/>

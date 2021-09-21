@@ -10,13 +10,13 @@ import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.sleepestapp.sleepest.databinding.FragmentInfoEntityBinding
-import com.sleepestapp.sleepest.model.data.InfoEntityStlye
+import com.sleepestapp.sleepest.model.data.InfoEntityStyle
 import com.sleepestapp.sleepest.ui.sleep.SleepFragment
 
 /**
  * An actual Information entity which is child of the [InfoFragment]
  */
-class InfoEntityFragment(val applicationContext: Context, private val infoEntity: InfoEntity, private val style: InfoEntityStlye) : Fragment() {
+class InfoEntityFragment(val applicationContext: Context, private val infoEntity: InfoEntity, private val style: InfoEntityStyle) : Fragment() {
 
     /**
      * Binding XML Code to Fragment
@@ -39,20 +39,20 @@ class InfoEntityFragment(val applicationContext: Context, private val infoEntity
         binding.lifecycleOwner = this;
 
         // Setup the layout for the actual Info Entity
-        if(style == InfoEntityStlye.PICTURE_LEFT || style == InfoEntityStlye.PICTURE_TOP){
+        if(style == InfoEntityStyle.PICTURE_LEFT || style == InfoEntityStyle.PICTURE_TOP){
             viewModel.layoutFormat.value = (
                 LayoutDirection.LTR)
         }
-        else if(style == InfoEntityStlye.PICTURE_RIGHT || style == InfoEntityStlye.PICTURE_BOTTOM) {
+        else if(style == InfoEntityStyle.PICTURE_RIGHT || style == InfoEntityStyle.PICTURE_BOTTOM) {
             viewModel.layoutFormat.value = (
                 LayoutDirection.RTL)
         }
 
-        if(style == InfoEntityStlye.PICTURE_LEFT || style == InfoEntityStlye.PICTURE_RIGHT){
+        if(style == InfoEntityStyle.PICTURE_LEFT || style == InfoEntityStyle.PICTURE_RIGHT){
             viewModel.orientation.value = (
                 LinearLayout.HORIZONTAL)
         }
-        else if(style == InfoEntityStlye.PICTURE_BOTTOM || style == InfoEntityStlye.PICTURE_TOP) {
+        else if(style == InfoEntityStyle.PICTURE_BOTTOM || style == InfoEntityStyle.PICTURE_TOP) {
             viewModel.orientation.value = (
                 LinearLayout.VERTICAL)
         }
