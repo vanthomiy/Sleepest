@@ -51,9 +51,7 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
 
     private Context context;
     private Activity activityContext;
-    private List<ImageView> indicators = new ArrayList<>();
 
-    private boolean notFirstAppStart = false;
     private boolean enableStartApp = false;
 
     private int starttime = 72000;
@@ -89,8 +87,6 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
             endTimeText = "End";
             startTimeValueText = (String) arrayList.get(4);
             endTimeValueText = (String) arrayList.get(5);
-
-            notFirstAppStart = (Boolean) arrayList.get(6);
 
             enableStartApp = true;
 
@@ -268,15 +264,13 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
             case 5:
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_6));
                 tvContent.setText(context.getString(R.string.onboarding_content_page_6));
-                imageView.setImageResource(R.drawable.phone_position_tim);
+                imageView.setImageResource(R.drawable.phone_position_final);
                 imageView.setVisibility(View.VISIBLE);
                 dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
             case 6:
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_7));
                 tvContent.setText(context.getString(R.string.onboarding_content_page_7));
-
-                imageView.setImageResource(R.drawable.phone_position_tim);
                 imageView.setVisibility(View.VISIBLE);
                 if (Locale.getDefault().getLanguage().equals("de")) {
                     imageView.setImageResource(R.drawable.banner_foregroundservice_german);
