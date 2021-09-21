@@ -667,11 +667,11 @@
                                 android:background="@drawable/bgrounded_button"
                                 android:textSize="@dimen/valueSize"
                                 android:layout_marginVertical="5dp"
-                                android:text="@string/settings_storage"
+                                android:text="@string/settings_notification_privacy"
                                 android:textColor="@color/primary_text_color"
 
-                                android:tag="storage"
-                                android:id="@+id/storagePermission"
+                                android:tag="notificationPrivacy"
+                                android:id="@+id/notificationPrivacyPermission"
                                 android:onClick="onPermissionClicked">
                             </androidx.appcompat.widget.AppCompatButton>
 
@@ -681,8 +681,8 @@
                                 android:layout_marginTop="5dp"
                                 android:layout_gravity="end"
                                 android:foregroundGravity="center_vertical"
-                                android:src="@{profileViewModel.storagePermission ? @drawable/ic_baseline_gpp_good_24 :@drawable/ic_baseline_gpp_bad_24}"
-                                android:tint="@{profileViewModel.storagePermission ? @color/accent_text_color :@color/error_color}"/>
+                                android:src="@{profileViewModel.notificationPrivacyPermission ? @drawable/ic_baseline_gpp_good_24 :@drawable/ic_baseline_gpp_bad_24}"
+                                android:tint="@{profileViewModel.notificationPrivacyPermission ? @color/accent_text_color :@color/error_color}"/>
 
                         </FrameLayout>
 
@@ -690,7 +690,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:visibility="@{profileViewModel.storagePermissionDescription}"
+                            android:visibility="@{profileViewModel.notificationPrivacyPermissionDescription}"
                             android:layout_margin="10dp"
                             >
 
@@ -701,7 +701,7 @@
                                 android:textSize="@dimen/headerSize"
                                 android:layout_gravity="start"
                                 android:textColor="@color/primary_text_color"
-                                android:text="@string/settings_permission_storage"/>
+                                android:text="@string/settings_permission_notification_privacy"/>
 
                         </LinearLayout>
 

@@ -217,15 +217,14 @@
     <string name="settings_permission_daily_activity">
         Die App benötigt diese Berechtigung, um deine Aktivität am Tag aufzuzeichnen
     </string>
-    <string name="settings_storage">Speicherzugriff</string>
-    <string name="settings_permission_storage">
-        Um deine Daten zu exportieren oder vorhandene Daten in die App zu laden, wird diese Berechtigung benötigt
+    <string name="settings_permission_notification_privacy">
+        Um den Wecker auch im lautlosen Modus klingeln zu lassen, wird diese Berechtigung benötigt
     </string>
     <string name="settings_overlapp_app">App überlappen</string>
     <string name="settings_permission_overlapp_app">
         Die App benötigt diese Berechtigung, damit sie dich auch bei gesperrtem Handy wecken kann
     </string>
-    <string name="settings_notification_privacy">Nicht stören ausschalten</string>
+    <string name="settings_notification_privacy">Nicht stören</string>
     <string name="settings_data">Daten</string>
     <string name="settings_export_data">Daten Exportieren</string>
     <string name="settings_import_data">Daten Importieren</string>

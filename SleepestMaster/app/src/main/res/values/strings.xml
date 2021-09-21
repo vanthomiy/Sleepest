@@ -211,15 +211,15 @@
     <string name="settings_permission_daily_activity">
                 The app needs this permission to record your activity during the day
     </string>
-    <string name="settings_storage">Memory access</string>
-    <string name="settings_permission_storage">
-                This authorization is required to export your data or load existing data into the app
+    <string name="settings_notification_privacy">Notification Privacy</string>
+    <string name="settings_permission_notification_privacy">
+                This authorization is required that the alarm is going to ring also in silent mode
     </string>
     <string name="settings_overlapp_app">App overlay</string>
     <string name="settings_permission_overlapp_app">
                 The app needs this authorization so that it can wake you up even if your mobile phone is locked
     </string>
-    <string name="settings_notification_privacy">Notification Privacy</string>
+
 
     <string name="settings_data">Daten</string>
     <string name="settings_export_data">Export data</string>

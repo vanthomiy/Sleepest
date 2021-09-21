@@ -116,12 +116,12 @@ class SettingsViewModel(
 
     val activityPermission = MutableLiveData(false)
     val dailyPermission = MutableLiveData(false)
-    val storagePermission = MutableLiveData(false)
+    val notificationPrivacyPermission = MutableLiveData(false)
     val overlayPermission = MutableLiveData(false)
 
     val activityPermissionDescription = MutableLiveData(View.GONE)
     val dailyPermissionDescription = MutableLiveData(View.GONE)
-    val storagePermissionDescription = MutableLiveData(View.GONE)
+    val notificationPrivacyPermissionDescription = MutableLiveData(View.GONE)
     val overlayPermissionDescription = MutableLiveData(View.GONE)
 
 
@@ -134,7 +134,7 @@ class SettingsViewModel(
 
         activityPermissionDescription.value = (if (permission == "sleepActivity") if (activityPermissionDescription.value != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
         dailyPermissionDescription.value = (if (permission == "dailyActivity") if (dailyPermissionDescription.value != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
-        storagePermissionDescription.value = (if (permission == "storage") if (storagePermissionDescription.value != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
+        notificationPrivacyPermissionDescription.value = (if (permission == "notificationPrivacy") if (notificationPrivacyPermissionDescription.value != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
         overlayPermissionDescription.value = (if (permission == "overlay") if (overlayPermissionDescription.value != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
     }
 

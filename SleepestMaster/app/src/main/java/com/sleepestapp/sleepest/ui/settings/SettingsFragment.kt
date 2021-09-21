@@ -105,7 +105,7 @@ class SettingsFragment : Fragment() {
         binding.dailyActivityPermission.setOnClickListener {
             onPermissionClicked(it)
         }
-        binding.storagePermission.setOnClickListener {
+        binding.notificationPrivacyPermission.setOnClickListener {
             onPermissionClicked(it)
         }
         binding.overlayPermission.setOnClickListener {
@@ -434,21 +434,10 @@ class SettingsFragment : Fragment() {
             "sleepActivity" -> if (viewModel.activityPermission.value != true) requestPermissionLauncher.launch(
                 Manifest.permission.ACTIVITY_RECOGNITION
             ) else viewModel.showPermissionInfo("sleepActivity")
-            "storage" -> if (viewModel.storagePermission.value != true) requestPermissionLauncher.launch(
-                Manifest.permission.MANAGE_EXTERNAL_STORAGE
-            ) else viewModel.showPermissionInfo("storage")
-            "overlay" -> if (viewModel.overlayPermission.value != true) {
-                // If not, form up an Intent to launch the permission request
-                val intent = Intent(
-                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse(
-                        "package:${actualContext.packageName}"
-                    )
-                )
-
-                // Launch Intent, with the supplied request code
-                startActivityForResult(intent, Constants.ACTIVITY_RECOGNITION_PERMISSION_REQUEST_CODE)
-
-            } else viewModel.showPermissionInfo("overlay")
+            "notificationPrivacy" -> if (viewModel.notificationPrivacyPermission.value != true) PermissionsUtil.setNotificationPolicyAccess(requireActivity()
+            ) else viewModel.showPermissionInfo("notificationPrivacy")
+            "overlay" -> if (viewModel.overlayPermission.value != true) PermissionsUtil.setOverlayPermission(requireActivity()
+                ) else viewModel.showPermissionInfo("overlay")
         }
     }
 
@@ -570,7 +559,7 @@ class SettingsFragment : Fragment() {
                 PermissionsUtil.isActivityRecognitionPermissionGranted(actualContext)
                 )
 
-        viewModel.storagePermission.value = (
+        viewModel.notificationPrivacyPermission.value = (
                 PermissionsUtil.isNotificationPolicyAccessGranted(actualContext)
                 )
 
