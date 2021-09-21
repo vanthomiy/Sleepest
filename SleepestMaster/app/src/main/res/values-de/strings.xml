@@ -258,16 +258,17 @@
     <string name="history_day_information_sleepPhases_lineChart">Dieses Diagramm zeigt Deine Schlafphasen der letzten Nacht an. Links und rechts über dem Diagramm kannst Du die, von der App erkannten, Einschlaf- und Aufwachzeitpunkte sehen. Die Nacht ist, je nachdem wo sich dein Handy in dieser Nacht befand, in zwei oder drei Schlafstati eingeteilt. Befand sich das Gerät neben dem Bett kannst Du die Phasen \"Wach\" und \"Schlaf\" erkennen. Lag es im Bett wird die Nacht in die Phasen \"Tiefschlaf\", \"Leichtschlaf\" und \"Wach\" eingeteilt. Das Diagramm ist linear über die Nacht aufgeteilt.</string>
     <string name="history_day_sleep_quality_rating_title">Schlafqualität:</string>
     <string name="history_activity_title">Aktivität:</string>
-    <string name="history_day_information_timeInPhase">Informationen über das Tortendiagramm der Schlaphasen.</string>
+    <string name="history_day_information_timeInPhase">Dieses Diagramm zeigt Dir die prozentuale Verteilung der Schlafphasen über die Nacht an.</string>
     <string name="history_day_information_sleepQualityRating">Hier kannst du Deine Befindlichtkeit nach dem Aufwachen eintragen. Du kannst zwischen den Werten \"schlecht\", \"gut\", \"überragend\", \"Tatendrang\" und \"müde\" unterscheiden.</string>
     <string name="history_day_information_activity">Dieses Diagramm zeigt Dein Aktivitätslevel des Tages an. Du kannst drei verschiedene Medallien erhalten.</string>
     <string name="history_week_information_sleepPhases_barChart">Dieses Diagramm zeigt Dir die Verteilung der verschiedenen Schlafphasen für die jeweilige Woche an. Je nach dem, wo sich Dein Handy in der Nacht befand, varriert das Diagramm zwischen zwei verschiedenen Anzeigemöglichkeiten. Die Werte der y-Achse entsprechen Stunden.</string>
     <string name="history_week_information_activity_lineChart">Hier kannst Du deine Aktivitätslevel für die jeweilige Woche einsehen.</string>
     <string name="history_month_information_sleepPhases_barChart">"Dieses Diagramm zeigt Dir die Verteilung der verschiedenen Schlafphasen für den jeweiligen Monat an. Je nach dem, wo sich Dein Handy in der Nacht befand, varriert das Diagramm zwischen zwei verschiedenen Anzeigemöglichkeiten. Die Werte der y-Achse entsprechen Stunden. "</string>
-    <string name="history_month_information_activity_lineChart">Hier kannst Du deine Aktivitätslevel für die jeweilige Woche einsehen.</string>
+    <string name="history_month_information_activity_lineChart">Hier kannst Du deine Aktivitätslevel für den jeweiligen Monat einsehen.</string>
     <string name="history_day_timeInPhase_awake">Wach</string>
-    <string name="history_day_timeInPhase_lightSleep">Leichtschlaf</string>
-    <string name="history_day_timeInPhase_deepSleep">Tiefschlaf</string>
+    <string name="history_day_timeInPhase_lightSleep">Leicht</string>
+    <string name="history_day_timeInPhase_deepSleep">Tief</string>
+    <string name="history_day_timeInPhase_remSleep">Traum</string>
     <string name="history_day_timeInPhase_sleepSum">Schlaf</string>
     <string name="history_day_title">Tag</string>
     <string name="history_week_title">Woche</string>
@@ -325,7 +326,6 @@
     <string name="onboarding_toast_permissions">Bitte akzeptiere alle Berechtigungen</string>
     <string name="onboarding_toast_read_to_end">Bitte lies das ganze Tutorial</string>
     <string name="onboarding_toast_permission_already_granted">Diese Berechtigung wurde schon akzeptiert</string>
-    <string name="history_day_timeInPhase_remSleep">Traumschlaf</string>
     <string name="privacy_police">Datenschutzerklärung</string>
 
     <!--endregion-->

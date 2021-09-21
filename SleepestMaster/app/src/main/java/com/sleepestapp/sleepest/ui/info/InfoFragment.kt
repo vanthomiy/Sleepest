@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.databinding.FragmentInfoBinding
 import com.sleepestapp.sleepest.model.data.Info
-import com.sleepestapp.sleepest.model.data.InfoEntityStlye
+import com.sleepestapp.sleepest.model.data.InfoEntityStyle
 
 /**
  * Info Fragment that can host x [InfoEntityFragment] elements
@@ -73,14 +73,14 @@ class InfoFragment : Fragment() {
                 it1, it, view.context)
         } }
 
-        var actualStlye = direction?.let { InfoEntityStlye.getById(it) }
+        var actualStlye = direction?.let { InfoEntityStyle.getById(it) }
 
         // Create all information entities that are used for this information
         infoEntity?.forEach{ info ->
             val transactions = childFragmentManager.beginTransaction()
             //transactions.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
 
-            val infoFragment = if(info.infoEntityStlye != InfoEntityStlye.RANDOM)
+            val infoFragment = if(info.infoEntityStlye != InfoEntityStyle.RANDOM)
             {
                 actualStlye = info.infoEntityStlye
                 InfoEntityFragment(view.context, info, info.infoEntityStlye)
@@ -95,14 +95,14 @@ class InfoFragment : Fragment() {
             }
 
 
-            actualStlye = if(actualStlye == InfoEntityStlye.PICTURE_LEFT || actualStlye == InfoEntityStlye.PICTURE_RIGHT)
+            actualStlye = if(actualStlye == InfoEntityStyle.PICTURE_LEFT || actualStlye == InfoEntityStyle.PICTURE_RIGHT)
             {
-                if (actualStlye == InfoEntityStlye.PICTURE_LEFT) InfoEntityStlye.PICTURE_RIGHT else
-                    InfoEntityStlye.PICTURE_LEFT
+                if (actualStlye == InfoEntityStyle.PICTURE_LEFT) InfoEntityStyle.PICTURE_RIGHT else
+                    InfoEntityStyle.PICTURE_LEFT
             }
             else{
-                if (actualStlye == InfoEntityStlye.PICTURE_BOTTOM) InfoEntityStlye.PICTURE_TOP else
-                    InfoEntityStlye.PICTURE_BOTTOM
+                if (actualStlye == InfoEntityStyle.PICTURE_BOTTOM) InfoEntityStyle.PICTURE_TOP else
+                    InfoEntityStyle.PICTURE_BOTTOM
             }
         }
 
