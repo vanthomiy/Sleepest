@@ -63,23 +63,24 @@
                         android:tag="0"
                         >
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="@dimen/img_header_size"
+                            android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="start"
                             android:src="@drawable/ic_baseline_build_24"
                             app:tint="@color/primary_text_color" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="40dp"
+                            android:layout_marginStart="@dimen/img_header_magrin"
                             android:textSize="@dimen/headerSize"
-                            android:layout_gravity="start"
+                            android:textStyle="bold"
+                            android:layout_gravity="start|center"
                             android:textColor="@color/primary_text_color"
                             android:text="@string/settings_design"/>
 
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="@dimen/img_header_size"
+                            android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
                             android:src="@drawable/ic_baseline_expand_more_24"
                             android:rotation="@{profileViewModel.actualExpand == 0 ? profileViewModel.rotatedState:profileViewModel.normalRotationState}"
@@ -105,7 +106,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="0dp"
+                                android:layout_marginStart="0dp"
                                 android:textSize="@dimen/headerSize"
                                 android:layout_gravity="start"
                                 android:textColor="@color/primary_text_color"
@@ -118,7 +119,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
-                            android:layout_marginLeft="0dp"
+                            android:layout_marginStart="0dp"
                             android:orientation="vertical"
                             android:layout_marginVertical="10dp"
                             android:background="@drawable/bgrounded_button">
@@ -179,10 +180,11 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="0dp"
+                            android:layout_marginStart="0dp"
                             android:layout_marginTop="10dp"
                             android:textSize="@dimen/headerSize"
-                            android:layout_gravity="start"
+                            android:textStyle="bold"
+                            android:layout_gravity="start|center"
                             android:textColor="@color/primary_text_color"
                             android:text="Sleepest Banner"/>
 
@@ -190,7 +192,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
-                            android:layout_marginLeft="0dp"
+                            android:layout_marginStart="0dp"
                             android:orientation="vertical"
                             android:layout_marginVertical="10dp"
                             android:background="@drawable/bgrounded_button">
@@ -345,23 +347,24 @@
                         android:tag="1"
                         >
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="@dimen/img_header_size"
+                            android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="start"
                             android:src="@drawable/ic_baseline_help_24"
                             app:tint="@color/primary_text_color" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="40dp"
+                            android:layout_marginStart="@dimen/img_header_magrin"
                             android:textSize="@dimen/headerSize"
-                            android:layout_gravity="start"
+                            android:textStyle="bold"
+                            android:layout_gravity="start|center"
                             android:textColor="@color/primary_text_color"
                             android:text="@string/settings_help"/>
 
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="@dimen/img_header_size"
+                            android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
                             android:src="@drawable/ic_baseline_expand_more_24"
                             android:rotation="@{profileViewModel.actualExpand == 1 ? profileViewModel.rotatedState:profileViewModel.normalRotationState}"
@@ -422,23 +425,24 @@
                         android:tag="2"
                         >
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="@dimen/img_header_size"
+                            android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="start"
                             android:src="@drawable/ic_baseline_feedback_24"
                             app:tint="@color/primary_text_color" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="40dp"
-                            android:textSize="@dimen/headerSize"
-                            android:layout_gravity="start"
+                            android:layout_marginStart="@dimen/img_header_magrin"
+                            android:textSize="@dimen/headerSize" android:textStyle="bold"
+                                android:layout_gravity="start|center"
+
                             android:textColor="@color/primary_text_color"
                             android:text="@string/settings_app_info"/>
 
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="@dimen/img_header_size"
+                            android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
                             android:src="@drawable/ic_baseline_expand_more_24"
                             android:rotation="@{profileViewModel.actualExpand == 2 ? profileViewModel.rotatedState:profileViewModel.normalRotationState}"
@@ -527,23 +531,24 @@
                         android:tag="3"
                         >
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="@dimen/img_header_size"
+                            android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="start"
                             android:src="@drawable/ic_baseline_person_add_alt_1_24"
                             app:tint="@color/primary_text_color" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="40dp"
-                            android:textSize="@dimen/headerSize"
-                            android:layout_gravity="start"
+                            android:layout_marginStart="@dimen/img_header_magrin"
+                            android:textSize="@dimen/headerSize" android:textStyle="bold"
+                                android:layout_gravity="start|center"
+
                             android:textColor="@color/primary_text_color"
                             android:text="@string/settings_permissions"/>
 
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="@dimen/img_header_size"
+                            android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
                             android:src="@drawable/ic_baseline_expand_more_24"
                             android:rotation="@{profileViewModel.actualExpand == 3 ? profileViewModel.rotatedState:profileViewModel.normalRotationState}"
@@ -773,23 +778,24 @@
                         android:tag="5"
                         >
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="@dimen/img_header_size"
+                            android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="start"
                             android:src="@drawable/ic_baseline_assignment_24"
                             app:tint="@color/primary_text_color" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="40dp"
-                            android:textSize="@dimen/headerSize"
-                            android:layout_gravity="start"
+                            android:layout_marginStart="@dimen/img_header_magrin"
+                            android:textSize="@dimen/headerSize" android:textStyle="bold"
+                                android:layout_gravity="start|center"
+
                             android:textColor="@color/primary_text_color"
                             android:text="@string/settings_credits"/>
 
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="@dimen/img_header_size"
+                            android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
                             android:src="@drawable/ic_baseline_expand_more_24"
                             android:rotation="@{profileViewModel.actualExpand == 5 ? profileViewModel.rotatedState:profileViewModel.normalRotationState}"
@@ -811,9 +817,10 @@
                         <!--TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="40dp"
-                            android:textSize="@dimen/headerSize"
-                            android:layout_gravity="start"
+                            android:layout_marginStart="@dimen/img_header_magrin"
+                            android:textSize="@dimen/headerSize" android:textStyle="bold"
+                                android:layout_gravity="start|center"
+
                             android:textColor="@color/primary_text_color"
                             android:text="@string/settings_flaticon_introduction"/!-->
 
@@ -836,23 +843,24 @@
                         android:tag="4"
                         >
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="@dimen/img_header_size"
+                            android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="start"
                             android:src="@drawable/ic_baseline_sd_storage_24"
                             app:tint="@color/primary_text_color" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="40dp"
-                            android:textSize="@dimen/headerSize"
-                            android:layout_gravity="start"
+                            android:layout_marginStart="@dimen/img_header_magrin"
+                            android:textSize="@dimen/headerSize" android:textStyle="bold"
+                                android:layout_gravity="start|center"
+
                             android:textColor="@color/primary_text_color"
                             android:text="@string/settings_data"/>
 
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="@dimen/img_header_size"
+                            android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
                             android:src="@drawable/ic_baseline_expand_more_24"
                             android:rotation="@{profileViewModel.actualExpand == 4 ? profileViewModel.rotatedState:profileViewModel.normalRotationState}"
@@ -918,7 +926,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="40dp"
+                                android:layout_marginStart="@dimen/img_header_magrin"
                                 android:textSize="@dimen/headerSize"
                                 android:layout_gravity="start"
                                 android:textColor="@color/primary_text_color"

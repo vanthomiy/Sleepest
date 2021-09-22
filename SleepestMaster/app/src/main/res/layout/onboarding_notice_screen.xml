@@ -30,14 +30,14 @@
 
 
                     <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
+                        android:layout_width="@dimen/img_header_size"
+                        android:layout_height="@dimen/img_header_size"
                         android:layout_gravity="start"
                         android:src="@drawable/ic_baseline_bedtime_24"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="40dp"
+                        android:layout_marginStart="@dimen/img_header_magrin"
                         android:textSize="@dimen/headerSize"
                         android:layout_gravity="start"
                         android:textColor="@color/primary_text_color"
@@ -72,7 +72,7 @@
                             android:layout_height="match_parent"
                             android:layout_gravity="end"
                             android:gravity="center_vertical"
-                            android:layout_marginRight="10dp"
+                            android:layout_marginEnd="10dp"
                             android:textSize="@dimen/valueSize"
                             android:textColor="@color/primary_text_color"/>
 
@@ -101,7 +101,7 @@
                             android:layout_height="match_parent"
                             android:layout_gravity="end"
                             android:gravity="center_vertical"
-                            android:layout_marginRight="10dp"
+                            android:layout_marginEnd="10dp"
                             android:textSize="@dimen/valueSize"
                             android:textColor="@color/primary_text_color"/>
 
@@ -115,14 +115,14 @@
                     android:layout_margin="10dp">
 
                     <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
+                        android:layout_width="@dimen/img_header_size"
+                        android:layout_height="@dimen/img_header_size"
                         android:layout_gravity="start"
                         android:src="@drawable/ic_baseline_night_shelter_24"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="40dp"
+                        android:layout_marginStart="@dimen/img_header_magrin"
                         android:textSize="@dimen/headerSize"
                         android:layout_gravity="start"
                         android:textColor="@color/primary_text_color"

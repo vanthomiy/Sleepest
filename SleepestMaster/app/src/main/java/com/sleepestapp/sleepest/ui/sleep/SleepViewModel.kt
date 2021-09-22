@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.SeekBar
-import androidx.databinding.ObservableField
 import androidx.lifecycle.*
 import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.model.data.LightConditions

@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.SleepestMaster" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/primary_app_background</item>
+        <item name="colorPrimary">@color/primary_text_color</item>
         <item name="colorPrimaryVariant">@color/accent_text_color</item>
         <item name="colorOnPrimary">@color/tertiary_app_background</item>
         <!-- Secondary brand color. -->

@@ -46,8 +46,8 @@
                         android:layout_marginTop="15dp"
                         android:layout_marginBottom="10dp">
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="@dimen/img_header_size"
+                            android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="start"
                             app:tint="@color/primary_text_color"
                             android:src="@drawable/ic_baseline_night_shelter_24"
@@ -56,14 +56,16 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="40dp"
+                            android:layout_marginStart="@dimen/img_header_magrin"
                             android:text="@string/history_sleepPhases_title"
                             android:textColor="@color/primary_text_color"
-                            android:textSize="@dimen/headerSize"/>
+                                                        android:textSize="@dimen/headerSize"
+                            android:textStyle="bold"
+                            android:layout_gravity="start|center"/>
 
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="@dimen/img_header_size"
+                            android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
                             app:tint="@color/primary_text_color"
                             android:src="@drawable/info_help"
@@ -110,8 +112,8 @@
                         android:layout_marginBottom="10dp">
                         
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="@dimen/img_header_size"
+                            android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="start"
                             app:tint="@color/primary_text_color"
                             android:src="@drawable/ic_baseline_pending_actions_24"
@@ -120,14 +122,16 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="40dp"
+                            android:layout_marginStart="@dimen/img_header_magrin"
                             android:text="@string/history_activity_title"
                             android:textColor="@color/primary_text_color"
-                            android:textSize="@dimen/headerSize"/>
+                                                        android:textSize="@dimen/headerSize"
+                            android:textStyle="bold"
+                            android:layout_gravity="start|center"/>
 
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="@dimen/img_header_size"
+                            android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
                             app:tint="@color/primary_text_color"
                             android:src="@drawable/info_help"

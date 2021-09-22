@@ -8,7 +8,6 @@
             <variable
             name="infoViewModel"
             type="com.sleepestapp.sleepest.ui.info.InfoEntityViewModel"/>
-
     </data>
 
     <LinearLayout

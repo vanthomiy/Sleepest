@@ -72,8 +72,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="vertical">
+                    android:layout_marginVertical="20dp"
+                    android:orientation="vertical"
+                    >
 
                     <FrameLayout
                         android:layout_width="match_parent"
@@ -84,8 +85,8 @@
                         android:layout_marginBottom="10dp">
 
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="@dimen/img_header_size"
+                            android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="start"
                             app:tint="@color/primary_text_color"
                             android:src="@drawable/ic_baseline_night_shelter_24"
@@ -94,14 +95,16 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="40dp"
+                            android:layout_marginStart="@dimen/img_header_magrin"
                             android:text="@string/history_sleepPhases_title"
                             android:textColor="@color/primary_text_color"
-                            android:textSize="@dimen/headerSize"/>
+                                                        android:textSize="@dimen/headerSize"
+                            android:textStyle="bold"
+                            android:layout_gravity="start|center"/>
 
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="@dimen/img_header_size"
+                            android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
                             app:tint="@color/primary_text_color"
                             android:src="@drawable/info_help"
@@ -154,10 +157,11 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_marginStart="16dp"
-                                android:layout_gravity="end"
                                 android:gravity="center_vertical"
                                 android:layout_marginEnd="10dp"
-                                android:textSize="@dimen/headerSize"
+                                android:textSize="@dimen/valueSize"
+                                android:textStyle="bold"
+                                android:layout_gravity="end"
                                 android:text="@{historyDayViewModel.beginOfSleep}"
                                 android:textColor="@color/accent_text_color"
                                 tools:text="22:00" />
@@ -192,10 +196,11 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_marginStart="16dp"
-                                android:layout_gravity="end"
                                 android:gravity="center_vertical"
                                 android:layout_marginEnd="10dp"
-                                android:textSize="@dimen/headerSize"
+                                android:textSize="@dimen/valueSize"
+                                android:textStyle="bold"
+                                android:layout_gravity="end"
                                 android:text="@{historyDayViewModel.endOfSeep}"
                                 android:textColor="@color/accent_text_color"
                                 tools:text="6:00" />
@@ -213,7 +218,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginVertical="20dp"
                     android:orientation="vertical" >
 
                     <FrameLayout
@@ -225,8 +230,8 @@
                         android:layout_marginBottom="10dp">
 
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="@dimen/img_header_size"
+                            android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="start"
                             app:tint="@color/primary_text_color"
                             android:src="@drawable/moon"
@@ -235,14 +240,16 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="40dp"
+                            android:layout_marginStart="@dimen/img_header_magrin"
                             android:text="@string/history_day_sleepPhases_time_in_phase_title"
                             android:textColor="@color/primary_text_color"
-                            android:textSize="@dimen/headerSize"/>
+                                                        android:textSize="@dimen/headerSize"
+                            android:textStyle="bold"
+                            android:layout_gravity="start|center"/>
 
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="@dimen/img_header_size"
+                            android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
                             app:tint="@color/primary_text_color"
                             android:src="@drawable/info_help"
@@ -333,7 +340,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginVertical="20dp"
                     android:orientation="vertical">
 
                     <FrameLayout
@@ -345,8 +352,8 @@
                         android:layout_marginBottom="10dp">
 
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="@dimen/img_header_size"
+                            android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="start"
                             app:tint="@color/primary_text_color"
                             android:src="@drawable/ic_arrow_down_"
@@ -355,14 +362,16 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="40dp"
+                            android:layout_marginStart="@dimen/img_header_magrin"
                             android:text="@string/history_day_sleep_quality_rating_title"
                             android:textColor="@color/primary_text_color"
-                            android:textSize="@dimen/headerSize"/>
+                                                        android:textSize="@dimen/headerSize"
+                            android:textStyle="bold"
+                            android:layout_gravity="start|center"/>
 
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="@dimen/img_header_size"
+                            android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
                             app:tint="@color/primary_text_color"
                             android:src="@drawable/info_help"
@@ -448,7 +457,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginVertical="20dp"
                     android:orientation="vertical" >
 
                     <FrameLayout
@@ -460,8 +469,8 @@
                         android:layout_marginBottom="10dp">
 
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="@dimen/img_header_size"
+                            android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="start"
                             app:tint="@color/primary_text_color"
                             android:src="@drawable/ic_baseline_pending_actions_24"
@@ -470,14 +479,16 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="40dp"
+                            android:layout_marginStart="@dimen/img_header_magrin"
                             android:text="@string/history_activity_title"
                             android:textColor="@color/primary_text_color"
-                            android:textSize="@dimen/headerSize"/>
+                                                        android:textSize="@dimen/headerSize"
+                            android:textStyle="bold"
+                            android:layout_gravity="start|center"/>
 
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="@dimen/img_header_size"
+                            android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
                             app:tint="@color/primary_text_color"
                             android:src="@drawable/info_help"
