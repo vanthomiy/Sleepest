@@ -133,7 +133,7 @@ class SettingsFragment : Fragment() {
             DontKillMyAppFragment.show(requireActivity())
         }
 
-        viewModel.aboutUsSelection.observe(this){
+        viewModel.aboutUsSelection.observe(viewLifecycleOwner){
             onAboutUsClicked(it)
         }
 
@@ -385,8 +385,9 @@ class SettingsFragment : Fragment() {
             }
             "PRIVACY_POLICE" -> {
                 val websiteUrl = Websites.getWebsite(Websites.getWebsiteByString(tag))
-
-                actualContext.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(websiteUrl)))
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(websiteUrl))
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                actualContext.startActivity(intent)
             }
         }
     }

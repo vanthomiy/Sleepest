@@ -11,11 +11,11 @@
     inner_frame_layout_padding (below variable) on round screens.
     -->
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="headerSize">19sp</dimen>
+    <dimen name="headerSize">17sp</dimen>
     <dimen name="bigSize">20sp</dimen>
     <dimen name="valueSize">13sp</dimen>
     <dimen name="infoSize">11sp</dimen>
     <dimen name="valuesHeight">40dp</dimen>
-    <dimen name="img_header_size">30dp</dimen>
-    <dimen name="img_header_magrin">45dp</dimen>
+    <dimen name="img_header_size">25dp</dimen>
+    <dimen name="img_header_magrin">40dp</dimen>
 </resources>
