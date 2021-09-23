@@ -100,7 +100,7 @@ class HistoryDayFragment : Fragment() {
         ).toInt()
         pieChartSleepAnalysis.invalidate()
 
-        // Listener for changes in the analysis date. If user changes the day for the diagramms.
+        // Listener for changes in the analysis date. If user changes the day for the diagrams.
         viewModel.analysisDate.addOnPropertyChangedCallback(
             object: Observable.OnPropertyChangedCallback() {
                 override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
@@ -316,12 +316,12 @@ class HistoryDayFragment : Fragment() {
         val colorList = mutableListOf<Int>()
         for (ent in barEntries) {
             when (ent.y) {
-                1f -> colorList.add(ContextCompat.getColor(viewModel.context, R.color.awake_sleep_color))
-                2f -> colorList.add(ContextCompat.getColor(viewModel.context, R.color.light_sleep_color))
-                3f -> colorList.add(ContextCompat.getColor(viewModel.context, R.color.deep_sleep_color))
-                4f -> colorList.add(ContextCompat.getColor(viewModel.context, R.color.rem_sleep_color))
-                5f -> colorList.add(ContextCompat.getColor(viewModel.context, R.color.sleep_sleep_color))
-                else -> colorList.add(ContextCompat.getColor(viewModel.context, R.color.warning_color))
+                1f -> colorList.add(ContextCompat.getColor(actualContext, R.color.awake_sleep_color))
+                2f -> colorList.add(ContextCompat.getColor(actualContext, R.color.light_sleep_color))
+                3f -> colorList.add(ContextCompat.getColor(actualContext, R.color.deep_sleep_color))
+                4f -> colorList.add(ContextCompat.getColor(actualContext, R.color.rem_sleep_color))
+                5f -> colorList.add(ContextCompat.getColor(actualContext, R.color.sleep_sleep_color))
+                else -> colorList.add(ContextCompat.getColor(actualContext, R.color.warning_color))
             }
         }
 
@@ -385,50 +385,69 @@ class HistoryDayFragment : Fragment() {
         barChart.legend.textSize = 12f
         barChart.legend.textColor = viewModel.checkDarkMode()
 
+        val legendEntryList = mutableListOf<LegendEntry>()
+
+        val sleepStates = SleepState.getListOfSleepStates()
+        sleepStates.forEach {
+            legendEntryList.add(
+                LegendEntry(
+                    viewModel.sleepStateString[it],
+                    Legend.LegendForm.SQUARE,
+                    8f,
+                    8f,
+                    null,
+                    viewModel.sleepStateColor[it]?: 1
+                )
+            )
+        }
+
+        barChart.legend.setCustom(legendEntryList)
+
+        /*
         barChart.legend.setCustom(
             listOf(
                 LegendEntry(
-                    StringUtil.getStringXml(R.string.history_day_timeInPhase_lightSleep, viewModel.getApplication()),
+                    StringUtil.getStringXml(R.string.history_day_timeInPhase_lightSleep, application),
                     Legend.LegendForm.SQUARE,
                     8f,
                     8f,
                     null,
-                    ContextCompat.getColor(viewModel.context, R.color.light_sleep_color)
+                    ContextCompat.getColor(actualContext, R.color.light_sleep_color)
                 ),
                 LegendEntry(
-                    StringUtil.getStringXml(R.string.history_day_timeInPhase_deepSleep, viewModel.getApplication()),
+                    StringUtil.getStringXml(R.string.history_day_timeInPhase_deepSleep, application),
                     Legend.LegendForm.SQUARE,
                     8f,
                     8f,
                     null,
-                    ContextCompat.getColor(viewModel.context, R.color.deep_sleep_color)
+                    ContextCompat.getColor(actualContext, R.color.deep_sleep_color)
                 ),
                 LegendEntry(
-                    StringUtil.getStringXml(R.string.history_day_timeInPhase_remSleep, viewModel.getApplication()),
+                    StringUtil.getStringXml(R.string.history_day_timeInPhase_remSleep, application),
                     Legend.LegendForm.SQUARE,
                     8f,
                     8f,
                     null,
-                    ContextCompat.getColor(viewModel.context, R.color.rem_sleep_color)
+                    ContextCompat.getColor(actualContext, R.color.rem_sleep_color)
                 ),
                 LegendEntry(
-                    StringUtil.getStringXml(R.string.history_day_timeInPhase_awake, viewModel.getApplication()),
+                    StringUtil.getStringXml(R.string.history_day_timeInPhase_awake, application),
                     Legend.LegendForm.SQUARE,
                     8f,
                     8f,
                     null,
-                    ContextCompat.getColor(viewModel.context, R.color.awake_sleep_color)
+                    ContextCompat.getColor(actualContext, R.color.awake_sleep_color)
                 ),
                 LegendEntry(
-                    StringUtil.getStringXml(R.string.history_day_timeInPhase_sleepSum, viewModel.getApplication()),
+                    StringUtil.getStringXml(R.string.history_day_timeInPhase_sleepSum, application),
                     Legend.LegendForm.SQUARE,
                     8f,
                     8f,
                     null,
-                    ContextCompat.getColor(viewModel.context, R.color.sleep_sleep_color)
+                    ContextCompat.getColor(actualContext, R.color.sleep_sleep_color)
                 )
             )
-        )
+        ) */
 
         barChart.isDragEnabled = false
 
@@ -504,7 +523,7 @@ class HistoryDayFragment : Fragment() {
 
     /**  */
     private fun setPieChart() : PieChart {
-        val chart = PieChart(viewModel.context)
+        val chart = PieChart(actualContext)
         val data = generateDataPieChart()
         val pieDataSet = PieDataSet(data.first, "")
         visualSetUpPieChart(chart, pieDataSet, data.second)
@@ -526,15 +545,15 @@ class HistoryDayFragment : Fragment() {
         //sleepTypes[0] = awake, sleepTypes[1] = sleep, sleepTypes[2] = light, sleepTypes[3] = deep, sleepTypes[4] = rem
 
         if (sleepTypes[0])
-            listColors.add(ContextCompat.getColor(viewModel.context, R.color.awake_sleep_color))
+            listColors.add(ContextCompat.getColor(actualContext, R.color.awake_sleep_color))
         if (sleepTypes[1])
-            listColors.add(ContextCompat.getColor(viewModel.context, R.color.sleep_sleep_color))
+            listColors.add(ContextCompat.getColor(actualContext, R.color.sleep_sleep_color))
         if (sleepTypes[2])
-            listColors.add(ContextCompat.getColor(viewModel.context, R.color.light_sleep_color))
+            listColors.add(ContextCompat.getColor(actualContext, R.color.light_sleep_color))
         if (sleepTypes[3])
-            listColors.add(ContextCompat.getColor(viewModel.context, R.color.deep_sleep_color))
+            listColors.add(ContextCompat.getColor(actualContext, R.color.deep_sleep_color))
         if (sleepTypes[4])
-            listColors.add(ContextCompat.getColor(viewModel.context, R.color.rem_sleep_color))
+            listColors.add(ContextCompat.getColor(actualContext, R.color.rem_sleep_color))
 
         pieDataSet.colors = listColors
         pieDataSet.setDrawValues(false)

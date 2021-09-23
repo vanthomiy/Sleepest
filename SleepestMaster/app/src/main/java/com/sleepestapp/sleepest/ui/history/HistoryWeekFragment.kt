@@ -1,5 +1,6 @@
 package com.sleepestapp.sleepest.ui.history
 
+import android.content.Context
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -21,6 +22,8 @@ class HistoryWeekFragment : Fragment() {
 
     private val viewModelWeek by lazy { ViewModelProvider(this).get(HistoryWeekViewModel::class.java) }
 
+    private val actualContext: Context by lazy { requireActivity().applicationContext }
+
     /**  */
     private lateinit var binding: FragmentHistoryWeekBinding
 
@@ -41,8 +44,8 @@ class HistoryWeekFragment : Fragment() {
         binding.historyWeekViewModel = viewModelWeek
         viewModelWeek.transitionsContainer = (binding.lLLinearAnimationLayoutWeeklyAnalysis)
 
-        barChart = viewModel.setBarChart(7, getSundayOfWeek())
-        activityChart = viewModel.setActivityChart(7, getSundayOfWeek())
+        barChart = viewModel.setBarChart(BarChart(actualContext), 7, getSundayOfWeek())
+        activityChart = viewModel.setActivityChart(LineChart(context), 7, getSundayOfWeek())
 
         binding.lLSleepAnalysisChartsWeekSleepPhases.addView(barChart)
         binding.lLActivityAnalysisChartWeek.addView(activityChart)

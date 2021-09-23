@@ -71,7 +71,7 @@ class SettingsViewModel(
     }
 
 
-    val showAlarmActiv = MutableLiveData(true)
+    val showAlarmActive = MutableLiveData(true)
     val showActualWakeUpPoint = MutableLiveData(true)
     val showActualSleepTime = MutableLiveData(true)
     val showDetailedSleepTime = MutableLiveData(true)
@@ -84,7 +84,7 @@ class SettingsViewModel(
 
         viewModelScope.launch {
             when (view.tag.toString()) {
-                "show_alarm_active" -> showAlarmActiv.value
+                "show_alarm_active" -> showAlarmActive.value
                     ?.let { dataStoreRepository.updateBannerShowAlarmActiv(it) }
                 "show_actual_wakeup" -> showActualWakeUpPoint.value
                     ?.let { dataStoreRepository.updateBannerShowActualWakeUpPoint(it) }
@@ -215,7 +215,7 @@ class SettingsViewModel(
             darkMode.value = (settingsParams.designDarkMode)
             autoDarkMode.value = (settingsParams.designAutoDarkMode)
 
-            showAlarmActiv.value = (settingsParams.bannerShowAlarmActiv)
+            showAlarmActive.value = (settingsParams.bannerShowAlarmActiv)
             showActualWakeUpPoint.value = (settingsParams.bannerShowActualWakeUpPoint)
             showActualSleepTime.value = (settingsParams.bannerShowActualSleepTime)
             showSleepState.value = (settingsParams.bannerShowSleepState)

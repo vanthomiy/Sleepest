@@ -1,5 +1,6 @@
 package com.sleepestapp.sleepest.ui.history
 
+import android.content.Context
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -19,6 +20,8 @@ class HistoryMonthFragment : Fragment() {
 
     private val viewModelMonth by lazy { ViewModelProvider(this).get(HistoryMonthViewModel::class.java) }
 
+    private val actualContext: Context by lazy { requireActivity().applicationContext }
+
     private lateinit var binding: FragmentHistoryMonthBinding
     private lateinit var barChart: BarChart
     private lateinit var barChartDates :  Pair<Int, LocalDate>
@@ -35,8 +38,8 @@ class HistoryMonthFragment : Fragment() {
         viewModelMonth.transitionsContainer = (binding.lLLinearAnimationLayoutMonthlyAnalysis)
 
         barChartDates = getEndOfMonth()
-        barChart = viewModel.setBarChart(barChartDates.first, barChartDates.second)
-        activityChart = viewModel.setActivityChart(barChartDates.first, barChartDates.second)
+        barChart = viewModel.setBarChart(BarChart(actualContext), barChartDates.first, barChartDates.second)
+        activityChart = viewModel.setActivityChart(LineChart(context), barChartDates.first, barChartDates.second)
 
         binding.lLSleepAnalysisChartsMonthSleepPhases.addView(barChart)
         binding.lLActivityAnalysisChartMonth.addView(activityChart)

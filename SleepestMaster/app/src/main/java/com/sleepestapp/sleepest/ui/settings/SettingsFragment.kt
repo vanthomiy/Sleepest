@@ -10,7 +10,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.DocumentsContract
-import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.TEXT_ALIGNMENT_CENTER
@@ -34,18 +33,12 @@ import com.sleepestapp.sleepest.model.data.credits.CreditsSites
 import com.sleepestapp.sleepest.model.data.export.ImportUtil
 import com.sleepestapp.sleepest.model.data.export.UserSleepExportData
 import com.sleepestapp.sleepest.onboarding.OnboardingActivity
-import com.sleepestapp.sleepest.storage.DataStoreRepository
-import com.sleepestapp.sleepest.storage.DatabaseRepository
-import com.sleepestapp.sleepest.ui.sleep.SleepViewModel
 import com.sleepestapp.sleepest.util.IconAnimatorUtil.isDarkThemeOn
 import com.sleepestapp.sleepest.util.PermissionsUtil
 import com.sleepestapp.sleepest.util.SmileySelectorUtil
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.*
-import java.util.*
 
 
 class SettingsFragment : Fragment() {
@@ -73,18 +66,18 @@ class SettingsFragment : Fragment() {
     private val actualContext: Context by lazy { requireActivity().applicationContext }
 
     /**
-     * actual case of entrie
-     * e.g. after switching dark mode the case of entrie changes
+     * actual case of entry
+     * e.g. after switching dark mode the case of entry changes
      */
-    private var caseOfEntrie = -1
+    private var caseOfEntry = -1
 
     /**
-     * Open the selected information view if [caseOfEntrie] is not -1
+     * Open the selected information view if [caseOfEntry] is not -1
      */
-    fun setCaseOfEntrie(case: Int){
-        caseOfEntrie = case
+    fun setCaseOfEntry(case: Int){
+        caseOfEntry = case
         if(this::binding.isInitialized)
-            viewModel.actualExpand.value = (caseOfEntrie)
+            viewModel.actualExpand.value = (caseOfEntry)
     }
 
     override fun onCreateView(
@@ -139,7 +132,7 @@ class SettingsFragment : Fragment() {
 
         //endregion
 
-        viewModel.actualExpand.value = (caseOfEntrie)
+        viewModel.actualExpand.value = (caseOfEntry)
 
 
         var version : String = "XX"
