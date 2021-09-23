@@ -88,7 +88,6 @@ public class AlarmClockAudio {
      * @return Instance
      */
     private static MediaPlayer getMediaPlayer() {
-        /**TODO: Verschiedene Alarme einfügen, über Einstellungen anpassbar */
 
         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
             return mediaPlayer;
@@ -168,12 +167,11 @@ public class AlarmClockAudio {
 
         if (screenOn) {
 
-
             //Timer of 1 minute, which snoozes the alarm after finishing
             countDownTimer = new CountDownTimer(Constants.MILLIS_UNTIL_SNOOZE, Constants.COUNTDOWN_TICK_INTERVAL) {
 
                 public void onTick(long millisUntilFinished) {
-
+                    //Unused at the moment
                 }
 
                 public void onFinish() {
@@ -183,7 +181,6 @@ public class AlarmClockAudio {
                     } else {
                         stopAlarm(true, screenOn);
                     }
-
                 }
 
             }.start();
@@ -214,7 +211,6 @@ public class AlarmClockAudio {
 
         //Get instance of ringtone
         ringtoneManager = getRingtoneManager(dataStoreRepository.getAlarmToneJob());
-        /**TODO: Abfrage, ob Uri noch mit dem eingestellten übereinstimmt*/
 
         //Convert integer volume to float volume 0.0 - 1.0 for ringtone
         if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) > 0) {

@@ -42,7 +42,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         //Init repos
         DatabaseRepository databaseRepository = ((MainApplication)context.getApplicationContext()).getDataBaseRepository();
-        DataStoreRepository dataStoreRepository = ((MainApplication)context.getApplicationContext()).getDataStoreRepository();
         SleepCalculationHandler sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(MainApplication.Companion.applicationContext());
 
         Calendar calendar = Calendar.getInstance();
@@ -80,7 +79,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 WorkmanagerCalculation.startPeriodicWorkmanager(Constants.WORKMANAGER_CALCULATION_DURATION, context.getApplicationContext());
                 break;
             case START_WORKMANAGER:
-                //Deprecated
+                //In the moment unused, but could be interesting for the future development
                 break;
             case STOP_WORKMANAGER:
                 //Stops the workmanager outside sleep time
@@ -107,7 +106,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 NotificationManager notificationManagerApi = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManagerApi.cancel(NotificationUsage.Companion.getCount(NotificationUsage.NOTIFICATION_NO_API_DATA));
             case GO_TO_SLEEP:
-                //After clear notification, which informs the user that he should sleep now.
+                //After clearing notification to inform the user that he should sleep now.
                 Toast.makeText(context.getApplicationContext(), context.getApplicationContext().getString(R.string.alarm_clock_user_should_sleep), Toast.LENGTH_LONG).show();
                 NotificationManager notificationManagerGoSleep = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManagerGoSleep.cancel(NotificationUsage.Companion.getCount(NotificationUsage.NOTIFICATION_USER_SHOULD_SLEEP));

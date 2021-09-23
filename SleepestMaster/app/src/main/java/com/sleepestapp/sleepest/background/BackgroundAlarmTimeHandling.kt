@@ -217,8 +217,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                 //Stops the foreground service depending on the screen status (on/off)
                 if (isUserInApp()) {
                     val startForegroundIntent = Intent(context, ForegroundActivity::class.java)
-                    startForegroundIntent.flags =
-                        Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startForegroundIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                     startForegroundIntent.putExtra("intent", 2)
                     context.startActivity(startForegroundIntent)
                 } else {
@@ -246,6 +245,8 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                     startForegroundIntent.putExtra("intent", 1)
                     context.startActivity(startForegroundIntent)
                 }
+
+                //Don't delete this for future development!
 
                 /*if (inActivity) {
                     val startForegroundIntent = Intent(context, ForegroundActivity::class.java)
@@ -292,13 +293,11 @@ class BackgroundAlarmTimeHandler(val context: Context) {
         val am = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
         val tasks = am.getRunningTasks(1)
         val task = tasks[0] // current task
+        val rootActivity = task.baseActivity //current activity
+        val currentPackageName = rootActivity!!.packageName //current packagename
 
-        val rootActivity = task.baseActivity
-
-
-        val currentPackageName = rootActivity!!.packageName
         if (currentPackageName == "com.sleepestapp.sleepest") {
-            return true;
+            return true
         }
 
         return false

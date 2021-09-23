@@ -42,24 +42,22 @@ public class WorkmanagerCalculation extends Worker {
     @Override
     public Result doWork() {
 
-        /**
-         * Hinweis: Hier dürfen nur Prozesse stattfinden, die nicht länger als 10 Minuten dauern
-         * Allerdings werden Notifications erst angezeigt, wenn der Bildschirm angeht. Somit bricht
-         * der Workmanager ab, sobald die Notification nicht innerhalb 10 Minuten nach Triggerung
-         * angeschaut wird. Prozesse, die den Nutzer nicht benötigen, sind hier aber im Normalfall
-         * problemlos möglich.
-         */
+        try {
+            //Defines the new wakeup
+            BackgroundAlarmTimeHandler.Companion.getHandler(context).defineNewUserWakeup(null, true);
 
-        //Defines the new wakeup
-        BackgroundAlarmTimeHandler.Companion.getHandler(context).defineNewUserWakeup(null, true);
+            Calendar calendar = Calendar.getInstance();
+            SharedPreferences pref = context.getSharedPreferences("WorkmanagerCalculation", 0);
+            SharedPreferences.Editor ed = pref.edit();
+            ed.putInt("day", calendar.get(Calendar.DAY_OF_WEEK));
+            ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
+            ed.putInt("minute", calendar.get(Calendar.MINUTE));
+            ed.apply();
 
-        Calendar calendar = Calendar.getInstance();
-        SharedPreferences pref = context.getSharedPreferences("WorkmanagerCalculation", 0);
-        SharedPreferences.Editor ed = pref.edit();
-        ed.putInt("day", calendar.get(Calendar.DAY_OF_WEEK));
-        ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
-        ed.putInt("minute", calendar.get(Calendar.MINUTE));
-        ed.apply();
+            return Result.success();
+        } catch (Exception e) {
+            Result.retry();
+        }
 
         return Result.success();
     }

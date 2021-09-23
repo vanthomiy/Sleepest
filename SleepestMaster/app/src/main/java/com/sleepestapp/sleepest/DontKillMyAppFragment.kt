@@ -27,33 +27,39 @@ class DontKillMyAppFragment : DialogFragment() {
     private val actualContext: Context by lazy {
         requireActivity().applicationContext }
 
+    /**
+     * Get repo of datastore
+     */
     private val dataStoreRepository by lazy {
         (actualContext as MainApplication).dataStoreRepository}
 
+    /**
+     * Initiate the dialog
+     */
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dokiCustomView = View.inflate(context, R.layout.fragment_dont_kill_my_app, null)
         dokiCustomView?.findViewById<DokiContentView?>(R.id.doki_content)?.let {
             it.setButtonsVisibility(false)
             it.loadContent()
         }
+        //Set the topic text
         val tvNoticeDontKillMyApp : TextView = dokiCustomView.findViewById(R.id.tvNoticeDontKillMyApp)
         tvNoticeDontKillMyApp.setText(getString(R.string.notice_dont_kill_my_app))
 
+        //Set the text for the user to let him know what to do
         val tvDescriptionDontKillMyApp : TextView = dokiCustomView.findViewById(R.id.tvDescriptionDontKillMyApp)
         tvDescriptionDontKillMyApp.setText(getString(R.string.description_dont_kill_my_app))
 
+        //return a new dialog window
         return MaterialDialog(requireContext()).show {
             customView(view = dokiCustomView)
+
+            //Set the close button
             positiveButton(R.string.doki_close) {
                 dataStoreRepository.updateEnergyOptionsShownJob(true)
                 dismiss()
             }
         }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        //dataStoreRepository.updateEnergyOptionsShownJob(true)
     }
 
     fun show(context: FragmentActivity, tag: String = DOKI_DIALOG_TAG) {

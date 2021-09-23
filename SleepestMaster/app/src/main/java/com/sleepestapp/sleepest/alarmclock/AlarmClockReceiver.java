@@ -62,18 +62,15 @@ public class AlarmClockReceiver extends BroadcastReceiver {
         switch (AlarmClockReceiverUsage.valueOf(intent.getStringExtra((context.getString(R.string.alarm_clock_intent_key))))) {
             case START_ALARMCLOCK: //Init Alarmclock
 
-                //if (alarmEntity != null && !alarmEntity.getTempDisabled()) {
-                    PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-                    if (powerManager.isInteractive()) {
-                        NotificationUtil notificationsUtil = new NotificationUtil(context.getApplicationContext(), NotificationUsage.NOTIFICATION_ALARM_CLOCK,null);
-                        notificationsUtil.chooseNotification();
-                    } else {
-                        //showNotificationOnLockScreen(NotificationUsage.NOTIFICATION_ALARM_CLOCK);
-                        NotificationUtil notificationsUtil = new NotificationUtil(context.getApplicationContext(), NotificationUsage.NOTIFICATION_ALARM_CLOCK_LOCK_SCREEN,null);
-                        notificationsUtil.chooseNotification();
-                    }
-               // }
-
+                PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+                if (powerManager.isInteractive()) {
+                    NotificationUtil notificationsUtil = new NotificationUtil(context.getApplicationContext(), NotificationUsage.NOTIFICATION_ALARM_CLOCK,null);
+                    notificationsUtil.chooseNotification();
+                } else {
+                    //showNotificationOnLockScreen(NotificationUsage.NOTIFICATION_ALARM_CLOCK);
+                    NotificationUtil notificationsUtil = new NotificationUtil(context.getApplicationContext(), NotificationUsage.NOTIFICATION_ALARM_CLOCK_LOCK_SCREEN,null);
+                    notificationsUtil.chooseNotification();
+                }
                 break;
             case STOP_ALARMCLOCK: //Stop button of ScreenOn notification
                 BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).alarmClockRang(true);
@@ -88,7 +85,6 @@ public class AlarmClockReceiver extends BroadcastReceiver {
                         NotificationUtil notificationsUtil = new NotificationUtil(context.getApplicationContext(), NotificationUsage.NOTIFICATION_ALARM_CLOCK,null);
                         notificationsUtil.chooseNotification();
                     } else {
-                        //showNotificationOnLockScreen(NotificationUsage.NOTIFICATION_ALARM_CLOCK);
                         NotificationUtil notificationsUtil = new NotificationUtil(context.getApplicationContext(), NotificationUsage.NOTIFICATION_ALARM_CLOCK_LOCK_SCREEN,null);
                         notificationsUtil.chooseNotification();
                     }
@@ -135,10 +131,6 @@ public class AlarmClockReceiver extends BroadcastReceiver {
         Intent intent = new Intent(restartAlarmContext, AlarmClockReceiver.class);
         intent.putExtra(context.getString(R.string.alarm_clock_intent_key), AlarmClockReceiverUsage.START_ALARMCLOCK.name());
         PendingIntent pendingIntent = PendingIntent.getBroadcast(restartAlarmContext, AlarmClockReceiverUsage.Companion.getCount(AlarmClockReceiverUsage.SNOOZE_ALARMCLOCK), intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        //AlarmManager alarmManager = (AlarmManager) restartAlarmContext.getSystemService(ALARM_SERVICE);
-
-        //alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + snoozeTime, pendingIntent);
     }
 
     /**
@@ -164,86 +156,4 @@ public class AlarmClockReceiver extends BroadcastReceiver {
 
         return (PendingIntent.getBroadcast(alarmActiveContext, AlarmClockReceiverUsage.Companion.getCount(alarmClockReceiverUsage), intent, PendingIntent.FLAG_NO_CREATE) != null);
     }
-
-    @RequiresApi(api = Build.VERSION_CODES.P)
-    private void showFullscreenNotification() {
-
-        createNotificationChannel();
-
-        // Intent, which starts with tap on the Notification
-        Intent intent = new Intent(context, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        // Intent, which starts with tap on the cancel button
-        Intent cancelAlarmIntent = new Intent(context, AlarmClockReceiver.class);
-        cancelAlarmIntent.putExtra(context.getString(R.string.alarm_clock_intent_key), AlarmClockReceiverUsage.STOP_ALARMCLOCK.name());
-        cancelAlarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent cancelAlarmPendingIntent = PendingIntent.getBroadcast(context, AlarmClockReceiverUsage.Companion.getCount(AlarmClockReceiverUsage.STOP_ALARMCLOCK), cancelAlarmIntent, PendingIntent.FLAG_ONE_SHOT);
-
-        // Intent, which starts with tap on the snooze button
-        Intent snoozeAlarmIntent = new Intent(context, AlarmClockReceiver.class);
-        snoozeAlarmIntent.putExtra(context.getString(R.string.alarm_clock_intent_key), AlarmClockReceiverUsage.SNOOZE_ALARMCLOCK.name());
-        snoozeAlarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent snoozeAlarmPendingIntent = PendingIntent.getBroadcast(context, AlarmClockReceiverUsage.Companion.getCount(AlarmClockReceiverUsage.SNOOZE_ALARMCLOCK), snoozeAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        //Build the builder for the notification
-        NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(context, context.getString(R.string.alarm_clock_channel))
-                        .setSmallIcon(R.drawable.ic_launcher_background) /**TODO: Icon*/
-                        .setContentTitle(context.getString(R.string.alarm_notification_title))
-                        .setContentText(context.getString(R.string.alarm_notification_text))
-                        .setPriority(NotificationCompat.PRIORITY_MAX)
-                        .setCategory(NotificationCompat.CATEGORY_ALARM)
-                        .setContentIntent(pendingIntent)
-                        .setFullScreenIntent(pendingIntent, true)
-                        .addAction(R.drawable.ic_launcher_foreground, context.getString(R.string.alarm_notification_button_1), cancelAlarmPendingIntent) /**TODO: Icon*/
-                        .addAction(R.drawable.ic_launcher_background, context.getString(R.string.alarm_notification_button_2), snoozeAlarmPendingIntent); /**TODO: Icon*/
-
-        NotificationManagerCompat.from(context).notify(Constants.ALARM_CLOCK_NOTIFICATION_ID, notificationBuilder.build());
-
-        //Starts a new singleton audio class and init it, if not init yet
-        AlarmClockAudio.getInstance().init(context);
-        AlarmClockAudio.getInstance().startAlarm(true);
-    }
-
-    /**
-     * A full screen notification is build with the help of Notification Builder. It is shown on the lockscreen.
-     * @param notificationUsage Usage of the lock screen notification
-     */
-    private void showNotificationOnLockScreen(NotificationUsage notificationUsage) {
-        createNotificationChannel();
-
-        Intent intent = new Intent(context, LockScreenAlarmActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, ActivityIntentUsage.Companion.getCount(ActivityIntentUsage.LOCKSCREEN_ACTIVITY), intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(context, context.getString(R.string.alarm_clock_channel))
-                        .setSmallIcon(R.drawable.ic_launcher_background) /**TODO: Icon*/
-                        .setContentTitle(context.getString(R.string.alarm_notification_title))
-                        .setContentText(context.getString(R.string.alarm_notification_text))
-                        .setPriority(NotificationCompat.PRIORITY_MAX)
-                        .setCategory(NotificationCompat.CATEGORY_ALARM)
-                        .setContentIntent(pendingIntent)
-                        .setFullScreenIntent(pendingIntent, true);
-        NotificationManagerCompat.from(context).notify(NotificationUsage.Companion.getCount(notificationUsage), notificationBuilder.build());
-    }
-
-    /**
-     * Creates a new channel for notifications
-     */
-    private void createNotificationChannel() {
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-
-        if (notificationManager.getNotificationChannel(context.getString(R.string.alarm_clock_channel)) == null) {
-            NotificationChannel channel = new NotificationChannel(context.getString(R.string.alarm_clock_channel),
-                    context.getString(R.string.alarm_clock_channel_name), NotificationManager.IMPORTANCE_HIGH);
-
-            channel.setDescription(context.getString(R.string.alarm_clock_channel_description));
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
-
-
 }

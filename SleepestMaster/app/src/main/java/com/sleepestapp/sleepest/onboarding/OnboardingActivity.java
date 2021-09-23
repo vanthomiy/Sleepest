@@ -16,6 +16,9 @@ import com.sleepestapp.sleepest.util.TimeConverterUtil;
 
 import java.util.ArrayList;
 
+/**
+ * Activity for the tutorial viewpager
+ */
 public class OnboardingActivity extends AppCompatActivity {
 
     public static ViewPager viewPager;
@@ -27,11 +30,13 @@ public class OnboardingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
 
+        //Get the viewpager
         viewPager = findViewById(R.id.onboarding_viewpager);
 
         dataStoreRepository = DataStoreRepository.Companion.getRepo(getApplicationContext());
         ArrayList<Object> arrayList = new ArrayList<>();
 
+        //Fill the list with values if it is not the first app start. The values are for the set sleep times
         if (dataStoreRepository.getTutorialCompletedJob()) {
             arrayList.add(dataStoreRepository.getSleepTimeBeginJob());
             arrayList.add(dataStoreRepository.getSleepTimeEndJob());
@@ -44,6 +49,7 @@ public class OnboardingActivity extends AppCompatActivity {
             arrayList.add(true);
         }
 
+        //Set the adapter
         onboardingViewPagerAdapter = new OnboardingViewPagerAdapter(OnboardingActivity.this, OnboardingActivity.this, arrayList);
         viewPager.setAdapter(onboardingViewPagerAdapter);
     }

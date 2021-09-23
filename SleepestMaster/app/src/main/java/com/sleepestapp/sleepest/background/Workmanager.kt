@@ -113,8 +113,6 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
             sleepCalculationHandler.checkIsUserSleeping(null)
         }
 
-        //sleepCalculationHandler.checkIsUserSleepingJob(null)
-
         return Result.success()
     }
 
