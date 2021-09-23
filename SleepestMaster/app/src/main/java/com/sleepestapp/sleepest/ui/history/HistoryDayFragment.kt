@@ -30,6 +30,7 @@ import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
+import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.Is24HourFormat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -77,6 +78,8 @@ class HistoryDayFragment : Fragment() {
         binding = FragmentHistoryDayBinding.inflate(inflater, container, false)
         binding.historyDayViewModel = viewModelDay
         viewModelDay.transitionsContainer = binding.lLLinearAnimationLayoutDailyAnalysis
+
+        viewModelDay.is24HourFormat = Is24HourFormat(actualContext)
 
         // Initial set up for the daily sleep analysis bar chart.
         barChartSleepAnalysis = setBarChart()

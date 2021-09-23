@@ -1,22 +1,19 @@
 package com.sleepestapp.sleepest.ui.history
 
-import android.app.Application
 import android.app.TimePickerDialog
-import android.content.Context
 import android.transition.TransitionManager
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.databinding.ObservableField
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.model.data.MoodType
 import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler
 import com.sleepestapp.sleepest.util.IconAnimatorUtil
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil
 import com.sleepestapp.sleepest.util.SmileySelectorUtil
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDateTime
@@ -24,11 +21,7 @@ import java.time.LocalTime
 import java.time.ZoneOffset
 
 /**  */
-class HistoryDayViewModel(application: Application) : AndroidViewModel(application) {
-
-    val context: Context by lazy { getApplication<Application>().applicationContext }
-
-    private val scope: CoroutineScope = MainScope()
+class HistoryDayViewModel() : ViewModel() {
 
     val sleepCalculationHandler: SleepCalculationHandler by lazy { SleepCalculationHandler.getHandler(context) }
 
@@ -77,6 +70,8 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
     val actualExpand = ObservableField(-1)
     val goneState = ObservableField(View.GONE)
     val visibleState = ObservableField(View.VISIBLE)
+
+    var is24HourFormat : Boolean = false
 
     lateinit var transitionsContainer : ViewGroup
 
@@ -136,12 +131,12 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
         createPickerDialogue(view, time, view.tag == "BeginOfSleep")
     }
 
-    private fun createPickerDialogue(view: View, dateTime: LocalDateTime, startOfSleep:Boolean) {
+    private fun createPickerDialogue(view: View, dateTime: LocalDateTime, startOfSleep: Boolean) {
         val tpd = TimePickerDialog(
             view.context,
             R.style.TimePickerTheme,
             { _, h, m ->
-                scope.launch {
+                viewModelScope.launch {
                     val tempTime = LocalTime.of(h, m)
                     val newDateTime = dateTime.toLocalDate().atTime(tempTime)
                     val epochTime = newDateTime.atZone(ZoneOffset.systemDefault()).toInstant().toEpochMilli().div(1000)
@@ -154,7 +149,7 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
             },
             dateTime.hour,
             dateTime.minute,
-            SleepTimeValidationUtil.Is24HourFormat(context)
+            is24HourFormat
         )
         tpd.show()
     }
