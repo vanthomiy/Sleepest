@@ -891,4 +891,72 @@ class SleepCalculationHandlerTest
 
     }
 
+
+    /**
+     * We check some calculation bugs in the last minutes
+     */
+    @Test
+    fun sleepCalculationLast30MinutesTest(): Unit = runBlocking {
+
+        val actualTimeSeconds = 100000
+        val sleepCalculationHandler = SleepCalculationHandler.getHandler(context)
+        var sleepList5 = mutableListOf<SleepApiRawDataEntity>()
+
+        // keine daten
+        var sleepState = sleepCalculationHandler.defineSleepStates(actualTimeSeconds, sleepList5, LightConditions.DARK)
+        assertThat(sleepState, CoreMatchers.equalTo(SleepState.SLEEPING))
+
+        // add 5 freuquency data with table but all in past
+        // 50 minutes awake
+        for(i in 0..9 step 1) // 2 hours / 20  < 10
+        {
+            val data = SleepApiRawDataEntity(actualTimeSeconds-(i*5*60), 5,1,1,sleepState = SleepState.NONE)
+            sleepList5.add(data)
+        }
+
+        // then 100 minutes of sleep
+        for(i in 10..30 step 1) // 2 hours / 20  < 10
+        {
+            val data = SleepApiRawDataEntity(actualTimeSeconds-(i*5*60), 96,1,1,sleepState = SleepState.NONE)
+            sleepList5.add(data)
+        }
+        val lastTime = sleepList5.last().timestampSeconds
+        sleepDbRepository.insertSleepApiRawData(sleepList5)
+
+        val actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(lastTime.toLong()*1000), ZoneOffset.systemDefault())
+        //now we are exact at the last timestamp
+        sleepCalculationHandler.checkIsUserSleeping(actualTime, false)
+        sleepCalculationHandler.defineUserWakeup(actualTime, false)
+
+        //sleep time is what?
+        val id =
+            UserSleepSessionEntity.getIdByTimeStamp(sleepList5.minOf { x -> x.timestampSeconds })
+        val sleepSessionEntity = sleepDbRepository.getOrCreateSleepSessionById(id)
+
+
+        Log.v("asd", "Sleep Time" + sleepSessionEntity.sleepTimes.sleepDuration)
+
+
+        // then add 50 minutes of awake
+        for(i in 31..40 step 1) // 2 hours / 20  < 10
+        {
+            val data = SleepApiRawDataEntity(actualTimeSeconds-(i*5*60), 5,1,1,sleepState = SleepState.NONE)
+            sleepList5.add(data)
+        }
+        val lastTimeNew = sleepList5.last().timestampSeconds
+        sleepDbRepository.insertSleepApiRawData(sleepList5)
+
+        val actualTimeNew = LocalDateTime.ofInstant(Instant.ofEpochMilli(lastTimeNew.toLong()*1000), ZoneOffset.systemDefault())
+        //now we are exact at the last timestamp
+        sleepCalculationHandler.checkIsUserSleeping(actualTimeNew, false)
+        sleepCalculationHandler.defineUserWakeup(actualTimeNew, false)
+
+        //sleep time is what?
+        val sleepSessionEntityNew = sleepDbRepository.getOrCreateSleepSessionById(id)
+
+
+        Log.v("TAG", "Sleep Time" + sleepSessionEntityNew.sleepTimes.sleepDuration)
+
+    }
+
 }
