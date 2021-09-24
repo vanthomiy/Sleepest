@@ -2,6 +2,7 @@ package com.sleepestapp.sleepest.ui.history
 
 import android.app.TimePickerDialog
 import android.transition.TransitionManager
+import android.transition.Visibility
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -52,6 +53,8 @@ class HistoryDayViewModel(val sleepCalculationHandler : SleepCalculationHandler)
 
     /** Contains information about the amount of time the user slept. */
     var sleepTime = ObservableField("")
+
+    var timeInSleepPhaseTextField = ObservableField(View.INVISIBLE)
 
     /** Contains the current smiley used to indicate the users activity level. */
     var activitySmiley = ObservableField(SmileySelectorUtil.getSmileyActivity(0))

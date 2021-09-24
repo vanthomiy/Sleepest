@@ -268,6 +268,13 @@ class HistoryDayFragment : Fragment() {
             viewModelDay.sleepTime.set(
                 actualContext.getString(R.string.history_day_timeInPhase_sleepSum) + " " + generateSleepValueInformation(it.third.sleepTimes.sleepDuration)
             )
+
+            if (it.third.mobilePosition == MobilePosition.INBED) {
+                viewModelDay.timeInSleepPhaseTextField.set(View.VISIBLE)
+            }
+            else {
+                viewModelDay.timeInSleepPhaseTextField.set(View.INVISIBLE)
+            }
         }
     }
 
@@ -414,52 +421,6 @@ class HistoryDayFragment : Fragment() {
         }
 
         barChart.legend.setCustom(legendEntryList)
-
-        /*
-        barChart.legend.setCustom(
-            listOf(
-                LegendEntry(
-                    StringUtil.getStringXml(R.string.history_day_timeInPhase_lightSleep, application),
-                    Legend.LegendForm.SQUARE,
-                    8f,
-                    8f,
-                    null,
-                    ContextCompat.getColor(actualContext, R.color.light_sleep_color)
-                ),
-                LegendEntry(
-                    StringUtil.getStringXml(R.string.history_day_timeInPhase_deepSleep, application),
-                    Legend.LegendForm.SQUARE,
-                    8f,
-                    8f,
-                    null,
-                    ContextCompat.getColor(actualContext, R.color.deep_sleep_color)
-                ),
-                LegendEntry(
-                    StringUtil.getStringXml(R.string.history_day_timeInPhase_remSleep, application),
-                    Legend.LegendForm.SQUARE,
-                    8f,
-                    8f,
-                    null,
-                    ContextCompat.getColor(actualContext, R.color.rem_sleep_color)
-                ),
-                LegendEntry(
-                    StringUtil.getStringXml(R.string.history_day_timeInPhase_awake, application),
-                    Legend.LegendForm.SQUARE,
-                    8f,
-                    8f,
-                    null,
-                    ContextCompat.getColor(actualContext, R.color.awake_sleep_color)
-                ),
-                LegendEntry(
-                    StringUtil.getStringXml(R.string.history_day_timeInPhase_sleepSum, application),
-                    Legend.LegendForm.SQUARE,
-                    8f,
-                    8f,
-                    null,
-                    ContextCompat.getColor(actualContext, R.color.sleep_sleep_color)
-                )
-            )
-        ) */
 
         barChart.isDragEnabled = false
 
