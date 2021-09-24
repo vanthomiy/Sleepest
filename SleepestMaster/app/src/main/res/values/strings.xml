@@ -247,6 +247,7 @@
     <string name="history_fragment_title">&#128197; History</string>
     <string name="history_button_analysisDate_previous">Previous</string>
     <string name="history_button_analysisDate_next">Next</string>
+    <string name="history_sleep_phases_information">Information about the different sleep phases.</string>
     <string name="history_day_information_sleepPhases_lineChart">This diagram shows your sleep phases of the last night. On the left and right above the diagram you can see the times when you fell asleep and woke up, as detected by the app. The night is divided into two or three sleep stages, depending on where your phone was that night. If the device was next to the bed, you can see the phases \"awake\" and \"sleep\". If it was in bed, the night is divided into the phases \"deep sleep\", \"light sleep\" and \"awake\". The diagram is divided linearly over the night.</string>
     <string name="history_day_sleep_quality_rating_title">Sleep quality rating:</string>
     <string name="history_activity_title">Activity:</string>

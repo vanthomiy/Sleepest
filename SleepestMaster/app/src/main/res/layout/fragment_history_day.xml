@@ -98,7 +98,7 @@
                             android:layout_marginStart="@dimen/img_header_magrin"
                             android:text="@string/history_sleepPhases_title"
                             android:textColor="@color/primary_text_color"
-                                                        android:textSize="@dimen/headerSize"
+                            android:textSize="@dimen/headerSize"
                             android:textStyle="bold"
                             android:layout_gravity="start|center"/>
 

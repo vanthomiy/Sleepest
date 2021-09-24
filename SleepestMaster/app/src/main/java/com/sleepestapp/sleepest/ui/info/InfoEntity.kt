@@ -30,6 +30,32 @@ data class InfoEntity (
                 Info.WEEK_HISTORY -> weekHistoryInfo(id, context)
                 Info.SETTINGS -> settingsInfo(id, context)
                 Info.SLEEP -> sleepInfo(id, context)
+                Info.HISTORY -> historyInfo(id, context)
+                else -> noInfo(context)
+            }
+        }
+
+        /**
+         * Actual information for the [Info.HISTORY]
+         */
+        private fun historyInfo(id:Int, context: Context) : List<InfoEntity>{
+            return when(id){
+                0 ->  listOf(
+                    InfoEntity(
+                        image = null,
+                        lottie = null,
+                        textHeader = "Light Sleep Phase",
+                        textDescription = context.resources.getString(R.string.history_sleep_phases_information),
+                        infoEntityStlye = InfoEntityStyle.PICTURE_LEFT
+                    ),
+                    InfoEntity(
+                        image = null,
+                        lottie = null,
+                        textHeader = "Deep Sleep Phase",
+                        textDescription = context.resources.getString(R.string.history_sleep_phases_information),
+                        infoEntityStlye = InfoEntityStyle.PICTURE_LEFT
+                    )
+                )
                 else -> noInfo(context)
             }
         }

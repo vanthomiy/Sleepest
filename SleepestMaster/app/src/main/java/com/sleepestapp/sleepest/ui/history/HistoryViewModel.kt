@@ -2,6 +2,10 @@ package com.sleepestapp.sleepest.ui.history
 
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.transition.TransitionManager
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.*
 import androidx.lifecycle.ViewModel
@@ -22,6 +26,7 @@ import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.sleepestapp.sleepest.util.IconAnimatorUtil
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.*
@@ -62,11 +67,37 @@ class HistoryViewModel(
     /** <Int: Sleep session id, Triple<List<[SleepApiRawDataEntity]>, Int: Sleep duration, [UserSleepSessionEntity]>> */
     val sleepSessionData = mutableMapOf<Int, Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>>()
 
+    lateinit var transitionsContainer : ViewGroup
+    val actualExpand = ObservableField(-1)
+    val goneState = ObservableField(View.GONE)
+    val visibleState = ObservableField(View.VISIBLE)
+
+    private var lastView: ImageView? = null
+
     init {
         viewModelScope.launch {
             darkMode = dataStoreRepository.settingsDataFlow.first().designDarkMode
             autoDarkMode = dataStoreRepository.settingsDataFlow.first().designAutoDarkMode
         }
+    }
+
+    fun onInfoClicked(view: View){
+        updateInfoChanged(view.tag.toString())
+
+        // Check if its an image view
+        IconAnimatorUtil.animateView(view as ImageView)
+
+        IconAnimatorUtil.resetView(lastView)
+
+        lastView = if(lastView != view)
+            view
+        else
+            null
+    }
+
+    private fun updateInfoChanged(value: String) {
+        TransitionManager.beginDelayedTransition(transitionsContainer)
+        actualExpand.set(if(actualExpand.get() == value.toIntOrNull()) -1 else value.toIntOrNull())
     }
 
     /** Onclick handler for altering the [analysisDate] based on the currently selected analysis Range. */

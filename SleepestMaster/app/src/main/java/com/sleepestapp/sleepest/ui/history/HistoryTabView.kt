@@ -78,6 +78,7 @@ class HistoryTabView : Fragment() {
         btnNext = view.findViewById(R.id.btn_Next)
         tVActualDayTabView = view.findViewById(R.id.tV_actualDayTabView)
         previousMonthAnalysisDate = LocalDate.now().month
+        viewModel.transitionsContainer = binding.lLLinearAnimationLayoutTabView
 
         val tabs = listOf(getString(R.string.history_day_title), getString(R.string.history_week_title), getString(R.string.history_month_title))
 
