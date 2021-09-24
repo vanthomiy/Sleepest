@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.databinding.Observable
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.databinding.FragmentHistoryDayBinding
@@ -30,6 +31,7 @@ import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
+import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.Is24HourFormat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -52,8 +54,15 @@ class HistoryDayFragment : Fragment() {
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(HistoryViewModel::class.java) }
 
     /** ViewModel for the daily calculations. */
-    private val viewModelDay by lazy { ViewModelProvider(this).get(HistoryDayViewModel::class.java) }
+    private val viewModelDay by lazy { ViewModelProvider(requireActivity(), factory).get(HistoryDayViewModel::class.java) }
 
+    var factory = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            return  HistoryDayViewModel(
+                SleepCalculationHandler.getHandler(actualContext)
+            ) as T
+        }
+    }
     /** Binding for daily history analysis and the corresponding fragment_history_day.xml. */
     private lateinit var binding: FragmentHistoryDayBinding
 
