@@ -28,7 +28,8 @@ import java.time.*
 
 class HistoryViewModel(
     val dataStoreRepository: DataStoreRepository,
-    val dataBaseRepository: DatabaseRepository
+    val dataBaseRepository: DatabaseRepository,
+    val sleepCalculationHandler: SleepCalculationHandler
 ) : ViewModel() {
 
     /** Contains the current date which will be displayed at the history fragment. */
