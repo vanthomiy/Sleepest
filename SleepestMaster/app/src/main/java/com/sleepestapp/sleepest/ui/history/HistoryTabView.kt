@@ -49,7 +49,8 @@ class HistoryTabView : Fragment() {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             return  HistoryViewModel(
                 (actualContext as MainApplication).dataStoreRepository,
-                (actualContext as MainApplication).dataBaseRepository
+                (actualContext as MainApplication).dataBaseRepository,
+                SleepCalculationHandler.getHandler(actualContext)
             ) as T
         }
     }
@@ -144,7 +145,7 @@ class HistoryTabView : Fragment() {
                 override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
 
                     if (viewModel.analysisDate.get()?.month != previousMonthAnalysisDate) {
-                        getSleepData()
+                        viewModel.getSleepData()
                     }
 
                     previousMonthAnalysisDate = viewModel.analysisDate.get()?.month!!
@@ -158,88 +159,10 @@ class HistoryTabView : Fragment() {
 
         viewModel.dataBaseRepository.allUserSleepSessions.asLiveData().observe(viewLifecycleOwner) {
             if (!viewModel.onWork) {
-                getSleepData()
+                viewModel.getSleepData()
             }
         }
     }
-
-    fun getSleepData() {
-        val ids = mutableSetOf<Int>()
-        viewModel.analysisDate.get()?.let {
-            val startDayToGet = it.minusMonths(1L).withDayOfMonth(1)
-            val endDayToGet = it.withDayOfMonth(it.lengthOfMonth())
-            val dayDifference = (endDayToGet.toEpochDay() - startDayToGet.toEpochDay()).toInt()
-
-            for (day in 0..dayDifference) {
-                ids.add(
-                    UserSleepSessionEntity.getIdByDateTime(
-                        LocalDate.of(
-                            startDayToGet.plusDays(day.toLong()).year,
-                            startDayToGet.plusDays(day.toLong()).month,
-                            startDayToGet.plusDays(day.toLong()).dayOfMonth,
-                        )
-                    )
-                )
-            }
-        }
-
-        lifecycleScope.launch {
-            for (id in ids) {
-                val session = viewModel.dataBaseRepository.getSleepSessionById(id).first().firstOrNull()
-                session?.let {
-                    viewModel.sleepSessionData[id] = Triple(
-                        viewModel.dataBaseRepository.getSleepApiRawDataBetweenTimestamps(
-                            session.sleepTimes.sleepTimeStart,
-                            session.sleepTimes.sleepTimeEnd).first()?.sortedBy { x -> x.timestampSeconds },
-                        session.sleepTimes.sleepDuration,
-                        session
-                    ) as Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>
-                }
-            }
-            checkSessionIntegrity()
-            viewModel.dataReceived.set(true)
-        }
-    }
-
-    /** Checks if the previously received sleep session data is correct and contains no errors.
-     * If unusual data was received, the sleep phase determination algorithm ist triggered again to interpret the api data. */
-    private fun checkSessionIntegrity() {
-        viewModel.onWork = true
-        for (key in viewModel.sleepSessionData.keys) {
-            val session = viewModel.sleepSessionData[key]?.first
-            session?.let {
-                val mobilePosition = viewModel.sleepSessionData[key]?.third?.mobilePosition
-                val isSleeping = it.any { x -> x.sleepState == SleepState.SLEEPING }
-                val isUnidentified = it.any { x -> x.sleepState == SleepState.NONE }
-
-                if ((isUnidentified)) {
-                    lifecycleScope.launch {
-                        SleepCalculationHandler.getHandler(actualContext).checkIsUserSleeping(
-                            LocalDateTime.ofInstant(
-                                Instant.ofEpochMilli((viewModel.sleepSessionData[key]?.third?.sleepTimes?.sleepTimeStart?.toLong())!! * 1000),
-                                ZoneOffset.systemDefault()
-                            ),
-                            true
-                        )
-                    }
-                }
-
-                if ((mobilePosition == MobilePosition.INBED && isSleeping)) { // || isUnidentified) {
-                    lifecycleScope.launch {
-                        SleepCalculationHandler.getHandler(actualContext).defineUserWakeup(
-                            LocalDateTime.ofInstant(
-                                Instant.ofEpochMilli((viewModel.sleepSessionData[key]?.third?.sleepTimes?.sleepTimeStart?.toLong())!! * 1000),
-                                ZoneOffset.systemDefault()
-                            ),
-                            false
-                        )
-                    }
-                }
-            }
-        }
-        viewModel.onWork = false
-    }
-
 
     fun setUpHistoryViewModelValues() {
         val application = requireActivity().application
