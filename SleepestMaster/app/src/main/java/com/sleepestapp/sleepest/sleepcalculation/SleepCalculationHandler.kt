@@ -553,6 +553,14 @@ class SleepCalculationHandler(val context: Context) {
             }
         }
 
+        // Add the actual sleep time to the sleep session entity at this moment
+        if(sleepSessionEntity.sleepTimes.possibleSleepTimeStart == -1){
+            val param = dataStoreRepository.sleepParameterFlow.first()
+            sleepSessionEntity.sleepTimes.possibleSleepTimeStart = param.sleepTimeStart
+            sleepSessionEntity.sleepTimes.possibleSleepTimeEnd= param.sleepTimeEnd
+        }
+
+
         dataStoreRepository.updateUserSleepTime(sleepSessionEntity.sleepTimes.sleepDuration)
         dataBaseRepository.insertUserSleepSession(sleepSessionEntity)
 
