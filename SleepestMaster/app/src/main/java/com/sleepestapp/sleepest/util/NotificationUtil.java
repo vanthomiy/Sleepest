@@ -219,7 +219,7 @@ public class NotificationUtil {
             remoteViews.setOnClickPendingIntent(R.id.btnNotSleepingNotification, btnClickPendingIntent);
 
             remoteViews.setViewVisibility(R.id.btnNotSleepingNotification, View.GONE);
-        } else {
+        } else if (!((boolean) arrayList.get(3))) {
             //Set button for currently not sleeping
             btnClickIntent = new Intent(context.getApplicationContext(), AlarmReceiver.class);
             btnClickIntent.putExtra(context.getApplicationContext().getString(R.string.alarmmanager_key), AlarmReceiverUsage.CURRENTLY_NOT_SLEEPING.name());

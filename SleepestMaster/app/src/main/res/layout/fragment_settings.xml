@@ -162,8 +162,8 @@
                             android:layout_marginVertical="5dp"
                             android:textColor="@color/primary_text_color"
                             android:visibility="@{profileViewModel.autoDarkMode ? View.GONE:View.VISIBLE}"
-                            android:textOn="Dark Mode"
-                            android:textOff="Light Mode"
+                            android:textOn="@string/settings_darkmode_on"
+                            android:textOff="@string/settings_darkmode_off"
                             android:layout_marginBottom="10dp"
                             android:checked="@={profileViewModel.darkMode}"
                             android:onClick="@{profileViewModel::darkModeToggled}"/>
@@ -186,7 +186,7 @@
                             android:textStyle="bold"
                             android:layout_gravity="start|center"
                             android:textColor="@color/primary_text_color"
-                            android:text="Sleepest Banner"/>
+                            android:text="@string/settings_sleepest_banner"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -208,7 +208,7 @@
                                     android:layout_marginStart="10dp"
                                     android:textSize="@dimen/valueSize"
                                     android:textColor="@color/primary_text_color"
-                                    android:text="Alarm aktive anzeigen"
+                                    android:text="@string/settings_banner_configuration_alarm_active"
                                     />
 
                                 <androidx.appcompat.widget.SwitchCompat
@@ -233,7 +233,7 @@
                                     android:layout_marginStart="10dp"
                                     android:textSize="@dimen/valueSize"
                                     android:textColor="@color/primary_text_color"
-                                    android:text="Aktueller Aufweckzeitpunkt"
+                                    android:text="@string/settings_banner_configuration_wakeup"
                                     />
 
                                 <androidx.appcompat.widget.SwitchCompat
@@ -258,7 +258,7 @@
                                     android:layout_marginStart="10dp"
                                     android:textSize="@dimen/valueSize"
                                     android:textColor="@color/primary_text_color"
-                                    android:text="Aktuelle Schlafenszeit"
+                                    android:text="@string/settings_banner_configuration_sleeptime"
                                     />
 
                                 <androidx.appcompat.widget.SwitchCompat
@@ -283,32 +283,7 @@
                                     android:layout_marginStart="10dp"
                                     android:textSize="@dimen/valueSize"
                                     android:textColor="@color/primary_text_color"
-                                    android:text="Genaue Schlafenszeiten"
-                                    />
-
-                                <androidx.appcompat.widget.SwitchCompat
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    android:layout_gravity="end"
-                                    android:gravity="center_vertical"
-                                    android:layout_marginEnd="10dp"
-                                    android:tag="show_detailed_sleep_states"
-                                    android:checked="@={profileViewModel.showDetailedSleepTime}"
-                                    android:onClick="@{profileViewModel::bannerSettingsToggled}"
-                                    />
-                            </FrameLayout>
-                            <FrameLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/valuesHeight">
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    android:layout_gravity="start"
-                                    android:gravity="center_vertical"
-                                    android:layout_marginStart="10dp"
-                                    android:textSize="@dimen/valueSize"
-                                    android:textColor="@color/primary_text_color"
-                                    android:text="Schlafstatus anzeigen"
+                                    android:text="@string/settings_banner_configuration_sleepstate"
                                     />
 
                                 <androidx.appcompat.widget.SwitchCompat
