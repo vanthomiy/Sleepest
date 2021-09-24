@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.first
  */
 class SleepClassifier constructor(private val context: Context) {
 
-
     /**
      * With [dataStoreRepository] we can access all the data from the proto store
      */

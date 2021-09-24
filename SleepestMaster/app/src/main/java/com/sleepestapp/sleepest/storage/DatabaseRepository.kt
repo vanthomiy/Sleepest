@@ -87,6 +87,7 @@ class DatabaseRepository(
      */
     fun getSleepApiRawDataFromDateLive(actualTime:LocalDateTime): Flow<List<SleepApiRawDataEntity>?>
     {
+        //TODO(TimeChange)
         val startTime = if (actualTime.hour < 15)
             actualTime.toLocalDate().minusDays(1).atTime(15,0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
         else actualTime.toLocalDate().atTime(15,0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
@@ -103,6 +104,7 @@ class DatabaseRepository(
      */
     fun getSleepApiRawDataFromDate(actualTime:LocalDateTime): Flow<List<SleepApiRawDataEntity>?>
     {
+        //TODO(TimeChange)
         val startTime = if (actualTime.hour < 15)
             actualTime.toLocalDate().minusDays(1).atTime(15,0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
         else actualTime.toLocalDate().atTime(15,0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
@@ -190,6 +192,7 @@ class DatabaseRepository(
      */
     fun getActivityApiRawDataFromDateLive(actualTime:LocalDateTime): Flow<List<ActivityApiRawDataEntity>>
     {
+        //TODO(TimeChange)
         val startTime = if (actualTime.hour < 15)
             actualTime.toLocalDate().minusDays(1).atTime(15,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
         else actualTime.toLocalDate().atTime(15,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
@@ -325,6 +328,7 @@ class DatabaseRepository(
      * All active alarms and on that specific day
      */
     fun activeAlarmsFlow() : Flow<List<AlarmEntity>> {
+        //TODO(TimeChange)
         val ldt:LocalDateTime = LocalDateTime.now()
         val date = if(ldt.hour > 15) ldt.plusDays(1).toLocalDate() else ldt.toLocalDate()
         val dayOfWeek = "%" + date.dayOfWeek + "%"
