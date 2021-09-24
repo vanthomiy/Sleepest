@@ -21,9 +21,7 @@ import java.time.LocalTime
 import java.time.ZoneOffset
 
 /**  */
-class HistoryDayViewModel() : ViewModel() {
-
-    val sleepCalculationHandler: SleepCalculationHandler by lazy { SleepCalculationHandler.getHandler(context) }
+class HistoryDayViewModel(val sleepCalculationHandler : SleepCalculationHandler) : ViewModel() {
 
     /** Contains information about the fall asleep time. */
     var beginOfSleep = ObservableField("")

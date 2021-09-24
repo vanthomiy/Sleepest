@@ -7,10 +7,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
+import com.sleepestapp.sleepest.model.data.MobilePosition
 import com.sleepestapp.sleepest.util.IconAnimatorUtil
 
 
-class HistoryWeekViewModel(application: Application) : AndroidViewModel(application) {
+class HistoryWeekViewModel() : ViewModel() {
 
     val actualExpand = ObservableField(-1)
     val goneState = ObservableField(View.GONE)
