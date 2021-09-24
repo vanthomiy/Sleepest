@@ -238,6 +238,15 @@
     <string name="settings_credits">Credits</string>
     <string name="settings_from"> at </string>
 
+    <string name="settings_darkmode_on">Dark mode</string>
+    <string name="settings_darkmode_off">Light mode</string>
+    <string name="settings_sleepest_banner">Sleepest banner</string>
+    <string name="settings_banner_configuration_alarm_active">Show alarm status</string>
+    <string name="settings_banner_configuration_wakeup">Show wakeup time</string>
+    <string name="settings_banner_configuration_sleeptime">Show sleep time</string>
+    <string name="settings_banner_configuration_sleepstate">Show sleep state</string>
+
+
     <!--endregion-->
 
     <!--region History Fragment texts -->

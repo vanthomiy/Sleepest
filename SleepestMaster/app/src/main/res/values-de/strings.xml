@@ -242,6 +242,14 @@
     <string name="settings_credits">Credits</string>
     <string name="settings_from"> im </string>
 
+    <string name="settings_darkmode_on">Dunkel Modus</string>
+    <string name="settings_darkmode_off">Heller Modus</string>
+    <string name="settings_sleepest_banner">Sleepest Benachrichtigung</string>
+    <string name="settings_banner_configuration_alarm_active">Alarm Status anzeigen</string>
+    <string name="settings_banner_configuration_wakeup">Aufweckzeitpunkt anzeigen</string>
+    <string name="settings_banner_configuration_sleeptime">Aktuelle Schlafzeit anzeigen</string>
+    <string name="settings_banner_configuration_sleepstate">Aktuellen Schlafstatus anzeigen</string>
+
 
     <!--endregion-->
 
