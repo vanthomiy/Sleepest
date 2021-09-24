@@ -159,8 +159,11 @@ enum class SleepState {
         /**
          * TODO"DEFINITION"
          */
-        fun getListOfSleepStates(): List<SleepState> {
-            return listOf(LIGHT, DEEP, REM, SLEEPING, AWAKE)
+        fun getListOfSleepStates(mobilePosition: MobilePosition = MobilePosition.INBED): List<SleepState> {
+            return when (mobilePosition) {
+                MobilePosition.INBED -> listOf(LIGHT, DEEP, REM, SLEEPING, AWAKE)
+                else -> listOf(SLEEPING, AWAKE)
+            }
         }
 
         fun getString(sleepState: SleepState, application: Application): String {

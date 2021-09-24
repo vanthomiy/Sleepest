@@ -269,6 +269,7 @@ class HistoryDayFragment : Fragment() {
                 actualContext.getString(R.string.history_day_timeInPhase_sleepSum) + " " + generateSleepValueInformation(it.third.sleepTimes.sleepDuration)
             )
 
+            // Manage visibility of the text information based on the mobile position
             if (it.third.mobilePosition == MobilePosition.INBED) {
                 viewModelDay.timeInSleepPhaseTextField.set(View.VISIBLE)
             }
@@ -376,8 +377,9 @@ class HistoryDayFragment : Fragment() {
         val diagramData = generateDataBarChart()
         val barData = BarData(generateBarDataSet(diagramData))
         barChart.data = barData
+        barChart.notifyDataSetChanged()
+
         visualSetUpBarChart(barChart, diagramData)
-        barChart.invalidate()
     }
 
     /**  */
@@ -405,19 +407,20 @@ class HistoryDayFragment : Fragment() {
         barChart.legend.textColor = viewModel.checkDarkMode()
 
         val legendEntryList = mutableListOf<LegendEntry>()
-
-        val sleepStates = SleepState.getListOfSleepStates()
-        sleepStates.forEach {
-            legendEntryList.add(
-                LegendEntry(
-                    viewModel.sleepStateString[it],
-                    Legend.LegendForm.SQUARE,
-                    8f,
-                    8f,
-                    null,
-                    viewModel.sleepStateColor[it]?: 1
+        sleepValues?.let {
+            val sleepStates = SleepState.getListOfSleepStates()
+            sleepStates.forEach {
+                legendEntryList.add(
+                    LegendEntry(
+                        viewModel.sleepStateString[it],
+                        Legend.LegendForm.SQUARE,
+                        8f,
+                        8f,
+                        null,
+                        viewModel.sleepStateColor[it]?: 1
+                    )
                 )
-            )
+            }
         }
 
         barChart.legend.setCustom(legendEntryList)
@@ -510,6 +513,7 @@ class HistoryDayFragment : Fragment() {
         val pieDataSet = PieDataSet(data.first, "")
         visualSetUpPieChart(chart, pieDataSet, data.second)
         chart.data = PieData(pieDataSet)
+        chart.notifyDataSetChanged()
     }
 
     /**  */
