@@ -367,7 +367,7 @@ class HistoryViewModel(
             barChart.xAxis.labelCount = (diagramData.second.size)
         }
         else {
-            xAxisValues = xAxisValuesWeek
+            xAxisValues.addAll(xAxisValuesWeek)
 
             barChart.barData.barWidth = 0.75f
             barChart.xAxis.axisMaximum = 7f
