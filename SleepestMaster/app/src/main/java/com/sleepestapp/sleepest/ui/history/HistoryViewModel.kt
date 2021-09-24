@@ -104,7 +104,6 @@ class HistoryViewModel(
 
     }
 
-    /*
     /** Starts the process of requesting data from the database. */
     fun getSleepData() {
         val ids = mutableSetOf<Int>()
@@ -157,7 +156,7 @@ class HistoryViewModel(
 
                 if ((isUnidentified)) {
                     viewModelScope.launch {
-                        SleepCalculationHandler.getHandler(context).checkIsUserSleeping(
+                       sleepCalculationHandler.checkIsUserSleeping(
                             LocalDateTime.ofInstant(
                                 Instant.ofEpochMilli((sleepSessionData[key]?.third?.sleepTimes?.sleepTimeStart?.toLong())!! * 1000),
                                 ZoneOffset.systemDefault()
@@ -169,7 +168,7 @@ class HistoryViewModel(
 
                 if ((mobilePosition == MobilePosition.INBED && isSleeping)) { // || isUnidentified) {
                     viewModelScope.launch {
-                        SleepCalculationHandler.getHandler(coroutineContext).defineUserWakeup(
+                        sleepCalculationHandler.defineUserWakeup(
                             LocalDateTime.ofInstant(
                                 Instant.ofEpochMilli((sleepSessionData[key]?.third?.sleepTimes?.sleepTimeStart?.toLong())!! * 1000),
                                 ZoneOffset.systemDefault()
@@ -181,7 +180,7 @@ class HistoryViewModel(
             }
         }
         onWork = false
-    }     */
+    }
 
     /** Checks if the passed date has an entry in the [sleepSessionData]. */
     fun checkId(time: LocalDate) : Boolean {
