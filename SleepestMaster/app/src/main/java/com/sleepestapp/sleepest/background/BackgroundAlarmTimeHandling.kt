@@ -2,7 +2,6 @@ package com.sleepestapp.sleepest.background
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.widget.Toast
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
@@ -104,14 +103,6 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                         calendarAlarm[Calendar.HOUR_OF_DAY],
                         calendarAlarm[Calendar.MINUTE], context, AlarmReceiverUsage.START_FOREGROUND)
 
-                    val pref = context.getSharedPreferences("AlarmReceiver1", 0)
-                    val ed = pref.edit()
-                    ed.putString("usage", "MainActivity")
-                    ed.putInt("day", calendarAlarm[Calendar.DAY_OF_WEEK])
-                    ed.putInt("hour", calendarAlarm[Calendar.HOUR_OF_DAY])
-                    ed.putInt("minute", calendarAlarm[Calendar.MINUTE])
-                    ed.apply()
-
                     endOfSleepTime(false)
 
                 }
@@ -182,14 +173,6 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
             //Stops the foreground service
             stopForegroundService()
-            Toast.makeText(context, "Alarmclock stopped", Toast.LENGTH_LONG).show()
-            val calendar = Calendar.getInstance()
-            val pref: SharedPreferences = context.getSharedPreferences("AlarmClock", 0)
-            var ed = pref.edit()
-            ed.putInt("hour", calendar[Calendar.HOUR_OF_DAY])
-            ed.putInt("minute", calendar[Calendar.MINUTE])
-            ed.apply()
-
 
             //Updated the alarm that it was fired. So it can not be called again
             if (checkAlarmActive()) {
@@ -319,8 +302,6 @@ class BackgroundAlarmTimeHandler(val context: Context) {
         val workManager = WorkManager.getInstance(context)
         workManager.enqueueUniquePeriodicWork(context.getString(R.string.workmanager1_tag), ExistingPeriodicWorkPolicy.KEEP, periodicDataWork)
 
-        Toast.makeText(context, "Workmanager started", Toast.LENGTH_LONG).show()
-
         //Subscribe to SleepApi
         sleepHandler.startSleepHandler()
         scope.launch {
@@ -368,7 +349,6 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
             //Stop Workmanager at end of sleeptime
             WorkManager.getInstance(context.applicationContext).cancelAllWorkByTag(context.getString(R.string.workmanager1_tag))
-            Toast.makeText(context, "Workmanager stopped", Toast.LENGTH_LONG).show()
 
             //Unsubscribe to SleepApi
             sleepHandler.stopSleepHandler()
@@ -444,101 +424,28 @@ class BackgroundAlarmTimeHandler(val context: Context) {
     fun chooseStateBeforeReboot() {
 
         scope.launch {
-            Toast.makeText(context, "Choose", Toast.LENGTH_LONG).show()
+
             if (!checkInSleepTime() && (!checkAlarmActive() || !checkAlarmTempDisabled() || !checkAlarmFired()) && !checkForegroundStatus()) {
                 executeStateAfterReboot(1)
-
-                val calendar = Calendar.getInstance()
-                val pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
-                val ed = pref.edit()
-                ed.putInt("hour", calendar[Calendar.HOUR_OF_DAY])
-                ed.putInt("minute", calendar[Calendar.MINUTE])
-                ed.putInt("usage", 1)
-                ed.apply()
             } else if (checkInSleepTime() && (!checkAlarmActive() || !checkAlarmTempDisabled() || !checkAlarmFired()) && !checkForegroundStatus()) {
                 executeStateAfterReboot(2)
-
-                val calendar = Calendar.getInstance()
-                val pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
-                val ed = pref.edit()
-                ed.putInt("hour", calendar[Calendar.HOUR_OF_DAY])
-                ed.putInt("minute", calendar[Calendar.MINUTE])
-                ed.putInt("usage", 2)
-                ed.apply()
             } else if (checkInSleepTime() && checkAlarmActive() && !checkAlarmTempDisabled() && !checkAlarmFired() && checkForegroundStatus()) {
-                Toast.makeText(context, "Alarm Detected", Toast.LENGTH_LONG).show()
                 val time = LocalTime.now().toSecondOfDay()
                 if (time > getFirstWakeup() && time < getLastWakeup()) {
                     executeStateAfterReboot(3)
-
-                    val calendar = Calendar.getInstance()
-                    val pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
-                    val ed = pref.edit()
-                    ed.putInt("hour", calendar[Calendar.HOUR_OF_DAY])
-                    ed.putInt("minute", calendar[Calendar.MINUTE])
-                    ed.putInt("usage", 3)
-                    ed.apply()
                 } else if (time > (getFirstWakeup() - Constants.CALCULATION_START_DIFFERENCE) && time < getFirstWakeup()) {
                     executeStateAfterReboot(3)
-
-                    val calendar = Calendar.getInstance()
-                    val pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
-                    val ed = pref.edit()
-                    ed.putInt("hour", calendar[Calendar.HOUR_OF_DAY])
-                    ed.putInt("minute", calendar[Calendar.MINUTE])
-                    ed.putInt("usage", 3)
-                    ed.apply()
                 } else if (time > getLastWakeup() && time < getSleepTimeBeginValue()) {
                     executeStateAfterReboot(5)
-
-                    val calendar = Calendar.getInstance()
-                    val pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
-                    val ed = pref.edit()
-                    ed.putInt("hour", calendar[Calendar.HOUR_OF_DAY])
-                    ed.putInt("minute", calendar[Calendar.MINUTE])
-                    ed.putInt("usage", 5)
-                    ed.apply()
                 } else if ((time < (getFirstWakeup() - Constants.CALCULATION_START_DIFFERENCE)) || (time > getSleepTimeBeginValue())) {
                     executeStateAfterReboot(6)
-
-                    val calendar = Calendar.getInstance()
-                    val pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
-                    val ed = pref.edit()
-                    ed.putInt("hour", calendar[Calendar.HOUR_OF_DAY])
-                    ed.putInt("minute", calendar[Calendar.MINUTE])
-                    ed.putInt("usage", 6)
-                    ed.apply()
                 }
             } else if (!checkInSleepTime() && (!checkAlarmActive() || !checkAlarmTempDisabled() || !checkAlarmFired()) && checkForegroundStatus()) {
                 executeStateAfterReboot(4)
-
-                val calendar = Calendar.getInstance()
-                val pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
-                val ed = pref.edit()
-                ed.putInt("hour", calendar[Calendar.HOUR_OF_DAY])
-                ed.putInt("minute", calendar[Calendar.MINUTE])
-                ed.putInt("usage", 4)
-                ed.apply()
             } else if (!checkInSleepTime() && checkAlarmActive() && !checkAlarmTempDisabled() && !checkAlarmFired() && checkForegroundStatus()) {
                 executeStateAfterReboot(4)
-
-                val calendar = Calendar.getInstance()
-                val pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
-                val ed = pref.edit()
-                ed.putInt("hour", calendar[Calendar.HOUR_OF_DAY])
-                ed.putInt("minute", calendar[Calendar.MINUTE])
-                ed.putInt("usage", 4)
-                ed.apply()
             } else if (!checkInSleepTime() && checkAlarmActive() && !checkAlarmTempDisabled() && !checkAlarmFired() && !checkForegroundStatus()) {
                 executeStateAfterReboot(1)
-
-                val calendar = Calendar.getInstance()
-                val pref: SharedPreferences = context.getSharedPreferences("BootTime1", 0)
-                val ed = pref.edit()
-                ed.putInt("hour", calendar[Calendar.HOUR_OF_DAY])
-                ed.putInt("minute", calendar[Calendar.MINUTE])
-                ed.putInt("usage", 1)
-                ed.apply()
             }
         }
     }
@@ -548,8 +455,6 @@ class BackgroundAlarmTimeHandler(val context: Context) {
      * @param state The state which was chosen and should be executed
      */
     private fun executeStateAfterReboot(state : Int) {
-
-        Toast.makeText(context, "Execute", Toast.LENGTH_LONG).show()
 
         scope.launch {
             when (state) {

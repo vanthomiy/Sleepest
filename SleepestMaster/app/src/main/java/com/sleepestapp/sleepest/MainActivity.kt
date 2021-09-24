@@ -1,17 +1,12 @@
 package com.sleepestapp.sleepest
 
 import android.Manifest
-import android.app.Application
-import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
-import android.content.pm.PackageManager
 
 import android.os.Build
 
 import android.os.Bundle
-import android.provider.Settings
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -20,17 +15,12 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-
-import com.sleepestapp.sleepest.background.AlarmCycleState
-
 import com.sleepestapp.sleepest.background.AlarmReceiver
 import com.sleepestapp.sleepest.background.BackgroundAlarmTimeHandler
 import com.sleepestapp.sleepest.databinding.ActivityMainBinding
 import com.sleepestapp.sleepest.model.data.AlarmReceiverUsage
 import com.sleepestapp.sleepest.model.data.SleepSleepChangeFrom
 import com.sleepestapp.sleepest.model.data.export.ImportUtil
-import com.sleepestapp.sleepest.storage.DataStoreRepository
-import com.sleepestapp.sleepest.storage.DatabaseRepository
 import com.sleepestapp.sleepest.ui.alarms.AlarmsFragment
 import com.sleepestapp.sleepest.ui.history.HistoryTabView
 import com.sleepestapp.sleepest.ui.settings.SettingsFragment
@@ -38,11 +28,6 @@ import com.sleepestapp.sleepest.ui.sleep.SleepFragment
 import com.sleepestapp.sleepest.util.PermissionsUtil
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil
 import com.sleepestapp.sleepest.util.TimeConverterUtil
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.snackbar.Snackbar
-import com.sleepestapp.sleepest.ui.sleep.SleepViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.*
@@ -255,7 +240,6 @@ class MainActivity : AppCompatActivity() {
         val bundle :Bundle ?=intent.extras
 
         //Get default settings of tutorial and save it in datastore
-        //TODO("Shared prefs!")
         if (bundle != null && bundle.getBoolean(getString(R.string.onboarding_intent_data_available))) {
             lifecycleScope.launch {
                 if (viewModel.dataStoreRepository.tutorialStatusFlow.first().tutorialCompleted && !viewModel.dataStoreRepository.tutorialStatusFlow.first().energyOptionsShown) {
@@ -302,12 +286,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-
-        val alarmCycleState = AlarmCycleState(applicationContext)
-        val pref: SharedPreferences = getSharedPreferences("State", 0)
-        val ed = pref.edit()
-        ed.putString("state", alarmCycleState.getState().toString())
-        ed.apply()
     }
 
 

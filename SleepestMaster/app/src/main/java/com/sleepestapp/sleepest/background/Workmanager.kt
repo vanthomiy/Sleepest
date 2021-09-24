@@ -1,7 +1,6 @@
 package com.sleepestapp.sleepest.background
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -48,11 +47,6 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
             // Check if foreground is active
             if (dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
 
-                val pref: SharedPreferences = applicationContext.getSharedPreferences("ForegroundServiceTime", 0)
-                val ed = pref.edit()
-                ed.putInt("time", ForegroundService.getForegroundServiceTime())
-                ed.apply()
-
                 //Get sleep data table
                 val sleepApiRawDataEntity =
                     dataBaseRepository.getSleepApiRawDataFromDateLive(LocalDateTime.now()).first()
@@ -62,8 +56,6 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
                 if (sleepApiRawDataEntity != null && sleepApiRawDataEntity.count() > 0) {
                     val lastTimestampInSeconds = sleepApiRawDataEntity.first().timestampSeconds
                     val actualTimestampSeconds = System.currentTimeMillis()/1000
-                    Toast.makeText(applicationContext, (actualTimestampSeconds - lastTimestampInSeconds).toString(), Toast.LENGTH_LONG).show()
-                    Toast.makeText(applicationContext, ForegroundService.getForegroundServiceTime().toString(), Toast.LENGTH_LONG).show()
 
                     // Check if data were received regularly
                     if (ForegroundService.getForegroundServiceTime() >= 1200 && ((actualTimestampSeconds - lastTimestampInSeconds) > 600) && dataStoreRepository.isInSleepTime(null)) {
@@ -99,15 +91,6 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
                 }
             }
         }
-
-        val calendar: Calendar = Calendar.getInstance()
-
-        val pref: SharedPreferences = applicationContext.getSharedPreferences("Workmanager", 0)
-        val ed = pref.edit()
-        ed.putInt("day", calendar.get(Calendar.DAY_OF_WEEK))
-        ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY))
-        ed.putInt("minute", calendar.get(Calendar.MINUTE))
-        ed.apply()
 
         scope.launch {
             sleepCalculationHandler.checkIsUserSleeping(null)

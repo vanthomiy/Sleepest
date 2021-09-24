@@ -12,7 +12,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.PowerManager;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
@@ -117,8 +116,6 @@ public class AlarmClockReceiver extends BroadcastReceiver {
 
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
 
-        Toast.makeText(alarmClockContext, "AlarmClock set to " + calendar.get(Calendar.DAY_OF_WEEK) + ": "
-                + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE), Toast.LENGTH_LONG).show();
     }
 
     /**
