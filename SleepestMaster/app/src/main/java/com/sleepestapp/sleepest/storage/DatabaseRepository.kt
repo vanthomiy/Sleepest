@@ -85,16 +85,16 @@ class DatabaseRepository(
      * so we always getting the data from 15:00 the day or day before until the specific time
      * later we have to combine it with the actual sleeptimes
      */
-    fun getSleepApiRawDataFromDateLive(actualTime:LocalDateTime, startTimeSecondsOfDay:Int): Flow<List<SleepApiRawDataEntity>?>
+    fun getSleepApiRawDataFromDateLive(actualTime:LocalDateTime, endTimeSecondsOfDay:Int): Flow<List<SleepApiRawDataEntity>?>
     {
 
-        val startTime = LocalTime.ofSecondOfDay(startTimeSecondsOfDay.toLong())
+        val endTime = LocalTime.ofSecondOfDay(endTimeSecondsOfDay.toLong())
 
         // We need to check wheter the time is before or after sleep time end.
         // Then we can decide if its this or the next day
-        val startDateTime = if (actualTime.hour < startTime.hour)
-            actualTime.toLocalDate().minusDays(1).atTime(startTime).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
-        else actualTime.toLocalDate().atTime(startTime).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+        val startDateTime = if (actualTime.hour < endTime.hour)
+            actualTime.toLocalDate().minusDays(1).atTime(endTime).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+        else actualTime.toLocalDate().atTime(endTime).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
 
         val endDateTime = actualTime.atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
 

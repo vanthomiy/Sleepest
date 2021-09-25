@@ -618,8 +618,11 @@ class SleepCalculationHandler(val context: Context) {
 
         // for each sleeping time, we have to define the sleep state
         val time = localTime ?: LocalDateTime.now()
+
+        val sleepEndTime = dataStoreRepository.sleepParameterFlow.first().sleepTimeEnd
+
         val sleepApiRawDataEntity =
-            dataBaseRepository.getSleepApiRawDataFromDateLive(time).first()
+            dataBaseRepository.getSleepApiRawDataFromDateLive(time, sleepEndTime).first()
                 ?.sortedBy { x -> x.timestampSeconds }
 
         if (sleepApiRawDataEntity == null || sleepApiRawDataEntity.count() == 0) {
@@ -670,8 +673,11 @@ class SleepCalculationHandler(val context: Context) {
      */
     suspend fun userCurrentlyNotSleeping(localTime: LocalDateTime? = null){         // for each sleeping time, we have to define the sleep state
         val time = localTime ?: LocalDateTime.now()
+
+        val sleepEndTime = dataStoreRepository.sleepParameterFlow.first().sleepTimeEnd
+
         val sleepApiRawDataEntity =
-            dataBaseRepository.getSleepApiRawDataFromDateLive(time).first()
+            dataBaseRepository.getSleepApiRawDataFromDateLive(time, sleepEndTime).first()
                 ?.sortedBy { x -> x.timestampSeconds }
 
         if (sleepApiRawDataEntity == null || sleepApiRawDataEntity.count() == 0) {
