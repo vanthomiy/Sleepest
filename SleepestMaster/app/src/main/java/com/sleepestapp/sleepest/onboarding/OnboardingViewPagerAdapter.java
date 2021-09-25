@@ -285,7 +285,7 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
                 if (Locale.getDefault().getLanguage().equals("de")) {
                     imageView.setImageResource(R.drawable.banner_foregroundservice_german);
                 } else {
-                    imageView.setImageResource(R.drawable.banner_foregroundservice_german);
+                    imageView.setImageResource(R.drawable.banner_foregroundservice_english);
                 }
                 dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
