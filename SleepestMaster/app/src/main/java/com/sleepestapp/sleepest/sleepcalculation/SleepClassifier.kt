@@ -1,6 +1,5 @@
 package com.sleepestapp.sleepest.sleepcalculation
 
-import android.annotation.SuppressLint
 import android.content.Context
 import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.model.data.*
@@ -14,7 +13,6 @@ import kotlinx.coroutines.flow.first
  * Gets called from the [SleepCalculationHandler]
  */
 class SleepClassifier constructor(private val context: Context) {
-
 
     /**
      * With [dataStoreRepository] we can access all the data from the proto store
@@ -311,29 +309,6 @@ class SleepClassifier constructor(private val context: Context) {
             actualParams.remSleepParams.checkIfThreshold(true, 2, avgThreshold) -> SleepState.REM
             actualParams.deepSleepParams.checkIfThreshold(true, 2, avgThreshold) -> SleepState.DEEP
             else -> SleepState.LIGHT
-        }
-    }
-
-
-    /**
-     * Companion object is used for static fields in kotlin
-     */
-    companion object {
-        // For Singleton instantiation
-        @SuppressLint("StaticFieldLeak")
-        @Volatile
-        private var INSTANCE: SleepClassifier? = null
-
-        /**
-         * This should be used to create or get the actual instance of the [SleepClassifier] class
-         */
-        fun getHandler(context: Context): SleepClassifier {
-            return INSTANCE ?: synchronized(this) {
-                val instance = SleepClassifier(context)
-                INSTANCE = instance
-                // return instance
-                instance
-            }
         }
     }
 }

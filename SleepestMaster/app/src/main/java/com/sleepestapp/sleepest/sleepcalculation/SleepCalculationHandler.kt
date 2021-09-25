@@ -1,6 +1,5 @@
 package com.sleepestapp.sleepest.sleepcalculation
 
-import android.annotation.SuppressLint
 import android.content.Context
 import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.googleapi.SleepHandler
@@ -31,7 +30,7 @@ class SleepCalculationHandler(val context: Context) {
     /**
      * Scope is used to write to the database async without affecting the normal process
      */
-    private val scope: CoroutineScope = MainScope()
+    private val scope: CoroutineScope by lazy { MainScope() }
 
     /**
      * With [dataBaseRepository] we can access all the data from the database
@@ -48,7 +47,7 @@ class SleepCalculationHandler(val context: Context) {
     }
 
     private val sleepHandler : SleepHandler by lazy {
-        SleepHandler.getHandler(context)
+        SleepHandler(context) //.getHandler(context)
     }
 
     //endregion
@@ -193,7 +192,7 @@ class SleepCalculationHandler(val context: Context) {
         }
 
         // create features for ml model
-        val sleepClassifier = SleepClassifier.getHandler(context)
+        val sleepClassifier = SleepClassifier(context)
 
         // call the ml model
         return  sleepClassifier.defineUserSleep(normedSleepApiDataPast, normedSleepApiDataFuture, lightConditions)
@@ -231,7 +230,7 @@ class SleepCalculationHandler(val context: Context) {
                 return
             }
 
-            val sleepClassifier = SleepClassifier.getHandler(context)
+            val sleepClassifier = SleepClassifier(context)
 
             val mobilePosition =
                 if(MobilePosition.getCount(dataStoreRepository.sleepParameterFlow.first().standardMobilePosition) == MobilePosition.UNIDENTIFIED) // create features for ml model
@@ -363,7 +362,7 @@ class SleepCalculationHandler(val context: Context) {
      */
     suspend fun defineUserWakeup(localTime: LocalDateTime? = null, setAlarm:Boolean = true) {
 
-        val sleepClassifier = SleepClassifier.getHandler(context)
+        val sleepClassifier = SleepClassifier(context)
 
         // for each sleeping time, we have to define the sleep state
         val time = localTime ?: LocalDateTime.now()
@@ -564,7 +563,6 @@ class SleepCalculationHandler(val context: Context) {
      * calls [userNotSleeping]
      */
     fun userNotSleepingJob(){
-
         scope.launch { userNotSleeping(null) }
     }
 
@@ -732,28 +730,5 @@ class SleepCalculationHandler(val context: Context) {
         defineUserWakeup(dateTime, false)
     }
 
-
     //endregion
-
-    /**
-     * Companion object is used for static fields in kotlin
-     */
-    companion object {
-        // For Singleton instantiation
-        @SuppressLint("StaticFieldLeak")
-        @Volatile
-        private var INSTANCE: SleepCalculationHandler? = null
-
-        /**
-         * This should be used to create or get the actual instance of the [SleepCalculationHandler] class
-         */
-        fun getHandler(context: Context): SleepCalculationHandler {
-            return INSTANCE ?: synchronized(this) {
-                val instance = SleepCalculationHandler(context)
-                INSTANCE = instance
-                // return instance
-                instance
-            }
-        }
-    }
 }

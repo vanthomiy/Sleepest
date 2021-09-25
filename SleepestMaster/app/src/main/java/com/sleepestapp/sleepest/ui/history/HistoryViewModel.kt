@@ -161,7 +161,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
                 if ((isUnidentified)) {
                     scope.launch {
-                        SleepCalculationHandler.getHandler(context).checkIsUserSleeping(
+                        SleepCalculationHandler(context).checkIsUserSleeping(
                             LocalDateTime.ofInstant(
                                 Instant.ofEpochMilli((sleepSessionData[key]?.third?.sleepTimes?.sleepTimeStart?.toLong())!! * 1000),
                                 ZoneOffset.systemDefault()
@@ -173,7 +173,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
                 if ((mobilePosition == MobilePosition.INBED && isSleeping)) { // || isUnidentified) {
                     scope.launch {
-                        SleepCalculationHandler.getHandler(context).defineUserWakeup(
+                        SleepCalculationHandler(context).defineUserWakeup(
                             LocalDateTime.ofInstant(
                                 Instant.ofEpochMilli((sleepSessionData[key]?.third?.sleepTimes?.sleepTimeStart?.toLong())!! * 1000),
                                 ZoneOffset.systemDefault()

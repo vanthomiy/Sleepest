@@ -9,7 +9,6 @@ import androidx.work.*
 import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.model.data.NotificationUsage
 import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler
-import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler.Companion.getHandler
 import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
 import com.sleepestapp.sleepest.util.NotificationUtil
@@ -40,7 +39,7 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
             (applicationContext as MainApplication).dataBaseRepository
         }
 
-        val sleepCalculationHandler : SleepCalculationHandler = getHandler(applicationContext)
+        val sleepCalculationHandler = SleepCalculationHandler(applicationContext)
 
 
         scope.launch {

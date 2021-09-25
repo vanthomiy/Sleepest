@@ -48,10 +48,10 @@ class BackgroundAlarmTimeHandler(val context: Context) {
         (context.applicationContext as MainApplication).dataStoreRepository
     }
     private val sleepHandler : SleepHandler by lazy {
-        SleepHandler.getHandler(context)
+        SleepHandler(context)
     }
     private val sleepCalculationHandler : SleepCalculationHandler by lazy {
-        SleepCalculationHandler.getHandler(context)
+        SleepCalculationHandler(context)
     }
     private val scope: CoroutineScope = MainScope()
 

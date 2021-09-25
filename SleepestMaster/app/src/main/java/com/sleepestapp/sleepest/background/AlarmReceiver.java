@@ -37,7 +37,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         //Init repos
         DatabaseRepository databaseRepository = ((MainApplication)context.getApplicationContext()).getDataBaseRepository();
-        SleepCalculationHandler sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(MainApplication.Companion.applicationContext());
+        SleepCalculationHandler sleepCalculationHandler = new SleepCalculationHandler(MainApplication.Companion.applicationContext());
 
         Calendar calendar = Calendar.getInstance();
         SharedPreferences pref = context.getSharedPreferences("AlarmReceiver", 0);

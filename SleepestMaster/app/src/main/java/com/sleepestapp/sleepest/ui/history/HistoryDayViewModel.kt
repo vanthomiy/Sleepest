@@ -30,7 +30,7 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
 
     private val scope: CoroutineScope = MainScope()
 
-    val sleepCalculationHandler: SleepCalculationHandler by lazy { SleepCalculationHandler.getHandler(context) }
+    val sleepCalculationHandler: SleepCalculationHandler by lazy { SleepCalculationHandler(context) }
 
     /** Contains information about the fall asleep time. */
     var beginOfSleep = ObservableField("")
