@@ -42,7 +42,6 @@ public class AlarmClockReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         AlarmClockReceiver.context = context;
-        DataStoreRepository dataStoreRepository = DataStoreRepository.Companion.getRepo(context);
         DatabaseRepository databaseRepository = ((MainApplication)context.getApplicationContext()).getDataBaseRepository();
         AlarmEntity alarmEntity = databaseRepository.getNextActiveAlarmJob();
 

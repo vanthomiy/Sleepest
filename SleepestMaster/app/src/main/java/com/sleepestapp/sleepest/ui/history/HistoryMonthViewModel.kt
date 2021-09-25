@@ -18,10 +18,6 @@ class HistoryMonthViewModel(application: Application) : AndroidViewModel(applica
 
     lateinit var transitionsContainer : ViewGroup
 
-    init {
-
-    }
-
     private var lastView: ImageView? = null
     fun onInfoClicked(view: View){
         updateInfoChanged(view.tag.toString())

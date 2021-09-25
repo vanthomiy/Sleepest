@@ -1,7 +1,6 @@
 package com.sleepestapp.sleepest.storage
 
 import android.content.Context
-import androidx.lifecycle.asLiveData
 import androidx.test.platform.app.InstrumentationRegistry
 import com.sleepestapp.sleepest.model.data.SleepState
 import com.sleepestapp.sleepest.sleepcalculation.model.SleepTimes
@@ -14,7 +13,6 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import java.io.BufferedReader
-import java.time.DayOfWeek
 import java.time.LocalDate
 
 class DatabaseRepositoryTest {
@@ -80,7 +78,7 @@ class DatabaseRepositoryTest {
             AlarmEntity(
                 2,
                 true,
-                activeDayOfWeek = arrayListOf<DayOfWeek>(dayofweekyesterday)
+                activeDayOfWeek = arrayListOf(dayofweekyesterday)
             )
         )
 

@@ -65,6 +65,7 @@
                         <ImageView
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
+                            tools:ignore="ContentDescription"
                             android:layout_gravity="start"
                             android:src="@drawable/ic_baseline_build_24"
                             app:tint="@color/primary_text_color" />
@@ -83,6 +84,7 @@
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
                             android:src="@drawable/ic_baseline_expand_more_24"
+                            tools:ignore="ContentDescription"
                             android:rotation="@{profileViewModel.actualExpand == 0 ? profileViewModel.rotatedState:profileViewModel.normalRotationState}"
                             android:onClick="@{profileViewModel::onExpandClicked}"
                             android:tag="0"
@@ -325,6 +327,7 @@
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="start"
+                            tools:ignore="ContentDescription"
                             android:src="@drawable/ic_baseline_help_24"
                             app:tint="@color/primary_text_color" />
                         <TextView
@@ -341,6 +344,7 @@
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
+                            tools:ignore="ContentDescription"
                             android:src="@drawable/ic_baseline_expand_more_24"
                             android:rotation="@{profileViewModel.actualExpand == 1 ? profileViewModel.rotatedState:profileViewModel.normalRotationState}"
                             android:onClick="@{profileViewModel::onExpandClicked}"
@@ -367,7 +371,6 @@
                             android:textColor="@color/primary_text_color"
                             android:tag="tutorial"
                             android:id="@+id/btnTutorial">
-                            android:onClick="@{profileViewModel::onHelpClicked}">
                         </androidx.appcompat.widget.AppCompatButton>
 
                         <androidx.appcompat.widget.AppCompatButton
@@ -402,6 +405,7 @@
                         <ImageView
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
+                            tools:ignore="ContentDescription"
                             android:layout_gravity="start"
                             android:src="@drawable/ic_baseline_feedback_24"
                             app:tint="@color/primary_text_color" />
@@ -418,6 +422,7 @@
                         <ImageView
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
+                            tools:ignore="ContentDescription"
                             android:layout_gravity="end"
                             android:src="@drawable/ic_baseline_expand_more_24"
                             android:rotation="@{profileViewModel.actualExpand == 2 ? profileViewModel.rotatedState:profileViewModel.normalRotationState}"
@@ -510,6 +515,7 @@
                         <ImageView
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
+                            tools:ignore="ContentDescription"
                             android:layout_gravity="start"
                             android:src="@drawable/ic_baseline_person_add_alt_1_24"
                             app:tint="@color/primary_text_color" />
@@ -527,6 +533,7 @@
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
+                            tools:ignore="ContentDescription"
                             android:src="@drawable/ic_baseline_expand_more_24"
                             android:rotation="@{profileViewModel.actualExpand == 3 ? profileViewModel.rotatedState:profileViewModel.normalRotationState}"
                             android:onClick="@{profileViewModel::onExpandClicked}"
@@ -752,6 +759,7 @@
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="start"
+                            tools:ignore="ContentDescription"
                             android:src="@drawable/ic_baseline_assignment_24"
                             app:tint="@color/primary_text_color" />
                         <TextView
@@ -759,8 +767,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/img_header_magrin"
                             android:textSize="@dimen/headerSize" android:textStyle="bold"
-                                android:layout_gravity="start|center"
-
+                            android:layout_gravity="start|center"
                             android:textColor="@color/primary_text_color"
                             android:text="@string/settings_credits"/>
 
@@ -768,6 +775,7 @@
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
+                            tools:ignore="ContentDescription"
                             android:src="@drawable/ic_baseline_expand_more_24"
                             android:rotation="@{profileViewModel.actualExpand == 5 ? profileViewModel.rotatedState:profileViewModel.normalRotationState}"
                             android:onClick="@{profileViewModel::onExpandClicked}"
@@ -816,6 +824,7 @@
                         <ImageView
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
+                            tools:ignore="ContentDescription"
                             android:layout_gravity="start"
                             android:src="@drawable/ic_baseline_sd_storage_24"
                             app:tint="@color/primary_text_color" />
@@ -833,6 +842,7 @@
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
+                            tools:ignore="ContentDescription"
                             android:src="@drawable/ic_baseline_expand_more_24"
                             android:rotation="@{profileViewModel.actualExpand == 4 ? profileViewModel.rotatedState:profileViewModel.normalRotationState}"
                             android:onClick="@{profileViewModel::onExpandClicked}"
@@ -881,7 +891,6 @@
                             android:layout_marginVertical="5dp"
                             android:text="@{profileViewModel.removeButtonText}"
                             android:textColor="@color/primary_text_color"
-
                             android:tag="remove"
                             android:onClick="@{profileViewModel::onDataClicked}">
                         </androidx.appcompat.widget.AppCompatButton>

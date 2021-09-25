@@ -103,10 +103,7 @@ public class ForegroundService extends LifecycleService {
         //Instance of DatabaseRepo
         DatabaseRepository databaseRepository = ((MainApplication) getApplicationContext()).getDataBaseRepository();
         alarmEntity = databaseRepository.getNextActiveAlarmJob();
-        //Instance of DataStoreRepo
-        DataStoreRepository dataStoreRepository = DataStoreRepository.Companion.getRepo(getApplicationContext());
         //Instance of SleepHandler
-        SleepHandler sleepHandler = SleepHandler.Companion.getHandler(getApplicationContext());
         sleepCalculationHandler = new SleepCalculationHandler(getApplicationContext());
         alarmCycleState = new AlarmCycleState(getApplicationContext());
 

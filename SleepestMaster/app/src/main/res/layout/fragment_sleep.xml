@@ -26,6 +26,7 @@
 
             <ImageView
                 android:id="@+id/background"
+                tools:ignore="ContentDescription"
                 android:layout_width="match_parent"
                 android:layout_height="400dp"
                 android:background="@color/colorAccent"
@@ -36,6 +37,7 @@
                 android:id="@+id/moon"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
+                tools:ignore="ContentDescription"
                 android:src="@drawable/moon"
                 app:layout_constraintBottom_toTopOf="@+id/bottom"
                 app:layout_constraintTop_toBottomOf="@id/header"
@@ -164,6 +166,7 @@
                             <ImageView
                                 android:layout_width="@dimen/img_header_size"
                                 android:layout_height="@dimen/img_header_size"
+                                tools:ignore="ContentDescription"
                                 android:layout_gravity="start"
                                 app:tint="@color/primary_text_color"
                                 android:src="@drawable/ic_baseline_bedtime_24"/>
@@ -180,6 +183,7 @@
                             <ImageView
                                 android:layout_width="@dimen/img_header_size"
                                 android:layout_height="@dimen/img_header_size"
+                                tools:ignore="ContentDescription"
                                 android:layout_gravity="end"
                                 app:tint="@color/primary_text_color"
                                 android:src="@drawable/info_help"
@@ -307,6 +311,7 @@
                             <ImageView
                                 android:layout_width="@dimen/img_header_size"
                                 android:layout_height="@dimen/img_header_size"
+                                tools:ignore="ContentDescription"
                                 android:layout_gravity="start"
                                 app:tint="@color/primary_text_color"
                                 android:src="@drawable/ic_baseline_night_shelter_24"/>
@@ -323,6 +328,7 @@
                             <ImageView
                                 android:layout_width="@dimen/img_header_size"
                                 android:layout_height="@dimen/img_header_size"
+                                tools:ignore="ContentDescription"
                                 android:layout_gravity="end"
                                 app:tint="@color/primary_text_color"
                                 android:src="@drawable/info_help"
@@ -445,6 +451,7 @@
                             <ImageView
                                 android:layout_width="@dimen/img_header_size"
                                 android:layout_height="@dimen/img_header_size"
+                                tools:ignore="ContentDescription"
                                 android:layout_gravity="start"
                                 app:tint="@color/primary_text_color"
                                 android:src="@drawable/ic_baseline_wb_sunny_24"/>
@@ -461,6 +468,7 @@
                             <ImageView
                                 android:layout_width="@dimen/img_header_size"
                                 android:layout_height="@dimen/img_header_size"
+                                tools:ignore="ContentDescription"
                                 android:layout_gravity="end"
                                 app:tint="@color/primary_text_color"
                                 android:src="@drawable/info_help"
@@ -508,6 +516,7 @@
                             <ImageView
                                 android:layout_width="@dimen/img_header_size"
                                 android:layout_height="@dimen/img_header_size"
+                                tools:ignore="ContentDescription"
                                 android:layout_gravity="start"
                                 app:tint="@color/primary_text_color"
                                 android:src="@drawable/ic_baseline_phone_android_24"/>
@@ -524,6 +533,7 @@
                             <ImageView
                                 android:layout_width="@dimen/img_header_size"
                                 android:layout_height="@dimen/img_header_size"
+                                tools:ignore="ContentDescription"
                                 android:layout_gravity="end"
                                 app:tint="@color/primary_text_color"
                                 android:src="@drawable/info_help"
@@ -582,6 +592,7 @@
                                 android:layout_width="@dimen/img_header_size"
                                 android:layout_height="@dimen/img_header_size"
                                 android:layout_gravity="start"
+                                tools:ignore="ContentDescription"
                                 app:tint="@color/primary_text_color"
                                 android:src="@drawable/ic_baseline_data_usage_24"/>
                             <TextView
@@ -598,6 +609,7 @@
                                 android:layout_width="@dimen/img_header_size"
                                 android:layout_height="@dimen/img_header_size"
                                 android:layout_gravity="end"
+                                tools:ignore="ContentDescription"
                                 app:tint="@color/primary_text_color"
                                 android:src="@drawable/info_help"
                                 android:onClick="@{sleepViewModel::onInfoClicked}"
@@ -689,6 +701,7 @@
                                 android:layout_height="@dimen/img_header_size"
                                 android:layout_gravity="start"
                                 app:tint="@color/primary_text_color"
+                                tools:ignore="ContentDescription"
                                 android:src="@drawable/ic_baseline_pending_actions_24"
                                 android:onClick="@{sleepViewModel::onInfoClicked}"
                                 android:tag="4"/>
@@ -706,6 +719,7 @@
                                 android:layout_width="@dimen/img_header_size"
                                 android:layout_height="@dimen/img_header_size"
                                 android:layout_gravity="end"
+                                tools:ignore="ContentDescription"
                                 app:tint="@color/primary_text_color"
                                 android:onClick="@{sleepViewModel::onInfoClicked}"
                                 android:tag="4"

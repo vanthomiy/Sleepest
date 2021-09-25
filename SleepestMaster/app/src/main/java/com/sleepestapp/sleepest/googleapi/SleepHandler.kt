@@ -29,24 +29,6 @@ class SleepHandler(private val context: Context) {
      */
     private val dataStoreRepository by lazy { (context.applicationContext as MainApplication).dataStoreRepository }
 
-    companion object {
-        // For Singleton instantiation
-        @Volatile
-        private var INSTANCE: SleepHandler? = null
-
-        /**
-         * Get a new or the actual instance of the [SleepHandler]
-         */
-        fun getHandler(context: Context): SleepHandler {
-            return INSTANCE ?: synchronized(this) {
-                val instance = SleepHandler(context)
-                INSTANCE = instance
-                // return instance
-                instance
-            }
-        }
-    }
-
     /**
      * Subscribes to sleep api data and listens to it automatically
      */

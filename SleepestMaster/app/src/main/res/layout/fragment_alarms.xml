@@ -251,6 +251,7 @@
                 android:id="@+id/btn_addAlarmEntity"
                 android:layout_width="match_parent"
                 app:tint="@color/primary_text_color"
+                tools:ignore="ContentDescription"
                 android:layout_height="match_parent"
                 android:src="@drawable/add_anim"/>
         </FrameLayout>

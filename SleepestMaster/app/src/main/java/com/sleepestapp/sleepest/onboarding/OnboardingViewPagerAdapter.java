@@ -54,7 +54,7 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
 
     private final List<ImageView> dots = new ArrayList<>();
 
-    Timer timer;
+    final Timer timer;
 
     public OnboardingViewPagerAdapter(Context context, Activity activityContext, ArrayList<Object> arrayList) {
 

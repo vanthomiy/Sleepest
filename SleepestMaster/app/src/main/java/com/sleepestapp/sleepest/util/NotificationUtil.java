@@ -102,11 +102,10 @@ public class NotificationUtil {
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notification_remote_view_template);
         PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), AlarmReceiverUsage.Companion.getCount(AlarmReceiverUsage.GO_TO_SLEEP), informationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         PendingIntent pendingIntentLeft;
-        SmileySelectorUtil smileySelectorUtil = new SmileySelectorUtil();
 
         if (usage == NotificationUsage.Companion.getCount(NotificationUsage.NOTIFICATION_NO_API_DATA)) {
 
-            information = smileySelectorUtil.getSmileyAttention() + context.getString(R.string.information_notification_text_sleep_api_problem);
+            information = SmileySelectorUtil.getSmileyAttention() + context.getString(R.string.information_notification_text_sleep_api_problem);
 
             informationIntent.putExtra(context.getString(R.string.alarmmanager_key), AlarmReceiverUsage.SOLVE_API_PROBLEM.name());
             informationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -122,7 +121,7 @@ public class NotificationUtil {
 
         } else  {
 
-            information = smileySelectorUtil.getSmileyAttention() + context.getString(R.string.information_notification_text_sleeptime_problem);
+            information = SmileySelectorUtil.getSmileyAttention() + context.getString(R.string.information_notification_text_sleeptime_problem);
 
             informationIntent.putExtra(context.getString(R.string.alarmmanager_key), AlarmReceiverUsage.GO_TO_SLEEP.name());
             informationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -233,30 +232,28 @@ public class NotificationUtil {
             arrayList.set(2, false);
         }
 
-        SmileySelectorUtil smileySelectorUtil = new SmileySelectorUtil();
-
         String contentText;
         if ((boolean) arrayList.get(2)) {
-            contentText = smileySelectorUtil.getSmileyAlarmActive() + context.getString(R.string.alarm_status_true);
+            contentText = SmileySelectorUtil.getSmileyAlarmActive() + context.getString(R.string.alarm_status_true);
         } else {
-            contentText = smileySelectorUtil.getSmileyAlarmNotActive() + context.getString(R.string.alarm_status_false);
+            contentText = SmileySelectorUtil.getSmileyAlarmNotActive() + context.getString(R.string.alarm_status_false);
         }
 
         String sleepStateText;
         if ((boolean) arrayList.get(3)) {
-            sleepStateText = smileySelectorUtil.getSmileySleep() + context.getString(R.string.sleep_status_true);
+            sleepStateText = SmileySelectorUtil.getSmileySleep() + context.getString(R.string.sleep_status_true);
         } else {
-            sleepStateText = smileySelectorUtil.getSmileySleep() + context.getString(R.string.sleep_status_false);
+            sleepStateText = SmileySelectorUtil.getSmileySleep() + context.getString(R.string.sleep_status_false);
         }
 
         String sleeptimeText;
         if ((int) arrayList.get(1) >= Constants.FOREGROUND_SERVICE_NOTIFICATION_DELAY_SLEEP_TIME) {
-            sleeptimeText = smileySelectorUtil.getSmileyTime() + context.getString(R.string.foregroundservice_notification_sleeptime)+ " " + TimeConverterUtil.toTimeFormat(TimeConverterUtil.minuteToTimeFormat((int) arrayList.get(1))[0], TimeConverterUtil.minuteToTimeFormat((int) arrayList.get(1))[1]);
+            sleeptimeText = SmileySelectorUtil.getSmileyTime() + context.getString(R.string.foregroundservice_notification_sleeptime)+ " " + TimeConverterUtil.toTimeFormat(TimeConverterUtil.minuteToTimeFormat((int) arrayList.get(1))[0], TimeConverterUtil.minuteToTimeFormat((int) arrayList.get(1))[1]);
         } else {
-            sleeptimeText = smileySelectorUtil.getSmileyTime() + context.getString(R.string.foregroundservice_notification_sleeptime)+ " " + 0 + "h " + "00" + "min";
+            sleeptimeText = SmileySelectorUtil.getSmileyTime() + context.getString(R.string.foregroundservice_notification_sleeptime)+ " " + 0 + "h " + "00" + "min";
         }
 
-        String alarmtimeText = smileySelectorUtil.getSmileyAlarmClock() + context.getString(R.string.foregroundservice_notification_alarmtime)+ " " + TimeConverterUtil.toTimeFormat(TimeConverterUtil.millisToTimeFormat((int) arrayList.get(4))[0], TimeConverterUtil.millisToTimeFormat((int) arrayList.get(4))[1]);
+        String alarmTimeText = SmileySelectorUtil.getSmileyAlarmClock() + context.getString(R.string.foregroundservice_notification_alarmtime)+ " " + TimeConverterUtil.toTimeFormat(TimeConverterUtil.millisToTimeFormat((int) arrayList.get(4))[0], TimeConverterUtil.millisToTimeFormat((int) arrayList.get(4))[1]);
 
         //Set the text in textview of the expanded notification view
         boolean[] bannerConfig = (boolean[]) arrayList.get(5);
@@ -269,7 +266,7 @@ public class NotificationUtil {
         }
 
         if (bannerConfig[1]) {
-            remoteViews.setTextViewText(R.id.tvBannerActualWakeup, alarmtimeText);
+            remoteViews.setTextViewText(R.id.tvBannerActualWakeup, alarmTimeText);
             remoteViews.setViewVisibility(R.id.tvBannerActualWakeup, View.VISIBLE);
         } else {
             remoteViews.setViewVisibility(R.id.tvBannerActualWakeup, View.GONE);

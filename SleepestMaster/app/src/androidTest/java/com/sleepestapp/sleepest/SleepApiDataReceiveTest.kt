@@ -1,7 +1,6 @@
 package com.sleepestapp.sleepest
 
 import android.content.Context
-import androidx.lifecycle.asLiveData
 import androidx.test.platform.app.InstrumentationRegistry
 import com.sleepestapp.sleepest.googleapi.SleepHandler
 import com.sleepestapp.sleepest.storage.DataStoreRepository
@@ -11,7 +10,6 @@ import org.hamcrest.CoreMatchers
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-//import org.awaitility.kotlin.await
 
 class SleepApiDataReceiveTest {
 
@@ -20,21 +18,13 @@ class SleepApiDataReceiveTest {
     private lateinit var dbRepository: DataStoreRepository
     private lateinit var sleepHandler : SleepHandler
 
-    private val sleepCalculationStoreRepository by lazy {  DataStoreRepository.getRepo(context)}
 
     @Before
     fun init(){
         context = InstrumentationRegistry.getInstrumentation().targetContext
         dataStoreRepository = DataStoreRepository(context)
         dbRepository = DataStoreRepository(context)
-        sleepHandler = SleepHandler.getHandler(context)
-       /* sleepDbRepository = DatabaseRepository.getRepo(
-            sleepCalcDatabase.sleepApiRawDataDao(),
-            sleepCalcDatabase.userSleepSessionDao(),
-            sleepCalcDatabase.alarmDao(),
-            sleepCalcDatabase.activityApiRawDataDao()
-
-        )*/
+        sleepHandler = SleepHandler(context)
 
     }
 

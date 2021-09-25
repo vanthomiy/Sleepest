@@ -87,6 +87,7 @@
                         <ImageView
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
+                            tools:ignore="ContentDescription"
                             android:layout_gravity="start"
                             app:tint="@color/primary_text_color"
                             android:src="@drawable/ic_baseline_night_shelter_24"
@@ -106,6 +107,7 @@
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
+                            tools:ignore="ContentDescription"
                             app:tint="@color/primary_text_color"
                             android:src="@drawable/info_help"
                             android:onClick="@{historyDayViewModel::onInfoClicked}"
@@ -233,6 +235,7 @@
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="start"
+                            tools:ignore="ContentDescription"
                             app:tint="@color/primary_text_color"
                             android:src="@drawable/moon"
                             android:tag="1"/>
@@ -251,6 +254,7 @@
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
+                            tools:ignore="ContentDescription"
                             app:tint="@color/primary_text_color"
                             android:src="@drawable/info_help"
                             android:onClick="@{historyDayViewModel::onInfoClicked}"
@@ -355,6 +359,7 @@
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="start"
+                            tools:ignore="ContentDescription"
                             app:tint="@color/primary_text_color"
                             android:src="@drawable/ic_arrow_down_"
                             android:tag="1"/>
@@ -373,6 +378,7 @@
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
+                            tools:ignore="ContentDescription"
                             app:tint="@color/primary_text_color"
                             android:src="@drawable/info_help"
                             android:onClick="@{historyDayViewModel::onInfoClicked}"
@@ -472,6 +478,7 @@
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="start"
+                            tools:ignore="ContentDescription"
                             app:tint="@color/primary_text_color"
                             android:src="@drawable/ic_baseline_pending_actions_24"
                             android:tag="1"/>
@@ -491,6 +498,7 @@
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
                             app:tint="@color/primary_text_color"
+                            tools:ignore="ContentDescription"
                             android:src="@drawable/info_help"
                             android:onClick="@{historyDayViewModel::onInfoClicked}"
                             android:tag="3"/>
