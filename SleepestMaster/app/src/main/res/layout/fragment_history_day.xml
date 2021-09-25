@@ -120,6 +120,7 @@
                         android:layout_margin="10dp"
                         android:visibility="@{historyDayViewModel.actualExpand == 0 ? historyDayViewModel.visibleState:historyDayViewModel.goneState, default=gone}">
                         <androidx.fragment.app.FragmentContainerView
+                            android:id="@+id/fcv0"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
@@ -267,6 +268,7 @@
                         android:layout_margin="10dp"
                         android:visibility="@{historyDayViewModel.actualExpand == 1 ? historyDayViewModel.visibleState:historyDayViewModel.goneState, default=gone}">
                         <androidx.fragment.app.FragmentContainerView
+                            android:id="@+id/fcv1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
@@ -391,6 +393,7 @@
                         android:layout_margin="10dp"
                         android:visibility="@{historyDayViewModel.actualExpand == 2 ? historyDayViewModel.visibleState:historyDayViewModel.goneState, default=gone}">
                         <androidx.fragment.app.FragmentContainerView
+                            android:id="@+id/fcv2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
@@ -510,6 +513,7 @@
                         android:layout_margin="10dp"
                         android:visibility="@{historyDayViewModel.actualExpand == 3 ? historyDayViewModel.visibleState:historyDayViewModel.goneState, default=gone}">
                         <androidx.fragment.app.FragmentContainerView
+                            android:id="@+id/fcv3"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"

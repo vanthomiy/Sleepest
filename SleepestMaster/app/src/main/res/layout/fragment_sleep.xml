@@ -140,6 +140,7 @@
                         android:layout_marginHorizontal="10dp"
                         android:visibility="@{sleepViewModel.actualExpand == 7 ? View.VISIBLE:View.GONE, default=gone}">
                         <androidx.fragment.app.FragmentContainerView
+                            android:id="@+id/fcv7"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
@@ -198,6 +199,7 @@
                             android:layout_marginBottom="10dp"
                             android:visibility="@{sleepViewModel.actualExpand == 0 ? View.VISIBLE:View.GONE, default=gone}">
                             <androidx.fragment.app.FragmentContainerView
+                                android:id="@+id/fcv0"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
@@ -343,6 +345,7 @@
                             android:layout_marginBottom="10dp"
                             android:visibility="@{sleepViewModel.actualExpand == 1 ? View.VISIBLE:View.GONE, default=gone}">
                             <androidx.fragment.app.FragmentContainerView
+                                android:id="@+id/fcv1"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
@@ -623,6 +626,7 @@
                             android:layout_marginBottom="10dp"
                             android:visibility="@{sleepViewModel.actualExpand == 3 ? View.VISIBLE:View.GONE, default=gone}">
                             <androidx.fragment.app.FragmentContainerView
+                                android:id="@+id/fcv3"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
@@ -734,6 +738,7 @@
                             android:layout_marginBottom="10dp"
                             android:visibility="@{sleepViewModel.actualExpand == 4 ? View.VISIBLE:View.GONE, default=gone}">
                             <androidx.fragment.app.FragmentContainerView
+                                android:id="@+id/fcv4"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
