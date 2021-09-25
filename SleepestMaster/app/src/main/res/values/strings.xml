@@ -29,8 +29,8 @@
     <string name="foregroundservice_notification_alarmtime">Alarm time: </string>
     <string name="information_notification_channel">Information Notification Channel</string>
     <string name="information_notification_channel_description">This channel is for the notification to show the user that it is time to sleep</string>
-    <string name="information_notification_text_sleeptime_problem">You cannot reach your sleep time anymore.</string>
-    <string name="information_notification_text_sleep_api_problem">There is something wrong with receiving sleep data.</string>
+    <string name="information_notification_text_sleeptime_problem">You cannot reach your sleep time anymore</string>
+    <string name="information_notification_text_sleep_api_problem">There is something wrong with receiving sleep data</string>
     <string name="information_notification_title">Attention</string>
     <string name="workmanager1_tag">Workmanager 1</string>
     <string name="workmanager2_tag">Workmanager 2</string>
@@ -329,6 +329,10 @@
     <string name="onboarding_toast_read_to_end">Please read the hole tutorial</string>
     <string name="onboarding_toast_permission_already_granted">This permission is already granted</string>
     <string name="onboarding_toast_find_permission_in_list">Please search for "Sleepest" in the list</string>
+    <string name="onboarding_start_time_text_first_start">Select start time</string>
+    <string name="onboarding_end_time_text_first_start">Select end time</string>
+    <string name="onboarding_start_time_text_not_first_start">Start</string>
+    <string name="onboarding_end_time_text_not_first_start">End</string>
 
     <string name="privacy_police">Privacy Police</string>
     <string name="alarms_ringtone_set">Set</string>

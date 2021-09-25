@@ -33,20 +33,20 @@
     <string name="workmanager2_tag">Workmanager 2</string>
     <string name="alarmmanager_key">com.sleepestapp.sleepest.background.AlarmIntentKey</string>
     <string name="error_start_foreground">Etwas lief schief. Versuche alle Alarme neuzustarten.</string>
-    <string name="disable_alarm_message">Du kannst den Alarm jederzeit reaktivieren.</string>
-    <string name="not_sleeping_message">Schlafenszeiten bis jetzt gelöscht.</string>
-    <string name="currently_not_sleeping_message">Die letzten Minuten an Schlaf wurden gelöscht.</string>
+    <string name="disable_alarm_message">Du kannst den Alarm jederzeit reaktivieren</string>
+    <string name="not_sleeping_message">Schlafenszeiten bis jetzt gelöscht</string>
+    <string name="currently_not_sleeping_message">Die letzten Minuten an Schlaf wurden gelöscht</string>
     <string name="btn_not_sleeping_text">Kein Schlaf</string>
     <string name="btn_currently_not_sleeping_text">Aktuell wach</string>
-    <string name="btn_disable_alarm">Alarm deaktivieren.</string>
-    <string name="btn_reactivate_alarm">Alarm reaktivieren.</string>
-    <string name="alarm_status_false">Alarm inaktiv.</string>
-    <string name="alarm_status_true">Alarm aktiv.</string>
+    <string name="btn_disable_alarm">Alarm deaktivieren</string>
+    <string name="btn_reactivate_alarm">Alarm reaktivieren</string>
+    <string name="alarm_status_false">Alarm inaktiv</string>
+    <string name="alarm_status_true">Alarm aktiv</string>
     <string name="wakelock_tag">Foregroundservice_lock</string>
-    <string name="sleep_status_false">Du schläfst momentan nicht.</string>
-    <string name="sleep_status_true">Du schläfst momentan.</string>
-    <string name="information_notification_text_sleeptime_problem">Schlafdauer kann nicht erreicht werden.</string>
-    <string name="information_notification_text_sleep_api_problem">Schlafdaten können nicht empfangen werden.</string>
+    <string name="sleep_status_false">Du schläfst momentan nicht</string>
+    <string name="sleep_status_true">Du schläfst momentan</string>
+    <string name="information_notification_text_sleeptime_problem">Schlafdauer kann nicht erreicht werden</string>
+    <string name="information_notification_text_sleep_api_problem">Schlafdaten können nicht empfangen werden</string>
     <string name="information_notification_title">Achtung</string>
     <string name="notification_information_api_problem_btn">Problem lösen</string>
     <string name="notification_information_user_should_sleep_btn_left">Gute Nacht</string>
@@ -334,6 +334,10 @@
     <string name="onboarding_toast_read_to_end">Bitte lies das ganze Tutorial</string>
     <string name="onboarding_toast_permission_already_granted">Diese Berechtigung wurde schon akzeptiert</string>
     <string name="onboarding_toast_find_permission_in_list">Bitte suche nach "Sleepest" in der Liste</string>
+    <string name="onboarding_start_time_text_first_start">Wähle Startzeit</string>
+    <string name="onboarding_end_time_text_first_start">Wähle Endzeit</string>
+    <string name="onboarding_start_time_text_not_first_start">Start</string>
+    <string name="onboarding_end_time_text_not_first_start">Ende</string>
 
     <string name="privacy_police">Datenschutzerklärung</string>
 

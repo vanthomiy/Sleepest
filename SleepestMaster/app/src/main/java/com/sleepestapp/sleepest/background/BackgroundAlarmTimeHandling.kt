@@ -207,7 +207,10 @@ class BackgroundAlarmTimeHandler(val context: Context) {
             if (checkForegroundStatus()) {
 
                 //Stops the calculation and all alarm clocks
-                WorkmanagerCalculation.stopPeriodicWorkmanager()
+
+
+                //Cancel periodic work by tag
+                WorkManager.getInstance(context.applicationContext).cancelAllWorkByTag(context.getString(R.string.workmanager2_tag))
                 AlarmClockReceiver.cancelAlarm(context.applicationContext, AlarmClockReceiverUsage.START_ALARMCLOCK);
                 AlarmClockReceiver.cancelAlarm(context.applicationContext, AlarmClockReceiverUsage.LATEST_WAKEUP_ALARMCLOCK);
 
