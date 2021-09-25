@@ -3,7 +3,6 @@ package com.sleepestapp.sleepest.util;
 public class SmileySelectorUtil {
     private final int smileyAttention = 0x26A0;
     private final int smileyAlarmActive = 0x1F514;
-    private final int smileyAlarmNotActive = 0x1F515;
     private final int smileySleep = 0x1F634;
     private final int smileyTime = 0x231B;
     private final int smileySleepState = 0x1F4CA;
@@ -18,7 +17,9 @@ public class SmileySelectorUtil {
 
     public String getSmileyAlarmActive() { return new String(Character.toChars(smileyAlarmActive)); }
 
-    public String getSmileyAlarmNotActive() { return new String(Character.toChars(smileyAlarmNotActive)); }
+    public String getSmileyAlarmNotActive() {
+        int smileyAlarmNotActive = 0x1F515;
+        return new String(Character.toChars(smileyAlarmNotActive)); }
 
     public String getSmileySleep() {
         return new String(Character.toChars(smileySleep));

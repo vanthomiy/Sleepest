@@ -44,7 +44,7 @@ class ForegroundActivity : Activity() {
                     scope.launch {
 
                         // next alarm or null
-                        if (databaseRepository.isAlarmActiv()) {
+                        if (databaseRepository.isAlarmActive()) {
 
                             // start foreground if not null
                             if (!dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {

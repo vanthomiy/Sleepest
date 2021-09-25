@@ -337,5 +337,7 @@
     <string name="alarms_ringtone_information">Increase volume to hear sounds</string>
 
     <string name="info_no_info_found">No Information found</string>
+    <string name="settings_export_failed">Export failed</string>
+    <string name="settings_unable_to_find_market">\" unable to find market app\"</string>
 
 </resources>

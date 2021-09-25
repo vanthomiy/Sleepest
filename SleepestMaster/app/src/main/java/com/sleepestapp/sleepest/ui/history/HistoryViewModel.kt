@@ -137,10 +137,10 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                     sleepSessionData[id] = Triple(
                         dataBaseRepository.getSleepApiRawDataBetweenTimestamps(
                             session.sleepTimes.sleepTimeStart,
-                            session.sleepTimes.sleepTimeEnd).first()?.sortedBy { x -> x.timestampSeconds },
+                            session.sleepTimes.sleepTimeEnd).first()?.sortedBy { x -> x.timestampSeconds }?: mutableListOf(),
                         session.sleepTimes.sleepDuration,
                         session
-                    ) as Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>
+                    )
                 }
             }
             checkSessionIntegrity()

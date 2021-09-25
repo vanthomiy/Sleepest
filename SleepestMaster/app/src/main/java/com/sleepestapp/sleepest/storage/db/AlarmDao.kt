@@ -25,7 +25,7 @@ interface AlarmDao {
     suspend fun insert(alarmEntity: AlarmEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(alarmEntitys: List<AlarmEntity>)
+    suspend fun insertAll(alarmEntities: List<AlarmEntity>)
 
     @Query("UPDATE alarm_properties_table SET sleepDuration =:sleepDuration Where id LIKE :alarmId")
     suspend fun updateSleepDuration(sleepDuration: Int, alarmId:Int)

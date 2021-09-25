@@ -26,7 +26,7 @@ interface UserSleepSessionDao {
     suspend fun insert(sleepSegmentEventEntityRaw: UserSleepSessionEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(sleepSegmentEventEntityRaws: List<UserSleepSessionEntity>)
+    suspend fun insertAll(sleepSegmentEventEntityRaw: List<UserSleepSessionEntity>)
 
     @Delete
     suspend fun delete(sleepSegmentEventEntityRaw: UserSleepSessionEntity)

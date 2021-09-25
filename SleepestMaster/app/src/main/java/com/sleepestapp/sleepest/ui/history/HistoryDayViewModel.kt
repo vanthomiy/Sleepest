@@ -154,7 +154,7 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
             },
             dateTime.hour,
             dateTime.minute,
-            SleepTimeValidationUtil.Is24HourFormat(context)
+            SleepTimeValidationUtil.is24HourFormat(context)
         )
         tpd.show()
     }

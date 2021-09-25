@@ -2,14 +2,12 @@ package com.sleepestapp.sleepest.util
 
 import android.content.Context
 import android.text.format.DateFormat
-import android.widget.Toast
 import com.sleepestapp.sleepest.model.data.AlarmSleepChangeFrom
 import com.sleepestapp.sleepest.model.data.SleepSleepChangeFrom
 import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
 import kotlinx.coroutines.flow.first
 import java.time.LocalTime
-import kotlin.coroutines.CoroutineContext
 
 object SleepTimeValidationUtil {
 
@@ -20,7 +18,7 @@ object SleepTimeValidationUtil {
 
         val secondsOfDay = 60 * 60 * 24
 
-        var timeOnDay: Int
+        val timeOnDay: Int
         var timeNextDay = 0
 
         if(startTime > endTime)
@@ -243,7 +241,7 @@ object SleepTimeValidationUtil {
     /**
      * Returns true if the date format is 24h format else false
      */
-    fun Is24HourFormat(context:Context) : Boolean{
+    fun is24HourFormat(context:Context) : Boolean{
         return DateFormat.is24HourFormat(context)
     }
 

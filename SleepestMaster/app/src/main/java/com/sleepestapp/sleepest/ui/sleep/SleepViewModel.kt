@@ -1,4 +1,5 @@
 package com.sleepestapp.sleepest.ui.sleep
+import android.annotation.SuppressLint
 import android.app.TimePickerDialog
 import android.transition.TransitionManager
 import android.view.View
@@ -33,6 +34,7 @@ class SleepViewModel(
         dataStoreRepository.sleepParameterFlow.asLiveData()
     }
 
+    @SuppressLint("StaticFieldLeak")
     lateinit var transitionsContainer : ViewGroup
 
     //endregion
@@ -67,8 +69,8 @@ class SleepViewModel(
 
     val sleepStartValue = MutableLiveData("07:30")
     val sleepEndValue = MutableLiveData("07:30")
-    var sleepStartTime = LocalTime.now()
-    var sleepEndTime = LocalTime.now()
+    var sleepStartTime: LocalTime = LocalTime.now()
+    var sleepEndTime: LocalTime = LocalTime.now()
     var is24HourFormat : Boolean = false
 
     /**
@@ -148,19 +150,21 @@ class SleepViewModel(
     /**
      * Auto sleep time toggled
      */
-    fun SleepTimeToogled(view: View) {
+    @Suppress("UNUSED_PARAMETER")
+    fun sleepTimeToggled(view: View) {
         viewModelScope.launch{
             autoSleepTime.value?.let {
                 dataStoreRepository.updateAutoSleepTime(it)
             }
         }
 
-        TransitionManager.beginDelayedTransition(transitionsContainer);
+        TransitionManager.beginDelayedTransition(transitionsContainer)
 
     }
 
 
     val actualExpand = MutableLiveData(-1)
+    @SuppressLint("StaticFieldLeak")
     private var lastView: ImageView? = null
 
     /**
@@ -170,19 +174,18 @@ class SleepViewModel(
         updateInfoChanged(view.tag.toString())
 
         // Check if its an image view
-        if(view.tag.toString() != "7"){
+        lastView = if(view.tag.toString() != "7"){
             IconAnimatorUtil.animateView(view as ImageView)
 
-                IconAnimatorUtil.resetView(lastView)
+            IconAnimatorUtil.resetView(lastView)
 
-            lastView = if(lastView != view)
-                (view as ImageView)
+            if(lastView != view)
+                view
             else
                 null
-        }
-        else{
+        } else{
             IconAnimatorUtil.resetView(lastView)
-            lastView = null
+            null
         }
     }
 
@@ -190,27 +193,27 @@ class SleepViewModel(
      * Update the info layouts hide/show
      */
     private fun updateInfoChanged(value: String) {
-
-        TransitionManager.beginDelayedTransition(transitionsContainer);
+        TransitionManager.beginDelayedTransition(transitionsContainer)
 
 
         actualExpand.value =(if(actualExpand.value == value.toIntOrNull()) -1 else value.toIntOrNull() )
     }
 
     val phoneUsageValueString = MutableLiveData("")
-    val phoneUsageValue = MutableLiveData<Int>(2)
+    val phoneUsageValue = MutableLiveData(2)
 
     /**
      * Phone usage value of slider changed
      */
-    fun onPhoneUsageChanged(seekBar: SeekBar, progresValue: Int, fromUser: Boolean){
+    @Suppress("UNUSED_PARAMETER")
+    fun onPhoneUsageChanged(seekBar: SeekBar, progressValue: Int, fromUser: Boolean){
 
-        val mf = MobileUseFrequency.getCount(progresValue)
+        val mf = MobileUseFrequency.getCount(progressValue)
         phoneUsageValueString.value = (mf.toString().lowercase(Locale.getDefault())
             .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
-        phoneUsageValue.value = (progresValue)
+        phoneUsageValue.value = (progressValue)
         viewModelScope.launch {
-            dataStoreRepository.updateUserMobileFequency(mf.ordinal)
+            dataStoreRepository.updateUserMobileFrequency(mf.ordinal)
 
         }
 
@@ -225,6 +228,7 @@ class SleepViewModel(
     /**
      * Mobile position selected
      */
+    @Suppress("UNUSED_PARAMETER")
     fun onMobilePositionChanged(
         parent: AdapterView<*>?,
         selectedItemView: View,
@@ -255,6 +259,7 @@ class SleepViewModel(
     /**
      * Light condition selected
      */
+    @Suppress("UNUSED_PARAMETER")
     fun onLightConditionChanged(
             parent: AdapterView<*>?,
             selectedItemView: View,
@@ -270,7 +275,7 @@ class SleepViewModel(
         } else {
             viewModelScope.launch {
                 lightCondition.value = position
-                dataStoreRepository.updateLigthCondition(position)
+                dataStoreRepository.updateLightCondition(position)
                 sleepCalculateFactorCalculation()
             }
         }
@@ -285,8 +290,8 @@ class SleepViewModel(
     /**
      * Activity tracking switched
      */
-    fun onActivityTrackingChanged(view:View) {
-        TransitionManager.beginDelayedTransition(transitionsContainer);
+    @Suppress("UNUSED_PARAMETER")
+    fun onActivityTrackingChanged(view:View) {        TransitionManager.beginDelayedTransition(transitionsContainer)
 
         viewModelScope.launch {
 
@@ -300,13 +305,14 @@ class SleepViewModel(
 
         }
 
-        TransitionManager.beginDelayedTransition(transitionsContainer);
+        TransitionManager.beginDelayedTransition(transitionsContainer)
 
     }
 
     /**
      * Activity tracking use in calculation switched
      */
+    @Suppress("UNUSED_PARAMETER")
     fun onActivityInCalcChanged(view:View) {
         viewModelScope.launch {
             includeActivityInCalculation.value?.let { dataStoreRepository.updateActivityInCalculation(
@@ -321,7 +327,7 @@ class SleepViewModel(
     val sleepScoreText = MutableLiveData("50")
 
     /**
-     *     defines how good the sleep can be messured
+     *     defines how good the sleep can be measured
      *     100 is max and 30 is lowest
      */
     fun sleepCalculateFactorCalculation() {
@@ -369,7 +375,7 @@ class SleepViewModel(
          * Loads all the init values from the datastore and passes the values to the bindings
          */
         viewModelScope.launch {
-            var sleepParams = dataStoreRepository.sleepParameterFlow.first()
+            val sleepParams = dataStoreRepository.sleepParameterFlow.first()
 
             sleepStartTime = LocalTime.ofSecondOfDay(sleepParams.sleepTimeStart.toLong())
             sleepEndTime = LocalTime.ofSecondOfDay(sleepParams.sleepTimeEnd.toLong())

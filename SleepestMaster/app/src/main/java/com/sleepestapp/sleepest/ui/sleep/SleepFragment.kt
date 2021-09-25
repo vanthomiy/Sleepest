@@ -13,9 +13,8 @@ import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.databinding.FragmentSleepBinding
 import com.sleepestapp.sleepest.googleapi.ActivityTransitionHandler
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil
-import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.Is24HourFormat
+import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.is24HourFormat
 import com.sleepestapp.sleepest.util.StringUtil
-import kotlinx.coroutines.launch
 import java.time.LocalTime
 
 
@@ -23,6 +22,8 @@ class SleepFragment : Fragment() {
 
     var factory = object : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            @Suppress("UNCHECKED_CAST")
+            // Workaround because we know that we can cast to T
             return  SleepViewModel(
                 (actualContext as MainApplication).dataStoreRepository,
                 (actualContext as MainApplication).dataBaseRepository
@@ -50,20 +51,20 @@ class SleepFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = FragmentSleepBinding.inflate(inflater, container, false)
         viewModel.transitionsContainer = (binding.linearAnimationlayout)
 
         binding.sleepViewModel = viewModel
-        binding.lifecycleOwner = this;
+        binding.lifecycleOwner = this
 
         val minData = SleepTimeValidationUtil.createMinutePickerHelper()
-        binding.npMinutes.minValue = 1;
-        binding.npMinutes.maxValue = minData.size;
-        binding.npMinutes.displayedValues = minData;
+        binding.npMinutes.minValue = 1
+        binding.npMinutes.maxValue = minData.size
+        binding.npMinutes.displayedValues = minData
 
-        viewModel.is24HourFormat = Is24HourFormat(actualContext)
+        viewModel.is24HourFormat = is24HourFormat(actualContext)
 
         viewModel.phonePositionSelections.value = (mutableListOf(
             StringUtil.getStringXml(R.string.sleep_phoneposition_inbed,requireActivity().application),
@@ -113,14 +114,14 @@ class SleepFragment : Fragment() {
             viewModel.sleepEndValue.value = ((if (viewModel.sleepEndTime.hour < 10) "0" else "") + viewModel.sleepEndTime.hour.toString() + ":" + (if (viewModel.sleepEndTime.minute < 10) "0" else "") + viewModel.sleepEndTime.minute.toString())
         }
 
-        viewModel.activityTracking.observe(this){
+        viewModel.activityTracking.observe(viewLifecycleOwner){
             if(it)
                 ActivityTransitionHandler.getHandler(actualContext).startActivityHandler()
             else
                 ActivityTransitionHandler.getHandler(actualContext).stopActivityHandler()
         }
 
-        viewModel.sleepScoreValue.observe(this){
+        viewModel.sleepScoreValue.observe(viewLifecycleOwner){
 
             val score = it.toInt()
 

@@ -340,7 +340,9 @@
     <!--endregion-->
 
     <!--region info-->
-        <string name="info_no_info_found">Keine Informationen gefunden</string>
+    <string name="info_no_info_found">Keine Informationen gefunden</string>
+    <string name="settings_export_failed">Export fehlgeschlagen</string>
+    <string name="settings_unable_to_find_market">\" App wurde nicht gefunden\"</string>
     <!--endregion-->
 
 

@@ -288,6 +288,7 @@ data class ThresholdParams(
                  * Helper function to create sleep start threshold factor by [MobileUseFrequency]
                  * Not needed for [MobileUseFrequency] at the moment
                  */
+                @Suppress("UNUSED_PARAMETER")
                 fun createSleepStartThreshold(mobileUseFrequency: MobileUseFrequency) : ThresholdParams{
                         return ThresholdParams(
                                 confidence = 1f,

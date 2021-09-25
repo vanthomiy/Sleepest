@@ -1,6 +1,5 @@
 package com.sleepestapp.sleepest.storage.datastorage
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import com.sleepestapp.sleepest.ActivityApiData
 import kotlinx.coroutines.flow.Flow
@@ -21,8 +20,7 @@ class ActivityApiDataStatus(private val dataStore: DataStore<ActivityApiData>) {
 
     val activityApiData: Flow<ActivityApiData> = dataStore.data
             .catch { exception->
-                if(exception is IOException){
-                    Log.d("Error", exception.message.toString())
+                if(exception is IOException) {
                     emit(ActivityApiData.getDefaultInstance())
                 }else{
                     throw exception

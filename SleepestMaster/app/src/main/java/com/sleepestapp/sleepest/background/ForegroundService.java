@@ -6,25 +6,18 @@ package com.sleepestapp.sleepest.background;
  * while the user is sleeping
  */
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.view.View;
-import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LifecycleService;
 
 import com.sleepestapp.sleepest.LiveUserSleepActivity;
-import com.sleepestapp.sleepest.MainActivity;
 import com.sleepestapp.sleepest.MainApplication;
 import com.sleepestapp.sleepest.R;
 import com.sleepestapp.sleepest.SettingsData;
@@ -43,11 +36,7 @@ import com.sleepestapp.sleepest.storage.DatabaseRepository;
 import com.sleepestapp.sleepest.storage.db.AlarmEntity;
 import com.sleepestapp.sleepest.util.NotificationUtil;
 import com.sleepestapp.sleepest.util.SleepUtil;
-import com.sleepestapp.sleepest.util.SmileySelectorUtil;
 import com.sleepestapp.sleepest.util.TimeConverterUtil;
-import com.sleepestapp.sleepest.MainActivity;
-import com.sleepestapp.sleepest.MainApplication;
-import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -475,7 +464,7 @@ public class ForegroundService extends LifecycleService {
     @RequiresApi(api = Build.VERSION_CODES.P)
     private void sendUserInformation() {
 
-        if (SleepUtil.checkSleeptimeReachingPossibility(getApplicationContext()) && !userInformed) {
+        if (SleepUtil.checkSleepTimeReachingPossibility(getApplicationContext()) && !userInformed) {
 
             userInformed = true;
 

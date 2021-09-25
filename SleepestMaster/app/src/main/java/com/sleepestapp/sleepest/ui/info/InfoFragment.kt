@@ -56,10 +56,10 @@ class InfoFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = FragmentInfoBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this;
+        binding.lifecycleOwner = this
 
         return binding.root
     }
@@ -73,21 +73,21 @@ class InfoFragment : Fragment() {
                 it1, it, view.context)
         } }
 
-        var actualStlye = direction?.let { InfoEntityStyle.getById(it) }
+        var actualStyle = direction?.let { InfoEntityStyle.getById(it) }
 
         // Create all information entities that are used for this information
         infoEntity?.forEach{ info ->
             val transactions = childFragmentManager.beginTransaction()
             //transactions.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
 
-            val infoFragment = if(info.infoEntityStlye != InfoEntityStyle.RANDOM)
+            val infoFragment = if(info.infoEntityStyle != InfoEntityStyle.RANDOM)
             {
-                actualStlye = info.infoEntityStlye
-                InfoEntityFragment(view.context, info, info.infoEntityStlye)
+                actualStyle = info.infoEntityStyle
+                InfoEntityFragment(view.context, info, info.infoEntityStyle)
 
             }
             else{
-                actualStlye?.let { InfoEntityFragment(view.context, info, it) }
+                actualStyle?.let { InfoEntityFragment(view.context, info, it) }
             }
 
             if (infoFragment != null) {
@@ -95,13 +95,13 @@ class InfoFragment : Fragment() {
             }
 
 
-            actualStlye = if(actualStlye == InfoEntityStyle.PICTURE_LEFT || actualStlye == InfoEntityStyle.PICTURE_RIGHT)
+            actualStyle = if(actualStyle == InfoEntityStyle.PICTURE_LEFT || actualStyle == InfoEntityStyle.PICTURE_RIGHT)
             {
-                if (actualStlye == InfoEntityStyle.PICTURE_LEFT) InfoEntityStyle.PICTURE_RIGHT else
+                if (actualStyle == InfoEntityStyle.PICTURE_LEFT) InfoEntityStyle.PICTURE_RIGHT else
                     InfoEntityStyle.PICTURE_LEFT
             }
             else{
-                if (actualStlye == InfoEntityStyle.PICTURE_BOTTOM) InfoEntityStyle.PICTURE_TOP else
+                if (actualStyle == InfoEntityStyle.PICTURE_BOTTOM) InfoEntityStyle.PICTURE_TOP else
                     InfoEntityStyle.PICTURE_BOTTOM
             }
         }

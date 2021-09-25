@@ -2,8 +2,8 @@ package com.sleepestapp.sleepest.storage
 
 import android.content.Context
 import androidx.datastore.createDataStore
-import com.doitstudio.sleepest_master.storage.datastorage.TUTORIAL_STATUS_NAME
-import com.doitstudio.sleepest_master.storage.datastorage.TutorialStatus
+import com.sleepestapp.sleepest.storage.datastorage.TUTORIAL_STATUS_NAME
+import com.sleepestapp.sleepest.storage.datastorage.TutorialStatus
 import com.sleepestapp.sleepest.*
 import com.sleepestapp.sleepest.model.data.Constants.DAY_IN_SECONDS
 import com.sleepestapp.sleepest.storage.datastorage.*
@@ -73,7 +73,7 @@ class DataStoreRepository(context: Context) {
      */
     suspend fun isInSleepTime(givenTime:LocalTime? = null): Boolean {
 
-        var times = sleepParameterFlow.first()
+        val times = sleepParameterFlow.first()
 
         val time = givenTime ?: LocalTime.now()
         val maxTime = DAY_IN_SECONDS + 1
@@ -186,7 +186,7 @@ class DataStoreRepository(context: Context) {
     /**
      * Updates the light condition of the user-defined sleep parameters
      */
-    suspend fun updateLigthCondition(time:Int) =
+    suspend fun updateLightCondition(time:Int) =
         sleepParameterStatus.updateLigthCondition(time)
 
     /**
@@ -198,13 +198,13 @@ class DataStoreRepository(context: Context) {
     /**
      * Updates the light condition of the last week of the user-defined sleep parameters
      */
-    suspend fun updateLigthConditionOverLastWeek(time:Int) =
+    suspend fun updateLightConditionOverLastWeek(time:Int) =
         sleepParameterStatus.updateLigthConditionOverLastWeek(time)
 
     /**
      * Updates the mobile use frequency of the user-defined sleep parameters
      */
-    suspend fun updateUserMobileFequency(time:Int) =
+    suspend fun updateUserMobileFrequency(time:Int) =
         sleepParameterStatus.updateUserMobileFrequency(time)
 
     /**
@@ -267,7 +267,7 @@ class DataStoreRepository(context: Context) {
         alarmParameterStatus.updateEndAlarmAfterFired(value)
 
     /**
-     * Get propertie to alarm end after awake automatically
+     * Get properties to alarm end after awake automatically
      */
     suspend fun getEndAlarmAfterFired() : Boolean {
         return alarmParameterFlow.first().endAlarmAfterFired
@@ -352,12 +352,6 @@ class DataStoreRepository(context: Context) {
     suspend fun updateSleepSleepApiValuesAmount(amount:Int) =
             sleepApiDataStatus.updateSleepApiValuesAmount(amount)
 
-    /**
-     * Reset sleep api values amount
-     */
-    suspend fun resetSleepApiValuesAmount() =
-        sleepApiDataStatus.resetSleepApiValuesAmount()
-
 
     //endregion
 
@@ -380,8 +374,8 @@ class DataStoreRepository(context: Context) {
     /**
      * Update settings banner show alarm active
      */
-    suspend fun updateBannerShowAlarmActiv(isActive:Boolean) =
-        settingsDataStatus.updateBannerShowAlarmActiv(isActive)
+    suspend fun updateBannerShowAlarmActive(isActive:Boolean) =
+        settingsDataStatus.updateBannerShowAlarmActive(isActive)
 
     /**
      * Update settings banner show actual wake up point
@@ -410,11 +404,11 @@ class DataStoreRepository(context: Context) {
     /**
      * Update settings auto dark mode ok
      */
-    suspend fun updateAutoDarkModeAckn(isActive:Boolean) =
-        settingsDataStatus.updateAutoDarkModeAckn(isActive)
+    suspend fun updateAutoDarkModeAcknowledge(isActive:Boolean) =
+        settingsDataStatus.updateAutoDarkModeAcknowledge(isActive)
 
     /**
-     * Update settings darke mode
+     * Update settings dark mode
      */
     suspend fun updateDarkMode(isActive:Boolean) =
             settingsDataStatus.updateDarkMode(isActive)

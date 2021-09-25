@@ -19,7 +19,7 @@ import kotlin.collections.ArrayList
 /**
  * This contains the interface for each SQL-Database and for DataStore.
  * ROOM API for SQL Database is used for storing large datasets like [SleepApiRawDataEntity]
- * DataStore is used for storing single classes or single values like {later} [AlarmPreferences] (Containing Alarm Time and Alarm Active etc.) and [AlgorithmPreferences] and other key values.
+ * DataStore is used for storing single classes or single values like {later} (Containing Alarm Time and Alarm Active etc.) and other key values.
  * More information about DataStore @see [link](https://developer.android.com/topic/libraries/architecture/datastore) and about ROOM SQL @see [link](https://developer.android.com/training/data-storage/room/#kotlin).
  *
  */
@@ -83,7 +83,7 @@ class DatabaseRepository(
     /**
      * Gets the sleep api data from a specific state from a date in life time.
      * so we always getting the data from 15:00 the day or day before until the specific time
-     * later we have to combine it with the actual sleeptimes
+     * later we have to combine it with the actual sleep times
      */
     fun getSleepApiRawDataFromDateLive(actualTime:LocalDateTime): Flow<List<SleepApiRawDataEntity>?>
     {
@@ -99,7 +99,7 @@ class DatabaseRepository(
     /**
      * Gets the sleep api data from a specific state from a date
      * e.g. the dateTime 20.05.2021 at 20:00 returns all data in between 20.05.2021 15:00 to 21.05.2021 at 15:00
-     * later we have to combine it with the actual sleeptimes
+     * later we have to combine it with the actual sleep times
      */
     fun getSleepApiRawDataFromDate(actualTime:LocalDateTime): Flow<List<SleepApiRawDataEntity>?>
     {
@@ -186,7 +186,7 @@ class DatabaseRepository(
     /**
      * Gets the activity api data from a specific state from a date in life time.
      * so we always getting the data from 15:00 the day or day before until the specific time
-     * later we have to combine it with the actual activitytimes
+     * later we have to combine it with the actual activity times
      */
     fun getActivityApiRawDataFromDateLive(actualTime:LocalDateTime): Flow<List<ActivityApiRawDataEntity>>
     {
@@ -202,7 +202,7 @@ class DatabaseRepository(
     /**
      * Gets the activity api data from a specific state from a date
      * e.g. the dateTime 20.05.2021 at 20:00 returns all data in between 20.05.2021 15:00 to 21.05.2021 at 15:00
-     * later we have to combine it with the actual activitytimes
+     * later we have to combine it with the actual activity times
      */
     fun getActivityApiRawDataFromDate(actualTime:LocalDateTime): Flow<List<ActivityApiRawDataEntity>>
     {
@@ -254,7 +254,7 @@ class DatabaseRepository(
      */
     suspend fun getOrCreateSleepSessionById(id: Int): UserSleepSessionEntity {
 
-        var userSession = userSleepSessionDao.getById(id).first().firstOrNull()
+        val userSession = userSleepSessionDao.getById(id).first().firstOrNull()
         //val userSession = allData.firstOrNull { x -> x.id == id }
 
         if(userSession == null){
@@ -268,7 +268,7 @@ class DatabaseRepository(
     }
 
     /**
-     * [time] the duration in seconds eg. 86200 would be from 24hours ago to now the data
+     * [days] the duration in seconds eg. 86200 would be from 24hours ago to now the data
      */
     fun getUserSleepSessionSinceDays(days:Long): Flow<List<UserSleepSessionEntity>>
     {
@@ -329,7 +329,7 @@ class DatabaseRepository(
         val date = if(ldt.hour > 15) ldt.plusDays(1).toLocalDate() else ldt.toLocalDate()
         val dayOfWeek = "%" + date.dayOfWeek + "%"
 
-        return alarmDao.getAllActiveOnDay(dayOfWeek.toString()).distinctUntilChanged()
+        return alarmDao.getAllActiveOnDay(dayOfWeek).distinctUntilChanged()
     }
 
     /**
@@ -357,9 +357,9 @@ class DatabaseRepository(
     }
 
     /**
-     * Returns true or false wheter a alarm is active for the actual/next day or not
+     * Returns true or false whether a alarm is active for the actual/next day or not
      */
-    suspend fun isAlarmActiv() : Boolean{
+    suspend fun isAlarmActive() : Boolean{
         val list = activeAlarmsFlow().first()
         // get first alarm
         return list.isNotEmpty()

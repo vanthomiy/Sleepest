@@ -84,7 +84,7 @@ class ActivityTransitionHandler(private val context: Context) {
                     dataStoreRepository.updateActivitySubscribeFailed(false)
                 }                 }
 
-            task.addOnFailureListener { e: Exception ->
+            task.addOnFailureListener {
                 scope.launch {
                     dataStoreRepository.updateActivityPermissionRemovedError(true)
                     dataStoreRepository.updateActivityPermissionActive(false)
@@ -108,7 +108,7 @@ class ActivityTransitionHandler(private val context: Context) {
                 dataStoreRepository.updateActivityUnsubscribeFailed(false)
             }        }
 
-        task.addOnFailureListener { e: Exception ->
+        task.addOnFailureListener {
             scope.launch {
                 dataStoreRepository.updateActivityUnsubscribeFailed(true)
 

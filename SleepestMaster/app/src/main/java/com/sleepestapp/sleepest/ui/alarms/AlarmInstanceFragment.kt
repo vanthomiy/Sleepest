@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.asLiveData
 import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.databinding.AlarmEntityBinding
@@ -23,6 +22,8 @@ class AlarmInstanceFragment(val applicationContext: Context, private var alarmId
 
     var factory = object : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            @Suppress("UNCHECKED_CAST")
+            // Workaround because we know that we can cast to T
             return  AlarmsViewModel(
                 (actualContext as MainApplication).dataStoreRepository,
                 (actualContext as MainApplication).dataBaseRepository
@@ -31,6 +32,8 @@ class AlarmInstanceFragment(val applicationContext: Context, private var alarmId
     }
     var instanceFactory = object : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            @Suppress("UNCHECKED_CAST")
+            // Workaround because we know that we can cast to T
             return  AlarmInstanceViewModel(
                 (actualContext as MainApplication).dataStoreRepository,
                 (actualContext as MainApplication).dataBaseRepository,
@@ -62,19 +65,19 @@ class AlarmInstanceFragment(val applicationContext: Context, private var alarmId
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = AlarmEntityBinding.inflate(inflater, container, false)
         binding.alarmInstanceViewModel = viewModel
         binding.alarmsViewModel = alarmsViewModel
-        binding.lifecycleOwner = this;
+        binding.lifecycleOwner = this
 
         viewModel.transitionsContainer = (binding.cLAlarmEntityInnerLayer)
 
         val minData = SleepTimeValidationUtil.createMinutePickerHelper()
-        binding.npMinutes.minValue = 1;
-        binding.npMinutes.maxValue = minData.size;
-        binding.npMinutes.displayedValues = minData;
+        binding.npMinutes.minValue = 1
+        binding.npMinutes.maxValue = minData.size
+        binding.npMinutes.displayedValues = minData
 
         return binding.root
     }
@@ -129,15 +132,15 @@ class AlarmInstanceFragment(val applicationContext: Context, private var alarmId
         }
 
         // Expand an alarm view
-        alarmsViewModel.alarmExpandId.observe(this){
+        alarmsViewModel.alarmExpandId.observe(viewLifecycleOwner){
             if(it != alarmId)
                 viewModel.extendedAlarmEntity.value = (false)
         }
 
         viewModel.alarmName.value = StringUtil.getStringXml(R.string.alarm_instance_alarm, requireActivity().application)
-        viewModel.is24HourFormat = SleepTimeValidationUtil.Is24HourFormat(actualContext)
+        viewModel.is24HourFormat = SleepTimeValidationUtil.is24HourFormat(actualContext)
 
-        viewModel.selectedDays.observe(this){
+        viewModel.selectedDays.observe(viewLifecycleOwner){
             setDaysSelectedString(it)
         }
     }

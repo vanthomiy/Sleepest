@@ -60,7 +60,6 @@ class SleepCalculationHandlerTest
 
         val actualtime = 1000000
         val twohours = 60 * 60  * 2
-        val onehour = 60 * 60  * 1
         val sleepCalculationHandler = SleepCalculationHandler.getHandler(context)
 
         var sleepList = mutableListOf<SleepApiRawDataEntity>()

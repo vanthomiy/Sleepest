@@ -282,7 +282,7 @@
                             android:layout_marginVertical="5dp"
                             android:textColor="@color/primary_text_color"
                             android:backgroundTint="@{sleepViewModel.autoSleepTime ? @color/sleep_indicator_perfect :  @color/semi_transparent_button_color}"
-                            android:onClick="@{sleepViewModel::SleepTimeToogled}"
+                            android:onClick="@{sleepViewModel::sleepTimeToggled}"
                             android:checked="@={sleepViewModel.autoSleepTime}"
                             android:textOn="@string/sleep_sleeptimes_autoOn"
                             android:textOff="@string/sleep_sleeptimes_autoOff">

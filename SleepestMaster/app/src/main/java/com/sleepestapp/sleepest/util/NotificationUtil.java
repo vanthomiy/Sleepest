@@ -30,7 +30,6 @@ import com.sleepestapp.sleepest.model.data.AlarmReceiverUsage;
 import com.sleepestapp.sleepest.model.data.Constants;
 import com.sleepestapp.sleepest.model.data.NotificationUsage;
 import com.sleepestapp.sleepest.storage.db.AlarmEntity;
-import com.sleepestapp.sleepest.MainActivity;
 
 import java.util.ArrayList;
 
@@ -199,7 +198,7 @@ public class NotificationUtil {
             remoteViews.setOnClickPendingIntent(R.id.btnDisableAlarmNotification, btnClickPendingIntent);
         }
 
-        if(((int) arrayList.get(1) <= Constants.NOT_SLEEP_BUTTON_DELAY) && ((int) arrayList.get(1) > Constants.FOREGROUNDSERVICE_NOTIFICATION_DELAY_SLEEPTIME)) {
+        if(((int) arrayList.get(1) <= Constants.NOT_SLEEP_BUTTON_DELAY) && ((int) arrayList.get(1) > Constants.FOREGROUND_SERVICE_NOTIFICATION_DELAY_SLEEP_TIME)) {
             //Set button for not sleeping
             btnClickIntent = new Intent(context.getApplicationContext(), AlarmReceiver.class);
             btnClickIntent.putExtra(context.getApplicationContext().getString(R.string.alarmmanager_key), AlarmReceiverUsage.NOT_SLEEPING.name());
@@ -209,7 +208,7 @@ public class NotificationUtil {
             remoteViews.setOnClickPendingIntent(R.id.btnNotSleepingNotification, btnClickPendingIntent);
 
             remoteViews.setViewVisibility(R.id.btnNotSleepingNotification, View.VISIBLE);
-        } else if ((int) arrayList.get(1) <= Constants.FOREGROUNDSERVICE_NOTIFICATION_DELAY_SLEEPTIME) {
+        } else if ((int) arrayList.get(1) <= Constants.FOREGROUND_SERVICE_NOTIFICATION_DELAY_SLEEP_TIME) {
             //Set button for not sleeping
             btnClickIntent = new Intent(context.getApplicationContext(), AlarmReceiver.class);
             btnClickIntent.putExtra(context.getApplicationContext().getString(R.string.alarmmanager_key), AlarmReceiverUsage.NOT_SLEEPING.name());
@@ -252,7 +251,7 @@ public class NotificationUtil {
         }
 
         String sleeptimeText;
-        if ((int) arrayList.get(1) >= Constants.FOREGROUNDSERVICE_NOTIFICATION_DELAY_SLEEPTIME) {
+        if ((int) arrayList.get(1) >= Constants.FOREGROUND_SERVICE_NOTIFICATION_DELAY_SLEEP_TIME) {
             sleeptimeText = smileySelectorUtil.getSmileyTime() + context.getString(R.string.foregroundservice_notification_sleeptime)+ " " + TimeConverterUtil.toTimeFormat(TimeConverterUtil.minuteToTimeFormat((int) arrayList.get(1))[0], TimeConverterUtil.minuteToTimeFormat((int) arrayList.get(1))[1]);
         } else {
             sleeptimeText = smileySelectorUtil.getSmileyTime() + context.getString(R.string.foregroundservice_notification_sleeptime)+ " " + 0 + "h " + "00" + "min";

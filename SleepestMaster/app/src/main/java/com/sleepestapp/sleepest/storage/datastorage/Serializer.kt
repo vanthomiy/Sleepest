@@ -9,7 +9,7 @@ import com.google.protobuf.InvalidProtocolBufferException
 import java.io.InputStream
 import java.io.OutputStream
 
-class SleepApiDataSerializer() : Serializer<SleepApiData> {
+class SleepApiDataSerializer : Serializer<SleepApiData> {
 
     override fun readFrom(input: InputStream): SleepApiData {
         try {
@@ -27,7 +27,7 @@ class SleepApiDataSerializer() : Serializer<SleepApiData> {
 }
 
 
-class ActivityApiDataSerializer() : Serializer<ActivityApiData> {
+class ActivityApiDataSerializer : Serializer<ActivityApiData> {
 
     override fun readFrom(input: InputStream): ActivityApiData {
         try {
@@ -45,7 +45,7 @@ class ActivityApiDataSerializer() : Serializer<ActivityApiData> {
 }
 
 
-class SettingsDataSerializer() : Serializer<SettingsData> {
+class SettingsDataSerializer: Serializer<SettingsData> {
 
     override fun readFrom(input: InputStream): SettingsData {
         try {
@@ -70,7 +70,7 @@ class SettingsDataSerializer() : Serializer<SettingsData> {
 
 
 
-class LiveUserSleepActivitySerializer() : Serializer<LiveUserSleepActivity> {
+class LiveUserSleepActivitySerializer : Serializer<LiveUserSleepActivity> {
 
     override fun readFrom(input: InputStream): LiveUserSleepActivity {
         try {
@@ -87,7 +87,7 @@ class LiveUserSleepActivitySerializer() : Serializer<LiveUserSleepActivity> {
     override val defaultValue: LiveUserSleepActivity = LiveUserSleepActivity.getDefaultInstance()
 }
 
-class SleepParameterSerializer() : Serializer<SleepParameters> {
+class SleepParameterSerializer : Serializer<SleepParameters> {
 
     override fun readFrom(input: InputStream): SleepParameters {
         try {
@@ -115,7 +115,7 @@ class SleepParameterSerializer() : Serializer<SleepParameters> {
         .build()
 }
 
-class AlarmParameterSerializer() : Serializer<AlarmParameters> {
+class AlarmParameterSerializer : Serializer<AlarmParameters> {
 
     override fun readFrom(input: InputStream): AlarmParameters {
         try {
@@ -135,7 +135,7 @@ class AlarmParameterSerializer() : Serializer<AlarmParameters> {
         .build()
 }
 
-class BackgroundServiceSerializer() : Serializer<BackgroundService> {
+class BackgroundServiceSerializer : Serializer<BackgroundService> {
 
     override fun readFrom(input: InputStream): BackgroundService {
         try {
@@ -155,7 +155,7 @@ class BackgroundServiceSerializer() : Serializer<BackgroundService> {
         .build()
 }
 
-class TutorialStatusSerializer() : Serializer<Tutorial> {
+class TutorialStatusSerializer : Serializer<Tutorial> {
 
     override fun readFrom(input: InputStream): Tutorial {
         try {
