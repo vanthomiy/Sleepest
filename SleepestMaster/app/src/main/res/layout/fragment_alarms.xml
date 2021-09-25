@@ -123,7 +123,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
                             android:layout_gravity="end"
-                            android:background="@drawable/bgrounded_button"
+                            android:background="@drawable/background_rounded_button"
                             android:layout_marginStart="100dp"
                             android:text="@{alarmsViewModel.alarmSoundName}"
                             android:textColor="@color/primary_text_color"
@@ -209,9 +209,6 @@
                     </LinearLayout>
 
 
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="150dp"></FrameLayout>
                 </LinearLayout>
 
             </ScrollView>
@@ -255,8 +252,7 @@
                 android:layout_width="match_parent"
                 app:tint="@color/primary_text_color"
                 android:layout_height="match_parent"
-                android:src="@drawable/add_anim"
-                />
+                android:src="@drawable/add_anim"/>
         </FrameLayout>
 
 

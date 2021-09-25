@@ -122,7 +122,7 @@
                             android:layout_marginStart="0dp"
                             android:orientation="vertical"
                             android:layout_marginVertical="10dp"
-                            android:background="@drawable/bgrounded_button">
+                            android:background="@drawable/background_rounded_button">
 
                             <FrameLayout
                                 android:layout_width="match_parent"
@@ -157,7 +157,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
                             android:layout_gravity="start"
-                            android:background="@drawable/bgrounded_button"
+                            android:background="@drawable/background_rounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:textColor="@color/primary_text_color"
@@ -195,7 +195,7 @@
                             android:layout_marginStart="0dp"
                             android:orientation="vertical"
                             android:layout_marginVertical="10dp"
-                            android:background="@drawable/bgrounded_button">
+                            android:background="@drawable/background_rounded_button">
 
                             <FrameLayout
                                 android:layout_width="match_parent"
@@ -360,7 +360,7 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgrounded_button"
+                            android:background="@drawable/background_rounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/settings_tutorial"
@@ -373,7 +373,7 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgrounded_button"
+                            android:background="@drawable/background_rounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/settings_neccessary_settings"
@@ -438,7 +438,7 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgrounded_button"
+                            android:background="@drawable/background_rounded_button"
                             android:backgroundTint="@color/rem_sleep_color"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
@@ -451,7 +451,7 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgrounded_button"
+                            android:background="@drawable/background_rounded_button"
                             android:backgroundTint="@color/sleep_sleep_color"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
@@ -464,7 +464,7 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgrounded_button"
+                            android:background="@drawable/background_rounded_button"
                             android:backgroundTint="@color/warning_color"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
@@ -477,7 +477,7 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgrounded_button"
+                            android:background="@drawable/background_rounded_button"
                             android:backgroundTint="@color/light_sleep_color"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
@@ -551,14 +551,13 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/valuesHeight"
                                 android:layout_marginEnd="50dp"
-                                android:background="@drawable/bgrounded_button"
+                                android:background="@drawable/background_rounded_button"
                                 android:textSize="@dimen/valueSize"
                                 android:textColor="@color/primary_text_color"
                                 android:layout_marginVertical="5dp"
                                 android:text="@string/settings_sleepdata"
                                 android:tag="sleepActivity"
-                                android:id="@+id/sleepActivityPermission"
-                                android:onClick="onPermissionClicked">
+                                android:id="@+id/sleepActivityPermission">
                             </androidx.appcompat.widget.AppCompatButton>
 
                             <androidx.appcompat.widget.AppCompatImageView
@@ -600,13 +599,13 @@
                                 android:layout_height="@dimen/valuesHeight"
                                 android:layout_marginVertical="5dp"
                                 android:layout_marginEnd="50dp"
-                                android:background="@drawable/bgrounded_button"
+                                android:background="@drawable/background_rounded_button"
                                 android:onClick="onPermissionClicked"
                                 android:tag="dailyActivity"
                                 android:id="@+id/dailyActivityPermission"
                                 android:text="@string/settings_daily_activity"
                                 android:textColor="@color/primary_text_color"
-                                android:textSize="@dimen/valueSize"></androidx.appcompat.widget.AppCompatButton>
+                                android:textSize="@dimen/valueSize" />
 
                             <androidx.appcompat.widget.AppCompatImageView
                                 android:layout_width="35dp"
@@ -646,7 +645,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/valuesHeight"
                                 android:layout_marginEnd="50dp"
-                                android:background="@drawable/bgrounded_button"
+                                android:background="@drawable/background_rounded_button"
                                 android:textSize="@dimen/valueSize"
                                 android:layout_marginVertical="5dp"
                                 android:text="@string/settings_notification_privacy"
@@ -696,7 +695,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/valuesHeight"
                                 android:layout_marginEnd="50dp"
-                                android:background="@drawable/bgrounded_button"
+                                android:background="@drawable/background_rounded_button"
                                 android:textSize="@dimen/valueSize"
                                 android:layout_marginVertical="5dp"
                                 android:text="@string/settings_overlapp_app"
@@ -858,7 +857,7 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgrounded_button"
+                            android:background="@drawable/background_rounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/settings_export_data"
@@ -869,7 +868,7 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgrounded_button"
+                            android:background="@drawable/background_rounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/settings_import_data"
@@ -964,12 +963,6 @@
                     android:textSize="@dimen/headerSize"
                     android:layout_gravity="center_horizontal"
                     android:textColor="@color/primary_text_color"/>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"></FrameLayout>
-
-
 
 
             </LinearLayout>

@@ -55,7 +55,7 @@
                         android:layout_width="150dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="start"
-                        android:background="@drawable/bgrounded_button">
+                        android:background="@drawable/background_rounded_button">
                         <TextView
                             android:id="@+id/tvOnboardingStartTime"
                             android:layout_width="wrap_content"
@@ -83,7 +83,7 @@
                         android:layout_width="150dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="end"
-                        android:background="@drawable/bgrounded_button">
+                        android:background="@drawable/background_rounded_button">
 
                         <TextView
                             android:id="@+id/tvOnboardingEndTime"
@@ -517,7 +517,7 @@
             android:layout_height="@dimen/valuesHeight"
             android:layout_marginHorizontal="30dp"
             android:layout_marginVertical="10dp"
-            android:background="@drawable/bgrounded_button"
+            android:background="@drawable/background_rounded_button"
             android:textColor="@color/primary_text_color"
             android:text="Get started"/>
 

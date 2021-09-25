@@ -137,7 +137,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="10dp"
                         android:visibility="@{sleepViewModel.actualExpand == 7 ? View.VISIBLE:View.GONE, default=gone}">
-                        <fragment
+                        <androidx.fragment.app.FragmentContainerView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
@@ -193,7 +193,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
                             android:visibility="@{sleepViewModel.actualExpand == 0 ? View.VISIBLE:View.GONE, default=gone}">
-                            <fragment
+                            <androidx.fragment.app.FragmentContainerView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
@@ -216,7 +216,7 @@
                                 android:layout_gravity="start"
                                 android:clickable="@{sleepViewModel.autoSleepTime == false}"
                                 android:onClick="@{sleepViewModel::onAlarmStartClicked}"
-                                android:background="@drawable/bgrounded_button">
+                                android:background="@drawable/background_rounded_button">
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -244,7 +244,7 @@
                                 android:layout_width="150dp"
                                 android:layout_height="match_parent"
                                 android:layout_gravity="end"
-                                android:background="@drawable/bgrounded_button"
+                                android:background="@drawable/background_rounded_button"
                                 android:clickable="@{sleepViewModel.autoSleepTime == false}"
                                 android:onClick="@{sleepViewModel::onAlarmEndClicked}">
 
@@ -277,7 +277,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
                             android:layout_gravity="start"
-                            android:background="@drawable/bgrounded_button"
+                            android:background="@drawable/background_rounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:textColor="@color/primary_text_color"
@@ -336,7 +336,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
                             android:visibility="@{sleepViewModel.actualExpand == 1 ? View.VISIBLE:View.GONE, default=gone}">
-                            <fragment
+                            <androidx.fragment.app.FragmentContainerView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
@@ -363,7 +363,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="20dp"
-                                    android:layout_gravity="left|top"
+                                    android:layout_gravity="start|top"
                                     android:textSize="@dimen/valueSize"
                                     android:textColor="@color/accent_text_color"
                                     android:textStyle="bold"
@@ -378,7 +378,6 @@
                                         android:id="@+id/np_hours"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_centerInParent="true"
                                         app:np_dividerColor="@color/colorPrimary"
                                         app:np_height="50dp"
                                         app:np_max="24"
@@ -401,7 +400,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="20dp"
-                                    android:layout_gravity="left|top"
+                                    android:layout_gravity="start|top"
                                     android:textSize="@dimen/valueSize"
                                     android:textColor="@color/accent_text_color"
                                     android:textStyle="bold"
@@ -416,7 +415,6 @@
                                         android:id="@+id/np_minutes"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_centerInParent="true"
                                         app:np_dividerColor="@color/colorPrimary"
                                         app:np_height="50dp"
                                         app:np_max="59"
@@ -476,15 +474,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
                             android:visibility="@{sleepViewModel.actualExpand == 6 ? View.VISIBLE:View.GONE, default=gone}">
-                            <fragment
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
-                                android:layout_gravity="center_horizontal"
-                                android:tag="6"
-                                app:infoId = "6"
-                                app:info = "SLEEP"
-                                />
                         </FrameLayout>
 
                         <androidx.appcompat.widget.AppCompatSpinner
@@ -621,7 +610,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
                             android:visibility="@{sleepViewModel.actualExpand == 3 ? View.VISIBLE:View.GONE, default=gone}">
-                            <fragment
+                            <androidx.fragment.app.FragmentContainerView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
@@ -730,7 +719,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
                             android:visibility="@{sleepViewModel.actualExpand == 4 ? View.VISIBLE:View.GONE, default=gone}">
-                            <fragment
+                            <androidx.fragment.app.FragmentContainerView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
@@ -802,9 +791,6 @@
                         </FrameLayout>
                     </LinearLayout>
 
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="100dp"></FrameLayout>
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
 

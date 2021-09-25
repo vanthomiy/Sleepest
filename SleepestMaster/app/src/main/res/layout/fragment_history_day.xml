@@ -117,7 +117,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:visibility="@{historyDayViewModel.actualExpand == 0 ? historyDayViewModel.visibleState:historyDayViewModel.goneState, default=gone}">
-                        <fragment
+                        <androidx.fragment.app.FragmentContainerView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
@@ -141,7 +141,7 @@
                             android:clickable="true"
                             android:tag="BeginOfSleep"
                             android:onClick="@{historyDayViewModel::manualChangeSleepTimes}"
-                            android:background="@drawable/bgrounded_button">
+                            android:background="@drawable/background_rounded_button">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -177,7 +177,7 @@
                             android:layout_width="150dp"
                             android:layout_height="match_parent"
                             android:layout_gravity="end"
-                            android:background="@drawable/bgrounded_button"
+                            android:background="@drawable/background_rounded_button"
                             android:clickable="true"
                             android:tag="EndOfSleep"
                             android:onClick="@{historyDayViewModel::manualChangeSleepTimes}">
@@ -262,7 +262,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:visibility="@{historyDayViewModel.actualExpand == 1 ? historyDayViewModel.visibleState:historyDayViewModel.goneState, default=gone}">
-                        <fragment
+                        <androidx.fragment.app.FragmentContainerView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
@@ -384,7 +384,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:visibility="@{historyDayViewModel.actualExpand == 2 ? historyDayViewModel.visibleState:historyDayViewModel.goneState, default=gone}">
-                        <fragment
+                        <androidx.fragment.app.FragmentContainerView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
@@ -501,7 +501,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:visibility="@{historyDayViewModel.actualExpand == 3 ? historyDayViewModel.visibleState:historyDayViewModel.goneState, default=gone}">
-                        <fragment
+                        <androidx.fragment.app.FragmentContainerView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
