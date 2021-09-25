@@ -47,8 +47,8 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
     private int durationHours = 7;
     private int durationMinutes = 30;
 
-    private String startTimeText = "Select start time";
-    private String endTimeText = "Select end time";
+    private String startTimeText;
+    private String endTimeText;
     private String startTimeValueText;
     private String endTimeValueText;
 
@@ -63,6 +63,9 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
 
         timer = new Timer();
 
+        startTimeText = context.getString(R.string.onboarding_start_time_text_first_start);
+        endTimeText = context.getString(R.string.onboarding_end_time_text_first_start);;
+
         if (arrayList.size() > 0) {
             starttime = (int) arrayList.get(0);
             endtime = (int) arrayList.get(1);
@@ -70,8 +73,8 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
             durationHours = (int) arrayList.get(2);
             durationMinutes = (int) arrayList.get(3);
 
-            startTimeText = "Start";
-            endTimeText = "End";
+            startTimeText = context.getString(R.string.onboarding_start_time_text_not_first_start);
+            startTimeText = context.getString(R.string.onboarding_end_time_text_not_first_start);
             startTimeValueText = (String) arrayList.get(4);
             endTimeValueText = (String) arrayList.get(5);
 

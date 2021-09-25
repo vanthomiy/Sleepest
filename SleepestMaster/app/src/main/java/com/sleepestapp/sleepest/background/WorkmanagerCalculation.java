@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 
 public class WorkmanagerCalculation extends Worker {
 
-    private static Context context;
+    private final Context context;
     private SleepCalculationHandler sleepCalculationHandler;
 
     public WorkmanagerCalculation(@NonNull Context context, @NonNull WorkerParameters workerParams) {
@@ -81,13 +81,5 @@ public class WorkmanagerCalculation extends Worker {
             Calendar calendar = TimeConverterUtil.getAlarmDate(LocalTime.now().toSecondOfDay() + 300);
             AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context1, AlarmReceiverUsage.START_WORKMANAGER_CALCULATION);
         }
-    }
-
-    /**
-     * Stops the Workmanager
-     */
-    public static void stopPeriodicWorkmanager() {
-        //Cancel periodic work by tag
-        WorkManager.getInstance(context).cancelAllWorkByTag("Workmanager 2");
     }
 }
