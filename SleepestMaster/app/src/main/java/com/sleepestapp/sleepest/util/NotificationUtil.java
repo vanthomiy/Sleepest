@@ -256,7 +256,7 @@ public class NotificationUtil {
             sleeptimeText = smileySelectorUtil.getSmileyTime() + context.getString(R.string.foregroundservice_notification_sleeptime)+ " " + 0 + "h " + "00" + "min";
         }
 
-        String alarmtimeText = smileySelectorUtil.getSmileyAlarmClock() + context.getString(R.string.foregroundservice_notification_alarmtime)+ " " + TimeConverterUtil.millisToTimeFormat((int) arrayList.get(4))[0] + ":" + TimeConverterUtil.millisToTimeFormat((int) arrayList.get(4))[1];
+        String alarmtimeText = smileySelectorUtil.getSmileyAlarmClock() + context.getString(R.string.foregroundservice_notification_alarmtime)+ " " + TimeConverterUtil.toTimeFormat(TimeConverterUtil.millisToTimeFormat((int) arrayList.get(4))[0], TimeConverterUtil.millisToTimeFormat((int) arrayList.get(4))[1]);
 
         //Set the text in textview of the expanded notification view
         boolean[] bannerConfig = (boolean[]) arrayList.get(5);
