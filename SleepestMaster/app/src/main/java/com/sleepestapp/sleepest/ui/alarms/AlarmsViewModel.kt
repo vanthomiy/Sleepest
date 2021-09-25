@@ -46,7 +46,7 @@ class AlarmsViewModel(
     /**
      * Observable live data of the alarms flow
      */
-    val activeAlarmsLiveData by lazy {  dataBaseRepository.activeAlarmsFlow().asLiveData() }
+    lateinit var activeAlarmsLiveData : LiveData<List<AlarmEntity>>
 
 
     val alarmExpandId = MutableLiveData(0)
@@ -145,6 +145,9 @@ class AlarmsViewModel(
             if(settings.alarmName != "") {
                 alarmSoundName.value = (settings.alarmName)
             }
+
+            val isAfterSleepTime = dataStoreRepository.isAfterSleepTime()
+            activeAlarmsLiveData = dataBaseRepository.activeAlarmsFlow(isAfterSleepTime.first, isAfterSleepTime.second).asLiveData()
         }
     }
 

@@ -42,6 +42,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         //Init repos
         DatabaseRepository databaseRepository = ((MainApplication)context.getApplicationContext()).getDataBaseRepository();
+        DataStoreRepository dataStoreRepository = ((MainApplication)context.getApplicationContext()).getDataStoreRepository();
         SleepCalculationHandler sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(MainApplication.Companion.applicationContext());
 
         Calendar calendar = Calendar.getInstance();
@@ -63,7 +64,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case DISABLE_ALARM:
                     //Disables the next active alarm temporary
-                    if ((databaseRepository.getNextActiveAlarmJob() != null) && (!databaseRepository.getNextActiveAlarmJob().getTempDisabled())) {
+                    if ((databaseRepository.getNextActiveAlarmJob(dataStoreRepository) != null) && (!databaseRepository.getNextActiveAlarmJob(dataStoreRepository).getTempDisabled())) {
                         BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, false);
                     } else {
                         BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, true);
@@ -83,7 +84,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case STOP_WORKMANAGER:
                 //Stops the workmanager outside sleep time
-                if (databaseRepository.getNextActiveAlarmJob() != null && !databaseRepository.getNextActiveAlarmJob().getWasFired()) {
+                if (databaseRepository.getNextActiveAlarmJob(dataStoreRepository) != null && !databaseRepository.getNextActiveAlarmJob(dataStoreRepository).getWasFired()) {
                     Calendar calendarNewAlarm = TimeConverterUtil.getAlarmDate(LocalTime.now().toSecondOfDay() + 600);
                     AlarmReceiver.startAlarmManager(
                             calendarNewAlarm.get(Calendar.DAY_OF_WEEK),

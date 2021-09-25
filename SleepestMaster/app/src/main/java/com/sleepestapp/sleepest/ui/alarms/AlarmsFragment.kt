@@ -203,7 +203,7 @@ class AlarmsFragment() : Fragment() {
         viewModel.fragments = mutableMapOf()
 
         // Update the disable next alarm button by checking the settings of all alarms
-        viewModel.activeAlarmsLiveData.observe(this){
+        viewModel.activeAlarmsLiveData.observe(viewLifecycleOwner){
             activeAlarms ->
 
             TransitionManager.beginDelayedTransition(viewModel.transitionsContainer);
@@ -255,12 +255,16 @@ class AlarmsFragment() : Fragment() {
         // temp disable alarm was clicked
         binding.btnTemporaryDisableAlarm.setOnClickListener {
             lifecycleScope.launch {
-                if (viewModel.dataBaseRepository.getNextActiveAlarm() != null) {
-                    if (viewModel.dataBaseRepository.getNextActiveAlarm()!!.tempDisabled && !viewModel.dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
+
+                val isAfterSleepTime = viewModel.dataStoreRepository.isAfterSleepTime()
+
+
+                if (viewModel.dataBaseRepository.getNextActiveAlarm(isAfterSleepTime.first, isAfterSleepTime.second) != null) {
+                    if (viewModel.dataBaseRepository.getNextActiveAlarm(isAfterSleepTime.first, isAfterSleepTime.second)!!.tempDisabled && !viewModel.dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
                         BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(true, true)
                         viewModel.isTempDisabled.value = false
                     }
-                    else if (viewModel.dataBaseRepository.getNextActiveAlarm()!!.tempDisabled && viewModel.dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
+                    else if (viewModel.dataBaseRepository.getNextActiveAlarm(isAfterSleepTime.first, isAfterSleepTime.second)!!.tempDisabled && viewModel.dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
                         BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(false, true)
                         viewModel.isTempDisabled.value = false
                     }

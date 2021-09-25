@@ -8,9 +8,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.*
 import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.background.BackgroundAlarmTimeHandler
@@ -36,9 +34,7 @@ class MainActivityViewModel(
     val dataBaseRepository: DatabaseRepository
 ) : ViewModel() {
 
-    val activeAlarmsLiveData by lazy {
-        dataBaseRepository.activeAlarmsFlow().asLiveData()
-    }
+    lateinit var activeAlarmsLiveData : LiveData<List<AlarmEntity>>
 
     val sleepParametersLiveData by lazy {
         dataStoreRepository.sleepParameterFlow.asLiveData()
@@ -48,6 +44,15 @@ class MainActivityViewModel(
         dataStoreRepository.settingsDataFlow.asLiveData()
     }
 
+    init {
+        /**
+         * Loads all the init values from the datastore and passes the values to the bindings
+         */
+        viewModelScope.launch {
+            val isAfterSleepTime = dataStoreRepository.isAfterSleepTime()
+            activeAlarmsLiveData = dataBaseRepository.activeAlarmsFlow(isAfterSleepTime.first, isAfterSleepTime.second).asLiveData()
+        }
+    }
 
 }
 

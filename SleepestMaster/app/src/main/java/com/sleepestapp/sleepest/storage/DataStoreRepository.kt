@@ -68,6 +68,7 @@ class DataStoreRepository(context: Context) {
      */
     val sleepParameterFlow: Flow<SleepParameters> = sleepParameterStatus.sleepParameters.distinctUntilChanged()
 
+
     /**
      * Returns if the time is in actual sleep time
      */
@@ -82,6 +83,24 @@ class DataStoreRepository(context: Context) {
         val overTwoDays = times.sleepTimeStart > times.sleepTimeEnd
 
         return ((overTwoDays && (seconds in times.sleepTimeStart..maxTime ||  seconds in 0 .. times.sleepTimeEnd)) || (!overTwoDays && seconds in times.sleepTimeStart..times.sleepTimeEnd))
+    }
+
+    /**
+     * Returns if the time is after the sleep time
+     */
+    suspend fun isAfterSleepTime(givenTime:LocalTime? = null): Pair<Boolean, Boolean> {
+
+        var times = sleepParameterFlow.first()
+
+        val time = givenTime ?: LocalTime.now()
+        val maxTime = DAY_IN_SECONDS + 1
+        val seconds = time.toSecondOfDay()
+
+        val overTwoDays = times.sleepTimeStart > times.sleepTimeEnd
+        val afterSleepTime = (overTwoDays && seconds > times.sleepTimeEnd && seconds < times.sleepTimeStart) ||
+                (!overTwoDays && seconds > times.sleepTimeEnd)
+
+        return Pair(afterSleepTime, overTwoDays)
     }
 
     /**
