@@ -264,7 +264,7 @@ class SleepCalculationHandlerTest
         val timeStart = sleepStoreRepository.sleepParameterFlow.first()
 
         val sleepApiRawDataEntityList = sleepDbRepository.getSleepApiRawDataFromDate(day, timeStart.sleepTimeEnd, timeStart.sleepTimeStart).first()
-        
+
         val actualAwakeTime =
             sleepApiRawDataEntityList?.let { SleepApiRawDataEntity.getActualAwakeTime(it) }?.div(60)
 

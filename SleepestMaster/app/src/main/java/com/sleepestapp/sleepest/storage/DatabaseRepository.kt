@@ -85,18 +85,20 @@ class DatabaseRepository(
      * so we always getting the data from 15:00 the day or day before until the specific time
      * later we have to combine it with the actual sleeptimes
      */
-    fun getSleepApiRawDataFromDateLive(actualTime:LocalDateTime): Flow<List<SleepApiRawDataEntity>?>
+    fun getSleepApiRawDataFromDateLive(actualTime:LocalDateTime, startTimeSecondsOfDay:Int): Flow<List<SleepApiRawDataEntity>?>
     {
-        //TODO(TimeChange)
+
+        val startTime = LocalTime.ofSecondOfDay(startTimeSecondsOfDay.toLong())
+
         // We need to check wheter the time is before or after sleep time end.
         // Then we can decide if its this or the next day
-        val startTime = if (actualTime.hour < 15)
-            actualTime.toLocalDate().minusDays(1).atTime(15,0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
-        else actualTime.toLocalDate().atTime(15,0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+        val startDateTime = if (actualTime.hour < startTime.hour)
+            actualTime.toLocalDate().minusDays(1).atTime(startTime).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+        else actualTime.toLocalDate().atTime(startTime).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
 
-        val endTime = actualTime.atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+        val endDateTime = actualTime.atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
 
-        return sleepApiRawDataDao.getBetween(startTime,endTime).distinctUntilChanged()
+        return sleepApiRawDataDao.getBetween(startDateTime,endDateTime).distinctUntilChanged()
     }
 
     /**
@@ -114,7 +116,6 @@ class DatabaseRepository(
 
         // we are in the sleep time
 
-        //TODO(TimeChange)
         // We need to check whether the time is before or after sleep time end.
         // Then we can decide if its this or the next day
 
@@ -217,16 +218,20 @@ class DatabaseRepository(
      * so we always getting the data from 15:00 the day or day before until the specific time
      * later we have to combine it with the actual activitytimes
      */
-    fun getActivityApiRawDataFromDateLive(actualTime:LocalDateTime): Flow<List<ActivityApiRawDataEntity>>
+    fun getActivityApiRawDataFromDateLive(actualTime:LocalDateTime, startTimeSecondsOfDay:Int): Flow<List<ActivityApiRawDataEntity>>
     {
-        //TODO(TimeChange)
-        val startTime = if (actualTime.hour < 15)
-            actualTime.toLocalDate().minusDays(1).atTime(15,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
-        else actualTime.toLocalDate().atTime(15,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+        val startTime = LocalTime.ofSecondOfDay(startTimeSecondsOfDay.toLong())
 
-        val endTime = actualTime.atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+        // We need to check wheter the time is before or after sleep time end.
+        // Then we can decide if its this or the next day
 
-        return activityApiRawDataDao.getBetween(startTime,endTime).distinctUntilChanged()
+        val startDateTime = if (actualTime.hour < startTime.hour)
+            actualTime.toLocalDate().minusDays(1).atTime(startTime).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+        else actualTime.toLocalDate().atTime(startTime).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+
+        val endDateTime = actualTime.atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+
+        return activityApiRawDataDao.getBetween(startDateTime,endDateTime).distinctUntilChanged()
     }
 
     /**

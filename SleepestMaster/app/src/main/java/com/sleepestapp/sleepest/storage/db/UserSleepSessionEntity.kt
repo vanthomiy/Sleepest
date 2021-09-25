@@ -43,7 +43,6 @@ data class UserSleepSessionEntity(
 
                 /**
                  * Returns the id for the assigned stored data of a sleep from a local date
-                 * TODO(TimeChange)
                  */
                 fun getIdByDateTime(date : LocalDate) : Int {
 
@@ -64,7 +63,6 @@ data class UserSleepSessionEntity(
                         }*/
 
                         val date = actualTime.toLocalDate()
-                        //TODO(TimeChange)
                         var newTime = LocalTime.of(15,0)
 
                         var dateTime = LocalDateTime.of(date, newTime)
