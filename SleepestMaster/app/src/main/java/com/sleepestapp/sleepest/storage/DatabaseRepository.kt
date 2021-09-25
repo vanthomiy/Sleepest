@@ -110,7 +110,7 @@ class DatabaseRepository(
         val startTime = LocalTime.ofSecondOfDay(startTimeSecondsOfDay.toLong())
         val endTime = LocalTime.ofSecondOfDay(endTimeSecondsOfDay.toLong())
 
-        val sameDay = (startTime > endTime)
+        val sameDay = (startTime < endTime)
 
         // we are in the sleep time
 
@@ -364,18 +364,19 @@ class DatabaseRepository(
      * Pass true/false if the actual time is in sleep time or not
      * You can check this with the provided function [isAfterSleepTime] in the [DataStoreRepository]
      */
-    fun activeAlarmsFlow(isAfterSleepTime:Boolean, isOnSameDay:Boolean) : Flow<List<AlarmEntity>> {
+    fun activeAlarmsFlow(dataStoreRepository: DataStoreRepository) : Flow<List<AlarmEntity>> = runBlocking {
         val ldt:LocalDate = LocalDate.now()
         //val date = if(ldt.hour > 15) ldt.plusDays(1).toLocalDate() else ldt.toLocalDate()
+        val isAfterSleepTime = dataStoreRepository.isAfterSleepTime()
 
-        val date = if(!isAfterSleepTime && isOnSameDay)
+        val date = if(!isAfterSleepTime.first && isAfterSleepTime.second)
             ldt
         else
             ldt.plusDays(1)
 
         val dayOfWeek = "%" + date.dayOfWeek + "%"
 
-        return alarmDao.getAllActiveOnDay(dayOfWeek.toString()).distinctUntilChanged()
+        return@runBlocking alarmDao.getAllActiveOnDay(dayOfWeek.toString()).distinctUntilChanged()
     }
 
     /**
@@ -389,8 +390,7 @@ class DatabaseRepository(
      * calls [getNextActiveAlarm]
      */
     fun getNextActiveAlarmJob(dataStoreRepository: DataStoreRepository) : AlarmEntity? = runBlocking{
-        val isAfterSleepTime = dataStoreRepository.isAfterSleepTime()
-        return@runBlocking getNextActiveAlarm(isAfterSleepTime.first, isAfterSleepTime.second)
+        return@runBlocking getNextActiveAlarm(dataStoreRepository)
     }
 
     /**
@@ -398,9 +398,9 @@ class DatabaseRepository(
      * Pass true/false if the actual time is in sleep time or not
      * You can check this with the provided function [isInSleepTime] in the [DataStoreRepository]
      */
-    suspend fun getNextActiveAlarm(isAfterSleepTime:Boolean, isOnSameDay:Boolean) : AlarmEntity?{
+    suspend fun getNextActiveAlarm(dataStoreRepository: DataStoreRepository) : AlarmEntity?{
 
-        val list = activeAlarmsFlow(isAfterSleepTime, isOnSameDay).first()
+        val list = activeAlarmsFlow(dataStoreRepository).first()
         // get first alarm
         return list.minByOrNull { x-> x.wakeupEarly }
     }
@@ -410,8 +410,8 @@ class DatabaseRepository(
      * Pass true/false if the actual time is in sleep time or not
      * You can check this with the provided function [isInSleepTime] in the [DataStoreRepository]
      */
-    suspend fun isAlarmActiv(isAfterSleepTime:Boolean, isOnSameDay:Boolean) : Boolean{
-        val list = activeAlarmsFlow(isAfterSleepTime, isOnSameDay).first()
+    suspend fun isAlarmActiv(dataStoreRepository: DataStoreRepository) : Boolean{
+        val list = activeAlarmsFlow(dataStoreRepository).first()
         // get first alarm
         return list.isNotEmpty()
     }

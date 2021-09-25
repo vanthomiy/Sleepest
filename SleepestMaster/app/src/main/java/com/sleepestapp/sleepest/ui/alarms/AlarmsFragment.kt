@@ -256,15 +256,12 @@ class AlarmsFragment() : Fragment() {
         binding.btnTemporaryDisableAlarm.setOnClickListener {
             lifecycleScope.launch {
 
-                val isAfterSleepTime = viewModel.dataStoreRepository.isAfterSleepTime()
-
-
-                if (viewModel.dataBaseRepository.getNextActiveAlarm(isAfterSleepTime.first, isAfterSleepTime.second) != null) {
-                    if (viewModel.dataBaseRepository.getNextActiveAlarm(isAfterSleepTime.first, isAfterSleepTime.second)!!.tempDisabled && !viewModel.dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
+                if (viewModel.dataBaseRepository.getNextActiveAlarm(viewModel.dataStoreRepository) != null) {
+                    if (viewModel.dataBaseRepository.getNextActiveAlarm(viewModel.dataStoreRepository)!!.tempDisabled && !viewModel.dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
                         BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(true, true)
                         viewModel.isTempDisabled.value = false
                     }
-                    else if (viewModel.dataBaseRepository.getNextActiveAlarm(isAfterSleepTime.first, isAfterSleepTime.second)!!.tempDisabled && viewModel.dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
+                    else if (viewModel.dataBaseRepository.getNextActiveAlarm(viewModel.dataStoreRepository)!!.tempDisabled && viewModel.dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
                         BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(false, true)
                         viewModel.isTempDisabled.value = false
                     }

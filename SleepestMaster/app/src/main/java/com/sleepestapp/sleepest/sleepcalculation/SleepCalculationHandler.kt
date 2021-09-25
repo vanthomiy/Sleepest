@@ -497,8 +497,7 @@ class SleepCalculationHandler(val context: Context) {
         if(setAlarm) {
 
             // store in the alarm
-                val afterSleepTime = dataStoreRepository.isAfterSleepTime(date.toLocalTime())
-            val alarm = dataBaseRepository.getNextActiveAlarm(afterSleepTime.first, afterSleepTime.second) ?: return
+            val alarm = dataBaseRepository.getNextActiveAlarm(dataStoreRepository) ?: return
 
             var sleepDuration = alarm.sleepDuration
 

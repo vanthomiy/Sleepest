@@ -26,7 +26,7 @@ class ForegroundObserver(private val fs: ForegroundService) {
     private val dataStoreRepository: DataStoreRepository by lazy {
         (fs.applicationContext as MainApplication).dataStoreRepository
     }
-    private lateinit var alarmLivedata : LiveData<List<AlarmEntity>> //by lazy{databaseRepository.activeAlarmsFlow().asLiveData()}
+    val alarmLivedata by lazy{databaseRepository.activeAlarmsFlow(dataStoreRepository).asLiveData()}
     private val userSleepTime by lazy{dataStoreRepository.sleepApiDataFlow.asLiveData()}
     private val liveUserSleepActivityData by lazy{dataStoreRepository.liveUserSleepActivityFlow.asLiveData()}
     private val bannerConfigLivedata by lazy{dataStoreRepository.settingsDataFlow.asLiveData()}
@@ -46,8 +46,7 @@ class ForegroundObserver(private val fs: ForegroundService) {
      * @return Instance of next active alarm
      */
     fun getNextAlarm() : AlarmEntity? = runBlocking {
-        val isAfterSleepTime = dataStoreRepository.isAfterSleepTime()
-        return@runBlocking databaseRepository.getNextActiveAlarm(isAfterSleepTime.first, isAfterSleepTime.second)
+        return@runBlocking databaseRepository.getNextActiveAlarm(dataStoreRepository)
     }
 
     /**
@@ -100,11 +99,6 @@ class ForegroundObserver(private val fs: ForegroundService) {
      * Initialisation of the live data
      */
     init {
-
-        scope.launch {
-            val isAfterSleepTime = dataStoreRepository.isAfterSleepTime()
-            alarmLivedata = databaseRepository.activeAlarmsFlow(isAfterSleepTime.first, isAfterSleepTime.second).asLiveData()
-        }
 
         alarmLivedata.observe(fs) {
 

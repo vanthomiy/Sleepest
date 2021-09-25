@@ -263,10 +263,8 @@ class SleepCalculationHandlerTest
 
         val timeStart = sleepStoreRepository.sleepParameterFlow.first()
 
-
         val sleepApiRawDataEntityList = sleepDbRepository.getSleepApiRawDataFromDate(day, timeStart.sleepTimeEnd, timeStart.sleepTimeStart).first()
-
-
+        
         val actualAwakeTime =
             sleepApiRawDataEntityList?.let { SleepApiRawDataEntity.getActualAwakeTime(it) }?.div(60)
 
@@ -532,10 +530,9 @@ class SleepCalculationHandlerTest
                 restsleep = 3000
             }
 
-            val isAfterSleepTime = sleepStoreRepository.isAfterSleepTime()
 
             // wakeuptime is
-            var realWakeup = sleepDbRepository.getNextActiveAlarm(isAfterSleepTime.first, isAfterSleepTime.second)!!.actualWakeup
+            var realWakeup = sleepDbRepository.getNextActiveAlarm(dataStoreRepository = sleepStoreRepository)!!.actualWakeup
             val getactiveAlamrs = sleepDbRepository.alarmFlow.first()
             val ok = getactiveAlamrs
             val actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(lastCall.toLong()*1000), ZoneOffset.systemDefault())

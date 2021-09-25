@@ -34,7 +34,9 @@ class MainActivityViewModel(
     val dataBaseRepository: DatabaseRepository
 ) : ViewModel() {
 
-    lateinit var activeAlarmsLiveData : LiveData<List<AlarmEntity>>
+    val activeAlarmsLiveData by lazy {
+        dataBaseRepository.activeAlarmsFlow(dataStoreRepository).asLiveData()
+    }
 
     val sleepParametersLiveData by lazy {
         dataStoreRepository.sleepParameterFlow.asLiveData()
@@ -43,16 +45,5 @@ class MainActivityViewModel(
     val settingsLiveData by lazy {
         dataStoreRepository.settingsDataFlow.asLiveData()
     }
-
-    init {
-        /**
-         * Loads all the init values from the datastore and passes the values to the bindings
-         */
-        viewModelScope.launch {
-            val isAfterSleepTime = dataStoreRepository.isAfterSleepTime()
-            activeAlarmsLiveData = dataBaseRepository.activeAlarmsFlow(isAfterSleepTime.first, isAfterSleepTime.second).asLiveData()
-        }
-    }
-
 }
 

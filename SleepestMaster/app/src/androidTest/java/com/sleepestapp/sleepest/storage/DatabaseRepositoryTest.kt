@@ -62,7 +62,7 @@ class DatabaseRepositoryTest {
         assertThat(alarms.count(), CoreMatchers.equalTo(0))
 
         // call the get active alarms ( in time )
-        alarms = sleepDatabaseRepository.activeAlarmsFlow(isAfterSleepTime.first, isAfterSleepTime.second).first()
+        alarms = sleepDatabaseRepository.activeAlarmsFlow(sleepStoreRepository).first()
         assertThat(alarms.count(), CoreMatchers.equalTo(0))
 
         // insert one with id 1 and false
@@ -73,7 +73,7 @@ class DatabaseRepositoryTest {
         assertThat(alarms.count(), CoreMatchers.equalTo(1))
 
         // call the get active alarms ( in time )
-        alarms = sleepDatabaseRepository.activeAlarmsFlow(isAfterSleepTime.first, isAfterSleepTime.second).first()
+        alarms = sleepDatabaseRepository.activeAlarmsFlow(sleepStoreRepository).first()
         assertThat(alarms.count(), CoreMatchers.equalTo(0))
 
         // insert one with id 2 and active yesterday
@@ -95,7 +95,7 @@ class DatabaseRepositoryTest {
         assertThat(alarms.count(), CoreMatchers.equalTo(2))
 
         // call the get active alarms ( in time )
-        alarms = sleepDatabaseRepository.activeAlarmsFlow(isAfterSleepTime.first, isAfterSleepTime.second).first()
+        alarms = sleepDatabaseRepository.activeAlarmsFlow(sleepStoreRepository).first()
         assertThat(alarms.count(), CoreMatchers.equalTo(0))
 
 
@@ -112,7 +112,7 @@ class DatabaseRepositoryTest {
         assertThat(alarms.count(), CoreMatchers.equalTo(3))
 
         // call the get active alarms ( in time )
-        alarms = sleepDatabaseRepository.activeAlarmsFlow(isAfterSleepTime.first, isAfterSleepTime.second).first()
+        alarms = sleepDatabaseRepository.activeAlarmsFlow(sleepStoreRepository).first()
         assertThat(alarms.count(), CoreMatchers.equalTo(1))
 
     }
