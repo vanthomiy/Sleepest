@@ -35,9 +35,9 @@ import java.util.ArrayList;
 
 public class NotificationUtil {
 
-    private Context context;
+    private final Context context;
     private NotificationUsage notificationUsage;
-    private ArrayList<Object> arrayList;
+    private final ArrayList<Object> arrayList;
 
     public NotificationUtil(Context context, NotificationUsage notificationUsage, ArrayList<Object> arrayList) {
         this.context = context;
@@ -73,7 +73,7 @@ public class NotificationUtil {
             notificationManager.notify(1, notification);
         } else if (notification != null) {
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-            notificationManager.notify(notificationUsage.Companion.getCount(notificationUsage), notification);
+            notificationManager.notify(NotificationUsage.Companion.getCount(notificationUsage), notification);
         }
 
     }
@@ -98,7 +98,6 @@ public class NotificationUtil {
         String notificationChannelId = context.getApplicationContext().getString(R.string.information_notification_channel);
 
         Intent informationIntent = new Intent(context.getApplicationContext(), AlarmReceiver.class);
-        String buttonText;
         String information;
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notification_remote_view_template);
         PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), AlarmReceiverUsage.Companion.getCount(AlarmReceiverUsage.GO_TO_SLEEP), informationIntent, PendingIntent.FLAG_UPDATE_CURRENT);

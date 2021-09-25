@@ -1,6 +1,5 @@
 package com.sleepestapp.sleepest.alarmclock;
 
-/** This class is singleton and you can start the alarm audio from everywhere */
 
 import android.app.NotificationManager;
 import android.content.Context;
@@ -16,7 +15,6 @@ import android.os.Vibrator;
 
 import androidx.annotation.RequiresApi;
 
-import com.sleepestapp.sleepest.MainApplication;
 import com.sleepestapp.sleepest.R;
 import com.sleepestapp.sleepest.model.data.AlarmClockReceiverUsage;
 import com.sleepestapp.sleepest.model.data.Constants;
@@ -27,6 +25,8 @@ import com.sleepestapp.sleepest.util.TimeConverterUtil;
 
 import java.time.LocalTime;
 import java.util.Calendar;
+
+/** This class is singleton and you can start the alarm audio from everywhere */
 
 public class AlarmClockAudio {
 
@@ -177,9 +177,9 @@ public class AlarmClockAudio {
                 public void onFinish() {
 
                     if (ringtoneManager.isPlaying()) {
-                        stopAlarm(true, screenOn);
+                        stopAlarm(true, true);
                     } else {
-                        stopAlarm(true, screenOn);
+                        stopAlarm(true, true);
                     }
                 }
 

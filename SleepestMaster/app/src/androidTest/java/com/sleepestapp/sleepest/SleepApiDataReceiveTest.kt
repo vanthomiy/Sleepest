@@ -21,7 +21,6 @@ class SleepApiDataReceiveTest {
     private lateinit var sleepHandler : SleepHandler
 
     private val sleepCalculationStoreRepository by lazy {  DataStoreRepository.getRepo(context)}
-    private val userSleepTime by lazy {sleepCalculationStoreRepository.sleepApiDataFlow.asLiveData()}
 
     @Before
     fun init(){

@@ -1,43 +1,43 @@
 package com.sleepestapp.sleepest.util;
 
 public class SmileySelectorUtil {
-    private final int smileyAttention = 0x26A0;
-    private final int smileyAlarmActive = 0x1F514;
-    private final int smileySleep = 0x1F634;
-    private final int smileyTime = 0x231B;
-    private final int smileySleepState = 0x1F4CA;
-    private final int smileyAlarmClock = 0x23F0;
-    private final int smileyHeart = 0x2764;
+    private static final int smileyAttention = 0x26A0;
+    private static final int smileyAlarmActive = 0x1F514;
+    private static final int smileySleep = 0x1F634;
+    private static final int smileyTime = 0x231B;
+    private static final int smileySleepState = 0x1F4CA;
+    private static final int smileyAlarmClock = 0x23F0;
+    private static final int smileyHeart = 0x2764;
     private static final int smileyLowActivity = 0x1F949;
     private static final int smileyMediumActivity = 0x1F948;
     private static final int smileyHighActivity = 0x1F947;
     private static final int smileyIteration = 0x1F536;
 
-    public String getSmileyAttention() { return new String(Character.toChars(smileyAttention)); }
+    public static String getSmileyAttention() { return new String(Character.toChars(smileyAttention)); }
 
-    public String getSmileyAlarmActive() { return new String(Character.toChars(smileyAlarmActive)); }
+    public static String getSmileyAlarmActive() { return new String(Character.toChars(smileyAlarmActive)); }
 
-    public String getSmileyAlarmNotActive() {
+    public static String getSmileyAlarmNotActive() {
         int smileyAlarmNotActive = 0x1F515;
         return new String(Character.toChars(smileyAlarmNotActive)); }
 
-    public String getSmileySleep() {
+    public static String getSmileySleep() {
         return new String(Character.toChars(smileySleep));
     }
 
-    public String getSmileyTime() {
+    public static String getSmileyTime() {
         return new String(Character.toChars(smileyTime));
     }
 
-    public String getSmileySleepState() {
+    public static String getSmileySleepState() {
         return new String(Character.toChars(smileySleepState));
     }
 
-    public String getSmileyAlarmClock() {
+    public static String getSmileyAlarmClock() {
         return new String(Character.toChars(smileyAlarmClock));
     }
 
-    public String getSmileyHeart() {
+    public static String getSmileyHeart() {
         return new String(Character.toChars(smileyHeart));
     }
 

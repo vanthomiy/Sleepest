@@ -10,38 +10,22 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.PagerAdapter;
-
 import com.airbnb.lottie.LottieAnimationView;
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.sleepestapp.sleepest.DontKillMyAppFragment;
 import com.sleepestapp.sleepest.MainActivity;
 import com.sleepestapp.sleepest.R;
-import com.sleepestapp.sleepest.databinding.ActivityLockScreenAlarmBinding;
-import com.sleepestapp.sleepest.databinding.ActivityOnboardingBinding;
 import com.sleepestapp.sleepest.databinding.OnboardingNoticeScreenBinding;
 import com.sleepestapp.sleepest.storage.DataStoreRepository;
 import com.sleepestapp.sleepest.util.PermissionsUtil;
 import com.sleepestapp.sleepest.util.TimeConverterUtil;
-import com.sleepestapp.sleepest.MainActivity;
-
 import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -52,8 +36,8 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
 
     private OnboardingNoticeScreenBinding binding;
 
-    private Context context;
-    private Activity activityContext;
+    private final Context context;
+    private final Activity activityContext;
 
     private boolean enableStartApp = false;
 
@@ -68,7 +52,7 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
     private String startTimeValueText;
     private String endTimeValueText;
 
-    private List<ImageView> dots = new ArrayList<>();
+    private final List<ImageView> dots = new ArrayList<>();
 
     Timer timer;
 
@@ -111,7 +95,7 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
     @Override
     public Object instantiateItem(@NonNull @NotNull ViewGroup container, int position) {
 
-        /** Initiate all layout elements **/
+        /* Initiate all layout elements **/
         LayoutInflater layoutInflater= (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.onboarding_notice_screen,container,false);
 
@@ -349,18 +333,15 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
      * @return Is granted
      */
     private boolean checkAllPermissions() {
-        if (PermissionsUtil.isActivityRecognitionPermissionGranted(context) && PermissionsUtil.isNotificationPolicyAccessGranted(context) &&
-                PermissionsUtil.isNotificationPolicyAccessGranted(context)) {
-            return true;
-        }
-
-        return false;
+        return PermissionsUtil.isActivityRecognitionPermissionGranted(context) && PermissionsUtil.isNotificationPolicyAccessGranted(context) &&
+                PermissionsUtil.isNotificationPolicyAccessGranted(context);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnOnboardingDailyActivityPermission:
+            case R.id.btnOnboardingSleepdataPermission:
                 if (!PermissionsUtil.isActivityRecognitionPermissionGranted(context)) {
                     PermissionsUtil.setActivityRecognitionPermission(context);
                 } else {
@@ -377,13 +358,6 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
             case R.id.btnOnboardingOverlayPermission:
                 if (!PermissionsUtil.isOverlayPermissionGranted(context)) {
                     PermissionsUtil.setOverlayPermission(activityContext);
-                } else {
-                    Toast.makeText(context, context.getString(R.string.onboarding_toast_permission_already_granted), Toast.LENGTH_LONG).show();
-                }
-                break;
-            case R.id.btnOnboardingSleepdataPermission:
-                if (!PermissionsUtil.isActivityRecognitionPermissionGranted(context)) {
-                    PermissionsUtil.setActivityRecognitionPermission(context);
                 } else {
                     Toast.makeText(context, context.getString(R.string.onboarding_toast_permission_already_granted), Toast.LENGTH_LONG).show();
                 }

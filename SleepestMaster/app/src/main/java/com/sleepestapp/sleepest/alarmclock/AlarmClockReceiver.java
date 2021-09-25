@@ -1,11 +1,7 @@
 package com.sleepestapp.sleepest.alarmclock;
 
-/**This class inherits from Broadcastreceiver and starts an alarm at a specific time and date
- * When alarm was fired, the alarm audio will start */
 
 import android.app.AlarmManager;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,34 +11,26 @@ import android.os.PowerManager;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-
-import com.sleepestapp.sleepest.MainActivity;
 import com.sleepestapp.sleepest.MainApplication;
 import com.sleepestapp.sleepest.R;
 import com.sleepestapp.sleepest.background.BackgroundAlarmTimeHandler;
-import com.sleepestapp.sleepest.background.ForegroundActivity;
-import com.sleepestapp.sleepest.model.data.ActivityIntentUsage;
 import com.sleepestapp.sleepest.model.data.AlarmClockReceiverUsage;
-import com.sleepestapp.sleepest.model.data.AlarmReceiverUsage;
-import com.sleepestapp.sleepest.model.data.Constants;
 import com.sleepestapp.sleepest.model.data.NotificationUsage;
 import com.sleepestapp.sleepest.storage.DataStoreRepository;
 import com.sleepestapp.sleepest.storage.DatabaseRepository;
 import com.sleepestapp.sleepest.storage.db.AlarmEntity;
 import com.sleepestapp.sleepest.util.NotificationUtil;
 import com.sleepestapp.sleepest.util.TimeConverterUtil;
-import com.sleepestapp.sleepest.MainActivity;
-import com.sleepestapp.sleepest.MainApplication;
 
 import java.util.Calendar;
 import static android.content.Context.ALARM_SERVICE;
 
+/**This class inherits from Broadcastreceiver and starts an alarm at a specific time and date
+ * When alarm was fired, the alarm audio will start */
+
 public class AlarmClockReceiver extends BroadcastReceiver {
 
     private static Context context;
-    private DataStoreRepository dataStoreRepository;
 
     /**
      * Callback to receive the alarm
@@ -53,8 +41,8 @@ public class AlarmClockReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        this.context = context;
-        dataStoreRepository = DataStoreRepository.Companion.getRepo(context);
+        AlarmClockReceiver.context = context;
+        DataStoreRepository dataStoreRepository = DataStoreRepository.Companion.getRepo(context);
         DatabaseRepository databaseRepository = ((MainApplication)context.getApplicationContext()).getDataBaseRepository();
         AlarmEntity alarmEntity = databaseRepository.getNextActiveAlarmJob();
 

@@ -10,15 +10,11 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
-
-import com.sleepestapp.sleepest.MainApplication;
 import com.sleepestapp.sleepest.R;
 import com.sleepestapp.sleepest.model.data.AlarmCycleStates;
 import com.sleepestapp.sleepest.model.data.AlarmReceiverUsage;
 import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler;
 import com.sleepestapp.sleepest.util.TimeConverterUtil;
-import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler;
-
 import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
@@ -35,7 +31,7 @@ public class WorkmanagerCalculation extends Worker {
 
     public WorkmanagerCalculation(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
-        this.context = context;
+        WorkmanagerCalculation.context = context;
     }
 
     @NonNull

@@ -1,6 +1,5 @@
 package com.sleepestapp.sleepest.background;
 
-/**This class inherits from Broadcastreceiver and starts an alarm at a specific time and date**/
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -29,6 +28,7 @@ import java.time.LocalTime;
 import java.util.Calendar;
 
 import static android.content.Context.ALARM_SERVICE;
+/**This class inherits from Broadcastreceiver and starts an alarm at a specific time and date**/
 
 public class AlarmReceiver extends BroadcastReceiver {
 
@@ -58,11 +58,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case DISABLE_ALARM:
                     //Disables the next active alarm temporary
-                    if ((databaseRepository.getNextActiveAlarmJob() != null) && (!databaseRepository.getNextActiveAlarmJob().getTempDisabled())) {
-                        BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, false);
-                    } else {
-                        BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, true);
-                    }
+                BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, (databaseRepository.getNextActiveAlarmJob() == null) || (databaseRepository.getNextActiveAlarmJob().getTempDisabled()));
                 break;
             case NOT_SLEEPING:
                 //Button not Sleeping, only in the first 2 hours of sleep
@@ -160,7 +156,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     /**
      * Create the notification to inform the user about problems
-     * @return
      */
     public static Notification createInformationNotification(Context context, String information) {
         //Get Channel id

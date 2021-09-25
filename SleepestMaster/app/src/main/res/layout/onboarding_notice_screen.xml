@@ -240,8 +240,7 @@
                         android:text="@string/settings_sleepdata"
                         android:textColor="@color/primary_text_color"
                         android:layout_gravity="start"
-                        android:id="@+id/btnOnboardingSleepdataPermission"
-                        android:onClick="onPermissionClicked">
+                        android:id="@+id/btnOnboardingSleepdataPermission">
                     </androidx.appcompat.widget.AppCompatButton>
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -271,8 +270,7 @@
                         android:text="@string/settings_overlapp_app"
                         android:textColor="@color/primary_text_color"
                         android:layout_gravity="start"
-                        android:id="@+id/btnOnboardingOverlayPermission"
-                        android:onClick="onPermissionClicked">
+                        android:id="@+id/btnOnboardingOverlayPermission">
                     </androidx.appcompat.widget.AppCompatButton>
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -300,8 +298,7 @@
                         android:text="@string/settings_daily_activity"
                         android:textColor="@color/primary_text_color"
                         android:layout_gravity="start"
-                        android:id="@+id/btnOnboardingDailyActivityPermission"
-                        android:onClick="onPermissionClicked">
+                        android:id="@+id/btnOnboardingDailyActivityPermission">
                     </androidx.appcompat.widget.AppCompatButton>
 
                     <androidx.appcompat.widget.AppCompatImageView

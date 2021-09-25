@@ -80,9 +80,6 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
 
     lateinit var transitionsContainer : ViewGroup
 
-    init {
-
-    }
 
     fun sleepRating(view: View) {
         sleepRatingUpdate = true

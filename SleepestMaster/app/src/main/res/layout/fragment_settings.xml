@@ -600,7 +600,6 @@
                                 android:layout_marginVertical="5dp"
                                 android:layout_marginEnd="50dp"
                                 android:background="@drawable/background_rounded_button"
-                                android:onClick="onPermissionClicked"
                                 android:tag="dailyActivity"
                                 android:id="@+id/dailyActivityPermission"
                                 android:text="@string/settings_daily_activity"
@@ -650,10 +649,8 @@
                                 android:layout_marginVertical="5dp"
                                 android:text="@string/settings_notification_privacy"
                                 android:textColor="@color/primary_text_color"
-
                                 android:tag="notificationPrivacy"
-                                android:id="@+id/notificationPrivacyPermission"
-                                android:onClick="onPermissionClicked">
+                                android:id="@+id/notificationPrivacyPermission">
                             </androidx.appcompat.widget.AppCompatButton>
 
                             <androidx.appcompat.widget.AppCompatImageView
@@ -700,10 +697,8 @@
                                 android:layout_marginVertical="5dp"
                                 android:text="@string/settings_overlapp_app"
                                 android:textColor="@color/primary_text_color"
-
                                 android:tag="overlay"
-                                android:id="@+id/overlayPermission"
-                                android:onClick="onPermissionClicked">
+                                android:id="@+id/overlayPermission">
                             </androidx.appcompat.widget.AppCompatButton>
 
                             <androidx.appcompat.widget.AppCompatImageView
