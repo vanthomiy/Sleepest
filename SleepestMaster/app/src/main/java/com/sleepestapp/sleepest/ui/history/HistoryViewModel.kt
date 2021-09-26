@@ -46,7 +46,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
     /** Contains the current date which will be displayed at the history fragment. */
     var analysisDate = ObservableField(LocalDate.now())
 
-    /** Indicates whether darkmode is on or off. */
+    /** Indicates whether dark mode is on or off. */
     var darkMode = false
 
     /** Indicates whether the user has set the app up for automatically detect the devices dark mode settings. */
