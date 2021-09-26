@@ -125,7 +125,7 @@
             android:enabled="true"
             android:exported="true" />
         <receiver
-            android:name="com.sleepestapp.sleepest.googleapi.ActivityTransitionReciver"
+            android:name="com.sleepestapp.sleepest.googleapi.ActivityTransitionReceiver"
             android:enabled="true"
             android:exported="true" />
 

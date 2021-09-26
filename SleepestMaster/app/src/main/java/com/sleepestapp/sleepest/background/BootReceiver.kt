@@ -32,7 +32,7 @@ class BootReceiver : BroadcastReceiver() {
 
             scope.launch {
                 if (dataStoreRepository.getActivitySubscribeStatus()) {
-                    ActivityTransitionHandler.getHandler(context.applicationContext).startActivityHandler()
+                    ActivityTransitionHandler(context.applicationContext).startActivityHandler()
                 }
             }
         }

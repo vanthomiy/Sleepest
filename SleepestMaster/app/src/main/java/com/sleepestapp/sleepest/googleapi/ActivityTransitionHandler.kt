@@ -13,9 +13,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 
-/**
- * Needs to be created with [getHandler] and then nothing much is to do...
- * From Background we need to update unsubscribe and subscribe Activity Data and the handler will sub/unsubscripe the Activity data recive
+/*** From Background we need to update unsubscribe and subscribe Activity Data and the handler will sub/unsubscribe the Activity data receive
  */
 class ActivityTransitionHandler(private val context: Context) {
 
@@ -28,24 +26,6 @@ class ActivityTransitionHandler(private val context: Context) {
      * The actual datastore
      */
     private val dataStoreRepository by lazy { (context.applicationContext as MainApplication).dataStoreRepository }
-
-    companion object {
-        // For Singleton instantiation
-        @Volatile
-        private var INSTANCE: ActivityTransitionHandler? = null
-
-        /**
-         * Get a new or the actual instance of the [ActivityTransitionHandler]
-         */
-        fun getHandler(context: Context): ActivityTransitionHandler {
-            return INSTANCE ?: synchronized(this) {
-                val instance = ActivityTransitionHandler(context)
-                INSTANCE = instance
-                // return instance
-                instance
-            }
-        }
-    }
 
     /**
      * Subscribes to activity data and listens to it automatically
@@ -119,12 +99,12 @@ class ActivityTransitionHandler(private val context: Context) {
      * The actual intent for the subscription
      */
     private fun getPendingIntent(): PendingIntent {
-        val intent = Intent(context, ActivityTransitionReciver::class.java)
+        val intent = Intent(context, ActivityTransitionReceiver::class.java)
         return PendingIntent.getBroadcast(
                 context,
                 ActivityTransitionUsage.getCount(ActivityTransitionUsage.REQUEST_CODE),
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
     }
 }

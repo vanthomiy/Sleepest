@@ -15,7 +15,7 @@ import java.time.ZoneOffset
 /**
  * Receives and saves activity events to database.
  */
-class ActivityTransitionReciver : BroadcastReceiver() {
+class ActivityTransitionReceiver : BroadcastReceiver() {
 
 
     /**
@@ -53,7 +53,7 @@ class ActivityTransitionReciver : BroadcastReceiver() {
                     // Update the raw Activity api data
                     repository.insertActivityApiRawData(convertedToEntityVersion)
 
-                    // update the amount of data that is beeing recived
+                    // update the amount of data that is being received
                     dataStoreRepository.updateActivityApiValuesAmount(
                         it.transitionEvents.count()
                     )

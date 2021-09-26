@@ -279,7 +279,7 @@ class SettingsFragment : Fragment() {
     }
 
     /**
-     * create the credits for the credtis view
+     * create the credits for the credits view
      */
     private fun createCredits(){
         val creditsSites = CreditsSites.createCreditSites()

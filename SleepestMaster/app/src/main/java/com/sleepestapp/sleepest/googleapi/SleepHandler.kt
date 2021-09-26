@@ -12,8 +12,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 /**
- * Needs to be created with [getHandler] and then nothing much is to do...
- * From Background we need to update unsubscribe and subscribe Sleep Data and the handler will sub/unsubscripe the sleep data recive
+ * From Background we need to update unsubscribe and subscribe Sleep Data and the handler will sub/unsubscribe the sleep data receive
  */
 class SleepHandler(private val context: Context) {
 

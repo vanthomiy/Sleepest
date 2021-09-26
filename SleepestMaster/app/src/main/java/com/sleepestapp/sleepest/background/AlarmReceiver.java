@@ -118,7 +118,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         Intent intent = new Intent(alarmContext, AlarmReceiver.class);
         intent.putExtra(alarmContext.getString(R.string.alarmmanager_key), alarmReceiverUsage.name());
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(alarmContext, AlarmReceiverUsage.Companion.getCount(alarmReceiverUsage), intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(alarmContext, AlarmReceiverUsage.Companion.getCount(alarmReceiverUsage), intent, PendingIntent.FLAG_IMMUTABLE);
         AlarmManager alarmManager = (AlarmManager) alarmContext.getSystemService(ALARM_SERVICE);
 
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calenderAlarm.getTimeInMillis(), pendingIntent);
@@ -134,7 +134,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     public static void cancelAlarm(Context cancelAlarmContext, AlarmReceiverUsage alarmReceiverUsage) {
 
         Intent intent = new Intent(cancelAlarmContext, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(cancelAlarmContext, AlarmReceiverUsage.Companion.getCount(alarmReceiverUsage), intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(cancelAlarmContext, AlarmReceiverUsage.Companion.getCount(alarmReceiverUsage), intent, PendingIntent.FLAG_IMMUTABLE);
         AlarmManager alarmManager = (AlarmManager) cancelAlarmContext.getSystemService(ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
         pendingIntent.cancel();
@@ -151,7 +151,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     public static boolean isAlarmManagerActive(Context alarmActiveContext, AlarmReceiverUsage alarmReceiverUsage) {
         Intent intent = new Intent(alarmActiveContext, AlarmReceiver.class);
 
-        return (PendingIntent.getBroadcast(alarmActiveContext, AlarmReceiverUsage.Companion.getCount(alarmReceiverUsage), intent, PendingIntent.FLAG_NO_CREATE) != null);
+        return (PendingIntent.getBroadcast(alarmActiveContext, AlarmReceiverUsage.Companion.getCount(alarmReceiverUsage), intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_NO_CREATE) != null);
     }
 
     /**
@@ -164,7 +164,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         //Create intent if user tap on notification
         Intent intent = new Intent(context.getApplicationContext(), MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
         //Create manager and channel
         NotificationManager notificationManager = (NotificationManager) context.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);

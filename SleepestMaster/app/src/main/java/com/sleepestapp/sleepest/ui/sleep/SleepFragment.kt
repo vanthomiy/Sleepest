@@ -116,9 +116,9 @@ class SleepFragment : Fragment() {
 
         viewModel.activityTracking.observe(viewLifecycleOwner){
             if(it)
-                ActivityTransitionHandler.getHandler(actualContext).startActivityHandler()
+                ActivityTransitionHandler(actualContext).startActivityHandler()
             else
-                ActivityTransitionHandler.getHandler(actualContext).stopActivityHandler()
+                ActivityTransitionHandler(actualContext).stopActivityHandler()
         }
 
         viewModel.sleepScoreValue.observe(viewLifecycleOwner){
