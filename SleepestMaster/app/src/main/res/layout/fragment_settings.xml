@@ -119,16 +119,12 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
                             android:layout_gravity="start"
                             android:layout_marginStart="0dp"
+                            android:layout_height="@dimen/valuesHeight"
                             android:orientation="vertical"
                             android:layout_marginVertical="10dp"
                             android:background="@drawable/background_rounded_button">
-
-                            <FrameLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/valuesHeight">
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
@@ -149,10 +145,6 @@
                                     android:checked="@={profileViewModel.autoDarkMode}"
                                     android:onClick="@{profileViewModel::autoDarkModeToggled}"
                                     />
-                            </FrameLayout>
-
-
-
                         </LinearLayout>
 
                         <androidx.appcompat.widget.AppCompatToggleButton
