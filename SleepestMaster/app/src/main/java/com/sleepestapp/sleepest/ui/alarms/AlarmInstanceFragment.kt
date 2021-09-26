@@ -72,8 +72,6 @@ class AlarmInstanceFragment(val applicationContext: Context, private var alarmId
         binding.alarmsViewModel = alarmsViewModel
         binding.lifecycleOwner = this
 
-        viewModel.transitionsContainer = (binding.cLAlarmEntityInnerLayer)
-
         val minData = SleepTimeValidationUtil.createMinutePickerHelper()
         binding.npMinutes.minValue = 1
         binding.npMinutes.maxValue = minData.size

@@ -124,7 +124,7 @@ class AlarmsFragment : Fragment() {
      */
     fun removeAlarmEntity(alarmId: Int) {
 
-        TransitionManager.beginDelayedTransition(viewModel.transitionsContainer)
+        TransitionManager.beginDelayedTransition(binding.cLParent)
 
         viewModel.transactions[alarmId]?.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit)
 
@@ -194,7 +194,6 @@ class AlarmsFragment : Fragment() {
 
         binding = FragmentAlarmsBinding.inflate(inflater, container, false)
 
-        viewModel.transitionsContainer = (binding.cLParent)
         binding.alarmsViewModel = viewModel
         binding.lifecycleOwner = this
 
@@ -208,7 +207,7 @@ class AlarmsFragment : Fragment() {
         viewModel.activeAlarmsLiveData.observe(viewLifecycleOwner){
             activeAlarms ->
 
-            TransitionManager.beginDelayedTransition(viewModel.transitionsContainer)
+            TransitionManager.beginDelayedTransition(binding.cLParent)
 
             if (activeAlarms.isNotEmpty()){
                 val nextAlarm = activeAlarms.minByOrNull { x-> x.wakeupEarly }
@@ -284,6 +283,15 @@ class AlarmsFragment : Fragment() {
 
         viewModel.alarmArtSelections.value = (mutableListOf((actualContext.getString(R.string.alarms_type_selection_only_alarm)), (actualContext.getString(R.string.alarms_type_selection_alarm_vibration)), (actualContext.getString(R.string.alarms_type_selection_only_vibration))))
         viewModel.alarmSoundName.value = (actualContext.getString(R.string.alarms_type_selection_default))
+
+        viewModel.expandToggled.observe(viewLifecycleOwner){
+            TransitionManager.beginDelayedTransition(binding.cLParent)
+
+            if(viewModel.actualExpand.value == View.GONE)
+                binding.lottieSettings.playAnimation()
+            else
+                binding.lottieSettings.pauseAnimation()
+        }
     }
 
     companion object {

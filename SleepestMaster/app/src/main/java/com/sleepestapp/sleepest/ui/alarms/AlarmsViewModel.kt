@@ -1,13 +1,9 @@
 package com.sleepestapp.sleepest.ui.alarms
 
-import android.annotation.SuppressLint
-import android.transition.TransitionManager
 import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.*
-import com.airbnb.lottie.LottieAnimationView
 import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
 import com.sleepestapp.sleepest.storage.db.AlarmEntity
@@ -50,28 +46,19 @@ class AlarmsViewModel(
 
     val actualExpand = MutableLiveData(View.GONE)
     val rotateState = MutableLiveData(0)
-
-    @SuppressLint("StaticFieldLeak")
-    var lottie : LottieAnimationView? = null
-
+    val expandToggled = MutableLiveData(false)
     /**
      * Expands the alarm settings of the alarms view
      */
+    @Suppress("UNUSED_PARAMETER")
     fun onExpandClicked(view: View) {
-        TransitionManager.beginDelayedTransition(transitionsContainer)
+        //TransitionManager.beginDelayedTransition(transitionsContainer)
+        expandToggled.value = expandToggled.value == false
 
         actualExpand.value = (if (actualExpand.value == View.GONE) View.VISIBLE else View.GONE)
         rotateState.value = (if (actualExpand.value == View.GONE) 0 else 180)
 
         alarmExpandId.value = (-1)
-
-        lottie = view as LottieAnimationView
-
-        if(actualExpand.value == View.GONE)
-            lottie?.playAnimation()
-        else
-            lottie?.pauseAnimation()
-
     }
 
     /**
@@ -79,7 +66,8 @@ class AlarmsViewModel(
      */
     fun updateExpandChanged(isExpanded : Boolean) {
 
-        TransitionManager.beginDelayedTransition(transitionsContainer)
+        //TransitionManager.beginDelayedTransition(transitionsContainer)
+        expandToggled.value = expandToggled.value == false
 
         if(isExpanded)
         {
@@ -87,10 +75,6 @@ class AlarmsViewModel(
             rotateState.value = (0)
         }
 
-        if(actualExpand.value == View.GONE)
-            lottie?.playAnimation()
-        else
-            lottie?.pauseAnimation()
     }
 
     val cancelAlarmWhenAwake = MutableLiveData(false)
@@ -142,13 +126,5 @@ class AlarmsViewModel(
             }
         }
     }
-
-    //region animation
-
-    @SuppressLint("StaticFieldLeak")
-    lateinit var transitionsContainer : ViewGroup
-
-
-    //endregion
 }
 

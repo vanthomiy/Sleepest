@@ -1,9 +1,7 @@
 package com.sleepestapp.sleepest.ui.sleep
 import android.annotation.SuppressLint
 import android.app.TimePickerDialog
-import android.transition.TransitionManager
 import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.SeekBar
@@ -33,8 +31,6 @@ class SleepViewModel(
     val sleepParameterLiveData by lazy{
         dataStoreRepository.sleepParameterFlow.asLiveData()
     }
-
-    lateinit var transitionsContainer : ViewGroup
 
     //endregion
 
@@ -157,7 +153,7 @@ class SleepViewModel(
             }
         }
 
-        TransitionManager.beginDelayedTransition(transitionsContainer)
+        //TransitionManager.beginDelayedTransition(transitionsContainer)
 
     }
 
@@ -192,7 +188,7 @@ class SleepViewModel(
      * Update the info layouts hide/show
      */
     private fun updateInfoChanged(value: String) {
-        TransitionManager.beginDelayedTransition(transitionsContainer)
+        //TransitionManager.beginDelayedTransition(transitionsContainer)
 
 
         actualExpand.value =(if(actualExpand.value == value.toIntOrNull()) -1 else value.toIntOrNull() )
@@ -290,7 +286,8 @@ class SleepViewModel(
      * Activity tracking switched
      */
     @Suppress("UNUSED_PARAMETER")
-    fun onActivityTrackingChanged(view:View) {        TransitionManager.beginDelayedTransition(transitionsContainer)
+    fun onActivityTrackingChanged(view:View) {
+        //TransitionManager.beginDelayedTransition(transitionsContainer)
 
         viewModelScope.launch {
 
@@ -303,9 +300,6 @@ class SleepViewModel(
             sleepCalculateFactorCalculation()
 
         }
-
-        TransitionManager.beginDelayedTransition(transitionsContainer)
-
     }
 
     /**

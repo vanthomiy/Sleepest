@@ -1,9 +1,7 @@
 package com.sleepestapp.sleepest.ui.alarms
 
-import android.annotation.SuppressLint
 import android.app.TimePickerDialog
 import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
@@ -228,14 +226,6 @@ class AlarmInstanceViewModel(
             }
         }
     }
-
-    //region animation
-
-    @SuppressLint("StaticFieldLeak")
-    lateinit var transitionsContainer : ViewGroup
-
-
-    //endregion
 }
 
 

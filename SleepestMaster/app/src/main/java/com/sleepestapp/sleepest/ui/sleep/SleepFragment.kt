@@ -2,6 +2,7 @@ package com.sleepestapp.sleepest.ui.sleep
 
 import android.content.Context
 import android.os.Bundle
+import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,7 +55,7 @@ class SleepFragment : Fragment() {
     ): View {
 
         binding = FragmentSleepBinding.inflate(inflater, container, false)
-        viewModel.transitionsContainer = (binding.linearAnimationlayout)
+        //viewModel.transitionsContainer = (binding.linearAnimationlayout)
 
         binding.sleepViewModel = viewModel
         binding.lifecycleOwner = this
@@ -142,6 +143,19 @@ class SleepFragment : Fragment() {
                     StringUtil.getStringXml(R.string.sleep_score_text_100, requireActivity().application)
                 }
             })
+
+            viewModel.autoSleepTime.observe(viewLifecycleOwner){
+                TransitionManager.beginDelayedTransition(binding.linearAnimationlayout)
+            }
+
+            viewModel.actualExpand.observe(viewLifecycleOwner){
+                TransitionManager.beginDelayedTransition(binding.linearAnimationlayout)
+            }
+
+            viewModel.activityTracking.observe(viewLifecycleOwner){
+                TransitionManager.beginDelayedTransition(binding.linearAnimationlayout)
+            }
+
         }
     }
 }
