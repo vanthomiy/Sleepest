@@ -130,11 +130,11 @@ class SettingsViewModel(
      */
     fun showPermissionInfo(permission: String){
         //TransitionManager.beginDelayedTransition(transitionsContainer)
-        descriptionChanged.value = descriptionChanged.value == false
         activityPermissionDescription.value = (if (permission == "sleepActivity") if (activityPermissionDescription.value != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
         dailyPermissionDescription.value = (if (permission == "dailyActivity") if (dailyPermissionDescription.value != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
         notificationPrivacyPermissionDescription.value = (if (permission == "notificationPrivacy") if (notificationPrivacyPermissionDescription.value != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
         overlayPermissionDescription.value = (if (permission == "overlay") if (overlayPermissionDescription.value != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
+        descriptionChanged.value = descriptionChanged.value == false
     }
 
 
