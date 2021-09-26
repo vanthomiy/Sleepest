@@ -34,7 +34,6 @@ class SleepViewModel(
         dataStoreRepository.sleepParameterFlow.asLiveData()
     }
 
-    @SuppressLint("StaticFieldLeak")
     lateinit var transitionsContainer : ViewGroup
 
     //endregion

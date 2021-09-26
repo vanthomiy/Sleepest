@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.DocumentsContract
+import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.TEXT_ALIGNMENT_CENTER
@@ -92,7 +93,7 @@ class SettingsFragment : Fragment() {
     ): View {
 
         binding = FragmentSettingsBinding.inflate(inflater, container, false)
-        viewModel.transitionsContainer = (binding.linearAnimationlayout)
+        //viewModel.transitionsContainer = (binding.linearAnimationlayout)
         binding.profileViewModel = viewModel
         binding.lifecycleOwner = this
 
@@ -134,6 +135,22 @@ class SettingsFragment : Fragment() {
 
         viewModel.aboutUsSelection.observe(viewLifecycleOwner){
             onAboutUsClicked(it)
+        }
+
+        viewModel.autoDarkMode.observe(viewLifecycleOwner){
+            TransitionManager.beginDelayedTransition(binding.linearAnimationlayout)
+        }
+
+        viewModel.removeExpand.observe(viewLifecycleOwner){
+            TransitionManager.beginDelayedTransition(binding.linearAnimationlayout)
+        }
+
+        viewModel.actualExpand.observe(viewLifecycleOwner){
+            TransitionManager.beginDelayedTransition(binding.linearAnimationlayout)
+        }
+
+        viewModel.descriptionChanged.observe(viewLifecycleOwner){
+            TransitionManager.beginDelayedTransition(binding.linearAnimationlayout)
         }
 
         //endregion

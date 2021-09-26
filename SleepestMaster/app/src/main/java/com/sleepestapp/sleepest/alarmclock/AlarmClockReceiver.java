@@ -16,7 +16,6 @@ import com.sleepestapp.sleepest.R;
 import com.sleepestapp.sleepest.background.BackgroundAlarmTimeHandler;
 import com.sleepestapp.sleepest.model.data.AlarmClockReceiverUsage;
 import com.sleepestapp.sleepest.model.data.NotificationUsage;
-import com.sleepestapp.sleepest.storage.DataStoreRepository;
 import com.sleepestapp.sleepest.storage.DatabaseRepository;
 import com.sleepestapp.sleepest.storage.db.AlarmEntity;
 import com.sleepestapp.sleepest.util.NotificationUtil;
@@ -99,7 +98,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
         //Starts the alarm with a new intent
         Intent intent = new Intent(alarmClockContext, AlarmClockReceiver.class);
         intent.putExtra(alarmClockContext.getString(R.string.alarm_clock_intent_key), alarmClockReceiverUsage.name());
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(alarmClockContext, AlarmClockReceiverUsage.Companion.getCount(alarmClockReceiverUsage), intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(alarmClockContext, AlarmClockReceiverUsage.Companion.getCount(alarmClockReceiverUsage), intent, PendingIntent.FLAG_IMMUTABLE);
         AlarmManager alarmManager = (AlarmManager) alarmClockContext.getSystemService(ALARM_SERVICE);
 
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
@@ -117,7 +116,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
 
         Intent intent = new Intent(restartAlarmContext, AlarmClockReceiver.class);
         intent.putExtra(context.getString(R.string.alarm_clock_intent_key), AlarmClockReceiverUsage.START_ALARMCLOCK.name());
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(restartAlarmContext, AlarmClockReceiverUsage.Companion.getCount(AlarmClockReceiverUsage.SNOOZE_ALARMCLOCK), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent.getBroadcast(restartAlarmContext, AlarmClockReceiverUsage.Companion.getCount(AlarmClockReceiverUsage.SNOOZE_ALARMCLOCK), intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     /**
@@ -126,7 +125,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
      */
     public static void cancelAlarm(Context cancelAlarmContext, AlarmClockReceiverUsage alarmClockReceiverUsage) {
         Intent intent = new Intent(cancelAlarmContext, AlarmClockReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(cancelAlarmContext, AlarmClockReceiverUsage.Companion.getCount(alarmClockReceiverUsage), intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(cancelAlarmContext, AlarmClockReceiverUsage.Companion.getCount(alarmClockReceiverUsage), intent, PendingIntent.FLAG_IMMUTABLE);
         AlarmManager alarmManager = (AlarmManager) cancelAlarmContext.getSystemService(ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
         pendingIntent.cancel();
@@ -141,6 +140,6 @@ public class AlarmClockReceiver extends BroadcastReceiver {
     public static boolean isAlarmClockActive(Context alarmActiveContext, AlarmClockReceiverUsage alarmClockReceiverUsage) {
         Intent intent = new Intent(alarmActiveContext, AlarmClockReceiver.class);
 
-        return (PendingIntent.getBroadcast(alarmActiveContext, AlarmClockReceiverUsage.Companion.getCount(alarmClockReceiverUsage), intent, PendingIntent.FLAG_NO_CREATE) != null);
+        return (PendingIntent.getBroadcast(alarmActiveContext, AlarmClockReceiverUsage.Companion.getCount(alarmClockReceiverUsage), intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_NO_CREATE) != null);
     }
 }

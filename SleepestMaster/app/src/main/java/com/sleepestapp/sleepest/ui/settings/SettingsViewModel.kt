@@ -1,10 +1,6 @@
 package com.sleepestapp.sleepest.ui.settings
-import android.annotation.SuppressLint
-import android.transition.TransitionManager
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -51,7 +47,7 @@ class SettingsViewModel(
      */
     @Suppress("UNUSED_PARAMETER")
     fun autoDarkModeToggled(view: View) {
-        TransitionManager.beginDelayedTransition(transitionsContainer)
+        //TransitionManager.beginDelayedTransition(transitionsContainer)
 
         viewModelScope.launch {
             autoDarkMode.value?.let {
@@ -126,15 +122,15 @@ class SettingsViewModel(
     val dailyPermissionDescription = MutableLiveData(View.GONE)
     val notificationPrivacyPermissionDescription = MutableLiveData(View.GONE)
     val overlayPermissionDescription = MutableLiveData(View.GONE)
-
+    val descriptionChanged = MutableLiveData(false)
 
 
     /**
      * Show permission info for each permission
      */
     fun showPermissionInfo(permission: String){
-        TransitionManager.beginDelayedTransition(transitionsContainer)
-
+        //TransitionManager.beginDelayedTransition(transitionsContainer)
+        descriptionChanged.value = descriptionChanged.value == false
         activityPermissionDescription.value = (if (permission == "sleepActivity") if (activityPermissionDescription.value != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
         dailyPermissionDescription.value = (if (permission == "dailyActivity") if (dailyPermissionDescription.value != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
         notificationPrivacyPermissionDescription.value = (if (permission == "notificationPrivacy") if (notificationPrivacyPermissionDescription.value != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
@@ -157,7 +153,7 @@ class SettingsViewModel(
     fun onDataClicked(view: View) {
         when(view.tag.toString()){
             "remove" -> {
-                TransitionManager.beginDelayedTransition(transitionsContainer)
+                //TransitionManager.beginDelayedTransition(transitionsContainer)
 
                 removeExpand.value = (removeExpand.value != true)
                 removeButtonText.value = (if (removeExpand.value == false)
@@ -190,16 +186,16 @@ class SettingsViewModel(
      * Expand a topic is clicked
      */
     fun onExpandClicked(view: View) {
-        updateExpandChanged(view.tag.toString(), true)
+        updateExpandChanged(view.tag.toString())
     }
 
     /**
      * Expand the actual topic and hide all other topics
      */
     @Suppress("UNUSED_PARAMETER")
-    private fun updateExpandChanged(value: String, toggle: Boolean) {
+    private fun updateExpandChanged(value: String) {
 
-        TransitionManager.beginDelayedTransition(transitionsContainer)
+        //TransitionManager.beginDelayedTransition(transitionsContainer)
 
         actualExpand.value = (if (actualExpand.value == value.toIntOrNull()) -1 else value.toIntOrNull())
         removeExpand.value = (if (actualExpand.value == 4) removeExpand.value else false)
@@ -226,13 +222,4 @@ class SettingsViewModel(
 
         }
     }
-
-    //region animation
-
-    @SuppressLint("StaticFieldLeak")
-    lateinit var transitionsContainer : ViewGroup
-    @SuppressLint("StaticFieldLeak")
-    lateinit var animatedTopView : MotionLayout
-
-    //endregion
 }

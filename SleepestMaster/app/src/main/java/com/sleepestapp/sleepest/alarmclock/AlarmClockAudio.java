@@ -176,11 +176,7 @@ public class AlarmClockAudio {
 
                 public void onFinish() {
 
-                    if (ringtoneManager.isPlaying()) {
-                        stopAlarm(true, true);
-                    } else {
-                        stopAlarm(true, true);
-                    }
+                    stopAlarm(true, true);
                 }
 
             }.start();
