@@ -96,7 +96,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/img_header_magrin"
+                            android:layout_marginStart="@dimen/img_header_margin"
                             android:text="@string/history_sleepPhases_title"
                             android:textColor="@color/primary_text_color"
                                                         android:textSize="@dimen/headerSize"
@@ -244,7 +244,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/img_header_magrin"
+                            android:layout_marginStart="@dimen/img_header_margin"
                             android:text="@string/history_day_sleepPhases_time_in_phase_title"
                             android:textColor="@color/primary_text_color"
                                                         android:textSize="@dimen/headerSize"
@@ -369,7 +369,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/img_header_magrin"
+                            android:layout_marginStart="@dimen/img_header_margin"
                             android:text="@string/history_day_sleep_quality_rating_title"
                             android:textColor="@color/primary_text_color"
                                                         android:textSize="@dimen/headerSize"
@@ -489,7 +489,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/img_header_magrin"
+                            android:layout_marginStart="@dimen/img_header_margin"
                             android:text="@string/history_activity_title"
                             android:textColor="@color/primary_text_color"
                                                         android:textSize="@dimen/headerSize"

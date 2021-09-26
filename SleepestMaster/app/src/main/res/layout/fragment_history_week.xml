@@ -56,7 +56,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             tools:ignore="ContentDescription"
-                            android:layout_marginStart="@dimen/img_header_magrin"
+                            android:layout_marginStart="@dimen/img_header_margin"
                             android:text="@string/history_sleepPhases_title"
                             android:textColor="@color/primary_text_color"
                                                         android:textSize="@dimen/headerSize"
@@ -125,7 +125,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/img_header_magrin"
+                            android:layout_marginStart="@dimen/img_header_margin"
                             android:text="@string/history_activity_title"
                             android:textColor="@color/primary_text_color"
                                                         android:textSize="@dimen/headerSize"

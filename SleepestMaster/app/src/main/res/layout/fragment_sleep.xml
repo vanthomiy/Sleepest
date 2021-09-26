@@ -174,7 +174,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/img_header_magrin"
+                                android:layout_marginStart="@dimen/img_header_margin"
                                 android:textSize="@dimen/headerSize"
                                 android:textStyle="bold"
                                 android:layout_gravity="start|center"
@@ -320,7 +320,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/img_header_magrin"
+                                android:layout_marginStart="@dimen/img_header_margin"
                                 android:textSize="@dimen/headerSize"
                                 android:textStyle="bold"
                                 android:layout_gravity="start|center"
@@ -461,7 +461,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/img_header_magrin"
+                                android:layout_marginStart="@dimen/img_header_margin"
                                 android:textSize="@dimen/headerSize"
                                 android:textStyle="bold"
                                 android:layout_gravity="start|center"
@@ -526,7 +526,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/img_header_magrin"
+                                android:layout_marginStart="@dimen/img_header_margin"
                                 android:textSize="@dimen/headerSize"
                                 android:textStyle="bold"
                                 android:layout_gravity="start|center"
@@ -601,7 +601,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/img_header_magrin"
+                                android:layout_marginStart="@dimen/img_header_margin"
                                 android:textSize="@dimen/headerSize"
                                 android:textStyle="bold"
                                 android:layout_gravity="start|center"
@@ -712,7 +712,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/img_header_magrin"
+                                android:layout_marginStart="@dimen/img_header_margin"
                                 android:textSize="@dimen/headerSize"
                                 android:textStyle="bold"
                                 android:layout_gravity="start|center"

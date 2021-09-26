@@ -17,5 +17,5 @@
     <dimen name="infoSize">11sp</dimen>
     <dimen name="valuesHeight">40sp</dimen>
     <dimen name="img_header_size">25dp</dimen>
-    <dimen name="img_header_magrin">40dp</dimen>
+    <dimen name="img_header_margin">40dp</dimen>
 </resources>
