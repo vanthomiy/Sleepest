@@ -16,6 +16,7 @@ import com.sleepestapp.sleepest.R;
 import com.sleepestapp.sleepest.background.BackgroundAlarmTimeHandler;
 import com.sleepestapp.sleepest.model.data.AlarmClockReceiverUsage;
 import com.sleepestapp.sleepest.model.data.NotificationUsage;
+import com.sleepestapp.sleepest.storage.DataStoreRepository;
 import com.sleepestapp.sleepest.storage.DatabaseRepository;
 import com.sleepestapp.sleepest.storage.db.AlarmEntity;
 import com.sleepestapp.sleepest.util.NotificationUtil;
@@ -42,6 +43,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
 
         AlarmClockReceiver.context = context;
         DatabaseRepository databaseRepository = ((MainApplication)context.getApplicationContext()).getDataBaseRepository();
+        DataStoreRepository dataStoreRepository = ((MainApplication)context.getApplicationContext()).getDataStoreRepository();
         AlarmEntity alarmEntity = databaseRepository.getNextActiveAlarmJob(dataStoreRepository);
 
         //Different actions for the alarm clock depending on the usage

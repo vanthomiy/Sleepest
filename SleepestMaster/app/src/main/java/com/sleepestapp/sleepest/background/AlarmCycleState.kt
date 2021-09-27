@@ -55,13 +55,10 @@ class AlarmCycleState(context: Context) {
 
                     return AlarmCycleStates.BETWEEN_LAST_WAKEUP_AND_SLEEPTIME_END
 
-                }
-                isBetweenTwoTimes(dataStoreRepository.getSleepTimeEnd(), dataStoreRepository.getSleepTimeBegin(),
-                    checkDayChange(dataStoreRepository.getSleepTimeEnd(), dataStoreRepository.getSleepTimeBegin())) -> {
+            } else if(isBetweenTwoTimes(dataStoreRepository.getSleepTimeEnd(), dataStoreRepository.getSleepTimeBegin(),
+                    checkDayChange(dataStoreRepository.getSleepTimeEnd(), dataStoreRepository.getSleepTimeBegin()))) {
 
                     return AlarmCycleStates.BETWEEN_SLEEPTIME_END_AND_SLEEPTIME_START
-
-                }
             }
         }
 
