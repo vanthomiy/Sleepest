@@ -417,19 +417,14 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
                 android:text="@{alarmInstanceViewModel.selectedDaysInfo}"
+                tools:text="Monday"
                 android:textColor="@color/tertiary_text_color"
-                android:textStyle="bold"
-                android:layout_weight="0"/>
-
-
-
-
+                android:textStyle="bold"/>
         </LinearLayout>
-
-
     </LinearLayout>
 </layout>
 
