@@ -193,7 +193,8 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
             //Updated the alarm that it was fired. So it can not be called again
             if (checkAlarmActive()) {
-                dataBaseRepository.updateAlarmWasFired(true, dataBaseRepository.getNextActiveAlarm()!!.id)
+                val isAfterSleepTime = dataStoreRepository.isAfterSleepTime()
+                dataBaseRepository.updateAlarmWasFired(true, dataBaseRepository.getNextActiveAlarm(dataStoreRepository)!!.id)
             }
         }
     }
@@ -407,15 +408,18 @@ class BackgroundAlarmTimeHandler(val context: Context) {
     fun disableAlarmTemporaryInApp(fromApp : Boolean, reactivate : Boolean) {
 
         scope.launch {
+
+            val isAfterSleepTime = dataStoreRepository.isAfterSleepTime()
+
             //Alarm was disabled in AlarmFragment
             if (fromApp && !reactivate) {
                 stopForegroundService()
-                dataBaseRepository.updateAlarmTempDisabled(true, dataBaseRepository.getNextActiveAlarm()!!.id)
+                dataBaseRepository.updateAlarmTempDisabled(true, dataBaseRepository.getNextActiveAlarm(dataStoreRepository)!!.id)
             }
             //Alarm was disabled in notification
             else if (!fromApp && !reactivate) {
                 if (checkAlarmActive() && !checkAlarmTempDisabled()) {
-                    dataBaseRepository.updateAlarmTempDisabled(true, dataBaseRepository.getNextActiveAlarm()!!.id)
+                    dataBaseRepository.updateAlarmTempDisabled(true, dataBaseRepository.getNextActiveAlarm(dataStoreRepository)!!.id)
                     val calendarStopForeground = Calendar.getInstance()
                     calendarStopForeground.add(Calendar.MINUTE, Constants.DISABLE_ALARM_DELAY)
                     AlarmReceiver.startAlarmManager(calendarStopForeground.get(Calendar.DAY_OF_WEEK), calendarStopForeground.get(Calendar.HOUR_OF_DAY), calendarStopForeground.get(Calendar.MINUTE), context.applicationContext, AlarmReceiverUsage.STOP_FOREGROUND)
@@ -425,13 +429,13 @@ class BackgroundAlarmTimeHandler(val context: Context) {
             //Alarm was reactivated in notification
             else if (!fromApp && reactivate) {
                 if (checkAlarmActive() && checkAlarmTempDisabled()) {
-                    dataBaseRepository.updateAlarmTempDisabled(false, dataBaseRepository.getNextActiveAlarm()!!.id)
+                    dataBaseRepository.updateAlarmTempDisabled(false, dataBaseRepository.getNextActiveAlarm(dataStoreRepository)!!.id)
                     AlarmReceiver.cancelAlarm(context.applicationContext, AlarmReceiverUsage.STOP_FOREGROUND)
                 }
             }
             //Alarm was reactivated in AlarmFragment
             else if (fromApp && reactivate) {
-                dataBaseRepository.updateAlarmTempDisabled(false, dataBaseRepository.getNextActiveAlarm()!!.id)
+                dataBaseRepository.updateAlarmTempDisabled(false, dataBaseRepository.getNextActiveAlarm(dataStoreRepository)!!.id)
                 startForegroundService()
             }
         }
@@ -624,15 +628,19 @@ class BackgroundAlarmTimeHandler(val context: Context) {
     /**
      * Get the first wakeup of the next active alarm
      */
-    private suspend fun getFirstWakeup() =
-        (dataBaseRepository.getNextActiveAlarm()!!.wakeupEarly)
+    private suspend fun getFirstWakeup() : Int {
+        val isAfterSleepTime = dataStoreRepository.isAfterSleepTime()
+        return (dataBaseRepository.getNextActiveAlarm(dataStoreRepository)!!.wakeupEarly)
+    }
 
     /**
      * Get the last wakeup of the next active alarm
      */
-    private suspend fun getLastWakeup() =
-        (dataBaseRepository.getNextActiveAlarm()!!.wakeupLate)
-
+    private suspend fun getLastWakeup() : Int {
+        return (dataBaseRepository.getNextActiveAlarm(
+            dataStoreRepository
+        )!!.wakeupLate)
+    }
     /**
      * Get the status of the foreground service
      */
@@ -642,20 +650,27 @@ class BackgroundAlarmTimeHandler(val context: Context) {
     /**
      * Check, if an alarm is active for the next day
      */
-    private suspend fun checkAlarmActive(): Boolean =
-        (dataBaseRepository.getNextActiveAlarm() != null)
+    private suspend fun checkAlarmActive(): Boolean {
+        val isAfterSleepTime = dataStoreRepository.isAfterSleepTime()
+        return (dataBaseRepository.getNextActiveAlarm(dataStoreRepository) != null)
+    }
 
     /**
      * Get alarm fired status
      */
-    private suspend fun checkAlarmFired(): Boolean =
-        (checkAlarmActive() && dataBaseRepository.getNextActiveAlarm()!!.wasFired)
+    private suspend fun checkAlarmFired(): Boolean {
+        val isAfterSleepTime = dataStoreRepository.isAfterSleepTime()
+        return (checkAlarmActive() && dataBaseRepository.getNextActiveAlarm(dataStoreRepository)!!.wasFired)
+    }
 
     /**
      * Get alarm temporary disabled status
      */
-    private suspend fun checkAlarmTempDisabled(): Boolean =
-        (checkAlarmActive() && dataBaseRepository.getNextActiveAlarm()!!.tempDisabled)
+    private suspend fun checkAlarmTempDisabled(): Boolean {
+        val isAfterSleepTime = dataStoreRepository.isAfterSleepTime()
+        return (checkAlarmActive() && dataBaseRepository.getNextActiveAlarm(dataStoreRepository)!!.tempDisabled)
+    }
+
 
     /**
      * Checks if the user is in sleep time

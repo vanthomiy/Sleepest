@@ -85,15 +85,20 @@ class DatabaseRepository(
      * so we always getting the data from 15:00 the day or day before until the specific time
      * later we have to combine it with the actual sleep times
      */
-    fun getSleepApiRawDataFromDateLive(actualTime:LocalDateTime): Flow<List<SleepApiRawDataEntity>?>
+    fun getSleepApiRawDataFromDateLive(actualTime:LocalDateTime, endTimeSecondsOfDay:Int): Flow<List<SleepApiRawDataEntity>?>
     {
-        val startTime = if (actualTime.hour < 15)
-            actualTime.toLocalDate().minusDays(1).atTime(15,0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
-        else actualTime.toLocalDate().atTime(15,0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
 
-        val endTime = actualTime.atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+        val endTime = LocalTime.ofSecondOfDay(endTimeSecondsOfDay.toLong())
 
-        return sleepApiRawDataDao.getBetween(startTime,endTime).distinctUntilChanged()
+        // We need to check wheter the time is before or after sleep time end.
+        // Then we can decide if its this or the next day
+        val startDateTime = if (actualTime.hour < endTime.hour)
+            actualTime.toLocalDate().minusDays(1).atTime(endTime).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+        else actualTime.toLocalDate().atTime(endTime).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+
+        val endDateTime = actualTime.atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+
+        return sleepApiRawDataDao.getBetween(startDateTime,endDateTime).distinctUntilChanged()
     }
 
     /**
@@ -101,17 +106,42 @@ class DatabaseRepository(
      * e.g. the dateTime 20.05.2021 at 20:00 returns all data in between 20.05.2021 15:00 to 21.05.2021 at 15:00
      * later we have to combine it with the actual sleep times
      */
-    fun getSleepApiRawDataFromDate(actualTime:LocalDateTime): Flow<List<SleepApiRawDataEntity>?>
+    fun getSleepApiRawDataFromDate(actualDateTime:LocalDateTime, endTimeSecondsOfDay:Int, startTimeSecondsOfDay:Int): Flow<List<SleepApiRawDataEntity>?>
     {
-        val startTime = if (actualTime.hour < 15)
-            actualTime.toLocalDate().minusDays(1).atTime(15,0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
-        else actualTime.toLocalDate().atTime(15,0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
 
-        val endTime = if (actualTime.hour >= 15)
-            actualTime.toLocalDate().plusDays(1).atTime(15,0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
-        else actualTime.toLocalDate().atTime(15,0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+        val startTime = LocalTime.ofSecondOfDay(startTimeSecondsOfDay.toLong())
+        val endTime = LocalTime.ofSecondOfDay(endTimeSecondsOfDay.toLong())
 
-        return sleepApiRawDataDao.getBetween(startTime,endTime).distinctUntilChanged()
+        val sameDay = (startTime < endTime)
+
+        // we are in the sleep time
+
+        // We need to check whether the time is before or after sleep time end.
+        // Then we can decide if its this or the next day
+
+        val startDateTime = if(sameDay && actualDateTime.toLocalTime() < endTime)
+            actualDateTime.toLocalDate().atTime(startTime.hour,startTime.minute).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+        else if(sameDay && actualDateTime.toLocalTime() > endTime)
+            actualDateTime.toLocalDate().plusDays(1).atTime(startTime.hour,startTime.minute).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+        else if(!sameDay && actualDateTime.toLocalTime() > startTime)
+            actualDateTime.toLocalDate().atTime(startTime.hour,startTime.minute).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+        else if(!sameDay && actualDateTime.toLocalTime() < endTime)
+            actualDateTime.toLocalDate().minusDays(1).atTime(startTime.hour,startTime.minute).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+        else
+            actualDateTime.toLocalDate().atTime(startTime.hour,startTime.minute).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+
+        val endDateTime = if(sameDay && actualDateTime.toLocalTime() < endTime)
+            actualDateTime.toLocalDate().atTime(endTime.hour,endTime.minute).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+        else if(sameDay && actualDateTime.toLocalTime() > endTime)
+            actualDateTime.toLocalDate().plusDays(1).atTime(endTime.hour,endTime.minute).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+        else if(!sameDay && actualDateTime.toLocalTime() > startTime)
+            actualDateTime.toLocalDate().plusDays(1).atTime(endTime.hour,endTime.minute).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+        else if(!sameDay && actualDateTime.toLocalTime() < endTime)
+            actualDateTime.toLocalDate().atTime(endTime.hour,endTime.minute).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+        else
+            actualDateTime.toLocalDate().plusDays(1).atTime(endTime.hour,endTime.minute).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+
+        return sleepApiRawDataDao.getBetween(startDateTime,endDateTime).distinctUntilChanged()
     }
 
     /**
@@ -188,15 +218,20 @@ class DatabaseRepository(
      * so we always getting the data from 15:00 the day or day before until the specific time
      * later we have to combine it with the actual activity times
      */
-    fun getActivityApiRawDataFromDateLive(actualTime:LocalDateTime): Flow<List<ActivityApiRawDataEntity>>
+    fun getActivityApiRawDataFromDateLive(actualTime:LocalDateTime, startTimeSecondsOfDay:Int): Flow<List<ActivityApiRawDataEntity>>
     {
-        val startTime = if (actualTime.hour < 15)
-            actualTime.toLocalDate().minusDays(1).atTime(15,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
-        else actualTime.toLocalDate().atTime(15,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+        val startTime = LocalTime.ofSecondOfDay(startTimeSecondsOfDay.toLong())
 
-        val endTime = actualTime.atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+        // We need to check wheter the time is before or after sleep time end.
+        // Then we can decide if its this or the next day
 
-        return activityApiRawDataDao.getBetween(startTime,endTime).distinctUntilChanged()
+        val startDateTime = if (actualTime.hour < startTime.hour)
+            actualTime.toLocalDate().minusDays(1).atTime(startTime).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+        else actualTime.toLocalDate().atTime(startTime).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+
+        val endDateTime = actualTime.atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+
+        return activityApiRawDataDao.getBetween(startDateTime,endDateTime).distinctUntilChanged()
     }
 
     /**
@@ -247,6 +282,14 @@ class DatabaseRepository(
      */
     fun getSleepSessionById(id: Int): Flow<List<UserSleepSessionEntity?>> =
             userSleepSessionDao.getById(id).distinctUntilChanged()
+
+    /**
+     * Returns [true] if a user session is available by id
+     */
+    suspend fun checkIfUserSessionIsDefinedById(id:Int): Boolean
+    {
+        return !userSleepSessionDao.getById(id).first().isNullOrEmpty()
+    }
 
     /**
      * Returns a specific [UserSleepSessionEntity] by its ID
@@ -323,13 +366,22 @@ class DatabaseRepository(
 
     /**
      * All active alarms and on that specific day
+     * Pass true/false if the actual time is in sleep time or not
+     * You can check this with the provided function [isAfterSleepTime] in the [DataStoreRepository]
      */
-    fun activeAlarmsFlow() : Flow<List<AlarmEntity>> {
-        val ldt:LocalDateTime = LocalDateTime.now()
-        val date = if(ldt.hour > 15) ldt.plusDays(1).toLocalDate() else ldt.toLocalDate()
+    fun activeAlarmsFlow(dataStoreRepository: DataStoreRepository) : Flow<List<AlarmEntity>> = runBlocking {
+        val ldt:LocalDate = LocalDate.now()
+        //val date = if(ldt.hour > 15) ldt.plusDays(1).toLocalDate() else ldt.toLocalDate()
+        val isAfterSleepTime = dataStoreRepository.isAfterSleepTime()
+
+        val date = if(!isAfterSleepTime.first && isAfterSleepTime.second)
+            ldt
+        else
+            ldt.plusDays(1)
+
         val dayOfWeek = "%" + date.dayOfWeek + "%"
 
-        return alarmDao.getAllActiveOnDay(dayOfWeek).distinctUntilChanged()
+        return@runBlocking alarmDao.getAllActiveOnDay(dayOfWeek).distinctUntilChanged()
     }
 
     /**
@@ -342,25 +394,29 @@ class DatabaseRepository(
      * Workaround to call function from JAVA code
      * calls [getNextActiveAlarm]
      */
-    fun getNextActiveAlarmJob() : AlarmEntity? = runBlocking{
-        return@runBlocking getNextActiveAlarm()
+    fun getNextActiveAlarmJob(dataStoreRepository: DataStoreRepository) : AlarmEntity? = runBlocking{
+        return@runBlocking getNextActiveAlarm(dataStoreRepository)
     }
 
     /**
      * Returns the next alarm that is active or null is no alarm is active in that time duration
+     * Pass true/false if the actual time is in sleep time or not
+     * You can check this with the provided function [isInSleepTime] in the [DataStoreRepository]
      */
-    suspend fun getNextActiveAlarm() : AlarmEntity?{
+    suspend fun getNextActiveAlarm(dataStoreRepository: DataStoreRepository) : AlarmEntity?{
 
-        val list = activeAlarmsFlow().first()
+        val list = activeAlarmsFlow(dataStoreRepository).first()
         // get first alarm
         return list.minByOrNull { x-> x.wakeupEarly }
     }
 
     /**
-     * Returns true or false whether a alarm is active for the actual/next day or not
+     * Returns true or false wheter a alarm is active for the actual/next day or not
+     * Pass true/false if the actual time is in sleep time or not
+     * You can check this with the provided function [isInSleepTime] in the [DataStoreRepository]
      */
-    suspend fun isAlarmActive() : Boolean{
-        val list = activeAlarmsFlow().first()
+    suspend fun isAlarmActiv(dataStoreRepository: DataStoreRepository) : Boolean{
+        val list = activeAlarmsFlow(dataStoreRepository).first()
         // get first alarm
         return list.isNotEmpty()
     }

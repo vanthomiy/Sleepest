@@ -11,7 +11,7 @@ private const val DATABASE_NAME = "sleepest_database"
 
 @Database(
         entities = [SleepApiRawDataEntity::class, UserSleepSessionEntity::class, AlarmEntity::class, ActivityApiRawDataEntity::class],
-        version = 6,
+        version = 7,
         exportSchema = false
 )
 

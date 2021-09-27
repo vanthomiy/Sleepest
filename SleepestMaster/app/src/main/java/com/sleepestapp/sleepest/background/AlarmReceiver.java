@@ -58,7 +58,14 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case DISABLE_ALARM:
                     //Disables the next active alarm temporary
-                BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, (databaseRepository.getNextActiveAlarmJob() == null) || (databaseRepository.getNextActiveAlarmJob().getTempDisabled()));
+                    if ((databaseRepository.getNextActiveAlarmJob(dataStoreRepository) != null) && (!databaseRepository.getNextActiveAlarmJob(dataStoreRepository).getTempDisabled())) {
+                        BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, false);
+                    } else {
+                        BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, true);
+                    }
+
+                     //BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, (databaseRepository.getNextActiveAlarmJob() == null) || (databaseRepository.getNextActiveAlarmJob().getTempDisabled()));
+
                 break;
             case NOT_SLEEPING:
                 //Button not Sleeping, only in the first 2 hours of sleep
@@ -74,7 +81,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case STOP_WORKMANAGER:
                 //Stops the workmanager outside sleep time
-                if (databaseRepository.getNextActiveAlarmJob() != null && !databaseRepository.getNextActiveAlarmJob().getWasFired()) {
+                if (databaseRepository.getNextActiveAlarmJob(dataStoreRepository) != null && !databaseRepository.getNextActiveAlarmJob(dataStoreRepository).getWasFired()) {
                     Calendar calendarNewAlarm = TimeConverterUtil.getAlarmDate(LocalTime.now().toSecondOfDay() + 600);
                     AlarmReceiver.startAlarmManager(
                             calendarNewAlarm.get(Calendar.DAY_OF_WEEK),

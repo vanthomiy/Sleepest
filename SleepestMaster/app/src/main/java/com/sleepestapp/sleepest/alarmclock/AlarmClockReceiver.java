@@ -42,7 +42,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
 
         AlarmClockReceiver.context = context;
         DatabaseRepository databaseRepository = ((MainApplication)context.getApplicationContext()).getDataBaseRepository();
-        AlarmEntity alarmEntity = databaseRepository.getNextActiveAlarmJob();
+        AlarmEntity alarmEntity = databaseRepository.getNextActiveAlarmJob(dataStoreRepository);
 
         //Different actions for the alarm clock depending on the usage
         switch (AlarmClockReceiverUsage.valueOf(intent.getStringExtra((context.getString(R.string.alarm_clock_intent_key))))) {

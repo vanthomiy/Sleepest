@@ -12,7 +12,7 @@ class MainActivityViewModel(
 ) : ViewModel() {
 
     val activeAlarmsLiveData by lazy {
-        dataBaseRepository.activeAlarmsFlow().asLiveData()
+        dataBaseRepository.activeAlarmsFlow(dataStoreRepository).asLiveData()
     }
 
     val sleepParametersLiveData by lazy {
@@ -22,7 +22,5 @@ class MainActivityViewModel(
     val settingsLiveData by lazy {
         dataStoreRepository.settingsDataFlow.asLiveData()
     }
-
-
 }
 

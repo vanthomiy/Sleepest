@@ -251,6 +251,26 @@ class SleepCalculationHandlerTest
         assertThat(newSleepList?.count(), CoreMatchers.equalTo(sleepList.count()-1))
     }
 
+    /**
+     * We recalculate the sleep api data on a specific date
+     */
+    @Test
+    fun userNotSleptInLastTimeTest() : Unit =  runBlocking {
+
+
+        val day = LocalDateTime.now().minusDays(1)
+
+        val timeStart = sleepStoreRepository.sleepParameterFlow.first()
+
+        val sleepApiRawDataEntityList = sleepDbRepository.getSleepApiRawDataFromDate(day, timeStart.sleepTimeEnd, timeStart.sleepTimeStart).first()
+
+        val actualAwakeTime =
+            sleepApiRawDataEntityList?.let { SleepApiRawDataEntity.getActualAwakeTime(it) }?.div(60)
+
+
+        Log.v("as", "Awake, Awake:" + actualAwakeTime)
+
+    }
 
     @Test
     fun checkPhonePositionTest() = runBlocking{
@@ -509,8 +529,9 @@ class SleepCalculationHandlerTest
                 restsleep = 3000
             }
 
+
             // wakeuptime is
-            val realWakeup = sleepDbRepository.getNextActiveAlarm()!!.actualWakeup
+            var realWakeup = sleepDbRepository.getNextActiveAlarm(dataStoreRepository = sleepStoreRepository)!!.actualWakeup
             val getactiveAlamrs = sleepDbRepository.alarmFlow.first()
             val ok = getactiveAlamrs
             val actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(lastCall.toLong()*1000), ZoneOffset.systemDefault())
@@ -684,7 +705,9 @@ class SleepCalculationHandlerTest
                 ZoneOffset.systemDefault()
             )
 
-            val newlist = sleepDbRepository.getSleepApiRawDataFromDate(actualTime).first()
+            val sleepParameters = sleepStoreRepository.sleepParameterFlow.first()
+
+            val newlist = sleepDbRepository.getSleepApiRawDataFromDate(actualTime, sleepParameters.sleepTimeEnd, sleepParameters.sleepTimeStart).first()
 
             if (newlist != null) {
                 if(newlist.count() != dataTrue[i].count()){
@@ -876,8 +899,10 @@ class SleepCalculationHandlerTest
 
         val sleepCalculationHandler = SleepCalculationHandler(context)
 
+        val sleepParameters = sleepStoreRepository.sleepParameterFlow.first()
+
         val day = LocalDateTime.now().minusDays(1)
-        val sleepApiRawDataEntityList = sleepDbRepository.getSleepApiRawDataFromDate(day).first()
+        val sleepApiRawDataEntityList = sleepDbRepository.getSleepApiRawDataFromDate(day, sleepParameters.sleepTimeEnd, sleepParameters.sleepTimeStart).first()
 
         sleepApiRawDataEntityList?.forEach { data ->
             data.oldSleepState = SleepState.NONE

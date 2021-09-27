@@ -31,30 +31,27 @@ class AlarmCycleState(context: Context) {
     /**
      * Returns the state depending on the actual time
      */
-    private suspend fun chooseState() : AlarmCycleStates {
-        if (databaseRepository.getNextActiveAlarm() != null) {
+    suspend private fun chooseState() : AlarmCycleStates {
 
-            when {
-                isBetweenTwoTimes(dataStoreRepository.getSleepTimeBegin(), databaseRepository.getNextActiveAlarm()!!.wakeupEarly - Constants.CALCULATION_START_DIFFERENCE,
-                    checkDayChange(dataStoreRepository.getSleepTimeBegin(), databaseRepository.getNextActiveAlarm()!!.wakeupEarly - Constants.CALCULATION_START_DIFFERENCE)) -> {
+        if (databaseRepository.getNextActiveAlarm(dataStoreRepository) != null) {
+
+            if (isBetweenTwoTimes(dataStoreRepository.getSleepTimeBegin(), databaseRepository.getNextActiveAlarm(dataStoreRepository)!!.wakeupEarly - Constants.CALCULATION_START_DIFFERENCE,
+                checkDayChange(dataStoreRepository.getSleepTimeBegin(), databaseRepository.getNextActiveAlarm(dataStoreRepository)!!.wakeupEarly - Constants.CALCULATION_START_DIFFERENCE))) {
 
                     return AlarmCycleStates.BETWEEN_SLEEPTIME_START_AND_CALCULATION
 
-                }
-                isBetweenTwoTimes(databaseRepository.getNextActiveAlarm()!!.wakeupEarly - Constants.CALCULATION_START_DIFFERENCE, databaseRepository.getNextActiveAlarm()!!.wakeupEarly,
-                    checkDayChange(databaseRepository.getNextActiveAlarm()!!.wakeupEarly - Constants.CALCULATION_START_DIFFERENCE, databaseRepository.getNextActiveAlarm()!!.wakeupEarly)) -> {
+            } else if (isBetweenTwoTimes(databaseRepository.getNextActiveAlarm(dataStoreRepository)!!.wakeupEarly - Constants.CALCULATION_START_DIFFERENCE, databaseRepository.getNextActiveAlarm(dataStoreRepository)!!.wakeupEarly,
+                    checkDayChange(databaseRepository.getNextActiveAlarm(dataStoreRepository)!!.wakeupEarly - Constants.CALCULATION_START_DIFFERENCE, databaseRepository.getNextActiveAlarm(dataStoreRepository)!!.wakeupEarly))) {
 
                     return AlarmCycleStates.BETWEEN_CALCULATION_AND_FIRST_WAKEUP
 
-                }
-                isBetweenTwoTimes(databaseRepository.getNextActiveAlarm()!!.wakeupEarly, databaseRepository.getNextActiveAlarm()!!.wakeupLate,
-                    checkDayChange(databaseRepository.getNextActiveAlarm()!!.wakeupEarly, databaseRepository.getNextActiveAlarm()!!.wakeupLate)) -> {
+            } else if (isBetweenTwoTimes(databaseRepository.getNextActiveAlarm(dataStoreRepository)!!.wakeupEarly, databaseRepository.getNextActiveAlarm(dataStoreRepository)!!.wakeupLate,
+                    checkDayChange(databaseRepository.getNextActiveAlarm(dataStoreRepository)!!.wakeupEarly, databaseRepository.getNextActiveAlarm(dataStoreRepository)!!.wakeupLate))) {
 
                     return AlarmCycleStates.BETWEEN_FIRST_AND_LAST_WAKEUP
 
-                }
-                isBetweenTwoTimes(databaseRepository.getNextActiveAlarm()!!.wakeupLate, dataStoreRepository.getSleepTimeEnd(),
-                    checkDayChange(databaseRepository.getNextActiveAlarm()!!.wakeupLate, dataStoreRepository.getSleepTimeEnd())) -> {
+            }  else if (isBetweenTwoTimes(databaseRepository.getNextActiveAlarm(dataStoreRepository)!!.wakeupLate, dataStoreRepository.getSleepTimeEnd(),
+                    checkDayChange(databaseRepository.getNextActiveAlarm(dataStoreRepository)!!.wakeupLate, dataStoreRepository.getSleepTimeEnd()))) {
 
                     return AlarmCycleStates.BETWEEN_LAST_WAKEUP_AND_SLEEPTIME_END
 

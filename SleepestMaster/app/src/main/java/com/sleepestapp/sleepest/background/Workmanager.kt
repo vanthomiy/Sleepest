@@ -52,9 +52,11 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
                 ed.putInt("time", ForegroundService.getForegroundServiceTime())
                 ed.apply()
 
+                val endTime = dataStoreRepository.sleepParameterFlow.first().sleepTimeEnd
+
                 //Get sleep data table
                 val sleepApiRawDataEntity =
-                    dataBaseRepository.getSleepApiRawDataFromDateLive(LocalDateTime.now()).first()
+                    dataBaseRepository.getSleepApiRawDataFromDateLive(LocalDateTime.now(), endTime).first()
                         ?.sortedByDescending { x -> x.timestampSeconds }
 
                 //Check if data are in table

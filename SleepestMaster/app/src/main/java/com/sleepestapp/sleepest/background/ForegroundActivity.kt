@@ -42,9 +42,9 @@ class ForegroundActivity : Activity() {
             when (extras.getInt("intent", 0)) {
                 1 -> {
                     scope.launch {
-
+                        val isAfterSleepTime = dataStoreRepository.isAfterSleepTime()
                         // next alarm or null
-                        if (databaseRepository.isAlarmActive()) {
+                        if (databaseRepository.isAlarmActiv(dataStoreRepository)) {
 
                             // start foreground if not null
                             if (!dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {

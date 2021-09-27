@@ -38,7 +38,9 @@ class AlarmsViewModel(
     /**
      * Observable live data of the alarms flow
      */
-    val activeAlarmsLiveData by lazy {  dataBaseRepository.activeAlarmsFlow().asLiveData() }
+    val activeAlarmsLiveData by lazy {
+        dataBaseRepository.activeAlarmsFlow(dataStoreRepository).asLiveData()
+    }
 
 
     val alarmExpandId = MutableLiveData(0)
