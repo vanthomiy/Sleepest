@@ -631,7 +631,7 @@ class SleepCalculationHandlerTest
             SleepState.DEEP to 0,
             SleepState.REM to 0)
 
-        for (i in 1 until 49)
+        for (i in 52 until 63)
         {
             val data = dataUnPred[i]
 
