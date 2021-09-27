@@ -268,7 +268,7 @@ class SleepCalculationHandler(val context: Context) {
         val mobileUseFrequency = MobileUseFrequency.getCount(dataStoreRepository.sleepParameterFlow.first().mobileUseFrequency)
 
 
-        // check for each sleepstate
+        // check for each sleep state
         sleepApiRawDataEntity.forEach { data ->
             // First definition without future data
             if(data.sleepState == SleepState.NONE){

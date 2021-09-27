@@ -20,6 +20,7 @@ import com.sleepestapp.sleepest.model.data.AlarmReceiverUsage;
 import com.sleepestapp.sleepest.model.data.Constants;
 import com.sleepestapp.sleepest.model.data.NotificationUsage;
 import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler;
+import com.sleepestapp.sleepest.storage.DataStoreRepository;
 import com.sleepestapp.sleepest.storage.DatabaseRepository;
 import com.sleepestapp.sleepest.util.TimeConverterUtil;
 //import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler;
@@ -37,6 +38,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         //Init repos
         DatabaseRepository databaseRepository = ((MainApplication)context.getApplicationContext()).getDataBaseRepository();
+        DataStoreRepository dataStoreRepository = ((MainApplication)context.getApplicationContext()).getDataStoreRepository();
         SleepCalculationHandler sleepCalculationHandler = new SleepCalculationHandler(MainApplication.Companion.applicationContext());
 
         Calendar calendar = Calendar.getInstance();
