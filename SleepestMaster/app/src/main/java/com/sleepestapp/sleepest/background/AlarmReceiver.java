@@ -65,9 +65,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                     } else {
                         BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, true);
                     }
-
-                     //BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, (databaseRepository.getNextActiveAlarmJob() == null) || (databaseRepository.getNextActiveAlarmJob().getTempDisabled()));
-
                 break;
             case NOT_SLEEPING:
                 //Button not Sleeping, only in the first 2 hours of sleep
