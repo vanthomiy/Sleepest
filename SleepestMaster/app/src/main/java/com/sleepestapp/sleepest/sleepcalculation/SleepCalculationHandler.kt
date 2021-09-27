@@ -219,6 +219,14 @@ class SleepCalculationHandler(val context: Context) {
      */
     suspend fun checkIsUserSleeping(localTime: LocalDateTime? = null, finalCalc: Boolean = false){
 
+        val date = localTime ?: LocalDateTime.now()
+
+        val timestamp = date.atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+
+        // calculate all sleep states when the user is sleeping
+        val id =
+            UserSleepSessionEntity.getIdByTimeStamp(timestamp)
+
         val sessionAvailable = dataBaseRepository.checkIfUserSessionIsDefinedById(id)
         val sleepSessionEntity = dataBaseRepository.getOrCreateSleepSessionById(id)
 
@@ -242,7 +250,7 @@ class SleepCalculationHandler(val context: Context) {
             return
         }
 
-        val sleepClassifier = SleepClassifier.getHandler(context)
+        val sleepClassifier = SleepClassifier(context)
 
         val mobilePosition =
             if(MobilePosition.getCount(dataStoreRepository.sleepParameterFlow.first().standardMobilePosition) == MobilePosition.UNIDENTIFIED) // create features for ml model
