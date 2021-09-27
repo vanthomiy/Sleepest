@@ -228,7 +228,6 @@ class SleepCalculationHandler(val context: Context) {
             UserSleepSessionEntity.getIdByTimeStamp(timestamp)
 
         val sessionAvailable = dataBaseRepository.checkIfUserSessionIsDefinedById(id)
-        val sleepSessionEntity = dataBaseRepository.getOrCreateSleepSessionById(id)
 
         val endTime = if(sessionAvailable)
             dataBaseRepository.getOrCreateSleepSessionById(id).sleepTimes.sleepTimeEnd
