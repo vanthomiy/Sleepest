@@ -80,18 +80,18 @@ object SleepTimeValidationUtil {
         }
 
         // Check if Wakeup Late is in sleep time
-        if(wakeUpLate > sleepSettings.sleepTimeEnd) {
+        if(wakeUpLate >= sleepSettings.sleepTimeEnd) {
             // differ between auto sleep time and user defined sleep time
             if(sleepSettings.autoSleepTime){
-                val restTime = kotlin.math.abs(wakeUpLate -  sleepSettings.sleepTimeEnd) + (minTimeBuffer / 2)
+                //val restTime = kotlin.math.abs(wakeUpLate -  sleepSettings.sleepTimeEnd) + (minTimeBuffer / 2)
 
                 // Adjust the sleep time automatically
-                val newSleepTimeEnd = sleepSettings.sleepTimeEnd + restTime
+                val newSleepTimeEnd = sleepSettings.sleepTimeEnd + 900//+ restTime
 
                 dataStoreRepository.updateSleepTimeEnd(newSleepTimeEnd)
             }
             else{
-                newWakeUpLate = sleepSettings.sleepTimeEnd
+                newWakeUpLate = sleepSettings.sleepTimeEnd - 900
                 /*Toast.makeText(context, "Out of sleep time! Change the sleep time end", Toast.LENGTH_SHORT)
                     .show()*/
             }
@@ -196,8 +196,8 @@ object SleepTimeValidationUtil {
         val allAlarms = dataBaseRepository.alarmFlow.first()
 
         allAlarms.forEach{ alarm ->
-            if(alarm.wakeupLate > (newSleepTimeEnd - minTimeBuffer/2)){
-                newSleepTimeEnd = alarm.wakeupLate + minTimeBuffer/2
+            if(alarm.wakeupLate >= (newSleepTimeEnd /*- minTimeBuffer/2*/)){
+                newSleepTimeEnd = alarm.wakeupLate + 900//+ minTimeBuffer/2
                 /*Toast.makeText(this, "Conflicts with an alarm! Latest possible sleep end time is set", Toast.LENGTH_SHORT)
                     .show()*/
             }
