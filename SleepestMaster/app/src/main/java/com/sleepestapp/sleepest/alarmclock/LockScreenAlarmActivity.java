@@ -192,6 +192,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
+            v.performClick(); // without is warning
             return gestureDetector.onTouchEvent(event);
         }
     }
