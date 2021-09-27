@@ -156,6 +156,9 @@ class HistoryDayFragment : Fragment() {
         updateActivitySmiley()
     }
 
+    /**
+     * Maintains the visibility of the diagrams in the day fragment.
+     */
     private fun maintainVisibilityDayHistory(setVisibility: Boolean) {
         if (setVisibility) {
             binding.iVNoDataAvailable.visibility = View.GONE
@@ -279,7 +282,9 @@ class HistoryDayFragment : Fragment() {
         }
     }
 
-    /**  */
+    /** Auxiliary function for generating data for the BarChart.
+     * Analysis the sleepValues for the current date and creates BarEntries for every single minte of the night.
+     */
     fun generateDataBarChart(): ArrayList<BarEntry> {
         val entries = ArrayList<BarEntry>()
         var xIndex = 0.5f
@@ -329,7 +334,7 @@ class HistoryDayFragment : Fragment() {
         return entries
     }
 
-    /**  */
+    /** Auxiliary function for generating a dataset for a BarChart. */
     private fun generateBarDataSet(barEntries: ArrayList<BarEntry>) : BarDataSet {
         val barDataSet = BarDataSet(barEntries, "")
 
@@ -351,7 +356,7 @@ class HistoryDayFragment : Fragment() {
         return barDataSet
     }
 
-    /**  */
+    /** Auxiliary function to determine the height of a BarChart. */
     private fun getBarChartYAxisProportion(entries: ArrayList<BarEntry>) : Float {
         var size = 0f
         for (ent in entries) {
@@ -362,7 +367,7 @@ class HistoryDayFragment : Fragment() {
         return  size
     }
 
-    /**  */
+    /**  Function for creating a BarChart for hte first time. */
     fun setBarChart() : BarChart {
         val barChart = BarChart(context)
         val diagramData = generateDataBarChart()
@@ -372,7 +377,7 @@ class HistoryDayFragment : Fragment() {
         return barChart
     }
 
-    /**  */
+    /**  Function for updating an existing BarChart. */
     private fun updateBarChart(barChart: BarChart) {
         val diagramData = generateDataBarChart()
         val barData = BarData(generateBarDataSet(diagramData))
@@ -382,7 +387,9 @@ class HistoryDayFragment : Fragment() {
         visualSetUpBarChart(barChart, diagramData)
     }
 
-    /**  */
+    /** Auxiliary function for setting up or updating a BarChart.
+     * Sets up the visual settings.
+     */
     private fun visualSetUpBarChart(barChart: BarChart, diagramData: ArrayList<BarEntry>) {
         barChart.description.isEnabled = false
         barChart.data.isHighlightEnabled = false
@@ -487,9 +494,6 @@ class HistoryDayFragment : Fragment() {
                             entries.add(PieEntry(remSleep.toFloat(), actualContext.getString(R.string.history_day_timeInPhase_remSleep)))
                         sleepTypes[4] = true
                     }
-                }?: kotlin.run {
-                    // If no data is here when the Fragment launches, call again.
-                    //viewModel.getSleepData()
                 }
             }
         }
@@ -497,7 +501,7 @@ class HistoryDayFragment : Fragment() {
         return Pair(entries, sleepTypes)
     }
 
-    /**  */
+    /**  Function for creating a PieChart for the first time. */
     private fun setPieChart() : PieChart {
         val chart = PieChart(actualContext)
         val data = generateDataPieChart()
@@ -507,7 +511,7 @@ class HistoryDayFragment : Fragment() {
         return chart
     }
 
-    /**  */
+    /**  Function for updating a BarChart for the first time. */
     private fun updatePieChart(chart: PieChart) {
         val data = generateDataPieChart()
         val pieDataSet = PieDataSet(data.first, "")
@@ -516,7 +520,9 @@ class HistoryDayFragment : Fragment() {
         chart.notifyDataSetChanged()
     }
 
-    /**  */
+    /** Auxiliary function for setting up or updating a PieChart.
+     * Sets up the visual settings.
+     */
     private fun visualSetUpPieChart(chart: PieChart, pieDataSet: PieDataSet, sleepTypes: BooleanArray) {
         val listColors = ArrayList<Int>()
         //sleepTypes[0] = awake, sleepTypes[1] = sleep, sleepTypes[2] = light, sleepTypes[3] = deep, sleepTypes[4] = rem
@@ -550,7 +556,8 @@ class HistoryDayFragment : Fragment() {
         chart.animateY(500, Easing.EaseInOutQuad)
     }
 
-    /**  */
+    /** Gets the current value of the ActivitySmiley.
+     * Allows to alter the current moodAfterSleep smiley and save it to the database. */
     private fun updateActivitySmiley() {
         var activityOnDay = 0
 

@@ -36,7 +36,7 @@ class HistoryDayViewModel(val sleepCalculationHandler : SleepCalculationHandler)
     /** Contains information about the wakeup time in epoch seconds. */
     var endOfSleepEpoch = ObservableField(0L)
 
-    /** */
+    /** Stores the ID of the current SleepSession. */
     var sessionId = 0
 
     /** Contains information about the amount of time the user spend awake. */
@@ -54,6 +54,7 @@ class HistoryDayViewModel(val sleepCalculationHandler : SleepCalculationHandler)
     /** Contains information about the amount of time the user slept. */
     var sleepTime = ObservableField("")
 
+    /** Contains the visibility status of the time analysis of each sleep phase. */
     var timeInSleepPhaseTextField = ObservableField(View.INVISIBLE)
 
     /** Contains the current smiley used to indicate the users activity level. */
@@ -62,7 +63,7 @@ class HistoryDayViewModel(val sleepCalculationHandler : SleepCalculationHandler)
     /** Contains the smiley which was picked by the user to assess it's mood. */
     var sleepMoodSmiley = ObservableField(MoodType.NONE)
 
-    /** */
+    /**  Contains the tag of the selected mood smiley. */
     var sleepMoodSmileyTag = ObservableField(0)
 
     /** This will prevent the daily sleep analysis diagrams from reloading when the sleep rating was altered. */
@@ -72,6 +73,7 @@ class HistoryDayViewModel(val sleepCalculationHandler : SleepCalculationHandler)
     val goneState = ObservableField(View.GONE)
     val visibleState = ObservableField(View.VISIBLE)
 
+    /** Contains information about the current time zone and its time formatting standards. */
     var is24HourFormat : Boolean = false
 
     lateinit var transitionsContainer : ViewGroup
@@ -80,6 +82,9 @@ class HistoryDayViewModel(val sleepCalculationHandler : SleepCalculationHandler)
 
     }
 
+    /**
+     * Allows to alter the sleepRating (MoodAfterSleep) and saves it to its ObservableField.
+     */
     fun sleepRating(view: View) {
         sleepRatingUpdate = true
         val mood = when (view.tag.toString().toInt()) {
@@ -115,6 +120,9 @@ class HistoryDayViewModel(val sleepCalculationHandler : SleepCalculationHandler)
         actualExpand.set(if(actualExpand.get() == value.toIntOrNull()) -1 else value.toIntOrNull())
     }
 
+    /**
+     * Allows the manual alternation of the time in at which the user fell asleep and woke up.
+     */
     fun manualChangeSleepTimes(view: View) {
         val time : LocalDateTime = if (view.tag == "BeginOfSleep") {
             //Set the fall asleep time.
@@ -132,6 +140,9 @@ class HistoryDayViewModel(val sleepCalculationHandler : SleepCalculationHandler)
         createPickerDialogue(view, time, view.tag == "BeginOfSleep")
     }
 
+    /**
+     * Creates a TimePickerDialogue as auxiliary function for [manualChangeSleepTimes].
+     */
     private fun createPickerDialogue(view: View, dateTime: LocalDateTime, startOfSleep: Boolean) {
         val tpd = TimePickerDialog(
             view.context,

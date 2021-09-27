@@ -165,6 +165,9 @@ class HistoryTabView : Fragment() {
         }
     }
 
+    /**
+     * Sets up some values for the [HistoryViewModel].
+     */
     fun setUpHistoryViewModelValues() {
         val application = requireActivity().application
 
@@ -208,6 +211,9 @@ class HistoryTabView : Fragment() {
         viewModel.activityBackgroundDrawable = ContextCompat.getDrawable(application, R.drawable.bg_spark_line)
     }
 
+    /**
+     * Updates the currently displayed date at the TabView.
+     */
     fun updateDateInformation(range: Int) {
         when (range) {
             0 -> tVActualDayTabView.text = createCalendarDayInformation()
@@ -216,6 +222,9 @@ class HistoryTabView : Fragment() {
         }
     }
 
+    /**
+     * Creates a formatted string for the function [updateDateInformation].
+     */
     private fun createCalendarDayInformation(): String {
         val actualDay = LocalDate.now()
         var information = actualContext.getString(R.string.history_failure_title)
@@ -238,6 +247,9 @@ class HistoryTabView : Fragment() {
         return information
     }
 
+    /**
+     * Creates a formatted string for the function [updateDateInformation].
+     */
     private fun createCalendarWeekInformation(): String {
         var information = getString(R.string.history_failure_title)
         val actualDate = LocalDate.now()
@@ -263,6 +275,9 @@ class HistoryTabView : Fragment() {
         return information
     }
 
+    /**
+     * Auxiliary function for determining the range of a week in order to display its border dates.
+     */
     private fun getWeekRange(date: LocalDate) : String {
         val sundayOfWeek : LocalDate = when (date.dayOfWeek.value) {
             1 -> date.plusDays(6L) // Monday
@@ -281,6 +296,9 @@ class HistoryTabView : Fragment() {
         return ("$mondayString - $sundayString")
     }
 
+    /**
+     * Creates a formatted string for the function [updateDateInformation].
+     */
     private fun createCalendarMonthInformation(): String {
         viewModel.analysisDate.get()?.let {
             return when (it.monthValue) {

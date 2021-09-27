@@ -14,23 +14,20 @@ import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
 import java.time.*
 
-/**  */
 class HistoryWeekFragment : Fragment() {
 
-    /**  */
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(HistoryViewModel::class.java) }
 
     private val viewModelWeek by lazy { ViewModelProvider(this).get(HistoryWeekViewModel::class.java) }
 
     private val actualContext: Context by lazy { requireActivity().applicationContext }
 
-    /**  */
     private lateinit var binding: FragmentHistoryWeekBinding
 
-    /**  */
+    /** Contains the BarChart for the [HistoryWeekFragment]. */
     private lateinit var barChart: BarChart
 
-    /**  */
+    /** Contains the LineChart for the [HistoryWeekFragment]. */
     private lateinit var activityChart: LineChart
 
 
@@ -76,7 +73,7 @@ class HistoryWeekFragment : Fragment() {
         return binding.root
     }
 
-    /**  */
+    /** Used to find the sunday of the current weak. */
     private fun getSundayOfWeek(): LocalDate {
         viewModel.analysisDate.get()?.let {
             val dayOfWeek = it.dayOfWeek

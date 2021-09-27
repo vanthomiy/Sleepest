@@ -71,6 +71,9 @@ class HistoryMonthFragment : Fragment() {
         return binding.root
     }
 
+    /**
+     * Returns the length and the end of the current month.
+     */
     private fun getEndOfMonth(): Pair<Int, LocalDate> {
         viewModel.analysisDate.get()?.let {
             val date = it

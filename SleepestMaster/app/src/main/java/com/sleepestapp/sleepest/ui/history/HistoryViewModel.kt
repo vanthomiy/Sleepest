@@ -55,10 +55,13 @@ class HistoryViewModel(
     /** Container for the x-axis values of the weekly bar charts. */
     var xAxisValuesWeek = ArrayList<String>()
 
+    /** Container for the string of the SleepState for the legend of the diagrams. */
     var sleepStateString = mutableMapOf<SleepState, String>()
 
+    /** Container for the color of the SleepState for the legend of the diagrams. */
     var sleepStateColor = mutableMapOf<SleepState, Int>()
 
+    /** Container for the drawable of the LineChart diagram. */
     var activityBackgroundDrawable : Drawable? = null
 
     /** Indicates that [getSleepData] has finished and fresh data was received from the database. */
@@ -247,7 +250,7 @@ class HistoryViewModel(
 
 
     /** Generates all the relevant information for the Bar Charts by searching the database for the correct period of time.
-     * TODO(Check this)
+     *
      * */
     fun generateDataBarChart(range: Int, endDateOfDiagram: LocalDate): Triple<ArrayList<BarEntry>, List<Int>, Int> {
         val entries = ArrayList<BarEntry>()
@@ -466,7 +469,7 @@ class HistoryViewModel(
     }
 
     /** Generates all the relevant information for the activity chart by searching the [sleepSessionData] for the correct period of time.
-     * TODO(Check this)
+     *
      * */
     private fun generateDataActivityChart(range: Int, endDateOfDiagram: LocalDate): ArrayList<Entry> {
         val entries = ArrayList<Entry>()
@@ -487,7 +490,6 @@ class HistoryViewModel(
         for (id in ids) {
             if (sleepSessionData.containsKey(id)) {
                 val values = sleepSessionData[id]?.third!!
-
                 entries.add(Entry(xValue.toFloat(), values.userSleepRating.activityOnDay.ordinal.toFloat()))
             }
             else {
