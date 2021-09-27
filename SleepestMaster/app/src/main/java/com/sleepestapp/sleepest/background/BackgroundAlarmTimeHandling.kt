@@ -193,7 +193,6 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
             //Updated the alarm that it was fired. So it can not be called again
             if (checkAlarmActive()) {
-                val isAfterSleepTime = dataStoreRepository.isAfterSleepTime()
                 dataBaseRepository.updateAlarmWasFired(true, dataBaseRepository.getNextActiveAlarm(dataStoreRepository)!!.id)
             }
         }
@@ -408,8 +407,6 @@ class BackgroundAlarmTimeHandler(val context: Context) {
     fun disableAlarmTemporaryInApp(fromApp : Boolean, reactivate : Boolean) {
 
         scope.launch {
-
-            val isAfterSleepTime = dataStoreRepository.isAfterSleepTime()
 
             //Alarm was disabled in AlarmFragment
             if (fromApp && !reactivate) {
@@ -629,7 +626,6 @@ class BackgroundAlarmTimeHandler(val context: Context) {
      * Get the first wakeup of the next active alarm
      */
     private suspend fun getFirstWakeup() : Int {
-        val isAfterSleepTime = dataStoreRepository.isAfterSleepTime()
         return (dataBaseRepository.getNextActiveAlarm(dataStoreRepository)!!.wakeupEarly)
     }
 
@@ -651,7 +647,6 @@ class BackgroundAlarmTimeHandler(val context: Context) {
      * Check, if an alarm is active for the next day
      */
     private suspend fun checkAlarmActive(): Boolean {
-        val isAfterSleepTime = dataStoreRepository.isAfterSleepTime()
         return (dataBaseRepository.getNextActiveAlarm(dataStoreRepository) != null)
     }
 
@@ -659,7 +654,6 @@ class BackgroundAlarmTimeHandler(val context: Context) {
      * Get alarm fired status
      */
     private suspend fun checkAlarmFired(): Boolean {
-        val isAfterSleepTime = dataStoreRepository.isAfterSleepTime()
         return (checkAlarmActive() && dataBaseRepository.getNextActiveAlarm(dataStoreRepository)!!.wasFired)
     }
 
@@ -667,7 +661,6 @@ class BackgroundAlarmTimeHandler(val context: Context) {
      * Get alarm temporary disabled status
      */
     private suspend fun checkAlarmTempDisabled(): Boolean {
-        val isAfterSleepTime = dataStoreRepository.isAfterSleepTime()
         return (checkAlarmActive() && dataBaseRepository.getNextActiveAlarm(dataStoreRepository)!!.tempDisabled)
     }
 

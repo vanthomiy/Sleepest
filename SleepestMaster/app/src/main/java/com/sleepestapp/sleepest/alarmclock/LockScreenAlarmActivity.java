@@ -186,7 +186,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
                 }
             };
 
-            gestureDetector = new GestureDetector(listener);
+            gestureDetector = new GestureDetector(getApplicationContext(), listener);
             view.setOnTouchListener(this);
         }
 

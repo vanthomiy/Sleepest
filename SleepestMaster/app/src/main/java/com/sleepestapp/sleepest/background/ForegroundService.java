@@ -26,6 +26,7 @@ import com.sleepestapp.sleepest.model.data.AlarmReceiverUsage;
 import com.sleepestapp.sleepest.model.data.Constants;
 import com.sleepestapp.sleepest.model.data.NotificationUsage;
 import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler;
+import com.sleepestapp.sleepest.storage.DataStoreRepository;
 import com.sleepestapp.sleepest.storage.DatabaseRepository;
 import com.sleepestapp.sleepest.storage.db.AlarmEntity;
 import com.sleepestapp.sleepest.util.NotificationUtil;
@@ -100,7 +101,11 @@ public class ForegroundService extends LifecycleService {
         foregroundObserver = new ForegroundObserver (this);
         //Instance of DatabaseRepo
         DatabaseRepository databaseRepository = ((MainApplication) getApplicationContext()).getDataBaseRepository();
-        alarmEntity = databaseRepository.getNextActiveAlarmJob();
+
+        //Instance of Datastore Repo
+        DataStoreRepository dataStoreRepository = ((MainApplication) getApplicationContext()).getDataStoreRepository();
+
+        alarmEntity = databaseRepository.getNextActiveAlarmJob(dataStoreRepository);
         //Instance of SleepHandler
         sleepCalculationHandler = new SleepCalculationHandler(getApplicationContext());
         alarmCycleState = new AlarmCycleState(getApplicationContext());

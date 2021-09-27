@@ -93,7 +93,6 @@ class DataStoreRepository(context: Context) {
         var times = sleepParameterFlow.first()
 
         val time = givenTime ?: LocalTime.now()
-        val maxTime = DAY_IN_SECONDS + 1
         val seconds = time.toSecondOfDay()
 
         val overTwoDays = times.sleepTimeStart > times.sleepTimeEnd
