@@ -217,8 +217,9 @@ class SleepCalculationHandler(val context: Context) {
      * Checks if the user is Sleeping or not at the moment.
      * Saves the state in the [SleepApiRawDataEntity] and in the [LiveUserSleepActivityStatus]
      * [time] the actual time in seconds
+     * Call fromDefineUserWakeUp to make count lesser to 30 min instead of 1hour
      */
-    suspend fun checkIsUserSleeping(localTime: LocalDateTime? = null, finalCalc: Boolean = false){
+    suspend fun checkIsUserSleeping(localTime: LocalDateTime? = null, finalCalc: Boolean = false, fromDefineUserWakeUp:Boolean = false){
 
             // get the actual sleepApiDataList
             val time = localTime ?: LocalDateTime.now()
@@ -292,14 +293,14 @@ class SleepCalculationHandler(val context: Context) {
                 if (data.sleepState != SleepState.NONE && data.oldSleepState == SleepState.NONE){
                     // get normed list
                     val (normedSleepApiDataBefore, frequency1) = createTimeNormedData(
-                        1f,
+                        if(fromDefineUserWakeUp) 1f else 0.5f,
                         false,
                         data.timestampSeconds,
                         sleepApiRawDataEntity.toList()
                     )
 
                     val (normedSleepApiDataAfter, frequency2) = createTimeNormedData(
-                        1f,
+                        if(fromDefineUserWakeUp) 1f else 0.5f,
                         true,
                         data.timestampSeconds,
                         sleepApiRawDataEntity.toList()
@@ -367,6 +368,10 @@ class SleepCalculationHandler(val context: Context) {
 
         // for each sleeping time, we have to define the sleep state
         val time = localTime ?: LocalDateTime.now()
+
+        // we define the user sleep with the define user wake up. That will make it more accurate in the morning
+        checkIsUserSleeping(time, !setAlarm, true)
+
         val sleepApiRawDataEntity =
             dataBaseRepository.getSleepApiRawDataFromDate(time).first()
                 ?.sortedBy { x -> x.timestampSeconds }

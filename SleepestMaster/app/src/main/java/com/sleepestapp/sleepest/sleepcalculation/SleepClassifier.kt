@@ -306,9 +306,9 @@ class SleepClassifier constructor(private val context: Context) {
         avgThreshold.motion = avgThreshold.motion / factor
 
         return when {
-            actualParams.lightSleepParams.checkIfThreshold(false, 1, avgThreshold) -> SleepState.LIGHT
-            actualParams.remSleepParams.checkIfThreshold(true, 2, avgThreshold) -> SleepState.REM
-            actualParams.deepSleepParams.checkIfThreshold(true, 2, avgThreshold) -> SleepState.DEEP
+            actualParams.remSleepParams.checkIfDifferenceThreshold(true, 3, avgThreshold) -> SleepState.REM
+            actualParams.deepSleepParams.checkIfThreshold(true, 3, avgThreshold) -> SleepState.DEEP
+            //actualParams.lightSleepParams.checkIfThreshold(false, 1, avgThreshold) -> SleepState.LIGHT
             else -> SleepState.LIGHT
         }
     }
