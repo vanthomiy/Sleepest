@@ -46,7 +46,7 @@ data class UserSleepSessionEntity(
                  */
                 fun getIdByDateTime(date : LocalDate) : Int {
 
-                        var time = LocalTime.of(15,0)
+                        val time = LocalTime.of(15,0)
                         val datetime = LocalDateTime.of(date.minusDays(1), time)
                         return datetime.toEpochSecond(ZoneOffset.UTC).toInt()
                 }
@@ -56,16 +56,16 @@ data class UserSleepSessionEntity(
                  */
                 fun getIdByTimeStamp(timestamp: Int) : Int {
 
-                        var actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp.toLong()*1000), ZoneOffset.UTC)
+                        val actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp.toLong()*1000), ZoneOffset.UTC)
 
                         /*if(actualTime.hour >= 15){
                                 actualTime = actualTime.plusDays(1)
                         }*/
 
                         val date = actualTime.toLocalDate()
-                        var newTime = LocalTime.of(15,0)
+                        val newTime = LocalTime.of(15,0)
 
-                        var dateTime = LocalDateTime.of(date, newTime)
+                        val dateTime = LocalDateTime.of(date, newTime)
                         return dateTime.toEpochSecond(ZoneOffset.UTC).toInt()
                 }
 

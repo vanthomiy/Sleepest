@@ -1,30 +1,19 @@
 package com.sleepestapp.sleepest.background;
 
-/**
- * This service class inherits from LifecycleService. It implements all functions of the foreground service
- * like start, stop and foreground notification. Further implements this function the observation of data
- * while the user is sleeping
- */
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.view.View;
-import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LifecycleService;
 
 import com.sleepestapp.sleepest.LiveUserSleepActivity;
-import com.sleepestapp.sleepest.MainActivity;
 import com.sleepestapp.sleepest.MainApplication;
 import com.sleepestapp.sleepest.R;
 import com.sleepestapp.sleepest.SettingsData;
@@ -35,24 +24,22 @@ import com.sleepestapp.sleepest.model.data.AlarmClockReceiverUsage;
 import com.sleepestapp.sleepest.model.data.AlarmCycleStates;
 import com.sleepestapp.sleepest.model.data.AlarmReceiverUsage;
 import com.sleepestapp.sleepest.model.data.Constants;
-import com.sleepestapp.sleepest.googleapi.SleepHandler;
 import com.sleepestapp.sleepest.model.data.NotificationUsage;
 import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler;
-import com.sleepestapp.sleepest.storage.DataStoreRepository;
 import com.sleepestapp.sleepest.storage.DatabaseRepository;
 import com.sleepestapp.sleepest.storage.db.AlarmEntity;
 import com.sleepestapp.sleepest.util.NotificationUtil;
 import com.sleepestapp.sleepest.util.SleepUtil;
-import com.sleepestapp.sleepest.util.SmileySelectorUtil;
 import com.sleepestapp.sleepest.util.TimeConverterUtil;
-import com.sleepestapp.sleepest.MainActivity;
-import com.sleepestapp.sleepest.MainApplication;
-import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
-
+/**
+ * This service class inherits from LifecycleService. It implements all functions of the foreground service
+ * like start, stop and foreground notification. Further implements this function the observation of data
+ * while the user is sleeping
+ */
 public class ForegroundService extends LifecycleService {
 
     private PowerManager.WakeLock wakeLock = null; //To keep Service active in background
@@ -63,16 +50,12 @@ public class ForegroundService extends LifecycleService {
     private int userSleepTime = 0; //Shows the actual sleep time of the user
     private boolean isSleeping = false; //Detects sleep state
     private int alarmTimeInSeconds = 0; //Shows the calculated alarm time
-    private int actualWakeUp = 0; //Shows the set alarm clock time
     private boolean userInformed = false; //Detects if the user is already informed about problems with reaching sleep time
-    private boolean[] bannerConfig = new boolean[5];
+    private final boolean[] bannerConfig = new boolean[5];
     private static int foregroundServiceStartTime = 0;
 
-    private DataStoreRepository dataStoreRepository; //Instance of DataStoreRepo
-    private DatabaseRepository databaseRepository; //Instance of DatabaseRepo
     private AlarmEntity alarmEntity = null; //Instance of AlarmEntity, especially next active alarm
     private SleepCalculationHandler sleepCalculationHandler; //Instance of SleepCalculationHandler
-    private SleepHandler sleepHandler; //Instance of SleepHandler
     public ForegroundObserver foregroundObserver; //Instance of the ForegroundObserver for live data
     private NotificationUtil notificationUtil;
     private AlarmCycleState alarmCycleState;
@@ -115,11 +98,11 @@ public class ForegroundService extends LifecycleService {
 
         //Create Instances
         foregroundObserver = new ForegroundObserver (this);
-        databaseRepository = ((MainApplication)getApplicationContext()).getDataBaseRepository();
-        alarmEntity = databaseRepository.getNextActiveAlarmJob(dataStoreRepository);
-        dataStoreRepository = DataStoreRepository.Companion.getRepo(getApplicationContext());
-        sleepHandler =  SleepHandler.Companion.getHandler(getApplicationContext());
-        sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(MainApplication.Companion.applicationContext());
+        //Instance of DatabaseRepo
+        DatabaseRepository databaseRepository = ((MainApplication) getApplicationContext()).getDataBaseRepository();
+        alarmEntity = databaseRepository.getNextActiveAlarmJob();
+        //Instance of SleepHandler
+        sleepCalculationHandler = new SleepCalculationHandler(getApplicationContext());
         alarmCycleState = new AlarmCycleState(getApplicationContext());
 
         foregroundObserver.resetSleepTime();
@@ -136,11 +119,6 @@ public class ForegroundService extends LifecycleService {
         //Start the Foregroundservice
         startForeground(Constants.FOREGROUND_SERVICE_ID, notificationUtil.createForegroundNotification());
         sendUserInformation();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 
     // Starts the service and start a thread for foreground processes
@@ -236,7 +214,7 @@ public class ForegroundService extends LifecycleService {
      */
     public static int getForegroundServiceTime() {
 
-        int time = 0;
+        int time;
         if (foregroundServiceStartTime < LocalTime.now().toSecondOfDay()) {
             time = LocalTime.now().toSecondOfDay() - foregroundServiceStartTime;
         } else {
@@ -269,9 +247,6 @@ public class ForegroundService extends LifecycleService {
         Calendar calendar = Calendar.getInstance();
 
         //Update wakeup time
-        /**if ((LocalTime.now().toSecondOfDay() - foregroundServiceStartTime) < 3 && (LocalTime.now().toSecondOfDay() - foregroundServiceStartTime) > 0) {
-            alarmTimeInSeconds = time.getActualWakeup();
-        }**/
 
         alarmTimeInSeconds = time.getActualWakeup();
 
@@ -300,6 +275,8 @@ public class ForegroundService extends LifecycleService {
         }
 
         //Check if the actual alarm time is already reached and set the alarm to now
+        //Shows the set alarm clock time
+        int actualWakeUp = 0;
         if ((secondsOfDay > time.getActualWakeup()) && checkPossibleAlarm() && (secondsOfDay > time.getWakeupEarly())) {
             calendar.add(Calendar.SECOND, 60);
 
@@ -400,14 +377,9 @@ public class ForegroundService extends LifecycleService {
 
     /**
      * Check if the alarm set is possible or already set
-     * @return
      */
     private boolean checkPossibleAlarm() {
-        if (!AlarmClockReceiver.isAlarmClockActive(getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK) && !alarmEntity.getWasFired()) {
-            return true;
-        }
-
-        return false;
+        return !AlarmClockReceiver.isAlarmClockActive(getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK) && !alarmEntity.getWasFired();
     }
 
     /**
@@ -453,7 +425,6 @@ public class ForegroundService extends LifecycleService {
 
     /**
      * Check if banner configuration was changed
-     * @param settingsData
      */
     @RequiresApi(api = Build.VERSION_CODES.P)
     public void OnBannerConfigChanged(SettingsData settingsData) {
@@ -475,7 +446,7 @@ public class ForegroundService extends LifecycleService {
     @RequiresApi(api = Build.VERSION_CODES.P)
     private void sendUserInformation() {
 
-        if (SleepUtil.checkSleeptimeReachingPossibility(getApplicationContext()) && !userInformed) {
+        if (SleepUtil.checkSleepTimeReachingPossibility(getApplicationContext()) && !userInformed) {
 
             userInformed = true;
 

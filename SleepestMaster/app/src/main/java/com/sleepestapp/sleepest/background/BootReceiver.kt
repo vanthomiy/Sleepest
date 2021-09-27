@@ -8,7 +8,6 @@ import com.sleepestapp.sleepest.googleapi.ActivityTransitionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import java.util.*
 
 /**
  * This receiver is called after a reboot of the device. Sometimes there are some battery optimization
@@ -33,7 +32,7 @@ class BootReceiver : BroadcastReceiver() {
 
             scope.launch {
                 if (dataStoreRepository.getActivitySubscribeStatus()) {
-                    ActivityTransitionHandler.getHandler(context.applicationContext).startActivityHandler()
+                    ActivityTransitionHandler(context.applicationContext).startActivityHandler()
                 }
             }
         }

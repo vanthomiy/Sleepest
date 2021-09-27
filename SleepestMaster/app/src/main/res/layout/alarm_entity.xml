@@ -66,6 +66,7 @@
                 android:textStyle="bold" />
 
             <LinearLayout
+                android:baselineAligned="false"
                 android:layout_height="70dp"
                 android:layout_width="match_parent"
                 android:layout_margin="10dp"
@@ -82,7 +83,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="20dp"
-                        android:layout_gravity="left|top"
+                        android:layout_gravity="start|top"
                         android:textSize="@dimen/valueSize"
                         android:textColor="@color/accent_text_color"
                         android:textStyle="bold"
@@ -97,7 +98,6 @@
                             android:id="@+id/np_hours"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
                             app:np_dividerColor="@color/colorPrimary"
                             app:np_height="50dp"
                             app:np_max="24"
@@ -121,7 +121,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="20dp"
-                        android:layout_gravity="left|top"
+                        android:layout_gravity="start|top"
                         android:textSize="@dimen/valueSize"
                         android:textColor="@color/accent_text_color"
                         android:textStyle="bold"
@@ -136,7 +136,6 @@
                             android:id="@+id/np_minutes"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
                             app:np_dividerColor="@color/colorPrimary"
                             app:np_height="50dp"
                             app:np_max="45"
@@ -159,6 +158,7 @@
                 android:textStyle="bold" />
 
             <LinearLayout
+                android:baselineAligned="false"
                 android:layout_height="70dp"
                 android:layout_width="match_parent"
                 android:layout_margin="10dp"
@@ -174,7 +174,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="20dp"
-                        android:layout_gravity="left|top"
+                        android:layout_gravity="start|top"
                         android:textSize="@dimen/valueSize"
                         android:textColor="@color/accent_text_color"
                         android:textStyle="bold"
@@ -212,7 +212,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="20dp"
-                        android:layout_gravity="left|top"
+                        android:layout_gravity="start|top"
                         android:textSize="@dimen/valueSize"
                         android:textColor="@color/accent_text_color"
                         android:textStyle="bold"
@@ -272,7 +272,7 @@
                         android:checked="@{alarmInstanceViewModel.selectedDays.contains(0), default=false}"
                         android:textOn="@string/alarm_entity_day_mo"
                         android:textOff="@string/alarm_entity_day_mo"
-                        android:textSize="10sp" />
+                        android:textSize="11sp" />
 
                     <androidx.appcompat.widget.AppCompatToggleButton
                         android:layout_width="40dp"
@@ -284,7 +284,7 @@
                         android:checked="@{alarmInstanceViewModel.selectedDays.contains(1), default=false}"
                         android:textOn="@string/alarm_entity_day_tu"
                         android:textOff="@string/alarm_entity_day_tu"
-                        android:textSize="10sp" />
+                        android:textSize="11sp" />
 
                     <androidx.appcompat.widget.AppCompatToggleButton
                         android:layout_width="40dp"
@@ -296,7 +296,7 @@
                         android:checked="@{alarmInstanceViewModel.selectedDays.contains(2), default=false}"
                         android:textOn="@string/alarm_entity_day_we"
                         android:textOff="@string/alarm_entity_day_we"
-                        android:textSize="10sp" />
+                        android:textSize="11sp" />
 
                     <androidx.appcompat.widget.AppCompatToggleButton
                         android:layout_width="40dp"
@@ -308,7 +308,7 @@
                         android:checked="@{alarmInstanceViewModel.selectedDays.contains(3), default=false}"
                         android:textOn="@string/alarm_entity_day_th"
                         android:textOff="@string/alarm_entity_day_th"
-                        android:textSize="10sp" />
+                        android:textSize="11sp" />
 
                     <androidx.appcompat.widget.AppCompatToggleButton
                         android:layout_width="40dp"
@@ -320,7 +320,7 @@
                         android:checked="@{alarmInstanceViewModel.selectedDays.contains(4), default=false}"
                         android:textOn="@string/alarm_entity_day_fr"
                         android:textOff="@string/alarm_entity_day_fr"
-                        android:textSize="10sp" />
+                        android:textSize="11sp" />
 
                     <androidx.appcompat.widget.AppCompatToggleButton
                         android:layout_width="40dp"
@@ -332,7 +332,7 @@
                         android:checked="@{alarmInstanceViewModel.selectedDays.contains(5), default=false}"
                         android:textOn="@string/alarm_entity_day_sa"
                         android:textOff="@string/alarm_entity_day_sa"
-                        android:textSize="10sp" />
+                        android:textSize="11sp" />
 
                     <androidx.appcompat.widget.AppCompatToggleButton
                         android:layout_width="40dp"
@@ -344,7 +344,7 @@
                         android:checked="@{alarmInstanceViewModel.selectedDays.contains(6), default=false}"
                         android:textOn="@string/alarm_entity_day_su"
                         android:textOff="@string/alarm_entity_day_su"
-                        android:textSize="10sp" />
+                        android:textSize="11sp" />
 
                 </LinearLayout>
 
@@ -417,7 +417,7 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginStart="10dp"
                 android:text="@{alarmInstanceViewModel.selectedDaysInfo}"
                 android:textColor="@color/tertiary_text_color"

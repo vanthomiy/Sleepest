@@ -2,7 +2,6 @@ package com.sleepestapp.sleepest.storage.db
 
 import android.content.Context
 import androidx.room.*
-import androidx.sqlite.db.SupportSQLiteDatabase
 
 private const val DATABASE_NAME = "sleepest_database"
 
@@ -31,7 +30,7 @@ abstract class SleepDatabase : RoomDatabase() {
         lateinit var instance:SleepDatabase
 
         /**
-         * This should only once be called by the [MainApplication] to provide a singleton database
+         * This should only once be called by the MainApplication to provide a singleton database
          */
         fun getDatabase(context: Context): SleepDatabase {
             return INSTANCE ?: synchronized(this) {
@@ -41,10 +40,6 @@ abstract class SleepDatabase : RoomDatabase() {
                         DATABASE_NAME
                 )
                         .addCallback(object:RoomDatabase.Callback(){
-                            override fun onCreate(db: SupportSQLiteDatabase) {
-                                super.onCreate(db)
-                                //instance.alarmDao().setupAlarmDatabase()
-                            }
                         })
                         // Wipes and rebuilds instead of migrating if no Migration object.
                         // Migration is not part of this sample.

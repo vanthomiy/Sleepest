@@ -14,15 +14,12 @@ import java.time.LocalTime
  * This class detects the state of the alarm cycle. The different cycle states are declared in enum AlarmCycleStates.
  */
 
-class AlarmCycleState(private val context: Context) {
-    private val dataStoreRepository : DataStoreRepository //Instance of DataStoreRepo
-    private val databaseRepository : DatabaseRepository //Instance of DatabaseRepo
+class AlarmCycleState(context: Context) {
+    private val dataStoreRepository : DataStoreRepository =
+        getRepo(context.applicationContext) //Instance of DataStoreRepo
+    private val databaseRepository : DatabaseRepository =
+        (context.applicationContext as MainApplication).dataBaseRepository //Instance of DatabaseRepo
 
-    init {
-        //Init repos
-        databaseRepository = (context.applicationContext as MainApplication).dataBaseRepository
-        dataStoreRepository = getRepo(context.applicationContext)
-    }
 
     /**
      * Returns the actual state.
@@ -46,23 +43,25 @@ class AlarmCycleState(private val context: Context) {
             } else if (isBetweenTwoTimes(databaseRepository.getNextActiveAlarm(dataStoreRepository)!!.wakeupEarly - Constants.CALCULATION_START_DIFFERENCE, databaseRepository.getNextActiveAlarm(dataStoreRepository)!!.wakeupEarly,
                     checkDayChange(databaseRepository.getNextActiveAlarm(dataStoreRepository)!!.wakeupEarly - Constants.CALCULATION_START_DIFFERENCE, databaseRepository.getNextActiveAlarm(dataStoreRepository)!!.wakeupEarly))) {
 
-                        return AlarmCycleStates.BETWEEN_CALCULATION_AND_FIRST_WAKEUP
+                    return AlarmCycleStates.BETWEEN_CALCULATION_AND_FIRST_WAKEUP
 
             } else if (isBetweenTwoTimes(databaseRepository.getNextActiveAlarm(dataStoreRepository)!!.wakeupEarly, databaseRepository.getNextActiveAlarm(dataStoreRepository)!!.wakeupLate,
                     checkDayChange(databaseRepository.getNextActiveAlarm(dataStoreRepository)!!.wakeupEarly, databaseRepository.getNextActiveAlarm(dataStoreRepository)!!.wakeupLate))) {
 
-                        return AlarmCycleStates.BETWEEN_FIRST_AND_LAST_WAKEUP
+                    return AlarmCycleStates.BETWEEN_FIRST_AND_LAST_WAKEUP
 
             }  else if (isBetweenTwoTimes(databaseRepository.getNextActiveAlarm(dataStoreRepository)!!.wakeupLate, dataStoreRepository.getSleepTimeEnd(),
                     checkDayChange(databaseRepository.getNextActiveAlarm(dataStoreRepository)!!.wakeupLate, dataStoreRepository.getSleepTimeEnd()))) {
 
-                        return AlarmCycleStates.BETWEEN_LAST_WAKEUP_AND_SLEEPTIME_END
+                    return AlarmCycleStates.BETWEEN_LAST_WAKEUP_AND_SLEEPTIME_END
 
-            } else if (isBetweenTwoTimes(dataStoreRepository.getSleepTimeEnd(), dataStoreRepository.getSleepTimeBegin(),
-                    checkDayChange(dataStoreRepository.getSleepTimeEnd(), dataStoreRepository.getSleepTimeBegin()))) {
+                }
+                isBetweenTwoTimes(dataStoreRepository.getSleepTimeEnd(), dataStoreRepository.getSleepTimeBegin(),
+                    checkDayChange(dataStoreRepository.getSleepTimeEnd(), dataStoreRepository.getSleepTimeBegin())) -> {
 
-                return AlarmCycleStates.BETWEEN_SLEEPTIME_END_AND_SLEEPTIME_START
+                    return AlarmCycleStates.BETWEEN_SLEEPTIME_END_AND_SLEEPTIME_START
 
+                }
             }
         }
 
@@ -71,8 +70,8 @@ class AlarmCycleState(private val context: Context) {
 
     /**
      * Checks if midnight is between two times
-     * @param time1 first time
-     * @param time2 second time
+     * @param firstTime first time
+     * @param secondTime second time
      * @return Midnight between = true
      */
     private fun checkDayChange(firstTime : Int, secondTime : Int) : Boolean {
@@ -86,10 +85,10 @@ class AlarmCycleState(private val context: Context) {
      * @return Is actual time between these two times or not: true = between.
      */
     private fun isBetweenTwoTimes(firstTime : Int, secondTime : Int, withDayChange : Boolean) : Boolean {
-        if (withDayChange) {
-           return ((LocalTime.now().toSecondOfDay() <= secondTime) || (LocalTime.now().toSecondOfDay() >= firstTime))
+        return if (withDayChange) {
+            ((LocalTime.now().toSecondOfDay() <= secondTime) || (LocalTime.now().toSecondOfDay() >= firstTime))
         } else {
-            return LocalTime.now().toSecondOfDay() in firstTime..secondTime
+            LocalTime.now().toSecondOfDay() in firstTime..secondTime
         }
     }
 }

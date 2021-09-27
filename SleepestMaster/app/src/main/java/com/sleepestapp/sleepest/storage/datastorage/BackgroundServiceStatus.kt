@@ -1,6 +1,5 @@
 package com.sleepestapp.sleepest.storage.datastorage
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import com.sleepestapp.sleepest.BackgroundService
 import kotlinx.coroutines.flow.Flow
@@ -22,7 +21,6 @@ class BackgroundServiceStatus(private val dataStore: DataStore<BackgroundService
     val backgroundService: Flow<BackgroundService> = dataStore.data
         .catch { exception->
             if(exception is IOException){
-                Log.d("Error", exception.message.toString())
                 emit(BackgroundService.getDefaultInstance())
             }else{
                 throw exception

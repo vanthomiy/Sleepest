@@ -7,9 +7,6 @@ import com.sleepestapp.sleepest.MainApplication;
 import com.sleepestapp.sleepest.model.data.Constants;
 import com.sleepestapp.sleepest.storage.DataStoreRepository;
 import com.sleepestapp.sleepest.storage.DatabaseRepository;
-import com.sleepestapp.sleepest.MainApplication;
-import com.sleepestapp.sleepest.storage.DataStoreRepository;
-import com.sleepestapp.sleepest.storage.DatabaseRepository;
 
 import java.time.LocalTime;
 
@@ -17,9 +14,9 @@ public class SleepUtil {
 
     /**
      * Check if time from now to last wakeup is less than the sleep time set
-     * @return is sleeptime possible
+     * @return is sleep time possible
      */
-    public static boolean checkSleeptimeReachingPossibility(Context context) {
+    public static boolean checkSleepTimeReachingPossibility(Context context) {
 
         //Get PowerManager instance to check if screen is on
         PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -43,10 +40,6 @@ public class SleepUtil {
         }
 
         //Check if difference is less then sleep time
-        if((difference <= databaseRepository.getNextActiveAlarmJob(dataStoreRepository).getSleepDuration())) {
-            return true;
-        }
-
-        return false;
+        return difference <= databaseRepository.getNextActiveAlarmJob(dataStoreRepository).getSleepDuration();
     }
 }

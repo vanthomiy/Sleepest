@@ -48,10 +48,10 @@ class BackgroundAlarmTimeHandler(val context: Context) {
         (context.applicationContext as MainApplication).dataStoreRepository
     }
     private val sleepHandler : SleepHandler by lazy {
-        SleepHandler.getHandler(context)
+        SleepHandler(context)
     }
     private val sleepCalculationHandler : SleepCalculationHandler by lazy {
-        SleepCalculationHandler.getHandler(context)
+        SleepCalculationHandler(context)
     }
     private val scope: CoroutineScope = MainScope()
 
@@ -92,7 +92,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                 else if (checkInSleepTime() && (sleepTimeEndTemp != getSleepTimeEndValue())) {
                     //Change the end of sleep time alarm
                     val calendar = TimeConverterUtil.getAlarmDate(getSleepTimeEndValue() + 60)
-                    AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context.applicationContext, AlarmReceiverUsage.STOP_WORKMANAGER);
+                    AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context.applicationContext, AlarmReceiverUsage.STOP_WORKMANAGER)
                 }
 
                 //User changes sleep time begin and is not in sleep time
@@ -155,7 +155,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                 //User changes the last wakeup time of the alarm
                 if (getLastWakeup() != lastWakeupTemp) {
                     val calendar = TimeConverterUtil.getAlarmDate(getLastWakeup())
-                    AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context.applicationContext, AlarmClockReceiverUsage.LATEST_WAKEUP_ALARMCLOCK);
+                    AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context.applicationContext, AlarmClockReceiverUsage.LATEST_WAKEUP_ALARMCLOCK)
                 }
             }
 
@@ -185,7 +185,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
             Toast.makeText(context, "Alarmclock stopped", Toast.LENGTH_LONG).show()
             val calendar = Calendar.getInstance()
             val pref: SharedPreferences = context.getSharedPreferences("AlarmClock", 0)
-            var ed = pref.edit()
+            val ed = pref.edit()
             ed.putInt("hour", calendar[Calendar.HOUR_OF_DAY])
             ed.putInt("minute", calendar[Calendar.MINUTE])
             ed.apply()
@@ -201,16 +201,18 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
     /**
      * This function stops the foreground service and do all things to restart it on a specific time
-     * @param inActivity true, if user is not in app
      */
     fun stopForegroundService() = runBlocking{
 
             if (checkForegroundStatus()) {
 
                 //Stops the calculation and all alarm clocks
-                WorkmanagerCalculation.stopPeriodicWorkmanager()
-                AlarmClockReceiver.cancelAlarm(context.applicationContext, AlarmClockReceiverUsage.START_ALARMCLOCK);
-                AlarmClockReceiver.cancelAlarm(context.applicationContext, AlarmClockReceiverUsage.LATEST_WAKEUP_ALARMCLOCK);
+
+
+                //Cancel periodic work by tag
+                WorkManager.getInstance(context.applicationContext).cancelAllWorkByTag(context.getString(R.string.workmanager2_tag))
+                AlarmClockReceiver.cancelAlarm(context.applicationContext, AlarmClockReceiverUsage.START_ALARMCLOCK)
+                AlarmClockReceiver.cancelAlarm(context.applicationContext, AlarmClockReceiverUsage.LATEST_WAKEUP_ALARMCLOCK)
 
                 //Cancel Alarm for starting Workmanager
                 AlarmReceiver.cancelAlarm(context, AlarmReceiverUsage.START_WORKMANAGER_CALCULATION)
@@ -229,7 +231,6 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
     /**
      * This function starts the foreground service
-     * @param inActivity true, if user is not in app
      */
     private suspend fun startForegroundService() {
 
@@ -276,12 +277,12 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                         )
                     } else if ((alarmCycleState.getState() == AlarmCycleStates.BETWEEN_FIRST_AND_LAST_WAKEUP) || (alarmCycleState.getState() == AlarmCycleStates.BETWEEN_CALCULATION_AND_FIRST_WAKEUP)) {
                         WorkmanagerCalculation.startPeriodicWorkmanager(
-                            Constants.WORKMANAGER_CALCULATION_DURATION, context)
+                            Constants.WORK_MANAGER_CALCULATION_DURATION, context)
                     }
 
                     //Set the alarm clock for the latest wakeup
                     val calendar = TimeConverterUtil.getAlarmDate(getLastWakeup())
-                    AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context.applicationContext, AlarmClockReceiverUsage.LATEST_WAKEUP_ALARMCLOCK);
+                    AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context.applicationContext, AlarmClockReceiverUsage.LATEST_WAKEUP_ALARMCLOCK)
                 }
             }
 
@@ -292,6 +293,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
     private fun isUserInApp() : Boolean {
         val am = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
+
         val tasks = am.getRunningTasks(1)
         val task = tasks[0] // current task
         val rootActivity = task.baseActivity //current activity
@@ -312,7 +314,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
         //Start Workmanager at sleeptime
         val periodicDataWork: PeriodicWorkRequest = PeriodicWorkRequest.Builder(Workmanager::class.java,
-            Constants.WORKMANAGER_DURATION.toLong(),
+            Constants.WORK_MANAGER_DURATION.toLong(),
             TimeUnit.MINUTES)
             .addTag(context.getString(R.string.workmanager1_tag)) //Tag is needed for canceling the periodic work
             .build()
@@ -578,7 +580,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                     startForegroundService()
                     AlarmReceiver.cancelAlarm(context, AlarmReceiverUsage.START_WORKMANAGER_CALCULATION)
                     WorkmanagerCalculation.startPeriodicWorkmanager(
-                        Constants.WORKMANAGER_CALCULATION_DURATION, context)
+                        Constants.WORK_MANAGER_CALCULATION_DURATION, context)
                 }
                 4 -> {
                     setForegroundStatus(false)

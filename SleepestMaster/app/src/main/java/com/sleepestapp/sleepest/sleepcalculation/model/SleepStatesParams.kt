@@ -1,9 +1,8 @@
-package com.sleepestapp.sleepest.storage.db
+package com.sleepestapp.sleepest.sleepcalculation.model
 
 import androidx.room.Entity
 import com.sleepestapp.sleepest.model.data.LightConditions
 import com.sleepestapp.sleepest.model.data.SleepState
-import com.sleepestapp.sleepest.sleepcalculation.model.ThresholdParams
 
 /**
  * Stores the param values for the algorithm
@@ -33,7 +32,7 @@ data class SleepStatesParams(
         /**
          * Merge this [SleepStatesParams] with another factor [SleepStatesParams] by multiplying
          */
-        fun mergeParameters(factorParams:SleepStatesParams){
+        fun mergeParameters(factorParams: SleepStatesParams){
                 lightSleepParams.mergeParameters(factorParams = factorParams.lightSleepParams)
                 deepSleepParams.mergeParameters(factorParams = factorParams.deepSleepParams)
                 remSleepParams.mergeParameters(factorParams = factorParams.remSleepParams)

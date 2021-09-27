@@ -50,6 +50,7 @@
 
 
                     <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/lottieSettings"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_gravity="end|center"
@@ -123,7 +124,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
                             android:layout_gravity="end"
-                            android:background="@drawable/bgrounded_button"
+                            android:background="@drawable/background_rounded_button"
                             android:layout_marginStart="100dp"
                             android:text="@{alarmsViewModel.alarmSoundName}"
                             android:textColor="@color/primary_text_color"
@@ -209,9 +210,6 @@
                     </LinearLayout>
 
 
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="150dp"></FrameLayout>
                 </LinearLayout>
 
             </ScrollView>
@@ -254,9 +252,9 @@
                 android:id="@+id/btn_addAlarmEntity"
                 android:layout_width="match_parent"
                 app:tint="@color/primary_text_color"
+                tools:ignore="ContentDescription"
                 android:layout_height="match_parent"
-                android:src="@drawable/add_anim"
-                />
+                android:src="@drawable/add_anim"/>
         </FrameLayout>
 
 

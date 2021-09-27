@@ -46,7 +46,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
     /** Contains the current date which will be displayed at the history fragment. */
     var analysisDate = ObservableField(LocalDate.now())
 
-    /** Indicates whether darkmode is on or off. */
+    /** Indicates whether dark mode is on or off. */
     var darkMode = false
 
     /** Indicates whether the user has set the app up for automatically detect the devices dark mode settings. */
@@ -137,10 +137,10 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                     sleepSessionData[id] = Triple(
                         dataBaseRepository.getSleepApiRawDataBetweenTimestamps(
                             session.sleepTimes.sleepTimeStart,
-                            session.sleepTimes.sleepTimeEnd).first()?.sortedBy { x -> x.timestampSeconds },
+                            session.sleepTimes.sleepTimeEnd).first()?.sortedBy { x -> x.timestampSeconds }?: mutableListOf(),
                         session.sleepTimes.sleepDuration,
                         session
-                    ) as Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>
+                    )
                 }
             }
             checkSessionIntegrity()
@@ -161,7 +161,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
                 if ((isUnidentified)) {
                     scope.launch {
-                        SleepCalculationHandler.getHandler(context).checkIsUserSleeping(
+                        SleepCalculationHandler(context).checkIsUserSleeping(
                             LocalDateTime.ofInstant(
                                 Instant.ofEpochMilli((sleepSessionData[key]?.third?.sleepTimes?.sleepTimeStart?.toLong())!! * 1000),
                                 ZoneOffset.systemDefault()
@@ -173,7 +173,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
                 if ((mobilePosition == MobilePosition.INBED && isSleeping)) { // || isUnidentified) {
                     scope.launch {
-                        SleepCalculationHandler.getHandler(context).defineUserWakeup(
+                        SleepCalculationHandler(context).defineUserWakeup(
                             LocalDateTime.ofInstant(
                                 Instant.ofEpochMilli((sleepSessionData[key]?.third?.sleepTimes?.sleepTimeStart?.toLong())!! * 1000),
                                 ZoneOffset.systemDefault()

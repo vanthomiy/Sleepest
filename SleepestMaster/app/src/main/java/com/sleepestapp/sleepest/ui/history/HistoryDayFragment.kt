@@ -1,8 +1,6 @@
 package com.sleepestapp.sleepest.ui.history
 
-import android.app.Application
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -270,9 +268,9 @@ class HistoryDayFragment : Fragment() {
                 setTimeStamps()
                 maintainVisibilityDayHistory(true)
 
-                sleepValues?.let {
-                    for (rawData in it.first) {
-                        for (minute in 0..((it.second / 60).toDouble()).roundToInt()) {
+                sleepValues?.let { sleep ->
+                    for (rawData in sleep.first) {
+                        for (minute in 0..((sleep.second / 60).toDouble()).roundToInt()) {
                             when (rawData.sleepState) {
                                 SleepState.AWAKE -> {
                                     entries.add(BarEntry(xIndex, 1f))
@@ -295,7 +293,7 @@ class HistoryDayFragment : Fragment() {
                         }
                     }
 
-                    if (it.third.sleepTimes.sleepTimeStart == 0)
+                    if (sleep.third.sleepTimes.sleepTimeStart == 0)
                         maintainVisibilityDayHistory(false)
                 } ?: kotlin.run {
                     maintainVisibilityDayHistory(false)

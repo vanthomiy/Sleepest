@@ -1,7 +1,6 @@
 package com.sleepestapp.sleepest.storage
 
 import android.content.Context
-import androidx.lifecycle.asLiveData
 import androidx.test.platform.app.InstrumentationRegistry
 import com.sleepestapp.sleepest.model.data.SleepState
 import com.sleepestapp.sleepest.sleepcalculation.model.SleepTimes
@@ -14,7 +13,6 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import java.io.BufferedReader
-import java.time.DayOfWeek
 import java.time.LocalDate
 
 class DatabaseRepositoryTest {
@@ -86,7 +84,7 @@ class DatabaseRepositoryTest {
             AlarmEntity(
                 2,
                 true,
-                activeDayOfWeek = arrayListOf<DayOfWeek>(dayofweekyesterday)
+                activeDayOfWeek = arrayListOf(dayofweekyesterday)
             )
         )
 
@@ -103,7 +101,7 @@ class DatabaseRepositoryTest {
             AlarmEntity(
                 3,
                 true,
-                activeDayOfWeek = arrayListOf<DayOfWeek>(dayofweektoday, dayofweektomorrow)
+                activeDayOfWeek = arrayListOf(dayofweektoday, dayofweektomorrow)
             )
         )
 
@@ -125,9 +123,9 @@ class DatabaseRepositoryTest {
         )
 
         // load all data
-        var pathTrue = "databases/testdata/SleepValuesTrue.json"
+        val pathTrue = "databases/testdata/SleepValuesTrue.json"
 
-        var gson = Gson()
+        val gson = Gson()
 
         val jsonFileTrue = context
                 .assets
@@ -135,7 +133,7 @@ class DatabaseRepositoryTest {
                 .bufferedReader()
                 .use(BufferedReader::readText)
 
-        var dataTrue =  gson.fromJson(jsonFileTrue, Array<Array<SleepApiRawDataRealEntity>>::class.java).asList()
+        val dataTrue =  gson.fromJson(jsonFileTrue, Array<Array<SleepApiRawDataRealEntity>>::class.java).asList()
 
 
 
@@ -146,8 +144,8 @@ class DatabaseRepositoryTest {
                 continue
             }
 
-            var startTime = dataTrue[i].filter { x -> x.real != "awake" }.minByOrNull { y -> y.timestampSeconds }!!.timestampSeconds
-            var endTimeTime = dataTrue[i].filter { x -> x.real != "awake" }.maxByOrNull { y -> y.timestampSeconds }!!.timestampSeconds
+            val startTime = dataTrue[i].filter { x -> x.real != "awake" }.minByOrNull { y -> y.timestampSeconds }!!.timestampSeconds
+            val endTimeTime = dataTrue[i].filter { x -> x.real != "awake" }.maxByOrNull { y -> y.timestampSeconds }!!.timestampSeconds
 
 
             val rawDataList = mutableListOf<SleepApiRawDataEntity>()
@@ -157,33 +155,39 @@ class DatabaseRepositoryTest {
 
                 var sleepstate = SleepState.NONE
 
-                if(singledata.real == "awake"){
-                    sleepstate = SleepState.AWAKE
-                } else if(singledata.real == "sleeping"){
-                    sleepstate = SleepState.SLEEPING
-                } else if(singledata.real == "deep"){
-                    sleepstate = SleepState.DEEP
-                } else if(singledata.real == "light"){
-                    sleepstate = SleepState.LIGHT
-                } else if(singledata.real == "rem"){
-                    sleepstate = SleepState.REM
+                when (singledata.real) {
+                    "awake" -> {
+                        sleepstate = SleepState.AWAKE
+                    }
+                    "sleeping" -> {
+                        sleepstate = SleepState.SLEEPING
+                    }
+                    "deep" -> {
+                        sleepstate = SleepState.DEEP
+                    }
+                    "light" -> {
+                        sleepstate = SleepState.LIGHT
+                    }
+                    "rem" -> {
+                        sleepstate = SleepState.REM
+                    }
                 }
 
 
-                var rawData = SleepApiRawDataEntity(singledata.timestampSeconds, singledata.confidence, singledata.motion, singledata.light, sleepstate)
+                val rawData = SleepApiRawDataEntity(singledata.timestampSeconds, singledata.confidence, singledata.motion, singledata.light, sleepstate)
 
                 rawDataList.add(rawData)
                 sleepDatabaseRepository.insertSleepApiRawData(rawData)
             }
 
-            var sleepTime = SleepTimes(sleepTimeStart = startTime, sleepTimeEnd = endTimeTime)
+            val sleepTime = SleepTimes(sleepTimeStart = startTime, sleepTimeEnd = endTimeTime)
             sleepTime.awakeTime = SleepApiRawDataEntity.getAwakeTime(rawDataList)
             sleepTime.lightSleepDuration = SleepApiRawDataEntity.getSleepTimeByState(rawDataList, SleepState.LIGHT)
             sleepTime.deepSleepDuration = SleepApiRawDataEntity.getSleepTimeByState(rawDataList, SleepState.DEEP)
             sleepTime.remSleepDuration = SleepApiRawDataEntity.getSleepTimeByState(rawDataList, SleepState.REM)
             sleepTime.sleepDuration = SleepApiRawDataEntity.getSleepTime(rawDataList)
             val id = UserSleepSessionEntity.getIdByTimeStamp(startTime)
-            var session = UserSleepSessionEntity(id, sleepTimes = sleepTime)
+            val session = UserSleepSessionEntity(id, sleepTimes = sleepTime)
             sleepDatabaseRepository.insertUserSleepSession(session)
 
         }
