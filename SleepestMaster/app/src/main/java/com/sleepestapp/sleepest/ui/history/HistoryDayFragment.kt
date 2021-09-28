@@ -480,18 +480,22 @@ class HistoryDayFragment : Fragment() {
                         sleepTypes[1] = true
                     }
                     else if (sVal.third.mobilePosition == MobilePosition.INBED) {
-                        if (awake > 0)
+                        if (awake > 0) {
                             entries.add(PieEntry(awake.toFloat(), actualContext.getString(R.string.history_day_timeInPhase_awake)))
-                        sleepTypes[0] = true
-                        if (lightSleep > 0)
+                            sleepTypes[0] = true
+                        }
+                        if (lightSleep > 0) {
                             entries.add(PieEntry(lightSleep.toFloat(), actualContext.getString(R.string.history_day_timeInPhase_lightSleep)))
-                        sleepTypes[2] = true
-                        if (deepSleep > 0)
+                            sleepTypes[2] = true
+                        }
+                        if (deepSleep > 0) {
                             entries.add(PieEntry(deepSleep.toFloat(), actualContext.getString(R.string.history_day_timeInPhase_deepSleep)))
-                        sleepTypes[3] = true
-                        if (remSleep > 0)
+                            sleepTypes[3] = true
+                        }
+                        if (remSleep > 0) {
                             entries.add(PieEntry(remSleep.toFloat(), actualContext.getString(R.string.history_day_timeInPhase_remSleep)))
-                        sleepTypes[4] = true
+                            sleepTypes[4] = true
+                        }
                     }
                 }
             }
