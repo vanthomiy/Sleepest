@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.*
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sleepestapp.sleepest.model.data.Constants
@@ -38,7 +39,7 @@ class HistoryViewModel(
 ) : ViewModel() {
 
     /** Contains the current date which will be displayed at the history fragment. */
-    var analysisDate = ObservableField(LocalDate.now())
+    var analysisDate = MutableLiveData(LocalDate.now())
 
     /** Indicates whether darkmode is on or off. */
     var darkMode = false
@@ -65,15 +66,14 @@ class HistoryViewModel(
     var activityBackgroundDrawable : Drawable? = null
 
     /** Indicates that [getSleepData] has finished and fresh data was received from the database. */
-    val dataReceived = ObservableBoolean(false)
+    val dataReceived = MutableLiveData(false)
 
     /** <Int: Sleep session id, Triple<List<[SleepApiRawDataEntity]>, Int: Sleep duration, [UserSleepSessionEntity]>> */
     val sleepSessionData = mutableMapOf<Int, Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>>()
 
-    lateinit var transitionsContainer : ViewGroup
-    val actualExpand = ObservableField(-1)
-    val goneState = ObservableField(View.GONE)
-    val visibleState = ObservableField(View.VISIBLE)
+    val actualExpand = MutableLiveData(-1)
+    val goneState = MutableLiveData(View.GONE)
+    val visibleState = MutableLiveData(View.VISIBLE)
 
     private var lastView: ImageView? = null
 
@@ -99,17 +99,16 @@ class HistoryViewModel(
     }
 
     private fun updateInfoChanged(value: String) {
-        TransitionManager.beginDelayedTransition(transitionsContainer)
-        actualExpand.set(if(actualExpand.get() == value.toIntOrNull()) -1 else value.toIntOrNull())
+        actualExpand.value = (if(actualExpand.value == value.toIntOrNull()) -1 else value.toIntOrNull())
     }
 
     /** Onclick handler for altering the [analysisDate] based on the currently selected analysis Range. */
     fun onPreviousDateClick(range: Int) {
         analysisDate.let {
             when (range) {
-                0 -> it.set(it.get()?.minusDays(1L))
-                1 -> it.set(it.get()?.minusWeeks(1L))
-                2 -> it.set(it.get()?.minusMonths(1L))
+                0 -> it.value = it.value?.minusDays(1L)
+                1 -> it.value = it.value?.minusWeeks(1L)
+                2 -> it.value = it.value?.minusMonths(1L)
             }
         }
     }
@@ -119,18 +118,18 @@ class HistoryViewModel(
         analysisDate.let {
             when (range) {
                 0 -> {
-                    if (LocalDate.now().dayOfYear >= it.get()?.plusDays(1L)?.dayOfYear!!) {
-                        it.set(it.get()?.plusDays(1L))
+                    if (LocalDate.now().dayOfYear >= it.value?.plusDays(1L)?.dayOfYear!!) {
+                        it.value = it.value?.plusDays(1L)
                     }
                 }
                 1 -> {
-                    if (LocalDate.now().dayOfYear >= it.get()?.plusWeeks(1L)?.dayOfYear!!) {
-                        it.set(it.get()?.plusWeeks(1L))
+                    if (LocalDate.now().dayOfYear >= it.value?.plusWeeks(1L)?.dayOfYear!!) {
+                        it.value = it.value?.plusWeeks(1L)
                     }
                 }
                 2 -> {
-                    if (LocalDate.now().dayOfYear >= it.get()?.plusMonths(1L)?.dayOfYear!!) {
-                        it.set(it.get()?.plusMonths(1L))
+                    if (LocalDate.now().dayOfYear >= it.value?.plusMonths(1L)?.dayOfYear!!) {
+                        it.value = it.value?.plusMonths(1L)
                     }
                 }
             }
@@ -141,7 +140,7 @@ class HistoryViewModel(
     /** Starts the process of requesting data from the database. */
     fun getSleepData() {
         val ids = mutableSetOf<Int>()
-        analysisDate.get()?.let {
+        analysisDate.value?.let {
             val startDayToGet = it.minusMonths(1L).withDayOfMonth(1)
             val endDayToGet = it.withDayOfMonth(it.lengthOfMonth())
             val dayDifference = (endDayToGet.toEpochDay() - startDayToGet.toEpochDay()).toInt()
@@ -173,7 +172,7 @@ class HistoryViewModel(
                 }
             }
             checkSessionIntegrity()
-            dataReceived.set(true)
+            dataReceived.value = true
         }
     }
 

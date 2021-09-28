@@ -3,6 +3,7 @@ package com.sleepestapp.sleepest.ui.history
 import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
+import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,7 +50,7 @@ class HistoryTabView : Fragment() {
             return  HistoryViewModel(
                 (actualContext as MainApplication).dataStoreRepository,
                 (actualContext as MainApplication).dataBaseRepository,
-                SleepCalculationHandler.getHandler(actualContext)
+                SleepCalculationHandler(actualContext)
             ) as T
         }
     }
@@ -77,7 +78,6 @@ class HistoryTabView : Fragment() {
         btnNext = view.findViewById(R.id.btn_Next)
         tVActualDayTabView = view.findViewById(R.id.tV_actualDayTabView)
         previousMonthAnalysisDate = LocalDate.now().month
-        viewModel.transitionsContainer = binding.lLLinearAnimationLayoutTabView
 
         val tabs = listOf(getString(R.string.history_day_title), getString(R.string.history_week_title), getString(R.string.history_month_title))
 
@@ -122,7 +122,7 @@ class HistoryTabView : Fragment() {
                     picker,
                     R.style.TimePickerTheme,
                     { _, year, monthOfYear, dayOfMonth ->
-                        viewModel.analysisDate.set(LocalDate.of(year, monthOfYear + 1, dayOfMonth))
+                        viewModel.analysisDate.value = LocalDate.of(year, monthOfYear + 1, dayOfMonth)
                     },
                     year,
                     month,
@@ -135,25 +135,19 @@ class HistoryTabView : Fragment() {
         }
 
         tVActualDayTabView.setOnLongClickListener {
-            viewModel.analysisDate.set(LocalDate.now())
+            viewModel.analysisDate.value = LocalDate.now()
             return@setOnLongClickListener true
         }
 
-        viewModel.analysisDate.addOnPropertyChangedCallback(
-            object: Observable.OnPropertyChangedCallback() {
-
-                override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-
-                    if (viewModel.analysisDate.get()?.month != previousMonthAnalysisDate) {
-                        viewModel.getSleepData()
-                    }
-
-                    previousMonthAnalysisDate = viewModel.analysisDate.get()?.month!!
-
-                    updateDateInformation(tabLayout.selectedTabPosition)
-                }
+        viewModel.analysisDate.observe(viewLifecycleOwner) {
+            if (viewModel.analysisDate.value?.month != previousMonthAnalysisDate) {
+                viewModel.getSleepData()
             }
-        )
+
+            previousMonthAnalysisDate = viewModel.analysisDate.value?.month!!
+
+            updateDateInformation(tabLayout.selectedTabPosition)
+        }
 
         updateDateInformation(tabLayout.selectedTabPosition)
 
@@ -161,6 +155,10 @@ class HistoryTabView : Fragment() {
             if (!viewModel.onWork) {
                 viewModel.getSleepData()
             }
+        }
+
+        viewModel.actualExpand.observe(viewLifecycleOwner) {
+            TransitionManager.beginDelayedTransition(binding.lLLinearAnimationLayoutTabView)
         }
     }
 
@@ -228,7 +226,7 @@ class HistoryTabView : Fragment() {
         val actualDay = LocalDate.now()
         var information = actualContext.getString(R.string.history_failure_title)
 
-        viewModel.analysisDate.get()?.let {
+        viewModel.analysisDate.value?.let {
 
             information = when {
                 actualDay.dayOfYear == it.dayOfYear -> {
@@ -254,7 +252,7 @@ class HistoryTabView : Fragment() {
         val actualDate = LocalDate.now()
         val actualWeekOfYear = actualDate.get(WeekFields.of(Locale.GERMANY).weekOfYear())
 
-        viewModel.analysisDate.get()?.let {
+        viewModel.analysisDate.value?.let {
             val analysisDate = LocalDate.of(it.year, it.monthValue, it.dayOfMonth)
             val analysisWeekOfYear = analysisDate.get(WeekFields.of(Locale.GERMANY).weekOfYear())
 
@@ -299,7 +297,7 @@ class HistoryTabView : Fragment() {
      * Creates a formatted string for the function [updateDateInformation].
      */
     private fun createCalendarMonthInformation(): String {
-        viewModel.analysisDate.get()?.let {
+        viewModel.analysisDate.value?.let {
             return when (it.monthValue) {
                 1 -> getString(R.string.history_january_title)
                 2 -> getString(R.string.history_february_title)

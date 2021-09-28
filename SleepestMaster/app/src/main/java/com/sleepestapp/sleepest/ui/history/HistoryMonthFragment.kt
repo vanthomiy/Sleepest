@@ -2,6 +2,7 @@ package com.sleepestapp.sleepest.ui.history
 
 import android.content.Context
 import android.os.Bundle
+import android.transition.TransitionManager
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -35,7 +36,6 @@ class HistoryMonthFragment : Fragment() {
 
         binding = FragmentHistoryMonthBinding.inflate(inflater, container, false)
         binding.historyMonthViewModel = viewModelMonth
-        viewModelMonth.transitionsContainer = (binding.lLLinearAnimationLayoutMonthlyAnalysis)
 
         barChartDates = getEndOfMonth()
         barChart = viewModel.setBarChart(BarChart(actualContext), barChartDates.first, barChartDates.second)
@@ -53,20 +53,18 @@ class HistoryMonthFragment : Fragment() {
         activityChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
         activityChart.invalidate()
 
-        viewModel.analysisDate.addOnPropertyChangedCallback(
-            object: Observable.OnPropertyChangedCallback() {
+        viewModel.analysisDate.observe(viewLifecycleOwner) {
+            barChartDates = getEndOfMonth()
+            viewModel.updateBarChart(barChart, barChartDates.first, barChartDates.second)
+            barChart.invalidate()
 
-                override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+            viewModel.updateActivityChart(activityChart, barChartDates.first, barChartDates.second)
+            activityChart.invalidate()
+        }
 
-                    barChartDates = getEndOfMonth()
-                    viewModel.updateBarChart(barChart, barChartDates.first, barChartDates.second)
-                    barChart.invalidate()
-
-                    viewModel.updateActivityChart(activityChart, barChartDates.first, barChartDates.second)
-                    activityChart.invalidate()
-                }
-            }
-        )
+        viewModelMonth.actualExpand.observe(viewLifecycleOwner) {
+            TransitionManager.beginDelayedTransition(binding.lLLinearAnimationLayoutMonthlyAnalysis)
+        }
 
         return binding.root
     }
@@ -75,7 +73,7 @@ class HistoryMonthFragment : Fragment() {
      * Returns the length and the end of the current month.
      */
     private fun getEndOfMonth(): Pair<Int, LocalDate> {
-        viewModel.analysisDate.get()?.let {
+        viewModel.analysisDate.value?.let {
             val date = it
             return Pair(
                 date.lengthOfMonth(),

@@ -2,6 +2,7 @@ package com.sleepestapp.sleepest.ui.history
 
 import android.content.Context
 import android.os.Bundle
+import android.transition.TransitionManager
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -30,7 +31,7 @@ import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler
-import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.Is24HourFormat
+import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.is24HourFormat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -56,7 +57,7 @@ class HistoryDayFragment : Fragment() {
     var factory = object : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             return  HistoryDayViewModel(
-                SleepCalculationHandler.getHandler(actualContext)
+                SleepCalculationHandler(actualContext)
             ) as T
         }
     }
@@ -83,9 +84,8 @@ class HistoryDayFragment : Fragment() {
 
         binding = FragmentHistoryDayBinding.inflate(inflater, container, false)
         binding.historyDayViewModel = viewModelDay
-        viewModelDay.transitionsContainer = binding.lLLinearAnimationLayoutDailyAnalysis
 
-        viewModelDay.is24HourFormat = Is24HourFormat(actualContext)
+        viewModelDay.is24HourFormat = is24HourFormat(actualContext)
 
         // Initial set up for the daily sleep analysis bar chart.
         barChartSleepAnalysis = setBarChart()
@@ -110,34 +110,27 @@ class HistoryDayFragment : Fragment() {
         pieChartSleepAnalysis.invalidate()
 
         // Listener for changes in the analysis date. If user changes the day for the diagrams.
-        viewModel.analysisDate.addOnPropertyChangedCallback(
-            object: Observable.OnPropertyChangedCallback() {
-                override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                    getDataValues()
-                    updateCharts()
-                }
-            })
+        viewModel.analysisDate.observe(viewLifecycleOwner) {
+            getDataValues()
+            updateCharts()
+        }
 
-        viewModelDay.sleepMoodSmiley.addOnPropertyChangedCallback(
-            object: Observable.OnPropertyChangedCallback() {
-                override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                    saveSleepRatingDaily()
-                }
-            }
-        )
+        viewModelDay.sleepMoodSmiley.observe(viewLifecycleOwner) {
+            saveSleepRatingDaily()
+        }
 
-        viewModel.dataReceived.addOnPropertyChangedCallback(
-            object: Observable.OnPropertyChangedCallback() {
-                override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                    if (viewModel.dataReceived.get() && !viewModelDay.sleepRatingUpdate) {
-                        getDataValues()
-                        updateCharts()
-                        viewModel.dataReceived.set(false)
-                    }
-                    viewModelDay.sleepRatingUpdate = false
-                }
+        viewModel.dataReceived.observe(viewLifecycleOwner) {
+            if (viewModel.dataReceived.value == true && !viewModelDay.sleepRatingUpdate) {
+                getDataValues()
+                updateCharts()
+                viewModel.dataReceived.value = false
             }
-        )
+            viewModelDay.sleepRatingUpdate = false
+        }
+
+        viewModelDay.actualExpand.observe(viewLifecycleOwner) {
+            TransitionManager.beginDelayedTransition(binding.lLLinearAnimationLayoutDailyAnalysis)
+        }
 
         return binding.root
     }
@@ -174,7 +167,7 @@ class HistoryDayFragment : Fragment() {
     /** Save users input of the [UserSleepRating.moodAfterSleep] into database. */
     private fun saveSleepRatingDaily() {
         scope.launch {
-            viewModelDay.sleepMoodSmiley.get()?.let {
+            viewModelDay.sleepMoodSmiley.value?.let {
                 sleepValues?.let { sVal ->
                     viewModel.dataBaseRepository.updateMoodAfterSleep(
                         it, sVal.third.id)
@@ -185,7 +178,7 @@ class HistoryDayFragment : Fragment() {
 
     /** Get [sleepValues] for the currently selected analysisDate. */
     private fun getDataValues() {
-        viewModel.analysisDate.get()?.let {
+        viewModel.analysisDate.value?.let {
             if (viewModel.checkId(it)) {
                 sleepValues = viewModel.sleepSessionData[UserSleepSessionEntity.getIdByDateTime(it)]!!
             }
@@ -205,26 +198,26 @@ class HistoryDayFragment : Fragment() {
 
         // Initial setting necessary in case asynchronous demand of the sleep session (sleepValues) isn`t ready.
         var time = LocalDateTime.of(1970, 1, 1, 0, 0, 0).format(DateTimeFormatter.ISO_TIME)
-        viewModelDay.beginOfSleep.set(time)
-        viewModelDay.endOfSeep.set(time)
+        viewModelDay.beginOfSleep.value = (time)
+        viewModelDay.endOfSeep.value = (time)
 
-        viewModelDay.awakeTime.set(
+        viewModelDay.awakeTime.value = (
             actualContext.getString(R.string.history_day_timeInPhase_awake) + " " + generateSleepValueInformation(0)
         )
 
-        viewModelDay.lightSleepTime.set(
+        viewModelDay.lightSleepTime.value = (
             actualContext.getString(R.string.history_day_timeInPhase_lightSleep) + " " + generateSleepValueInformation(0)
         )
 
-        viewModelDay.deepSleepTime.set(
+        viewModelDay.deepSleepTime.value = (
             actualContext.getString(R.string.history_day_timeInPhase_deepSleep) + " " + generateSleepValueInformation(0)
         )
 
-        viewModelDay.remSleepTime.set(
+        viewModelDay.remSleepTime.value = (
             actualContext.getString(R.string.history_day_timeInPhase_remSleep) + " " + generateSleepValueInformation(0)
         )
 
-        viewModelDay.sleepTime.set(
+        viewModelDay.sleepTime.value = (
             actualContext.getString(R.string.history_day_timeInPhase_sleepSum) + " " + generateSleepValueInformation(0)
         )
 
@@ -236,9 +229,9 @@ class HistoryDayFragment : Fragment() {
             )
 
             time = TimeConverterUtil.toTimeFormat(tempTime.hour, tempTime.minute) //tempTime.hour.toString() + ":" + tempTime.minute.toString()
-            viewModelDay.beginOfSleep.set(time)
+            viewModelDay.beginOfSleep.value = (time)
             viewModelDay.sessionId = it.third.id
-            viewModelDay.beginOfSleepEpoch.set(it.third.sleepTimes.sleepTimeStart.toLong() * 1000)
+            viewModelDay.beginOfSleepEpoch.value = (it.third.sleepTimes.sleepTimeStart.toLong() * 1000)
 
             tempTime = LocalDateTime.ofInstant(
                 Instant.ofEpochMilli((it.third.sleepTimes.sleepTimeEnd.toLong()) * 1000),
@@ -246,35 +239,35 @@ class HistoryDayFragment : Fragment() {
             )
 
             time = TimeConverterUtil.toTimeFormat(tempTime.hour, tempTime.minute) //tempTime.hour.toString() + ":" + tempTime.minute.toString()
-            viewModelDay.endOfSeep.set(time)
-            viewModelDay.endOfSleepEpoch.set(it.third.sleepTimes.sleepTimeEnd.toLong() * 1000)
+            viewModelDay.endOfSeep.value = (time)
+            viewModelDay.endOfSleepEpoch.value = (it.third.sleepTimes.sleepTimeEnd.toLong() * 1000)
 
-            viewModelDay.awakeTime.set(
+            viewModelDay.awakeTime.value = (
                 actualContext.getString(R.string.history_day_timeInPhase_awake) + " " + generateSleepValueInformation(it.third.sleepTimes.awakeTime)
             )
 
-            viewModelDay.lightSleepTime.set(
+            viewModelDay.lightSleepTime.value = (
                 actualContext.getString(R.string.history_day_timeInPhase_lightSleep) + " " + generateSleepValueInformation(it.third.sleepTimes.lightSleepDuration)
             )
 
-            viewModelDay.deepSleepTime.set(
+            viewModelDay.deepSleepTime.value = (
                 actualContext.getString(R.string.history_day_timeInPhase_deepSleep) + " " + generateSleepValueInformation(it.third.sleepTimes.deepSleepDuration)
             )
 
-            viewModelDay.remSleepTime.set(
+            viewModelDay.remSleepTime.value = (
                 actualContext.getString(R.string.history_day_timeInPhase_remSleep) + " " + generateSleepValueInformation(it.third.sleepTimes.remSleepDuration)
             )
 
-            viewModelDay.sleepTime.set(
+            viewModelDay.sleepTime.value = (
                 actualContext.getString(R.string.history_day_timeInPhase_sleepSum) + " " + generateSleepValueInformation(it.third.sleepTimes.sleepDuration)
             )
 
             // Manage visibility of the text information based on the mobile position
             if (it.third.mobilePosition == MobilePosition.INBED) {
-                viewModelDay.timeInSleepPhaseTextField.set(View.VISIBLE)
+                viewModelDay.timeInSleepPhaseTextField.value = (View.VISIBLE)
             }
             else {
-                viewModelDay.timeInSleepPhaseTextField.set(View.INVISIBLE)
+                viewModelDay.timeInSleepPhaseTextField.value = (View.INVISIBLE)
             }
         }
     }
@@ -286,7 +279,7 @@ class HistoryDayFragment : Fragment() {
         val entries = ArrayList<BarEntry>()
         var xIndex = 0.5f
 
-        viewModel.analysisDate.get()?.let {
+        viewModel.analysisDate.value?.let {
             if (viewModel.checkId(it)) {
 
                 setTimeStamps()
@@ -460,7 +453,7 @@ class HistoryDayFragment : Fragment() {
         val entries = ArrayList<PieEntry>()
         val sleepTypes = booleanArrayOf(false, false, false, false, false)  //awake, sleep, light, deep, rem
 
-        viewModel.analysisDate.get()?.let {
+        viewModel.analysisDate.value?.let {
             if (viewModel.checkId(it)) {
                 sleepValues?.let { sVal ->
                     val awake = sVal.third.sleepTimes.awakeTime
@@ -560,7 +553,7 @@ class HistoryDayFragment : Fragment() {
     private fun updateActivitySmiley() {
         var activityOnDay = 0
 
-        viewModel.analysisDate.get()?.let { it_time ->
+        viewModel.analysisDate.value?.let { it_time ->
             if (viewModel.checkId(it_time)) {
                 sleepValues?.let {
                     activityOnDay = when (it.third.userSleepRating.activityOnDay) {
@@ -572,10 +565,10 @@ class HistoryDayFragment : Fragment() {
                         else -> 0
                     }
                 }
-                sleepValues?.let { viewModelDay.sleepMoodSmileyTag.set(it.third.userSleepRating.moodAfterSleep.ordinal) }
+                sleepValues?.let { viewModelDay.sleepMoodSmileyTag.value = (it.third.userSleepRating.moodAfterSleep.ordinal) }
             }
         }
-        viewModelDay.activitySmiley.set(SmileySelectorUtil.getSmileyActivity(activityOnDay))
+        viewModelDay.activitySmiley.value = (SmileySelectorUtil.getSmileyActivity(activityOnDay))
     }
 }
 

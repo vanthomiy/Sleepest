@@ -2,6 +2,7 @@ package com.sleepestapp.sleepest.ui.history
 
 import android.content.Context
 import android.os.Bundle
+import android.transition.TransitionManager
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -39,7 +40,6 @@ class HistoryWeekFragment : Fragment() {
 
         binding = FragmentHistoryWeekBinding.inflate(inflater, container, false)
         binding.historyWeekViewModel = viewModelWeek
-        viewModelWeek.transitionsContainer = (binding.lLLinearAnimationLayoutWeeklyAnalysis)
 
         barChart = viewModel.setBarChart(BarChart(actualContext), 7, getSundayOfWeek())
         activityChart = viewModel.setActivityChart(LineChart(context), 7, getSundayOfWeek())
@@ -56,26 +56,24 @@ class HistoryWeekFragment : Fragment() {
         activityChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
         activityChart.invalidate()
 
-        viewModel.analysisDate.addOnPropertyChangedCallback(
-            object: Observable.OnPropertyChangedCallback() {
+        viewModel.analysisDate.observe(viewLifecycleOwner) {
+            viewModel.updateBarChart(barChart, 7, getSundayOfWeek())
+            barChart.invalidate()
 
-                override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+            viewModel.updateActivityChart(activityChart, 7, getSundayOfWeek())
+            activityChart.invalidate()
+        }
 
-                    viewModel.updateBarChart(barChart, 7, getSundayOfWeek())
-                    barChart.invalidate()
-
-                    viewModel.updateActivityChart(activityChart, 7, getSundayOfWeek())
-                    activityChart.invalidate()
-                }
-            }
-        )
+        viewModelWeek.actualExpand.observe(viewLifecycleOwner) {
+            TransitionManager.beginDelayedTransition(binding.lLLinearAnimationLayoutWeeklyAnalysis)
+        }
 
         return binding.root
     }
 
     /** Used to find the sunday of the current weak. */
     private fun getSundayOfWeek(): LocalDate {
-        viewModel.analysisDate.get()?.let {
+        viewModel.analysisDate.value?.let {
             val dayOfWeek = it.dayOfWeek
 
             return when (dayOfWeek.value) {

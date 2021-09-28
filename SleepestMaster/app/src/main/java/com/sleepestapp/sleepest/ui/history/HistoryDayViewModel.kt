@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.databinding.ObservableField
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sleepestapp.sleepest.R
@@ -25,62 +26,59 @@ import java.time.ZoneOffset
 class HistoryDayViewModel(val sleepCalculationHandler : SleepCalculationHandler) : ViewModel() {
 
     /** Contains information about the fall asleep time. */
-    var beginOfSleep = ObservableField("")
+    var beginOfSleep = MutableLiveData("")
 
     /** Contains information about the fall asleep time in epoch seconds. */
-    var beginOfSleepEpoch = ObservableField(0L)
+    var beginOfSleepEpoch = MutableLiveData(0L)
 
     /** Contains information about the wakeup time. */
-    var endOfSeep = ObservableField("")
+    var endOfSeep = MutableLiveData("")
 
     /** Contains information about the wakeup time in epoch seconds. */
-    var endOfSleepEpoch = ObservableField(0L)
+    var endOfSleepEpoch = MutableLiveData(0L)
 
     /** Stores the ID of the current SleepSession. */
     var sessionId = 0
 
     /** Contains information about the amount of time the user spend awake. */
-    var awakeTime = ObservableField("")
+    var awakeTime = MutableLiveData("")
 
     /** Contains information about the amount of time the user spend in light sleep phase. */
-    var lightSleepTime = ObservableField("")
+    var lightSleepTime = MutableLiveData("")
 
     /** Contains information about the amount of time the user spend in deep sleep phase. */
-    var deepSleepTime = ObservableField("")
+    var deepSleepTime = MutableLiveData("")
 
     /** Contains information about the amount of time the user spend in rem sleep phase. */
-    var remSleepTime = ObservableField("")
+    var remSleepTime = MutableLiveData("")
 
     /** Contains information about the amount of time the user slept. */
-    var sleepTime = ObservableField("")
+    var sleepTime = MutableLiveData("")
 
     /** Contains the visibility status of the time analysis of each sleep phase. */
-    var timeInSleepPhaseTextField = ObservableField(View.INVISIBLE)
+    var timeInSleepPhaseTextField = MutableLiveData(View.INVISIBLE)
 
     /** Contains the current smiley used to indicate the users activity level. */
-    var activitySmiley = ObservableField(SmileySelectorUtil.getSmileyActivity(0))
+    var activitySmiley = MutableLiveData(SmileySelectorUtil.getSmileyActivity(0))
 
     /** Contains the smiley which was picked by the user to assess it's mood. */
-    var sleepMoodSmiley = ObservableField(MoodType.NONE)
+    var sleepMoodSmiley = MutableLiveData(MoodType.NONE)
 
     /**  Contains the tag of the selected mood smiley. */
-    var sleepMoodSmileyTag = ObservableField(0)
+    var sleepMoodSmileyTag = MutableLiveData(0)
 
     /** This will prevent the daily sleep analysis diagrams from reloading when the sleep rating was altered. */
     var sleepRatingUpdate = false
 
-    val actualExpand = ObservableField(-1)
-    val goneState = ObservableField(View.GONE)
-    val visibleState = ObservableField(View.VISIBLE)
+    val actualExpand = MutableLiveData(-1)
+    val goneState = MutableLiveData(View.GONE)
+    val visibleState = MutableLiveData(View.VISIBLE)
 
     /** Contains information about the current time zone and its time formatting standards. */
     var is24HourFormat : Boolean = false
 
-    lateinit var transitionsContainer : ViewGroup
-
-
     /**
-     * Allows to alter the sleepRating (MoodAfterSleep) and saves it to its ObservableField.
+     * Allows to alter the sleepRating (MoodAfterSleep) and saves it to its MutableLiveData.
      */
     fun sleepRating(view: View) {
         sleepRatingUpdate = true
@@ -93,8 +91,8 @@ class HistoryDayViewModel(val sleepCalculationHandler : SleepCalculationHandler)
             else -> MoodType.NONE
         }
 
-        sleepMoodSmiley.set(mood)
-        sleepMoodSmileyTag.set(view.tag.toString().toInt())
+        sleepMoodSmiley.value = (mood)
+        sleepMoodSmileyTag.value = (view.tag.toString().toInt())
     }
 
     private var lastView: ImageView? = null
@@ -113,8 +111,7 @@ class HistoryDayViewModel(val sleepCalculationHandler : SleepCalculationHandler)
     }
 
     private fun updateInfoChanged(value: String) {
-        TransitionManager.beginDelayedTransition(transitionsContainer)
-        actualExpand.set(if(actualExpand.get() == value.toIntOrNull()) -1 else value.toIntOrNull())
+        actualExpand.value = if(actualExpand.value == value.toIntOrNull()) -1 else value.toIntOrNull()
     }
 
     /**
@@ -124,12 +121,12 @@ class HistoryDayViewModel(val sleepCalculationHandler : SleepCalculationHandler)
         val time : LocalDateTime = if (view.tag == "BeginOfSleep") {
             //Set the fall asleep time.
             LocalDateTime.ofInstant(
-                beginOfSleepEpoch.get()?.let { Instant.ofEpochMilli(it) },
+                beginOfSleepEpoch.value?.let { Instant.ofEpochMilli(it) },
                 ZoneOffset.systemDefault()
             )
         } else {
             LocalDateTime.ofInstant(
-                endOfSleepEpoch.get()?.let { Instant.ofEpochMilli(it) },
+                endOfSleepEpoch.value?.let { Instant.ofEpochMilli(it) },
                 ZoneOffset.systemDefault()
             )
         }
@@ -151,9 +148,9 @@ class HistoryDayViewModel(val sleepCalculationHandler : SleepCalculationHandler)
                     val epochTime = newDateTime.atZone(ZoneOffset.systemDefault()).toInstant().toEpochMilli().div(1000)
 
                     if(startOfSleep)
-                        sleepCalculationHandler.updateSleepSessionManually(epochTime.toInt(), (endOfSleepEpoch.get()!! / 1000).toInt(), sessionId = sessionId)
+                        sleepCalculationHandler.updateSleepSessionManually(epochTime.toInt(), (endOfSleepEpoch.value!! / 1000).toInt(), sessionId = sessionId)
                     else
-                        sleepCalculationHandler.updateSleepSessionManually((beginOfSleepEpoch.get()!! / 1000).toInt(), epochTime.toInt(), sessionId = sessionId)
+                        sleepCalculationHandler.updateSleepSessionManually((beginOfSleepEpoch.value!! / 1000).toInt(), epochTime.toInt(), sessionId = sessionId)
                 }
             },
             dateTime.hour,

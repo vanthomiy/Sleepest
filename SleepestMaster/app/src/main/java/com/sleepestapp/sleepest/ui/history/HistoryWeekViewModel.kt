@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sleepestapp.sleepest.model.data.MobilePosition
 import com.sleepestapp.sleepest.util.IconAnimatorUtil
@@ -14,11 +15,9 @@ import com.sleepestapp.sleepest.util.IconAnimatorUtil
 
 class HistoryWeekViewModel() : ViewModel() {
 
-    val actualExpand = ObservableField(-1)
-    val goneState = ObservableField(View.GONE)
-    val visibleState = ObservableField(View.VISIBLE)
-
-    lateinit var transitionsContainer : ViewGroup
+    val actualExpand = MutableLiveData(-1)
+    val goneState = MutableLiveData(View.GONE)
+    val visibleState = MutableLiveData(View.VISIBLE)
 
     private var lastView: ImageView? = null
     fun onInfoClicked(view: View){
@@ -37,7 +36,6 @@ class HistoryWeekViewModel() : ViewModel() {
 
     @Suppress("UNUSED_PARAMETER")
     private fun updateInfoChanged(value: String, toggle: Boolean = false) {
-        TransitionManager.beginDelayedTransition(transitionsContainer)
-        actualExpand.set(if(actualExpand.get() == value.toIntOrNull()) -1 else value.toIntOrNull())
+        actualExpand.value = (if(actualExpand.value == value.toIntOrNull()) -1 else value.toIntOrNull())
     }
 }
