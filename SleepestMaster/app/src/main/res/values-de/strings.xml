@@ -166,7 +166,7 @@
     <string name="sleep_activitytracking_info_2">
         Mit "In Schlafenszeit einbeziehen" gibt dir die App mehr oder weniger Schlaf, je nach dem wie viel Bewegung du am Tag hattest
     </string>
-    <string name="sleep_trackactivity_header">Tägliche aktivitäten aufzeichnen</string>
+    <string name="sleep_trackactivity_header">Tägliche Aktivitäten aufzeichnen</string>
     <string name="sleep_trackactivity_include_in_wakeup">In Schlafzeit einbeziehen</string>
     <string name="sleep_alarm_header">&#9200; Wecker</string>
 
