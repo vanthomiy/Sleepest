@@ -3,7 +3,6 @@ package com.sleepestapp.sleepest.ui.history
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.view.View
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,7 +23,6 @@ import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.sleepestapp.sleepest.util.IconAnimatorUtil
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.*
@@ -78,8 +76,6 @@ class HistoryViewModel(
     val goneState = MutableLiveData(View.GONE)
     val visibleState = MutableLiveData(View.VISIBLE)
 
-    private var lastView: ImageView? = null
-
     init {
         viewModelScope.launch {
             darkMode = dataStoreRepository.settingsDataFlow.first().designDarkMode
@@ -88,21 +84,8 @@ class HistoryViewModel(
     }
 
     fun onInfoClicked(view: View){
-        updateInfoChanged(view.tag.toString())
-
-        // Check if its an image view
-        IconAnimatorUtil.animateView(view as ImageView)
-
-        IconAnimatorUtil.resetView(lastView)
-
-        lastView = if(lastView != view)
-            view
-        else
-            null
-    }
-
-    private fun updateInfoChanged(value: String) {
-        actualExpand.value = (if(actualExpand.value == value.toIntOrNull()) -1 else value.toIntOrNull())
+        val value = view.tag.toString()
+        actualExpand.value = if(actualExpand.value == value.toIntOrNull()) -1 else value.toIntOrNull()
     }
 
     /** Onclick handler for altering the [analysisDate] based on the currently selected analysis Range. */

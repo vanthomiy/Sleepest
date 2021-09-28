@@ -98,7 +98,7 @@
                             app:tint="@color/primary_text_color"
                             tools:ignore="ContentDescription"
                             android:onClick="@{historyWeekViewModel::onInfoClicked}"
-                            android:src="@drawable/info_help"
+                            android:src="@{historyWeekViewModel.actualExpand == 0 ? @drawable/info_help_start : @drawable/info_help}"
                             android:tag="0" />
                     </FrameLayout>
 
@@ -166,7 +166,7 @@
                             android:layout_gravity="end"
                             app:tint="@color/primary_text_color"
                             tools:ignore="ContentDescription"
-                            android:src="@drawable/info_help"
+                            android:src="@{historyWeekViewModel.actualExpand == 1 ? @drawable/info_help_start : @drawable/info_help}"
                             android:onClick="@{historyWeekViewModel::onInfoClicked}"
                             android:tag="1"/>
                     </FrameLayout>

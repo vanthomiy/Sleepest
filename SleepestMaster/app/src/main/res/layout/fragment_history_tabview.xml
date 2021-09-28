@@ -40,7 +40,7 @@
                 android:layout_gravity="end"
                 android:layout_margin="5dp"
                 app:tint="@color/primary_text_color"
-                android:src="@drawable/info_help"
+                android:src="@{historyTabView.actualExpand == 0 ? @drawable/info_help_start : @drawable/info_help}"
                 android:onClick="@{historyTabView::onInfoClicked}"
                 android:tag="0"/>
         </FrameLayout>

@@ -3,14 +3,12 @@ package com.sleepestapp.sleepest.ui.history
 
 import android.app.TimePickerDialog
 import android.view.View
-import android.widget.ImageView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.model.data.MoodType
 import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler
-import com.sleepestapp.sleepest.util.IconAnimatorUtil
 import com.sleepestapp.sleepest.util.SmileySelectorUtil
 import kotlinx.coroutines.launch
 import java.time.Instant
@@ -91,22 +89,8 @@ class HistoryDayViewModel(val sleepCalculationHandler : SleepCalculationHandler)
         sleepMoodSmileyTag.value = (view.tag.toString().toInt())
     }
 
-    private var lastView: ImageView? = null
     fun onInfoClicked(view: View){
-        updateInfoChanged(view.tag.toString())
-
-        // Check if its an image view
-        IconAnimatorUtil.animateView(view as ImageView)
-
-        IconAnimatorUtil.resetView(lastView)
-
-        lastView = if(lastView != view)
-            view
-        else
-            null
-    }
-
-    private fun updateInfoChanged(value: String) {
+        val value = view.tag.toString()
         actualExpand.value = if(actualExpand.value == value.toIntOrNull()) -1 else value.toIntOrNull()
     }
 

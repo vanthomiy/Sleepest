@@ -109,7 +109,7 @@
                             android:layout_gravity="end"
                             tools:ignore="ContentDescription"
                             app:tint="@color/primary_text_color"
-                            android:src="@drawable/info_help"
+                            android:src="@{historyDayViewModel.actualExpand == 0 ? @drawable/info_help_start : @drawable/info_help}"
                             android:onClick="@{historyDayViewModel::onInfoClicked}"
                             android:tag="0"/>
                     </FrameLayout>
@@ -257,7 +257,7 @@
                             android:layout_gravity="end"
                             tools:ignore="ContentDescription"
                             app:tint="@color/primary_text_color"
-                            android:src="@drawable/info_help"
+                            android:src="@{historyDayViewModel.actualExpand == 1 ? @drawable/info_help_start : @drawable/info_help}"
                             android:onClick="@{historyDayViewModel::onInfoClicked}"
                             android:tag="1"/>
                     </FrameLayout>
@@ -385,7 +385,7 @@
                             android:layout_gravity="end"
                             tools:ignore="ContentDescription"
                             app:tint="@color/primary_text_color"
-                            android:src="@drawable/info_help"
+                            android:src="@{historyDayViewModel.actualExpand == 2 ? @drawable/info_help_start : @drawable/info_help}"
                             android:onClick="@{historyDayViewModel::onInfoClicked}"
                             android:tag="2"/>
                     </FrameLayout>
@@ -505,7 +505,7 @@
                             android:layout_gravity="end"
                             app:tint="@color/primary_text_color"
                             tools:ignore="ContentDescription"
-                            android:src="@drawable/info_help"
+                            android:src="@{historyDayViewModel.actualExpand == 3 ? @drawable/info_help_start : @drawable/info_help}"
                             android:onClick="@{historyDayViewModel::onInfoClicked}"
                             android:tag="3"/>
                     </FrameLayout>
