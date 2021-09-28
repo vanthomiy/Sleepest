@@ -66,6 +66,12 @@ class HistoryMonthFragment : Fragment() {
             TransitionManager.beginDelayedTransition(binding.lLLinearAnimationLayoutMonthlyAnalysis)
         }
 
+        viewModel.visibilityManagerMonthDiagrams.observe(viewLifecycleOwner) {
+            viewModel.visibilityManagerMonthDiagrams.value?.let { visibility ->
+                maintainVisibilityMonthHistory(visibility)
+            }
+        }
+
         return binding.root
     }
 
@@ -82,5 +88,21 @@ class HistoryMonthFragment : Fragment() {
         }
 
         return Pair(10, LocalDate.of(2000, 1, 1))
+    }
+
+    /**
+     * Maintains the visibility of the diagrams in the day fragment.
+     */
+    private fun maintainVisibilityMonthHistory(setVisibility: Boolean) {
+        if (setVisibility) {
+            binding.iVNoDataAvailable.visibility = View.GONE
+            binding.tVNoDataAvailable.visibility = View.GONE
+            binding.sVSleepAnalysisChartsMonth.visibility = View.VISIBLE
+        }
+        else {
+            binding.sVSleepAnalysisChartsMonth.visibility = View.GONE
+            binding.iVNoDataAvailable.visibility = View.VISIBLE
+            binding.tVNoDataAvailable.visibility = View.VISIBLE
+        }
     }
 }

@@ -228,7 +228,7 @@ class HistoryDayFragment : Fragment() {
                 ZoneOffset.systemDefault()
             )
 
-            time = TimeConverterUtil.toTimeFormat(tempTime.hour, tempTime.minute) //tempTime.hour.toString() + ":" + tempTime.minute.toString()
+            time = TimeConverterUtil.toTimeFormat(tempTime.hour, tempTime.minute)
             viewModelDay.beginOfSleep.value = (time)
             viewModelDay.sessionId = it.third.id
             viewModelDay.beginOfSleepEpoch.value = (it.third.sleepTimes.sleepTimeStart.toLong() * 1000)
@@ -238,7 +238,7 @@ class HistoryDayFragment : Fragment() {
                 ZoneOffset.systemDefault()
             )
 
-            time = TimeConverterUtil.toTimeFormat(tempTime.hour, tempTime.minute) //tempTime.hour.toString() + ":" + tempTime.minute.toString()
+            time = TimeConverterUtil.toTimeFormat(tempTime.hour, tempTime.minute)
             viewModelDay.endOfSeep.value = (time)
             viewModelDay.endOfSleepEpoch.value = (it.third.sleepTimes.sleepTimeEnd.toLong() * 1000)
 

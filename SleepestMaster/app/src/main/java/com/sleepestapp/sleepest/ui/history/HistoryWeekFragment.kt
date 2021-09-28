@@ -68,6 +68,12 @@ class HistoryWeekFragment : Fragment() {
             TransitionManager.beginDelayedTransition(binding.lLLinearAnimationLayoutWeeklyAnalysis)
         }
 
+        viewModel.visibilityManagerWeekDiagrams.observe(viewLifecycleOwner) {
+            viewModel.visibilityManagerWeekDiagrams.value?.let { visibility ->
+                maintainVisibilityWeekHistory(visibility)
+            }
+        }
+
         return binding.root
     }
 
@@ -88,5 +94,21 @@ class HistoryWeekFragment : Fragment() {
         }
 
         return LocalDate.of(2000, 1, 1)
+    }
+
+    /**
+     * Maintains the visibility of the diagrams in the day fragment.
+     */
+    private fun maintainVisibilityWeekHistory(setVisibility: Boolean) {
+        if (setVisibility) {
+            binding.iVNoDataAvailable.visibility = View.GONE
+            binding.tVNoDataAvailable.visibility = View.GONE
+            binding.sVSleepAnalysisChartsWeek.visibility = View.VISIBLE
+        }
+        else {
+            binding.sVSleepAnalysisChartsWeek.visibility = View.GONE
+            binding.iVNoDataAvailable.visibility = View.VISIBLE
+            binding.tVNoDataAvailable.visibility = View.VISIBLE
+        }
     }
 }

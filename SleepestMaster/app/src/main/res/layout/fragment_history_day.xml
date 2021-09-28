@@ -34,7 +34,7 @@
             android:layout_height="36dp"
             android:layout_margin="10dp"
             android:maxWidth="300dp"
-            android:text="@string/history_day_information_noDataAvailable"
+            android:text="@string/history_information_noDataAvailable"
             android:textAlignment="center"
             android:textColor="@color/accent_text_color"
             android:textSize="@dimen/valueSize"
@@ -302,7 +302,7 @@
                                 android:layout_marginTop="16dp"
                                 android:text="@{historyDayViewModel.awakeTime}"
                                 android:textColor="@color/primary_text_color"
-                                android:textSize="16sp"/>
+                                android:textSize="16sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -311,7 +311,7 @@
                                 android:layout_marginTop="4dp"
                                 android:text="@{historyDayViewModel.sleepTime}"
                                 android:textColor="@color/primary_text_color"
-                                android:textSize="16sp"/>
+                                android:textSize="16sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -319,9 +319,9 @@
                                 android:layout_marginStart="4dp"
                                 android:layout_marginTop="4dp"
                                 android:text="@{historyDayViewModel.lightSleepTime}"
-                                android:visibility="@{historyDayViewModel.timeInSleepPhaseTextField}"
                                 android:textColor="@color/primary_text_color"
-                                android:textSize="16sp"/>
+                                android:textSize="16sp"
+                                android:visibility="@{historyDayViewModel.timeInSleepPhaseTextField}" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -329,9 +329,9 @@
                                 android:layout_marginStart="4dp"
                                 android:layout_marginTop="4dp"
                                 android:text="@{historyDayViewModel.deepSleepTime}"
-                                android:visibility="@{historyDayViewModel.timeInSleepPhaseTextField}"
                                 android:textColor="@color/primary_text_color"
-                                android:textSize="16sp"/>
+                                android:textSize="16sp"
+                                android:visibility="@{historyDayViewModel.timeInSleepPhaseTextField}" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -339,9 +339,9 @@
                                 android:layout_marginStart="4dp"
                                 android:layout_marginTop="4dp"
                                 android:text="@{historyDayViewModel.remSleepTime}"
-                                android:visibility="@{historyDayViewModel.timeInSleepPhaseTextField}"
                                 android:textColor="@color/primary_text_color"
-                                android:textSize="16sp"/>
+                                android:textSize="16sp"
+                                android:visibility="@{historyDayViewModel.timeInSleepPhaseTextField}" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>

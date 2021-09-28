@@ -256,10 +256,10 @@
 
     <!--region History Fragment texts -->
 
-    <string name="history_day_information_noDataAvailable">Keine Daten zum Anzeigen gefunden.</string>
+    <string name="history_information_noDataAvailable">Keine Daten zum Anzeigen gefunden.</string>
     <string name="history_sleepPhases_title">Schlafphasen:</string>
     <string name="history_day_sleepPhases_time_in_phase_title">Zeit in Phase:</string>
-    <string name="history_fragment_title">&#128197; History</string>
+    <string name="history_fragment_title">&#128197; Schlafverlauf</string>
     <string name="history_button_analysisDate_previous">Zurück</string>
     <string name="history_button_analysisDate_next">Nächste</string>
     <string name="history_sleep_phases_information_light">"Die Leichtschlafphase, welche sich durch einen bewusstlosen Schlaf mit entspannten Muskeln und nahezu ohne Augenbewegungen äußert, macht etwa die Hälfte des gesamten Schlafvolumens aus. "</string>

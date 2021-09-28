@@ -59,6 +59,12 @@ class HistoryViewModel(
     /** Container for the color of the SleepState for the legend of the diagrams. */
     var sleepStateColor = mutableMapOf<SleepState, Int>()
 
+    /** Maintains the visibility of the diagrams. */
+    val visibilityManagerWeekDiagrams = MutableLiveData(false)
+
+    /** Maintains the visibility of the diagrams. */
+    val visibilityManagerMonthDiagrams = MutableLiveData(false)
+
     /** Container for the drawable of the LineChart diagram. */
     var activityBackgroundDrawable : Drawable? = null
 
@@ -253,6 +259,7 @@ class HistoryViewModel(
         val xAxisLabels = mutableListOf<Int>()
         var xIndex = 0.5f
         var maxSleepTime = 0f
+        var visibilityManager = false
 
         val ids = mutableSetOf<Int>()
         for (i in -(range-2)..1) {
@@ -268,6 +275,8 @@ class HistoryViewModel(
         ids.reversed()
         for (id in ids) {
             if (sleepSessionData.containsKey(id)) {
+                visibilityManager = true
+
                 val values = sleepSessionData[id]!!
 
                 val awake = values.third.sleepTimes.awakeTime / 60f
@@ -293,7 +302,8 @@ class HistoryViewModel(
                         )
                     )
 
-                } else {
+                }
+                else {
                     entries.add(
                         BarEntry(
                             xIndex, floatArrayOf(
@@ -306,10 +316,29 @@ class HistoryViewModel(
                         )
                     )
                 }
-
-            } else { entries.add(BarEntry(xIndex, floatArrayOf(0F, 0F, 0F, 0F, 0F))) }
+            }
+            else {
+                entries.add(
+                    BarEntry(
+                        xIndex, floatArrayOf(
+                            0F,
+                            0F,
+                            0F,
+                            0F,
+                            0F
+                        )
+                    )
+                )
+            }
             xAxisLabels.add(id)
             xIndex += 1
+        }
+
+        if (range < 21) {
+            visibilityManagerWeekDiagrams.value = visibilityManager
+        }
+        else if (range > 21) {
+            visibilityManagerMonthDiagrams.value = visibilityManager
         }
 
         return Triple(entries, xAxisLabels, maxSleepTime.toInt())

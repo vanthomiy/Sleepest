@@ -15,6 +15,34 @@
         android:layout_height="match_parent"
         android:background="@color/primary_app_background">
 
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/iV_noDataAvailable"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginBottom="96dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_rawRes="@raw/empty"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"/>
+
+        <TextView
+            android:id="@id/tV_noDataAvailable"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_margin="10dp"
+            android:maxWidth="300dp"
+            android:text="@string/history_information_noDataAvailable"
+            android:textAlignment="center"
+            android:textColor="@color/accent_text_color"
+            android:textSize="@dimen/valueSize"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/iV_noDataAvailable"
+            app:layout_constraintStart_toStartOf="@+id/iV_noDataAvailable"
+            app:layout_constraintTop_toBottomOf="@+id/iV_noDataAvailable" />
+
         <ScrollView
             android:id="@+id/sV_sleepAnalysisChartsWeek"
             android:layout_width="match_parent"
