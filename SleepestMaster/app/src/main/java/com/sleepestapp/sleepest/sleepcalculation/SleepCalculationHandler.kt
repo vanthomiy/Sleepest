@@ -231,21 +231,21 @@ class SleepCalculationHandler(val context: Context) {
         val sessionAvailable = dataBaseRepository.checkIfUserSessionIsDefinedById(id)
 
         val endTime = if(sessionAvailable) {
-            val endTime = dataBaseRepository.getOrCreateSleepSessionById(id).sleepTimes.sleepTimeEnd
-            if(endTime == -1)
+            val sleepEndTime = dataBaseRepository.getOrCreateSleepSessionById(id).sleepTimes.sleepTimeEnd
+            if(sleepEndTime == -1)
                 dataStoreRepository.getSleepTimeEnd()
             else
-                endTime
+                sleepEndTime
         }
         else
             dataStoreRepository.getSleepTimeEnd()
 
         val startTime = if(sessionAvailable){
-            val startTime = dataBaseRepository.getOrCreateSleepSessionById(id).sleepTimes.sleepTimeStart
-            if(startTime == -1)
+            val sleepStartTime = dataBaseRepository.getOrCreateSleepSessionById(id).sleepTimes.sleepTimeStart
+            if(sleepStartTime == -1)
                 dataStoreRepository.getSleepTimeEnd()
             else
-                startTime
+                sleepStartTime
         }
         else
             dataStoreRepository.getSleepTimeBegin()
@@ -571,8 +571,13 @@ class SleepCalculationHandler(val context: Context) {
             sleepSessionEntity.sleepTimes.sleepTimeEnd =
                 SleepApiRawDataEntity.getSleepEndTime(sleepApiRawDataEntity)
 
-            // now we are also recalculating the default light and mobile position over the last week
+            // Check if no sleep was in the sleep time
+            if (sleepSessionEntity.sleepTimes.sleepTimeEnd == 0 && sleepSessionEntity.sleepTimes.sleepTimeStart == 0){
+                sleepSessionEntity.sleepTimes.sleepTimeStart = dataStoreRepository.getSleepTimeStart()
+                sleepSessionEntity.sleepTimes.sleepTimeEnd = dataStoreRepository.getSleepTimeEnd()
+            }
 
+            // now we are also recalculating the default light and mobile position over the last week
             val sleepSessions = dataBaseRepository.getUserSleepSessionSinceDays(7).first()
 
             if(sleepSessions.filter { x -> x.mobilePosition == MobilePosition.INBED }.count() >= sleepSessions.count() / 2){

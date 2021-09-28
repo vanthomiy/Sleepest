@@ -187,7 +187,7 @@
                                 tools:ignore="ContentDescription"
                                 android:layout_gravity="end"
                                 app:tint="@color/primary_text_color"
-                                android:src="@drawable/info_help"
+                                android:src="@{sleepViewModel.actualExpand == 0 ? @drawable/info_help_start : @drawable/info_help}"
                                 android:onClick="@{sleepViewModel::onInfoClicked}"
                                 android:tag="0"/>
 
@@ -333,7 +333,7 @@
                                 tools:ignore="ContentDescription"
                                 android:layout_gravity="end"
                                 app:tint="@color/primary_text_color"
-                                android:src="@drawable/info_help"
+                                android:src="@{sleepViewModel.actualExpand == 1 ? @drawable/info_help_start : @drawable/info_help}"
                                 android:onClick="@{sleepViewModel::onInfoClicked}"
                                 android:tag="1"/>
 
@@ -474,7 +474,7 @@
                                 tools:ignore="ContentDescription"
                                 android:layout_gravity="end"
                                 app:tint="@color/primary_text_color"
-                                android:src="@drawable/info_help"
+                                android:src="@{sleepViewModel.actualExpand == 6 ? @drawable/info_help_start : @drawable/info_help}"
                                 android:onClick="@{sleepViewModel::onInfoClicked}"
                                 android:tag="6"/>
 
@@ -539,7 +539,7 @@
                                 tools:ignore="ContentDescription"
                                 android:layout_gravity="end"
                                 app:tint="@color/primary_text_color"
-                                android:src="@drawable/info_help"
+                                android:src="@{sleepViewModel.actualExpand == 2 ? @drawable/info_help_start : @drawable/info_help}"
                                 android:onClick="@{sleepViewModel::onInfoClicked}"
                                 android:tag="2"/>
 
@@ -614,7 +614,7 @@
                                 android:layout_gravity="end"
                                 tools:ignore="ContentDescription"
                                 app:tint="@color/primary_text_color"
-                                android:src="@drawable/info_help"
+                                android:src="@{sleepViewModel.actualExpand == 3 ? @drawable/info_help_start : @drawable/info_help}"
                                 android:onClick="@{sleepViewModel::onInfoClicked}"
                                 android:tag="3"/>
 
@@ -727,7 +727,7 @@
                                 app:tint="@color/primary_text_color"
                                 android:onClick="@{sleepViewModel::onInfoClicked}"
                                 android:tag="4"
-                                android:src="@drawable/info_help"
+                                android:src="@{sleepViewModel.actualExpand == 4 ? @drawable/info_help_start : @drawable/info_help}"
                                 />
 
                         </FrameLayout>

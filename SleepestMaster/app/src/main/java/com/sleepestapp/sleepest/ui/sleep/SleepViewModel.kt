@@ -160,37 +160,13 @@ class SleepViewModel(
 
     val actualExpand = MutableLiveData(-1)
     @SuppressLint("StaticFieldLeak")
-    private var lastView: ImageView? = null
+    //private var lastView: ImageView? = null
 
     /**
      * Info button click by tag
      */
     fun onInfoClicked(view: View){
-        updateInfoChanged(view.tag.toString())
-
-        // Check if its an image view
-        lastView = if(view.tag.toString() != "7"){
-            IconAnimatorUtil.animateView(view as ImageView)
-
-            IconAnimatorUtil.resetView(lastView)
-
-            if(lastView != view)
-                view
-            else
-                null
-        } else{
-            IconAnimatorUtil.resetView(lastView)
-            null
-        }
-    }
-
-    /**
-     * Update the info layouts hide/show
-     */
-    private fun updateInfoChanged(value: String) {
-        //TransitionManager.beginDelayedTransition(transitionsContainer)
-
-
+        val value = view.tag.toString()
         actualExpand.value =(if(actualExpand.value == value.toIntOrNull()) -1 else value.toIntOrNull() )
     }
 
