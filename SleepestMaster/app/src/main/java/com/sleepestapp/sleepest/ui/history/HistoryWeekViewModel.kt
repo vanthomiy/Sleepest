@@ -21,7 +21,7 @@ class HistoryWeekViewModel() : ViewModel() {
 
     private var lastView: ImageView? = null
     fun onInfoClicked(view: View){
-        updateInfoChanged(view.tag.toString(), true)
+        updateInfoChanged(view.tag.toString())
 
         // Check if its an image view
         IconAnimatorUtil.animateView(view as ImageView)
@@ -34,8 +34,7 @@ class HistoryWeekViewModel() : ViewModel() {
             null
     }
 
-    @Suppress("UNUSED_PARAMETER")
-    private fun updateInfoChanged(value: String, toggle: Boolean = false) {
+    private fun updateInfoChanged(value: String) {
         actualExpand.value = (if(actualExpand.value == value.toIntOrNull()) -1 else value.toIntOrNull())
     }
 }

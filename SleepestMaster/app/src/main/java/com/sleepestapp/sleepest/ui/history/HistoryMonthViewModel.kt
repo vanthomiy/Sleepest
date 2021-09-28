@@ -13,7 +13,7 @@ import com.sleepestapp.sleepest.model.data.MobilePosition
 import com.sleepestapp.sleepest.util.IconAnimatorUtil
 
 
-class HistoryMonthViewModel() : ViewModel() {
+class HistoryMonthViewModel : ViewModel() {
 
     val actualExpand = MutableLiveData(-1)
     val goneState = MutableLiveData(View.GONE)

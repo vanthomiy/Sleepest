@@ -63,6 +63,7 @@ class HistoryTabView : Fragment() {
 
         binding = FragmentHistoryTabviewBinding.inflate(inflater, container, false)
         binding.historyTabView = viewModel
+        binding.lifecycleOwner = this
 
         setUpHistoryViewModelValues()
 

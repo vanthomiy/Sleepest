@@ -36,6 +36,7 @@ class HistoryMonthFragment : Fragment() {
 
         binding = FragmentHistoryMonthBinding.inflate(inflater, container, false)
         binding.historyMonthViewModel = viewModelMonth
+        binding.lifecycleOwner = this
 
         barChartDates = getEndOfMonth()
         barChart = viewModel.setBarChart(BarChart(actualContext), barChartDates.first, barChartDates.second)

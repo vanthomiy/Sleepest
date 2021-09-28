@@ -84,6 +84,7 @@ class HistoryDayFragment : Fragment() {
 
         binding = FragmentHistoryDayBinding.inflate(inflater, container, false)
         binding.historyDayViewModel = viewModelDay
+        binding.lifecycleOwner = this
 
         viewModelDay.is24HourFormat = is24HourFormat(actualContext)
 

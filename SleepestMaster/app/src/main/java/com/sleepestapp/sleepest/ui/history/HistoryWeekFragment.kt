@@ -40,6 +40,7 @@ class HistoryWeekFragment : Fragment() {
 
         binding = FragmentHistoryWeekBinding.inflate(inflater, container, false)
         binding.historyWeekViewModel = viewModelWeek
+        binding.lifecycleOwner = this
 
         barChart = viewModel.setBarChart(BarChart(actualContext), 7, getSundayOfWeek())
         activityChart = viewModel.setActivityChart(LineChart(context), 7, getSundayOfWeek())
