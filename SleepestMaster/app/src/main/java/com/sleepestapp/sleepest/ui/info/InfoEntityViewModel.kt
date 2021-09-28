@@ -1,6 +1,5 @@
 package com.sleepestapp.sleepest.ui.info
 
-import android.app.Application
 import android.util.LayoutDirection
 import android.view.View
 import android.widget.LinearLayout
@@ -21,7 +20,7 @@ class InfoEntityViewModel : ViewModel() {
     val imageVisible = MutableLiveData(View.GONE)
     val lottieVisible = MutableLiveData(View.GONE)
     val headerVisible = MutableLiveData(View.GONE)
-    val descrriptionVisible = MutableLiveData(View.GONE)
+    val descriptionVisible = MutableLiveData(View.GONE)
 
     //endregion
 

@@ -25,7 +25,7 @@ public class TimeConverterUtil {
 
     public static String toTimeFormat(int hour, int minute) {
 
-        String hourText = null, minuteText = null;
+        String hourText, minuteText;
 
         if(hour < 10) {
             hourText = "0" + hour;

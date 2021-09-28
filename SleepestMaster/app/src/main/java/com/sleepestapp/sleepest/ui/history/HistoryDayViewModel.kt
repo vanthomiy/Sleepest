@@ -30,7 +30,7 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
 
     private val scope: CoroutineScope = MainScope()
 
-    val sleepCalculationHandler: SleepCalculationHandler by lazy { SleepCalculationHandler.getHandler(context) }
+    val sleepCalculationHandler: SleepCalculationHandler by lazy { SleepCalculationHandler(context) }
 
     /** Contains information about the fall asleep time. */
     var beginOfSleep = ObservableField("")
@@ -80,9 +80,6 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
 
     lateinit var transitionsContainer : ViewGroup
 
-    init {
-
-    }
 
     fun sleepRating(view: View) {
         sleepRatingUpdate = true
@@ -154,7 +151,7 @@ class HistoryDayViewModel(application: Application) : AndroidViewModel(applicati
             },
             dateTime.hour,
             dateTime.minute,
-            SleepTimeValidationUtil.Is24HourFormat(context)
+            SleepTimeValidationUtil.is24HourFormat(context)
         )
         tpd.show()
     }

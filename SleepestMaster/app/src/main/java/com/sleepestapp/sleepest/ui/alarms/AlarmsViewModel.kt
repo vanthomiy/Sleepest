@@ -1,20 +1,12 @@
 package com.sleepestapp.sleepest.ui.alarms
 
-import android.app.Application
-import android.transition.TransitionManager
 import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.*
-import com.airbnb.lottie.LottieAnimationView
-import com.sleepestapp.sleepest.MainApplication
-import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
 import com.sleepestapp.sleepest.storage.db.AlarmEntity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -46,7 +38,9 @@ class AlarmsViewModel(
     /**
      * Observable live data of the alarms flow
      */
-    val activeAlarmsLiveData by lazy {  dataBaseRepository.activeAlarmsFlow().asLiveData() }
+    val activeAlarmsLiveData by lazy {
+        dataBaseRepository.activeAlarmsFlow(dataStoreRepository).asLiveData()
+    }
 
 
     val alarmExpandId = MutableLiveData(0)
@@ -54,46 +48,35 @@ class AlarmsViewModel(
 
     val actualExpand = MutableLiveData(View.GONE)
     val rotateState = MutableLiveData(0)
-
-    var lottie : LottieAnimationView? = null
-
+    val expandToggled = MutableLiveData(false)
     /**
      * Expands the alarm settings of the alarms view
      */
+    @Suppress("UNUSED_PARAMETER")
     fun onExpandClicked(view: View) {
-        TransitionManager.beginDelayedTransition(transitionsContainer);
+        //TransitionManager.beginDelayedTransition(transitionsContainer)
+        expandToggled.value = expandToggled.value == false
 
         actualExpand.value = (if (actualExpand.value == View.GONE) View.VISIBLE else View.GONE)
         rotateState.value = (if (actualExpand.value == View.GONE) 0 else 180)
 
         alarmExpandId.value = (-1)
-
-        lottie = view as LottieAnimationView
-
-        if(actualExpand.value == View.GONE)
-            lottie?.playAnimation()
-        else
-            lottie?.pauseAnimation()
-
     }
 
     /**
      * When another expand is clicked, we also update the lottie animation to start again
      */
-    fun updateExpandChanged(isExpaned : Boolean) {
+    fun updateExpandChanged(isExpanded : Boolean) {
 
-        TransitionManager.beginDelayedTransition(transitionsContainer);
+        //TransitionManager.beginDelayedTransition(transitionsContainer)
+        expandToggled.value = expandToggled.value == false
 
-        if(isExpaned)
+        if(isExpanded)
         {
             actualExpand.value = (View.GONE)
             rotateState.value = (0)
         }
 
-        if(actualExpand.value == View.GONE)
-            lottie?.playAnimation()
-        else
-            lottie?.pauseAnimation()
     }
 
     val cancelAlarmWhenAwake = MutableLiveData(false)
@@ -103,11 +86,8 @@ class AlarmsViewModel(
     /**
      * When the alarm type has changed (Vibration/Sound etc.)
      */
-    fun onAlarmTypeChanged(
-        parent: AdapterView<*>?,
-        selectedItemView: View,
-        art: Int,
-        id: Long)
+    @Suppress("UNUSED_PARAMETER")
+    fun onAlarmTypeChanged(parent: AdapterView<*>?, selectedItemView: View, art: Int, id: Long)
     {
 
         viewModelScope.launch {
@@ -118,6 +98,7 @@ class AlarmsViewModel(
     /**
      * When the alarm end after awake was changed
      */
+    @Suppress("UNUSED_PARAMETER")
     fun onEndAlarmAfterFiredChanged(view: View) {
         viewModelScope.launch {
             cancelAlarmWhenAwake.value?.let { dataStoreRepository.updateEndAlarmAfterFired(it) }
@@ -137,7 +118,7 @@ class AlarmsViewModel(
          * Loads all the init values from the datastore and passes the values to the bindings
          */
         viewModelScope.launch {
-            var settings = dataStoreRepository.alarmParameterFlow.first()
+            val settings = dataStoreRepository.alarmParameterFlow.first()
 
             cancelAlarmWhenAwake.value = (settings.endAlarmAfterFired)
             alarmArt.value = (settings.alarmArt)
@@ -147,12 +128,5 @@ class AlarmsViewModel(
             }
         }
     }
-
-    //region animation
-
-    lateinit var transitionsContainer : ViewGroup
-
-
-    //endregion
 }
 

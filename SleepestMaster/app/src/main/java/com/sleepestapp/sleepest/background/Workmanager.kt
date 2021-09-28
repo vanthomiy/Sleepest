@@ -9,7 +9,6 @@ import androidx.work.*
 import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.model.data.NotificationUsage
 import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler
-import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler.Companion.getHandler
 import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
 import com.sleepestapp.sleepest.util.NotificationUtil
@@ -40,7 +39,7 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
             (applicationContext as MainApplication).dataBaseRepository
         }
 
-        val sleepCalculationHandler : SleepCalculationHandler = getHandler(applicationContext)
+        val sleepCalculationHandler = SleepCalculationHandler(applicationContext)
 
 
         scope.launch {
@@ -53,9 +52,11 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
                 ed.putInt("time", ForegroundService.getForegroundServiceTime())
                 ed.apply()
 
+                val endTime = dataStoreRepository.sleepParameterFlow.first().sleepTimeEnd
+
                 //Get sleep data table
                 val sleepApiRawDataEntity =
-                    dataBaseRepository.getSleepApiRawDataFromDateLive(LocalDateTime.now()).first()
+                    dataBaseRepository.getSleepApiRawDataFromDateLive(LocalDateTime.now(), endTime).first()
                         ?.sortedByDescending { x -> x.timestampSeconds }
 
                 //Check if data are in table
@@ -76,7 +77,7 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
                         notificationsUtil.chooseNotification()
                         //Restarts the subscribing of data in case of an receiving error
                         Toast.makeText(applicationContext,"Restarted sleepdata tracking", Toast.LENGTH_LONG).show()
-                        BackgroundAlarmTimeHandler.getHandler(applicationContext.getApplicationContext()).startWorkmanager()
+                        BackgroundAlarmTimeHandler.getHandler(applicationContext.applicationContext).startWorkmanager()
                     } else {
                         if (NotificationUtil.isNotificationActive(NotificationUsage.NOTIFICATION_NO_API_DATA, applicationContext)) {
                             NotificationUtil.cancelNotification(NotificationUsage.NOTIFICATION_NO_API_DATA, applicationContext)
@@ -91,7 +92,7 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
                         )
                     notificationsUtil.chooseNotification()
                     Toast.makeText(applicationContext,"Restarted sleepdata tracking", Toast.LENGTH_LONG).show()
-                    BackgroundAlarmTimeHandler.getHandler(applicationContext.getApplicationContext()).startWorkmanager()
+                    BackgroundAlarmTimeHandler.getHandler(applicationContext.applicationContext).startWorkmanager()
                 } else {
                     if (NotificationUtil.isNotificationActive(NotificationUsage.NOTIFICATION_NO_API_DATA, applicationContext)) {
                         NotificationUtil.cancelNotification(NotificationUsage.NOTIFICATION_NO_API_DATA, applicationContext)

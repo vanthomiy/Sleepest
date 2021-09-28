@@ -65,13 +65,14 @@
                         <ImageView
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
+                            tools:ignore="ContentDescription"
                             android:layout_gravity="start"
                             android:src="@drawable/ic_baseline_build_24"
                             app:tint="@color/primary_text_color" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/img_header_magrin"
+                            android:layout_marginStart="@dimen/img_header_margin"
                             android:textSize="@dimen/headerSize"
                             android:textStyle="bold"
                             android:layout_gravity="start|center"
@@ -83,6 +84,7 @@
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
                             android:src="@drawable/ic_baseline_expand_more_24"
+                            tools:ignore="ContentDescription"
                             android:rotation="@{profileViewModel.actualExpand == 0 ? profileViewModel.rotatedState:profileViewModel.normalRotationState}"
                             android:onClick="@{profileViewModel::onExpandClicked}"
                             android:tag="0"
@@ -115,18 +117,14 @@
                         </LinearLayout>
 
 
-                        <LinearLayout
+                        <FrameLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
                             android:layout_gravity="start"
                             android:layout_marginStart="0dp"
-                            android:orientation="vertical"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:orientation="horizontal"
                             android:layout_marginVertical="10dp"
-                            android:background="@drawable/bgrounded_button">
-
-                            <FrameLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/valuesHeight">
+                            android:background="@drawable/background_rounded_button">
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
@@ -147,23 +145,19 @@
                                     android:checked="@={profileViewModel.autoDarkMode}"
                                     android:onClick="@{profileViewModel::autoDarkModeToggled}"
                                     />
-                            </FrameLayout>
-
-
-
-                        </LinearLayout>
+                        </FrameLayout>
 
                         <androidx.appcompat.widget.AppCompatToggleButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
                             android:layout_gravity="start"
-                            android:background="@drawable/bgrounded_button"
+                            android:background="@drawable/background_rounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:textColor="@color/primary_text_color"
                             android:visibility="@{profileViewModel.autoDarkMode ? View.GONE:View.VISIBLE}"
-                            android:textOn="Dark Mode"
-                            android:textOff="Light Mode"
+                            android:textOn="@string/settings_darkmode_on"
+                            android:textOff="@string/settings_darkmode_off"
                             android:layout_marginBottom="10dp"
                             android:checked="@={profileViewModel.darkMode}"
                             android:onClick="@{profileViewModel::darkModeToggled}"/>
@@ -186,7 +180,7 @@
                             android:textStyle="bold"
                             android:layout_gravity="start|center"
                             android:textColor="@color/primary_text_color"
-                            android:text="Sleepest Banner"/>
+                            android:text="@string/settings_sleepest_banner"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -195,7 +189,7 @@
                             android:layout_marginStart="0dp"
                             android:orientation="vertical"
                             android:layout_marginVertical="10dp"
-                            android:background="@drawable/bgrounded_button">
+                            android:background="@drawable/background_rounded_button">
 
                             <FrameLayout
                                 android:layout_width="match_parent"
@@ -208,7 +202,7 @@
                                     android:layout_marginStart="10dp"
                                     android:textSize="@dimen/valueSize"
                                     android:textColor="@color/primary_text_color"
-                                    android:text="Alarm aktive anzeigen"
+                                    android:text="@string/settings_banner_configuration_alarm_active"
                                     />
 
                                 <androidx.appcompat.widget.SwitchCompat
@@ -218,7 +212,7 @@
                                     android:gravity="center_vertical"
                                     android:layout_marginEnd="10dp"
                                     android:tag="show_alarm_active"
-                                    android:checked="@={profileViewModel.showAlarmActiv}"
+                                    android:checked="@={profileViewModel.showAlarmActive}"
                                     android:onClick="@{profileViewModel::bannerSettingsToggled}"
                                     />
                             </FrameLayout>
@@ -233,7 +227,7 @@
                                     android:layout_marginStart="10dp"
                                     android:textSize="@dimen/valueSize"
                                     android:textColor="@color/primary_text_color"
-                                    android:text="Aktueller Aufweckzeitpunkt"
+                                    android:text="@string/settings_banner_configuration_wakeup"
                                     />
 
                                 <androidx.appcompat.widget.SwitchCompat
@@ -258,7 +252,7 @@
                                     android:layout_marginStart="10dp"
                                     android:textSize="@dimen/valueSize"
                                     android:textColor="@color/primary_text_color"
-                                    android:text="Aktuelle Schlafenszeit"
+                                    android:text="@string/settings_banner_configuration_sleeptime"
                                     />
 
                                 <androidx.appcompat.widget.SwitchCompat
@@ -283,32 +277,7 @@
                                     android:layout_marginStart="10dp"
                                     android:textSize="@dimen/valueSize"
                                     android:textColor="@color/primary_text_color"
-                                    android:text="Genaue Schlafenszeiten"
-                                    />
-
-                                <androidx.appcompat.widget.SwitchCompat
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    android:layout_gravity="end"
-                                    android:gravity="center_vertical"
-                                    android:layout_marginEnd="10dp"
-                                    android:tag="show_detailed_sleep_states"
-                                    android:checked="@={profileViewModel.showDetailedSleepTime}"
-                                    android:onClick="@{profileViewModel::bannerSettingsToggled}"
-                                    />
-                            </FrameLayout>
-                            <FrameLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/valuesHeight">
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    android:layout_gravity="start"
-                                    android:gravity="center_vertical"
-                                    android:layout_marginStart="10dp"
-                                    android:textSize="@dimen/valueSize"
-                                    android:textColor="@color/primary_text_color"
-                                    android:text="Schlafstatus anzeigen"
+                                    android:text="@string/settings_banner_configuration_sleepstate"
                                     />
 
                                 <androidx.appcompat.widget.SwitchCompat
@@ -350,12 +319,13 @@
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="start"
+                            tools:ignore="ContentDescription"
                             android:src="@drawable/ic_baseline_help_24"
                             app:tint="@color/primary_text_color" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/img_header_magrin"
+                            android:layout_marginStart="@dimen/img_header_margin"
                             android:textSize="@dimen/headerSize"
                             android:textStyle="bold"
                             android:layout_gravity="start|center"
@@ -366,6 +336,7 @@
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
+                            tools:ignore="ContentDescription"
                             android:src="@drawable/ic_baseline_expand_more_24"
                             android:rotation="@{profileViewModel.actualExpand == 1 ? profileViewModel.rotatedState:profileViewModel.normalRotationState}"
                             android:onClick="@{profileViewModel::onExpandClicked}"
@@ -385,20 +356,19 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgrounded_button"
+                            android:background="@drawable/background_rounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/settings_tutorial"
                             android:textColor="@color/primary_text_color"
                             android:tag="tutorial"
                             android:id="@+id/btnTutorial">
-                            android:onClick="@{profileViewModel::onHelpClicked}">
                         </androidx.appcompat.widget.AppCompatButton>
 
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgrounded_button"
+                            android:background="@drawable/background_rounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/settings_neccessary_settings"
@@ -427,13 +397,14 @@
                         <ImageView
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
+                            tools:ignore="ContentDescription"
                             android:layout_gravity="start"
                             android:src="@drawable/ic_baseline_feedback_24"
                             app:tint="@color/primary_text_color" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/img_header_magrin"
+                            android:layout_marginStart="@dimen/img_header_margin"
                             android:textSize="@dimen/headerSize" android:textStyle="bold"
                                 android:layout_gravity="start|center"
 
@@ -443,6 +414,7 @@
                         <ImageView
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
+                            tools:ignore="ContentDescription"
                             android:layout_gravity="end"
                             android:src="@drawable/ic_baseline_expand_more_24"
                             android:rotation="@{profileViewModel.actualExpand == 2 ? profileViewModel.rotatedState:profileViewModel.normalRotationState}"
@@ -463,7 +435,7 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgrounded_button"
+                            android:background="@drawable/background_rounded_button"
                             android:backgroundTint="@color/rem_sleep_color"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
@@ -476,7 +448,7 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgrounded_button"
+                            android:background="@drawable/background_rounded_button"
                             android:backgroundTint="@color/sleep_sleep_color"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
@@ -489,7 +461,7 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgrounded_button"
+                            android:background="@drawable/background_rounded_button"
                             android:backgroundTint="@color/warning_color"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
@@ -502,7 +474,7 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgrounded_button"
+                            android:background="@drawable/background_rounded_button"
                             android:backgroundTint="@color/light_sleep_color"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
@@ -535,13 +507,14 @@
                         <ImageView
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
+                            tools:ignore="ContentDescription"
                             android:layout_gravity="start"
                             android:src="@drawable/ic_baseline_person_add_alt_1_24"
                             app:tint="@color/primary_text_color" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/img_header_magrin"
+                            android:layout_marginStart="@dimen/img_header_margin"
                             android:textSize="@dimen/headerSize" android:textStyle="bold"
                                 android:layout_gravity="start|center"
 
@@ -552,6 +525,7 @@
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
+                            tools:ignore="ContentDescription"
                             android:src="@drawable/ic_baseline_expand_more_24"
                             android:rotation="@{profileViewModel.actualExpand == 3 ? profileViewModel.rotatedState:profileViewModel.normalRotationState}"
                             android:onClick="@{profileViewModel::onExpandClicked}"
@@ -576,14 +550,13 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/valuesHeight"
                                 android:layout_marginEnd="50dp"
-                                android:background="@drawable/bgrounded_button"
+                                android:background="@drawable/background_rounded_button"
                                 android:textSize="@dimen/valueSize"
                                 android:textColor="@color/primary_text_color"
                                 android:layout_marginVertical="5dp"
                                 android:text="@string/settings_sleepdata"
                                 android:tag="sleepActivity"
-                                android:id="@+id/sleepActivityPermission"
-                                android:onClick="onPermissionClicked">
+                                android:id="@+id/sleepActivityPermission">
                             </androidx.appcompat.widget.AppCompatButton>
 
                             <androidx.appcompat.widget.AppCompatImageView
@@ -625,13 +598,12 @@
                                 android:layout_height="@dimen/valuesHeight"
                                 android:layout_marginVertical="5dp"
                                 android:layout_marginEnd="50dp"
-                                android:background="@drawable/bgrounded_button"
-                                android:onClick="onPermissionClicked"
+                                android:background="@drawable/background_rounded_button"
                                 android:tag="dailyActivity"
                                 android:id="@+id/dailyActivityPermission"
                                 android:text="@string/settings_daily_activity"
                                 android:textColor="@color/primary_text_color"
-                                android:textSize="@dimen/valueSize"></androidx.appcompat.widget.AppCompatButton>
+                                android:textSize="@dimen/valueSize" />
 
                             <androidx.appcompat.widget.AppCompatImageView
                                 android:layout_width="35dp"
@@ -671,15 +643,13 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/valuesHeight"
                                 android:layout_marginEnd="50dp"
-                                android:background="@drawable/bgrounded_button"
+                                android:background="@drawable/background_rounded_button"
                                 android:textSize="@dimen/valueSize"
                                 android:layout_marginVertical="5dp"
                                 android:text="@string/settings_notification_privacy"
                                 android:textColor="@color/primary_text_color"
-
                                 android:tag="notificationPrivacy"
-                                android:id="@+id/notificationPrivacyPermission"
-                                android:onClick="onPermissionClicked">
+                                android:id="@+id/notificationPrivacyPermission">
                             </androidx.appcompat.widget.AppCompatButton>
 
                             <androidx.appcompat.widget.AppCompatImageView
@@ -721,15 +691,13 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/valuesHeight"
                                 android:layout_marginEnd="50dp"
-                                android:background="@drawable/bgrounded_button"
+                                android:background="@drawable/background_rounded_button"
                                 android:textSize="@dimen/valueSize"
                                 android:layout_marginVertical="5dp"
                                 android:text="@string/settings_overlapp_app"
                                 android:textColor="@color/primary_text_color"
-
                                 android:tag="overlay"
-                                android:id="@+id/overlayPermission"
-                                android:onClick="onPermissionClicked">
+                                android:id="@+id/overlayPermission">
                             </androidx.appcompat.widget.AppCompatButton>
 
                             <androidx.appcompat.widget.AppCompatImageView
@@ -783,15 +751,15 @@
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="start"
+                            tools:ignore="ContentDescription"
                             android:src="@drawable/ic_baseline_assignment_24"
                             app:tint="@color/primary_text_color" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/img_header_magrin"
+                            android:layout_marginStart="@dimen/img_header_margin"
                             android:textSize="@dimen/headerSize" android:textStyle="bold"
-                                android:layout_gravity="start|center"
-
+                            android:layout_gravity="start|center"
                             android:textColor="@color/primary_text_color"
                             android:text="@string/settings_credits"/>
 
@@ -799,6 +767,7 @@
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
+                            tools:ignore="ContentDescription"
                             android:src="@drawable/ic_baseline_expand_more_24"
                             android:rotation="@{profileViewModel.actualExpand == 5 ? profileViewModel.rotatedState:profileViewModel.normalRotationState}"
                             android:onClick="@{profileViewModel::onExpandClicked}"
@@ -847,13 +816,14 @@
                         <ImageView
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
+                            tools:ignore="ContentDescription"
                             android:layout_gravity="start"
                             android:src="@drawable/ic_baseline_sd_storage_24"
                             app:tint="@color/primary_text_color" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/img_header_magrin"
+                            android:layout_marginStart="@dimen/img_header_margin"
                             android:textSize="@dimen/headerSize" android:textStyle="bold"
                                 android:layout_gravity="start|center"
 
@@ -864,6 +834,7 @@
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
+                            tools:ignore="ContentDescription"
                             android:src="@drawable/ic_baseline_expand_more_24"
                             android:rotation="@{profileViewModel.actualExpand == 4 ? profileViewModel.rotatedState:profileViewModel.normalRotationState}"
                             android:onClick="@{profileViewModel::onExpandClicked}"
@@ -883,7 +854,7 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgrounded_button"
+                            android:background="@drawable/background_rounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/settings_export_data"
@@ -894,7 +865,7 @@
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/valuesHeight"
-                            android:background="@drawable/bgrounded_button"
+                            android:background="@drawable/background_rounded_button"
                             android:textSize="@dimen/valueSize"
                             android:layout_marginVertical="5dp"
                             android:text="@string/settings_import_data"
@@ -912,7 +883,6 @@
                             android:layout_marginVertical="5dp"
                             android:text="@{profileViewModel.removeButtonText}"
                             android:textColor="@color/primary_text_color"
-
                             android:tag="remove"
                             android:onClick="@{profileViewModel::onDataClicked}">
                         </androidx.appcompat.widget.AppCompatButton>
@@ -928,7 +898,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/img_header_magrin"
+                                android:layout_marginStart="@dimen/img_header_margin"
                                 android:textSize="@dimen/headerSize"
                                 android:layout_gravity="start"
                                 android:textColor="@color/primary_text_color"
@@ -989,12 +959,6 @@
                     android:textSize="@dimen/headerSize"
                     android:layout_gravity="center_horizontal"
                     android:textColor="@color/primary_text_color"/>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"></FrameLayout>
-
-
 
 
             </LinearLayout>

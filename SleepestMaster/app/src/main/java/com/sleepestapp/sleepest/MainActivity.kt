@@ -1,17 +1,13 @@
 package com.sleepestapp.sleepest
 
 import android.Manifest
-import android.app.Application
-import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
 
 import android.os.Build
 
 import android.os.Bundle
-import android.provider.Settings
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -19,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 
 import com.sleepestapp.sleepest.background.AlarmCycleState
@@ -29,8 +26,6 @@ import com.sleepestapp.sleepest.databinding.ActivityMainBinding
 import com.sleepestapp.sleepest.model.data.AlarmReceiverUsage
 import com.sleepestapp.sleepest.model.data.SleepSleepChangeFrom
 import com.sleepestapp.sleepest.model.data.export.ImportUtil
-import com.sleepestapp.sleepest.storage.DataStoreRepository
-import com.sleepestapp.sleepest.storage.DatabaseRepository
 import com.sleepestapp.sleepest.ui.alarms.AlarmsFragment
 import com.sleepestapp.sleepest.ui.history.HistoryTabView
 import com.sleepestapp.sleepest.ui.settings.SettingsFragment
@@ -38,11 +33,6 @@ import com.sleepestapp.sleepest.ui.sleep.SleepFragment
 import com.sleepestapp.sleepest.util.PermissionsUtil
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil
 import com.sleepestapp.sleepest.util.TimeConverterUtil
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.snackbar.Snackbar
-import com.sleepestapp.sleepest.ui.sleep.SleepViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.*
@@ -56,10 +46,12 @@ class MainActivity : AppCompatActivity() {
 
     var factory = object : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return  MainActivityViewModel(
+            @Suppress("UNCHECKED_CAST")
+            // Workaround because we know that we can cast to T
+            return  (MainActivityViewModel(
                 (actualContext as MainApplication).dataStoreRepository,
                 (actualContext as MainApplication).dataBaseRepository
-            ) as T
+            ) as T)
         }
     }
 
@@ -90,7 +82,7 @@ class MainActivity : AppCompatActivity() {
             }
             else{
                 if(settings.designDarkModeAckn)
-                    viewModel.dataStoreRepository.updateAutoDarkModeAckn(false)
+                    viewModel.dataStoreRepository.updateAutoDarkModeAcknowledge(false)
 
                 supportFragmentManager.beginTransaction().replace(
                     R.id.navigationFrame,
@@ -100,12 +92,12 @@ class MainActivity : AppCompatActivity() {
                 binding.bottomBar.selectedItemId = R.id.profile
 
                 if(settings.afterRestartApp){
-                    settingsFragment.setCaseOfEntrie(4)
+                    settingsFragment.setCaseOfEntry(4)
                     viewModel.dataStoreRepository.updateAfterRestartApp(false)
                 }
                 else{
 
-                    settingsFragment.setCaseOfEntrie(0)
+                    settingsFragment.setCaseOfEntry(0)
                 }
             }
 
@@ -166,8 +158,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun switchToMenu(itemId: Int, changeType:Int = -1) {
-        settingsFragment.setCaseOfEntrie(changeType)
-        binding.bottomBar.selectedItemId = itemId;
+        settingsFragment.setCaseOfEntry(changeType)
+        binding.bottomBar.selectedItemId = itemId
     }
 
     // endregion
@@ -199,13 +191,12 @@ class MainActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
 
-        // observe alarm changes
         viewModel.activeAlarmsLiveData.observe(this){ list ->
             // check the list if empty or not
             BackgroundAlarmTimeHandler.getHandler(applicationContext).changeOfAlarmEntity(list.isEmpty())
         }
 
-        // observe sleeptime changes
+        // observe sleep time changes
         viewModel.sleepParametersLiveData.observe(this) {
             BackgroundAlarmTimeHandler.getHandler(applicationContext).changeSleepTime()
         }
@@ -261,7 +252,7 @@ class MainActivity : AppCompatActivity() {
                 if (viewModel.dataStoreRepository.tutorialStatusFlow.first().tutorialCompleted && !viewModel.dataStoreRepository.tutorialStatusFlow.first().energyOptionsShown) {
                     DontKillMyAppFragment.show(this@MainActivity)
                 }
-                //Start a alarm for the new foregroundservice start time
+                //Start a alarm for the new foreground service start time
                 val calendar = TimeConverterUtil.getAlarmDate(bundle.getInt(getString(R.string.onboarding_intent_starttime)))
                 AlarmReceiver.startAlarmManager(
                     calendar[Calendar.DAY_OF_WEEK],
@@ -314,19 +305,16 @@ class MainActivity : AppCompatActivity() {
     private val requestPermissionLauncher: ActivityResultLauncher<String> =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (!isGranted) {
-                //mainViewModel.updatePermissionActive(false)
                 //Permission denied on Android platform that supports runtime permissions.
-                //displayPermissionSettingsSnackBar()
             } else {
-                //mainViewModel.updatePermissionActive(true)
                 // Permission was granted (either by approval or Android version below Q).
 
-                com.sleepestapp.sleepest.DontKillMyAppFragment.show(this@MainActivity)
+                DontKillMyAppFragment.show(this@MainActivity)
 
                 lifecycleScope.launch {
                     val calendar = TimeConverterUtil.getAlarmDate(viewModel.dataStoreRepository.getSleepTimeBegin())
 
-                    //Start a alarm for the new foregroundservice start time
+                    //Start a alarm for the new foreground service start time
                     AlarmReceiver.startAlarmManager(
                         calendar[Calendar.DAY_OF_WEEK],
                         calendar[Calendar.HOUR_OF_DAY],

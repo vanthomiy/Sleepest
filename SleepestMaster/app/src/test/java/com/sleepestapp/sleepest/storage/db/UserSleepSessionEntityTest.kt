@@ -8,7 +8,7 @@ import java.time.LocalDate
 class UserSleepSessionEntityTest{
 
     @Test
-    fun IdAndTimestampDateCreation(){
+    fun idAndTimestampDateCreation(){
 
         var idDate = UserSleepSessionEntity.getIdByDateTime(LocalDate.of(2021, 6, 3))
         // 7:36

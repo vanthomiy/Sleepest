@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:orientation="vertical"
@@ -31,13 +31,14 @@
 
                     <ImageView
                         android:layout_width="@dimen/img_header_size"
+                        tools:ignore="ContentDescription"
                         android:layout_height="@dimen/img_header_size"
                         android:layout_gravity="start"
                         android:src="@drawable/ic_baseline_bedtime_24"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/img_header_magrin"
+                        android:layout_marginStart="@dimen/img_header_margin"
                         android:textSize="@dimen/headerSize"
                         android:layout_gravity="start"
                         android:textColor="@color/primary_text_color"
@@ -55,7 +56,7 @@
                         android:layout_width="150dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="start"
-                        android:background="@drawable/bgrounded_button">
+                        android:background="@drawable/background_rounded_button">
                         <TextView
                             android:id="@+id/tvOnboardingStartTime"
                             android:layout_width="wrap_content"
@@ -83,7 +84,7 @@
                         android:layout_width="150dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="end"
-                        android:background="@drawable/bgrounded_button">
+                        android:background="@drawable/background_rounded_button">
 
                         <TextView
                             android:id="@+id/tvOnboardingEndTime"
@@ -117,12 +118,13 @@
                     <ImageView
                         android:layout_width="@dimen/img_header_size"
                         android:layout_height="@dimen/img_header_size"
+                        tools:ignore="ContentDescription"
                         android:layout_gravity="start"
                         android:src="@drawable/ic_baseline_night_shelter_24"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/img_header_magrin"
+                        android:layout_marginStart="@dimen/img_header_margin"
                         android:textSize="@dimen/headerSize"
                         android:layout_gravity="start"
                         android:textColor="@color/primary_text_color"
@@ -240,8 +242,7 @@
                         android:text="@string/settings_sleepdata"
                         android:textColor="@color/primary_text_color"
                         android:layout_gravity="start"
-                        android:id="@+id/btnOnboardingSleepdataPermission"
-                        android:onClick="onPermissionClicked">
+                        android:id="@+id/btnOnboardingSleepdataPermission">
                     </androidx.appcompat.widget.AppCompatButton>
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -271,8 +272,7 @@
                         android:text="@string/settings_overlapp_app"
                         android:textColor="@color/primary_text_color"
                         android:layout_gravity="start"
-                        android:id="@+id/btnOnboardingOverlayPermission"
-                        android:onClick="onPermissionClicked">
+                        android:id="@+id/btnOnboardingOverlayPermission">
                     </androidx.appcompat.widget.AppCompatButton>
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -300,8 +300,7 @@
                         android:text="@string/settings_daily_activity"
                         android:textColor="@color/primary_text_color"
                         android:layout_gravity="start"
-                        android:id="@+id/btnOnboardingDailyActivityPermission"
-                        android:onClick="onPermissionClicked">
+                        android:id="@+id/btnOnboardingDailyActivityPermission">
                     </androidx.appcompat.widget.AppCompatButton>
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -364,6 +363,7 @@
             android:id="@+id/ivOnboadingNoticeImage"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            tools:ignore="ContentDescription"
             android:layout_weight="0.4"
             android:layout_margin="10dp"
             android:visibility="gone"
@@ -379,6 +379,7 @@
             <ImageView
                 android:id="@+id/ivOnboardingPreviousPage"
                 android:layout_width="0dp"
+                tools:ignore="ContentDescription"
                 android:layout_height="match_parent"
                 android:layout_weight="0.2"
                 android:gravity="start"
@@ -397,6 +398,7 @@
 
             <ImageView
                 android:id="@+id/ivOnboardingNextPage"
+                tools:ignore="ContentDescription"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.2"
@@ -429,6 +431,7 @@
                 android:id="@+id/ivOnboardingIndicator1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                tools:ignore="ContentDescription"
                 android:layout_weight="0.05"
                 android:layout_margin="4dp"
                 android:src="@drawable/onboarding_indicator_unselected"/>
@@ -436,6 +439,7 @@
             <ImageView
                 android:id="@+id/ivOnboardingIndicator2"
                 android:layout_width="0dp"
+                tools:ignore="ContentDescription"
                 android:layout_height="match_parent"
                 android:layout_weight="0.05"
                 android:layout_margin="4dp"
@@ -445,6 +449,7 @@
                 android:id="@+id/ivOnboardingIndicator3"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                tools:ignore="ContentDescription"
                 android:layout_weight="0.05"
                 android:layout_margin="4dp"
                 android:src="@drawable/onboarding_indicator_unselected"/>
@@ -453,6 +458,7 @@
                 android:id="@+id/ivOnboardingIndicator4"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                tools:ignore="ContentDescription"
                 android:layout_weight="0.05"
                 android:layout_margin="4dp"
                 android:src="@drawable/onboarding_indicator_unselected"/>
@@ -460,6 +466,7 @@
             <ImageView
                 android:id="@+id/ivOnboardingIndicator5"
                 android:layout_width="0dp"
+                tools:ignore="ContentDescription"
                 android:layout_height="match_parent"
                 android:layout_weight="0.05"
                 android:layout_margin="4dp"
@@ -469,6 +476,7 @@
                 android:id="@+id/ivOnboardingIndicator6"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                tools:ignore="ContentDescription"
                 android:layout_weight="0.05"
                 android:layout_margin="4dp"
                 android:src="@drawable/onboarding_indicator_unselected"/>
@@ -476,6 +484,7 @@
             <ImageView
                 android:id="@+id/ivOnboardingIndicator7"
                 android:layout_width="0dp"
+                tools:ignore="ContentDescription"
                 android:layout_height="match_parent"
                 android:layout_weight="0.05"
                 android:layout_margin="4dp"
@@ -485,6 +494,7 @@
                 android:id="@+id/ivOnboardingIndicator8"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                tools:ignore="ContentDescription"
                 android:layout_weight="0.05"
                 android:layout_margin="4dp"
                 android:src="@drawable/onboarding_indicator_unselected"/>
@@ -492,12 +502,14 @@
             <ImageView
                 android:id="@+id/ivOnboardingIndicator9"
                 android:layout_width="0dp"
+                tools:ignore="ContentDescription"
                 android:layout_height="match_parent"
                 android:layout_weight="0.05"
                 android:layout_margin="4dp"
                 android:src="@drawable/onboarding_indicator_unselected"/>
             <ImageView
                 android:id="@+id/ivOnboardingIndicator10"
+                tools:ignore="ContentDescription"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.05"
@@ -517,7 +529,7 @@
             android:layout_height="@dimen/valuesHeight"
             android:layout_marginHorizontal="30dp"
             android:layout_marginVertical="10dp"
-            android:background="@drawable/bgrounded_button"
+            android:background="@drawable/background_rounded_button"
             android:textColor="@color/primary_text_color"
             android:text="Get started"/>
 

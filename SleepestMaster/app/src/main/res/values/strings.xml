@@ -6,8 +6,8 @@
     <string name="permission_activity_recognition_old">com.google.android.gms.permission.ACTIVITY_RECOGNITION</string>
 
     <!--region AlarmClock-->
-    <string name="alarm_clock_channel">Alarmclock Notification Channel</string>
-    <string name="alarm_clock_channel_name">Alarmclock Channel</string>
+    <string name="alarm_clock_channel">Alarm Clock Notification Channel</string>
+    <string name="alarm_clock_channel_name">Alarm Clock Channel</string>
     <string name="alarm_clock_channel_description">This channel is for all notifications in alarm clock actions</string>
     <string name="alarm_clock_intent_key">com.sleepestapp.sleepest.alarmclock.AlarmClockIntentKey</string>
     <string name="alarm_notification_title">"It's time to wake up"</string>
@@ -20,17 +20,17 @@
     <!--endregion-->
 
     <!--region Background-->
-    <string name="foregroundservice_channel">Foregroundservice Notification Channel</string>
-    <string name="foregroundservice_channel_name">Foregroundservice Channel</string>
-    <string name="foregroundservice_channel_description">This channel is for the notification banner of the foregroundservice</string>
+    <string name="foregroundservice_channel">Foreground Service Notification Channel</string>
+    <string name="foregroundservice_channel_name">Foreground Service Channel</string>
+    <string name="foregroundservice_channel_description">This channel is for the notification banner of the foreground service</string>
     <string name="information_notification_channel_name">Information Notification Channel</string>
     <string name="foregroundservice_notification_title">Sleepest - The best sleep you ever had</string>
     <string name="foregroundservice_notification_sleeptime">Sleep time: </string>
     <string name="foregroundservice_notification_alarmtime">Alarm time: </string>
     <string name="information_notification_channel">Information Notification Channel</string>
     <string name="information_notification_channel_description">This channel is for the notification to show the user that it is time to sleep</string>
-    <string name="information_notification_text_sleeptime_problem">You cannot reach your sleep time anymore.</string>
-    <string name="information_notification_text_sleep_api_problem">There is something wrong with receiving sleep data.</string>
+    <string name="information_notification_text_sleeptime_problem">You cannot reach your sleep time anymore</string>
+    <string name="information_notification_text_sleep_api_problem">There is something wrong with receiving sleep data</string>
     <string name="information_notification_title">Attention</string>
     <string name="workmanager1_tag">Workmanager 1</string>
     <string name="workmanager2_tag">Workmanager 2</string>
@@ -183,7 +183,7 @@
     <string name="sleep_lightcondidition_auto">Auto detection</string>
 
     <string name="sleep_sleeptimes_autoOn">Auto detection</string>
-    <string name="sleep_sleeptimes_autoOff">Costum</string>
+    <string name="sleep_sleeptimes_autoOff">Custom</string>
     <string name="sleep_sleep_header">&#128564; Sleep</string>
 
 
@@ -221,7 +221,7 @@
     </string>
 
 
-    <string name="settings_data">Daten</string>
+    <string name="settings_data">Data</string>
     <string name="settings_export_data">Export data</string>
     <string name="settings_import_data">Import data</string>
     <string name="settings_remove_data_warning">All data will be deleted. Sure?</string>
@@ -237,6 +237,15 @@
     <string name="settings_delete_all_data">Delete all data</string>
     <string name="settings_credits">Credits</string>
     <string name="settings_from"> at </string>
+
+    <string name="settings_darkmode_on">Dark mode</string>
+    <string name="settings_darkmode_off">Light mode</string>
+    <string name="settings_sleepest_banner">Sleepest banner</string>
+    <string name="settings_banner_configuration_alarm_active">Show alarm status</string>
+    <string name="settings_banner_configuration_wakeup">Show wakeup time</string>
+    <string name="settings_banner_configuration_sleeptime">Show sleep time</string>
+    <string name="settings_banner_configuration_sleepstate">Show sleep state</string>
+
 
     <!--endregion-->
 
@@ -309,7 +318,7 @@
     <string name="onboarding_content_page_6">To track your sleep correctly, you should position your phone in your bed, preferably next or under your pillow. The sleep is tracked with the help of your phone sensors</string>
     <string name="onboarding_content_page_7">In your set sleep time the notification above is shown. If not there is something wrong.\n
                         This notification some useful things and guarantees, that the app is working in the background.\n
-                        With the left button you can easily diable your next alarm.\n
+                        With the left button you can easily disable your next alarm.\n
                         With the right button you can correct a wrong sleep detection. </string>
     <string name="onboarding_content_page_8">Set your ordinary sleep time and your preferred sleep duration.\n
                         You can change them later.\n
@@ -320,6 +329,10 @@
     <string name="onboarding_toast_read_to_end">Please read the hole tutorial</string>
     <string name="onboarding_toast_permission_already_granted">This permission is already granted</string>
     <string name="onboarding_toast_find_permission_in_list">Please search for "Sleepest" in the list</string>
+    <string name="onboarding_start_time_text_first_start">Select start time</string>
+    <string name="onboarding_end_time_text_first_start">Select end time</string>
+    <string name="onboarding_start_time_text_not_first_start">Start</string>
+    <string name="onboarding_end_time_text_not_first_start">End</string>
 
     <string name="privacy_police">Privacy Police</string>
     <string name="alarms_ringtone_set">Set</string>
@@ -328,5 +341,7 @@
     <string name="alarms_ringtone_information">Increase volume to hear sounds</string>
 
     <string name="info_no_info_found">No Information found</string>
+    <string name="settings_export_failed">Export failed</string>
+    <string name="settings_unable_to_find_market">\" unable to find market app\"</string>
 
 </resources>
