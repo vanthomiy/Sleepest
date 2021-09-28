@@ -272,7 +272,7 @@ class SleepCalculationHandler(val context: Context) {
         // check for each sleep state
         sleepApiRawDataEntity.forEach { data ->
             // First definition without future data
-            if(data.sleepState == SleepState.NONE){
+            if(data.sleepState == SleepState.NONE) {
 
                 // get normed list
                 val (normedSleepApiDataBefore, frequency) = createTimeNormedData(
@@ -282,7 +282,7 @@ class SleepCalculationHandler(val context: Context) {
                     sleepApiRawDataEntity.toList()
                 )
 
-                if(frequency == SleepDataFrequency.NONE) {
+                if (frequency == SleepDataFrequency.NONE) {
 
                     dataBaseRepository.updateSleepApiRawDataSleepState(
                         data.timestampSeconds,
@@ -292,35 +292,32 @@ class SleepCalculationHandler(val context: Context) {
                     return@forEach
                 }
 
-                if (data.sleepState != SleepState.NONE && data.oldSleepState == SleepState.NONE){
-                    // get normed list
-                    val (normedSleepApiDataBefore, frequency1) = createTimeNormedData(
-                        if(fromDefineUserWakeUp) 1f else 0.5f,
-                        false,
-                        data.timestampSeconds,
-                        sleepApiRawDataEntity.toList()
-                    )
+                // call the ml model
+                data.sleepState = sleepClassifier.isUserSleeping(
+                    normedSleepApiDataBefore,
+                    null,
+                    mobilePosition,
+                    lightConditions,
+                    mobileUseFrequency
+                )
 
-                    val (normedSleepApiDataAfter, frequency2) = createTimeNormedData(
-                        if(fromDefineUserWakeUp) 1f else 0.5f,
-                        true,
-                        data.timestampSeconds,
-                        sleepApiRawDataEntity.toList()
-                    )
-
+                dataBaseRepository.updateSleepApiRawDataSleepState(
+                    data.timestampSeconds,
+                    data.sleepState
+                )
             }
 
             if (data.sleepState != SleepState.NONE && data.oldSleepState == SleepState.NONE){
                 // get normed list
                 val (normedSleepApiDataBefore, frequency1) = createTimeNormedData(
-                    1f,
+                    if(fromDefineUserWakeUp) 1f else 0.5f,
                     false,
                     data.timestampSeconds,
                     sleepApiRawDataEntity.toList()
                 )
 
                 val (normedSleepApiDataAfter, frequency2) = createTimeNormedData(
-                    1f,
+                    if(fromDefineUserWakeUp) 1f else 0.5f,
                     true,
                     data.timestampSeconds,
                     sleepApiRawDataEntity.toList()
@@ -785,6 +782,4 @@ class SleepCalculationHandler(val context: Context) {
 
         defineUserWakeup(dateTime, false)
     }
-
-    //endregion
 }
