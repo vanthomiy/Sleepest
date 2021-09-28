@@ -366,7 +366,7 @@ data class ThresholdParams(
                  */
                 fun createLightSleepBorder() : ThresholdParams{
                         return ThresholdParams(
-                                confidence = 88f,
+                                confidence = 94f,
                                 motion = 2f,
                                 light = 2f
                         )
@@ -377,9 +377,9 @@ data class ThresholdParams(
                  */
                 fun createDeepSleepBorder() : ThresholdParams{
                         return ThresholdParams(
-                                confidence = 88f,
+                                confidence = 95f,
                                 motion = 2f,
-                                light = 2f
+                                light = 3f
                         )
                 }
 
@@ -388,9 +388,9 @@ data class ThresholdParams(
                  */
                 fun createRemSleepBorder() : ThresholdParams{
                         return ThresholdParams(
-                                confidence = 93f,
-                                motion = 1f,
-                                light = 1f
+                                confidence = 85f,
+                                motion = 2f,
+                                light = 0f
                         )
                 }
 

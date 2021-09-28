@@ -145,6 +145,13 @@ class DataStoreRepository(context: Context) {
     }
 
     /**
+     * Returns the sleep start of the user-defined sleep parameters
+     */
+    suspend fun getSleepTimeStart() : Int {
+        return sleepParameterFlow.first().sleepTimeStart
+    }
+
+    /**
      * Updates the activity tracking of the user-defined sleep parameters
      */
     suspend fun updateActivityTracking(value:Boolean) =
