@@ -651,7 +651,7 @@ class SleepCalculationHandlerTest
             SleepState.DEEP to 0,
             SleepState.REM to 0)
 
-        for (i in 52 until 63)
+        for (i in 1 until 41)
         {
             val data = dataUnPred[i]
 
@@ -707,7 +707,7 @@ class SleepCalculationHandlerTest
 
             val sleepParameters = sleepStoreRepository.sleepParameterFlow.first()
 
-            val newlist = sleepDbRepository.getSleepApiRawDataFromDate(actualTime, sleepParameters.sleepTimeEnd, sleepParameters.sleepTimeStart).first()
+            val newlist = sleepDbRepository.getSleepApiRawDataFromDate(actualTime.minusDays(1), sleepParameters.sleepTimeEnd, sleepParameters.sleepTimeStart).first()
 
             if (newlist != null) {
                 if(newlist.count() != dataTrue[i].count()){

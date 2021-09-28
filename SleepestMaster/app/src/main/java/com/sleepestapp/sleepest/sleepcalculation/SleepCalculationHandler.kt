@@ -230,25 +230,25 @@ class SleepCalculationHandler(val context: Context) {
 
         val sessionAvailable = dataBaseRepository.checkIfUserSessionIsDefinedById(id)
 
-        val endTime = if(sessionAvailable) {
-            val sleepEndTime = dataBaseRepository.getOrCreateSleepSessionById(id).sleepTimes.sleepTimeEnd
-            if(sleepEndTime == -1)
-                dataStoreRepository.getSleepTimeEnd()
-            else
-                sleepEndTime
+        var endTime = if(sessionAvailable) {
+            dataBaseRepository.getOrCreateSleepSessionById(id).sleepTimes.sleepTimeEnd
         }
         else
             dataStoreRepository.getSleepTimeEnd()
 
-        val startTime = if(sessionAvailable){
-            val sleepStartTime = dataBaseRepository.getOrCreateSleepSessionById(id).sleepTimes.sleepTimeStart
-            if(sleepStartTime == -1)
-                dataStoreRepository.getSleepTimeEnd()
-            else
-                sleepStartTime
+        var startTime = if(sessionAvailable){
+            dataBaseRepository.getOrCreateSleepSessionById(id).sleepTimes.sleepTimeStart
         }
         else
             dataStoreRepository.getSleepTimeBegin()
+
+        if(startTime !in 0..86399){
+            startTime = dataStoreRepository.getSleepTimeEnd()
+        }
+
+        if(endTime !in 0..86399){
+            endTime = dataStoreRepository.getSleepTimeEnd()
+        }
 
 
         val sleepApiRawDataEntity =
@@ -403,26 +403,25 @@ class SleepCalculationHandler(val context: Context) {
         val sessionAvailable = dataBaseRepository.checkIfUserSessionIsDefinedById(id)
         val sleepSessionEntity = dataBaseRepository.getOrCreateSleepSessionById(id)
 
-        val startTime = if(sessionAvailable){
-            val startTime = dataBaseRepository.getOrCreateSleepSessionById(id).sleepTimes.sleepTimeStart
-            if(startTime == -1)
-                dataStoreRepository.getSleepTimeEnd()
-            else
-                startTime
+        var startTime = if(sessionAvailable){
+            dataBaseRepository.getOrCreateSleepSessionById(id).sleepTimes.sleepTimeStart
         }
         else
             dataStoreRepository.getSleepTimeBegin()
 
-        val endTime = if(sessionAvailable) {
-            val endTime = dataBaseRepository.getOrCreateSleepSessionById(id).sleepTimes.sleepTimeEnd
-            if(endTime == -1)
-                dataStoreRepository.getSleepTimeEnd()
-            else
-                endTime
+        var endTime = if(sessionAvailable) {
+            dataBaseRepository.getOrCreateSleepSessionById(id).sleepTimes.sleepTimeEnd
         }
         else
             dataStoreRepository.getSleepTimeEnd()
 
+        if(startTime !in 0..86399){
+            startTime = dataStoreRepository.getSleepTimeEnd()
+        }
+
+        if(endTime !in 0..86399){
+            endTime = dataStoreRepository.getSleepTimeEnd()
+        }
 
         // for each sleeping time, we have to define the sleep state
         val time = localTime ?: LocalDateTime.now()
@@ -619,9 +618,8 @@ class SleepCalculationHandler(val context: Context) {
 
         // Add the actual sleep time to the sleep session entity at this moment
         if(sleepSessionEntity.sleepTimes.possibleSleepTimeStart == -1){
-            val param = dataStoreRepository.sleepParameterFlow.first()
-            sleepSessionEntity.sleepTimes.possibleSleepTimeStart = param.sleepTimeStart
-            sleepSessionEntity.sleepTimes.possibleSleepTimeEnd= param.sleepTimeEnd
+            sleepSessionEntity.sleepTimes.possibleSleepTimeStart = dataStoreRepository.getSleepTimeStart()
+            sleepSessionEntity.sleepTimes.possibleSleepTimeEnd = dataStoreRepository.getSleepTimeEnd()
         }
 
 

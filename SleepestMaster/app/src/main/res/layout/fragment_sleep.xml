@@ -485,6 +485,17 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
                             android:visibility="@{sleepViewModel.actualExpand == 6 ? View.VISIBLE:View.GONE, default=gone}">
+
+                            <androidx.fragment.app.FragmentContainerView
+                                android:id="@+id/fcv6"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
+                                android:layout_gravity="center_horizontal"
+                                android:tag="6"
+                                app:infoId = "6"
+                                app:info = "SLEEP"
+                                />
                         </FrameLayout>
 
                         <androidx.appcompat.widget.AppCompatSpinner
@@ -550,7 +561,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
                             android:visibility="@{sleepViewModel.actualExpand == 2 ? View.VISIBLE:View.GONE, default=gone}">
-                            <fragment
+                            <androidx.fragment.app.FragmentContainerView
+                                android:id="@+id/fcv2"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
