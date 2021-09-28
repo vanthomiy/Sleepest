@@ -22,6 +22,8 @@ class ActivityTransitionHandler(private val context: Context) {
      */
     private val scope: CoroutineScope = MainScope()
 
+    private var activityTransitionPendingIntent: PendingIntent = ActivityTransitionReceiver.createActivityTransitionReceiverPendingIntent(context = context)
+
     /**
      * The actual datastore
      */
@@ -31,14 +33,14 @@ class ActivityTransitionHandler(private val context: Context) {
      * Subscribes to activity data and listens to it automatically
      */
     fun startActivityHandler() {
-        subscribeToActivitySegmentUpdates()
+        subscribeToActivitySegmentUpdates(context, activityTransitionPendingIntent)
     }
 
     /**
      * Unsubscribes from the activity data
      */
     fun stopActivityHandler(){
-        unsubscribeToActivitySegmentUpdates()
+        unsubscribeToActivitySegmentUpdates(context, activityTransitionPendingIntent)
     }
 
 
@@ -49,62 +51,58 @@ class ActivityTransitionHandler(private val context: Context) {
      * accessing Activity data).
      */
     @SuppressLint("MissingPermission")
-    private fun subscribeToActivitySegmentUpdates() {
+    private fun subscribeToActivitySegmentUpdates(context: Context, pendingIntent: PendingIntent) {
         if(isActivityRecognitionPermissionGranted(context)){
 
             val request = ActivityTransitionUtil.getActivityTransitionRequest()
 
             // myPendingIntent is the instance of PendingIntent where the app receives callbacks.
             val task = ActivityRecognition.getClient(context)
-                    .requestActivityTransitionUpdates(request, getPendingIntent())
+                    .requestActivityTransitionUpdates(request, pendingIntent)
 
             task.addOnSuccessListener {
                 scope.launch {
                     dataStoreRepository.updateActivityIsSubscribed(true)
                     dataStoreRepository.updateActivitySubscribeFailed(false)
-                }                 }
+                }
+            }
 
             task.addOnFailureListener {
                 scope.launch {
-                    dataStoreRepository.updateActivityPermissionRemovedError(true)
-                    dataStoreRepository.updateActivityPermissionActive(false)
-                }            }
+                    dataStoreRepository.updateActivityIsSubscribed(false)
+                    dataStoreRepository.updateActivitySubscribeFailed(true)
+                }
+            }
 
+        } else {
+            scope.launch {
+                dataStoreRepository.updateActivityPermissionRemovedError(true)
+                dataStoreRepository.updateActivityPermissionActive(false)
+            }
         }
     }
 
     /**
      * Unsubscribe to Activity data.
      */
-    private fun unsubscribeToActivitySegmentUpdates() {
-        val request = ActivityTransitionUtil.getActivityTransitionRequest()
+    private fun unsubscribeToActivitySegmentUpdates(context: Context, pendingIntent: PendingIntent) {
 
         val task = ActivityRecognition.getClient(context)
-                .requestActivityTransitionUpdates(request, getPendingIntent())
+                .removeActivityTransitionUpdates(pendingIntent)
 
         task.addOnSuccessListener {
             scope.launch {
                 dataStoreRepository.updateActivityIsSubscribed(false)
                 dataStoreRepository.updateActivityUnsubscribeFailed(false)
-            }        }
+            }
+        }
 
         task.addOnFailureListener {
             scope.launch {
                 dataStoreRepository.updateActivityUnsubscribeFailed(true)
 
-            }        }
+            }
+        }
     }
 
-    /**
-     * The actual intent for the subscription
-     */
-    private fun getPendingIntent(): PendingIntent {
-        val intent = Intent(context, ActivityTransitionReceiver::class.java)
-        return PendingIntent.getBroadcast(
-                context,
-                ActivityTransitionUsage.getCount(ActivityTransitionUsage.REQUEST_CODE),
-                intent,
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
-    }
 }

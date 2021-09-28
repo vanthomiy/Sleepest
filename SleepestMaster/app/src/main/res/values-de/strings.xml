@@ -338,6 +338,7 @@
     <string name="onboarding_end_time_text_first_start">Wähle Endzeit</string>
     <string name="onboarding_start_time_text_not_first_start">Start</string>
     <string name="onboarding_end_time_text_not_first_start">Ende</string>
+    <string name="onboarding_btn_text_start">Start</string>
 
     <string name="privacy_police">Datenschutzerklärung</string>
 
