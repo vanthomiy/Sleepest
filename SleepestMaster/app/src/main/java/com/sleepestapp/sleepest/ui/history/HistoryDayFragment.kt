@@ -43,7 +43,6 @@ import java.time.format.DateTimeFormatter
 import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
-/**  */
 class HistoryDayFragment : Fragment() {
 
     private val scope: CoroutineScope = MainScope()
@@ -540,17 +539,16 @@ class HistoryDayFragment : Fragment() {
 
         pieDataSet.colors = listColors
         pieDataSet.setDrawValues(false)
-        pieDataSet.label
 
         chart.setCenterTextColor(viewModel.checkDarkMode())
-        chart.setHoleColor(viewModel.checkDarkModeInverse())
-        chart.setEntryLabelColor(viewModel.checkDarkMode())
+        //chart.setHoleColor(viewModel.checkDarkModeInverse())
+        //chart.setEntryLabelColor(viewModel.checkDarkMode())
 
-        chart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+        //chart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
         chart.legend.isEnabled = false
-        chart.legend.textColor = viewModel.checkDarkMode()
+        //chart.legend.textColor = viewModel.checkDarkMode()
 
-        chart.isDrawHoleEnabled = true
+        chart.isDrawHoleEnabled = false
         chart.description.isEnabled = false
         chart.setTouchEnabled(false)
         chart.animateY(500, Easing.EaseInOutQuad)
