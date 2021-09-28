@@ -374,7 +374,7 @@ class DatabaseRepository(
         //val date = if(ldt.hour > 15) ldt.plusDays(1).toLocalDate() else ldt.toLocalDate()
         val isAfterSleepTime = dataStoreRepository.isAfterSleepTime()
 
-        val date = if(!isAfterSleepTime.first && isAfterSleepTime.second)
+        val date = if(!isAfterSleepTime.first && !isAfterSleepTime.second)
             ldt
         else
             ldt.plusDays(1)
