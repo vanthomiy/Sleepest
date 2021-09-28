@@ -1,6 +1,5 @@
 package com.sleepestapp.sleepest.alarmclock;
 
-/** This class is singleton and you can start the alarm audio from everywhere */
 
 import android.app.NotificationManager;
 import android.content.Context;
@@ -16,7 +15,6 @@ import android.os.Vibrator;
 
 import androidx.annotation.RequiresApi;
 
-import com.sleepestapp.sleepest.MainApplication;
 import com.sleepestapp.sleepest.R;
 import com.sleepestapp.sleepest.model.data.AlarmClockReceiverUsage;
 import com.sleepestapp.sleepest.model.data.Constants;
@@ -27,6 +25,8 @@ import com.sleepestapp.sleepest.util.TimeConverterUtil;
 
 import java.time.LocalTime;
 import java.util.Calendar;
+
+/** This class is singleton and you can start the alarm audio from everywhere */
 
 public class AlarmClockAudio {
 
@@ -88,7 +88,6 @@ public class AlarmClockAudio {
      * @return Instance
      */
     private static MediaPlayer getMediaPlayer() {
-        /**TODO: Verschiedene Alarme einfügen, über Einstellungen anpassbar */
 
         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
             return mediaPlayer;
@@ -168,22 +167,16 @@ public class AlarmClockAudio {
 
         if (screenOn) {
 
-
             //Timer of 1 minute, which snoozes the alarm after finishing
             countDownTimer = new CountDownTimer(Constants.MILLIS_UNTIL_SNOOZE, Constants.COUNTDOWN_TICK_INTERVAL) {
 
                 public void onTick(long millisUntilFinished) {
-
+                    //Unused at the moment
                 }
 
                 public void onFinish() {
 
-                    if (ringtoneManager.isPlaying()) {
-                        stopAlarm(true, screenOn);
-                    } else {
-                        stopAlarm(true, screenOn);
-                    }
-
+                    stopAlarm(true, true);
                 }
 
             }.start();
@@ -214,7 +207,6 @@ public class AlarmClockAudio {
 
         //Get instance of ringtone
         ringtoneManager = getRingtoneManager(dataStoreRepository.getAlarmToneJob());
-        /**TODO: Abfrage, ob Uri noch mit dem eingestellten übereinstimmt*/
 
         //Convert integer volume to float volume 0.0 - 1.0 for ringtone
         if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) > 0) {

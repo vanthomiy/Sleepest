@@ -7,8 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.sleepestapp.sleepest.onboarding.OnboardingActivity
 import com.sleepestapp.sleepest.storage.DataStoreRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -21,12 +19,13 @@ class SplashScreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        @Suppress("DEPRECATION")
         window.setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
 
-        // Send user to MainActivity or OnboardingActivity as soon as this activity loads
+        // Send user to MainActivity or OnboardActivity as soon as this activity loads
         // remove this activity from the stack
 
         lifecycleScope.launch {
@@ -51,7 +50,4 @@ class SplashScreen : AppCompatActivity() {
         finish()
     }
 
-    companion object {
-        private const val SPLASH_SCREEN = 2500
-    }
 }

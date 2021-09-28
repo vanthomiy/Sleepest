@@ -1,6 +1,5 @@
 package com.sleepestapp.sleepest.storage.datastorage
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import com.sleepestapp.sleepest.SleepApiData
 import kotlinx.coroutines.flow.Flow
@@ -23,7 +22,6 @@ class SleepApiDataStatus(private val dataStore: DataStore<SleepApiData>) {
     val sleepApiData: Flow<SleepApiData> = dataStore.data
             .catch { exception->
                 if(exception is IOException){
-                    Log.d("Error", exception.message.toString())
                     emit(SleepApiData.getDefaultInstance())
                 }else{
                     throw exception
@@ -60,16 +58,10 @@ class SleepApiDataStatus(private val dataStore: DataStore<SleepApiData>) {
         }
     }
 
-    suspend fun updateSleepApiValuesAmount(amount:Int){
+    suspend fun updateSleepApiValuesAmount(amount:Int) {
         val newAmount = sleepApiData.first().sleepApiValuesAmount + amount
-        dataStore.updateData{preference->
+        dataStore.updateData { preference ->
             preference.toBuilder().setSleepApiValuesAmount(newAmount).build()
-        }
-    }
-
-    suspend fun resetSleepApiValuesAmount(){
-        dataStore.updateData{preference->
-            preference.toBuilder().setSleepApiValuesAmount(0).build()
         }
     }
 

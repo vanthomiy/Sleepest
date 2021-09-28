@@ -10,47 +10,34 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.PagerAdapter;
-
 import com.airbnb.lottie.LottieAnimationView;
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.sleepestapp.sleepest.DontKillMyAppFragment;
 import com.sleepestapp.sleepest.MainActivity;
 import com.sleepestapp.sleepest.R;
-import com.sleepestapp.sleepest.databinding.ActivityLockScreenAlarmBinding;
-import com.sleepestapp.sleepest.databinding.ActivityOnboardingBinding;
 import com.sleepestapp.sleepest.databinding.OnboardingNoticeScreenBinding;
 import com.sleepestapp.sleepest.storage.DataStoreRepository;
 import com.sleepestapp.sleepest.util.PermissionsUtil;
 import com.sleepestapp.sleepest.util.TimeConverterUtil;
-import com.sleepestapp.sleepest.MainActivity;
-
 import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Class for the hole layout and the handling of the tutorial pages
+ */
 public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnClickListener {
 
     private OnboardingNoticeScreenBinding binding;
 
-    private Context context;
-    private Activity activityContext;
+    private final Context context;
+    private final Activity activityContext;
 
     private boolean enableStartApp = false;
 
@@ -60,14 +47,14 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
     private int durationHours = 7;
     private int durationMinutes = 30;
 
-    private String startTimeText = "Select start time";
-    private String endTimeText = "Select end time";
+    private String startTimeText;
+    private String endTimeText;
     private String startTimeValueText;
     private String endTimeValueText;
 
-    private List<ImageView> dots = new ArrayList<>();
+    private final List<ImageView> dots = new ArrayList<>();
 
-    Timer timer;
+    final Timer timer;
 
     public OnboardingViewPagerAdapter(Context context, Activity activityContext, ArrayList<Object> arrayList) {
 
@@ -76,6 +63,9 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
 
         timer = new Timer();
 
+        startTimeText = context.getString(R.string.onboarding_start_time_text_first_start);
+        endTimeText = context.getString(R.string.onboarding_end_time_text_first_start);;
+
         if (arrayList.size() > 0) {
             starttime = (int) arrayList.get(0);
             endtime = (int) arrayList.get(1);
@@ -83,8 +73,8 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
             durationHours = (int) arrayList.get(2);
             durationMinutes = (int) arrayList.get(3);
 
-            startTimeText = "Start";
-            endTimeText = "End";
+            startTimeText = context.getString(R.string.onboarding_start_time_text_not_first_start);
+            startTimeText = context.getString(R.string.onboarding_end_time_text_not_first_start);
             startTimeValueText = (String) arrayList.get(4);
             endTimeValueText = (String) arrayList.get(5);
 
@@ -108,6 +98,7 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
     @Override
     public Object instantiateItem(@NonNull @NotNull ViewGroup container, int position) {
 
+        /* Initiate all layout elements **/
         LayoutInflater layoutInflater= (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.onboarding_notice_screen,container,false);
 
@@ -161,10 +152,11 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
         dots.add(view.findViewById(R.id.ivOnboardingIndicator9));
         dots.add(view.findViewById(R.id.ivOnboardingIndicator10));
 
+        //Set the unselected images for the dots
         for(int i = 0; i < dots.size(); i++) {
             dots.get(i).setImageResource(R.drawable.onboarding_indicator_unselected);
         }
-
+        //Set the OnClickListener
         btnEndOnboarding.setOnClickListener(this);
         btnOnboardingNotificationPrivacyPermission.setOnClickListener(this);
         btnOnboardingActivityRecognitionPermission.setOnClickListener(this);
@@ -174,24 +166,28 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
         ivNextPage.setVisibility(View.VISIBLE);
         ivPreviousPage.setVisibility(View.VISIBLE);
 
+        //Button for going to the left page
         ivNextPage.setOnClickListener(v -> {
             if (position < getCount()) {
                 OnboardingActivity.viewPager.setCurrentItem(position+1);
             }
         });
 
+        //Button for going to the right page
         ivPreviousPage.setOnClickListener(v -> {
             if (position > 0) {
                 OnboardingActivity.viewPager.setCurrentItem(position-1);
             }
         });
 
+        //Check position possibility
         if (position <= 0) {
             ivPreviousPage.setVisibility(View.INVISIBLE);
         } else if (position >= (getCount() - 1)) {
             ivNextPage.setVisibility(View.INVISIBLE);
         }
 
+        //Picker dialog for the start time
         frameLayoutStartTime.setOnClickListener(v -> {
             TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(), R.style.TimePickerTheme, (view1, hourOfDay, minute) -> {
                 starttime = (hourOfDay * 60 + minute) * 60;
@@ -204,6 +200,7 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
             timePickerDialog.show();
         });
 
+        //Picker dialog for the end time
         frameLayoutEndTime.setOnClickListener(v -> {
             TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(), R.style.TimePickerTheme, (view12, hourOfDay, minute) -> {
                 endtime = (hourOfDay * 60 + minute) * 60;
@@ -216,31 +213,31 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
         });
 
         npDurationHours.setOnValueChangedListener((picker, oldVal, newVal) -> durationHours = newVal);
-
         npDurationMinutes.setOnValueChangedListener((picker, oldVal, newVal) -> durationMinutes = newVal);
 
+        //Choose the layouts for the different pages of the viewpager depending on the position
         switch (position) {
-            case 0:
+            case 0: //Page with logo
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_1));
                 tvContent.setText(context.getString(R.string.onboarding_content_page_1));
                 imageView.setImageResource(R.drawable.logofullroundtransparent);
                 imageView.setVisibility(View.VISIBLE);
                 dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
-            case 1:
+            case 1: //Page with sleep detection
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_2));
                 tvContent.setText(context.getString(R.string.onboarding_content_page_2));
                 lottieAnimationViewSearch.setVisibility(View.VISIBLE);
                 dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
-            case 2:
+            case 2: //Page with sleep tracking
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_3));
                 tvContent.setText(context.getString(R.string.onboarding_content_page_3));
                 imageView.setVisibility(View.VISIBLE);
                 imageView.setImageResource(R.drawable.analytics);
                 dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
-            case 3:
+            case 3: //Page with wakeup time calculation
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_4));
                 tvContent.setText(context.getString(R.string.onboarding_content_page_4));
                 lottieAnimationViewSearch.setVisibility(View.VISIBLE);
@@ -249,7 +246,7 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
                 layoutParams.leftMargin = 80;
                 dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
-            case 4:
+            case 4: //Page with sleep analysis
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_5));
                 tvContent.setText(context.getString(R.string.onboarding_content_page_5));
                 imageView.setVisibility(View.VISIBLE);
@@ -261,25 +258,25 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
 
                 dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
-            case 5:
+            case 5: //Page with best phone position
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_6));
                 tvContent.setText(context.getString(R.string.onboarding_content_page_6));
                 imageView.setImageResource(R.drawable.phone_position_final);
                 imageView.setVisibility(View.VISIBLE);
                 dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
-            case 6:
+            case 6: //Page with foreground service notification
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_7));
                 tvContent.setText(context.getString(R.string.onboarding_content_page_7));
                 imageView.setVisibility(View.VISIBLE);
                 if (Locale.getDefault().getLanguage().equals("de")) {
                     imageView.setImageResource(R.drawable.banner_foregroundservice_german);
                 } else {
-                    imageView.setImageResource(R.drawable.banner_foregroundservice_german);
+                    imageView.setImageResource(R.drawable.banner_foregroundservice_english);
                 }
                 dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
-            case 7:
+            case 7: //Page with sleep time initiation
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_8));
                 tvContent.setText(context.getString(R.string.onboarding_content_page_8));
                 linearLayoutSettings.setVisibility(View.VISIBLE);
@@ -291,7 +288,7 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
                 npDurationMinutes.setValue(durationMinutes);
                 dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
-            case 8:
+            case 8: //Page with permissions
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_9));
                 tvContent.setText(context.getString(R.string.onboarding_content_page_9));
                 linearLayoutPermission.setVisibility(View.VISIBLE);
@@ -314,7 +311,7 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
 
                 dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
                 break;
-            case 9:
+            case 9: //Page with battery optimization
                 tvTitle.setText(context.getString(R.string.onboarding_title_page_10));
                 tvContent.setText(context.getString(R.string.onboarding_content_page_10));
                 lottieAnimationViewSearch.setVisibility(View.VISIBLE);
@@ -334,19 +331,20 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
         container.removeView((View) object);
     }
 
+    /**
+     * Check if all permissions are granted
+     * @return Is granted
+     */
     private boolean checkAllPermissions() {
-        if (PermissionsUtil.isActivityRecognitionPermissionGranted(context) && PermissionsUtil.isNotificationPolicyAccessGranted(context) &&
-                PermissionsUtil.isNotificationPolicyAccessGranted(context)) {
-            return true;
-        }
-
-        return false;
+        return PermissionsUtil.isActivityRecognitionPermissionGranted(context) && PermissionsUtil.isNotificationPolicyAccessGranted(context) &&
+                PermissionsUtil.isNotificationPolicyAccessGranted(context);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnOnboardingDailyActivityPermission:
+            case R.id.btnOnboardingSleepdataPermission:
                 if (!PermissionsUtil.isActivityRecognitionPermissionGranted(context)) {
                     PermissionsUtil.setActivityRecognitionPermission(context);
                 } else {
@@ -354,24 +352,15 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
                 }
                 break;
             case R.id.btnOnboardingNotificationPrivacyPermission:
-                /*if (!PermissionsUtil.isNotificationPolicyAccessGranted(context)) {
+                if (!PermissionsUtil.isNotificationPolicyAccessGranted(context)) {
                     PermissionsUtil.setNotificationPolicyAccess(activityContext);
                 } else {
                     Toast.makeText(context, context.getString(R.string.onboarding_toast_permission_already_granted), Toast.LENGTH_LONG).show();
-                }*/
-                PermissionsUtil.setNotificationPolicyAccess(activityContext);
+                }
                 break;
             case R.id.btnOnboardingOverlayPermission:
-                /*if (!PermissionsUtil.isOverlayPermissionGranted(context)) {
+                if (!PermissionsUtil.isOverlayPermissionGranted(context)) {
                     PermissionsUtil.setOverlayPermission(activityContext);
-                } else {
-                    Toast.makeText(context, context.getString(R.string.onboarding_toast_permission_already_granted), Toast.LENGTH_LONG).show();
-                }*/
-                PermissionsUtil.setOverlayPermission(activityContext);
-                break;
-            case R.id.btnOnboardingSleepdataPermission:
-                if (!PermissionsUtil.isActivityRecognitionPermissionGranted(context)) {
-                    PermissionsUtil.setActivityRecognitionPermission(context);
                 } else {
                     Toast.makeText(context, context.getString(R.string.onboarding_toast_permission_already_granted), Toast.LENGTH_LONG).show();
                 }
@@ -385,7 +374,6 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
                     dataStoreRepository.updateTutorialCompletedJob(true);
                     Intent intent=new Intent(context , MainActivity.class);
                     intent.putExtra(context.getString(R.string.onboarding_intent_data_available), true);
-                    //intent.putExtra(context.getString(R.string.onboarding_intent_show_dontkillmyapp), !notFirstAppStart);
                     intent.putExtra(context.getString(R.string.onboarding_intent_starttime), starttime);
                     intent.putExtra(context.getString(R.string.onboarding_intent_endtime), endtime);
                     intent.putExtra(context.getString(R.string.onboarding_intent_duration), (durationHours * 60 + durationMinutes) * 60);

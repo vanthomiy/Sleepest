@@ -80,9 +80,9 @@ class Converters {
     fun toDayOfWeekList(string: String?) : ArrayList<DayOfWeek> {
         if(string != null && string != "")
         {
-            val split = string?.split(";")
-            val map = split?.mapNotNull { DayOfWeek.valueOf(it) }
-            return ArrayList(map ?: emptyList())
+            val split = string.split(";")
+            val map = split.map { DayOfWeek.valueOf(it) }
+            return ArrayList(map)
 
         }
 

@@ -1,6 +1,5 @@
 package com.sleepestapp.sleepest.background;
 
-/**This class inherits from Broadcastreceiver and starts an alarm at a specific time and date**/
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -19,21 +18,18 @@ import com.sleepestapp.sleepest.MainApplication;
 import com.sleepestapp.sleepest.R;
 import com.sleepestapp.sleepest.model.data.AlarmReceiverUsage;
 import com.sleepestapp.sleepest.model.data.Constants;
-import com.sleepestapp.sleepest.googleapi.SleepHandler;
 import com.sleepestapp.sleepest.model.data.NotificationUsage;
 import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler;
 import com.sleepestapp.sleepest.storage.DataStoreRepository;
 import com.sleepestapp.sleepest.storage.DatabaseRepository;
 import com.sleepestapp.sleepest.util.TimeConverterUtil;
-import com.sleepestapp.sleepest.MainActivity;
-import com.sleepestapp.sleepest.MainApplication;
-import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler;
 //import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler;
 
 import java.time.LocalTime;
 import java.util.Calendar;
 
 import static android.content.Context.ALARM_SERVICE;
+/**This class inherits from Broadcastreceiver and starts an alarm at a specific time and date**/
 
 public class AlarmReceiver extends BroadcastReceiver {
 
@@ -43,7 +39,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         //Init repos
         DatabaseRepository databaseRepository = ((MainApplication)context.getApplicationContext()).getDataBaseRepository();
         DataStoreRepository dataStoreRepository = ((MainApplication)context.getApplicationContext()).getDataStoreRepository();
-        SleepCalculationHandler sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(MainApplication.Companion.applicationContext());
+        SleepCalculationHandler sleepCalculationHandler = new SleepCalculationHandler(MainApplication.Companion.applicationContext());
 
         Calendar calendar = Calendar.getInstance();
         SharedPreferences pref = context.getSharedPreferences("AlarmReceiver", 0);
@@ -64,7 +60,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case DISABLE_ALARM:
                     //Disables the next active alarm temporary
-                    if ((databaseRepository.getNextActiveAlarmJob() != null) && (!databaseRepository.getNextActiveAlarmJob().getTempDisabled())) {
+                    if ((databaseRepository.getNextActiveAlarmJob(dataStoreRepository) != null) && (!databaseRepository.getNextActiveAlarmJob(dataStoreRepository).getTempDisabled())) {
                         BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, false);
                     } else {
                         BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, true);
@@ -77,14 +73,14 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case START_WORKMANAGER_CALCULATION:
                 //Start the workmanager for the calculation of the sleep
-                WorkmanagerCalculation.startPeriodicWorkmanager(Constants.WORKMANAGER_CALCULATION_DURATION, context.getApplicationContext());
+                WorkmanagerCalculation.startPeriodicWorkmanager(Constants.WORK_MANAGER_CALCULATION_DURATION, context.getApplicationContext());
                 break;
             case START_WORKMANAGER:
-                //Deprecated
+                //In the moment unused, but could be interesting for the future development
                 break;
             case STOP_WORKMANAGER:
                 //Stops the workmanager outside sleep time
-                if (databaseRepository.getNextActiveAlarmJob() != null && !databaseRepository.getNextActiveAlarmJob().getWasFired()) {
+                if (databaseRepository.getNextActiveAlarmJob(dataStoreRepository) != null && !databaseRepository.getNextActiveAlarmJob(dataStoreRepository).getWasFired()) {
                     Calendar calendarNewAlarm = TimeConverterUtil.getAlarmDate(LocalTime.now().toSecondOfDay() + 600);
                     AlarmReceiver.startAlarmManager(
                             calendarNewAlarm.get(Calendar.DAY_OF_WEEK),
@@ -107,7 +103,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 NotificationManager notificationManagerApi = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManagerApi.cancel(NotificationUsage.Companion.getCount(NotificationUsage.NOTIFICATION_NO_API_DATA));
             case GO_TO_SLEEP:
-                //After clear notification, which informs the user that he should sleep now.
+                //After clearing notification to inform the user that he should sleep now.
                 Toast.makeText(context.getApplicationContext(), context.getApplicationContext().getString(R.string.alarm_clock_user_should_sleep), Toast.LENGTH_LONG).show();
                 NotificationManager notificationManagerGoSleep = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManagerGoSleep.cancel(NotificationUsage.Companion.getCount(NotificationUsage.NOTIFICATION_USER_SHOULD_SLEEP));
@@ -128,7 +124,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         Intent intent = new Intent(alarmContext, AlarmReceiver.class);
         intent.putExtra(alarmContext.getString(R.string.alarmmanager_key), alarmReceiverUsage.name());
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(alarmContext, AlarmReceiverUsage.Companion.getCount(alarmReceiverUsage), intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(alarmContext, AlarmReceiverUsage.Companion.getCount(alarmReceiverUsage), intent, PendingIntent.FLAG_IMMUTABLE);
         AlarmManager alarmManager = (AlarmManager) alarmContext.getSystemService(ALARM_SERVICE);
 
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calenderAlarm.getTimeInMillis(), pendingIntent);
@@ -144,7 +140,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     public static void cancelAlarm(Context cancelAlarmContext, AlarmReceiverUsage alarmReceiverUsage) {
 
         Intent intent = new Intent(cancelAlarmContext, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(cancelAlarmContext, AlarmReceiverUsage.Companion.getCount(alarmReceiverUsage), intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(cancelAlarmContext, AlarmReceiverUsage.Companion.getCount(alarmReceiverUsage), intent, PendingIntent.FLAG_IMMUTABLE);
         AlarmManager alarmManager = (AlarmManager) cancelAlarmContext.getSystemService(ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
         pendingIntent.cancel();
@@ -161,12 +157,11 @@ public class AlarmReceiver extends BroadcastReceiver {
     public static boolean isAlarmManagerActive(Context alarmActiveContext, AlarmReceiverUsage alarmReceiverUsage) {
         Intent intent = new Intent(alarmActiveContext, AlarmReceiver.class);
 
-        return (PendingIntent.getBroadcast(alarmActiveContext, AlarmReceiverUsage.Companion.getCount(alarmReceiverUsage), intent, PendingIntent.FLAG_NO_CREATE) != null);
+        return (PendingIntent.getBroadcast(alarmActiveContext, AlarmReceiverUsage.Companion.getCount(alarmReceiverUsage), intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_NO_CREATE) != null);
     }
 
     /**
      * Create the notification to inform the user about problems
-     * @return
      */
     public static Notification createInformationNotification(Context context, String information) {
         //Get Channel id
@@ -175,7 +170,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         //Create intent if user tap on notification
         Intent intent = new Intent(context.getApplicationContext(), MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
         //Create manager and channel
         NotificationManager notificationManager = (NotificationManager) context.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);

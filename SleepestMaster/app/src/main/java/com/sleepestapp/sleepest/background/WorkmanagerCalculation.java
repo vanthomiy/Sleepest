@@ -10,15 +10,10 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
-
-import com.sleepestapp.sleepest.MainApplication;
 import com.sleepestapp.sleepest.R;
 import com.sleepestapp.sleepest.model.data.AlarmCycleStates;
 import com.sleepestapp.sleepest.model.data.AlarmReceiverUsage;
-import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler;
 import com.sleepestapp.sleepest.util.TimeConverterUtil;
-import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler;
-
 import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
@@ -30,8 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 public class WorkmanagerCalculation extends Worker {
 
-    private static Context context;
-    private SleepCalculationHandler sleepCalculationHandler;
+    private final Context context;
 
     public WorkmanagerCalculation(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
@@ -42,24 +36,22 @@ public class WorkmanagerCalculation extends Worker {
     @Override
     public Result doWork() {
 
-        /**
-         * Hinweis: Hier dürfen nur Prozesse stattfinden, die nicht länger als 10 Minuten dauern
-         * Allerdings werden Notifications erst angezeigt, wenn der Bildschirm angeht. Somit bricht
-         * der Workmanager ab, sobald die Notification nicht innerhalb 10 Minuten nach Triggerung
-         * angeschaut wird. Prozesse, die den Nutzer nicht benötigen, sind hier aber im Normalfall
-         * problemlos möglich.
-         */
+        try {
+            //Defines the new wakeup
+            BackgroundAlarmTimeHandler.Companion.getHandler(context).defineNewUserWakeup(null, true);
 
-        //Defines the new wakeup
-        BackgroundAlarmTimeHandler.Companion.getHandler(context).defineNewUserWakeup(null, true);
+            Calendar calendar = Calendar.getInstance();
+            SharedPreferences pref = context.getSharedPreferences("WorkmanagerCalculation", 0);
+            SharedPreferences.Editor ed = pref.edit();
+            ed.putInt("day", calendar.get(Calendar.DAY_OF_WEEK));
+            ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
+            ed.putInt("minute", calendar.get(Calendar.MINUTE));
+            ed.apply();
 
-        Calendar calendar = Calendar.getInstance();
-        SharedPreferences pref = context.getSharedPreferences("WorkmanagerCalculation", 0);
-        SharedPreferences.Editor ed = pref.edit();
-        ed.putInt("day", calendar.get(Calendar.DAY_OF_WEEK));
-        ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
-        ed.putInt("minute", calendar.get(Calendar.MINUTE));
-        ed.apply();
+            return Result.success();
+        } catch (Exception e) {
+            Result.retry();
+        }
 
         return Result.success();
     }
@@ -87,14 +79,5 @@ public class WorkmanagerCalculation extends Worker {
             Calendar calendar = TimeConverterUtil.getAlarmDate(LocalTime.now().toSecondOfDay() + 300);
             AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context1, AlarmReceiverUsage.START_WORKMANAGER_CALCULATION);
         }
-    }
-
-    /**
-     * Stops the Workmanager
-     */
-    public static void stopPeriodicWorkmanager() {
-
-        //Cancel periodic work by tag
-        WorkManager.getInstance(context).cancelAllWorkByTag("Workmanager 2");
     }
 }

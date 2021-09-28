@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 
 import com.sleepestapp.sleepest.background.AlarmCycleState
@@ -45,10 +46,12 @@ class MainActivity : AppCompatActivity() {
 
     var factory = object : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return  MainActivityViewModel(
+            @Suppress("UNCHECKED_CAST")
+            // Workaround because we know that we can cast to T
+            return  (MainActivityViewModel(
                 (actualContext as MainApplication).dataStoreRepository,
                 (actualContext as MainApplication).dataBaseRepository
-            ) as T
+            ) as T)
         }
     }
 
@@ -79,7 +82,7 @@ class MainActivity : AppCompatActivity() {
             }
             else{
                 if(settings.designDarkModeAckn)
-                    viewModel.dataStoreRepository.updateAutoDarkModeAckn(false)
+                    viewModel.dataStoreRepository.updateAutoDarkModeAcknowledge(false)
 
                 supportFragmentManager.beginTransaction().replace(
                     R.id.navigationFrame,
@@ -156,7 +159,7 @@ class MainActivity : AppCompatActivity() {
 
     fun switchToMenu(itemId: Int, changeType:Int = -1) {
         settingsFragment.setCaseOfEntry(changeType)
-        binding.bottomBar.selectedItemId = itemId;
+        binding.bottomBar.selectedItemId = itemId
     }
 
     // endregion
@@ -188,13 +191,12 @@ class MainActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
 
-        // observe alarm changes
         viewModel.activeAlarmsLiveData.observe(this){ list ->
             // check the list if empty or not
             BackgroundAlarmTimeHandler.getHandler(applicationContext).changeOfAlarmEntity(list.isEmpty())
         }
 
-        // observe sleeptime changes
+        // observe sleep time changes
         viewModel.sleepParametersLiveData.observe(this) {
             BackgroundAlarmTimeHandler.getHandler(applicationContext).changeSleepTime()
         }
@@ -250,7 +252,7 @@ class MainActivity : AppCompatActivity() {
                 if (viewModel.dataStoreRepository.tutorialStatusFlow.first().tutorialCompleted && !viewModel.dataStoreRepository.tutorialStatusFlow.first().energyOptionsShown) {
                     DontKillMyAppFragment.show(this@MainActivity)
                 }
-                //Start a alarm for the new foregroundservice start time
+                //Start a alarm for the new foreground service start time
                 val calendar = TimeConverterUtil.getAlarmDate(bundle.getInt(getString(R.string.onboarding_intent_starttime)))
                 AlarmReceiver.startAlarmManager(
                     calendar[Calendar.DAY_OF_WEEK],
@@ -303,19 +305,16 @@ class MainActivity : AppCompatActivity() {
     private val requestPermissionLauncher: ActivityResultLauncher<String> =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (!isGranted) {
-                //mainViewModel.updatePermissionActive(false)
                 //Permission denied on Android platform that supports runtime permissions.
-                //displayPermissionSettingsSnackBar()
             } else {
-                //mainViewModel.updatePermissionActive(true)
                 // Permission was granted (either by approval or Android version below Q).
 
-                com.sleepestapp.sleepest.DontKillMyAppFragment.show(this@MainActivity)
+                DontKillMyAppFragment.show(this@MainActivity)
 
                 lifecycleScope.launch {
                     val calendar = TimeConverterUtil.getAlarmDate(viewModel.dataStoreRepository.getSleepTimeBegin())
 
-                    //Start a alarm for the new foregroundservice start time
+                    //Start a alarm for the new foreground service start time
                     AlarmReceiver.startAlarmManager(
                         calendar[Calendar.DAY_OF_WEEK],
                         calendar[Calendar.HOUR_OF_DAY],

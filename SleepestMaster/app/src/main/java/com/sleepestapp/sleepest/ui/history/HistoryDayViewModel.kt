@@ -78,9 +78,6 @@ class HistoryDayViewModel(val sleepCalculationHandler : SleepCalculationHandler)
 
     lateinit var transitionsContainer : ViewGroup
 
-    init {
-
-    }
 
     /**
      * Allows to alter the sleepRating (MoodAfterSleep) and saves it to its ObservableField.

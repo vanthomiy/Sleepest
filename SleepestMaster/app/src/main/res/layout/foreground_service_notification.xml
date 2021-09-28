@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:background="@color/transparent">
 
@@ -18,6 +19,7 @@
             <ImageView
                 android:layout_width="69dp"
                 android:layout_height="69dp"
+                tools:ignore="ContentDescription"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/logofullroundtransparent" />
 
@@ -80,7 +82,7 @@
                 android:layout_weight="0.5"
                 android:layout_height="@dimen/valuesHeight"
                 android:layout_margin="5dp"
-                android:background="@drawable/bgrounded_button"
+                android:background="@drawable/background_rounded_button"
                 android:backgroundTint="@color/error_color"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/btn_disable_alarm"
@@ -95,7 +97,7 @@
                 android:layout_weight="0.5"
                 android:layout_height="@dimen/valuesHeight"
                 android:layout_margin="5dp"
-                android:background="@drawable/bgrounded_button"
+                android:background="@drawable/background_rounded_button"
                 android:backgroundTint="@color/warning_color"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/btn_not_sleeping_text"

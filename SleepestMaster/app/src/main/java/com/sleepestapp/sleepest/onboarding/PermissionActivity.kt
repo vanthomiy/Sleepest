@@ -7,6 +7,9 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import com.sleepestapp.sleepest.R
 
+/**
+ * Workaround Activity to grant activity recognition permission from inside the tutorial
+ */
 class PermissionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

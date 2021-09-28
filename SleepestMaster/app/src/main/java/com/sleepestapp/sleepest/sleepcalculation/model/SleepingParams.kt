@@ -1,10 +1,9 @@
-package com.sleepestapp.sleepest.storage.db
+package com.sleepestapp.sleepest.sleepcalculation.model
 
 import androidx.room.Entity
 import com.sleepestapp.sleepest.model.data.LightConditions
 import com.sleepestapp.sleepest.model.data.MobilePosition
 import com.sleepestapp.sleepest.model.data.MobileUseFrequency
-import com.sleepestapp.sleepest.sleepcalculation.model.ThresholdParams
 
 /**
  * Stores the param values for the algorithm
@@ -38,7 +37,7 @@ data class SleepingParams(
         /**
          * Merge this [SleepingParams] with another factor [SleepingParams] by multiplying
          */
-        fun mergeParameters(factorParams:SleepingParams){
+        fun mergeParameters(factorParams: SleepingParams){
                 sleepStartBorder.mergeParameters(factorParams = factorParams.sleepStartBorder)
                 sleepStartThreshold.mergeParameters(factorParams = factorParams.sleepStartThreshold)
                 sleepCleanUp.mergeParameters(factorParams = factorParams.sleepCleanUp)

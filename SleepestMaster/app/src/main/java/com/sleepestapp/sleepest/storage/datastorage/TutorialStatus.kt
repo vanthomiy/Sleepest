@@ -1,10 +1,9 @@
-package com.doitstudio.sleepest_master.storage.datastorage
+package com.sleepestapp.sleepest.storage.datastorage
 
 import androidx.datastore.core.DataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import java.io.IOException
-import android.util.Log
 import com.sleepestapp.sleepest.Tutorial
 
 
@@ -22,7 +21,6 @@ class TutorialStatus(private val dataStore: DataStore<Tutorial>) {
     val tutorialData: Flow<Tutorial> = dataStore.data
         .catch { exception->
             if(exception is IOException){
-                Log.d("Error", exception.message.toString())
                 emit(Tutorial.getDefaultInstance())
             }else{
                 throw exception

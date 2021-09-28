@@ -10,7 +10,6 @@
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -126,7 +125,7 @@
             android:enabled="true"
             android:exported="true" />
         <receiver
-            android:name="com.sleepestapp.sleepest.googleapi.ActivityTransitionReciver"
+            android:name="com.sleepestapp.sleepest.googleapi.ActivityTransitionReceiver"
             android:enabled="true"
             android:exported="true" />
 

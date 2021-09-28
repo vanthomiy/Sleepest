@@ -87,7 +87,7 @@
                 android:layout_height="match_parent"
 
                 android:layout_weight="1"
-                android:background="@drawable/bgrounded_button"
+                android:background="@drawable/background_rounded_button"
                 android:textColor="@color/primary_text_color"
                 android:text="@string/history_button_analysisDate_previous"/>
 
@@ -106,7 +106,7 @@
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bgrounded_button"
+                android:background="@drawable/background_rounded_button"
                 android:textColor="@color/primary_text_color"
                 android:text="@string/history_button_analysisDate_next"/>
         </LinearLayout>

@@ -1,6 +1,5 @@
 package com.sleepestapp.sleepest.storage.datastorage
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import com.sleepestapp.sleepest.SleepParameters
 import com.sleepestapp.sleepest.model.data.MobilePosition
@@ -16,7 +15,6 @@ class SleepParameterStatus(private val dataStore: DataStore<SleepParameters>) {
     val sleepParameters: Flow<SleepParameters> = dataStore.data
         .catch { exception->
             if(exception is IOException){
-                Log.d("Error", exception.message.toString())
                 emit(SleepParameters.getDefaultInstance())
             }else{
                 throw exception

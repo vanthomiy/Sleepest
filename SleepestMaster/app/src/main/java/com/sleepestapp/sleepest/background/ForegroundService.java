@@ -1,30 +1,19 @@
 package com.sleepestapp.sleepest.background;
 
-/**
- * This service class inherits from LifecycleService. It implements all functions of the foreground service
- * like start, stop and foreground notification. Further implements this function the observation of data
- * while the user is sleeping
- */
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.view.View;
-import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LifecycleService;
 
 import com.sleepestapp.sleepest.LiveUserSleepActivity;
-import com.sleepestapp.sleepest.MainActivity;
 import com.sleepestapp.sleepest.MainApplication;
 import com.sleepestapp.sleepest.R;
 import com.sleepestapp.sleepest.SettingsData;
@@ -35,7 +24,6 @@ import com.sleepestapp.sleepest.model.data.AlarmClockReceiverUsage;
 import com.sleepestapp.sleepest.model.data.AlarmCycleStates;
 import com.sleepestapp.sleepest.model.data.AlarmReceiverUsage;
 import com.sleepestapp.sleepest.model.data.Constants;
-import com.sleepestapp.sleepest.googleapi.SleepHandler;
 import com.sleepestapp.sleepest.model.data.NotificationUsage;
 import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler;
 import com.sleepestapp.sleepest.storage.DataStoreRepository;
@@ -43,16 +31,16 @@ import com.sleepestapp.sleepest.storage.DatabaseRepository;
 import com.sleepestapp.sleepest.storage.db.AlarmEntity;
 import com.sleepestapp.sleepest.util.NotificationUtil;
 import com.sleepestapp.sleepest.util.SleepUtil;
-import com.sleepestapp.sleepest.util.SmileySelectorUtil;
 import com.sleepestapp.sleepest.util.TimeConverterUtil;
-import com.sleepestapp.sleepest.MainActivity;
-import com.sleepestapp.sleepest.MainApplication;
-import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
-
+/**
+ * This service class inherits from LifecycleService. It implements all functions of the foreground service
+ * like start, stop and foreground notification. Further implements this function the observation of data
+ * while the user is sleeping
+ */
 public class ForegroundService extends LifecycleService {
 
     private PowerManager.WakeLock wakeLock = null; //To keep Service active in background
@@ -63,16 +51,12 @@ public class ForegroundService extends LifecycleService {
     private int userSleepTime = 0; //Shows the actual sleep time of the user
     private boolean isSleeping = false; //Detects sleep state
     private int alarmTimeInSeconds = 0; //Shows the calculated alarm time
-    private int actualWakeUp = 0; //Shows the set alarm clock time
     private boolean userInformed = false; //Detects if the user is already informed about problems with reaching sleep time
-    private boolean[] bannerConfig = new boolean[5];
+    private final boolean[] bannerConfig = new boolean[5];
     private static int foregroundServiceStartTime = 0;
 
-    private DataStoreRepository dataStoreRepository; //Instance of DataStoreRepo
-    private DatabaseRepository databaseRepository; //Instance of DatabaseRepo
     private AlarmEntity alarmEntity = null; //Instance of AlarmEntity, especially next active alarm
     private SleepCalculationHandler sleepCalculationHandler; //Instance of SleepCalculationHandler
-    private SleepHandler sleepHandler; //Instance of SleepHandler
     public ForegroundObserver foregroundObserver; //Instance of the ForegroundObserver for live data
     private NotificationUtil notificationUtil;
     private AlarmCycleState alarmCycleState;
@@ -115,11 +99,15 @@ public class ForegroundService extends LifecycleService {
 
         //Create Instances
         foregroundObserver = new ForegroundObserver (this);
-        databaseRepository = ((MainApplication)getApplicationContext()).getDataBaseRepository();
-        alarmEntity = databaseRepository.getNextActiveAlarmJob();
-        dataStoreRepository = DataStoreRepository.Companion.getRepo(getApplicationContext());
-        sleepHandler =  SleepHandler.Companion.getHandler(getApplicationContext());
-        sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(MainApplication.Companion.applicationContext());
+        //Instance of DatabaseRepo
+        DatabaseRepository databaseRepository = ((MainApplication) getApplicationContext()).getDataBaseRepository();
+
+        //Instance of Datastore Repo
+        DataStoreRepository dataStoreRepository = ((MainApplication) getApplicationContext()).getDataStoreRepository();
+
+        alarmEntity = databaseRepository.getNextActiveAlarmJob(dataStoreRepository);
+        //Instance of SleepHandler
+        sleepCalculationHandler = new SleepCalculationHandler(getApplicationContext());
         alarmCycleState = new AlarmCycleState(getApplicationContext());
 
         foregroundObserver.resetSleepTime();
@@ -136,11 +124,6 @@ public class ForegroundService extends LifecycleService {
         //Start the Foregroundservice
         startForeground(Constants.FOREGROUND_SERVICE_ID, notificationUtil.createForegroundNotification());
         sendUserInformation();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 
     // Starts the service and start a thread for foreground processes
@@ -236,7 +219,7 @@ public class ForegroundService extends LifecycleService {
      */
     public static int getForegroundServiceTime() {
 
-        int time = 0;
+        int time;
         if (foregroundServiceStartTime < LocalTime.now().toSecondOfDay()) {
             time = LocalTime.now().toSecondOfDay() - foregroundServiceStartTime;
         } else {
@@ -262,9 +245,6 @@ public class ForegroundService extends LifecycleService {
             return;
         }
 
-        //Recheck, if alarm already set but AlarmClockReceiver is not active because of an error
-        checkAlarmSet();
-
         //Update instance of AlarmEntity
         alarmEntity = time;
 
@@ -272,9 +252,6 @@ public class ForegroundService extends LifecycleService {
         Calendar calendar = Calendar.getInstance();
 
         //Update wakeup time
-        /**if ((LocalTime.now().toSecondOfDay() - foregroundServiceStartTime) < 3 && (LocalTime.now().toSecondOfDay() - foregroundServiceStartTime) > 0) {
-            alarmTimeInSeconds = time.getActualWakeup();
-        }**/
 
         alarmTimeInSeconds = time.getActualWakeup();
 
@@ -282,7 +259,7 @@ public class ForegroundService extends LifecycleService {
         isAlarmActive = true;
 
         //Update the foreground notification with data
-        updateNotification();
+        showForegroundNotification();
         sendUserInformation();
 
         SharedPreferences pref = getSharedPreferences("AlarmChanged", 0);
@@ -303,6 +280,8 @@ public class ForegroundService extends LifecycleService {
         }
 
         //Check if the actual alarm time is already reached and set the alarm to now
+        //Shows the set alarm clock time
+        int actualWakeUp = 0;
         if ((secondsOfDay > time.getActualWakeup()) && checkPossibleAlarm() && (secondsOfDay > time.getWakeupEarly())) {
             calendar.add(Calendar.SECOND, 60);
 
@@ -403,29 +382,10 @@ public class ForegroundService extends LifecycleService {
 
     /**
      * Check if the alarm set is possible or already set
-     * @return
      */
     private boolean checkPossibleAlarm() {
-        if (!AlarmClockReceiver.isAlarmClockActive(getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK) && !alarmEntity.getWasFired()) {
-            return true;
-        }
-
-        return false;
+        return !AlarmClockReceiver.isAlarmClockActive(getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK) && !alarmEntity.getWasFired();
     }
-
-    /**
-     * Check the set alarm and set it to the right time
-     */
-    private void checkAlarmSet() {
-        if ((actualWakeUp != 0) && !AlarmClockReceiver.isAlarmClockActive(getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK)) {
-            //Calendar calendar = TimeConverterUtil.getAlarmDate(actualWakeUp);
-            //AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK) ,calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
-
-            //setPreferences(calendar, actualWakeUp, 9);
-        }
-    }
-
-
 
     /**
      * Will be called if sleep API data change
@@ -434,12 +394,10 @@ public class ForegroundService extends LifecycleService {
     @RequiresApi(api = Build.VERSION_CODES.P)
     public void OnSleepApiDataChanged(SleepApiData sleepApiData) {
 
-        checkAlarmSet();
-
         sleepValueAmount = sleepApiData.getSleepApiValuesAmount();
         isSubscribed = sleepApiData.getIsSubscribed();
 
-        updateNotification();
+        showForegroundNotification();
         sendUserInformation();
 
         SharedPreferences pref = getSharedPreferences("SleepValue", 0);
@@ -457,8 +415,6 @@ public class ForegroundService extends LifecycleService {
     @RequiresApi(api = Build.VERSION_CODES.P)
     public void OnSleepTimeChanged(LiveUserSleepActivity liveUserSleepActivity) {
 
-        checkAlarmSet();
-
         userSleepTime = liveUserSleepActivity.getUserSleepTime();
         isSleeping = liveUserSleepActivity.getIsUserSleeping();
 
@@ -467,14 +423,13 @@ public class ForegroundService extends LifecycleService {
         ed.putInt("sleeptime", userSleepTime);
         ed.apply();
 
-        updateNotification();
+        showForegroundNotification();
         sendUserInformation();
 
     }
 
     /**
      * Check if banner configuration was changed
-     * @param settingsData
      */
     @RequiresApi(api = Build.VERSION_CODES.P)
     public void OnBannerConfigChanged(SettingsData settingsData) {
@@ -483,7 +438,7 @@ public class ForegroundService extends LifecycleService {
         bannerConfig[2] = settingsData.getBannerShowActualSleepTime();
         bannerConfig[3] = settingsData.getBannerShowSleepState();
 
-        updateNotification();
+        showForegroundNotification();
     }
 
     //endregion
@@ -491,35 +446,17 @@ public class ForegroundService extends LifecycleService {
     //region notification
 
     /**
-     * Updates the notification banner with a new text
-     */
-    @RequiresApi(api = Build.VERSION_CODES.P)
-    public void updateNotification() {
-
-        //Notification notification = createNotification();
-        //NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        //notificationManager.notify(1, notification);
-
-        showForegroundNotification();
-
-    }
-
-    /**
      * Sends information to the user like missing data or user should go to sleep
      */
     @RequiresApi(api = Build.VERSION_CODES.P)
     private void sendUserInformation() {
 
-        if (SleepUtil.checkSleeptimeReachingPossibility(getApplicationContext()) && !userInformed) {
+        if (SleepUtil.checkSleepTimeReachingPossibility(getApplicationContext()) && !userInformed) {
 
             userInformed = true;
 
             NotificationUtil notificationUtilSleepProblem = new NotificationUtil(getApplicationContext(), NotificationUsage.NOTIFICATION_USER_SHOULD_SLEEP, null);
             notificationUtilSleepProblem.chooseNotification();
-
-            //Notification notification = AlarmReceiver.createInformationNotification(getApplicationContext(), getString(R.string.information_notification_text_sleeptime_problem));
-            //NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            //notificationManager.notify(3, notification);
 
         }
     }
@@ -566,195 +503,6 @@ public class ForegroundService extends LifecycleService {
 
         return actualTime;
     }
-
-    /**
-     * Creats a notification banner, that is permanent to show that the app is still running.
-     * @return Notification.Builder
-     */
-    private Notification createNotification() {
-        String notificationChannelId = getString(R.string.foregroundservice_channel);
-
-        //Init remoteView for expanded notification
-        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.foreground_service_notification);
-
-        //Set button for disable alarm with its intents
-        Intent btnClickIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
-        PendingIntent btnClickPendingIntent;
-
-        if (alarmEntity != null && alarmEntity.getTempDisabled()) {
-            btnClickIntent.putExtra(getApplicationContext().getString(R.string.alarmmanager_key), AlarmReceiverUsage.DISABLE_ALARM.name());
-
-            remoteViews.setTextViewText(R.id.btnDisableAlarmNotification, getString(R.string.btn_reactivate_alarm));
-
-            btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), AlarmReceiverUsage.Companion.getCount(AlarmReceiverUsage.DISABLE_ALARM), btnClickIntent, 0);
-            remoteViews.setOnClickPendingIntent(R.id.btnDisableAlarmNotification, btnClickPendingIntent);
-        } else {
-            btnClickIntent.putExtra(getApplicationContext().getString(R.string.alarmmanager_key), AlarmReceiverUsage.DISABLE_ALARM.name());
-
-            remoteViews.setTextViewText(R.id.btnDisableAlarmNotification, getString(R.string.btn_disable_alarm));
-
-            btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), AlarmReceiverUsage.Companion.getCount(AlarmReceiverUsage.DISABLE_ALARM), btnClickIntent, 0);
-            remoteViews.setOnClickPendingIntent(R.id.btnDisableAlarmNotification, btnClickPendingIntent);
-        }
-
-        if((userSleepTime <= Constants.NOT_SLEEP_BUTTON_DELAY) && (userSleepTime > 0)) {
-            //Set button for not sleeping
-            btnClickIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
-            btnClickIntent.putExtra(getApplicationContext().getString(R.string.alarmmanager_key), AlarmReceiverUsage.NOT_SLEEPING.name());
-            remoteViews.setTextViewText(R.id.btnNotSleepingNotification, getString(R.string.btn_not_sleeping_text));
-
-            btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), AlarmReceiverUsage.Companion.getCount(AlarmReceiverUsage.NOT_SLEEPING), btnClickIntent, 0);
-            remoteViews.setOnClickPendingIntent(R.id.btnNotSleepingNotification, btnClickPendingIntent);
-
-            remoteViews.setViewVisibility(R.id.btnNotSleepingNotification, View.VISIBLE);
-        } else if (userSleepTime <= 0) {
-            //Set button for not sleeping
-            btnClickIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
-            btnClickIntent.putExtra(getApplicationContext().getString(R.string.alarmmanager_key), AlarmReceiverUsage.NOT_SLEEPING.name());
-            remoteViews.setTextViewText(R.id.btnNotSleepingNotification, getString(R.string.btn_not_sleeping_text));
-
-            btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), AlarmReceiverUsage.Companion.getCount(AlarmReceiverUsage.NOT_SLEEPING), btnClickIntent, 0);
-            remoteViews.setOnClickPendingIntent(R.id.btnNotSleepingNotification, btnClickPendingIntent);
-
-            remoteViews.setViewVisibility(R.id.btnNotSleepingNotification, View.GONE);
-        } else {
-            //Set button for currently not sleeping
-            btnClickIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
-            btnClickIntent.putExtra(getApplicationContext().getString(R.string.alarmmanager_key), AlarmReceiverUsage.CURRENTLY_NOT_SLEEPING.name());
-            remoteViews.setTextViewText(R.id.btnNotSleepingNotification, getString(R.string.btn_currently_not_sleeping_text));
-
-            btnClickPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), AlarmReceiverUsage.Companion.getCount(AlarmReceiverUsage.CURRENTLY_NOT_SLEEPING), btnClickIntent, 0);
-            remoteViews.setOnClickPendingIntent(R.id.btnNotSleepingNotification, btnClickPendingIntent);
-
-            remoteViews.setViewVisibility(R.id.btnNotSleepingNotification, View.VISIBLE);
-        }
-
-        if (alarmEntity != null && alarmEntity.getTempDisabled()) {
-            isAlarmActive = false;
-        }
-
-        SmileySelectorUtil smileySelectorUtil = new SmileySelectorUtil();
-
-        String contentText;
-        if (isAlarmActive) {
-            contentText = smileySelectorUtil.getSmileyAlarmActive() + getString(R.string.alarm_status_true);
-        } else {
-            contentText = smileySelectorUtil.getSmileyAlarmNotActive() + getString(R.string.alarm_status_false);
-        }
-
-        String sleepStateText;
-        if (isSleeping) {
-            sleepStateText = smileySelectorUtil.getSmileySleep() + getString(R.string.sleep_status_true);
-        } else {
-            sleepStateText = smileySelectorUtil.getSmileySleep() + getString(R.string.sleep_status_false);
-        }
-
-        String sleeptimeText = smileySelectorUtil.getSmileyTime() + "Sleep time: " + TimeConverterUtil.minuteToTimeFormat(userSleepTime)[0] + "h " + TimeConverterUtil.minuteToTimeFormat(userSleepTime)[1] + "min";
-        String alarmtimeText = smileySelectorUtil.getSmileyAlarmClock() + "Alarm time: " + TimeConverterUtil.millisToTimeFormat(alarmTimeInSeconds)[0] + ":" + TimeConverterUtil.millisToTimeFormat(alarmTimeInSeconds)[1];
-
-        if (bannerConfig[0]) {
-            remoteViews.setTextViewText(R.id.tvBannerAlarmActive, contentText + " sub:" + isSubscribed);
-            remoteViews.setViewVisibility(R.id.tvBannerAlarmActive, View.VISIBLE);
-        } else {
-            remoteViews.setViewVisibility(R.id.tvBannerAlarmActive, View.GONE);
-        }
-
-        if (bannerConfig[1]) {
-            remoteViews.setTextViewText(R.id.tvBannerActualWakeup, alarmtimeText);
-            remoteViews.setViewVisibility(R.id.tvBannerActualWakeup, View.VISIBLE);
-        } else {
-            remoteViews.setViewVisibility(R.id.tvBannerActualWakeup, View.GONE);
-        }
-
-        if (bannerConfig[2]) {
-            remoteViews.setTextViewText(R.id.tvBannerActualSleeptime, sleeptimeText);
-            remoteViews.setViewVisibility(R.id.tvBannerActualSleeptime, View.VISIBLE);
-        } else {
-            remoteViews.setViewVisibility(R.id.tvBannerActualSleeptime, View.GONE);
-        }
-
-        if (bannerConfig[4]) {
-            remoteViews.setTextViewText(R.id.tvBannerIsSleeping, sleepStateText);
-            remoteViews.setViewVisibility(R.id.tvBannerIsSleeping, View.VISIBLE);
-        } else {
-            remoteViews.setViewVisibility(R.id.tvBannerIsSleeping, View.INVISIBLE);
-        }
-
-
-
-        //Set the Intent for tap on the notification, it will launch MainActivity
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        // Since Oreo there is a Notification Service needed
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationChannel channel = new NotificationChannel(
-                notificationChannelId,
-                getString(R.string.foregroundservice_channel_name),
-                NotificationManager.IMPORTANCE_HIGH
-        );
-        channel.setDescription(getString(R.string.foregroundservice_channel_description));
-        if (notificationManager != null) {
-            notificationManager.createNotificationChannel(channel);
-        }
-
-        Notification.Builder builder;
-        builder = new Notification.Builder(this, notificationChannelId);
-
-        return builder
-                .setContentTitle(getString(R.string.foregroundservice_notification_title))
-                .setContentText(contentText)
-                .setCustomBigContentView(remoteViews)
-                .setStyle(new Notification.DecoratedCustomViewStyle())
-                .setSmallIcon(R.drawable.logofulllinesoutlineround)
-                .setContentIntent(pendingIntent)
-                .setOnlyAlertOnce(true)
-                .build();
-    }
-
-
-
-    /**
-     * Create the notification to inform the user about sleep time problems
-     * @return
-     */
-   /** private Notification createInformationNotification() {
-        //Get Channel id
-        String notificationChannelId = getString(R.string.foregroundservice_channel);
-
-        //Create intent if user tap on notification
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        //Create manager and channel
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationChannel channel = new NotificationChannel(
-                notificationChannelId,
-                getString(R.string.information_notification_channel_name),
-                NotificationManager.IMPORTANCE_HIGH
-        );
-
-        //Set channel description
-        channel.setDescription(getString(R.string.foregroundservice_channel_description));
-        if (notificationManager != null) {
-            notificationManager.createNotificationChannel(channel);
-        }
-
-        //Build the notification and return it
-        Notification.Builder builder;
-        builder = new Notification.Builder(this, notificationChannelId);
-
-        return builder
-                .setContentTitle(getString(R.string.foregroundservice_notification_title))
-                .setContentText(getString(R.string.information_notification_text))
-                .setStyle(new Notification.DecoratedCustomViewStyle())
-                .setSmallIcon(R.drawable.logo_notification)
-                .setContentIntent(pendingIntent)
-                .setOnlyAlertOnce(true)
-                .build();
-    }**/
 
     /**
      * Starts or stops the foreground service. This function must be called to start or stop service
