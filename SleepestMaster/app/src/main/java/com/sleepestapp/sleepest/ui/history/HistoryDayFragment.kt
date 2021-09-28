@@ -474,28 +474,27 @@ class HistoryDayFragment : Fragment() {
                     if (sVal.third.mobilePosition == MobilePosition.ONTABLE) {
                         if (awake > 0)
                             entries.add(PieEntry(awake.toFloat(), actualContext.getString(R.string.history_day_timeInPhase_awake)))
-                        sleepTypes[0] = true
+                            sleepTypes[0] = true
                         if (sleep > 0)
                             entries.add(PieEntry(sleep.toFloat(), actualContext.getString(R.string.history_day_timeInPhase_sleepSum)))
-                        sleepTypes[1] = true
+                            sleepTypes[1] = true
                     }
                     else if (sVal.third.mobilePosition == MobilePosition.INBED) {
-                        if (awake > 0) {
+                        if (awake > 0)
                             entries.add(PieEntry(awake.toFloat(), actualContext.getString(R.string.history_day_timeInPhase_awake)))
                             sleepTypes[0] = true
-                        }
-                        if (lightSleep > 0) {
+
+                        if (lightSleep > 0)
                             entries.add(PieEntry(lightSleep.toFloat(), actualContext.getString(R.string.history_day_timeInPhase_lightSleep)))
                             sleepTypes[2] = true
-                        }
-                        if (deepSleep > 0) {
+
+                        if (deepSleep > 0)
                             entries.add(PieEntry(deepSleep.toFloat(), actualContext.getString(R.string.history_day_timeInPhase_deepSleep)))
                             sleepTypes[3] = true
-                        }
-                        if (remSleep > 0) {
+
+                        if (remSleep > 0)
                             entries.add(PieEntry(remSleep.toFloat(), actualContext.getString(R.string.history_day_timeInPhase_remSleep)))
                             sleepTypes[4] = true
-                        }
                     }
                 }
             }
