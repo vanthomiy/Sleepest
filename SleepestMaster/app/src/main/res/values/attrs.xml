@@ -9,6 +9,7 @@
             <enum name="WEEK_HISTORY" value="2"/>
             <enum name="MONTH_HISTORY" value="3"/>
             <enum name="SETTINGS" value="4"/>
+            <enum name="HISTORY" value="5"/>
         </attr>
         <attr name="direction" format="enum">
             <enum name="PICTURE_LEFT" value="0"/>

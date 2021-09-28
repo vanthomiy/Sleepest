@@ -1,7 +1,10 @@
 package com.sleepestapp.sleepest.model.data
 
+import android.app.Application
 import android.content.Context
+import androidx.core.content.ContextCompat
 import com.sleepestapp.sleepest.R
+import com.sleepestapp.sleepest.util.StringUtil
 
 
 // Enum actions for service start/stop
@@ -150,7 +153,41 @@ enum class SleepState {
     DEEP,
     REM,
     SLEEPING,
-    NONE
+    NONE;
+
+    companion object {
+        /**
+         * TODO"DEFINITION"
+         */
+        fun getListOfSleepStates(mobilePosition: MobilePosition = MobilePosition.INBED): List<SleepState> {
+            return when (mobilePosition) {
+                MobilePosition.INBED -> listOf(LIGHT, DEEP, REM, SLEEPING, AWAKE)
+                else -> listOf(SLEEPING, AWAKE)
+            }
+        }
+
+        fun getString(sleepState: SleepState, application: Application): String {
+            return when (sleepState) {
+                AWAKE -> StringUtil.getStringXml(R.string.history_day_timeInPhase_awake, application)
+                LIGHT -> StringUtil.getStringXml(R.string.history_day_timeInPhase_lightSleep, application)
+                DEEP -> StringUtil.getStringXml(R.string.history_day_timeInPhase_deepSleep, application)
+                REM -> StringUtil.getStringXml(R.string.history_day_timeInPhase_remSleep, application)
+                SLEEPING -> StringUtil.getStringXml(R.string.history_day_timeInPhase_sleepSum, application)
+                else -> "failure"
+            }
+        }
+
+        fun getColor(sleepState: SleepState, application: Application): Int {
+            return when (sleepState) {
+                AWAKE -> ContextCompat.getColor(application, R.color.awake_sleep_color)
+                LIGHT -> ContextCompat.getColor(application, R.color.light_sleep_color)
+                DEEP -> ContextCompat.getColor(application, R.color.deep_sleep_color)
+                REM -> ContextCompat.getColor(application, R.color.rem_sleep_color)
+                SLEEPING -> ContextCompat.getColor(application, R.color.sleep_sleep_color)
+                else -> ContextCompat.getColor(application, R.color.warning_color)
+            }
+        }
+    }
 }
 
 
