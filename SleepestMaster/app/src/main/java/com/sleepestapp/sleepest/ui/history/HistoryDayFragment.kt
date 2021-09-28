@@ -29,6 +29,7 @@ import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler
+import com.sleepestapp.sleepest.util.DesignUtil
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.is24HourFormat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -88,24 +89,24 @@ class HistoryDayFragment : Fragment() {
         viewModelDay.is24HourFormat = is24HourFormat(actualContext)
 
         // Initial set up for the daily sleep analysis bar chart.
-        barChartSleepAnalysis = setBarChart()
-        updateBarChart(barChartSleepAnalysis)
+        barChartSleepAnalysis = setBarChart(DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext)))
+        updateBarChart(barChartSleepAnalysis, DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext)))
         binding.lLSleepAnalysisChartsDaySleepPhases.addView(barChartSleepAnalysis)
         barChartSleepAnalysis.layoutParams.height = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics
+            TypedValue.COMPLEX_UNIT_DIP, 150F, resources.displayMetrics
         ).toInt()
         barChartSleepAnalysis.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
         barChartSleepAnalysis.invalidate()
 
 
         // Initial set up for the daily sleep analysis pie chart.
-        pieChartSleepAnalysis = setPieChart()
+        pieChartSleepAnalysis = setPieChart(DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext)))
         binding.lLSleepAnalysisChartsDaySleepPhasesAmount.addView(pieChartSleepAnalysis)
         pieChartSleepAnalysis.layoutParams.height = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics
+            TypedValue.COMPLEX_UNIT_DIP, 150F, resources.displayMetrics
         ).toInt()
         pieChartSleepAnalysis.layoutParams.width = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics
+            TypedValue.COMPLEX_UNIT_DIP, 150F, resources.displayMetrics
         ).toInt()
         pieChartSleepAnalysis.invalidate()
 
@@ -137,10 +138,16 @@ class HistoryDayFragment : Fragment() {
 
     /** Updates all existing charts on the fragment. */
     private fun updateCharts() {
-        updateBarChart(barChartSleepAnalysis)
+        updateBarChart(
+            barChartSleepAnalysis,
+            DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext))
+        )
         barChartSleepAnalysis.invalidate()
 
-        updatePieChart(pieChartSleepAnalysis)
+        updatePieChart(
+            pieChartSleepAnalysis,
+            DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext))
+        )
         pieChartSleepAnalysis.invalidate()
 
         updateActivitySmiley()
@@ -358,29 +365,33 @@ class HistoryDayFragment : Fragment() {
     }
 
     /**  Function for creating a BarChart for hte first time. */
-    fun setBarChart() : BarChart {
+    fun setBarChart(colorDarkMode: Int): BarChart {
         val barChart = BarChart(context)
         val diagramData = generateDataBarChart()
         val barData = BarData(generateBarDataSet(diagramData))
         barChart.data = barData
-        visualSetUpBarChart(barChart, diagramData)
+        visualSetUpBarChart(barChart, diagramData, colorDarkMode)
         return barChart
     }
 
     /**  Function for updating an existing BarChart. */
-    private fun updateBarChart(barChart: BarChart) {
+    private fun updateBarChart(barChart: BarChart, colorDarkMode: Int) {
         val diagramData = generateDataBarChart()
         val barData = BarData(generateBarDataSet(diagramData))
         barChart.data = barData
         barChart.notifyDataSetChanged()
 
-        visualSetUpBarChart(barChart, diagramData)
+        visualSetUpBarChart(barChart, diagramData, colorDarkMode)
     }
 
     /** Auxiliary function for setting up or updating a BarChart.
      * Sets up the visual settings.
      */
-    private fun visualSetUpBarChart(barChart: BarChart, diagramData: ArrayList<BarEntry>) {
+    private fun visualSetUpBarChart(
+        barChart: BarChart,
+        diagramData: ArrayList<BarEntry>,
+        colorDarkMode: Int
+    ) {
         barChart.description.isEnabled = false
         barChart.data.isHighlightEnabled = false
 
@@ -401,7 +412,7 @@ class HistoryDayFragment : Fragment() {
         barChart.legend.orientation = Legend.LegendOrientation.HORIZONTAL
         barChart.legend.setDrawInside(false)
         barChart.legend.textSize = 12f
-        barChart.legend.textColor = viewModel.checkDarkMode()
+        barChart.legend.textColor = colorDarkMode
 
         val legendEntryList = mutableListOf<LegendEntry>()
         sleepValues?.let {
@@ -495,20 +506,20 @@ class HistoryDayFragment : Fragment() {
     }
 
     /**  Function for creating a PieChart for the first time. */
-    private fun setPieChart() : PieChart {
+    private fun setPieChart(colorDarkMode: Int): PieChart {
         val chart = PieChart(actualContext)
         val data = generateDataPieChart()
         val pieDataSet = PieDataSet(data.first, "")
-        visualSetUpPieChart(chart, pieDataSet, data.second)
+        visualSetUpPieChart(chart, pieDataSet, data.second, colorDarkMode)
         chart.data = PieData(pieDataSet)
         return chart
     }
 
     /**  Function for updating a BarChart for the first time. */
-    private fun updatePieChart(chart: PieChart) {
+    private fun updatePieChart(chart: PieChart, colorDarkMode: Int) {
         val data = generateDataPieChart()
         val pieDataSet = PieDataSet(data.first, "")
-        visualSetUpPieChart(chart, pieDataSet, data.second)
+        visualSetUpPieChart(chart, pieDataSet, data.second, colorDarkMode)
         chart.data = PieData(pieDataSet)
         chart.notifyDataSetChanged()
     }
@@ -516,7 +527,12 @@ class HistoryDayFragment : Fragment() {
     /** Auxiliary function for setting up or updating a PieChart.
      * Sets up the visual settings.
      */
-    private fun visualSetUpPieChart(chart: PieChart, pieDataSet: PieDataSet, sleepTypes: BooleanArray) {
+    private fun visualSetUpPieChart(
+        chart: PieChart,
+        pieDataSet: PieDataSet,
+        sleepTypes: BooleanArray,
+        colorDarkMode: Int
+    ) {
         val listColors = ArrayList<Int>()
         //sleepTypes[0] = awake, sleepTypes[1] = sleep, sleepTypes[2] = light, sleepTypes[3] = deep, sleepTypes[4] = rem
 
@@ -534,7 +550,7 @@ class HistoryDayFragment : Fragment() {
         pieDataSet.colors = listColors
         pieDataSet.setDrawValues(false)
 
-        chart.setCenterTextColor(viewModel.checkDarkMode())
+        chart.setCenterTextColor(colorDarkMode)
         //chart.setHoleColor(viewModel.checkDarkModeInverse())
         //chart.setEntryLabelColor(viewModel.checkDarkMode())
 

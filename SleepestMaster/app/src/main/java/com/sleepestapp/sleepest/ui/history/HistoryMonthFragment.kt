@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.sleepestapp.sleepest.databinding.FragmentHistoryMonthBinding
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
+import com.sleepestapp.sleepest.util.DesignUtil
 import java.time.LocalDate
 
 class HistoryMonthFragment : Fragment() {
@@ -38,27 +39,52 @@ class HistoryMonthFragment : Fragment() {
         binding.lifecycleOwner = this
 
         barChartDates = getEndOfMonth()
-        barChart = viewModel.setBarChart(BarChart(actualContext), barChartDates.first, barChartDates.second)
-        activityChart = viewModel.setActivityChart(LineChart(context), barChartDates.first, barChartDates.second)
+        barChart = viewModel.setBarChart(
+            BarChart(actualContext),
+            barChartDates.first,
+            barChartDates.second,
+            DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext))
+        )
+        activityChart = viewModel.setActivityChart(
+            LineChart(context),
+            barChartDates.first,
+            barChartDates.second,
+            DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext))
+        )
 
         binding.lLSleepAnalysisChartsMonthSleepPhases.addView(barChart)
         binding.lLActivityAnalysisChartMonth.addView(activityChart)
 
-        val height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 350F, resources.displayMetrics)
+        val height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics)
         barChart.layoutParams.height = height.toInt()
         barChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
         barChart.invalidate()
 
-        activityChart.layoutParams.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics).toInt()
+        activityChart.layoutParams.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150F, resources.displayMetrics).toInt()
         activityChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
         activityChart.invalidate()
 
         viewModel.analysisDate.observe(viewLifecycleOwner) {
             barChartDates = getEndOfMonth()
-            viewModel.updateBarChart(barChart, barChartDates.first, barChartDates.second)
+
+            viewModel.updateBarChart(
+                barChart,
+                barChartDates.first,
+                barChartDates.second,
+                DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext)
+                )
+            )
+
             barChart.invalidate()
 
-            viewModel.updateActivityChart(activityChart, barChartDates.first, barChartDates.second)
+            viewModel.updateActivityChart(
+                activityChart,
+                barChartDates.first,
+                barChartDates.second,
+                DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext)
+                )
+            )
+
             activityChart.invalidate()
         }
 

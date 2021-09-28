@@ -1,9 +1,7 @@
 package com.sleepestapp.sleepest.ui.history
 
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.view.View
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -206,34 +204,6 @@ class HistoryViewModel(
         return sleepSessionData.containsKey(UserSleepSessionEntity.getIdByDateTime(time))
     }
 
-    /** Auxiliary function the determine if the device is currently in dark mode. */
-    fun checkDarkMode() : Int {
-        var color = Color.BLACK
-        if (autoDarkMode) {
-            if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-                color = Color.WHITE
-            }
-        } else if (darkMode) {
-            color = Color.WHITE
-        }
-        return color
-    }
-
-    /** Auxiliary function the determine if the device is currently in dark mode and invert colors. */
-    fun checkDarkModeInverse() : Int {
-        var color = Color.WHITE
-        if (autoDarkMode) {
-            if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-                color = Color.BLACK
-            }
-        }
-        if (darkMode) {
-            color = Color.BLACK
-        }
-        return color
-    }
-
-
     /** Generates all the relevant information for the Bar Charts by searching the database for the correct period of time.
      *
      * */
@@ -361,28 +331,36 @@ class HistoryViewModel(
     }
 
     /** Create a new Bar Chart entity. */
-    fun setBarChart(barChart: BarChart, range: Int, endDateOfDiagram: LocalDate) : BarChart {
+    fun setBarChart(barChart: BarChart, range: Int, endDateOfDiagram: LocalDate, colorDarkMode: Int) : BarChart {
         //http://developine.com/android-grouped-stacked-bar-chart-using-mpchart-kotlin/
         val diagramData = generateDataBarChart(range, endDateOfDiagram)
         val barData = BarData(generateBarDataSet(diagramData.first))
         barChart.data = barData
-        visualSetUpBarChart(barChart, diagramData, range)
+        visualSetUpBarChart(barChart, diagramData, range, colorDarkMode)
         return barChart
     }
 
     /** Update an existing Bar Chart entity. */
-    fun updateBarChart(barChart: BarChart, range: Int, endDateOfDiagram: LocalDate) {
+    fun updateBarChart(
+        barChart: BarChart,
+        range: Int,
+        endDateOfDiagram: LocalDate,
+        colorDarkMode: Int
+    ) {
         val diagramData = generateDataBarChart(range, endDateOfDiagram)
         val barData = BarData(generateBarDataSet(diagramData.first))
         barChart.data = barData
-        visualSetUpBarChart(barChart, diagramData, range)
+        visualSetUpBarChart(barChart, diagramData, range, colorDarkMode)
         barChart.invalidate()
     }
 
     /** Visual setup for Bar Chart entities. With separation between monthly and weekly bar charts. */
-    private fun visualSetUpBarChart(barChart: BarChart,
-                                    diagramData: Triple<ArrayList<BarEntry>, List<Int>, Int>,
-                                    range: Int) {
+    private fun visualSetUpBarChart(
+        barChart: BarChart,
+        diagramData: Triple<ArrayList<BarEntry>, List<Int>, Int>,
+        range: Int,
+        colorDarkMode: Int
+    ) {
         barChart.description.isEnabled = false
         barChart.data.isHighlightEnabled = false
 
@@ -421,7 +399,7 @@ class HistoryViewModel(
 
         barChart.xAxis.axisMinimum = 0f
         barChart.xAxis.setCenterAxisLabels(true)
-        barChart.xAxis.textColor = checkDarkMode()
+        barChart.xAxis.textColor = colorDarkMode
 
 
         // set bar label
@@ -430,7 +408,7 @@ class HistoryViewModel(
         barChart.legend.orientation = Legend.LegendOrientation.HORIZONTAL
         barChart.legend.setDrawInside(false)
         barChart.legend.textSize = 12f
-        barChart.legend.textColor = checkDarkMode()
+        barChart.legend.textColor = colorDarkMode
 
         val legendEntryList = mutableListOf<LegendEntry>()
 
@@ -463,7 +441,7 @@ class HistoryViewModel(
         barChart.axisLeft.axisMinimum = 0f
         barChart.axisLeft.labelCount = 10
         barChart.axisLeft.setDrawGridLines(false)
-        barChart.axisLeft.textColor = checkDarkMode()
+        barChart.axisLeft.textColor = colorDarkMode
 
         val proportion = getBarChartYAxisProportion(diagramData.third)
         barChart.axisRight.axisMaximum = proportion
@@ -509,22 +487,36 @@ class HistoryViewModel(
     }
 
     /** Create a new Activity Chart [LineChart] entity. */
-    fun setActivityChart(chart: LineChart, range: Int, endDateOfDiagram: LocalDate) : LineChart {
+    fun setActivityChart(
+        chart: LineChart,
+        range: Int,
+        endDateOfDiagram: LocalDate,
+        colorDarkMode: Int
+    ) : LineChart {
         val lineDataSet = LineDataSet(generateDataActivityChart(range, endDateOfDiagram), "")
-        visualSetUpActivityChart(chart, lineDataSet)
+        visualSetUpActivityChart(chart, lineDataSet, colorDarkMode)
         chart.data = LineData(lineDataSet)
         return chart
     }
 
     /** Updates the information in an existing Activity Chart. */
-    fun updateActivityChart(chart: LineChart, range: Int, endDateOfDiagram: LocalDate) {
+    fun updateActivityChart(
+        chart: LineChart,
+        range: Int,
+        endDateOfDiagram: LocalDate,
+        colorDarkMode: Int
+    ) {
         val lineDataSet = LineDataSet(generateDataActivityChart(range, endDateOfDiagram), "")
-        visualSetUpActivityChart(chart, lineDataSet)
+        visualSetUpActivityChart(chart, lineDataSet, colorDarkMode)
         chart.data = LineData(lineDataSet)
     }
 
     /** Visual setup for the Activity Chart. With separation between monthly and weekly bar charts. */
-    private fun visualSetUpActivityChart(chart: LineChart, lineDataSet: LineDataSet) {
+    private fun visualSetUpActivityChart(
+        chart: LineChart,
+        lineDataSet: LineDataSet,
+        colorDarkMode: Int
+    ) {
         lineDataSet.setDrawValues(false)
         lineDataSet.setDrawFilled(true)
         lineDataSet.setDrawCircles(false)
@@ -548,7 +540,7 @@ class HistoryViewModel(
         chart.axisLeft.valueFormatter = IndexAxisValueFormatter(yAxisValues)
         chart.axisLeft.axisMinimum = -0.05f
         chart.axisLeft.setDrawGridLines(false)
-        chart.axisLeft.textColor = checkDarkMode()
+        chart.axisLeft.textColor = colorDarkMode
         chart.axisLeft.textSize = 16f
         chart.legend.isEnabled= false
 
@@ -558,7 +550,7 @@ class HistoryViewModel(
         chart.xAxis.setDrawGridLines(false)
         chart.xAxis.setDrawLabels(true)
 
-        chart.xAxis.textColor = checkDarkMode()
+        chart.xAxis.textColor = colorDarkMode
         chart.xAxis.setCenterAxisLabels(false)
         chart.xAxis.position = XAxis.XAxisPosition.BOTTOM
 

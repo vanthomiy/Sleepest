@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.sleepestapp.sleepest.databinding.FragmentHistoryWeekBinding
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
+import com.sleepestapp.sleepest.util.DesignUtil
 import java.time.*
 
 class HistoryWeekFragment : Fragment() {
@@ -36,31 +37,53 @@ class HistoryWeekFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentHistoryWeekBinding.inflate(inflater, container, false)
         binding.historyWeekViewModel = viewModelWeek
         binding.lifecycleOwner = this
 
-        barChart = viewModel.setBarChart(BarChart(actualContext), 7, getSundayOfWeek())
-        activityChart = viewModel.setActivityChart(LineChart(context), 7, getSundayOfWeek())
+        barChart = viewModel.setBarChart(
+            BarChart(actualContext),
+            7,
+            getSundayOfWeek(),
+            DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext)
+            )
+        )
+
+        activityChart = viewModel.setActivityChart(
+            LineChart(context),
+            7,
+            getSundayOfWeek(),
+            DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext)
+            )
+        )
 
         binding.lLSleepAnalysisChartsWeekSleepPhases.addView(barChart)
         binding.lLActivityAnalysisChartWeek.addView(activityChart)
 
-        val height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 350F, resources.displayMetrics)
+        val height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics)
         barChart.layoutParams.height = height.toInt()
         barChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
         barChart.invalidate()
 
-        activityChart.layoutParams.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics).toInt()
+        activityChart.layoutParams.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150F, resources.displayMetrics).toInt()
         activityChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
         activityChart.invalidate()
 
         viewModel.analysisDate.observe(viewLifecycleOwner) {
-            viewModel.updateBarChart(barChart, 7, getSundayOfWeek())
+            viewModel.updateBarChart(
+                barChart,
+                7,
+                getSundayOfWeek(),
+                DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext))
+            )
             barChart.invalidate()
 
-            viewModel.updateActivityChart(activityChart, 7, getSundayOfWeek())
+            viewModel.updateActivityChart(
+                activityChart,
+                7,
+                getSundayOfWeek(),
+                DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext))
+            )
             activityChart.invalidate()
         }
 
