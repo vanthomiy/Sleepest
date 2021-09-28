@@ -2,12 +2,9 @@ package com.sleepestapp.sleepest.ui.history
 
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.transition.TransitionManager
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.databinding.*
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -41,7 +38,7 @@ class HistoryViewModel(
     /** Contains the current date which will be displayed at the history fragment. */
     var analysisDate = MutableLiveData(LocalDate.now())
 
-    /** Indicates whether darkmode is on or off. */
+    /** Indicates whether dark mode is on or off. */
     var darkMode = false
 
     /** Indicates whether the user has set the app up for automatically detect the devices dark mode settings. */
@@ -165,10 +162,10 @@ class HistoryViewModel(
                     sleepSessionData[id] = Triple(
                         dataBaseRepository.getSleepApiRawDataBetweenTimestamps(
                             session.sleepTimes.sleepTimeStart,
-                            session.sleepTimes.sleepTimeEnd).first()?.sortedBy { x -> x.timestampSeconds },
+                            session.sleepTimes.sleepTimeEnd).first()?.sortedBy { x -> x.timestampSeconds }?: listOf(),
                         session.sleepTimes.sleepDuration,
                         session
-                    ) as Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>
+                    )
                 }
             }
             checkSessionIntegrity()

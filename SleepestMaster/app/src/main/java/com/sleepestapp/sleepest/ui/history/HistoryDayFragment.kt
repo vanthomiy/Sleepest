@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.databinding.Observable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -21,7 +20,6 @@ import com.sleepestapp.sleepest.sleepcalculation.model.UserSleepRating
 import com.sleepestapp.sleepest.storage.db.SleepApiRawDataEntity
 import com.sleepestapp.sleepest.storage.db.UserSleepSessionEntity
 import com.sleepestapp.sleepest.util.SmileySelectorUtil
-import com.sleepestapp.sleepest.util.StringUtil
 import com.sleepestapp.sleepest.util.TimeConverterUtil
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
@@ -56,6 +54,7 @@ class HistoryDayFragment : Fragment() {
 
     var factory = object : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            @Suppress("UNCHECKED_CAST")
             return  HistoryDayViewModel(
                 SleepCalculationHandler(actualContext)
             ) as T
@@ -274,7 +273,7 @@ class HistoryDayFragment : Fragment() {
     }
 
     /** Auxiliary function for generating data for the BarChart.
-     * Analysis the sleepValues for the current date and creates BarEntries for every single minte of the night.
+     * Analysis the sleepValues for the current date and creates BarEntries for every single minute of the night.
      */
     fun generateDataBarChart(): ArrayList<BarEntry> {
         val entries = ArrayList<BarEntry>()

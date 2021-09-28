@@ -1,12 +1,9 @@
 package com.sleepestapp.sleepest.ui.history
 
+
 import android.app.TimePickerDialog
-import android.transition.TransitionManager
-import android.transition.Visibility
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,7 +11,6 @@ import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.model.data.MoodType
 import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler
 import com.sleepestapp.sleepest.util.IconAnimatorUtil
-import com.sleepestapp.sleepest.util.SleepTimeValidationUtil
 import com.sleepestapp.sleepest.util.SmileySelectorUtil
 import kotlinx.coroutines.launch
 import java.time.Instant

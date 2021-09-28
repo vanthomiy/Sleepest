@@ -10,28 +10,22 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.databinding.Observable
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import androidx.viewpager2.widget.ViewPager2
 import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.databinding.FragmentHistoryTabviewBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.sleepestapp.sleepest.MainApplication
-import com.sleepestapp.sleepest.model.data.MobilePosition
 import com.sleepestapp.sleepest.model.data.SleepState
 import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler
-import com.sleepestapp.sleepest.storage.db.SleepApiRawDataEntity
-import com.sleepestapp.sleepest.storage.db.UserSleepSessionEntity
-import com.sleepestapp.sleepest.ui.settings.SettingsViewModel
 import com.sleepestapp.sleepest.util.StringUtil
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import java.time.*
 import java.time.temporal.WeekFields
 import java.util.*
-import kotlin.collections.ArrayList
 
 class HistoryTabView : Fragment() {
     private lateinit var adapter: HistoryTabViewAdapter
@@ -47,6 +41,7 @@ class HistoryTabView : Fragment() {
 
     var factory = object : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            @Suppress("UNCHECKED_CAST")
             return  HistoryViewModel(
                 (actualContext as MainApplication).dataStoreRepository,
                 (actualContext as MainApplication).dataBaseRepository,
