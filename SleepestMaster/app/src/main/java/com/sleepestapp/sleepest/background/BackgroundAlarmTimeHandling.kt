@@ -1,5 +1,6 @@
 package com.sleepestapp.sleepest.background
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -27,6 +28,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 import android.app.ActivityManager
+import android.app.ActivityManager.AppTask
 
 import android.content.Context.ACTIVITY_SERVICE
 import com.sleepestapp.sleepest.model.data.Constants
@@ -93,6 +95,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                     //Change the end of sleep time alarm
                     val calendar = TimeConverterUtil.getAlarmDate(getSleepTimeEndValue() + 60)
                     AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context.applicationContext, AlarmReceiverUsage.STOP_WORKMANAGER)
+                    beginOfSleepTime(false)
                 }
 
                 //User changes sleep time begin and is not in sleep time
@@ -217,7 +220,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                 AlarmReceiver.cancelAlarm(context, AlarmReceiverUsage.START_WORKMANAGER_CALCULATION)
 
                 //Stops the foreground service depending on the screen status (on/off)
-                if (isUserInApp()) {
+                if (!isUserInApp()) {
                     val startForegroundIntent = Intent(context, ForegroundActivity::class.java)
                     startForegroundIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                     startForegroundIntent.putExtra("intent", 2)
@@ -291,6 +294,25 @@ class BackgroundAlarmTimeHandler(val context: Context) {
     }
 
     private fun isUserInApp() : Boolean {
+        /*val activityManager = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
+        val allTasks = activityManager.appTasks
+        if (allTasks.size > 0 && allTasks.get(0).taskInfo.baseActivity != null) {
+
+            if (allTasks[0].taskInfo.baseActivity!!.packageName == "com.sleepestapp.sleepest") {
+                return true
+            }
+        }*/
+
+        /*val activityManager = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
+        val processinfo = activityManager.runningAppProcesses
+        val info = processinfo.
+
+        ActivityManager.RunningAppProcessInfo appProcessInfo = new ActivityManager.RunningAppProcessInfo();
+        ActivityManager.getMyMemoryState(appProcessInfo);
+        return (appProcessInfo.importance == IMPORTANCE_FOREGROUND || appProcessInfo.importance == IMPORTANCE_VISIBLE)*/
+
+
+
         val am = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
 
         val tasks = am.getRunningTasks(1)
@@ -683,6 +705,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
      */
     companion object {
         // For Singleton instantiation
+        @SuppressLint("StaticFieldLeak")
         @Volatile
         private var INSTANCE: BackgroundAlarmTimeHandler? = null
 

@@ -1,5 +1,6 @@
 package com.sleepestapp.sleepest.googleapi
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -63,13 +64,14 @@ class SleepReceiver : BroadcastReceiver() {
         /**
          * The actual intent for the subscription
          */
+        @SuppressLint("UnspecifiedImmutableFlag")
         fun createSleepReceiverPendingIntent(context: Context): PendingIntent {
             val sleepIntent = Intent(context, SleepReceiver::class.java)
             return PendingIntent.getBroadcast(
                     context,
                     SleepApiUsage.getCount(SleepApiUsage.REQUEST_CODE),
                     sleepIntent,
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
+                PendingIntent.FLAG_CANCEL_CURRENT
             )
         }
     }

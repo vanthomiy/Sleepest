@@ -1,11 +1,15 @@
 package com.sleepestapp.sleepest.googleapi
 
+import android.annotation.SuppressLint
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.storage.db.ActivityApiRawDataEntity
 import com.google.android.gms.location.ActivityTransitionResult
+import com.sleepestapp.sleepest.model.data.ActivityTransitionUsage
+import com.sleepestapp.sleepest.model.data.SleepApiUsage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -62,4 +66,22 @@ class ActivityTransitionReceiver : BroadcastReceiver() {
             }
         }
     }
+
+    companion object {
+        /**
+         * The actual intent for the subscription
+         */
+        @SuppressLint("UnspecifiedImmutableFlag")
+        fun createActivityTransitionReceiverPendingIntent(context: Context): PendingIntent {
+            val intent = Intent(context, ActivityTransitionReceiver::class.java)
+            return PendingIntent.getBroadcast(
+                context,
+                ActivityTransitionUsage.getCount(ActivityTransitionUsage.REQUEST_CODE),
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
+    }
+
+
 }
