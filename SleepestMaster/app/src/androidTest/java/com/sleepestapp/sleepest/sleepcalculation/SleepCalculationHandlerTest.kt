@@ -926,7 +926,7 @@ class SleepCalculationHandlerTest
     fun sleepCalculationLast30MinutesTest(): Unit = runBlocking {
 
         val actualTimeSeconds = 100000
-        val sleepCalculationHandler = SleepCalculationHandler.getHandler(context)
+        val sleepCalculationHandler = SleepCalculationHandler(context)
         var sleepList5 = mutableListOf<SleepApiRawDataEntity>()
 
         // keine daten

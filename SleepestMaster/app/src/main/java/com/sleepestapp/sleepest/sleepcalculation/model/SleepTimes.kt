@@ -18,7 +18,7 @@ data class SleepTimes(
         /**
          * The utc timestamp in seconds when the last user sleep of the sleep session is detected
          */
-        var sleepTimeEnd: Int = 0,
+        var sleepTimeEnd: Int = -1,
 
         /**
          * Setup sleep time start at the specific day in seconds of day
