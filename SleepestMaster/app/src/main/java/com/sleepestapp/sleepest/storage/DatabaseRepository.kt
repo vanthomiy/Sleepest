@@ -167,6 +167,13 @@ class DatabaseRepository(
     }
 
     /**
+     * Delete list of [SleepApiRawDataEntity]
+     */
+    suspend fun deleteSleepApiRawData(id:Int) {
+        sleepApiRawDataDao.delete(id)
+    }
+
+    /**
      * Insert or update list of [SleepApiRawDataEntity]
      */
     suspend fun insertSleepApiRawData(sleepClassifyEventEntities: List<SleepApiRawDataEntity>) {

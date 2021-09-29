@@ -320,14 +320,14 @@ class SleepCalculationHandler(val context: Context) {
             if (data.sleepState != SleepState.NONE && data.oldSleepState == SleepState.NONE){
                 // get normed list
                 val (normedSleepApiDataBefore, frequency1) = createTimeNormedData(
-                    if(fromDefineUserWakeUp) 1f else 0.5f,
+                    if(!fromDefineUserWakeUp) 1f else 0.5f,
                     false,
                     data.timestampSeconds,
                     sleepApiRawDataEntity.toList()
                 )
 
                 val (normedSleepApiDataAfter, frequency2) = createTimeNormedData(
-                    if(fromDefineUserWakeUp) 1f else 0.5f,
+                    if(!fromDefineUserWakeUp) 1f else 0.5f,
                     true,
                     data.timestampSeconds,
                     sleepApiRawDataEntity.toList()

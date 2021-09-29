@@ -64,7 +64,7 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
         timer = new Timer();
 
         startTimeText = context.getString(R.string.onboarding_start_time_text_first_start);
-        endTimeText = context.getString(R.string.onboarding_end_time_text_first_start);;
+        endTimeText = context.getString(R.string.onboarding_end_time_text_first_start);
 
         if (arrayList.size() > 0) {
             starttime = (int) arrayList.get(0);

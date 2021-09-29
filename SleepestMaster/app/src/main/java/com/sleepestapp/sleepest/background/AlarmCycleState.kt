@@ -31,7 +31,7 @@ class AlarmCycleState(context: Context) {
     /**
      * Returns the state depending on the actual time
      */
-    suspend private fun chooseState() : AlarmCycleStates {
+    private suspend fun chooseState() : AlarmCycleStates {
 
         if (databaseRepository.getNextActiveAlarm(dataStoreRepository) != null) {
 
