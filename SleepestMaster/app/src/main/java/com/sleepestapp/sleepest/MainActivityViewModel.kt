@@ -11,8 +11,8 @@ class MainActivityViewModel(
     val dataBaseRepository: DatabaseRepository
 ) : ViewModel() {
 
-    val activeAlarmsLiveData by lazy {
-        dataBaseRepository.activeAlarmsFlow(dataStoreRepository).asLiveData()
+    val alarmsLiveData by lazy {
+        dataBaseRepository.alarmFlow.asLiveData()
     }
 
     val sleepParametersLiveData by lazy {

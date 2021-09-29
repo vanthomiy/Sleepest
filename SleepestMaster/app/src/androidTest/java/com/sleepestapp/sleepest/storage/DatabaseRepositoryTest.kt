@@ -6,6 +6,7 @@ import com.sleepestapp.sleepest.model.data.SleepState
 import com.sleepestapp.sleepest.sleepcalculation.model.SleepTimes
 import com.sleepestapp.sleepest.storage.db.*
 import com.google.gson.Gson
+import com.sleepestapp.sleepest.util.SleepTimeValidationUtil
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers
@@ -60,8 +61,11 @@ class DatabaseRepositoryTest {
         assertThat(alarms.count(), CoreMatchers.equalTo(0))
 
         // call the get active alarms ( in time )
-        alarms = sleepDatabaseRepository.activeAlarmsFlow(sleepStoreRepository).first()
-        assertThat(alarms.count(), CoreMatchers.equalTo(0))
+        var activeAlarms = SleepTimeValidationUtil.getActiveAlarms(
+            alarms,
+            sleepStoreRepository
+        )
+        assertThat(activeAlarms.count(), CoreMatchers.equalTo(0))
 
         // insert one with id 1 and false
         sleepDatabaseRepository.insertAlarm(AlarmEntity(1, false))
@@ -71,8 +75,13 @@ class DatabaseRepositoryTest {
         assertThat(alarms.count(), CoreMatchers.equalTo(1))
 
         // call the get active alarms ( in time )
-        alarms = sleepDatabaseRepository.activeAlarmsFlow(sleepStoreRepository).first()
-        assertThat(alarms.count(), CoreMatchers.equalTo(0))
+        alarms = sleepDatabaseRepository.alarmFlow.first()
+
+        activeAlarms = SleepTimeValidationUtil.getActiveAlarms(
+            alarms,
+            sleepStoreRepository
+        )
+        assertThat(activeAlarms.count(), CoreMatchers.equalTo(0))
 
         // insert one with id 2 and active yesterday
 
@@ -93,8 +102,14 @@ class DatabaseRepositoryTest {
         assertThat(alarms.count(), CoreMatchers.equalTo(2))
 
         // call the get active alarms ( in time )
-        alarms = sleepDatabaseRepository.activeAlarmsFlow(sleepStoreRepository).first()
-        assertThat(alarms.count(), CoreMatchers.equalTo(0))
+        alarms = sleepDatabaseRepository.alarmFlow.first()
+
+        activeAlarms = SleepTimeValidationUtil.getActiveAlarms(
+            alarms,
+            sleepStoreRepository
+        )
+
+        assertThat(activeAlarms.count(), CoreMatchers.equalTo(0))
 
 
         sleepDatabaseRepository.insertAlarm(
@@ -110,8 +125,14 @@ class DatabaseRepositoryTest {
         assertThat(alarms.count(), CoreMatchers.equalTo(3))
 
         // call the get active alarms ( in time )
-        alarms = sleepDatabaseRepository.activeAlarmsFlow(sleepStoreRepository).first()
-        assertThat(alarms.count(), CoreMatchers.equalTo(1))
+        alarms = sleepDatabaseRepository.alarmFlow.first()
+
+        activeAlarms = SleepTimeValidationUtil.getActiveAlarms(
+            alarms,
+            sleepStoreRepository
+        )
+
+        assertThat(activeAlarms.count(), CoreMatchers.equalTo(1))
 
     }
 

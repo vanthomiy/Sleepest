@@ -5,6 +5,7 @@ import androidx.datastore.createDataStore
 import com.sleepestapp.sleepest.storage.datastorage.TUTORIAL_STATUS_NAME
 import com.sleepestapp.sleepest.storage.datastorage.TutorialStatus
 import com.sleepestapp.sleepest.*
+import com.sleepestapp.sleepest.model.data.AlarmTimeData
 import com.sleepestapp.sleepest.model.data.Constants.DAY_IN_SECONDS
 import com.sleepestapp.sleepest.storage.datastorage.*
 import kotlinx.coroutines.flow.Flow
@@ -72,6 +73,7 @@ class DataStoreRepository(context: Context) {
     /**
      * Returns if the time is in actual sleep time
      */
+    @Deprecated("asd")
     suspend fun isInSleepTime(givenTime:LocalTime? = null): Boolean {
 
         val times = sleepParameterFlow.first()
@@ -85,9 +87,50 @@ class DataStoreRepository(context: Context) {
         return ((overTwoDays && (seconds in times.sleepTimeStart..maxTime ||  seconds in 0 .. times.sleepTimeEnd)) || (!overTwoDays && seconds in times.sleepTimeStart..times.sleepTimeEnd))
     }
 
+
+    suspend fun getActualAlarmTimeData(givenTime:LocalTime? = null): AlarmTimeData {
+        // get sleep times
+        var times = sleepParameterFlow.first()
+
+        // get the given or actual time
+        val time = givenTime ?: LocalTime.now()
+
+        // get the seconds of the actual day
+        val seconds = time.toSecondOfDay()
+
+        // check if sleep time is over two days
+        val sleepTimeOverTwoDays = times.sleepTimeStart > times.sleepTimeEnd
+
+        // check if time is before sleep time on day
+        val isBeforeSleepTime = times.sleepTimeStart > seconds
+
+        // check if time is in sleep time
+        val isInSleepTime = if(sleepTimeOverTwoDays){
+            (times.sleepTimeStart < seconds || times.sleepTimeEnd > seconds)
+        }
+        else {
+            (times.sleepTimeStart < seconds && times.sleepTimeEnd > seconds)
+        }
+
+        val alarmIsOnSameDay = if(sleepTimeOverTwoDays) {
+            (isInSleepTime && seconds < times.sleepTimeEnd)
+        }
+        else{
+            (isInSleepTime || isBeforeSleepTime)
+        }
+
+
+        return AlarmTimeData(
+            isBeforeSleepTime,
+            isInSleepTime,
+            sleepTimeOverTwoDays,
+            alarmIsOnSameDay)
+    }
+
     /**
      * Returns if the time is after the sleep time
      */
+    @Deprecated("asdasd")
     suspend fun isAfterSleepTime(givenTime:LocalTime? = null): Pair<Boolean, Boolean> {
 
         var times = sleepParameterFlow.first()
@@ -180,7 +223,6 @@ class DataStoreRepository(context: Context) {
         if(time < 0)
             newTime += DAY_IN_SECONDS
         sleepParameterStatus.updateSleepTimeEnd(newTime)
-
     }
 
     /**

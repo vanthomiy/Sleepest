@@ -191,9 +191,17 @@ class MainActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
 
-        viewModel.activeAlarmsLiveData.observe(this){ list ->
+        viewModel.alarmsLiveData.observe(this){ alarms ->
             // check the list if empty or not
-            BackgroundAlarmTimeHandler.getHandler(applicationContext).changeOfAlarmEntity(list.isEmpty())
+            lifecycleScope.launch {
+                val activeAlarms = SleepTimeValidationUtil.getActiveAlarms(
+                    alarms,
+                    dataStoreRepository = viewModel.dataStoreRepository
+                )
+
+                BackgroundAlarmTimeHandler.getHandler(applicationContext)
+                    .changeOfAlarmEntity(activeAlarms.isEmpty())
+            }
         }
 
         // observe sleep time changes

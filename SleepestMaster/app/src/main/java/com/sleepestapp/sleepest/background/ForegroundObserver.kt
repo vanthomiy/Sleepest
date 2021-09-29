@@ -7,11 +7,9 @@ import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
 import com.sleepestapp.sleepest.storage.db.AlarmEntity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
+import com.sleepestapp.sleepest.util.SleepTimeValidationUtil
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 /**
  * Helper class for the foreground service to get live data.
@@ -26,7 +24,7 @@ class ForegroundObserver(private val fs: ForegroundService) {
     private val dataStoreRepository: DataStoreRepository by lazy {
         (fs.applicationContext as MainApplication).dataStoreRepository
     }
-    val alarmLivedata by lazy{databaseRepository.activeAlarmsFlow(dataStoreRepository).asLiveData()}
+    val alarmLivedata by lazy{databaseRepository.alarmFlow.asLiveData()}
     private val userSleepTime by lazy{dataStoreRepository.sleepApiDataFlow.asLiveData()}
     private val liveUserSleepActivityData by lazy{dataStoreRepository.liveUserSleepActivityFlow.asLiveData()}
     private val bannerConfigLivedata by lazy{dataStoreRepository.settingsDataFlow.asLiveData()}
@@ -101,11 +99,19 @@ class ForegroundObserver(private val fs: ForegroundService) {
     init {
 
         alarmLivedata.observe(fs) {
+            alarms->
+            scope.launch {
+                val activeAlarms = SleepTimeValidationUtil.getActiveAlarms(
+                    alarms,
+                    dataStoreRepository
+                )
 
-            val nextAlarm = it.minByOrNull { x->x.actualWakeup }
+                val nextAlarm = activeAlarms.minByOrNull { x->x.actualWakeup }
 
-            if(nextAlarm != null)
-                fs.OnAlarmChanged(nextAlarm)
+                if(nextAlarm != null)
+                    fs.OnAlarmChanged(nextAlarm)
+            }
+
         }
 
         userSleepTime.observe(fs){ ust->

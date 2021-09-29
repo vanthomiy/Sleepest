@@ -3,10 +3,14 @@ package com.sleepestapp.sleepest.util
 import android.content.Context
 import android.text.format.DateFormat
 import com.sleepestapp.sleepest.model.data.AlarmSleepChangeFrom
+import com.sleepestapp.sleepest.model.data.AlarmTimeData
 import com.sleepestapp.sleepest.model.data.SleepSleepChangeFrom
 import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
+import com.sleepestapp.sleepest.storage.db.AlarmEntity
 import kotlinx.coroutines.flow.first
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 
 object SleepTimeValidationUtil {
@@ -253,4 +257,69 @@ object SleepTimeValidationUtil {
         return LocalTime.now().toSecondOfDay()
 
     }
+
+    suspend fun getActiveAlarms(allAlarms : List<AlarmEntity>, dataStoreRepository: DataStoreRepository) : List<AlarmEntity>
+    {
+        val activeAlarms = mutableListOf<AlarmEntity>()
+
+        allAlarms.forEach {
+            alarm ->
+
+            val alarmTimeData = getActualAlarmTimeData(dataStoreRepository)
+
+            val dateTime = LocalDate.now()
+
+            val date = if(alarmTimeData.alarmIsOnSameDay)
+                dateTime
+            else
+                dateTime.plusDays(1)
+
+            if(alarm.activeDayOfWeek.contains(date.dayOfWeek) && alarm.isActive)
+                activeAlarms.add(alarm)
+        }
+
+        return activeAlarms
+    }
+
+    suspend fun getActualAlarmTimeData(dataStoreRepository: DataStoreRepository): AlarmTimeData {
+        // get sleep times
+        val times = dataStoreRepository.sleepParameterFlow.first()
+
+        // get the given or actual time
+        val time = LocalTime.now()
+
+        // get the seconds of the actual day
+        val seconds = time.toSecondOfDay()
+
+        // check if sleep time is over two days
+        val sleepTimeOverTwoDays = times.sleepTimeStart > times.sleepTimeEnd
+
+        // check if time is before sleep time on day
+        val isBeforeSleepTime = times.sleepTimeStart > seconds
+
+        // check if time is in sleep time
+        val isInSleepTime = if(sleepTimeOverTwoDays){
+            (times.sleepTimeStart < seconds || times.sleepTimeEnd > seconds)
+        }
+        else {
+            (times.sleepTimeStart < seconds && times.sleepTimeEnd > seconds)
+        }
+
+        val alarmIsOnSameDay = if(sleepTimeOverTwoDays) {
+            (isInSleepTime && seconds < times.sleepTimeEnd)
+        }
+        else{
+            (isInSleepTime || isBeforeSleepTime)
+        }
+
+
+        return AlarmTimeData(
+            isBeforeSleepTime,
+            isInSleepTime,
+            sleepTimeOverTwoDays,
+            alarmIsOnSameDay)
+    }
+
+
+
 }
