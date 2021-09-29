@@ -17,7 +17,7 @@ object SleepTimeValidationUtil {
     /**
      * Returns the seconds between two seconds of day
      */
-    private fun getTimeBetweenSecondsOfDay(endTime: Int, startTime:Int) : Int{
+    fun getTimeBetweenSecondsOfDay(endTime: Int, startTime:Int) : Int{
 
         val secondsOfDay = 60 * 60 * 24
 
@@ -34,6 +34,21 @@ object SleepTimeValidationUtil {
         }
 
         return timeOnDay + timeNextDay
+    }
+
+    /**
+     * Subtracts minutes from seconds of day. Day aware
+     */
+    fun subtractMinutesFromSecondsOfDay(secondsOfDay: Int, subtractMinutes:Int) : Int{
+
+        val maxSecondsOfDay = 60 * 60 * 24
+
+        val subtractedTime = secondsOfDay - (subtractMinutes * 60)
+
+        return if (subtractedTime < 0)
+            maxSecondsOfDay + subtractedTime
+        else
+            subtractedTime
     }
 
     /**

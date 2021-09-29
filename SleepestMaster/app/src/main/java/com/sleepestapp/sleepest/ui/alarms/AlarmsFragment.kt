@@ -25,6 +25,8 @@ import com.sleepestapp.sleepest.util.IconAnimatorUtil
 import com.sleepestapp.sleepest.util.PermissionsUtil
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.getActiveAlarms
+import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.getTimeBetweenSecondsOfDay
+import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.subtractMinutesFromSecondsOfDay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -98,8 +100,30 @@ class AlarmsFragment : Fragment() {
             }
         }
         lifecycleScope.launch {
-            val sleepTime = viewModel.dataStoreRepository.getSleepDuration()
-            viewModel.dataBaseRepository.insertAlarm(AlarmEntity(newId, sleepDuration = sleepTime))
+            val sleepParams = viewModel.dataStoreRepository.sleepParameterFlow.first()
+            val sleepTime = sleepParams.sleepDuration
+
+            val maxTimeMinutes = getTimeBetweenSecondsOfDay(
+                sleepParams.sleepTimeEnd,
+                sleepParams.sleepTimeStart) / 60
+            val offset = 240
+            val timeOffset = if(maxTimeMinutes < offset)
+                (maxTimeMinutes / 2) else offset
+
+            val wakeUpEarly = subtractMinutesFromSecondsOfDay(
+                sleepParams.sleepTimeEnd,
+                timeOffset / 2)
+            val wakeUpLate = subtractMinutesFromSecondsOfDay(
+                sleepParams.sleepTimeEnd,
+                timeOffset)
+
+            viewModel.dataBaseRepository.insertAlarm(
+                AlarmEntity(
+                id = newId,
+                sleepDuration = sleepTime
+                , wakeupEarly = wakeUpEarly
+                , wakeupLate = wakeUpLate)
+            )
         }
         addAlarmEntity(actualContext, newId)
         viewModel.usedIds.add(newId)
