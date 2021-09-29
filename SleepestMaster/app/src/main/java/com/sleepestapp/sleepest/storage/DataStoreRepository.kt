@@ -217,7 +217,7 @@ class DataStoreRepository(context: Context) {
     /**
      * Trigger this var to reload all data in some view models
      */
-    suspend fun triggerObserver() =
+    suspend fun triggerSleepObserver() =
         sleepParameterStatus.triggerObserver()
 
     //endregion
@@ -297,6 +297,12 @@ class DataStoreRepository(context: Context) {
      */
     suspend fun updateAlarmName(value:String) =
         alarmParameterStatus.updateAlarmName(value)
+
+    /**
+     * Trigger this var to reload all data in some view models
+     */
+    suspend fun triggerAlarmObserver() =
+        alarmParameterStatus.triggerObserver()
 
     //endregion
 

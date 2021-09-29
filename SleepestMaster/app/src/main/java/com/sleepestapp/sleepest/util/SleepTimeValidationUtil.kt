@@ -139,10 +139,15 @@ object SleepTimeValidationUtil {
             }
         }
 
-        if(wakeUpLate != newWakeUpLate || changeFrom == AlarmSleepChangeFrom.WAKEUPLATE)
+        if(wakeUpLate != newWakeUpLate || changeFrom == AlarmSleepChangeFrom.WAKEUPLATE){
             dataBaseRepository.updateWakeupLate(newWakeUpLate, alarmId)
-        if(sleepDuration != newSleepDuration || changeFrom == AlarmSleepChangeFrom.DURATION)
+            dataStoreRepository.triggerAlarmObserver()
+        }
+
+        if(sleepDuration != newSleepDuration || changeFrom == AlarmSleepChangeFrom.DURATION){
             dataBaseRepository.updateSleepDuration(newSleepDuration, alarmId)
+            dataStoreRepository.triggerAlarmObserver()
+        }
     }
 
     /**
@@ -227,14 +232,18 @@ object SleepTimeValidationUtil {
             }
         }
 
-        if(sleepTimeStart != newSleepTimeStart || changeFrom == SleepSleepChangeFrom.SLEEPTIMESTART)
+        if(sleepTimeStart != newSleepTimeStart || changeFrom == SleepSleepChangeFrom.SLEEPTIMESTART){
             dataStoreRepository.updateSleepTimeStart(newSleepTimeStart)
-        if(sleepTimeEnd != newSleepTimeEnd || changeFrom == SleepSleepChangeFrom.SLEEPTIMEEND)
+            dataStoreRepository.triggerSleepObserver()
+        }
+        if(sleepTimeEnd != newSleepTimeEnd || changeFrom == SleepSleepChangeFrom.SLEEPTIMEEND){
             dataStoreRepository.updateSleepTimeEnd(newSleepTimeEnd)
-        if(sleepDuration != newSleepDuration || changeFrom == SleepSleepChangeFrom.DURATION)
+            dataStoreRepository.triggerSleepObserver()
+        }
+        if(sleepDuration != newSleepDuration || changeFrom == SleepSleepChangeFrom.DURATION){
             dataStoreRepository.updateUserWantedSleepTime(newSleepDuration)
-            dataStoreRepository.triggerObserver()
-
+            dataStoreRepository.triggerSleepObserver()
+        }
     }
 
     fun createMinutePickerHelper() : Array<String>{
