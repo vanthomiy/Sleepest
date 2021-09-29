@@ -482,21 +482,22 @@ class HistoryDayFragment : Fragment() {
                             sleepTypes[1] = true
                     }
                     else if (sVal.third.mobilePosition == MobilePosition.INBED) {
-                        if (awake > 0)
+                        if (awake > 0) {
                             entries.add(PieEntry(awake.toFloat(), actualContext.getString(R.string.history_day_timeInPhase_awake)))
                             sleepTypes[0] = true
-
-                        if (lightSleep > 0)
+                        }
+                        if (lightSleep > 0) {
                             entries.add(PieEntry(lightSleep.toFloat(), actualContext.getString(R.string.history_day_timeInPhase_lightSleep)))
                             sleepTypes[2] = true
-
-                        if (deepSleep > 0)
+                        }
+                        if (deepSleep > 0) {
                             entries.add(PieEntry(deepSleep.toFloat(), actualContext.getString(R.string.history_day_timeInPhase_deepSleep)))
                             sleepTypes[3] = true
-
-                        if (remSleep > 0)
+                        }
+                        if (remSleep > 0) {
                             entries.add(PieEntry(remSleep.toFloat(), actualContext.getString(R.string.history_day_timeInPhase_remSleep)))
                             sleepTypes[4] = true
+                        }
                     }
                 }
             }
@@ -536,16 +537,21 @@ class HistoryDayFragment : Fragment() {
         val listColors = ArrayList<Int>()
         //sleepTypes[0] = awake, sleepTypes[1] = sleep, sleepTypes[2] = light, sleepTypes[3] = deep, sleepTypes[4] = rem
 
-        if (sleepTypes[0])
+        if (sleepTypes[0]) {
             listColors.add(ContextCompat.getColor(actualContext, R.color.awake_sleep_color))
-        if (sleepTypes[1])
+        }
+        if (sleepTypes[1]) {
             listColors.add(ContextCompat.getColor(actualContext, R.color.sleep_sleep_color))
-        if (sleepTypes[2])
+        }
+        if (sleepTypes[2]) {
             listColors.add(ContextCompat.getColor(actualContext, R.color.light_sleep_color))
-        if (sleepTypes[3])
+        }
+        if (sleepTypes[3]) {
             listColors.add(ContextCompat.getColor(actualContext, R.color.deep_sleep_color))
-        if (sleepTypes[4])
+        }
+        if (sleepTypes[4]) {
             listColors.add(ContextCompat.getColor(actualContext, R.color.rem_sleep_color))
+        }
 
         pieDataSet.colors = listColors
         pieDataSet.setDrawValues(false)
