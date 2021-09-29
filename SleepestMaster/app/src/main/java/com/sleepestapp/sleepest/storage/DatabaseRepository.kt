@@ -372,24 +372,6 @@ class DatabaseRepository(
     val alarmFlow: Flow<List<AlarmEntity>> =
             alarmDao.getAll().distinctUntilChanged()
 
-    /**
-     * All active alarms and on that specific day
-     */
-    @Deprecated("Use [alarmFlow] and check with [")
-    fun activeAlarmsFlow(dataStoreRepository: DataStoreRepository) : Flow<List<AlarmEntity>> = runBlocking {
-        val ldt:LocalDate = LocalDate.now()
-        //val date = if(ldt.hour > 15) ldt.plusDays(1).toLocalDate() else ldt.toLocalDate()
-        val alarmTimeData = dataStoreRepository.getActualAlarmTimeData()
-
-        val date = if(alarmTimeData.alarmIsOnSameDay)
-            ldt
-        else
-            ldt.plusDays(1)
-
-        val dayOfWeek = "%" + date.dayOfWeek + "%"
-
-        return@runBlocking alarmDao.getAllActiveOnDay(dayOfWeek).distinctUntilChanged()
-    }
 
     /**
      * Returns an [AlarmEntity] by its ID

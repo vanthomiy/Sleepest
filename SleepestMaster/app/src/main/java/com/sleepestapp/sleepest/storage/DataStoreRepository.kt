@@ -133,7 +133,7 @@ class DataStoreRepository(context: Context) {
     @Deprecated("asdasd")
     suspend fun isAfterSleepTime(givenTime:LocalTime? = null): Pair<Boolean, Boolean> {
 
-        var times = sleepParameterFlow.first()
+        val times = sleepParameterFlow.first()
 
         val time = givenTime ?: LocalTime.now()
         val seconds = time.toSecondOfDay()

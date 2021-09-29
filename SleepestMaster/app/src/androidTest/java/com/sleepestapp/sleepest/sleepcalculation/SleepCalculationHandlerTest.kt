@@ -268,7 +268,7 @@ class SleepCalculationHandlerTest
             sleepApiRawDataEntityList?.let { SleepApiRawDataEntity.getActualAwakeTime(it) }?.div(60)
 
 
-        Log.v("as", "Awake, Awake:" + actualAwakeTime)
+        Log.v("as", "Awake, Awake:$actualAwakeTime")
 
     }
 
@@ -943,10 +943,10 @@ class SleepCalculationHandlerTest
 
         val actualTimeSeconds = 100000
         val sleepCalculationHandler = SleepCalculationHandler(context)
-        var sleepList5 = mutableListOf<SleepApiRawDataEntity>()
+        val sleepList5 = mutableListOf<SleepApiRawDataEntity>()
 
         // keine daten
-        var sleepState = sleepCalculationHandler.defineSleepStates(actualTimeSeconds, sleepList5, LightConditions.DARK)
+        val sleepState = sleepCalculationHandler.defineSleepStates(actualTimeSeconds, sleepList5, LightConditions.DARK)
         assertThat(sleepState, CoreMatchers.equalTo(SleepState.SLEEPING))
 
         // add 5 freuquency data with table but all in past

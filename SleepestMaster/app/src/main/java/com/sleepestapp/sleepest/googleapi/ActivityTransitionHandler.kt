@@ -3,9 +3,7 @@ package com.sleepestapp.sleepest.googleapi
 import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import com.sleepestapp.sleepest.MainApplication
-import com.sleepestapp.sleepest.model.data.ActivityTransitionUsage
 import com.sleepestapp.sleepest.util.PermissionsUtil.isActivityRecognitionPermissionGranted
 import com.google.android.gms.location.*
 import kotlinx.coroutines.CoroutineScope

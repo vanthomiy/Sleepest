@@ -26,10 +26,7 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.*
 import java.util.concurrent.TimeUnit
-
 import android.app.ActivityManager
-import android.app.ActivityManager.AppTask
-
 import android.content.Context.ACTIVITY_SERVICE
 import com.sleepestapp.sleepest.model.data.Constants
 import kotlinx.coroutines.flow.first

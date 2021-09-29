@@ -214,8 +214,8 @@ class SleepCalculationHandler(val context: Context) {
 
     /**
      * Checks if the user is Sleeping or not at the moment.
-     * Saves the state in the [SleepApiRawDataEntity] and in the [LiveUserSleepActivityStatus]
-     * [time] the actual time in seconds
+     * Saves the state in the [SleepApiRawDataEntity]
+     * [localTime] the actual time in seconds
      * Call fromDefineUserWakeUp to make count lesser to 30 min instead of 1hour
      */
     suspend fun checkIsUserSleeping(localTime: LocalDateTime? = null, finalCalc: Boolean = false, fromDefineUserWakeUp:Boolean = false){
