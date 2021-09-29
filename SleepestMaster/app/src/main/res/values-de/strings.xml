@@ -166,7 +166,7 @@
     <string name="sleep_activitytracking_info_2">
         Mit "In Schlafenszeit einbeziehen" gibt dir die App mehr oder weniger Schlaf, je nach dem wie viel Bewegung du am Tag hattest
     </string>
-    <string name="sleep_trackactivity_header">Tägliche aktivitäten aufzeichnen</string>
+    <string name="sleep_trackactivity_header">Tägliche Aktivitäten aufzeichnen</string>
     <string name="sleep_trackactivity_include_in_wakeup">In Schlafzeit einbeziehen</string>
     <string name="sleep_alarm_header">&#9200; Wecker</string>
 
@@ -256,12 +256,15 @@
 
     <!--region History Fragment texts -->
 
-    <string name="history_day_information_noDataAvailable">Keine Daten zum Anzeigen gefunden.</string>
+    <string name="history_information_noDataAvailable">Keine Daten zum Anzeigen gefunden.</string>
     <string name="history_sleepPhases_title">Schlafphasen:</string>
     <string name="history_day_sleepPhases_time_in_phase_title">Zeit in Phase:</string>
-    <string name="history_fragment_title">&#128197; History</string>
+    <string name="history_fragment_title">&#128197; Schlafverlauf</string>
     <string name="history_button_analysisDate_previous">Zurück</string>
     <string name="history_button_analysisDate_next">Nächste</string>
+    <string name="history_sleep_phases_information_light">"Die Leichtschlafphase, welche sich durch einen bewusstlosen Schlaf mit entspannten Muskeln und nahezu ohne Augenbewegungen äußert, macht etwa die Hälfte des gesamten Schlafvolumens aus. "</string>
+    <string name="history_sleep_phases_information_deep">"Die Tiefschlafphase ist von besonderer Bedeutung für die Erholung des Körpers und Geistes. Dies wird durch eine sehr hohe körperliche und geistige Entspanntheit erreicht. Der Körper reagiert auf diese Phase mit einer weiteren Senkung der Atem- und Herzfrequenz, die Körpertemperatur ver-ringert sich und der Blutdruck fällt. In dieser Phase sind keine Augenbewegungen feststellbar.  In der Tiefschlafphase findet die Regeneration und Reparatur von Zellen statt und das Immunsys-tem ist äußerst aktiv. "</string>
+    <string name="history_sleep_phases_information_rem">"Die Traumphase äußert sich durch rasante Augenbewegungen unter geschlossenen Lidern. Zudem erhöht sich sowohl die Atemfrequenz als auch die Atemtiefe. Neben der Verarbeitung von Infor-mationen und emotionalen Sinneseindrücken werden Tagesereignisse mit dem Langzeitgedächtnis verknüpft. Um diesen Vorgang möglichst ungestört ablaufen lassen zu können, werden weitge-hend alle äußeren Sinneseindrücke ausgeblendet. Die hat zur Folge, dass das Aufwecken in dieser Phase äußerst schwerfällt. An die in dieser Phase erlebten Träume kann man sich am häufigsten nach dem Aufwachen erin-nern. "</string>
     <string name="history_day_information_sleepPhases_lineChart">Dieses Diagramm zeigt Deine Schlafphasen der letzten Nacht an. Links und rechts über dem Diagramm kannst Du die, von der App erkannten, Einschlaf- und Aufwachzeitpunkte sehen. Die Nacht ist, je nachdem wo sich dein Handy in dieser Nacht befand, in zwei oder drei Schlafstati eingeteilt. Befand sich das Gerät neben dem Bett kannst Du die Phasen \"Wach\" und \"Schlaf\" erkennen. Lag es im Bett wird die Nacht in die Phasen \"Tiefschlaf\", \"Leichtschlaf\" und \"Wach\" eingeteilt. Das Diagramm ist linear über die Nacht aufgeteilt.</string>
     <string name="history_day_sleep_quality_rating_title">Schlafqualität:</string>
     <string name="history_activity_title">Aktivität:</string>

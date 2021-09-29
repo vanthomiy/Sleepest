@@ -76,15 +76,15 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case STOP_WORKMANAGER:
                 //Stops the workmanager outside sleep time
-                if (databaseRepository.getNextActiveAlarmJob(dataStoreRepository) != null && !databaseRepository.getNextActiveAlarmJob(dataStoreRepository).getWasFired()) {
+                /*if (databaseRepository.getNextActiveAlarmJob(dataStoreRepository) != null && !databaseRepository.getNextActiveAlarmJob(dataStoreRepository).getWasFired()) {
                     Calendar calendarNewAlarm = TimeConverterUtil.getAlarmDate(LocalTime.now().toSecondOfDay() + 600);
                     AlarmReceiver.startAlarmManager(
                             calendarNewAlarm.get(Calendar.DAY_OF_WEEK),
                             calendarNewAlarm.get(Calendar.HOUR_OF_DAY),
                             calendarNewAlarm.get(Calendar.MINUTE), context, AlarmReceiverUsage.STOP_WORKMANAGER);
-                } else {
+                } else {*/
                     BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).endOfSleepTime(true);
-                }
+               // }
 
                  break;
             case CURRENTLY_NOT_SLEEPING:
