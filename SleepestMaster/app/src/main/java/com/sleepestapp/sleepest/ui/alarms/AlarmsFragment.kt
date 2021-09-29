@@ -112,10 +112,10 @@ class AlarmsFragment : Fragment() {
 
             val wakeUpEarly = subtractMinutesFromSecondsOfDay(
                 sleepParams.sleepTimeEnd,
-                timeOffset / 2)
+                timeOffset)
             val wakeUpLate = subtractMinutesFromSecondsOfDay(
                 sleepParams.sleepTimeEnd,
-                timeOffset)
+                timeOffset / 2)
 
             viewModel.dataBaseRepository.insertAlarm(
                 AlarmEntity(
