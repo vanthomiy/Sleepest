@@ -114,7 +114,6 @@ object SleepTimeValidationUtil {
                     .show()*/
             }
         }
-
         //check if the possible sleep time is big enough for the sleep time
         val possibleSleepTime =
             getTimeBetweenSecondsOfDay(newWakeUpLate, sleepSettings.sleepTimeStart)
