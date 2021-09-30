@@ -21,10 +21,10 @@ object DesignUtil {
         }
     }
 
-    fun colorDarkModeInvert(darkModeOn: Boolean) : Int {
+    fun determineHoleColorPieChart(darkModeOn: Boolean) : Int {
         return when (darkModeOn) {
-            true -> Color.BLACK
-            else -> Color.WHITE
+            true -> Color.parseColor("#1a1a1a")
+            else -> Color.parseColor("#FFFFFF")
         }
     }
 }
