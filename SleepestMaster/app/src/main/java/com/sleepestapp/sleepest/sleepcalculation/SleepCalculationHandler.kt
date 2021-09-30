@@ -389,7 +389,7 @@ class SleepCalculationHandler(val context: Context) {
      * Stores alarm data in the main
      * [localTime] = the actual time in seconds
      */
-    suspend fun defineUserWakeup(localTime: LocalDateTime? = null, setAlarm:Boolean = true) {
+    suspend fun defineUserWakeup(localTime: LocalDateTime? = null, setAlarm:Boolean = true, recalculateMobilePosition: Boolean = false) {
 
         val sleepClassifier = SleepClassifier(context)
 
@@ -442,7 +442,7 @@ class SleepCalculationHandler(val context: Context) {
 
         // only when in sleep time and not after it
 
-        if(setAlarm){
+        if(setAlarm || recalculateMobilePosition) {
             sleepSessionEntity.mobilePosition =
                 when {
                     MobilePosition.getCount(dataStoreRepository.sleepParameterFlow.first().standardMobilePosition) == MobilePosition.UNIDENTIFIED // create features for ml model

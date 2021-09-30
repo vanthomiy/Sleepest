@@ -171,7 +171,7 @@ class HistoryViewModel(
                 val isSleeping = it.any { x -> x.sleepState == SleepState.SLEEPING }
                 val isUnidentified = it.any { x -> x.sleepState == SleepState.NONE }
 
-                if ((isUnidentified)) {
+                if (isUnidentified) {
                     viewModelScope.launch {
                        sleepCalculationHandler.checkIsUserSleeping(
                             LocalDateTime.ofInstant(
@@ -183,7 +183,7 @@ class HistoryViewModel(
                     }
                 }
 
-                if ((mobilePosition == MobilePosition.INBED && isSleeping)) { // || isUnidentified) {
+                if (mobilePosition == MobilePosition.INBED && isSleeping) {
                     viewModelScope.launch {
                         sleepCalculationHandler.defineUserWakeup(
                             LocalDateTime.ofInstant(
@@ -191,6 +191,19 @@ class HistoryViewModel(
                                 ZoneOffset.systemDefault()
                             ),
                             false
+                        )
+                    }
+                }
+
+                if (mobilePosition == MobilePosition.UNIDENTIFIED) {
+                    viewModelScope.launch {
+                        sleepCalculationHandler.defineUserWakeup(
+                            LocalDateTime.ofInstant(
+                                Instant.ofEpochMilli((sleepSessionData[key]?.third?.sleepTimes?.sleepTimeStart?.toLong())!! * 1000),
+                                ZoneOffset.systemDefault()
+                            ),
+                            false,
+                            recalculateMobilePosition = true
                         )
                     }
                 }

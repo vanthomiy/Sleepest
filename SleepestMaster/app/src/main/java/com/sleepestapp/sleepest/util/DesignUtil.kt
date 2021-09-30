@@ -20,4 +20,11 @@ object DesignUtil {
             else -> Color.BLACK
         }
     }
+
+    fun colorDarkModeInvert(darkModeOn: Boolean) : Int {
+        return when (darkModeOn) {
+            true -> Color.BLACK
+            else -> Color.WHITE
+        }
+    }
 }

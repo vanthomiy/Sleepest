@@ -100,13 +100,16 @@ class HistoryDayFragment : Fragment() {
 
 
         // Initial set up for the daily sleep analysis pie chart.
-        pieChartSleepAnalysis = setPieChart(DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext)))
+        pieChartSleepAnalysis = setPieChart(
+            DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext)),
+            DesignUtil.colorDarkModeInvert(DesignUtil.checkDarkModeActive(actualContext))
+        )
         binding.lLSleepAnalysisChartsDaySleepPhasesAmount.addView(pieChartSleepAnalysis)
         pieChartSleepAnalysis.layoutParams.height = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP, 150F, resources.displayMetrics
+            TypedValue.COMPLEX_UNIT_DIP, 175F, resources.displayMetrics
         ).toInt()
         pieChartSleepAnalysis.layoutParams.width = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP, 150F, resources.displayMetrics
+            TypedValue.COMPLEX_UNIT_DIP, 175F, resources.displayMetrics
         ).toInt()
         pieChartSleepAnalysis.invalidate()
 
@@ -146,7 +149,8 @@ class HistoryDayFragment : Fragment() {
 
         updatePieChart(
             pieChartSleepAnalysis,
-            DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext))
+            DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext)),
+            DesignUtil.colorDarkModeInvert(DesignUtil.checkDarkModeActive(actualContext))
         )
         pieChartSleepAnalysis.invalidate()
 
@@ -474,29 +478,32 @@ class HistoryDayFragment : Fragment() {
                     val remSleep = sVal.third.sleepTimes.remSleepDuration
 
                     if (sVal.third.mobilePosition == MobilePosition.ONTABLE) {
-                        if (awake > 0)
+                        if (awake > 0) {
                             entries.add(PieEntry(awake.toFloat(), actualContext.getString(R.string.history_day_timeInPhase_awake)))
                             sleepTypes[0] = true
-                        if (sleep > 0)
+                        }
+                        if (sleep > 0) {
                             entries.add(PieEntry(sleep.toFloat(), actualContext.getString(R.string.history_day_timeInPhase_sleepSum)))
                             sleepTypes[1] = true
+                        }
                     }
                     else if (sVal.third.mobilePosition == MobilePosition.INBED) {
-                        if (awake > 0)
+                        if (awake > 0) {
                             entries.add(PieEntry(awake.toFloat(), actualContext.getString(R.string.history_day_timeInPhase_awake)))
                             sleepTypes[0] = true
-
-                        if (lightSleep > 0)
+                        }
+                        if (lightSleep > 0) {
                             entries.add(PieEntry(lightSleep.toFloat(), actualContext.getString(R.string.history_day_timeInPhase_lightSleep)))
                             sleepTypes[2] = true
-
-                        if (deepSleep > 0)
+                        }
+                        if (deepSleep > 0) {
                             entries.add(PieEntry(deepSleep.toFloat(), actualContext.getString(R.string.history_day_timeInPhase_deepSleep)))
                             sleepTypes[3] = true
-
-                        if (remSleep > 0)
+                        }
+                        if (remSleep > 0) {
                             entries.add(PieEntry(remSleep.toFloat(), actualContext.getString(R.string.history_day_timeInPhase_remSleep)))
                             sleepTypes[4] = true
+                        }
                     }
                 }
             }
@@ -506,20 +513,20 @@ class HistoryDayFragment : Fragment() {
     }
 
     /**  Function for creating a PieChart for the first time. */
-    private fun setPieChart(colorDarkMode: Int): PieChart {
+    private fun setPieChart(colorDarkMode: Int, colorDarkModeInvert: Int): PieChart {
         val chart = PieChart(actualContext)
         val data = generateDataPieChart()
         val pieDataSet = PieDataSet(data.first, "")
-        visualSetUpPieChart(chart, pieDataSet, data.second, colorDarkMode)
+        visualSetUpPieChart(chart, pieDataSet, data.second, colorDarkMode, colorDarkModeInvert)
         chart.data = PieData(pieDataSet)
         return chart
     }
 
     /**  Function for updating a BarChart for the first time. */
-    private fun updatePieChart(chart: PieChart, colorDarkMode: Int) {
+    private fun updatePieChart(chart: PieChart, colorDarkMode: Int, colorDarkModeInvert: Int) {
         val data = generateDataPieChart()
         val pieDataSet = PieDataSet(data.first, "")
-        visualSetUpPieChart(chart, pieDataSet, data.second, colorDarkMode)
+        visualSetUpPieChart(chart, pieDataSet, data.second, colorDarkMode, colorDarkModeInvert)
         chart.data = PieData(pieDataSet)
         chart.notifyDataSetChanged()
     }
@@ -531,34 +538,40 @@ class HistoryDayFragment : Fragment() {
         chart: PieChart,
         pieDataSet: PieDataSet,
         sleepTypes: BooleanArray,
-        colorDarkMode: Int
+        colorDarkMode: Int,
+        colorDarkModeInvert: Int
     ) {
         val listColors = ArrayList<Int>()
         //sleepTypes[0] = awake, sleepTypes[1] = sleep, sleepTypes[2] = light, sleepTypes[3] = deep, sleepTypes[4] = rem
 
-        if (sleepTypes[0])
+        if (sleepTypes[0]) {
             listColors.add(ContextCompat.getColor(actualContext, R.color.awake_sleep_color))
-        if (sleepTypes[1])
+        }
+        if (sleepTypes[1]) {
             listColors.add(ContextCompat.getColor(actualContext, R.color.sleep_sleep_color))
-        if (sleepTypes[2])
+        }
+        if (sleepTypes[2]) {
             listColors.add(ContextCompat.getColor(actualContext, R.color.light_sleep_color))
-        if (sleepTypes[3])
+        }
+        if (sleepTypes[3]) {
             listColors.add(ContextCompat.getColor(actualContext, R.color.deep_sleep_color))
-        if (sleepTypes[4])
+        }
+        if (sleepTypes[4]) {
             listColors.add(ContextCompat.getColor(actualContext, R.color.rem_sleep_color))
+        }
 
         pieDataSet.colors = listColors
         pieDataSet.setDrawValues(false)
 
         chart.setCenterTextColor(colorDarkMode)
-        //chart.setHoleColor(viewModel.checkDarkModeInverse())
+        chart.isDrawHoleEnabled = true
+        chart.setHoleColor(colorDarkModeInvert)
         //chart.setEntryLabelColor(viewModel.checkDarkMode())
 
         //chart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
         chart.legend.isEnabled = false
         //chart.legend.textColor = viewModel.checkDarkMode()
 
-        chart.isDrawHoleEnabled = false
         chart.description.isEnabled = false
         chart.setTouchEnabled(false)
         chart.animateY(500, Easing.EaseInOutQuad)
