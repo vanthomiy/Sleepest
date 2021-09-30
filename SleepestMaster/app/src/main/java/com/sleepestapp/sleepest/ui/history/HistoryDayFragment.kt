@@ -478,12 +478,14 @@ class HistoryDayFragment : Fragment() {
                     val remSleep = sVal.third.sleepTimes.remSleepDuration
 
                     if (sVal.third.mobilePosition == MobilePosition.ONTABLE) {
-                        if (awake > 0)
+                        if (awake > 0) {
                             entries.add(PieEntry(awake.toFloat(), actualContext.getString(R.string.history_day_timeInPhase_awake)))
                             sleepTypes[0] = true
-                        if (sleep > 0)
+                        }
+                        if (sleep > 0) {
                             entries.add(PieEntry(sleep.toFloat(), actualContext.getString(R.string.history_day_timeInPhase_sleepSum)))
                             sleepTypes[1] = true
+                        }
                     }
                     else if (sVal.third.mobilePosition == MobilePosition.INBED) {
                         if (awake > 0) {
