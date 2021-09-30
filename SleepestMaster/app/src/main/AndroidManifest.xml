@@ -22,7 +22,8 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/logov4round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.SleepestMaster">
+        android:theme="@style/Theme.SleepestMaster"
+        android:fullBackupContent="@xml/backup_descriptor">
         <activity android:name="com.sleepestapp.sleepest.onboarding.PermissionActivity" />
         <activity
             android:name="com.sleepestapp.sleepest.onboarding.OnboardingActivity"
