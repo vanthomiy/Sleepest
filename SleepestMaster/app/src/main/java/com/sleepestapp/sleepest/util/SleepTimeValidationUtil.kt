@@ -3,10 +3,13 @@ package com.sleepestapp.sleepest.util
 import android.content.Context
 import android.text.format.DateFormat
 import com.sleepestapp.sleepest.model.data.AlarmSleepChangeFrom
+import com.sleepestapp.sleepest.model.data.AlarmTimeData
 import com.sleepestapp.sleepest.model.data.SleepSleepChangeFrom
 import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
+import com.sleepestapp.sleepest.storage.db.AlarmEntity
 import kotlinx.coroutines.flow.first
+import java.time.LocalDate
 import java.time.LocalTime
 
 object SleepTimeValidationUtil {
@@ -14,7 +17,7 @@ object SleepTimeValidationUtil {
     /**
      * Returns the seconds between two seconds of day
      */
-    private fun getTimeBetweenSecondsOfDay(endTime: Int, startTime:Int) : Int{
+    fun getTimeBetweenSecondsOfDay(endTime: Int, startTime:Int) : Int{
 
         val secondsOfDay = 60 * 60 * 24
 
@@ -31,6 +34,21 @@ object SleepTimeValidationUtil {
         }
 
         return timeOnDay + timeNextDay
+    }
+
+    /**
+     * Subtracts minutes from seconds of day. Day aware
+     */
+    fun subtractMinutesFromSecondsOfDay(secondsOfDay: Int, subtractMinutes:Int) : Int{
+
+        val maxSecondsOfDay = 60 * 60 * 24
+
+        val subtractedTime = secondsOfDay - (subtractMinutes * 60)
+
+        return if (subtractedTime < 0)
+            maxSecondsOfDay + subtractedTime
+        else
+            subtractedTime
     }
 
     /**
@@ -96,7 +114,6 @@ object SleepTimeValidationUtil {
                     .show()*/
             }
         }
-
         //check if the possible sleep time is big enough for the sleep time
         val possibleSleepTime =
             getTimeBetweenSecondsOfDay(newWakeUpLate, sleepSettings.sleepTimeStart)
@@ -136,10 +153,15 @@ object SleepTimeValidationUtil {
             }
         }
 
-        if(wakeUpLate != newWakeUpLate || changeFrom == AlarmSleepChangeFrom.WAKEUPLATE)
+        if(wakeUpLate != newWakeUpLate || changeFrom == AlarmSleepChangeFrom.WAKEUPLATE){
             dataBaseRepository.updateWakeupLate(newWakeUpLate, alarmId)
-        if(sleepDuration != newSleepDuration || changeFrom == AlarmSleepChangeFrom.DURATION)
+            dataStoreRepository.triggerAlarmObserver()
+        }
+
+        if(sleepDuration != newSleepDuration || changeFrom == AlarmSleepChangeFrom.DURATION){
             dataBaseRepository.updateSleepDuration(newSleepDuration, alarmId)
+            dataStoreRepository.triggerAlarmObserver()
+        }
     }
 
     /**
@@ -224,14 +246,18 @@ object SleepTimeValidationUtil {
             }
         }
 
-        if(sleepTimeStart != newSleepTimeStart || changeFrom == SleepSleepChangeFrom.SLEEPTIMESTART)
+        if(sleepTimeStart != newSleepTimeStart || changeFrom == SleepSleepChangeFrom.SLEEPTIMESTART){
             dataStoreRepository.updateSleepTimeStart(newSleepTimeStart)
-        if(sleepTimeEnd != newSleepTimeEnd || changeFrom == SleepSleepChangeFrom.SLEEPTIMEEND)
+            dataStoreRepository.triggerSleepObserver()
+        }
+        if(sleepTimeEnd != newSleepTimeEnd || changeFrom == SleepSleepChangeFrom.SLEEPTIMEEND){
             dataStoreRepository.updateSleepTimeEnd(newSleepTimeEnd)
-        if(sleepDuration != newSleepDuration || changeFrom == SleepSleepChangeFrom.DURATION)
+            dataStoreRepository.triggerSleepObserver()
+        }
+        if(sleepDuration != newSleepDuration || changeFrom == SleepSleepChangeFrom.DURATION){
             dataStoreRepository.updateUserWantedSleepTime(newSleepDuration)
-            dataStoreRepository.triggerObserver()
-
+            dataStoreRepository.triggerSleepObserver()
+        }
     }
 
     fun createMinutePickerHelper() : Array<String>{
@@ -253,4 +279,69 @@ object SleepTimeValidationUtil {
         return LocalTime.now().toSecondOfDay()
 
     }
+
+    suspend fun getActiveAlarms(allAlarms : List<AlarmEntity>, dataStoreRepository: DataStoreRepository) : List<AlarmEntity>
+    {
+        val activeAlarms = mutableListOf<AlarmEntity>()
+
+        allAlarms.forEach {
+            alarm ->
+
+            val alarmTimeData = getActualAlarmTimeData(dataStoreRepository)
+
+            val dateTime = LocalDate.now()
+
+            val date = if(alarmTimeData.alarmIsOnSameDay)
+                dateTime
+            else
+                dateTime.plusDays(1)
+
+            if(alarm.activeDayOfWeek.contains(date.dayOfWeek) && alarm.isActive)
+                activeAlarms.add(alarm)
+        }
+
+        return activeAlarms
+    }
+
+    suspend fun getActualAlarmTimeData(dataStoreRepository: DataStoreRepository): AlarmTimeData {
+        // get sleep times
+        val times = dataStoreRepository.sleepParameterFlow.first()
+
+        // get the given or actual time
+        val time = LocalTime.now()
+
+        // get the seconds of the actual day
+        val seconds = time.toSecondOfDay()
+
+        // check if sleep time is over two days
+        val sleepTimeOverTwoDays = times.sleepTimeStart > times.sleepTimeEnd
+
+        // check if time is before sleep time on day
+        val isBeforeSleepTime = times.sleepTimeStart > seconds
+
+        // check if time is in sleep time
+        val isInSleepTime = if(sleepTimeOverTwoDays){
+            (times.sleepTimeStart < seconds || times.sleepTimeEnd > seconds)
+        }
+        else {
+            (times.sleepTimeStart < seconds && times.sleepTimeEnd > seconds)
+        }
+
+        val alarmIsOnSameDay = if(sleepTimeOverTwoDays) {
+            (isInSleepTime && seconds < times.sleepTimeEnd)
+        }
+        else{
+            (isInSleepTime || isBeforeSleepTime)
+        }
+
+
+        return AlarmTimeData(
+            isBeforeSleepTime,
+            isInSleepTime,
+            sleepTimeOverTwoDays,
+            alarmIsOnSameDay)
+    }
+
+
+
 }

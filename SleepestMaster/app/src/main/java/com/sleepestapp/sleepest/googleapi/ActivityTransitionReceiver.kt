@@ -9,7 +9,6 @@ import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.storage.db.ActivityApiRawDataEntity
 import com.google.android.gms.location.ActivityTransitionResult
 import com.sleepestapp.sleepest.model.data.ActivityTransitionUsage
-import com.sleepestapp.sleepest.model.data.SleepApiUsage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch

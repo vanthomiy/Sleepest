@@ -26,9 +26,13 @@ class AlarmInstanceViewModel(
     //region Alarm Instance
 
     // The actual id of the alarm instance
-
     val actualAlarmLiveData by lazy{
         dataBaseRepository.getAlarmById(alarmId).asLiveData()
+    }
+
+    // The actual id of the alarm instance
+    val actualAlarmParameterLiveData by lazy{
+        dataStoreRepository.alarmParameterFlow.asLiveData()
     }
 
     val isAlarmActive = MutableLiveData(false)

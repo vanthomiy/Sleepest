@@ -268,7 +268,7 @@ class SleepCalculationHandlerTest
             sleepApiRawDataEntityList?.let { SleepApiRawDataEntity.getActualAwakeTime(it) }?.div(60)
 
 
-        Log.v("as", "Awake, Awake:" + actualAwakeTime)
+        Log.v("as", "Awake, Awake:$actualAwakeTime")
 
     }
 
@@ -901,21 +901,37 @@ class SleepCalculationHandlerTest
 
         val sleepParameters = sleepStoreRepository.sleepParameterFlow.first()
 
-        val day = LocalDateTime.now().minusDays(1)
+        val day = LocalDateTime.now().minusDays(0)
         val sleepApiRawDataEntityList = sleepDbRepository.getSleepApiRawDataFromDate(day, sleepParameters.sleepTimeEnd, sleepParameters.sleepTimeStart).first()
-
+        var sleepApiRawDataEntityListNew = mutableListOf<SleepApiRawDataEntity>()
         sleepApiRawDataEntityList?.forEach { data ->
             data.oldSleepState = SleepState.NONE
             data.sleepState = SleepState.NONE
-
-            sleepDbRepository.insertSleepApiRawData(data)
+            sleepApiRawDataEntityListNew.add(data)
+            sleepDbRepository.deleteSleepApiRawData(data.timestampSeconds)
         }
+        sleepApiRawDataEntityListNew.sortBy { x -> x.timestampSeconds }
 
-        sleepCalculationHandler.checkIsUserSleeping(day)
-        sleepCalculationHandler.checkIsUserSleeping(day)
+        sleepApiRawDataEntityListNew?.forEach { data ->
+            try {
+                sleepDbRepository.insertSleepApiRawData(data)
+                sleepCalculationHandler.checkIsUserSleeping(day)
 
-        sleepCalculationHandler.defineUserWakeup(day)
+                val dt = Instant.ofEpochSecond(data.timestampSeconds.toLong())
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDateTime()
 
+                if(dt.toLocalTime().hour > 6 && dt.dayOfYear >= day.dayOfYear)
+                {
+                    sleepCalculationHandler.defineUserWakeup(day)
+                }
+            }
+            catch (e:Exception){
+                val a = 2
+                val s = 2
+            }
+
+        }
     }
 
 
@@ -927,10 +943,10 @@ class SleepCalculationHandlerTest
 
         val actualTimeSeconds = 100000
         val sleepCalculationHandler = SleepCalculationHandler(context)
-        var sleepList5 = mutableListOf<SleepApiRawDataEntity>()
+        val sleepList5 = mutableListOf<SleepApiRawDataEntity>()
 
         // keine daten
-        var sleepState = sleepCalculationHandler.defineSleepStates(actualTimeSeconds, sleepList5, LightConditions.DARK)
+        val sleepState = sleepCalculationHandler.defineSleepStates(actualTimeSeconds, sleepList5, LightConditions.DARK)
         assertThat(sleepState, CoreMatchers.equalTo(SleepState.SLEEPING))
 
         // add 5 freuquency data with table but all in past

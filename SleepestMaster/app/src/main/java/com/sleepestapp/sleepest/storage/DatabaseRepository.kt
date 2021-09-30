@@ -7,6 +7,7 @@ import com.sleepestapp.sleepest.model.data.SleepState
 import com.sleepestapp.sleepest.storage.db.UserSleepSessionDao
 import com.sleepestapp.sleepest.storage.db.UserSleepSessionEntity
 import com.sleepestapp.sleepest.storage.db.*
+import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.getActiveAlarms
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
@@ -167,6 +168,13 @@ class DatabaseRepository(
     }
 
     /**
+     * Delete list of [SleepApiRawDataEntity]
+     */
+    suspend fun deleteSleepApiRawData(id:Int) {
+        sleepApiRawDataDao.delete(id)
+    }
+
+    /**
      * Insert or update list of [SleepApiRawDataEntity]
      */
     suspend fun insertSleepApiRawData(sleepClassifyEventEntities: List<SleepApiRawDataEntity>) {
@@ -284,7 +292,7 @@ class DatabaseRepository(
             userSleepSessionDao.getById(id).distinctUntilChanged()
 
     /**
-     * Returns [true] if a user session is available by id
+     * Returns True if a user session is available by id
      */
     suspend fun checkIfUserSessionIsDefinedById(id:Int): Boolean
     {
@@ -364,25 +372,6 @@ class DatabaseRepository(
     val alarmFlow: Flow<List<AlarmEntity>> =
             alarmDao.getAll().distinctUntilChanged()
 
-    /**
-     * All active alarms and on that specific day
-     * Pass true/false if the actual time is in sleep time or not
-     * You can check this with the provided function [isAfterSleepTime] in the [DataStoreRepository]
-     */
-    fun activeAlarmsFlow(dataStoreRepository: DataStoreRepository) : Flow<List<AlarmEntity>> = runBlocking {
-        val ldt:LocalDate = LocalDate.now()
-        //val date = if(ldt.hour > 15) ldt.plusDays(1).toLocalDate() else ldt.toLocalDate()
-        val isAfterSleepTime = dataStoreRepository.isAfterSleepTime()
-
-        val date = if(!isAfterSleepTime.first && !isAfterSleepTime.second)
-            ldt
-        else
-            ldt.plusDays(1)
-
-        val dayOfWeek = "%" + date.dayOfWeek + "%"
-
-        return@runBlocking alarmDao.getAllActiveOnDay(dayOfWeek).distinctUntilChanged()
-    }
 
     /**
      * Returns an [AlarmEntity] by its ID
@@ -401,11 +390,10 @@ class DatabaseRepository(
     /**
      * Returns the next alarm that is active or null is no alarm is active in that time duration
      * Pass true/false if the actual time is in sleep time or not
-     * You can check this with the provided function [isInSleepTime] in the [DataStoreRepository]
      */
     suspend fun getNextActiveAlarm(dataStoreRepository: DataStoreRepository) : AlarmEntity?{
 
-        val list = activeAlarmsFlow(dataStoreRepository).first()
+        val list = getActiveAlarms(alarmFlow.first(), dataStoreRepository)
         // get first alarm
         return list.minByOrNull { x-> x.wakeupEarly }
     }
@@ -413,10 +401,9 @@ class DatabaseRepository(
     /**
      * Returns true or false wheter a alarm is active for the actual/next day or not
      * Pass true/false if the actual time is in sleep time or not
-     * You can check this with the provided function [isInSleepTime] in the [DataStoreRepository]
      */
     suspend fun isAlarmActiv(dataStoreRepository: DataStoreRepository) : Boolean{
-        val list = activeAlarmsFlow(dataStoreRepository).first()
+        val list = getActiveAlarms(alarmFlow.first(), dataStoreRepository)
         // get first alarm
         return list.isNotEmpty()
     }

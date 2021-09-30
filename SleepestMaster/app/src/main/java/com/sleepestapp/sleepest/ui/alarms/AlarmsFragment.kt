@@ -24,6 +24,9 @@ import com.sleepestapp.sleepest.storage.db.AlarmEntity
 import com.sleepestapp.sleepest.util.IconAnimatorUtil
 import com.sleepestapp.sleepest.util.PermissionsUtil
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog
+import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.getActiveAlarms
+import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.getTimeBetweenSecondsOfDay
+import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.subtractMinutesFromSecondsOfDay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -97,8 +100,30 @@ class AlarmsFragment : Fragment() {
             }
         }
         lifecycleScope.launch {
-            val sleepTime = viewModel.dataStoreRepository.getSleepDuration()
-            viewModel.dataBaseRepository.insertAlarm(AlarmEntity(newId, sleepDuration = sleepTime))
+            val sleepParams = viewModel.dataStoreRepository.sleepParameterFlow.first()
+            val sleepTime = sleepParams.sleepDuration
+
+            val maxTimeMinutes = getTimeBetweenSecondsOfDay(
+                sleepParams.sleepTimeEnd,
+                sleepParams.sleepTimeStart) / 60
+            val offset = 240
+            val timeOffset = if(maxTimeMinutes < offset)
+                (maxTimeMinutes / 2) else offset
+
+            val wakeUpEarly = subtractMinutesFromSecondsOfDay(
+                sleepParams.sleepTimeEnd,
+                timeOffset)
+            val wakeUpLate = subtractMinutesFromSecondsOfDay(
+                sleepParams.sleepTimeEnd,
+                timeOffset / 2)
+
+            viewModel.dataBaseRepository.insertAlarm(
+                AlarmEntity(
+                id = newId,
+                sleepDuration = sleepTime
+                , wakeupEarly = wakeUpEarly
+                , wakeupLate = wakeUpLate)
+            )
         }
         addAlarmEntity(actualContext, newId)
         viewModel.usedIds.add(newId)
@@ -204,18 +229,34 @@ class AlarmsFragment : Fragment() {
         viewModel.fragments = mutableMapOf()
 
         // Update the disable next alarm button by checking the settings of all alarms
-        viewModel.activeAlarmsLiveData.observe(viewLifecycleOwner){
-            activeAlarms ->
+        viewModel.alarmsLiveData.observe(viewLifecycleOwner) {
+            alarms ->
+            lifecycleScope.launch{
+                val activeAlarms = getActiveAlarms(alarms, dataStoreRepository = viewModel.dataStoreRepository)
+                TransitionManager.beginDelayedTransition(binding.cLParent)
 
-            TransitionManager.beginDelayedTransition(binding.cLParent)
-
-            if (activeAlarms.isNotEmpty()){
-                val nextAlarm = activeAlarms.minByOrNull { x-> x.wakeupEarly }
-                viewModel.tempDisabledVisible.value = nextAlarm?.wasFired == false
-                viewModel.isTempDisabled.value = nextAlarm?.tempDisabled
+                if (activeAlarms.isNotEmpty()){
+                    val nextAlarm = activeAlarms.minByOrNull { x-> x.wakeupEarly }
+                    viewModel.tempDisabledVisible.value = nextAlarm?.wasFired == false
+                    viewModel.isTempDisabled.value = nextAlarm?.tempDisabled
+                }
+                else{
+                    viewModel.tempDisabledVisible.value = false
+                }
             }
-            else{
-                viewModel.tempDisabledVisible.value = false
+        }
+
+        // Update the disable next alarm button by checking the settings of all alarms
+        viewModel.sleepParameterLiveData.observe(viewLifecycleOwner){
+            lifecycleScope.launch {
+                val nextAlarm = viewModel.dataBaseRepository.getNextActiveAlarm(viewModel.dataStoreRepository)
+                if (nextAlarm != null){
+                    viewModel.tempDisabledVisible.value = nextAlarm.wasFired == false
+                    viewModel.isTempDisabled.value = nextAlarm.tempDisabled
+                }
+                else{
+                    viewModel.tempDisabledVisible.value = false
+                }
             }
         }
 
@@ -238,6 +279,7 @@ class AlarmsFragment : Fragment() {
             viewModel.actualExpand.value = (View.GONE)
         }
 
+
         // new click on alarm sound settings
         binding.lLAlarmSoundSettings.onFocusChangeListener =
             View.OnFocusChangeListener { _, hasFocus ->
@@ -255,14 +297,14 @@ class AlarmsFragment : Fragment() {
         // temp disable alarm was clicked
         binding.btnTemporaryDisableAlarm.setOnClickListener {
             lifecycleScope.launch {
-
-                if (viewModel.dataBaseRepository.getNextActiveAlarm(viewModel.dataStoreRepository) != null) {
-                    if (viewModel.dataBaseRepository.getNextActiveAlarm(viewModel.dataStoreRepository)!!.tempDisabled && !viewModel.dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
-                        BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(true, true)
+                val nextAlarm = viewModel.dataBaseRepository.getNextActiveAlarm(viewModel.dataStoreRepository)
+                if (nextAlarm != null) {
+                    if (nextAlarm.tempDisabled && !viewModel.dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
+                        BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(fromApp = true, reactivate = true)
                         viewModel.isTempDisabled.value = false
                     }
-                    else if (viewModel.dataBaseRepository.getNextActiveAlarm(viewModel.dataStoreRepository)!!.tempDisabled && viewModel.dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
-                        BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(false, true)
+                    else if (nextAlarm.tempDisabled && viewModel.dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
+                        BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(fromApp = false, reactivate = true)
                         viewModel.isTempDisabled.value = false
                     }
                     else  {

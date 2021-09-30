@@ -6,6 +6,7 @@ import com.sleepestapp.sleepest.model.data.SleepState
 import com.sleepestapp.sleepest.sleepcalculation.model.SleepTimes
 import com.sleepestapp.sleepest.storage.db.*
 import com.google.gson.Gson
+import com.sleepestapp.sleepest.util.SleepTimeValidationUtil
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers
@@ -40,79 +41,6 @@ class DatabaseRepositoryTest {
             dbDatabase.alarmDao(),
             dbDatabase.activityApiRawDataDao()
         )
-    }
-
-    /**
-     * We test the get alarm request
-     * we cannot test the observer ...
-     *
-     */
-    @Test
-    fun alarmTimeChanged() = runBlocking {
-
-        // remove all alarms
-        sleepDatabaseRepository.deleteAllAlarms()
-
-        val isAfterSleepTime = sleepStoreRepository.isAfterSleepTime()
-
-        // call the get all alarms
-        var alarms = sleepDatabaseRepository.alarmFlow.first()
-        assertThat(alarms.count(), CoreMatchers.equalTo(0))
-
-        // call the get active alarms ( in time )
-        alarms = sleepDatabaseRepository.activeAlarmsFlow(sleepStoreRepository).first()
-        assertThat(alarms.count(), CoreMatchers.equalTo(0))
-
-        // insert one with id 1 and false
-        sleepDatabaseRepository.insertAlarm(AlarmEntity(1, false))
-
-        // call the get all alarms
-        alarms = sleepDatabaseRepository.alarmFlow.first()
-        assertThat(alarms.count(), CoreMatchers.equalTo(1))
-
-        // call the get active alarms ( in time )
-        alarms = sleepDatabaseRepository.activeAlarmsFlow(sleepStoreRepository).first()
-        assertThat(alarms.count(), CoreMatchers.equalTo(0))
-
-        // insert one with id 2 and active yesterday
-
-        val dayofweekyesterday = LocalDate.now().minusDays(1).dayOfWeek
-        val dayofweektoday = LocalDate.now().dayOfWeek
-        val dayofweektomorrow = LocalDate.now().plusDays(1).dayOfWeek
-
-        sleepDatabaseRepository.insertAlarm(
-            AlarmEntity(
-                2,
-                true,
-                activeDayOfWeek = arrayListOf(dayofweekyesterday)
-            )
-        )
-
-        // call the get all alarms
-        alarms = sleepDatabaseRepository.alarmFlow.first()
-        assertThat(alarms.count(), CoreMatchers.equalTo(2))
-
-        // call the get active alarms ( in time )
-        alarms = sleepDatabaseRepository.activeAlarmsFlow(sleepStoreRepository).first()
-        assertThat(alarms.count(), CoreMatchers.equalTo(0))
-
-
-        sleepDatabaseRepository.insertAlarm(
-            AlarmEntity(
-                3,
-                true,
-                activeDayOfWeek = arrayListOf(dayofweektoday, dayofweektomorrow)
-            )
-        )
-
-        // call the get all alarms
-        alarms = sleepDatabaseRepository.alarmFlow.first()
-        assertThat(alarms.count(), CoreMatchers.equalTo(3))
-
-        // call the get active alarms ( in time )
-        alarms = sleepDatabaseRepository.activeAlarmsFlow(sleepStoreRepository).first()
-        assertThat(alarms.count(), CoreMatchers.equalTo(1))
-
     }
 
     @Test

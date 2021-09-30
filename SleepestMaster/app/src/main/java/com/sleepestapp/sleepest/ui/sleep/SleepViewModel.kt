@@ -3,7 +3,6 @@ import android.annotation.SuppressLint
 import android.app.TimePickerDialog
 import android.view.View
 import android.widget.AdapterView
-import android.widget.ImageView
 import android.widget.SeekBar
 import androidx.lifecycle.*
 import com.sleepestapp.sleepest.R
@@ -13,7 +12,6 @@ import com.sleepestapp.sleepest.model.data.MobileUseFrequency
 import com.sleepestapp.sleepest.model.data.SleepSleepChangeFrom
 import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
-import com.sleepestapp.sleepest.util.IconAnimatorUtil
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch

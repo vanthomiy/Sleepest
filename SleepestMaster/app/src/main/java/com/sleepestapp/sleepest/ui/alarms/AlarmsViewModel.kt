@@ -38,8 +38,15 @@ class AlarmsViewModel(
     /**
      * Observable live data of the alarms flow
      */
-    val activeAlarmsLiveData by lazy {
-        dataBaseRepository.activeAlarmsFlow(dataStoreRepository).asLiveData()
+    val alarmsLiveData by lazy {
+        dataBaseRepository.alarmFlow.asLiveData()
+    }
+
+    /**
+     * Observable live data of the sleep parameter flow
+     */
+    val sleepParameterLiveData by lazy {
+        dataStoreRepository.sleepParameterFlow.asLiveData()
     }
 
 

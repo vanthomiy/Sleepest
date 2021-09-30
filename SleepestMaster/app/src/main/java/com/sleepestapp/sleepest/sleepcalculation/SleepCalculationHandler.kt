@@ -214,8 +214,8 @@ class SleepCalculationHandler(val context: Context) {
 
     /**
      * Checks if the user is Sleeping or not at the moment.
-     * Saves the state in the [SleepApiRawDataEntity] and in the [LiveUserSleepActivityStatus]
-     * [time] the actual time in seconds
+     * Saves the state in the [SleepApiRawDataEntity]
+     * [localTime] the actual time in seconds
      * Call fromDefineUserWakeUp to make count lesser to 30 min instead of 1hour
      */
     suspend fun checkIsUserSleeping(localTime: LocalDateTime? = null, finalCalc: Boolean = false, fromDefineUserWakeUp:Boolean = false){
@@ -286,7 +286,7 @@ class SleepCalculationHandler(val context: Context) {
 
                 // get normed list
                 val (normedSleepApiDataBefore, frequency) = createTimeNormedData(
-                    0.5f,
+                    1f,
                     false,
                     data.timestampSeconds,
                     sleepApiRawDataEntity.toList()
@@ -320,14 +320,14 @@ class SleepCalculationHandler(val context: Context) {
             if (data.sleepState != SleepState.NONE && data.oldSleepState == SleepState.NONE){
                 // get normed list
                 val (normedSleepApiDataBefore, frequency1) = createTimeNormedData(
-                    if(fromDefineUserWakeUp) 1f else 0.5f,
+                    1f,
                     false,
                     data.timestampSeconds,
                     sleepApiRawDataEntity.toList()
                 )
 
                 val (normedSleepApiDataAfter, frequency2) = createTimeNormedData(
-                    if(fromDefineUserWakeUp) 1f else 0.5f,
+                    if(!fromDefineUserWakeUp) 1f else 0.5f,
                     true,
                     data.timestampSeconds,
                     sleepApiRawDataEntity.toList()

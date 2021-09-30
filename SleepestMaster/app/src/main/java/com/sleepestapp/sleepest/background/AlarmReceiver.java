@@ -60,11 +60,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case DISABLE_ALARM:
                     //Disables the next active alarm temporary
-                    if ((databaseRepository.getNextActiveAlarmJob(dataStoreRepository) != null) && (!databaseRepository.getNextActiveAlarmJob(dataStoreRepository).getTempDisabled())) {
-                        BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, false);
-                    } else {
-                        BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, true);
-                    }
+                BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, (databaseRepository.getNextActiveAlarmJob(dataStoreRepository) == null) || (databaseRepository.getNextActiveAlarmJob(dataStoreRepository).getTempDisabled()));
                 break;
             case NOT_SLEEPING:
                 //Button not Sleeping, only in the first 2 hours of sleep

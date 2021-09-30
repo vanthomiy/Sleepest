@@ -15,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 
 import com.sleepestapp.sleepest.background.AlarmCycleState
@@ -191,9 +190,17 @@ class MainActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
 
-        viewModel.activeAlarmsLiveData.observe(this){ list ->
+        viewModel.alarmsLiveData.observe(this){ alarms ->
             // check the list if empty or not
-            BackgroundAlarmTimeHandler.getHandler(applicationContext).changeOfAlarmEntity(list.isEmpty())
+            lifecycleScope.launch {
+                val activeAlarms = SleepTimeValidationUtil.getActiveAlarms(
+                    alarms,
+                    dataStoreRepository = viewModel.dataStoreRepository
+                )
+
+                BackgroundAlarmTimeHandler.getHandler(applicationContext)
+                    .changeOfAlarmEntity(activeAlarms.isEmpty())
+            }
         }
 
         // observe sleep time changes

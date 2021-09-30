@@ -50,6 +50,12 @@ class AlarmParameterStatus(private val dataStore: DataStore<AlarmParameters>) {
         }
     }
 
+    suspend fun triggerObserver(){
+        dataStore.updateData{preference->
+            preference.toBuilder().setTriggerObservable(!preference.triggerObservable).build()
+        }
+    }
+
 
 
 

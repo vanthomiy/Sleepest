@@ -249,7 +249,7 @@ class SettingsFragment : Fragment() {
             """.trimIndent()
         pref = actualContext.getSharedPreferences("ForegroundServiceTime", 0)
         val textForegroundServiceTime= """
-            Foreground Service Time: ${pref.getInt("time", 0)}
+            FS Time: ${pref.getInt("time", 0)}, usage:${pref.getInt("usage", 0)}, sod:${pref.getInt("sod", 0)}
             
             """.trimIndent()
         pref = actualContext.getSharedPreferences("SleepValue", 0)
