@@ -37,6 +37,7 @@
             <ImageView
                 android:layout_width="@dimen/img_header_size"
                 android:layout_height="@dimen/img_header_size"
+                tools:ignore="ContentDescription"
                 android:layout_gravity="end"
                 android:layout_margin="5dp"
                 app:tint="@color/primary_text_color"
