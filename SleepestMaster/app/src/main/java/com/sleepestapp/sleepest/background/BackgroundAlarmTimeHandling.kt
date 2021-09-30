@@ -27,6 +27,7 @@ import java.time.LocalTime
 import java.util.*
 import java.util.concurrent.TimeUnit
 import android.app.ActivityManager
+import android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
 import android.content.Context.ACTIVITY_SERVICE
 import com.sleepestapp.sleepest.model.data.Constants
 import kotlinx.coroutines.flow.first
@@ -300,13 +301,20 @@ class BackgroundAlarmTimeHandler(val context: Context) {
             }
         }*/
 
-        /*val activityManager = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
-        val processinfo = activityManager.runningAppProcesses
-        val info = processinfo.
+        val activityManager = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
+        val processInfo = activityManager.runningAppProcesses
 
-        ActivityManager.RunningAppProcessInfo appProcessInfo = new ActivityManager.RunningAppProcessInfo();
+        if (processInfo.size > 0) {
+            for (i in processInfo.indices) {
+                if (processInfo[i].processName == context.packageName && processInfo[i].importance == IMPORTANCE_FOREGROUND) {
+                    return true
+                }
+            }
+        }
+
+        /*ActivityManager.RunningAppProcessInfo appProcessInfo = new ActivityManager.RunningAppProcessInfo();
         ActivityManager.getMyMemoryState(appProcessInfo);
-        return (appProcessInfo.importance == IMPORTANCE_FOREGROUND || appProcessInfo.importance == IMPORTANCE_VISIBLE)*/
+        return (appProcessInfo.importance == IMPORTANCE_FOREGROUND || appProcessInfo.importance == IMPORTANCE_VISIBLE)
 
 
 
@@ -319,7 +327,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
         if (currentPackageName == "com.sleepestapp.sleepest") {
             return true
-        }
+        }*/
 
         return false
     }
