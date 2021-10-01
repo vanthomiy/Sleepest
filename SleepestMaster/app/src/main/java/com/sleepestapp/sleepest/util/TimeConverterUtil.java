@@ -44,19 +44,6 @@ public class TimeConverterUtil {
     }
 
     /**
-     * Convert the date to secondsOfDay
-     * @param calendar date
-     * @return secondsOfDay
-     */
-    public static int calendarToSecondsOfDay(Calendar calendar) {
-        int day = calendar.get(Calendar.HOUR_OF_DAY) * 3600;
-        int minute = calendar.get(Calendar.MINUTE) * 60;
-        int second = calendar.get(Calendar.SECOND);
-
-        return day + minute + second;
-    }
-
-    /**
      * Calculates the possible next date of calendar
      * @param day Number between 1 and 14, 1 = Sunday, 7 = Saturday, 8 = On Saturday + 1 = Sunday, ...
      * @param hour Number between 0 and 23

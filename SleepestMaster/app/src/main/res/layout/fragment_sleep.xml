@@ -736,7 +736,7 @@
                                 android:layout_width="@dimen/img_header_size"
                                 android:layout_height="@dimen/img_header_size"
                                 android:layout_gravity="end"
-                                tools:ignore="ContentDescription"
+                                tools:ignore="ContentDescription,TooManyViews"
                                 app:tint="@color/primary_text_color"
                                 android:onClick="@{sleepViewModel::onInfoClicked}"
                                 android:tag="4"
