@@ -18,7 +18,6 @@ import androidx.viewpager.widget.PagerAdapter;
 import com.airbnb.lottie.LottieAnimationView;
 import com.sleepestapp.sleepest.MainActivity;
 import com.sleepestapp.sleepest.R;
-import com.sleepestapp.sleepest.databinding.OnboardingNoticeScreenBinding;
 import com.sleepestapp.sleepest.storage.DataStoreRepository;
 import com.sleepestapp.sleepest.util.PermissionsUtil;
 import com.sleepestapp.sleepest.util.TimeConverterUtil;

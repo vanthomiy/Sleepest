@@ -348,7 +348,7 @@ public class ForegroundService extends LifecycleService {
             //Check if the actual time is lower than the actual wakeup and add the difference to the actual time and set the alarm to this new time
             if (secondsOfDay <= time.getActualWakeup()){
                 calendar.add(Calendar.SECOND, timeDifference);
-                
+
                 AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 1, getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
 
                 setPreferences(calendar, time.getActualWakeup(), 5);

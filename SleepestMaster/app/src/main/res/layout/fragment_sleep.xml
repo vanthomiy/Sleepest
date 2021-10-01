@@ -395,7 +395,8 @@
                                         app:np_selectedTextColor="@color/tertiary_text_color"
                                         app:np_textColor="@color/secondary_button_color"
                                         app:np_value="7"
-                                        app:np_width="150dp" />
+                                        app:np_width="150dp"
+                                        tools:ignore="TooDeepLayout" />
                                 </FrameLayout>
 
                             </LinearLayout>

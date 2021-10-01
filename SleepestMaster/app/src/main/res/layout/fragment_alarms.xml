@@ -144,7 +144,7 @@
                             android:layout_gravity="start"
                             android:layout_marginStart="10dp"
                             android:gravity="center_vertical"
-                            android:text="Klingeln"
+                            android:text="@string/alarm_type"
                             android:textColor="@color/accent_text_color"
                             android:textSize="@dimen/valueSize"
                             android:textStyle="bold" />

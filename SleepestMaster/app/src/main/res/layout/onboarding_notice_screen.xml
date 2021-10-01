@@ -375,7 +375,7 @@
             <ImageView
                 android:id="@+id/ivOnboardingPreviousPage"
                 android:layout_width="0dp"
-                tools:ignore="ContentDescription"
+                tools:ignore="ContentDescription,NestedWeights"
                 android:layout_height="match_parent"
                 android:layout_weight="0.2"
                 android:gravity="start"
