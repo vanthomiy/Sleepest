@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            binding.bottomBar.setOnNavigationItemSelectedListener { item->
+            binding.bottomBar.setOnItemSelectedListener { item->
 
                 val ft = supportFragmentManager.beginTransaction()
 

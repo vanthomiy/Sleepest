@@ -22,10 +22,10 @@ import com.sleepestapp.sleepest.model.data.NotificationUsage;
 import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler;
 import com.sleepestapp.sleepest.storage.DataStoreRepository;
 import com.sleepestapp.sleepest.storage.DatabaseRepository;
+import com.sleepestapp.sleepest.storage.db.AlarmEntity;
 import com.sleepestapp.sleepest.util.TimeConverterUtil;
 //import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler;
 
-import java.time.LocalTime;
 import java.util.Calendar;
 
 import static android.content.Context.ALARM_SERVICE;
@@ -60,7 +60,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case DISABLE_ALARM:
                     //Disables the next active alarm temporary
-                BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, (databaseRepository.getNextActiveAlarmJob(dataStoreRepository) == null) || (databaseRepository.getNextActiveAlarmJob(dataStoreRepository).getTempDisabled()));
+                AlarmEntity nextAlarm = databaseRepository.getNextActiveAlarmJob(dataStoreRepository);
+                BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, nextAlarm == null || (nextAlarm.getTempDisabled()));
                 break;
             case NOT_SLEEPING:
                 //Button not Sleeping, only in the first 2 hours of sleep
@@ -144,55 +145,5 @@ public class AlarmReceiver extends BroadcastReceiver {
         Toast.makeText(cancelAlarmContext, "AlarmManager canceled: " + AlarmReceiverUsage.Companion.getCount(alarmReceiverUsage), Toast.LENGTH_LONG).show();
     }
 
-    /**
-     * Checks if a specific alarm is active
-     * @param alarmActiveContext Context
-     * @param alarmReceiverUsage Usage of alarm
-     * @return true = active
-     */
-    public static boolean isAlarmManagerActive(Context alarmActiveContext, AlarmReceiverUsage alarmReceiverUsage) {
-        Intent intent = new Intent(alarmActiveContext, AlarmReceiver.class);
 
-        return (PendingIntent.getBroadcast(alarmActiveContext, AlarmReceiverUsage.Companion.getCount(alarmReceiverUsage), intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_NO_CREATE) != null);
-    }
-
-    /**
-     * Create the notification to inform the user about problems
-     */
-    public static Notification createInformationNotification(Context context, String information) {
-        //Get Channel id
-        String notificationChannelId = context.getApplicationContext().getString(R.string.information_notification_channel);
-
-        //Create intent if user tap on notification
-        Intent intent = new Intent(context.getApplicationContext(), MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
-
-        //Create manager and channel
-        NotificationManager notificationManager = (NotificationManager) context.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationChannel channel = new NotificationChannel(
-                notificationChannelId,
-                context.getApplicationContext().getString(R.string.information_notification_channel_name),
-                NotificationManager.IMPORTANCE_HIGH
-        );
-
-        //Set channel description
-        channel.setDescription(context.getApplicationContext().getString(R.string.information_notification_channel_description));
-        if (notificationManager != null) {
-            notificationManager.createNotificationChannel(channel);
-        }
-
-        //Build the notification and return it
-        Notification.Builder builder;
-        builder = new Notification.Builder(context.getApplicationContext(), notificationChannelId);
-
-        return builder
-                .setContentTitle(context.getApplicationContext().getString(R.string.information_notification_title))
-                .setContentText(information)
-                .setStyle(new Notification.DecoratedCustomViewStyle())
-                .setSmallIcon(R.drawable.logofulllinesoutlineround)
-                .setContentIntent(pendingIntent)
-                .setOnlyAlertOnce(true)
-                .build();
-    }
 }

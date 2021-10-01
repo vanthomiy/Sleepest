@@ -34,8 +34,6 @@ import java.util.TimerTask;
  */
 public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnClickListener {
 
-    private OnboardingNoticeScreenBinding binding;
-
     private final Context context;
     private final Activity activityContext;
 

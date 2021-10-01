@@ -64,12 +64,6 @@ public class ForegroundService extends LifecycleService {
     //region service functions
 
     @Override
-    public IBinder onBind(Intent intent) {
-        super.onBind(intent);
-        return null;
-    }
-
-    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         super.onStartCommand(intent, flags,startId);
@@ -292,11 +286,8 @@ public class ForegroundService extends LifecycleService {
 
         //Check if the actual alarm time is already reached and set the alarm to now
         //Shows the set alarm clock time
-        int actualWakeUp = 0;
         if ((secondsOfDay > time.getActualWakeup()) && checkPossibleAlarm() && (secondsOfDay > time.getWakeupEarly())) {
             calendar.add(Calendar.SECOND, 60);
-
-            actualWakeUp = TimeConverterUtil.calendarToSecondsOfDay(calendar);
 
             AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
 
@@ -306,8 +297,6 @@ public class ForegroundService extends LifecycleService {
             
         } else if((secondsOfDay > time.getActualWakeup()) && checkPossibleAlarm() && (secondsOfDay < time.getWakeupEarly())) {
             Calendar earliestWakeup = TimeConverterUtil.getAlarmDate(time.getWakeupEarly());
-
-            actualWakeUp = TimeConverterUtil.calendarToSecondsOfDay(earliestWakeup);
 
             AlarmClockReceiver.startAlarmManager(earliestWakeup.get(Calendar.DAY_OF_WEEK), earliestWakeup.get(Calendar.HOUR_OF_DAY), earliestWakeup.get(Calendar.MINUTE), getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
 
@@ -324,8 +313,6 @@ public class ForegroundService extends LifecycleService {
             latestWakeup.set(Calendar.SECOND, 0);
             latestWakeup.add(Calendar.SECOND, time.getWakeupLate());
 
-            actualWakeUp = TimeConverterUtil.calendarToSecondsOfDay(latestWakeup);
-
             AlarmClockReceiver.startAlarmManager(latestWakeup.get(Calendar.DAY_OF_WEEK), latestWakeup.get(Calendar.HOUR_OF_DAY), latestWakeup.get(Calendar.MINUTE), getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
 
             setPreferences(latestWakeup, time.getWakeupLate(), 1);
@@ -340,8 +327,6 @@ public class ForegroundService extends LifecycleService {
             if (time.getActualWakeup() < time.getWakeupEarly() && !(time.getWakeupEarly() < secondsOfDay) && !(time.getActualWakeup() < secondsOfDay)) {
                 Calendar earliestWakeup = TimeConverterUtil.getAlarmDate(time.getWakeupEarly());
 
-                actualWakeUp = TimeConverterUtil.calendarToSecondsOfDay(earliestWakeup);
-
                 AlarmClockReceiver.startAlarmManager(earliestWakeup.get(Calendar.DAY_OF_WEEK), earliestWakeup.get(Calendar.HOUR_OF_DAY), earliestWakeup.get(Calendar.MINUTE), getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
 
                 setPreferences(earliestWakeup, time.getWakeupEarly(), 2);
@@ -353,8 +338,6 @@ public class ForegroundService extends LifecycleService {
             if (time.getActualWakeup() > time.getWakeupLate()) {
                 Calendar latestWakeup = TimeConverterUtil.getAlarmDate(time.getWakeupLate());
 
-                actualWakeUp = TimeConverterUtil.calendarToSecondsOfDay(latestWakeup);
-
                 AlarmClockReceiver.startAlarmManager(latestWakeup.get(Calendar.DAY_OF_WEEK), latestWakeup.get(Calendar.HOUR_OF_DAY), latestWakeup.get(Calendar.MINUTE), getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
 
                 setPreferences(latestWakeup, time.getWakeupLate(), 3);
@@ -365,9 +348,7 @@ public class ForegroundService extends LifecycleService {
             //Check if the actual time is lower than the actual wakeup and add the difference to the actual time and set the alarm to this new time
             if (secondsOfDay <= time.getActualWakeup()){
                 calendar.add(Calendar.SECOND, timeDifference);
-
-                actualWakeUp = TimeConverterUtil.calendarToSecondsOfDay(calendar);
-
+                
                 AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 1, getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
 
                 setPreferences(calendar, time.getActualWakeup(), 5);

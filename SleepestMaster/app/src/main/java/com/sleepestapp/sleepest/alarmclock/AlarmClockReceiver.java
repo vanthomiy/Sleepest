@@ -110,18 +110,6 @@ public class AlarmClockReceiver extends BroadcastReceiver {
     }
 
     /**
-     * Start a alarm at a specific time
-     * @param snoozeTime Time in millis, restart alarm after that duration
-     * @param restartAlarmContext Context
-     */
-    public static void restartAlarmManager(int snoozeTime, Context restartAlarmContext) {
-
-        Intent intent = new Intent(restartAlarmContext, AlarmClockReceiver.class);
-        intent.putExtra(context.getString(R.string.alarm_clock_intent_key), AlarmClockReceiverUsage.START_ALARMCLOCK.name());
-        PendingIntent.getBroadcast(restartAlarmContext, AlarmClockReceiverUsage.Companion.getCount(AlarmClockReceiverUsage.SNOOZE_ALARMCLOCK), intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-
-    /**
      * Cancel a running alarm with a pending intent generated with usage
      * @param cancelAlarmContext Context
      */
