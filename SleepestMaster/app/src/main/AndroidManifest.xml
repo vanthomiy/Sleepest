@@ -108,7 +108,9 @@
         <receiver
             android:name="com.sleepestapp.sleepest.background.AlarmReceiver"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"
+            android:permission="android.permission.SCHEDULE_EXACT_ALARM" />
+
         <receiver
             android:name="com.sleepestapp.sleepest.background.BootReceiver"
             android:directBootAware="true"
@@ -128,18 +130,22 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
+
         <receiver
             android:name="com.sleepestapp.sleepest.alarmclock.AlarmClockReceiver"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"
+            android:permission="android.permission.SCHEDULE_EXACT_ALARM" />
         <receiver
             android:name="com.sleepestapp.sleepest.googleapi.SleepReceiver"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"
+            android:permission="android.permission.ACTIVITY_RECOGNITION" />
         <receiver
             android:name="com.sleepestapp.sleepest.googleapi.ActivityTransitionReceiver"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"
+            android:permission="android.permission.ACTIVITY_RECOGNITION" />
 
         <meta-data
             android:name="preloaded_fonts"
