@@ -292,14 +292,6 @@ class DatabaseRepository(
             userSleepSessionDao.getById(id).distinctUntilChanged()
 
     /**
-     * Returns True if a user session is available by id
-     */
-    suspend fun checkIfUserSessionIsDefinedById(id:Int): Boolean
-    {
-        return !userSleepSessionDao.getById(id).first().isNullOrEmpty()
-    }
-
-    /**
      * Returns a specific [UserSleepSessionEntity] by its ID
      * If not present, it creates a new session by this ID
      */

@@ -348,5 +348,9 @@
     <string name="settings_export_failed">Export failed</string>
     <string name="settings_unable_to_find_market">\" unable to find market app\"</string>
     <string name="alarm_type">Alarm type</string>
+    <string name="header">header</string>
+    <string name="history">history</string>
+    <string name="sleep">sleep</string>
+    <string name="profile">profile</string>
 
 </resources>

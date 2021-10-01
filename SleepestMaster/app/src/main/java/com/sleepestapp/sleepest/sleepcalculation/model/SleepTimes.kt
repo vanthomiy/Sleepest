@@ -18,16 +18,16 @@ data class SleepTimes(
         /**
          * The utc timestamp in seconds when the last user sleep of the sleep session is detected
          */
-        var sleepTimeEnd: Int = -1,
+        var sleepTimeEnd: Int = 0,
 
         /**
          * Setup sleep time start at the specific day in seconds of day
          */
-        var possibleSleepTimeStart: Int = -1,
+        var possibleSleepTimeStart: Int? = null,
         /**
          * Setup sleep time end at the specific day in seconds of day
          */
-        var possibleSleepTimeEnd: Int = -1,
+        var possibleSleepTimeEnd: Int? = null,
 
         /**
          * The sleep time of the user in minutes. ([SleepState.LIGHT], [SleepState.DEEP], [SleepState.REM] or [SleepState.SLEEPING] phases are counted)
