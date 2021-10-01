@@ -9,12 +9,10 @@ import androidx.lifecycle.viewModelScope
 import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.model.data.MoodType
 import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler
+import com.sleepestapp.sleepest.storage.db.UserSleepSessionEntity
 import com.sleepestapp.sleepest.util.SmileySelectorUtil
 import kotlinx.coroutines.launch
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.ZoneOffset
+import java.time.*
 
 /**  */
 class HistoryDayViewModel(val sleepCalculationHandler : SleepCalculationHandler) : ViewModel() {
@@ -70,6 +68,10 @@ class HistoryDayViewModel(val sleepCalculationHandler : SleepCalculationHandler)
 
     /** Contains information about the current time zone and its time formatting standards. */
     var is24HourFormat : Boolean = false
+
+    fun getSleepSessionId(time: LocalDate) {
+        sessionId = UserSleepSessionEntity.getIdByDateTime(time)
+    }
 
     /**
      * Allows to alter the sleepRating (MoodAfterSleep) and saves it to its MutableLiveData.

@@ -5,13 +5,11 @@ import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sleepestapp.sleepest.model.data.Constants
 import com.sleepestapp.sleepest.model.data.MobilePosition
 import com.sleepestapp.sleepest.model.data.SleepState
 import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler
 import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
-import com.sleepestapp.sleepest.storage.db.SleepApiRawDataEntity
 import com.sleepestapp.sleepest.storage.db.UserSleepSessionEntity
 import com.sleepestapp.sleepest.util.SmileySelectorUtil
 import com.github.mikephil.charting.charts.BarChart
@@ -21,6 +19,7 @@ import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.sleepestapp.sleepest.model.data.SleepDataAnalysis
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.*
@@ -67,8 +66,8 @@ class HistoryViewModel(
     /** Indicates that [getSleepData] has finished and fresh data was received from the database. */
     val dataReceived = MutableLiveData(false)
 
-    /** <Int: Sleep session id, Triple<List<[SleepApiRawDataEntity]>, Int: Sleep duration, [UserSleepSessionEntity]>> */
-    val sleepSessionData = mutableMapOf<Int, Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>>()
+    /**  */
+    val sleepAnalysisData = mutableListOf<SleepDataAnalysis>()
 
     val actualExpand = MutableLiveData(-1)
     val goneState = MutableLiveData(View.GONE)
@@ -145,13 +144,16 @@ class HistoryViewModel(
         viewModelScope.launch {
             for (id in ids) {
                 val session = dataBaseRepository.getSleepSessionById(id).first().firstOrNull()
+
                 session?.let {
-                    sleepSessionData[id] = Triple(
-                        dataBaseRepository.getSleepApiRawDataBetweenTimestamps(
-                            session.sleepTimes.sleepTimeStart,
-                            session.sleepTimes.sleepTimeEnd).first()?.sortedBy { x -> x.timestampSeconds }?: listOf(),
-                        session.sleepTimes.sleepDuration,
-                        session
+                    sleepAnalysisData.add(
+                        SleepDataAnalysis(
+                            id,
+                            dataBaseRepository.getSleepApiRawDataBetweenTimestamps(
+                                session.sleepTimes.sleepTimeStart,
+                                session.sleepTimes.sleepTimeEnd).first()?.sortedBy { x -> x.timestampSeconds }?: listOf(),
+                            session
+                        )
                     )
                 }
             }
@@ -164,57 +166,55 @@ class HistoryViewModel(
      * If unusual data was received, the sleep phase determination algorithm ist triggered again to interpret the api data. */
     private fun checkSessionIntegrity() {
         onWork = true
-        for (key in sleepSessionData.keys) {
-            val session = sleepSessionData[key]?.first
-            session?.let {
-                val mobilePosition = sleepSessionData[key]?.third?.mobilePosition
-                val isSleeping = it.any { x -> x.sleepState == SleepState.SLEEPING }
-                val isUnidentified = it.any { x -> x.sleepState == SleepState.NONE }
+        sleepAnalysisData.forEach {
+            val mobilePosition = it.userSleepSessionEntity.mobilePosition
+            val isSleepStateSleeping = it.sleepApiRawDataEntity.any { x -> x.sleepState == SleepState.SLEEPING }
+            val isSleepStateUnidentified = it.sleepApiRawDataEntity.any { x -> x.sleepState == SleepState.NONE }
 
-                if (isUnidentified) {
-                    viewModelScope.launch {
-                       sleepCalculationHandler.checkIsUserSleeping(
-                            LocalDateTime.ofInstant(
-                                Instant.ofEpochMilli((sleepSessionData[key]?.third?.sleepTimes?.sleepTimeStart?.toLong())!! * 1000),
-                                ZoneOffset.systemDefault()
-                            ),
-                            true
-                        )
-                    }
+            if (isSleepStateUnidentified) {
+                viewModelScope.launch {
+                    sleepCalculationHandler.checkIsUserSleeping(
+                        LocalDateTime.ofInstant(
+                            Instant.ofEpochMilli(it.userSleepSessionEntity.sleepTimes.sleepTimeStart.toLong() * 1000),
+                            ZoneOffset.systemDefault()
+                        ),
+                        true
+                    )
                 }
+            }
 
-                if (mobilePosition == MobilePosition.INBED && isSleeping) {
-                    viewModelScope.launch {
-                        sleepCalculationHandler.defineUserWakeup(
-                            LocalDateTime.ofInstant(
-                                Instant.ofEpochMilli((sleepSessionData[key]?.third?.sleepTimes?.sleepTimeStart?.toLong())!! * 1000),
-                                ZoneOffset.systemDefault()
-                            ),
-                            false
-                        )
-                    }
+            if (mobilePosition == MobilePosition.INBED && isSleepStateSleeping) {
+                viewModelScope.launch {
+                    sleepCalculationHandler.defineUserWakeup(
+                        LocalDateTime.ofInstant(
+                            Instant.ofEpochMilli(it.userSleepSessionEntity.sleepTimes.sleepTimeStart.toLong() * 1000),
+                            ZoneOffset.systemDefault()
+                        ),
+                        false
+                    )
                 }
+            }
 
-                if (mobilePosition == MobilePosition.UNIDENTIFIED) {
-                    viewModelScope.launch {
-                        sleepCalculationHandler.defineUserWakeup(
-                            LocalDateTime.ofInstant(
-                                Instant.ofEpochMilli((sleepSessionData[key]?.third?.sleepTimes?.sleepTimeStart?.toLong())!! * 1000),
-                                ZoneOffset.systemDefault()
-                            ),
-                            false,
-                            recalculateMobilePosition = true
-                        )
-                    }
+            if (mobilePosition == MobilePosition.UNIDENTIFIED) {
+                viewModelScope.launch {
+                    sleepCalculationHandler.defineUserWakeup(
+                        LocalDateTime.ofInstant(
+                            Instant.ofEpochMilli(it.userSleepSessionEntity.sleepTimes.sleepTimeStart.toLong() * 1000),
+                            ZoneOffset.systemDefault()
+                        ),
+                        false,
+                        recalculateMobilePosition = true
+                    )
                 }
             }
         }
+
         onWork = false
     }
 
-    /** Checks if the passed date has an entry in the [sleepSessionData]. */
+    /** Checks if the passed date has an entry in the [sleepAnalysisData]. */
     fun checkId(time: LocalDate) : Boolean {
-        return sleepSessionData.containsKey(UserSleepSessionEntity.getIdByDateTime(time))
+        return sleepAnalysisData.any { it.sleepSessionId == UserSleepSessionEntity.getIdByDateTime(time) }
     }
 
     /** Generates all the relevant information for the Bar Charts by searching the database for the correct period of time.
@@ -240,16 +240,18 @@ class HistoryViewModel(
 
         ids.reversed()
         for (id in ids) {
-            if (sleepSessionData.containsKey(id)) {
-                visibilityManager = true
 
-                val values = sleepSessionData[id]!!
-
-                val awake = values.third.sleepTimes.awakeTime / 60f
-                val sleep = values.third.sleepTimes.sleepDuration / 60f
-                val lightSleep = values.third.sleepTimes.lightSleepDuration / 60f
-                val deepSleep = values.third.sleepTimes.deepSleepDuration / 60f
-                val remSleep = values.third.sleepTimes.remSleepDuration / 60f
+            sleepAnalysisData.firstOrNull {
+                    x -> x.sleepSessionId == id
+            }?.let {
+                if (it.userSleepSessionEntity.sleepTimes.sleepDuration > 0) {
+                    visibilityManager = true
+                }
+                val awake = it.userSleepSessionEntity.sleepTimes.awakeTime / 60f
+                val sleep = it.userSleepSessionEntity.sleepTimes.sleepDuration / 60f
+                val lightSleep = it.userSleepSessionEntity.sleepTimes.lightSleepDuration / 60f
+                val deepSleep = it.userSleepSessionEntity.sleepTimes.deepSleepDuration / 60f
+                val remSleep = it.userSleepSessionEntity.sleepTimes.remSleepDuration / 60f
 
                 if (((sleep + awake) * 60f) > maxSleepTime) {
                     maxSleepTime = (sleep + awake) * 60f
@@ -282,8 +284,7 @@ class HistoryViewModel(
                         )
                     )
                 }
-            }
-            else {
+            } ?: kotlin.run {
                 entries.add(
                     BarEntry(
                         xIndex, floatArrayOf(
@@ -296,6 +297,7 @@ class HistoryViewModel(
                     )
                 )
             }
+
             xAxisLabels.add(id)
             xIndex += 1
         }
@@ -467,7 +469,7 @@ class HistoryViewModel(
         barChart.isDoubleTapToZoomEnabled = false
     }
 
-    /** Generates all the relevant information for the activity chart by searching the [sleepSessionData] for the correct period of time.
+    /** Generates all the relevant information for the activity chart by searching the [sleepAnalysisData] for the correct period of time.
      *
      * */
     private fun generateDataActivityChart(range: Int, endDateOfDiagram: LocalDate): ArrayList<Entry> {
@@ -475,7 +477,7 @@ class HistoryViewModel(
         var xValue = 0
 
         val ids = mutableSetOf<Int>()
-        for (i in -(range-2)..1) {
+        for (i in -(range - 2)..1) {
             ids.add(
                 UserSleepSessionEntity.getIdByDateTime(
                     LocalDate.ofEpochDay(
@@ -487,13 +489,20 @@ class HistoryViewModel(
 
         ids.reversed()
         for (id in ids) {
-            if (sleepSessionData.containsKey(id)) {
-                val values = sleepSessionData[id]?.third!!
-                entries.add(Entry(xValue.toFloat(), values.userSleepRating.activityOnDay.ordinal.toFloat()))
-            }
-            else {
+
+            sleepAnalysisData.firstOrNull {
+                    x -> x.sleepSessionId == id
+            }?.let {
+                entries.add(
+                    Entry(
+                        xValue.toFloat(),
+                        it.userSleepSessionEntity.userSleepRating.activityOnDay.ordinal.toFloat()
+                    )
+                )
+            } ?: kotlin.run {
                 entries.add(Entry(xValue.toFloat(), 0f))
             }
+
             xValue += 1
         }
         return entries
