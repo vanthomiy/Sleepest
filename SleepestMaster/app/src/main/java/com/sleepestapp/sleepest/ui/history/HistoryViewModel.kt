@@ -386,7 +386,7 @@ class HistoryViewModel(
         if (range > 21) {
             for (i in diagramData.second.indices) {
                 val date = LocalDateTime.ofInstant(
-                    Instant.ofEpochMilli((diagramData.second[i].toLong() + Constants.DAY_IN_SECONDS) * 1000),
+                    Instant.ofEpochMilli((diagramData.second[i].toLong()) * 1000), //Constants.DAY_IN_SECONDS
                     ZoneOffset.systemDefault())
 
                 if (i == 0 || i == 10 || i == 20  || i == (diagramData.second.size - 1)) {

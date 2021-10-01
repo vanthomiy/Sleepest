@@ -47,7 +47,7 @@ data class UserSleepSessionEntity(
                 fun getIdByDateTime(date : LocalDate) : Int {
 
                         val time = LocalTime.of(15,0)
-                        val datetime = LocalDateTime.of(date.minusDays(1), time)
+                        val datetime = LocalDateTime.of(date.minusDays(0), time)
                         return datetime.toEpochSecond(ZoneOffset.UTC).toInt()
                 }
 
