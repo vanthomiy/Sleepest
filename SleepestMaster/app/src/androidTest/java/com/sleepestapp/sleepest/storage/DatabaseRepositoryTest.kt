@@ -2,19 +2,15 @@ package com.sleepestapp.sleepest.storage
 
 import android.content.Context
 import androidx.test.platform.app.InstrumentationRegistry
+import com.google.gson.Gson
 import com.sleepestapp.sleepest.model.data.SleepState
 import com.sleepestapp.sleepest.sleepcalculation.model.SleepTimes
 import com.sleepestapp.sleepest.storage.db.*
-import com.google.gson.Gson
-import com.sleepestapp.sleepest.util.SleepTimeValidationUtil
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
-import org.hamcrest.CoreMatchers
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import java.io.BufferedReader
-import java.time.LocalDate
 
 class DatabaseRepositoryTest {
 
@@ -24,10 +20,6 @@ class DatabaseRepositoryTest {
 
     private val dbDatabase by lazy {
         SleepDatabase.getDatabase(context)
-    }
-
-    private val sleepStoreRepository by lazy {
-        DataStoreRepository.getRepo(context)
     }
 
     @Before

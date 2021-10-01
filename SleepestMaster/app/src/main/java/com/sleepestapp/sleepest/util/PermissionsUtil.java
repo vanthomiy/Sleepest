@@ -106,17 +106,4 @@ public class PermissionsUtil {
         context.startActivity(intent);
     }
 
-    public static void startInstalledAppDetailsActivity(final Activity context) {
-        if (context == null) {
-            return;
-        }
-        final Intent intent = new Intent();
-        intent.setAction(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-        intent.addCategory(Intent.CATEGORY_DEFAULT);
-        intent.setData(Uri.parse("package:" + context.getPackageName()));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-        context.startActivity(intent);
-    }
 }

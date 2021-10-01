@@ -531,7 +531,7 @@ class SleepCalculationHandlerTest
 
 
             // wakeuptime is
-            var realWakeup = sleepDbRepository.getNextActiveAlarm(dataStoreRepository = sleepStoreRepository)!!.actualWakeup
+            val realWakeup = sleepDbRepository.getNextActiveAlarm(dataStoreRepository = sleepStoreRepository)!!.actualWakeup
             val getactiveAlamrs = sleepDbRepository.alarmFlow.first()
             val ok = getactiveAlamrs
             val actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(lastCall.toLong()*1000), ZoneOffset.systemDefault())
@@ -903,7 +903,7 @@ class SleepCalculationHandlerTest
 
         val day = LocalDateTime.now().minusDays(0)
         val sleepApiRawDataEntityList = sleepDbRepository.getSleepApiRawDataFromDate(day, sleepParameters.sleepTimeEnd, sleepParameters.sleepTimeStart).first()
-        var sleepApiRawDataEntityListNew = mutableListOf<SleepApiRawDataEntity>()
+        val sleepApiRawDataEntityListNew = mutableListOf<SleepApiRawDataEntity>()
         sleepApiRawDataEntityList?.forEach { data ->
             data.oldSleepState = SleepState.NONE
             data.sleepState = SleepState.NONE
@@ -912,7 +912,7 @@ class SleepCalculationHandlerTest
         }
         sleepApiRawDataEntityListNew.sortBy { x -> x.timestampSeconds }
 
-        sleepApiRawDataEntityListNew?.forEach { data ->
+        sleepApiRawDataEntityListNew.forEach { data ->
             try {
                 sleepDbRepository.insertSleepApiRawData(data)
                 sleepCalculationHandler.checkIsUserSleeping(day)
@@ -921,12 +921,10 @@ class SleepCalculationHandlerTest
                     .atZone(ZoneId.systemDefault())
                     .toLocalDateTime()
 
-                if(dt.toLocalTime().hour > 6 && dt.dayOfYear >= day.dayOfYear)
-                {
+                if(dt.toLocalTime().hour > 6 && dt.dayOfYear >= day.dayOfYear) {
                     sleepCalculationHandler.defineUserWakeup(day)
                 }
-            }
-            catch (e:Exception){
+            } catch (e:Exception){
                 val a = 2
                 val s = 2
             }

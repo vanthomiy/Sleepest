@@ -14,7 +14,9 @@ public class Constants {
     public static final int MILLIS_SNOOZE = 600000; //10 minute
     public static final int COUNTDOWN_TICK_INTERVAL = 1000; //1 second
     public static final long[] VIBRATION_WAVEFORM = {0, 400, 800, 400, 800, 400, 800};
+    @SuppressWarnings("unused")
     public static final int DELAY = 1000;
+    @SuppressWarnings("unused")
     public static final int LOCKSCREEN_COLOR_ANIMATION_DURATION = 2000;
     public static final int FOREGROUND_SERVICE_NOTIFICATION_DELAY_SLEEP_TIME = 20;
     public static final int DELAY_USER_ALREADY_AWAKE = 60;
