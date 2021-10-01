@@ -11,7 +11,9 @@ class HistoryWeekViewModel : ViewModel() {
     val goneState = MutableLiveData(View.GONE)
     val visibleState = MutableLiveData(View.VISIBLE)
 
-    fun onInfoClicked(view: View){
+    fun onInfoClicked(
+        view: View
+    ) {
         val value = view.tag.toString()
         actualExpand.value = if(actualExpand.value == value.toIntOrNull()) -1 else value.toIntOrNull()
     }

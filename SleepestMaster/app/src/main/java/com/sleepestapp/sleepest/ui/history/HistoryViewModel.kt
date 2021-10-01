@@ -80,13 +80,17 @@ class HistoryViewModel(
         }
     }
 
-    fun onInfoClicked(view: View){
+    fun onInfoClicked(
+        view: View
+    ){
         val value = view.tag.toString()
         actualExpand.value = if(actualExpand.value == value.toIntOrNull()) -1 else value.toIntOrNull()
     }
 
     /** Onclick handler for altering the [analysisDate] based on the currently selected analysis Range. */
-    fun onPreviousDateClick(range: Int) {
+    fun onPreviousDateClick(
+        range: Int
+    ) {
         analysisDate.let {
             when (range) {
                 0 -> it.value = it.value?.minusDays(1L)
@@ -97,7 +101,9 @@ class HistoryViewModel(
     }
 
     /** Onclick handler for altering the [analysisDate] based on the currently selected analysis Range. */
-    fun onNextDateClick(range: Int) {
+    fun onNextDateClick(
+        range: Int
+    ) {
         analysisDate.let {
             when (range) {
                 0 -> {
@@ -166,6 +172,7 @@ class HistoryViewModel(
      * If unusual data was received, the sleep phase determination algorithm ist triggered again to interpret the api data. */
     private fun checkSessionIntegrity() {
         onWork = true
+
         sleepAnalysisData.forEach {
             val mobilePosition = it.userSleepSessionEntity.mobilePosition
             val isSleepStateSleeping = it.sleepApiRawDataEntity.any { x -> x.sleepState == SleepState.SLEEPING }
@@ -212,15 +219,13 @@ class HistoryViewModel(
         onWork = false
     }
 
-    /** Checks if the passed date has an entry in the [sleepAnalysisData]. */
-    fun checkId(time: LocalDate) : Boolean {
-        return sleepAnalysisData.any { it.sleepSessionId == UserSleepSessionEntity.getIdByDateTime(time) }
-    }
-
     /** Generates all the relevant information for the Bar Charts by searching the database for the correct period of time.
      *
      * */
-    fun generateDataBarChart(range: Int, endDateOfDiagram: LocalDate): Triple<ArrayList<BarEntry>, List<Int>, Int> {
+    fun generateDataBarChart(
+        range: Int,
+        endDateOfDiagram: LocalDate
+    ): Triple<ArrayList<BarEntry>, List<Int>, Int> {
         val entries = ArrayList<BarEntry>()
         val xAxisLabels = mutableListOf<Int>()
         var xIndex = 0.5f
@@ -313,7 +318,9 @@ class HistoryViewModel(
     }
 
     /** Auxiliary function for creating a BarDataSet. */
-    private fun generateBarDataSet(barEntries: ArrayList<BarEntry>) : BarDataSet {
+    private fun generateBarDataSet(
+        barEntries: ArrayList<BarEntry>
+    ) : BarDataSet {
         val barDataSet = BarDataSet(barEntries, "")
         val barDataColors = mutableListOf<Int>()
         val sleepStates = SleepState.getListOfSleepStates()
@@ -331,7 +338,9 @@ class HistoryViewModel(
     }
 
     /** Auxiliary function for setting the correct size of the chart. */
-    private fun getBarChartYAxisProportion(sleepAmount: Int) : Float {
+    private fun getBarChartYAxisProportion(
+        sleepAmount: Int
+    ) : Float {
         return if ((sleepAmount >= 540) && (sleepAmount < 660)) {
             12F
         } else if ((sleepAmount >= 660) && (sleepAmount < 780)) {
@@ -346,7 +355,12 @@ class HistoryViewModel(
     }
 
     /** Create a new Bar Chart entity. */
-    fun setBarChart(barChart: BarChart, range: Int, endDateOfDiagram: LocalDate, colorDarkMode: Int) : BarChart {
+    fun setBarChart(
+        barChart: BarChart,
+        range: Int,
+        endDateOfDiagram: LocalDate,
+        colorDarkMode: Int
+    ) : BarChart {
         //http://developine.com/android-grouped-stacked-bar-chart-using-mpchart-kotlin/
         val diagramData = generateDataBarChart(range, endDateOfDiagram)
         val barData = BarData(generateBarDataSet(diagramData.first))
@@ -472,7 +486,10 @@ class HistoryViewModel(
     /** Generates all the relevant information for the activity chart by searching the [sleepAnalysisData] for the correct period of time.
      *
      * */
-    private fun generateDataActivityChart(range: Int, endDateOfDiagram: LocalDate): ArrayList<Entry> {
+    private fun generateDataActivityChart(
+        range: Int,
+        endDateOfDiagram: LocalDate
+    ): ArrayList<Entry> {
         val entries = ArrayList<Entry>()
         var xValue = 0
 

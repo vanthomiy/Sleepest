@@ -54,7 +54,7 @@ class HistoryDayViewModel(val sleepCalculationHandler : SleepCalculationHandler)
     var activitySmiley = MutableLiveData(SmileySelectorUtil.getSmileyActivity(0))
 
     /** Contains the smiley which was picked by the user to assess it's mood. */
-    var sleepMoodSmiley = MutableLiveData(MoodType.NONE)
+    var sleepMoodSmiley = MutableLiveData<MoodType>()
 
     /**  Contains the tag of the selected mood smiley. */
     var sleepMoodSmileyTag = MutableLiveData(0)
@@ -69,14 +69,18 @@ class HistoryDayViewModel(val sleepCalculationHandler : SleepCalculationHandler)
     /** Contains information about the current time zone and its time formatting standards. */
     var is24HourFormat : Boolean = false
 
-    fun getSleepSessionId(time: LocalDate) {
+    fun getSleepSessionId(
+        time: LocalDate
+    ) {
         sessionId = UserSleepSessionEntity.getIdByDateTime(time)
     }
 
     /**
      * Allows to alter the sleepRating (MoodAfterSleep) and saves it to its MutableLiveData.
      */
-    fun sleepRating(view: View) {
+    fun sleepRating(
+        view: View
+    ) {
         sleepRatingUpdate = true
         val mood = when (view.tag.toString().toInt()) {
             1 -> MoodType.BAD
@@ -91,7 +95,9 @@ class HistoryDayViewModel(val sleepCalculationHandler : SleepCalculationHandler)
         sleepMoodSmileyTag.value = (view.tag.toString().toInt())
     }
 
-    fun onInfoClicked(view: View){
+    fun onInfoClicked(
+        view: View
+    ){
         val value = view.tag.toString()
         actualExpand.value = if(actualExpand.value == value.toIntOrNull()) -1 else value.toIntOrNull()
     }
@@ -99,7 +105,9 @@ class HistoryDayViewModel(val sleepCalculationHandler : SleepCalculationHandler)
     /**
      * Allows the manual alternation of the time in at which the user fell asleep and woke up.
      */
-    fun manualChangeSleepTimes(view: View) {
+    fun manualChangeSleepTimes(
+        view: View
+    ) {
         val time : LocalDateTime = if (view.tag == "BeginOfSleep") {
             //Set the fall asleep time.
             LocalDateTime.ofInstant(
@@ -119,7 +127,11 @@ class HistoryDayViewModel(val sleepCalculationHandler : SleepCalculationHandler)
     /**
      * Creates a TimePickerDialogue as auxiliary function for [manualChangeSleepTimes].
      */
-    private fun createPickerDialogue(view: View, dateTime: LocalDateTime, startOfSleep: Boolean) {
+    private fun createPickerDialogue(
+        view: View,
+        dateTime: LocalDateTime,
+        startOfSleep: Boolean
+    ) {
         val tpd = TimePickerDialog(
             view.context,
             R.style.TimePickerTheme,

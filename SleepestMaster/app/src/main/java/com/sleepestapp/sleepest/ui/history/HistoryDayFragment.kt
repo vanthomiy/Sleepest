@@ -153,7 +153,9 @@ class HistoryDayFragment : Fragment() {
     /**
      * Maintains the visibility of the diagrams in the day fragment.
      */
-    private fun maintainVisibilityDayHistory(setVisibility: Boolean) {
+    private fun maintainVisibilityDayHistory(
+        setVisibility: Boolean
+    ) {
         if (setVisibility) {
             binding.iVNoDataAvailable.visibility = View.GONE
             binding.tVNoDataAvailable.visibility = View.GONE
@@ -178,10 +180,20 @@ class HistoryDayFragment : Fragment() {
                 )
             }
         }
+
+        viewModel.sleepAnalysisData.firstOrNull {
+            x -> x.sleepSessionId == viewModelDay.sessionId
+        }?.let { session ->
+            viewModelDay.sleepMoodSmiley.value?.let {rating ->
+                session.userSleepSessionEntity.userSleepRating.moodAfterSleep = rating
+            }
+        }
     }
 
     /** Formats sleep duration times for [setTimeStamps]. */
-    private fun generateSleepValueInformation(time: Int): String {
+    private fun generateSleepValueInformation(
+        time: Int
+    ): String {
         return kotlin.math.floor((time.toFloat() / 60f).toDouble()).toInt().toString() +
                 "h " +
                 (time % 60).toString() +
@@ -318,7 +330,9 @@ class HistoryDayFragment : Fragment() {
     }
 
     /** Auxiliary function for generating a dataset for a BarChart. */
-    private fun generateBarDataSet(barEntries: ArrayList<BarEntry>) : BarDataSet {
+    private fun generateBarDataSet(
+        barEntries: ArrayList<BarEntry>
+    ) : BarDataSet {
         val barDataSet = BarDataSet(barEntries, "")
 
         val colorList = mutableListOf<Int>()
@@ -340,7 +354,9 @@ class HistoryDayFragment : Fragment() {
     }
 
     /** Auxiliary function to determine the height of a BarChart. */
-    private fun getBarChartYAxisProportion(entries: ArrayList<BarEntry>) : Float {
+    private fun getBarChartYAxisProportion(
+        entries: ArrayList<BarEntry>
+    ) : Float {
         var size = 0f
         for (ent in entries) {
             if (size < ent.y) {
@@ -351,7 +367,9 @@ class HistoryDayFragment : Fragment() {
     }
 
     /**  Function for creating a BarChart for hte first time. */
-    fun setBarChart(colorDarkMode: Int): BarChart {
+    fun setBarChart(
+        colorDarkMode: Int
+    ): BarChart {
         val barChart = BarChart(context)
         val diagramData = generateDataBarChart()
         val barData = BarData(generateBarDataSet(diagramData))
@@ -361,7 +379,10 @@ class HistoryDayFragment : Fragment() {
     }
 
     /**  Function for updating an existing BarChart. */
-    private fun updateBarChart(barChart: BarChart, colorDarkMode: Int) {
+    private fun updateBarChart(
+        barChart: BarChart,
+        colorDarkMode: Int
+    ) {
         val diagramData = generateDataBarChart()
         val barData = BarData(generateBarDataSet(diagramData))
         barChart.data = barData
@@ -491,7 +512,10 @@ class HistoryDayFragment : Fragment() {
     }
 
     /**  Function for creating a PieChart for the first time. */
-    private fun setPieChart(colorDarkMode: Int, holeColorPieChart: Int): PieChart {
+    private fun setPieChart(
+        colorDarkMode: Int,
+        holeColorPieChart: Int
+    ): PieChart {
         val chart = PieChart(actualContext)
         val data = generateDataPieChart()
         val pieDataSet = PieDataSet(data.first, "")
@@ -501,7 +525,11 @@ class HistoryDayFragment : Fragment() {
     }
 
     /**  Function for updating a BarChart for the first time. */
-    private fun updatePieChart(chart: PieChart, colorDarkMode: Int, holeColorPieChart: Int) {
+    private fun updatePieChart(
+        chart: PieChart,
+        colorDarkMode: Int,
+        holeColorPieChart: Int
+    ) {
         val data = generateDataPieChart()
         val pieDataSet = PieDataSet(data.first, "")
         visualSetUpPieChart(chart, pieDataSet, data.second, colorDarkMode, holeColorPieChart)

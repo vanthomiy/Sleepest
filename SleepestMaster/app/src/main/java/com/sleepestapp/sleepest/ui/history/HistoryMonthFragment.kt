@@ -119,7 +119,9 @@ class HistoryMonthFragment : Fragment() {
     /**
      * Maintains the visibility of the diagrams in the day fragment.
      */
-    private fun maintainVisibilityMonthHistory(setVisibility: Boolean) {
+    private fun maintainVisibilityMonthHistory(
+        setVisibility: Boolean
+    ) {
         if (setVisibility) {
             binding.iVNoDataAvailable.visibility = View.GONE
             binding.tVNoDataAvailable.visibility = View.GONE
