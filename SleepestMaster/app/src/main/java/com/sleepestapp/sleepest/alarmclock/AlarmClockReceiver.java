@@ -30,8 +30,6 @@ import static android.content.Context.ALARM_SERVICE;
 
 public class AlarmClockReceiver extends BroadcastReceiver {
 
-    private static Context context;
-
     /**
      * Callback to receive the alarm
      * @param context Context
@@ -41,7 +39,6 @@ public class AlarmClockReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        AlarmClockReceiver.context = context;
         DatabaseRepository databaseRepository = ((MainApplication)context.getApplicationContext()).getDataBaseRepository();
         DataStoreRepository dataStoreRepository = ((MainApplication)context.getApplicationContext()).getDataStoreRepository();
         AlarmEntity alarmEntity = databaseRepository.getNextActiveAlarmJob(dataStoreRepository);

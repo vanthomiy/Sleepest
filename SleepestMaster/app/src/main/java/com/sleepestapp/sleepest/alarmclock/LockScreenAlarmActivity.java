@@ -26,6 +26,7 @@ import com.sleepestapp.sleepest.model.data.Constants;
  * This Activity shows a view on the lock screen when alarm was fired. The user can
  * cancel or snooze the alarm with buttons.
  */
+@SuppressWarnings("unused")
 public class LockScreenAlarmActivity extends AppCompatActivity {
 
     public SwipeListener swipeListener;
@@ -139,6 +140,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
     /**
      * Class to detect swiping on the lockscreen
      */
+    @SuppressWarnings("unused")
     private class SwipeListener implements View.OnTouchListener {
 
         GestureDetector gestureDetector;
