@@ -102,7 +102,7 @@ class HistoryDayFragment : Fragment() {
         // Initial set up for the daily sleep analysis pie chart.
         pieChartSleepAnalysis = setPieChart(
             DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext)),
-            DesignUtil.colorDarkModeInvert(DesignUtil.checkDarkModeActive(actualContext))
+            DesignUtil.determineHoleColorPieChart(DesignUtil.checkDarkModeActive(actualContext))
         )
         binding.lLSleepAnalysisChartsDaySleepPhasesAmount.addView(pieChartSleepAnalysis)
         pieChartSleepAnalysis.layoutParams.height = TypedValue.applyDimension(
@@ -150,7 +150,7 @@ class HistoryDayFragment : Fragment() {
         updatePieChart(
             pieChartSleepAnalysis,
             DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext)),
-            DesignUtil.colorDarkModeInvert(DesignUtil.checkDarkModeActive(actualContext))
+            DesignUtil.determineHoleColorPieChart(DesignUtil.checkDarkModeActive(actualContext))
         )
         pieChartSleepAnalysis.invalidate()
 
@@ -513,20 +513,20 @@ class HistoryDayFragment : Fragment() {
     }
 
     /**  Function for creating a PieChart for the first time. */
-    private fun setPieChart(colorDarkMode: Int, colorDarkModeInvert: Int): PieChart {
+    private fun setPieChart(colorDarkMode: Int, holeColorPieChart: Int): PieChart {
         val chart = PieChart(actualContext)
         val data = generateDataPieChart()
         val pieDataSet = PieDataSet(data.first, "")
-        visualSetUpPieChart(chart, pieDataSet, data.second, colorDarkMode, colorDarkModeInvert)
+        visualSetUpPieChart(chart, pieDataSet, data.second, colorDarkMode, holeColorPieChart)
         chart.data = PieData(pieDataSet)
         return chart
     }
 
     /**  Function for updating a BarChart for the first time. */
-    private fun updatePieChart(chart: PieChart, colorDarkMode: Int, colorDarkModeInvert: Int) {
+    private fun updatePieChart(chart: PieChart, colorDarkMode: Int, holeColorPieChart: Int) {
         val data = generateDataPieChart()
         val pieDataSet = PieDataSet(data.first, "")
-        visualSetUpPieChart(chart, pieDataSet, data.second, colorDarkMode, colorDarkModeInvert)
+        visualSetUpPieChart(chart, pieDataSet, data.second, colorDarkMode, holeColorPieChart)
         chart.data = PieData(pieDataSet)
         chart.notifyDataSetChanged()
     }
@@ -539,7 +539,7 @@ class HistoryDayFragment : Fragment() {
         pieDataSet: PieDataSet,
         sleepTypes: BooleanArray,
         colorDarkMode: Int,
-        colorDarkModeInvert: Int
+        holeColorPieChart: Int
     ) {
         val listColors = ArrayList<Int>()
         //sleepTypes[0] = awake, sleepTypes[1] = sleep, sleepTypes[2] = light, sleepTypes[3] = deep, sleepTypes[4] = rem
@@ -565,7 +565,7 @@ class HistoryDayFragment : Fragment() {
 
         chart.setCenterTextColor(colorDarkMode)
         chart.isDrawHoleEnabled = true
-        chart.setHoleColor(colorDarkModeInvert)
+        chart.setHoleColor(holeColorPieChart)
         //chart.setEntryLabelColor(viewModel.checkDarkMode())
 
         //chart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
