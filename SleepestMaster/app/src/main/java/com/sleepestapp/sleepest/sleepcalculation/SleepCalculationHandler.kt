@@ -575,7 +575,7 @@ class SleepCalculationHandler(val context: Context) {
             if (sleepSessionEntity.sleepTimes.sleepTimeEnd == 0 && sleepSessionEntity.sleepTimes.sleepTimeStart == 0){
 
                 sleepSessionEntity.sleepTimes.sleepTimeStart = sleepApiRawDataEntity.first().timestampSeconds
-                sleepSessionEntity.sleepTimes.sleepTimeEnd = sleepApiRawDataEntity.timestampSeconds
+                sleepSessionEntity.sleepTimes.sleepTimeEnd = sleepApiRawDataEntity.last().timestampSeconds
             }
 
             // now we are also recalculating the default light and mobile position over the last week
