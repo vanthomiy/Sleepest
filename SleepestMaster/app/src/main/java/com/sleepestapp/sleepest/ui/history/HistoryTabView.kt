@@ -65,7 +65,10 @@ class HistoryTabView : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View
+        , savedInstanceState: Bundle?
+    ) {
         adapter = HistoryTabViewAdapter(this)
         viewPager = binding.pager
         viewPager.adapter = adapter
@@ -207,7 +210,9 @@ class HistoryTabView : Fragment() {
     /**
      * Updates the currently displayed date at the TabView.
      */
-    fun updateDateInformation(range: Int) {
+    fun updateDateInformation(
+        range: Int
+    ) {
         when (range) {
             0 -> tVActualDayTabView.text = createCalendarDayInformation()
             1 -> tVActualDayTabView.text = createCalendarWeekInformation()
@@ -271,7 +276,9 @@ class HistoryTabView : Fragment() {
     /**
      * Auxiliary function for determining the range of a week in order to display its border dates.
      */
-    private fun getWeekRange(date: LocalDate) : String {
+    private fun getWeekRange(
+        date: LocalDate
+    ) : String {
         val sundayOfWeek : LocalDate = when (date.dayOfWeek.value) {
             1 -> date.plusDays(6L) // Monday
             2 -> date.plusDays(5L) // Tuesday
