@@ -6,6 +6,8 @@ public class SmileySelectorUtil {
     private static final int smileySleep = 0x1F634;
     private static final int smileyTime = 0x231B;
     private static final int smileyLowActivity = 0x1F949;
+    private static final int smileyAlarmClock = 0x23F0;
+    private static final int smileyHeart = 0x2764;
     private static final int smileyMediumActivity = 0x1F948;
     private static final int smileyHighActivity = 0x1F947;
     private static final int smileyIteration = 0x1F536;
@@ -34,6 +36,13 @@ public class SmileySelectorUtil {
             case 3: return new String(Character.toChars(smileyHighActivity));
         }
         return "";
+    }
+    public static String getSmileyAlarmClock() {
+        return new String(Character.toChars(smileyAlarmClock));
+    }
+
+    public static String getSmileyHeart() {
+        return new String(Character.toChars(smileyHeart));
     }
 
     public static String getSmileyIteration() {
