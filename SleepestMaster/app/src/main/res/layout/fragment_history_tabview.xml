@@ -51,7 +51,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:visibility="@{historyTabView.actualExpand == 0 ? historyTabView.visibleState:historyTabView.goneState, default=gone}">
-            <fragment
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/fcv0"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"

@@ -228,19 +228,11 @@ class SleepCalculationHandler(val context: Context) {
         val id =
             UserSleepSessionEntity.getIdByTimeStamp(timestamp)
 
-        val sessionAvailable = dataBaseRepository.checkIfUserSessionIsDefinedById(id)
+        val sessionAvailable = dataBaseRepository.getSleepSessionById(id).first().firstOrNull()
 
-        var endTime = if(sessionAvailable) {
-            dataBaseRepository.getOrCreateSleepSessionById(id).sleepTimes.sleepTimeEnd
-        }
-        else
-            dataStoreRepository.getSleepTimeEnd()
+        var endTime = sessionAvailable?.sleepTimes?.possibleSleepTimeEnd ?: dataStoreRepository.getSleepTimeEnd()
 
-        var startTime = if(sessionAvailable){
-            dataBaseRepository.getOrCreateSleepSessionById(id).sleepTimes.sleepTimeStart
-        }
-        else
-            dataStoreRepository.getSleepTimeBegin()
+        var startTime = sessionAvailable?.sleepTimes?.possibleSleepTimeStart ?: dataStoreRepository.getSleepTimeBegin()
 
         if(startTime !in 0..86399){
             startTime = dataStoreRepository.getSleepTimeEnd()
@@ -249,7 +241,6 @@ class SleepCalculationHandler(val context: Context) {
         if(endTime !in 0..86399){
             endTime = dataStoreRepository.getSleepTimeEnd()
         }
-
 
         val sleepApiRawDataEntity =
             dataBaseRepository.getSleepApiRawDataFromDate(date, endTime, startTime).first()
@@ -400,20 +391,11 @@ class SleepCalculationHandler(val context: Context) {
         val id =
             UserSleepSessionEntity.getIdByTimeStamp(timestamp)
 
-        val sessionAvailable = dataBaseRepository.checkIfUserSessionIsDefinedById(id)
         val sleepSessionEntity = dataBaseRepository.getOrCreateSleepSessionById(id)
 
-        var startTime = if(sessionAvailable){
-            dataBaseRepository.getOrCreateSleepSessionById(id).sleepTimes.sleepTimeStart
-        }
-        else
-            dataStoreRepository.getSleepTimeBegin()
+        var startTime = sleepSessionEntity.sleepTimes.possibleSleepTimeStart ?: dataStoreRepository.getSleepTimeBegin()
 
-        var endTime = if(sessionAvailable) {
-            dataBaseRepository.getOrCreateSleepSessionById(id).sleepTimes.sleepTimeEnd
-        }
-        else
-            dataStoreRepository.getSleepTimeEnd()
+        var endTime = sleepSessionEntity.sleepTimes.possibleSleepTimeEnd ?: dataStoreRepository.getSleepTimeEnd()
 
         if(startTime !in 0..86399){
             startTime = dataStoreRepository.getSleepTimeEnd()
@@ -777,12 +759,12 @@ class SleepCalculationHandler(val context: Context) {
         }
         // remove after
         if (newEndTime){
-
-            val sleptLonger = (endTimeEpoch > sessionEntity.sleepTimes.sleepTimeEnd)
+            val possibleEndTime = sessionEntity.sleepTimes.sleepTimeEnd
+            val sleptLonger = (endTimeEpoch > possibleEndTime)
 
             if(sleptLonger){
                 // get all api data in between the sleep
-                val sleepDataAfter = dataBaseRepository.getSleepApiRawDataBetweenTimestamps(sessionEntity.sleepTimes.sleepTimeEnd, endTimeEpoch).first()
+                val sleepDataAfter = dataBaseRepository.getSleepApiRawDataBetweenTimestamps(possibleEndTime, endTimeEpoch).first()
 
                 // Check if a old sleep state is now in between these times and retrieve it
                 sleepDataAfter?.forEach { sleepData ->
@@ -793,7 +775,7 @@ class SleepCalculationHandler(val context: Context) {
             }
             else{
                 // get all api data in between the sleep
-                val sleepDataAfter = dataBaseRepository.getSleepApiRawDataBetweenTimestamps(endTimeEpoch, sessionEntity.sleepTimes.sleepTimeEnd).first()
+                val sleepDataAfter = dataBaseRepository.getSleepApiRawDataBetweenTimestamps(endTimeEpoch, possibleEndTime).first()
 
                 // Check if a old sleep state is now in between these times and retrieve it
                 sleepDataAfter?.forEach { sleepData ->

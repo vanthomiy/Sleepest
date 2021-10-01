@@ -26,6 +26,7 @@ buildscript {
 allprojects {
     repositories {
         google()
+        //noinspection JcenterRepositoryObsolete
         jcenter()
         maven { url "https://jitpack.io" }
     }
