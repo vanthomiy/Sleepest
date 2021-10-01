@@ -7,6 +7,7 @@ import com.sleepestapp.sleepest.MainApplication;
 import com.sleepestapp.sleepest.model.data.Constants;
 import com.sleepestapp.sleepest.storage.DataStoreRepository;
 import com.sleepestapp.sleepest.storage.DatabaseRepository;
+import com.sleepestapp.sleepest.storage.db.AlarmEntity;
 
 import java.time.LocalTime;
 
@@ -26,20 +27,22 @@ public class SleepUtil {
         DatabaseRepository databaseRepository = ((MainApplication)context.getApplicationContext()).getDataBaseRepository();
         DataStoreRepository dataStoreRepository = DataStoreRepository.Companion.getRepo(context.getApplicationContext());
 
+        AlarmEntity nextAlarm = databaseRepository.getNextActiveAlarmJob(dataStoreRepository);
+
         //Check if AlarmEntity is not null and the user is interacting on device
-        if ((databaseRepository.getNextActiveAlarmJob(dataStoreRepository) != null) && powerManager.isInteractive()) {
+        if ((nextAlarm != null) && powerManager.isInteractive()) {
 
             //Check if midnight was reached or not for calculating time difference
-            if (databaseRepository.getNextActiveAlarmJob(dataStoreRepository).getWakeupEarly() >= dataStoreRepository.getSleepTimeBeginJob()) {
-                difference = databaseRepository.getNextActiveAlarmJob(dataStoreRepository).getWakeupLate() - LocalTime.now().toSecondOfDay();
+            if (nextAlarm.getWakeupEarly() >= dataStoreRepository.getSleepTimeBeginJob()) {
+                difference = nextAlarm.getWakeupLate() - LocalTime.now().toSecondOfDay();
             } else {
-                difference = Constants.DAY_IN_SECONDS - LocalTime.now().toSecondOfDay() + databaseRepository.getNextActiveAlarmJob(dataStoreRepository).getWakeupLate();
+                difference = Constants.DAY_IN_SECONDS - LocalTime.now().toSecondOfDay() + nextAlarm.getWakeupLate();
             }
         } else {
             return false;
         }
 
         //Check if difference is less then sleep time
-        return difference <= databaseRepository.getNextActiveAlarmJob(dataStoreRepository).getSleepDuration();
+        return difference <= nextAlarm.getSleepDuration();
     }
 }

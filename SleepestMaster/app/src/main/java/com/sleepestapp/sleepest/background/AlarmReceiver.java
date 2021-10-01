@@ -22,6 +22,7 @@ import com.sleepestapp.sleepest.model.data.NotificationUsage;
 import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler;
 import com.sleepestapp.sleepest.storage.DataStoreRepository;
 import com.sleepestapp.sleepest.storage.DatabaseRepository;
+import com.sleepestapp.sleepest.storage.db.AlarmEntity;
 import com.sleepestapp.sleepest.util.TimeConverterUtil;
 //import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler;
 
@@ -59,7 +60,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case DISABLE_ALARM:
                     //Disables the next active alarm temporary
-                BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, (databaseRepository.getNextActiveAlarmJob(dataStoreRepository) == null) || (databaseRepository.getNextActiveAlarmJob(dataStoreRepository).getTempDisabled()));
+                AlarmEntity nextAlarm = databaseRepository.getNextActiveAlarmJob(dataStoreRepository);
+                BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, nextAlarm == null || (nextAlarm.getTempDisabled()));
                 break;
             case NOT_SLEEPING:
                 //Button not Sleeping, only in the first 2 hours of sleep
