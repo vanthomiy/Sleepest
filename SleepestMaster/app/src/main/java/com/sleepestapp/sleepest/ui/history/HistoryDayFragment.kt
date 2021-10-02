@@ -47,10 +47,14 @@ class HistoryDayFragment : Fragment() {
 
     private val actualContext: Context by lazy { requireActivity().applicationContext }
 
-    /** ViewModel for the main History Fragment. Contains calculations for the weekly and monthly charts. */
+    /**
+     * Base ViewModel which contains relevant information for the whole history fragment.
+     */
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(HistoryViewModel::class.java) }
 
-    /** ViewModel for the daily calculations. */
+    /**
+     * ViewModel for the daily sleep analysis.
+     */
     private val viewModelDay by lazy { ViewModelProvider(requireActivity(), factory).get(HistoryDayViewModel::class.java) }
 
     var factory = object : ViewModelProvider.Factory {
@@ -61,13 +65,20 @@ class HistoryDayFragment : Fragment() {
             ) as T
         }
     }
-    /** Binding for daily history analysis and the corresponding fragment_history_day.xml. */
+
+    /**
+     * Binding for daily history analysis fragment.
+     */
     private lateinit var binding: FragmentHistoryDayBinding
 
-    /** [PieChart] for the daily sleep analysis. */
+    /**
+     * [PieChart] for the daily sleep analysis.
+     */
     private lateinit var pieChartSleepAnalysis: PieChart
 
-    /** [BarChart] for the daily sleep analysis. */
+    /**
+     * [BarChart] for the daily sleep analysis.
+     */
     private lateinit var barChartSleepAnalysis: BarChart
 
     override fun onCreateView(
@@ -76,7 +87,7 @@ class HistoryDayFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        // Listener for changes in the analysis date. If user changes the day for the diagrams.
+        // Listener for changes in the analysis date.
         viewModel.analysisDate.observe(viewLifecycleOwner) {
             viewModelDay.getSleepSessionId(it)
             updateCharts()
@@ -113,10 +124,12 @@ class HistoryDayFragment : Fragment() {
         ).toInt()
         pieChartSleepAnalysis.invalidate()
 
+        // Listener for changes in the sleepMoodSmiley
         viewModelDay.sleepMoodSmiley.observe(viewLifecycleOwner) {
             saveSleepRatingDaily()
         }
 
+        // Listener for new data which was extracted from the database.
         viewModel.dataReceived.observe(viewLifecycleOwner) {
             if (viewModel.dataReceived.value == true && !viewModelDay.sleepRatingUpdate) {
                 updateCharts()
@@ -125,6 +138,7 @@ class HistoryDayFragment : Fragment() {
             viewModelDay.sleepRatingUpdate = false
         }
 
+        // Listener for the actual information button which was selected.
         viewModelDay.actualExpand.observe(viewLifecycleOwner) {
             TransitionManager.beginDelayedTransition(binding.lLLinearAnimationLayoutDailyAnalysis)
         }
@@ -132,7 +146,10 @@ class HistoryDayFragment : Fragment() {
         return binding.root
     }
 
-    /** Updates all existing charts on the fragment. */
+    /**
+     * Calls all update functions for the charts in this fragment.
+     * [updateBarChart], [updatePieChart],  [updateActivitySmiley].
+     */
     private fun updateCharts() {
         updateBarChart(
             barChartSleepAnalysis,
@@ -151,7 +168,8 @@ class HistoryDayFragment : Fragment() {
     }
 
     /**
-     * Maintains the visibility of the diagrams in the day fragment.
+     * Maintains the visibility settings of the daily sleep analysis.
+     * If no data is to be shown, the diagrams disappear and an information will appear.
      */
     private fun maintainVisibilityDayHistory(
         setVisibility: Boolean
@@ -170,8 +188,12 @@ class HistoryDayFragment : Fragment() {
         }
     }
 
-    /** Save users input of the [UserSleepRating.moodAfterSleep] into database. */
+    /**
+     * Save user input for the [UserSleepRating.moodAfterSleep] into the database.
+     * Alters the current value of this day in the [viewModel.sleepAnalysisData].
+     */
     private fun saveSleepRatingDaily() {
+        // Save to database.
         scope.launch {
             viewModelDay.sleepMoodSmiley.value?.let {
                 viewModel.dataBaseRepository.updateMoodAfterSleep(
@@ -181,6 +203,7 @@ class HistoryDayFragment : Fragment() {
             }
         }
 
+        // Alter value in the currently used sleepAnalysisData.
         viewModel.sleepAnalysisData.firstOrNull {
             x -> x.sleepSessionId == viewModelDay.sessionId
         }?.let { session ->
@@ -190,7 +213,9 @@ class HistoryDayFragment : Fragment() {
         }
     }
 
-    /** Formats sleep duration times for [setTimeStamps]. */
+    /**
+     * Auxiliary function for [setTimeStamps] which formats the strings for time information.
+     */
     private fun generateSleepValueInformation(
         time: Int
     ): String {
@@ -200,7 +225,9 @@ class HistoryDayFragment : Fragment() {
                 "min"
     }
 
-    /** Tells the user the exact duration for the selected sleep session. */
+    /**
+     * Tells the user the exact fall asleep time and wakeup time which is to be shown on top of the [barChartSleepAnalysis].
+     */
     private fun setTimeStamps() {
 
         // Initial setting necessary in case asynchronous demand of the sleep session (sleepValues) isn`t ready.
@@ -281,8 +308,9 @@ class HistoryDayFragment : Fragment() {
         }
     }
 
-    /** Auxiliary function for generating data for the BarChart.
-     * Analysis the sleepValues for the current date and creates BarEntries for every single minute of the night.
+    /**
+     * Auxiliary function for generating entries for the [barChartSleepAnalysis].
+     * Analysis the [viewModel.sleepAnalysisData] for the currently selected date and creates a [BarEntry] in a timely fitting manner.
      */
     fun generateDataBarChart(): ArrayList<BarEntry> {
         val entries = ArrayList<BarEntry>()
@@ -329,7 +357,10 @@ class HistoryDayFragment : Fragment() {
         return entries
     }
 
-    /** Auxiliary function for generating a dataset for a BarChart. */
+    /**
+     * Auxiliary function for generating a [BarDataSet] for the [barChartSleepAnalysis].
+     * Adds fitting colors for every [BarEntry] of the diagram.
+     */
     private fun generateBarDataSet(
         barEntries: ArrayList<BarEntry>
     ) : BarDataSet {
@@ -353,7 +384,9 @@ class HistoryDayFragment : Fragment() {
         return barDataSet
     }
 
-    /** Auxiliary function to determine the height of a BarChart. */
+    /**
+     * Auxiliary function to determine the height of the [barChartSleepAnalysis].
+     * */
     private fun getBarChartYAxisProportion(
         entries: ArrayList<BarEntry>
     ) : Float {
@@ -366,7 +399,9 @@ class HistoryDayFragment : Fragment() {
         return  size
     }
 
-    /**  Function for creating a BarChart for hte first time. */
+    /**
+     * Function for creating a new [BarChart] entity.
+     * */
     fun setBarChart(
         colorDarkMode: Int
     ): BarChart {
@@ -378,7 +413,9 @@ class HistoryDayFragment : Fragment() {
         return barChart
     }
 
-    /**  Function for updating an existing BarChart. */
+    /**
+     * Function for updating an existing [BarChart] entity.
+     * */
     private fun updateBarChart(
         barChart: BarChart,
         colorDarkMode: Int
@@ -391,36 +428,16 @@ class HistoryDayFragment : Fragment() {
         visualSetUpBarChart(barChart, diagramData, colorDarkMode)
     }
 
-    /** Auxiliary function for setting up or updating a BarChart.
-     * Sets up the visual settings.
+    /**
+     * Auxiliary function for setting up or updating the visual settings of a [BarChart].
      */
     private fun visualSetUpBarChart(
         barChart: BarChart,
         diagramData: ArrayList<BarEntry>,
         colorDarkMode: Int
     ) {
-        barChart.description.isEnabled = false
-        barChart.data.isHighlightEnabled = false
 
-        barChart.xAxis.setDrawGridLines(false)
-        barChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
-
-        barChart.barData.barWidth = 1.1f
-        barChart.xAxis.axisMaximum = diagramData.size.toFloat()
-
-        barChart.setFitBars(true)
-
-        barChart.xAxis.axisMinimum = 0f
-        barChart.xAxis.setDrawLabels(false)
-
-        // set bar label
-        barChart.legend.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
-        barChart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
-        barChart.legend.orientation = Legend.LegendOrientation.HORIZONTAL
-        barChart.legend.setDrawInside(false)
-        barChart.legend.textSize = 12f
-        barChart.legend.textColor = colorDarkMode
-
+        val proportion = getBarChartYAxisProportion(diagramData)
         val legendEntryList = mutableListOf<LegendEntry>()
         val sleepStates = SleepState.getListOfSleepStates()
         sleepStates.forEach {
@@ -436,35 +453,52 @@ class HistoryDayFragment : Fragment() {
             )
         }
 
+        barChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+        barChart.xAxis.axisMinimum = 0f
+        barChart.xAxis.axisMaximum = diagramData.size.toFloat()
+        barChart.xAxis.setDrawGridLines(false)
+        barChart.xAxis.setDrawLabels(false)
+
+        barChart.legend.textSize = 12f
+        barChart.legend.textColor = colorDarkMode
+        barChart.legend.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+        barChart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
+        barChart.legend.orientation = Legend.LegendOrientation.HORIZONTAL
+        barChart.legend.setDrawInside(false)
         barChart.legend.setCustom(legendEntryList)
 
-        barChart.isDragEnabled = false
-
-        //Y-axis
         barChart.axisRight.isEnabled = true
+        barChart.axisRight.spaceTop = 1f
         barChart.axisRight.axisMinimum = 0f
+        barChart.axisRight.axisMaximum = proportion
         barChart.axisRight.labelCount = 0
         barChart.axisRight.setDrawGridLines(false)
         barChart.axisRight.setDrawLabels(false)
 
+        barChart.axisLeft.isEnabled = true
         barChart.axisLeft.spaceTop = 1f
         barChart.axisLeft.axisMinimum = 0f
-        barChart.axisLeft.labelCount = 0
+        barChart.axisLeft.axisMaximum = proportion
+        barChart.axisLeft.labelCount = proportion.toInt()
         barChart.axisLeft.setDrawGridLines(false)
         barChart.axisLeft.setDrawLabels(false)
 
-        val proportion = getBarChartYAxisProportion(diagramData)
-        barChart.axisRight.axisMaximum = proportion
-        barChart.axisLeft.axisMaximum = proportion
-        barChart.axisLeft.labelCount = proportion.toInt()
-
+        barChart.description.isEnabled = false
+        barChart.data.isHighlightEnabled = false
+        barChart.barData.barWidth = 1.1f
+        barChart.isDragEnabled = false
+        barChart.isDoubleTapToZoomEnabled = false
+        barChart.setFitBars(true)
         barChart.setScaleEnabled(false)
         barChart.setTouchEnabled(false)
         barChart.setPinchZoom(false)
-        barChart.isDoubleTapToZoomEnabled = false
+
     }
 
-    /** Generates the data needed for the [PieChart]. */
+    /**
+     * Auxiliary function for generating entries for the [pieChartSleepAnalysis].
+     * Analysis the [viewModel.sleepAnalysisData] for the currently selected date and creates a [PieEntry] for each sleep phase.
+     * */
     private fun generateDataPieChart() : Pair<ArrayList<PieEntry>, BooleanArray> {
         val entries = ArrayList<PieEntry>()
         val sleepTypes = booleanArrayOf(false, false, false, false, false)  //awake, sleep, light, deep, rem
@@ -511,7 +545,9 @@ class HistoryDayFragment : Fragment() {
         return Pair(entries, sleepTypes)
     }
 
-    /**  Function for creating a PieChart for the first time. */
+    /**
+     * Function for creating a new [PieChart] entity.
+     */
     private fun setPieChart(
         colorDarkMode: Int,
         holeColorPieChart: Int
@@ -524,7 +560,9 @@ class HistoryDayFragment : Fragment() {
         return chart
     }
 
-    /**  Function for updating a BarChart for the first time. */
+    /**
+     * Function for updating an existing [PieChart] entity.
+     */
     private fun updatePieChart(
         chart: PieChart,
         colorDarkMode: Int,
@@ -537,8 +575,8 @@ class HistoryDayFragment : Fragment() {
         chart.notifyDataSetChanged()
     }
 
-    /** Auxiliary function for setting up or updating a PieChart.
-     * Sets up the visual settings.
+    /**
+     * Auxiliary function for setting up or updating the visual settings of a [PieChart].
      */
     private fun visualSetUpPieChart(
         chart: PieChart,
@@ -569,22 +607,23 @@ class HistoryDayFragment : Fragment() {
         pieDataSet.colors = listColors
         pieDataSet.setDrawValues(false)
 
-        chart.setCenterTextColor(colorDarkMode)
-        chart.isDrawHoleEnabled = true
-        chart.setHoleColor(holeColorPieChart)
-        //chart.setEntryLabelColor(viewModel.checkDarkMode())
-
         //chart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
         chart.legend.isEnabled = false
         //chart.legend.textColor = viewModel.checkDarkMode()
 
         chart.description.isEnabled = false
+        chart.setCenterTextColor(colorDarkMode)
+        chart.isDrawHoleEnabled = true
+        chart.setHoleColor(holeColorPieChart)
         chart.setTouchEnabled(false)
         chart.animateY(500, Easing.EaseInOutQuad)
+        //chart.setEntryLabelColor(viewModel.checkDarkMode())
     }
 
-    /** Gets the current value of the ActivitySmiley.
-     * Allows to alter the current moodAfterSleep smiley and save it to the database. */
+    /**
+     * Accesses the value of the [ActivityOnDay] from [viewModel.sleepAnalysisData].
+     * Accesses the value of the [UserSleepSessionEntity.userSleepRating.moodAfterSleep] from [viewModel.sleepAnalysisData].
+     */
     private fun updateActivitySmiley() {
         var activityOnDay = 0
 
