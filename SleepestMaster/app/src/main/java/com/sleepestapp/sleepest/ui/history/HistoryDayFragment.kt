@@ -86,7 +86,6 @@ class HistoryDayFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         // Listener for changes in the analysis date.
         viewModel.analysisDate.observe(viewLifecycleOwner) {
             viewModelDay.getSleepSessionId(it)
@@ -100,11 +99,22 @@ class HistoryDayFragment : Fragment() {
         viewModelDay.is24HourFormat = is24HourFormat(actualContext)
 
         // Initial set up for the daily sleep analysis bar chart.
-        barChartSleepAnalysis = setBarChart(DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext)))
-        updateBarChart(barChartSleepAnalysis, DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext)))
+        barChartSleepAnalysis = setBarChart(
+            DesignUtil.colorDarkMode(
+                DesignUtil.checkDarkModeActive(actualContext)
+            )
+        )
+        updateBarChart(
+            barChartSleepAnalysis,
+            DesignUtil.colorDarkMode(
+                DesignUtil.checkDarkModeActive(actualContext)
+            )
+        )
         binding.lLSleepAnalysisChartsDaySleepPhases.addView(barChartSleepAnalysis)
         barChartSleepAnalysis.layoutParams.height = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP, 150F, resources.displayMetrics
+            TypedValue.COMPLEX_UNIT_DIP,
+            150F,
+            resources.displayMetrics
         ).toInt()
         barChartSleepAnalysis.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
         barChartSleepAnalysis.invalidate()
@@ -112,15 +122,23 @@ class HistoryDayFragment : Fragment() {
 
         // Initial set up for the daily sleep analysis pie chart.
         pieChartSleepAnalysis = setPieChart(
-            DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext)),
-            DesignUtil.determineHoleColorPieChart(DesignUtil.checkDarkModeActive(actualContext))
+            DesignUtil.colorDarkMode(
+                DesignUtil.checkDarkModeActive(actualContext)
+            ),
+            DesignUtil.determineHoleColorPieChart(
+                DesignUtil.checkDarkModeActive(actualContext)
+            )
         )
         binding.lLSleepAnalysisChartsDaySleepPhasesAmount.addView(pieChartSleepAnalysis)
         pieChartSleepAnalysis.layoutParams.height = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP, 175F, resources.displayMetrics
+            TypedValue.COMPLEX_UNIT_DIP,
+            175F,
+            resources.displayMetrics
         ).toInt()
         pieChartSleepAnalysis.layoutParams.width = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP, 175F, resources.displayMetrics
+            TypedValue.COMPLEX_UNIT_DIP,
+            175F,
+            resources.displayMetrics
         ).toInt()
         pieChartSleepAnalysis.invalidate()
 

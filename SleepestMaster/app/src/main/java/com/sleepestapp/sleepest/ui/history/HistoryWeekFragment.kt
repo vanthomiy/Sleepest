@@ -25,10 +25,14 @@ class HistoryWeekFragment : Fragment() {
 
     private lateinit var binding: FragmentHistoryWeekBinding
 
-    /** Contains the BarChart for the [HistoryWeekFragment]. */
+    /**
+     * Contains the BarChart for the [HistoryWeekFragment].
+     */
     private lateinit var barChart: BarChart
 
-    /** Contains the LineChart for the [HistoryWeekFragment]. */
+    /**
+     * Contains the LineChart for the [HistoryWeekFragment].
+     */
     private lateinit var activityChart: LineChart
 
 
@@ -37,60 +41,52 @@ class HistoryWeekFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        val height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics)
         binding = FragmentHistoryWeekBinding.inflate(inflater, container, false)
         binding.historyWeekViewModel = viewModelWeek
         binding.lifecycleOwner = this
 
+        // Initial set up for the weekly sleep analysis bar chart.
         barChart = viewModel.setBarChart(
             BarChart(actualContext),
             7,
             getSundayOfWeek(),
-            DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext)
+            DesignUtil.colorDarkMode(
+                DesignUtil.checkDarkModeActive(actualContext)
             )
         )
+        barChart.layoutParams.height = height.toInt()
+        barChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
 
+        // Initial set up for the weekly activity analysis bar chart.
         activityChart = viewModel.setActivityChart(
             LineChart(context),
             7,
             getSundayOfWeek(),
-            DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext)
+            DesignUtil.colorDarkMode(
+                DesignUtil.checkDarkModeActive(actualContext)
             )
         )
+        activityChart.layoutParams.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150F, resources.displayMetrics).toInt()
+        activityChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
 
         binding.lLSleepAnalysisChartsWeekSleepPhases.addView(barChart)
         binding.lLActivityAnalysisChartWeek.addView(activityChart)
 
-        val height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics)
-        barChart.layoutParams.height = height.toInt()
-        barChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
         barChart.invalidate()
-
-        activityChart.layoutParams.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150F, resources.displayMetrics).toInt()
-        activityChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
         activityChart.invalidate()
 
+        // Listener for changes in the analysis date.
         viewModel.analysisDate.observe(viewLifecycleOwner) {
-            viewModel.updateBarChart(
-                barChart,
-                7,
-                getSundayOfWeek(),
-                DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext))
-            )
-            barChart.invalidate()
-
-            viewModel.updateActivityChart(
-                activityChart,
-                7,
-                getSundayOfWeek(),
-                DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext))
-            )
-            activityChart.invalidate()
+            updateCharts()
         }
 
+        // Listener for the actual information button which was selected.
         viewModelWeek.actualExpand.observe(viewLifecycleOwner) {
             TransitionManager.beginDelayedTransition(binding.lLLinearAnimationLayoutWeeklyAnalysis)
         }
 
+        // Listener for changes of the visibility manager
         viewModel.visibilityManagerWeekDiagrams.observe(viewLifecycleOwner) {
             viewModel.visibilityManagerWeekDiagrams.value?.let { visibility ->
                 maintainVisibilityWeekHistory(visibility)
@@ -100,7 +96,30 @@ class HistoryWeekFragment : Fragment() {
         return binding.root
     }
 
-    /** Used to find the sunday of the current weak. */
+    /**
+     * Calls all update functions for the charts in this fragment.
+     */
+    private fun updateCharts() {
+        viewModel.updateBarChart(
+            barChart,
+            7,
+            getSundayOfWeek(),
+            DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext))
+        )
+        barChart.invalidate()
+
+        viewModel.updateActivityChart(
+            activityChart,
+            7,
+            getSundayOfWeek(),
+            DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext))
+        )
+        activityChart.invalidate()
+    }
+
+    /**
+     * Determines the [LocalDate] of the Sunday of the current calendar week.
+     */
     private fun getSundayOfWeek(): LocalDate {
         viewModel.analysisDate.value?.let {
             val dayOfWeek = it.dayOfWeek
@@ -120,7 +139,8 @@ class HistoryWeekFragment : Fragment() {
     }
 
     /**
-     * Maintains the visibility of the diagrams in the day fragment.
+     * Maintains the visibility settings of the weekly sleep analysis.
+     * If no data is to be shown, the diagrams disappear and an information will appear.
      */
     private fun maintainVisibilityWeekHistory(
         setVisibility: Boolean
