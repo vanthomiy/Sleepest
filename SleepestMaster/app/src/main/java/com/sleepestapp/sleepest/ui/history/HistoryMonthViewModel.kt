@@ -4,11 +4,15 @@ import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-
 class HistoryMonthViewModel : ViewModel() {
 
+    /**
+     * Maintains the visibility of the information buttons and its text fields.
+     */
     val actualExpand = MutableLiveData(-1)
+
     val goneState = MutableLiveData(View.GONE)
+
     val visibleState = MutableLiveData(View.VISIBLE)
 
     fun onInfoClicked(

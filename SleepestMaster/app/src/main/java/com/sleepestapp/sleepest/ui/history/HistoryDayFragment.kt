@@ -425,9 +425,20 @@ class HistoryDayFragment : Fragment() {
     ): BarChart {
         val barChart = BarChart(context)
         val diagramData = generateDataBarChart()
-        val barData = BarData(generateBarDataSet(diagramData))
+        val barData = BarData(
+            generateBarDataSet(
+                diagramData
+            )
+        )
+
         barChart.data = barData
-        visualSetUpBarChart(barChart, diagramData, colorDarkMode)
+
+        visualSetUpBarChart(
+            barChart,
+            diagramData,
+            colorDarkMode
+        )
+
         return barChart
     }
 
@@ -439,11 +450,21 @@ class HistoryDayFragment : Fragment() {
         colorDarkMode: Int
     ) {
         val diagramData = generateDataBarChart()
-        val barData = BarData(generateBarDataSet(diagramData))
+        val barData = BarData(
+            generateBarDataSet(
+                diagramData
+            )
+        )
+
         barChart.data = barData
+
         barChart.notifyDataSetChanged()
 
-        visualSetUpBarChart(barChart, diagramData, colorDarkMode)
+        visualSetUpBarChart(
+            barChart,
+            diagramData,
+            colorDarkMode
+        )
     }
 
     /**
@@ -454,7 +475,6 @@ class HistoryDayFragment : Fragment() {
         diagramData: ArrayList<BarEntry>,
         colorDarkMode: Int
     ) {
-
         val proportion = getBarChartYAxisProportion(diagramData)
         val legendEntryList = mutableListOf<LegendEntry>()
         val sleepStates = SleepState.getListOfSleepStates()
@@ -494,7 +514,6 @@ class HistoryDayFragment : Fragment() {
         barChart.axisRight.setDrawLabels(false)
 
         barChart.axisLeft.isEnabled = true
-        barChart.axisLeft.spaceTop = 1f
         barChart.axisLeft.axisMinimum = 0f
         barChart.axisLeft.axisMaximum = proportion
         barChart.axisLeft.labelCount = proportion.toInt()
