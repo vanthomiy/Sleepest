@@ -142,8 +142,10 @@ class BackgroundAlarmTimeHandler(val context: Context) {
             //Alarm is already active and user is already in sleep time
             if (checkInSleepTime() && checkAlarmActive() && checkForegroundStatus() && !checkAlarmFired() && !checkAlarmTempDisabled() && !listEmpty) {
 
+                val alarmCycleState = AlarmCycleState(context)
+
                 //User changes first wakeup time of the alarm
-                if (getFirstWakeup() != firstWakeupTemp) {
+                if (getFirstWakeup() != firstWakeupTemp && alarmCycleState.getState() == AlarmCycleStates.BETWEEN_SLEEPTIME_START_AND_CALCULATION) {
                     val calenderCalculation = TimeConverterUtil.getAlarmDate(getFirstWakeup() - Constants.CALCULATION_START_DIFFERENCE)
                     AlarmReceiver.startAlarmManager(
                         calenderCalculation[Calendar.DAY_OF_WEEK],
@@ -151,6 +153,9 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                         calenderCalculation[Calendar.MINUTE],
                         context,
                         AlarmReceiverUsage.START_WORKMANAGER_CALCULATION)
+                } else if (getFirstWakeup() != firstWakeupTemp && alarmCycleState.getState() == AlarmCycleStates.BETWEEN_CALCULATION_AND_FIRST_WAKEUP ||
+                    alarmCycleState.getState() == AlarmCycleStates.BETWEEN_FIRST_AND_LAST_WAKEUP) {
+                    WorkmanagerCalculation.startPeriodicWorkmanager(Constants.WORK_MANAGER_CALCULATION_DURATION, context)
                 }
 
                 //User changes the last wakeup time of the alarm
@@ -292,14 +297,6 @@ class BackgroundAlarmTimeHandler(val context: Context) {
     }
 
     private fun isUserInApp() : Boolean {
-        /*val activityManager = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
-        val allTasks = activityManager.appTasks
-        if (allTasks.size > 0 && allTasks.get(0).taskInfo.baseActivity != null) {
-
-            if (allTasks[0].taskInfo.baseActivity!!.packageName == "com.sleepestapp.sleepest") {
-                return true
-            }
-        }*/
 
         val activityManager = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
         val processInfo = activityManager.runningAppProcesses
@@ -311,23 +308,6 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                 }
             }
         }
-
-        /*ActivityManager.RunningAppProcessInfo appProcessInfo = new ActivityManager.RunningAppProcessInfo();
-        ActivityManager.getMyMemoryState(appProcessInfo);
-        return (appProcessInfo.importance == IMPORTANCE_FOREGROUND || appProcessInfo.importance == IMPORTANCE_VISIBLE)
-
-
-
-        val am = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
-
-        val tasks = am.getRunningTasks(1)
-        val task = tasks[0] // current task
-        val rootActivity = task.baseActivity //current activity
-        val currentPackageName = rootActivity!!.packageName //current packagename
-
-        if (currentPackageName == "com.sleepestapp.sleepest") {
-            return true
-        }*/
 
         return false
     }

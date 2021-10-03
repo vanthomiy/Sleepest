@@ -25,6 +25,7 @@ import com.sleepestapp.sleepest.databinding.ActivityMainBinding
 import com.sleepestapp.sleepest.model.data.AlarmReceiverUsage
 import com.sleepestapp.sleepest.model.data.SleepSleepChangeFrom
 import com.sleepestapp.sleepest.model.data.export.ImportUtil
+import com.sleepestapp.sleepest.onboarding.OnboardingActivity
 import com.sleepestapp.sleepest.ui.alarms.AlarmsFragment
 import com.sleepestapp.sleepest.ui.history.HistoryTabView
 import com.sleepestapp.sleepest.ui.settings.SettingsFragment
@@ -170,6 +171,13 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         lifecycleScope.launch {
+
+            if (!viewModel.dataStoreRepository.tutorialStatusFlow.first().tutorialCompleted) {
+                startTutorial()
+            } else {
+                checkPermissions()
+            }
+
             val settings = viewModel.dataStoreRepository.settingsDataFlow.first()
 
             if (!settings.designAutoDarkMode && (AppCompatDelegate.getDefaultNightMode() != if (settings.designDarkMode) AppCompatDelegate.MODE_NIGHT_YES
@@ -220,18 +228,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        // check permission
-        if (!PermissionsUtil.isActivityRecognitionPermissionGranted(applicationContext)) {
-            requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
-        }
 
-        if(!PermissionsUtil.isOverlayPermissionGranted(applicationContext)) {
-            PermissionsUtil.setOverlayPermission(this@MainActivity)
-        }
-
-        if (!PermissionsUtil.isNotificationPolicyAccessGranted(applicationContext)) {
-            PermissionsUtil.setOverlayPermission(this@MainActivity)
-        }
 
         when (intent?.action) {
             Intent.ACTION_SEND -> {
@@ -306,6 +303,28 @@ class MainActivity : AppCompatActivity() {
         val ed = pref.edit()
         ed.putString("state", alarmCycleState.getState().toString())
         ed.apply()
+    }
+
+    private fun startTutorial() {
+        val intent = Intent(this, OnboardingActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun checkPermissions() {
+        // check permission
+        if (!PermissionsUtil.isActivityRecognitionPermissionGranted(applicationContext)) {
+            requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
+        }
+
+        if(!PermissionsUtil.isOverlayPermissionGranted(applicationContext)) {
+            PermissionsUtil.setOverlayPermission(this@MainActivity)
+        }
+
+        if (!PermissionsUtil.isNotificationPolicyAccessGranted(applicationContext)) {
+            PermissionsUtil.setOverlayPermission(this@MainActivity)
+        }
     }
 
 
