@@ -252,22 +252,21 @@ class SleepCalculationHandler(val context: Context) {
         }
 
         val sleepClassifier = SleepClassifier(context)
-
+        val sleepParam = dataStoreRepository.sleepParameterFlow.first()
         val mobilePosition =
-            if(MobilePosition.getCount(dataStoreRepository.sleepParameterFlow.first().standardMobilePosition) == MobilePosition.UNIDENTIFIED) // create features for ml model
+            if(MobilePosition.getCount(sleepParam.standardMobilePosition) == MobilePosition.UNIDENTIFIED) // create features for ml model
             // call the model
                 sleepClassifier.defineTableBed(sleepApiRawDataEntity)
             else
-                MobilePosition.getCount(dataStoreRepository.sleepParameterFlow.first().standardMobilePosition)
+                MobilePosition.getCount(sleepParam.standardMobilePosition)
 
         val lightConditions =
-            if(LightConditions.getCount(dataStoreRepository.sleepParameterFlow.first().standardLightCondition) == LightConditions.UNIDENTIFIED) // create features for ml model
-            // call the model
+            if(LightConditions.getCount(sleepParam.standardLightCondition) == LightConditions.UNIDENTIFIED) // create features for ml model
                 sleepClassifier.defineLightConditions(sleepApiRawDataEntity, false)
             else
-                LightConditions.getCount(dataStoreRepository.sleepParameterFlow.first().standardLightCondition)
+                LightConditions.getCount(sleepParam.standardLightCondition)
 
-        val mobileUseFrequency = MobileUseFrequency.getCount(dataStoreRepository.sleepParameterFlow.first().mobileUseFrequency)
+        val mobileUseFrequency = MobileUseFrequency.getCount(sleepParam.mobileUseFrequency)
 
 
         // check for each sleep state
@@ -425,22 +424,25 @@ class SleepCalculationHandler(val context: Context) {
         // only when in sleep time and not after it
 
         if(setAlarm || recalculateMobilePosition) {
+
+            val sleepParam = dataStoreRepository.sleepParameterFlow.first()
+
             sleepSessionEntity.mobilePosition =
                 when {
-                    MobilePosition.getCount(dataStoreRepository.sleepParameterFlow.first().standardMobilePosition) == MobilePosition.UNIDENTIFIED // create features for ml model
+                    MobilePosition.getCount(sleepParam.standardMobilePosition) == MobilePosition.UNIDENTIFIED // create features for ml model
                     -> sleepClassifier.defineTableBed(sleepApiRawDataEntity)
-                    sleepSessionEntity.mobilePosition == MobilePosition.UNIDENTIFIED -> MobilePosition.getCount(dataStoreRepository.sleepParameterFlow.first().standardMobilePosition)
+                    sleepSessionEntity.mobilePosition == MobilePosition.UNIDENTIFIED -> MobilePosition.getCount(sleepParam.standardMobilePosition)
                     else -> sleepSessionEntity.mobilePosition
                 }
 
             // only when unidentified
             if(sleepSessionEntity.lightConditions == LightConditions.UNIDENTIFIED){
                 sleepSessionEntity.lightConditions =
-                    if(LightConditions.getCount(dataStoreRepository.sleepParameterFlow.first().standardLightCondition) == LightConditions.UNIDENTIFIED) // create features for ml model
+                    if(LightConditions.getCount(sleepParam.standardLightCondition) == LightConditions.UNIDENTIFIED) // create features for ml model
                     // call the model
                         sleepClassifier.defineLightConditions(sleepApiRawDataEntity, true)
                     else
-                        LightConditions.getCount(dataStoreRepository.sleepParameterFlow.first().standardLightCondition)
+                        LightConditions.getCount(sleepParam.standardLightCondition)
             }
         }
 
@@ -714,6 +716,8 @@ class SleepCalculationHandler(val context: Context) {
     /**
      * Updates the sleep start and end times and [SleepState] of a [UserSleepSessionEntity]
      * This can be done by the user in the History Fragment
+     * TODO(If no data is available in the specific points we could add points manually and
+     * set the sleep state to sleeping)
      */
     suspend fun updateSleepSessionManually(startTimeEpoch: Int, endTimeEpoch: Int, sessionId: Int) {
 
