@@ -61,13 +61,13 @@ class AlarmsViewModel(
      */
     @Suppress("UNUSED_PARAMETER")
     fun onExpandClicked(view: View) {
-        //TransitionManager.beginDelayedTransition(transitionsContainer)
-        expandToggled.value = expandToggled.value == false
 
         actualExpand.value = (if (actualExpand.value == View.GONE) View.VISIBLE else View.GONE)
         rotateState.value = (if (actualExpand.value == View.GONE) 0 else 180)
 
         alarmExpandId.value = (-1)
+
+        expandToggled.value = expandToggled.value == false
     }
 
     /**
@@ -75,7 +75,6 @@ class AlarmsViewModel(
      */
     fun updateExpandChanged(isExpanded : Boolean) {
 
-        //TransitionManager.beginDelayedTransition(transitionsContainer)
         expandToggled.value = expandToggled.value == false
 
         if(isExpanded)
@@ -96,7 +95,6 @@ class AlarmsViewModel(
     @Suppress("UNUSED_PARAMETER")
     fun onAlarmTypeChanged(parent: AdapterView<*>?, selectedItemView: View, art: Int, id: Long)
     {
-
         viewModelScope.launch {
             dataStoreRepository.updateAlarmType(art)
         }
