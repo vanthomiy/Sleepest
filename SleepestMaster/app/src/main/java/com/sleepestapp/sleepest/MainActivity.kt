@@ -36,6 +36,10 @@ import com.sleepestapp.sleepest.util.TimeConverterUtil
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.*
+import android.service.notification.StatusBarNotification
+
+import android.app.NotificationManager
+import com.sleepestapp.sleepest.model.data.Constants
 
 
 class MainActivity : AppCompatActivity() {
@@ -293,16 +297,37 @@ class MainActivity : AppCompatActivity() {
                     false,
                     SleepSleepChangeFrom.SLEEPTIMESTART
                 )
-
             }
-
         }
 
         val alarmCycleState = AlarmCycleState(applicationContext)
-        val pref: SharedPreferences = getSharedPreferences("State", 0)
-        val ed = pref.edit()
+        var pref: SharedPreferences = getSharedPreferences("State", 0)
+        var ed = pref.edit()
         ed.putString("state", alarmCycleState.getState().toString())
         ed.apply()
+
+        val mNotificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        val notifications = mNotificationManager.activeNotifications
+        if (notifications.isEmpty()) {
+            pref = getSharedPreferences("ActiveNotification", 0)
+            ed = pref.edit()
+            ed.putBoolean("foregroundService", false)
+            ed.apply()
+        }
+        for (notification in notifications) {
+            if (notification.id == Constants.FOREGROUND_SERVICE_ID) {
+                pref = getSharedPreferences("ActiveNotification", 0)
+                ed = pref.edit()
+                ed.putBoolean("foregroundService", true)
+                ed.apply()
+                break
+            } else {
+                pref = getSharedPreferences("ActiveNotification", 0)
+                ed = pref.edit()
+                ed.putBoolean("foregroundService", false)
+                ed.apply()
+            }
+        }
     }
 
     private fun startTutorial() {
