@@ -75,13 +75,14 @@ class AlarmsViewModel(
      */
     fun updateExpandChanged(isExpanded : Boolean) {
 
-        expandToggled.value = expandToggled.value == false
 
         if(isExpanded)
         {
             actualExpand.value = (View.GONE)
             rotateState.value = (0)
         }
+
+        expandToggled.value = expandToggled.value == false
 
     }
 
