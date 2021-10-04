@@ -44,7 +44,7 @@ data class UserSleepSessionEntity(
                 /**
                  * Returns the id for the assigned stored data of a sleep from a local date
                  */
-                fun getIdByDateTime(date : LocalDate) : Int {
+                fun getIdByDateTimeWithTimeZone(date : LocalDate) : Int {
 
                         val time = LocalTime.of(15,0)
                         val datetime = LocalDateTime.of(date.minusDays(0), time)
@@ -54,7 +54,7 @@ data class UserSleepSessionEntity(
                 /**
                  * Returns the id for the assigned stored data of a sleep from a timestamp
                  */
-                fun getIdByTimeStamp(timestamp: Int) : Int {
+                fun getIdByTimeStampWithTimeZone(timestamp: Int) : Int {
 
                         val actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp.toLong()*1000), ZoneOffset.systemDefault())
 
@@ -64,6 +64,33 @@ data class UserSleepSessionEntity(
                         val dateTime = LocalDateTime.of(date, newTime)
 
                         return dateTime.atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+                }
+
+                /**
+                 * Returns the id for the assigned stored data of a sleep from a local date
+                 */
+                @Deprecated("This is the old version which is not Timezone sensitive", ReplaceWith("getIdByDateTimeWithTimeZone(date)"))
+                fun getIdByDateTime(date : LocalDate) : Int {
+
+                        val time = LocalTime.of(15,0)
+                        val datetime = LocalDateTime.of(date.minusDays(0), time)
+                        return datetime.atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+                }
+
+                /**
+                 * Returns the id for the assigned stored data of a sleep from a timestamp
+                 */
+                @Deprecated("This is the old version which is not Timezone sensitive", ReplaceWith("getIdByTimeStampWithTimeZone(timestamp)"))
+                fun getIdByTimeStamp(timestamp: Int) : Int {
+
+                        val actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp.toLong()*1000), ZoneOffset.UTC)
+
+                        val date = actualTime.toLocalDate()
+                        val newTime = LocalTime.of(15,0)
+
+                        val dateTime = LocalDateTime.of(date, newTime)
+
+                        return dateTime.atZone(ZoneOffset.UTC).toEpochSecond().toInt()
                 }
 
 
