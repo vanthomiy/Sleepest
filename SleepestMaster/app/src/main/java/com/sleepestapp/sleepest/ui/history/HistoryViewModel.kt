@@ -14,7 +14,6 @@ import com.sleepestapp.sleepest.storage.db.UserSleepSessionEntity
 import com.sleepestapp.sleepest.util.SmileySelectorUtil
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
@@ -32,19 +31,9 @@ class HistoryViewModel(
     ) : ViewModel() {
 
     /**
-     * Contains the current date which will be displayed at the history fragment.TODO
+     * Currently selected analysis date which will be displayed in the history.
      */
     var analysisDate = MutableLiveData(LocalDate.now())
-
-    /**
-     * Indicates whether dark mode is on or off.TODO
-     */
-    var darkMode = false
-
-    /**
-     * Indicates whether the user has set the app up for automatically detect the devices dark mode settings.TODO
-     */
-    var autoDarkMode = false
 
     /**
      * Indicates if the sleep phase assessment algorithm is currently working.TODO
@@ -52,12 +41,12 @@ class HistoryViewModel(
     var onWork = false
 
     /**
-     * Container for the x-axis values of the bar Charts.TODO
+     * Container for the x-axis values of the bar charts. TODO(Überarbeiten der ganzen Thematik)
      */
     var xAxisValues = ArrayList<String>()
 
     /**
-     * Container for the x-axis values of the weekly bar charts.TODO
+     * Container for the labels of the weekly charts.
      */
     var xAxisValuesWeek = ArrayList<String>()
 
@@ -99,10 +88,7 @@ class HistoryViewModel(
     val visibleState = MutableLiveData(View.VISIBLE)
 
     init {
-        viewModelScope.launch {
-            darkMode = dataStoreRepository.settingsDataFlow.first().designDarkMode
-            autoDarkMode = dataStoreRepository.settingsDataFlow.first().designAutoDarkMode
-        }
+
     }
 
     fun onInfoClicked(
@@ -471,7 +457,6 @@ class HistoryViewModel(
         val barWidth: Any
         val axisMaximum: Any
         val labelCount: Any
-        xAxisValues.clear()
 
         if (range > 21) {
             for (i in diagramData.second.indices) {
@@ -494,6 +479,7 @@ class HistoryViewModel(
             labelCount = diagramData.second.size
         }
         else {
+            // Set up the chart for weekly analysis
             xAxisValues.addAll(xAxisValuesWeek)
             barWidth = 0.75f
             axisMaximum = 7f
