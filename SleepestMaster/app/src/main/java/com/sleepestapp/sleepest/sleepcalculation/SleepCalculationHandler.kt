@@ -727,7 +727,7 @@ class SleepCalculationHandler(val context: Context) {
         val newStartTime = sessionEntity.sleepTimes.sleepTimeStart != startTimeEpoch
         val newEndTime = sessionEntity.sleepTimes.sleepTimeEnd != endTimeEpoch
 
-        val dateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli((sessionEntity.id.toLong() * 1000)), ZoneOffset.UTC)
+        val dateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli((sessionEntity.id.toLong() * 1000)), ZoneOffset.systemDefault())
 
         // remove before
         if (newStartTime){

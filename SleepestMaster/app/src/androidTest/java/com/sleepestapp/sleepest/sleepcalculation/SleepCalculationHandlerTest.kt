@@ -881,7 +881,7 @@ class SleepCalculationHandlerTest
 
         val newNow = LocalDateTime.ofInstant(
             Instant.ofEpochMilli((session.id.toLong() * 1000)),
-            ZoneOffset.UTC
+            ZoneOffset.systemDefault()
         )
 
         sleepCalculationHandler.checkIsUserSleeping(newNow)
