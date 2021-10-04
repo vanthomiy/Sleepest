@@ -94,7 +94,7 @@ class HistoryDayViewModel(
     var sleepRatingUpdate = false
 
     /**
-     * Maintains the visibility of the information buttons and its text fields.TODO
+     * Maintains the visibility of the information buttons and its text fields.
      */
     val actualExpand = MutableLiveData(-1)
 

@@ -36,7 +36,7 @@ class HistoryViewModel(
     var analysisDate = MutableLiveData(LocalDate.now())
 
     /**
-     * Indicates if the sleep phase assessment algorithm is currently working.TODO
+     * Indicates that [checkSessionIntegrity] is currently working.
      */
     var onWork = false
 
@@ -51,38 +51,43 @@ class HistoryViewModel(
     var xAxisValuesWeek = ArrayList<String>()
 
     /**
-     * Container for the string of the SleepState for the legend of the diagrams.TODO
+     * Container for the strings of the [SleepState] for the legend of the diagrams.
      */
     var sleepStateString = mutableMapOf<SleepState, String>()
 
     /**
-     * Container for the color of the SleepState for the legend of the diagrams.TODO
+     * Container for the colors of the [SleepState] for the legend of the diagrams.
      */
     var sleepStateColor = mutableMapOf<SleepState, Int>()
 
     /**
-     * Maintains the visibility of the diagrams.TODO
+     * Maintains the visibility of the diagrams in the weekly analysis based on the available information.
      */
     val visibilityManagerWeekDiagrams = MutableLiveData(false)
 
     /**
-     * Maintains the visibility of the diagrams.TODO
+     * Maintains the visibility of the diagrams in the monthly analysis based on the available information.
      */
     val visibilityManagerMonthDiagrams = MutableLiveData(false)
 
     /**
-     * Container for the drawable of the LineChart diagram.TODO
+     * Container for the background drawable of the activity analysis [LineChart].
      */
     var activityBackgroundDrawable : Drawable? = null
 
     /**
-     * Indicates that [getSleepData] has finished and fresh data was received from the database.TODO
+     * Indicates that [getSleepData] has finished and new data was pulled from the database.
      */
     val dataReceived = MutableLiveData(false)
 
-    /**  */
+    /** 
+     * List of the currently loaded [UserSleepSessionEntity] data from the database.
+     */
     val sleepAnalysisData = mutableListOf<SleepDataAnalysis>()
 
+    /**
+     * Maintains the visibility of the information buttons and its text fields.
+     */
     val actualExpand = MutableLiveData(-1)
     val goneState = MutableLiveData(View.GONE)
     val visibleState = MutableLiveData(View.VISIBLE)
@@ -99,7 +104,7 @@ class HistoryViewModel(
     }
 
     /**
-     * Onclick handler for altering the [analysisDate] based on the currently selected analysis Range.TODO
+     * Handler for altering the [analysisDate] based on the currently selected analysis range.
      */
     fun onPreviousDateClick(
         range: Int
@@ -114,7 +119,7 @@ class HistoryViewModel(
     }
 
     /**
-     * Onclick handler for altering the [analysisDate] based on the currently selected analysis Range.TODO
+     * Handler for altering the [analysisDate] based on the currently selected analysis range.
      */
     fun onNextDateClick(
         range: Int
@@ -138,7 +143,6 @@ class HistoryViewModel(
                 }
             }
         }
-
     }
 
     /**
