@@ -47,7 +47,7 @@
             android:id="@+id/tV_activitySmileyNoSleepDataAvailable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{historyDayViewModel.activitySmiley}"
+            android:text="@{historyDayViewModel.activitySmileyTag}"
             android:textColor="@color/primary_text_color"
             android:textSize="72sp"
             app:layout_constraintEnd_toEndOf="@+id/tV_noDataAvailable"
@@ -555,7 +555,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="2"
                                 android:layout_marginTop="16dp"
-                                android:text="@{historyDayViewModel.activitySmiley}"
+                                android:text="@{historyDayViewModel.activitySmileyTag}"
                                 android:textColor="@color/primary_text_color"
                                 android:textSize="72sp"
                                 android:textAlignment="center"/>

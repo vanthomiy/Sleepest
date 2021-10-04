@@ -19,79 +19,84 @@ class HistoryDayViewModel(
     ) : ViewModel() {
 
     /**
-     * Contains information about the fall asleep time. TODO
+     * Contains information about the fall asleep time as a string for the current analysis date.
      */
     var beginOfSleep = MutableLiveData("")
 
     /**
-     * Contains information about the fall asleep time in epoch seconds. TODO
+     * Contains information about the fall asleep time in epoch seconds for the current analysis date.
      */
     var beginOfSleepEpoch = MutableLiveData(0L)
 
     /**
-     * Contains information about the wakeup time. TODO
+     * Contains information about the wakeup time as string for the current analysis date.
      */
     var endOfSeep = MutableLiveData("")
 
     /**
-     * Contains information about the wakeup time in epoch seconds. TODO
+     * Contains information about the wakeup time in epoch seconds for the current analysis date.
      */
     var endOfSleepEpoch = MutableLiveData(0L)
 
     /**
-     * Stores the ID of the current SleepSession. TODO
+     * Stores the sleep session id of the current analysis date.
      */
     var sessionId = 0
 
     /**
-     * Contains information about the amount of time the user spend awake. TODO
+     * Contains amount of time the user spend awake for the current analysis date.
      */
     var awakeTime = MutableLiveData("")
 
     /**
-     * Contains information about the amount of time the user spend in light sleep phase. TODO
+     * Contains amount of time the user spend in the light sleep phase for the current analysis date.
      */
     var lightSleepTime = MutableLiveData("")
 
     /**
-     * Contains information about the amount of time the user spend in deep sleep phase. TODO
+     * Contains amount of time the user spend in the deep sleep phase for the current analysis date.
      */
     var deepSleepTime = MutableLiveData("")
 
     /**
-     * Contains information about the amount of time the user spend in rem sleep phase. TODO
+     * Contains amount of time the user spend in the rem sleep phase for the current analysis date.
      */
     var remSleepTime = MutableLiveData("")
 
     /**
-     * Contains information about the amount of time the user slept. TODO
+     * Contains amount of time the user slept for the current analysis date.
      */
     var sleepTime = MutableLiveData("")
 
     /**
-     * Contains the visibility status of the time analysis of each sleep phase. TODO
+     * Manages the visibility of the text field which give further information about the time spent in each sleep phase.
      */
     var timeInSleepPhaseTextField = MutableLiveData(View.INVISIBLE)
 
     /**
-     * Contains the current smiley used to indicate the users activity level. TODO
+     * Contains the tag of the current smiley used to indicate the users activity level.
      */
-    var activitySmiley = MutableLiveData(SmileySelectorUtil.getSmileyActivity(0))
+    var activitySmileyTag = MutableLiveData(SmileySelectorUtil.getSmileyActivity(0))
 
     /**
-     * Contains the smiley which was picked by the user to assess it's mood. TODO
+     * Contains the smiley which was picked by the user to assess it's mood after sleep.
      */
     var sleepMoodSmiley = MutableLiveData<MoodType>()
 
     /**
-     * Contains the tag of the selected mood smiley. TODO
+     * Contains the tag of the selected mood smiley for alternating it in the corresponding xml files.
      */
     var sleepMoodSmileyTag = MutableLiveData(0)
 
     /**
-     * This will prevent the daily sleep analysis diagrams from reloading when the sleep rating was altered.TODO
+     * Indicates that the sleep rating (mood after sleep) was altered by the user.
      */
     var sleepRatingUpdate = false
+
+    /**
+     * Contains information about the time zone's time formatting standards.
+     */
+    var is24HourFormat : Boolean = false
 
     /**
      * Maintains the visibility of the information buttons and its text fields.
@@ -102,11 +107,16 @@ class HistoryDayViewModel(
 
     val visibleState = MutableLiveData(View.VISIBLE)
 
-    /**
-     * Contains information about the current time zone and its time formatting standards. TODO
-     */
-    var is24HourFormat : Boolean = false
+    fun onInfoClicked(
+        view: View
+    ){
+        val value = view.tag.toString()
+        actualExpand.value = if(actualExpand.value == value.toIntOrNull()) -1 else value.toIntOrNull()
+    }
 
+    /**
+     * Auxiliary function to determine the sleep session id of the passed date.
+     */
     fun getSleepSessionId(
         time: LocalDate
     ) {
@@ -114,7 +124,7 @@ class HistoryDayViewModel(
     }
 
     /**
-     * Allows to alter the sleepRating (MoodAfterSleep) and saves it to its MutableLiveData. TODO
+     * Auxiliary function for alternating the sleep rating (mood after sleep).
      */
     fun sleepRating(
         view: View
@@ -129,19 +139,12 @@ class HistoryDayViewModel(
             else -> MoodType.NONE
         }
 
-        sleepMoodSmiley.value = (mood)
-        sleepMoodSmileyTag.value = (view.tag.toString().toInt())
-    }
-
-    fun onInfoClicked(
-        view: View
-    ){
-        val value = view.tag.toString()
-        actualExpand.value = if(actualExpand.value == value.toIntOrNull()) -1 else value.toIntOrNull()
+        sleepMoodSmiley.value = mood
+        sleepMoodSmileyTag.value = view.tag.toString().toInt()
     }
 
     /**
-     * Allows the manual alternation of the time in at which the user fell asleep and woke up. TODO
+     * Allows the manual alternation of the time at which the user fell asleep and woke up.
      */
     fun manualChangeSleepTimes(
         view: View
@@ -163,7 +166,7 @@ class HistoryDayViewModel(
     }
 
     /**
-     * Creates a TimePickerDialogue as auxiliary function for [manualChangeSleepTimes]. TODO
+     * Auxiliary function for creating a [TimePickerDialog] the function [manualChangeSleepTimes].
      */
     private fun createPickerDialogue(
         view: View,

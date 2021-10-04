@@ -17,8 +17,6 @@ import com.sleepestapp.sleepest.model.data.ActivityOnDay
 import com.sleepestapp.sleepest.model.data.MobilePosition
 import com.sleepestapp.sleepest.model.data.SleepState
 import com.sleepestapp.sleepest.sleepcalculation.model.UserSleepRating
-import com.sleepestapp.sleepest.storage.db.SleepApiRawDataEntity
-import com.sleepestapp.sleepest.storage.db.UserSleepSessionEntity
 import com.sleepestapp.sleepest.util.SmileySelectorUtil
 import com.sleepestapp.sleepest.util.TimeConverterUtil
 import com.github.mikephil.charting.animation.Easing
@@ -208,7 +206,7 @@ class HistoryDayFragment : Fragment() {
 
     /**
      * Save user input for the [UserSleepRating.moodAfterSleep] into the database.
-     * Alters the current value of this day in the [viewModel.sleepAnalysisData].
+     * Alters the current value of this day in the [HistoryViewModel.sleepAnalysisData].
      */
     private fun saveSleepRatingDaily() {
         // Save to database.
@@ -328,7 +326,7 @@ class HistoryDayFragment : Fragment() {
 
     /**
      * Auxiliary function for generating entries for the [barChartSleepAnalysis].
-     * Analysis the [viewModel.sleepAnalysisData] for the currently selected date and creates a [BarEntry] in a timely fitting manner.
+     * Analysis the [HistoryViewModel.sleepAnalysisData] for the currently selected date and creates a [BarEntry] in a timely fitting manner.
      */
     fun generateDataBarChart(): ArrayList<BarEntry> {
         val entries = ArrayList<BarEntry>()
@@ -534,7 +532,7 @@ class HistoryDayFragment : Fragment() {
 
     /**
      * Auxiliary function for generating entries for the [pieChartSleepAnalysis].
-     * Analysis the [viewModel.sleepAnalysisData] for the currently selected date and creates a [PieEntry] for each sleep phase.
+     * Analysis the [HistoryViewModel.sleepAnalysisData] for the currently selected date and creates a [PieEntry] for each sleep phase.
      * */
     private fun generateDataPieChart() : Pair<ArrayList<PieEntry>, BooleanArray> {
         val entries = ArrayList<PieEntry>()
@@ -658,8 +656,8 @@ class HistoryDayFragment : Fragment() {
     }
 
     /**
-     * Accesses the value of the [ActivityOnDay] from [viewModel.sleepAnalysisData].
-     * Accesses the value of the [UserSleepSessionEntity.userSleepRating.moodAfterSleep] from [viewModel.sleepAnalysisData].
+     * Accesses the value of the [ActivityOnDay] from [HistoryViewModel.sleepAnalysisData].
+     * Accesses the value of the [UserSleepRating.moodAfterSleep] from [HistoryViewModel.sleepAnalysisData].
      */
     private fun updateActivitySmiley() {
         var activityOnDay = 0
@@ -678,7 +676,7 @@ class HistoryDayFragment : Fragment() {
             viewModelDay.sleepMoodSmileyTag.value = it.userSleepSessionEntity.userSleepRating.moodAfterSleep.ordinal
         }
 
-        viewModelDay.activitySmiley.value = (SmileySelectorUtil.getSmileyActivity(activityOnDay))
+        viewModelDay.activitySmileyTag.value = (SmileySelectorUtil.getSmileyActivity(activityOnDay))
     }
 }
 

@@ -41,7 +41,7 @@ class HistoryViewModel(
     var onWork = false
 
     /**
-     * Container for the x-axis values of the bar charts. TODO(Überarbeiten der ganzen Thematik)
+     * Container for the x-axis values of the bar charts.
      */
     var xAxisValues = ArrayList<String>()
 
@@ -80,7 +80,7 @@ class HistoryViewModel(
      */
     val dataReceived = MutableLiveData(false)
 
-    /** 
+    /**
      * List of the currently loaded [UserSleepSessionEntity] data from the database.
      */
     val sleepAnalysisData = mutableListOf<SleepDataAnalysis>()
@@ -89,12 +89,10 @@ class HistoryViewModel(
      * Maintains the visibility of the information buttons and its text fields.
      */
     val actualExpand = MutableLiveData(-1)
+
     val goneState = MutableLiveData(View.GONE)
+
     val visibleState = MutableLiveData(View.VISIBLE)
-
-    init {
-
-    }
 
     fun onInfoClicked(
         view: View
@@ -146,7 +144,7 @@ class HistoryViewModel(
     }
 
     /**
-     * Starts the process of requesting data from the database.TODO
+     * Pulls the required data from the database and fills the [sleepAnalysisData] with [SleepDataAnalysis] instances.
      */
     fun getSleepData() {
         val ids = mutableSetOf<Int>()
@@ -190,8 +188,8 @@ class HistoryViewModel(
     }
 
     /**
-     * Checks if the previously received sleep session data is correct and contains no errors.TODO
-     * If unusual data was received, the sleep phase determination algorithm ist triggered again to interpret the api data.
+     * Checks if the currently used data set from the database contains any unusual values.
+     * If so, the [SleepCalculationHandler] is called to correct them.
      */
     private fun checkSessionIntegrity() {
         onWork = true
