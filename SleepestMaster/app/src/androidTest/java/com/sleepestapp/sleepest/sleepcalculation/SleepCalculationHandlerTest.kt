@@ -19,8 +19,11 @@ import org.hamcrest.CoreMatchers
 import org.junit.Before
 import org.junit.Test
 import kotlinx.coroutines.runBlocking
+import okhttp3.internal.Util.UTC
 import java.io.BufferedReader
 import java.time.*
+import java.time.ZoneId.systemDefault
+import java.time.ZoneOffset.UTC
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.abs
@@ -651,7 +654,7 @@ class SleepCalculationHandlerTest
             SleepState.DEEP to 0,
             SleepState.REM to 0)
 
-        for (i in 1 until 41)
+        for (i in 1 until 3)
         {
             val data = dataUnPred[i]
 
@@ -939,7 +942,10 @@ class SleepCalculationHandlerTest
     @Test
     fun sleepCalculationLast30MinutesTest(): Unit = runBlocking {
 
-        val actualTimeSeconds = 100000
+        val now = LocalDateTime.now(ZoneOffset.UTC)
+
+        // LocalDateTime to epoch seconds
+        val actualTimeSeconds = now.minusDays(1).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
         val sleepCalculationHandler = SleepCalculationHandler(context)
         val sleepList5 = mutableListOf<SleepApiRawDataEntity>()
 
