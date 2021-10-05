@@ -8,6 +8,9 @@ import com.sleepestapp.sleepest.model.data.MobilePosition
 import com.sleepestapp.sleepest.sleepcalculation.model.SleepTimes
 import com.sleepestapp.sleepest.sleepcalculation.model.UserCalculationRating
 import com.sleepestapp.sleepest.sleepcalculation.model.UserSleepRating
+import com.sleepestapp.sleepest.storage.DataStoreRepository
+import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.getActualAlarmTimeData
+import kotlinx.coroutines.runBlocking
 import java.time.*
 
 /**
@@ -40,6 +43,20 @@ data class UserSleepSessionEntity(
 )
 {
         companion object{
+
+                /**
+                 * Returns the id for the assigned stored data of a sleep from a local date
+                 */
+                fun getIdByDateTimeWithTimeZoneLive(dataStoreRepository:DataStoreRepository, dateTime : LocalDateTime) : Int = runBlocking {
+                        val alarmTimeData = getActualAlarmTimeData(dataStoreRepository, dateTime.toLocalTime())
+
+                        val date = if(alarmTimeData.alarmIsOnSameDay) dateTime.toLocalDate()
+                        else dateTime.toLocalDate().plusDays(1)
+
+                        val time = LocalTime.of(15,0)
+                        val datetime = LocalDateTime.of(date.minusDays(0), time)
+                        return@runBlocking datetime.atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+                }
 
                 /**
                  * Returns the id for the assigned stored data of a sleep from a local date

@@ -945,7 +945,7 @@ class SleepCalculationHandlerTest
         val now = LocalDateTime.now(ZoneOffset.UTC)
 
         // LocalDateTime to epoch seconds
-        val actualTimeSeconds = now.minusDays(1).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+        val actualTimeSeconds = now.minusDays(2).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
         val sleepCalculationHandler = SleepCalculationHandler(context)
         val sleepList5 = mutableListOf<SleepApiRawDataEntity>()
 
@@ -957,14 +957,14 @@ class SleepCalculationHandlerTest
         // 50 minutes awake
         for(i in 0..9 step 1) // 2 hours / 20  < 10
         {
-            val data = SleepApiRawDataEntity(actualTimeSeconds-(i*5*60), 5,1,1,sleepState = SleepState.NONE)
+            val data = SleepApiRawDataEntity(actualTimeSeconds+(i*5*60), 5,1,1,sleepState = SleepState.NONE)
             sleepList5.add(data)
         }
 
         // then 100 minutes of sleep
-        for(i in 10..30 step 1) // 2 hours / 20  < 10
+        for(i in 10..35 step 1) // 2 hours / 20  < 10
         {
-            val data = SleepApiRawDataEntity(actualTimeSeconds-(i*5*60), 96,1,1,sleepState = SleepState.NONE)
+            val data = SleepApiRawDataEntity(actualTimeSeconds+(i*5*60), 96,1,1,sleepState = SleepState.NONE)
             sleepList5.add(data)
         }
         val lastTime = sleepList5.last().timestampSeconds
@@ -972,7 +972,7 @@ class SleepCalculationHandlerTest
 
         val actualTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(lastTime.toLong()*1000), ZoneOffset.systemDefault())
         //now we are exact at the last timestamp
-        sleepCalculationHandler.checkIsUserSleeping(actualTime, false)
+        sleepCalculationHandler.checkIsUserSleeping(actualTime, true)
         sleepCalculationHandler.defineUserWakeup(actualTime, false)
 
         //sleep time is what?
@@ -985,9 +985,9 @@ class SleepCalculationHandlerTest
 
 
         // then add 50 minutes of awake
-        for(i in 31..40 step 1) // 2 hours / 20  < 10
+        for(i in 35..40 step 1) // 2 hours / 20  < 10
         {
-            val data = SleepApiRawDataEntity(actualTimeSeconds-(i*5*60), 5,1,1,sleepState = SleepState.NONE)
+            val data = SleepApiRawDataEntity(actualTimeSeconds+(i*5*60), 5,1,1,sleepState = SleepState.NONE)
             sleepList5.add(data)
         }
         val lastTimeNew = sleepList5.last().timestampSeconds
@@ -995,7 +995,7 @@ class SleepCalculationHandlerTest
 
         val actualTimeNew = LocalDateTime.ofInstant(Instant.ofEpochMilli(lastTimeNew.toLong()*1000), ZoneOffset.systemDefault())
         //now we are exact at the last timestamp
-        sleepCalculationHandler.checkIsUserSleeping(actualTimeNew, false)
+        sleepCalculationHandler.checkIsUserSleeping(actualTimeNew, true)
         sleepCalculationHandler.defineUserWakeup(actualTimeNew, false)
 
         //sleep time is what?

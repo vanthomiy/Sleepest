@@ -1,11 +1,43 @@
 package com.sleepestapp.sleepest.storage.db
 
+import android.content.Context
+import androidx.test.platform.app.InstrumentationRegistry
+import com.sleepestapp.sleepest.storage.DataStoreRepository
+import com.sleepestapp.sleepest.storage.DatabaseRepository
+import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers
 import org.junit.Assert.*
+import org.junit.Before
 import org.junit.Test
 import java.time.LocalDate
+import java.time.LocalTime
+import java.time.ZoneOffset
 
 class UserSleepSessionEntityTest{
+
+    private lateinit var context: Context
+    private lateinit var sleepDbRepository: DatabaseRepository
+
+    private val sleepCalcDatabase by lazy {
+        SleepDatabase.getDatabase(context)
+    }
+
+    private val sleepStoreRepository by lazy {
+        DataStoreRepository.getRepo(context)
+    }
+
+    @Before
+    fun init(){
+        context = InstrumentationRegistry.getInstrumentation().targetContext
+
+        sleepDbRepository = DatabaseRepository.getRepo(
+            sleepCalcDatabase.sleepApiRawDataDao(),
+            sleepCalcDatabase.userSleepSessionDao(),
+            sleepCalcDatabase.alarmDao(),
+            sleepCalcDatabase.activityApiRawDataDao()
+
+        )
+    }
 
     @Test
     fun idAndTimestampDateCreation(){
@@ -23,4 +55,5 @@ class UserSleepSessionEntityTest{
         assertThat(idDate, CoreMatchers.equalTo(idStamp))
 
     }
+
 }

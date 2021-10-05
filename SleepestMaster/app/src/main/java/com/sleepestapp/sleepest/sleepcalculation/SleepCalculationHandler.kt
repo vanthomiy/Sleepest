@@ -218,15 +218,15 @@ class SleepCalculationHandler(val context: Context) {
      * [localTime] the actual time in seconds
      * Call fromDefineUserWakeUp to make count lesser to 30 min instead of 1hour
      */
-    suspend fun checkIsUserSleeping(localTime: LocalDateTime? = null, finalCalc: Boolean = false, fromDefineUserWakeUp:Boolean = false){
+    suspend fun checkIsUserSleeping(localTime: LocalDateTime? = null, setAlarm: Boolean = true, fromDefineUserWakeUp:Boolean = false){
 
         val date = localTime ?: LocalDateTime.now()
 
-        val timestamp = date.atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
-
         // calculate all sleep states when the user is sleeping
-        val id =
-            UserSleepSessionEntity.getIdByTimeStamp(timestamp)
+        val id = if (setAlarm)
+            UserSleepSessionEntity.getIdByDateTimeWithTimeZoneLive(dataStoreRepository, date)
+        else
+            UserSleepSessionEntity.getIdByDateTimeWithTimeZone(date.toLocalDate())
 
         val sessionAvailable = dataBaseRepository.getSleepSessionById(id).first().firstOrNull()
 
@@ -355,7 +355,7 @@ class SleepCalculationHandler(val context: Context) {
             }
 
             // Workaround to prevent NONE Sleep States
-            if(finalCalc && data.sleepState == SleepState.NONE){
+            if(!setAlarm && data.sleepState == SleepState.NONE){
                 dataBaseRepository.updateSleepApiRawDataSleepState(
                     data.timestampSeconds,
                     SleepState.AWAKE
@@ -385,10 +385,11 @@ class SleepCalculationHandler(val context: Context) {
 
         val date = localTime ?: LocalDateTime.now()
 
-        val timestamp = date.atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
         // calculate all sleep states when the user is sleeping
-        val id =
-            UserSleepSessionEntity.getIdByTimeStamp(timestamp)
+        val id = if (setAlarm)
+            UserSleepSessionEntity.getIdByDateTimeWithTimeZoneLive(dataStoreRepository, date)
+        else
+            UserSleepSessionEntity.getIdByDateTimeWithTimeZone(date.toLocalDate())
 
         val sleepSessionEntity = dataBaseRepository.getOrCreateSleepSessionById(id)
 
@@ -408,7 +409,7 @@ class SleepCalculationHandler(val context: Context) {
         val time = localTime ?: LocalDateTime.now()
 
         // we define the user sleep with the define user wake up. That will make it more accurate in the morning
-        checkIsUserSleeping(time, !setAlarm, true)
+        checkIsUserSleeping(time, setAlarm, true)
 
         val sleepApiRawDataEntity =
             dataBaseRepository.getSleepApiRawDataFromDate(time, endTime, startTime).first()
