@@ -39,7 +39,7 @@
                 android:layout_height="@dimen/img_header_size"
                 tools:ignore="ContentDescription"
                 android:layout_gravity="end"
-                android:layout_margin="5dp"
+                android:layout_marginVertical="5dp"
                 app:tint="@color/primary_text_color"
                 android:src="@{historyTabView.actualExpand == 0 ? @drawable/info_help_start : @drawable/info_help}"
                 android:onClick="@{historyTabView::onInfoClicked}"

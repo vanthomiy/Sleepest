@@ -215,8 +215,7 @@ class DatabaseRepository(
      */
     fun getActivityApiRawDataSince(time:Int): Flow<List<ActivityApiRawDataEntity>>
     {
-        val now = LocalDateTime.now(ZoneOffset.UTC)
-        val seconds = now.atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+        val seconds = LocalDateTime.now().atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
         return activityApiRawDataDao.getSince(seconds-time).distinctUntilChanged()
     }
 
@@ -234,10 +233,10 @@ class DatabaseRepository(
         // Then we can decide if its this or the next day
 
         val startDateTime = if (actualTime.hour < startTime.hour)
-            actualTime.toLocalDate().minusDays(1).atTime(startTime).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
-        else actualTime.toLocalDate().atTime(startTime).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+            actualTime.toLocalDate().minusDays(1).atTime(startTime).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+        else actualTime.toLocalDate().atTime(startTime).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
 
-        val endDateTime = actualTime.atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+        val endDateTime = actualTime.atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
 
         return activityApiRawDataDao.getBetween(startDateTime,endDateTime).distinctUntilChanged()
     }
@@ -249,8 +248,8 @@ class DatabaseRepository(
      */
     fun getActivityApiRawDataFromDate(actualTime:LocalDateTime): Flow<List<ActivityApiRawDataEntity>>
     {
-        val startTime = actualTime.toLocalDate().minusDays(1).atTime(0,0).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
-        val endTime = actualTime.toLocalDate().minusDays(1).atTime(23,59).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+        val startTime = actualTime.toLocalDate().minusDays(1).atTime(0,0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+        val endTime = actualTime.toLocalDate().minusDays(1).atTime(23,59).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
 
         return activityApiRawDataDao.getBetween(startTime,endTime).distinctUntilChanged()
     }

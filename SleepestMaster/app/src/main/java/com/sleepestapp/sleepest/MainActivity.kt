@@ -25,6 +25,7 @@ import com.sleepestapp.sleepest.databinding.ActivityMainBinding
 import com.sleepestapp.sleepest.model.data.AlarmReceiverUsage
 import com.sleepestapp.sleepest.model.data.SleepSleepChangeFrom
 import com.sleepestapp.sleepest.model.data.export.ImportUtil
+import com.sleepestapp.sleepest.onboarding.OnboardingActivity
 import com.sleepestapp.sleepest.ui.alarms.AlarmsFragment
 import com.sleepestapp.sleepest.ui.history.HistoryTabView
 import com.sleepestapp.sleepest.ui.settings.SettingsFragment
@@ -35,6 +36,9 @@ import com.sleepestapp.sleepest.util.TimeConverterUtil
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.*
+
+import android.app.NotificationManager
+import com.sleepestapp.sleepest.model.data.Constants
 
 
 class MainActivity : AppCompatActivity() {
@@ -170,6 +174,13 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         lifecycleScope.launch {
+
+            if (!viewModel.dataStoreRepository.tutorialStatusFlow.first().tutorialCompleted) {
+                startTutorial()
+            } else {
+                checkPermissions()
+            }
+
             val settings = viewModel.dataStoreRepository.settingsDataFlow.first()
 
             if (!settings.designAutoDarkMode && (AppCompatDelegate.getDefaultNightMode() != if (settings.designDarkMode) AppCompatDelegate.MODE_NIGHT_YES
@@ -220,18 +231,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        // check permission
-        if (!PermissionsUtil.isActivityRecognitionPermissionGranted(applicationContext)) {
-            requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
-        }
 
-        if(!PermissionsUtil.isOverlayPermissionGranted(applicationContext)) {
-            PermissionsUtil.setOverlayPermission(this@MainActivity)
-        }
-
-        if (!PermissionsUtil.isNotificationPolicyAccessGranted(applicationContext)) {
-            PermissionsUtil.setOverlayPermission(this@MainActivity)
-        }
 
         when (intent?.action) {
             Intent.ACTION_SEND -> {
@@ -296,16 +296,59 @@ class MainActivity : AppCompatActivity() {
                     false,
                     SleepSleepChangeFrom.SLEEPTIMESTART
                 )
-
             }
-
         }
 
         val alarmCycleState = AlarmCycleState(applicationContext)
-        val pref: SharedPreferences = getSharedPreferences("State", 0)
-        val ed = pref.edit()
+        var pref: SharedPreferences = getSharedPreferences("State", 0)
+        var ed = pref.edit()
         ed.putString("state", alarmCycleState.getState().toString())
         ed.apply()
+
+        val mNotificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        val notifications = mNotificationManager.activeNotifications
+        if (notifications.isEmpty()) {
+            pref = getSharedPreferences("ActiveNotification", 0)
+            ed = pref.edit()
+            ed.putBoolean("foregroundService", false)
+            ed.apply()
+        }
+        for (notification in notifications) {
+            if (notification.id == Constants.FOREGROUND_SERVICE_ID) {
+                pref = getSharedPreferences("ActiveNotification", 0)
+                ed = pref.edit()
+                ed.putBoolean("foregroundService", true)
+                ed.apply()
+                break
+            } else {
+                pref = getSharedPreferences("ActiveNotification", 0)
+                ed = pref.edit()
+                ed.putBoolean("foregroundService", false)
+                ed.apply()
+            }
+        }
+    }
+
+    private fun startTutorial() {
+        val intent = Intent(this, OnboardingActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun checkPermissions() {
+        // check permission
+        if (!PermissionsUtil.isActivityRecognitionPermissionGranted(applicationContext)) {
+            requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
+        }
+
+        if(!PermissionsUtil.isOverlayPermissionGranted(applicationContext)) {
+            PermissionsUtil.setOverlayPermission(this@MainActivity)
+        }
+
+        if (!PermissionsUtil.isNotificationPolicyAccessGranted(applicationContext)) {
+            PermissionsUtil.setOverlayPermission(this@MainActivity)
+        }
     }
 
 

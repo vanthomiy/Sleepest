@@ -45,7 +45,7 @@ class ActivityTransitionReceiver : BroadcastReceiver() {
 
                         convertedToEntityVersion.add(
                             ActivityApiRawDataEntity(
-                                LocalDateTime.now().toEpochSecond(ZoneOffset.UTC).toInt(),
+                                LocalDateTime.now().atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt(),
                                 transition.activityType,
                                 transition.transitionType
                             )

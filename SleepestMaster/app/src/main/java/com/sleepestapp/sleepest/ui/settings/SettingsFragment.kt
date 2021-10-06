@@ -257,8 +257,13 @@ class SettingsFragment : Fragment() {
             Sleep value amount: ${pref.getInt("value", 0)},${pref.getBoolean("status",false)}
             
             """.trimIndent()
+        pref = actualContext.getSharedPreferences("ActiveNotification", 0)
+        val textNotificationActive= """
+            Notification active: ${pref.getBoolean("foregroundService",false)}
+            
+            """.trimIndent()
 
-        val textGesamt = textVersion + textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation + textCalc1 + textCalc2 + textAlarmReceiver + textSleepTime + textBooReceiver1 + textStopException + textAlarmReceiver1 + textActualState + textForegroundServiceTime + textSleepValue
+        val textGesamt = textVersion + textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation + textCalc1 + textCalc2 + textAlarmReceiver + textSleepTime + textBooReceiver1 + textStopException + textAlarmReceiver1 + textActualState + textForegroundServiceTime + textSleepValue +textNotificationActive
 
 
         binding.testText.text = textGesamt

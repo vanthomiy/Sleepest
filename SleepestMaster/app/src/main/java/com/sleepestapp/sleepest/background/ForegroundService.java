@@ -212,7 +212,7 @@ public class ForegroundService extends LifecycleService {
      */
     public static int getForegroundServiceTime(Context context) {
         int time;
-        if (foregroundServiceStartTime < LocalTime.now().toSecondOfDay()) {
+        if (foregroundServiceStartTime <= LocalTime.now().toSecondOfDay()) {
             time = LocalTime.now().toSecondOfDay() - foregroundServiceStartTime;
             SharedPreferences pref = context.getSharedPreferences("ForegroundServiceTime", 0);
             SharedPreferences.Editor ed = pref.edit();

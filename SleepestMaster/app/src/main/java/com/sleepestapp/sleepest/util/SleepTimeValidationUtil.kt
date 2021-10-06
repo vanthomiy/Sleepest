@@ -303,12 +303,9 @@ object SleepTimeValidationUtil {
         return activeAlarms
     }
 
-    suspend fun getActualAlarmTimeData(dataStoreRepository: DataStoreRepository): AlarmTimeData {
+    suspend fun getActualAlarmTimeData(dataStoreRepository: DataStoreRepository, time:LocalTime = LocalTime.now()): AlarmTimeData {
         // get sleep times
         val times = dataStoreRepository.sleepParameterFlow.first()
-
-        // get the given or actual time
-        val time = LocalTime.now()
 
         // get the seconds of the actual day
         val seconds = time.toSecondOfDay()

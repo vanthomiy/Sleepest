@@ -77,6 +77,7 @@ class DataStoreRepository(context: Context) {
     /**
      * Returns if the time is in actual sleep time
      */
+    @Deprecated("Dont use this crap anymore")
     suspend fun isInSleepTime(givenTime: LocalTime? = null): Boolean {
 
         val times = sleepParameterFlow.first()
