@@ -194,6 +194,7 @@ class HistoryViewModel(
      */
     private fun checkSessionIntegrity() {
         onWork = true
+        var reloadData = false
 
         sleepAnalysisData.forEach {
             val mobilePosition = it.userSleepSessionEntity.mobilePosition
@@ -207,8 +208,10 @@ class HistoryViewModel(
                             Instant.ofEpochMilli(it.sleepSessionId.toLong() * 1000),
                             ZoneOffset.systemDefault()
                         ),
-                        true
+                        false
                     )
+
+                    reloadData = true
                 }
             }
 
@@ -221,6 +224,9 @@ class HistoryViewModel(
                         ),
                         false
                     )
+
+                    reloadData = true
+
                 }
             }
 
@@ -234,8 +240,15 @@ class HistoryViewModel(
                         false,
                         recalculateMobilePosition = true
                     )
+
+                    reloadData = true
+
                 }
             }
+        }
+
+        if (reloadData) {
+            getSleepData()
         }
 
         onWork = false
