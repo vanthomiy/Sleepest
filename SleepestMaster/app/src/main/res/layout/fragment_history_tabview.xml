@@ -85,27 +85,47 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_Previous"
-                android:layout_width="100dp"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-
                 android:layout_weight="1"
                 android:background="@drawable/background_rounded_button"
                 android:textColor="@color/primary_text_color"
                 android:text="@string/history_button_analysisDate_previous"/>
 
-            <TextView
-                android:id="@+id/tV_actualDayTabView"
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:layout_weight="10"
-                android:gravity="center"
-                android:textColor="@color/primary_text_color"
-                android:textStyle="bold"
-                android:textSize="18sp" />
+            <LinearLayout
+                android:id="@+id/lL_dateInformation"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="2"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tV_actualDayTabView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/primary_text_color"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:text="@{historyTabView.analysisRangeString}"/>
+
+                <TextView
+                    android:id="@+id/tV_actualYearTabView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/tertiary_text_color"
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    android:visibility="visible"
+                    android:text="@{historyTabView.analysisRangeYearString}"/>
+
+            </LinearLayout>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_Next"
-                android:layout_width="100dp"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/background_rounded_button"

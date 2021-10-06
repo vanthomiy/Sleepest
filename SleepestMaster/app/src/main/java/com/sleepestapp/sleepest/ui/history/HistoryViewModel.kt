@@ -37,6 +37,16 @@ class HistoryViewModel(
     var analysisDate = MutableLiveData(LocalDate.now())
 
     /**
+     *
+     */
+    var analysisRangeString = MutableLiveData("")
+
+    /**
+     *
+     */
+    var analysisRangeYearString = MutableLiveData("")
+
+    /**
      * Indicates that [checkSessionIntegrity] is currently working.
      */
     var onWork = false
@@ -124,20 +134,54 @@ class HistoryViewModel(
         range: Int
     ) {
         analysisDate.let {
+
+            val actualMonth = LocalDate.now().withDayOfMonth(
+                LocalDate.now().lengthOfMonth()
+            ).toEpochDay()
+
             when (range) {
                 0 -> {
-                    if (LocalDate.now().dayOfYear >= it.value?.plusDays(1L)?.dayOfYear!!) {
+                    if (LocalDate.now().toEpochDay() >= it.value?.plusDays(1L)?.toEpochDay()!!) {
                         it.value = it.value?.plusDays(1L)
                     }
                 }
+
                 1 -> {
-                    if (LocalDate.now().dayOfYear >= it.value?.plusWeeks(1L)?.dayOfYear!!) {
-                        it.value = it.value?.plusWeeks(1L)
+                    val actualDate = LocalDate.now()
+                    val actualEndOfWeekDate : Long = when (actualDate.dayOfWeek.value) {
+                        1 -> actualDate.plusDays(6L).toEpochDay() // Monday
+                        2 -> actualDate.plusDays(5L).toEpochDay() // Tuesday
+                        3 -> actualDate.plusDays(4L).toEpochDay() // Wednesday
+                        4 -> actualDate.plusDays(3L).toEpochDay() // Thursday
+                        5 -> actualDate.plusDays(2L).toEpochDay() // Friday
+                        6 -> actualDate.plusDays(1L).toEpochDay() // Saturday
+                        else -> actualDate.plusDays(0L).toEpochDay() // Sunday
+                    }
+
+                    val analysisDay = it.value?.plusWeeks(1L)?.toEpochDay()!!
+
+                    if (actualEndOfWeekDate >= analysisDay) {
+                        if (analysisDay > LocalDate.now().toEpochDay()) {
+                            it.value = LocalDate.now()
+                        } else {
+                            it.value = it.value?.plusWeeks(1L)
+                        }
                     }
                 }
+                
                 2 -> {
-                    if (LocalDate.now().dayOfYear >= it.value?.plusMonths(1L)?.dayOfYear!!) {
-                        it.value = it.value?.plusMonths(1L)
+                    val actualEndOfMonthDate = LocalDate.now().withDayOfMonth(
+                        LocalDate.now().lengthOfMonth()
+                    ).toEpochDay()
+
+                    val analysisDay = it.value?.plusMonths(1L)?.toEpochDay()!!
+
+                    if (actualEndOfMonthDate >= analysisDay) {
+                        if (analysisDay > LocalDate.now().toEpochDay()) {
+                            it.value = LocalDate.now()
+                        } else {
+                            it.value = it.value?.plusMonths(1L)
+                        }
                     }
                 }
             }

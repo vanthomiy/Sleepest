@@ -4,17 +4,21 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.transition.TransitionManager
+import android.transition.Visibility
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.viewpager2.widget.ViewPager2
+import com.github.mikephil.charting.data.LineRadarDataSet
 import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.databinding.FragmentHistoryTabviewBinding
 import com.google.android.material.tabs.TabLayout
@@ -34,10 +38,9 @@ class HistoryTabView : Fragment() {
     private val actualContext: Context by lazy { requireActivity().applicationContext }
     private val viewModel by lazy { ViewModelProvider(requireActivity(), factory).get(HistoryViewModel::class.java) }
     private lateinit var binding: FragmentHistoryTabviewBinding
-    private lateinit var btnPrevious: Button
-    private lateinit var btnNext : Button
-    private lateinit var tVActualDayTabView : TextView
     private lateinit var previousMonthAnalysisDate : Month
+
+    var analysisDateString = MutableLiveData("")
 
     var factory = object : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -73,9 +76,6 @@ class HistoryTabView : Fragment() {
         viewPager = binding.pager
         viewPager.adapter = adapter
 
-        btnPrevious = view.findViewById(R.id.btn_Previous)
-        btnNext = view.findViewById(R.id.btn_Next)
-        tVActualDayTabView = view.findViewById(R.id.tV_actualDayTabView)
         previousMonthAnalysisDate = LocalDate.now().month
 
         val tabs = listOf(getString(R.string.history_day_title), getString(R.string.history_week_title), getString(R.string.history_month_title))
@@ -102,15 +102,15 @@ class HistoryTabView : Fragment() {
             }
         )
 
-        btnPrevious.setOnClickListener {
+        binding.btnPrevious.setOnClickListener {
             viewModel.onPreviousDateClick(tabLayout.selectedTabPosition)
         }
 
-        btnNext.setOnClickListener {
+        binding.btnNext.setOnClickListener {
             viewModel.onNextDateClick(tabLayout.selectedTabPosition)
         }
 
-        tVActualDayTabView.setOnClickListener {
+        binding.lLDateInformation.setOnClickListener {
             val c = Calendar.getInstance()
             val year = c.get(Calendar.YEAR)
             val month = c.get(Calendar.MONTH)
@@ -133,7 +133,7 @@ class HistoryTabView : Fragment() {
             dpd?.show()
         }
 
-        tVActualDayTabView.setOnLongClickListener {
+        binding.lLDateInformation.setOnLongClickListener {
             viewModel.analysisDate.value = LocalDate.now()
             return@setOnLongClickListener true
         }
@@ -213,11 +213,37 @@ class HistoryTabView : Fragment() {
     fun updateDateInformation(
         range: Int
     ) {
+        TransitionManager.beginDelayedTransition(binding.lLDateInformation)
         when (range) {
-            0 -> tVActualDayTabView.text = createCalendarDayInformation()
-            1 -> tVActualDayTabView.text = createCalendarWeekInformation()
-            2 -> tVActualDayTabView.text = createCalendarMonthInformation()
+            0 -> {
+                binding.tVActualYearTabView.visibility = View.GONE
+                viewModel.analysisRangeString.value = createCalendarDayInformation()
+                //binding.tVActualDayTabView.text = createCalendarDayInformation()
+            }
+            1 -> {
+                binding.tVActualYearTabView.visibility = View.VISIBLE
+                viewModel.analysisRangeString.value = createCalendarWeekInformation()
+                viewModel.analysisRangeYearString.value = createCalendarYearInformation()
+            }
+            2 -> {
+                binding.tVActualYearTabView.visibility = View.VISIBLE
+                viewModel.analysisRangeString.value = createCalendarMonthInformation()
+                viewModel.analysisRangeYearString.value = createCalendarYearInformation()
+            }
         }
+    }
+
+    /**
+     * Creates a formatted string for the function [updateDateInformation].
+     */
+    private fun createCalendarYearInformation(): String {
+        var information = actualContext.getString(R.string.history_failure_title)
+
+        viewModel.analysisDate.value?.let {
+            information = it.year.toString()
+        }
+
+        return information
     }
 
     /**
@@ -255,17 +281,20 @@ class HistoryTabView : Fragment() {
 
         viewModel.analysisDate.value?.let {
             val analysisDate = LocalDate.of(it.year, it.monthValue, it.dayOfMonth)
-            val analysisWeekOfYear = analysisDate.get(WeekFields.of(Locale.GERMANY).weekOfYear())
 
-            information = when {
-                actualWeekOfYear == analysisWeekOfYear -> {
-                    getString(R.string.history_currentWeek_title)
+            when (analysisDate.get(WeekFields.of(Locale.GERMANY).weekOfYear())) {
+                actualWeekOfYear -> {
+                    information = getString(R.string.history_currentWeek_title)
+                    binding.tVActualYearTabView.visibility = View.GONE
+
                 }
-                (actualWeekOfYear - 1) == analysisWeekOfYear -> {
-                    getString(R.string.history_previousWeek_title)
+                (actualWeekOfYear - 1) -> {
+                    information = getString(R.string.history_previousWeek_title)
+                    binding.tVActualYearTabView.visibility = View.GONE
+
                 }
                 else -> {
-                    getWeekRange(it)
+                    information = getWeekRange(it)
                 }
             }
         }
