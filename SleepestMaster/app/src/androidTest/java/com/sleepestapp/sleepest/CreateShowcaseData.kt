@@ -60,7 +60,7 @@ class CreateShowcaseData {
 
         val actualDate = LocalDate.now().minusDays(1)
         val sessionsToFill = 24 * 30 // 3 months
-        val sleepFailsPercentage = 10 // 10 out of 100
+        val sleepFailsPercentage = 3 // 10 out of 100
 
         val sleepSessionMinAmount = 20
         val sleepSessionMaxAmount = 40
@@ -94,41 +94,51 @@ class CreateShowcaseData {
             else
                 MobilePosition.ONTABLE
 
-            val sleepDataList = createSleepApiRawData(
-                actualTimeStamp,
-                sleepSessionAmount,
-                sleepDuration,
-                awakeInSleepTime,
-                inBed,
-                lightSleepPhaseWeight,
-                deepSleepPhaseWeight,
-                remSleepPhaseWeight
-            )
+            if (!isSleepFailure) {
+                val sleepDataList =
+                    createSleepApiRawData(
+                        actualTimeStamp,
+                        sleepSessionAmount,
+                        sleepDuration,
+                        awakeInSleepTime,
+                        inBed,
+                        lightSleepPhaseWeight,
+                        deepSleepPhaseWeight,
+                        remSleepPhaseWeight
+                    )
 
-            sleepDatabaseRepository.insertSleepApiRawData(sleepDataList)
+                sleepDatabaseRepository.insertSleepApiRawData(sleepDataList)
 
-            val id = UserSleepSessionEntity.getIdByDateTimeWithTimeZoneLive(
-                sleepStoreRepository,
-                actualDateTime
-            )
-            val userSleepSession = sleepDatabaseRepository.getOrCreateSleepSessionById(id)
+                val id = UserSleepSessionEntity.getIdByDateTimeWithTimeZoneLive(
+                    sleepStoreRepository,
+                    actualDateTime
+                )
+                val userSleepSession = sleepDatabaseRepository.getOrCreateSleepSessionById(id)
 
-            userSleepSession.lightConditions = LightConditions.LIGHT
-            userSleepSession.mobilePosition = inBed
-            userSleepSession.sleepTimes.possibleSleepTimeStart = sleepStoreRepository.getSleepTimeStart()
-            userSleepSession.sleepTimes.possibleSleepTimeEnd = sleepStoreRepository.getSleepTimeEnd()
-            userSleepSession.sleepTimes.sleepTimeStart = actualTimeStamp
-            userSleepSession.sleepTimes.sleepTimeEnd = actualTimeStamp + (sleepDuration * 60)
-            userSleepSession.sleepTimes.sleepDuration = SleepApiRawDataEntity.getSleepTime(sleepDataList)
-            userSleepSession.sleepTimes.awakeTime = SleepApiRawDataEntity.getAwakeTime(sleepDataList)
-            userSleepSession.sleepTimes.lightSleepDuration = SleepApiRawDataEntity.getSleepTimeByState(sleepDataList, SleepState.LIGHT)
-            userSleepSession.sleepTimes.deepSleepDuration = SleepApiRawDataEntity.getSleepTimeByState(sleepDataList, SleepState.DEEP)
-            userSleepSession.sleepTimes.remSleepDuration = SleepApiRawDataEntity.getSleepTimeByState(sleepDataList, SleepState.REM)
+                userSleepSession.lightConditions = LightConditions.LIGHT
+                userSleepSession.mobilePosition = inBed
+                userSleepSession.sleepTimes.possibleSleepTimeStart =
+                    sleepStoreRepository.getSleepTimeStart()
+                userSleepSession.sleepTimes.possibleSleepTimeEnd =
+                    sleepStoreRepository.getSleepTimeEnd()
+                userSleepSession.sleepTimes.sleepTimeStart = actualTimeStamp
+                userSleepSession.sleepTimes.sleepTimeEnd = actualTimeStamp + (sleepDuration * 60)
+                userSleepSession.sleepTimes.sleepDuration =
+                    SleepApiRawDataEntity.getSleepTime(sleepDataList)
+                userSleepSession.sleepTimes.awakeTime =
+                    SleepApiRawDataEntity.getAwakeTime(sleepDataList)
+                userSleepSession.sleepTimes.lightSleepDuration =
+                    SleepApiRawDataEntity.getSleepTimeByState(sleepDataList, SleepState.LIGHT)
+                userSleepSession.sleepTimes.deepSleepDuration =
+                    SleepApiRawDataEntity.getSleepTimeByState(sleepDataList, SleepState.DEEP)
+                userSleepSession.sleepTimes.remSleepDuration =
+                    SleepApiRawDataEntity.getSleepTimeByState(sleepDataList, SleepState.REM)
 
-            userSleepSession.userSleepRating.activityOnDay = ActivityOnDay.values()[(0..5).random().toInt()]
+                userSleepSession.userSleepRating.activityOnDay =
+                    ActivityOnDay.values()[(0..5).random().toInt()]
 
-            sleepDatabaseRepository.insertUserSleepSession(userSleepSession)
-
+                sleepDatabaseRepository.insertUserSleepSession(userSleepSession)
+            }
         }
     }
 
