@@ -8,6 +8,7 @@ import com.sleepestapp.sleepest.storage.datastorage.TutorialStatus
 import com.sleepestapp.sleepest.*
 import com.sleepestapp.sleepest.model.data.Constants.DAY_IN_SECONDS
 import com.sleepestapp.sleepest.storage.datastorage.*
+import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.getActualAlarmTimeData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
@@ -77,7 +78,7 @@ class DataStoreRepository(context: Context) {
     /**
      * Returns if the time is in actual sleep time
      */
-    @Deprecated("Dont use this crap anymore")
+    @Deprecated("Dont use this crap anymore",  ReplaceWith("getActualAlarmTimeData(timestamp)"))
     suspend fun isInSleepTime(givenTime: LocalTime? = null): Boolean {
 
         val times = sleepParameterFlow.first()

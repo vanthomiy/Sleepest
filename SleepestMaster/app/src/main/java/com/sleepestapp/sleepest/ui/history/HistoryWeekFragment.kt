@@ -35,7 +35,6 @@ class HistoryWeekFragment : Fragment() {
      */
     private lateinit var activityChart: LineChart
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

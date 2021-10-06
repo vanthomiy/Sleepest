@@ -37,6 +37,16 @@ class HistoryViewModel(
     var analysisDate = MutableLiveData(LocalDate.now())
 
     /**
+     *
+     */
+    var analysisRangeString = MutableLiveData("")
+
+    /**
+     *
+     */
+    var analysisRangeYearString = MutableLiveData("")
+
+    /**
      * Indicates that [checkSessionIntegrity] is currently working.
      */
     var onWork = false
@@ -124,20 +134,54 @@ class HistoryViewModel(
         range: Int
     ) {
         analysisDate.let {
+
+            val actualMonth = LocalDate.now().withDayOfMonth(
+                LocalDate.now().lengthOfMonth()
+            ).toEpochDay()
+
             when (range) {
                 0 -> {
-                    if (LocalDate.now().dayOfYear >= it.value?.plusDays(1L)?.dayOfYear!!) {
+                    if (LocalDate.now().toEpochDay() >= it.value?.plusDays(1L)?.toEpochDay()!!) {
                         it.value = it.value?.plusDays(1L)
                     }
                 }
+
                 1 -> {
-                    if (LocalDate.now().dayOfYear >= it.value?.plusWeeks(1L)?.dayOfYear!!) {
-                        it.value = it.value?.plusWeeks(1L)
+                    val actualDate = LocalDate.now()
+                    val actualEndOfWeekDate : Long = when (actualDate.dayOfWeek.value) {
+                        1 -> actualDate.plusDays(6L).toEpochDay() // Monday
+                        2 -> actualDate.plusDays(5L).toEpochDay() // Tuesday
+                        3 -> actualDate.plusDays(4L).toEpochDay() // Wednesday
+                        4 -> actualDate.plusDays(3L).toEpochDay() // Thursday
+                        5 -> actualDate.plusDays(2L).toEpochDay() // Friday
+                        6 -> actualDate.plusDays(1L).toEpochDay() // Saturday
+                        else -> actualDate.plusDays(0L).toEpochDay() // Sunday
+                    }
+
+                    val analysisDay = it.value?.plusWeeks(1L)?.toEpochDay()!!
+
+                    if (actualEndOfWeekDate >= analysisDay) {
+                        if (analysisDay > LocalDate.now().toEpochDay()) {
+                            it.value = LocalDate.now()
+                        } else {
+                            it.value = it.value?.plusWeeks(1L)
+                        }
                     }
                 }
+                
                 2 -> {
-                    if (LocalDate.now().dayOfYear >= it.value?.plusMonths(1L)?.dayOfYear!!) {
-                        it.value = it.value?.plusMonths(1L)
+                    val actualEndOfMonthDate = LocalDate.now().withDayOfMonth(
+                        LocalDate.now().lengthOfMonth()
+                    ).toEpochDay()
+
+                    val analysisDay = it.value?.plusMonths(1L)?.toEpochDay()!!
+
+                    if (actualEndOfMonthDate >= analysisDay) {
+                        if (analysisDay > LocalDate.now().toEpochDay()) {
+                            it.value = LocalDate.now()
+                        } else {
+                            it.value = it.value?.plusMonths(1L)
+                        }
                     }
                 }
             }
@@ -199,7 +243,7 @@ class HistoryViewModel(
             val mobilePosition = it.userSleepSessionEntity.mobilePosition
             val isSleepStateSleeping = it.sleepApiRawDataEntity.any { x -> x.sleepState == SleepState.SLEEPING }
             val isSleepStateUnidentified = it.sleepApiRawDataEntity.any { x -> x.sleepState == SleepState.NONE }
-
+            
             if (isSleepStateUnidentified) {
                 sleepCalculationHandler.checkIsUserSleeping(
                     LocalDateTime.ofInstant(
@@ -464,6 +508,7 @@ class HistoryViewModel(
         val barWidth: Any
         val axisMaximum: Any
         val labelCount: Any
+        xAxisValues.clear()
 
         if (range > 21) {
             for (i in diagramData.second.indices) {
@@ -524,15 +569,15 @@ class HistoryViewModel(
         barChart.legend.setCustom(legendEntryList)
 
         barChart.axisRight.isEnabled = true
-        barChart.axisRight.spaceTop = 1f
-        barChart.axisRight.axisMinimum = 0f
-        barChart.axisRight.axisMaximum = proportion
+        barChart.axisRight.spaceTop = 0F
+        barChart.axisRight.axisMinimum = 0F
+        barChart.axisRight.axisMaximum = 0F
         barChart.axisRight.labelCount = 0
         barChart.axisRight.setDrawGridLines(false)
         barChart.axisRight.setDrawLabels(false)
 
         barChart.axisLeft.isEnabled = true
-        barChart.axisLeft.spaceTop = 60f
+        barChart.axisLeft.spaceTop = 0f
         barChart.axisLeft.axisMinimum = 0f
         barChart.axisLeft.axisMaximum = proportion
         barChart.axisLeft.textColor = colorDarkMode
