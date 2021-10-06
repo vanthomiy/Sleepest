@@ -303,6 +303,10 @@ object SleepTimeValidationUtil {
         return activeAlarms
     }
 
+    /**
+     * pass the [DataStoreRepository] and nothing or a [LocalTime] to check the sleep time
+     * It will return a [AlarmTimeData] with some information about the current time
+     */
     suspend fun getActualAlarmTimeData(dataStoreRepository: DataStoreRepository, time:LocalTime = LocalTime.now()): AlarmTimeData {
         // get sleep times
         val times = dataStoreRepository.sleepParameterFlow.first()
