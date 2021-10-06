@@ -10,6 +10,7 @@ import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.model.data.MoodType
 import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler
 import com.sleepestapp.sleepest.storage.db.UserSleepSessionEntity
+import com.sleepestapp.sleepest.storage.db.UserSleepSessionEntity.Companion.getIdByDateTimeWithTimeZone
 import com.sleepestapp.sleepest.util.SmileySelectorUtil
 import kotlinx.coroutines.launch
 import java.time.*
@@ -120,7 +121,7 @@ class HistoryDayViewModel(
     fun getSleepSessionId(
         time: LocalDate
     ) {
-        sessionId = UserSleepSessionEntity.getIdByDateTime(time)
+        sessionId = getIdByDateTimeWithTimeZone(time)
     }
 
     /**

@@ -20,6 +20,7 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.sleepestapp.sleepest.model.data.SleepDataAnalysis
+import com.sleepestapp.sleepest.storage.db.UserSleepSessionEntity.Companion.getIdByDateTimeWithTimeZone
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.*
@@ -195,7 +196,7 @@ class HistoryViewModel(
 
             for (day in 0..dayDifference) {
                 ids.add(
-                    UserSleepSessionEntity.getIdByDateTime(
+                    getIdByDateTimeWithTimeZone(
                         LocalDate.of(
                             startDayToGet.plusDays(day.toLong()).year,
                             startDayToGet.plusDays(day.toLong()).month,
@@ -301,7 +302,7 @@ class HistoryViewModel(
         val ids = mutableSetOf<Int>()
         for (i in -(range-2)..1) {
             ids.add(
-                UserSleepSessionEntity.getIdByDateTime(
+                getIdByDateTimeWithTimeZone(
                     LocalDate.ofEpochDay(
                         endDateOfDiagram.toEpochDay().plus((i - 1).toLong())
                     )
@@ -605,7 +606,7 @@ class HistoryViewModel(
         val ids = mutableSetOf<Int>()
         for (i in -(range - 2)..1) {
             ids.add(
-                UserSleepSessionEntity.getIdByDateTime(
+                getIdByDateTimeWithTimeZone(
                     LocalDate.ofEpochDay(
                         endDateOfDiagram.toEpochDay().plus((i - 1).toLong())
                     )

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.test.platform.app.InstrumentationRegistry
 import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
+import com.sleepestapp.sleepest.storage.db.UserSleepSessionEntity.Companion.getIdByDateTimeWithTimeZone
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers
 import org.junit.Assert.*
@@ -40,9 +41,9 @@ class UserSleepSessionEntityTest{
     }
 
     @Test
-    fun idAndTimestampDateCreation(){
+    fun idAndTimestampDateCreation() {
 
-        var idDate = UserSleepSessionEntity.getIdByDateTime(LocalDate.of(2021, 6, 3))
+        var idDate = getIdByDateTimeWithTimeZone(LocalDate.of(2021, 6, 3))
         // 7:36
         var idStamp = UserSleepSessionEntity.getIdByTimeStamp(1622612190)
         assertThat(idDate, CoreMatchers.equalTo(idStamp))
@@ -51,7 +52,7 @@ class UserSleepSessionEntityTest{
         idStamp = UserSleepSessionEntity.getIdByTimeStamp(1622650832)
         assertThat((idDate != idStamp), CoreMatchers.equalTo(true))
 
-        idDate = UserSleepSessionEntity.getIdByDateTime(LocalDate.of(2021, 6, 4))
+        idDate = getIdByDateTimeWithTimeZone(LocalDate.of(2021, 6, 4))
         assertThat(idDate, CoreMatchers.equalTo(idStamp))
 
     }
