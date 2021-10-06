@@ -246,29 +246,24 @@ class HistoryDayFragment : Fragment() {
      */
     private fun setTimeStamps() {
 
-        // Initial setting necessary in case asynchronous demand of the sleep session (sleepValues) isn`t ready.
-        var time = LocalDateTime.of(1970, 1, 1, 0, 0, 0).format(DateTimeFormatter.ISO_TIME)
-
         // In case the session is available, set values.
         viewModel.sleepAnalysisData.firstOrNull {
                 x -> x.sleepSessionId == viewModelDay.sessionId
         }?.let {
-            var tempTime = LocalDateTime.ofInstant(
+            val sleepTimeStart = LocalDateTime.ofInstant(
                 Instant.ofEpochMilli((it.userSleepSessionEntity.sleepTimes.sleepTimeStart.toLong()) * 1000),
                 ZoneOffset.systemDefault()
             )
 
-            time = TimeConverterUtil.toTimeFormat(tempTime.hour, tempTime.minute)
-            viewModelDay.beginOfSleep.value = (time)
-            viewModelDay.beginOfSleepEpoch.value = (it.userSleepSessionEntity.sleepTimes.sleepTimeStart.toLong() * 1000)
-
-            tempTime = LocalDateTime.ofInstant(
+            val sleepTimeEnd = LocalDateTime.ofInstant(
                 Instant.ofEpochMilli((it.userSleepSessionEntity.sleepTimes.sleepTimeEnd.toLong()) * 1000),
                 ZoneOffset.systemDefault()
             )
 
-            time = TimeConverterUtil.toTimeFormat(tempTime.hour, tempTime.minute)
-            viewModelDay.endOfSeep.value = (time)
+            viewModelDay.beginOfSleep.value = (TimeConverterUtil.toTimeFormat(sleepTimeStart.hour, sleepTimeStart.minute))
+            viewModelDay.beginOfSleepEpoch.value = (it.userSleepSessionEntity.sleepTimes.sleepTimeStart.toLong() * 1000)
+
+            viewModelDay.endOfSeep.value = (TimeConverterUtil.toTimeFormat(sleepTimeEnd.hour, sleepTimeEnd.minute))
             viewModelDay.endOfSleepEpoch.value = (it.userSleepSessionEntity.sleepTimes.sleepTimeEnd.toLong() * 1000)
 
             viewModelDay.awakeTime.value = (
@@ -299,8 +294,10 @@ class HistoryDayFragment : Fragment() {
                 viewModelDay.timeInSleepPhaseTextField.value = (View.INVISIBLE)
             }
         } ?: run {
-            viewModelDay.beginOfSleep.value = (time)
-            viewModelDay.endOfSeep.value = (time)
+            val time = LocalDateTime.of(1970, 1, 1, 0, 0, 0).format(DateTimeFormatter.ISO_TIME)
+
+            viewModelDay.beginOfSleep.value = time
+            viewModelDay.endOfSeep.value = time
 
             viewModelDay.awakeTime.value = (
                     actualContext.getString(R.string.history_day_timeInPhase_awake) + " " + generateSleepValueInformation(0)
