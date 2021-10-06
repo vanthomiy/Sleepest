@@ -201,7 +201,10 @@ class HistoryViewModel(
             val isSleepStateSleeping = it.sleepApiRawDataEntity.any { x -> x.sleepState == SleepState.SLEEPING }
             val isSleepStateUnidentified = it.sleepApiRawDataEntity.any { x -> x.sleepState == SleepState.NONE }
 
+
+
             if (isSleepStateUnidentified) {
+
                 viewModelScope.launch {
                     sleepCalculationHandler.checkIsUserSleeping(
                         LocalDateTime.ofInstant(
