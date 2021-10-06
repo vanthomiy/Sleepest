@@ -59,7 +59,7 @@ class CreateShowcaseData {
         sleepDatabaseRepository.deleteSleepApiRawData()
 
         val actualDate = LocalDate.now().minusDays(1)
-        val sessionsToFill = 3 * 30 // 3 months
+        val sessionsToFill = 24 * 30 // 3 months
         val sleepFailsPercentage = 10 // 10 out of 100
 
         val sleepSessionMinAmount = 20
