@@ -87,14 +87,22 @@ public class PermissionsUtil {
         if (context == null) {
             return;
         }
-        final Intent intent = new Intent();
-        intent.setAction(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-        intent.addCategory(Intent.CATEGORY_DEFAULT);
-        intent.setData(Uri.parse("package:" + context.getPackageName()));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-        context.startActivity(intent);
+        try {
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            intent.setData(Uri.parse("package:" + context.getPackageName()));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+            context.startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+            context.startActivity(intent);
+            Toast.makeText(context, context.getString(R.string.onboarding_toast_find_permission_in_list), Toast.LENGTH_LONG).show();
+        }
+
     }
 
     /**
