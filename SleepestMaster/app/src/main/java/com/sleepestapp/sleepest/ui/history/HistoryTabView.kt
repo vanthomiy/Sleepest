@@ -33,14 +33,19 @@ import java.util.*
 
 class HistoryTabView : Fragment() {
     private lateinit var adapter: HistoryTabViewAdapter
+
     private lateinit var viewPager: ViewPager2
 
     private val actualContext: Context by lazy { requireActivity().applicationContext }
-    private val viewModel by lazy { ViewModelProvider(requireActivity(), factory).get(HistoryViewModel::class.java) }
-    private lateinit var binding: FragmentHistoryTabviewBinding
-    private lateinit var previousMonthAnalysisDate : Month
 
-    var analysisDateString = MutableLiveData("")
+    private val viewModel by lazy { ViewModelProvider(requireActivity(), factory).get(HistoryViewModel::class.java) }
+
+    private lateinit var binding: FragmentHistoryTabviewBinding
+
+    /**
+     * Contains date information about the month which lies right before the currently selected analysis date.
+     */
+    private lateinit var previousMonthAnalysisDate : Month
 
     var factory = object : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -218,7 +223,6 @@ class HistoryTabView : Fragment() {
             0 -> {
                 binding.tVActualYearTabView.visibility = View.GONE
                 viewModel.analysisRangeString.value = createCalendarDayInformation()
-                //binding.tVActualDayTabView.text = createCalendarDayInformation()
             }
             1 -> {
                 binding.tVActualYearTabView.visibility = View.VISIBLE

@@ -2,7 +2,6 @@ package com.sleepestapp.sleepest.ui.history
 
 import android.graphics.drawable.Drawable
 import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -37,12 +36,12 @@ class HistoryViewModel(
     var analysisDate = MutableLiveData(LocalDate.now())
 
     /**
-     *
+     * Currently selected analysis date range which will be displayed in the history.
      */
     var analysisRangeString = MutableLiveData("")
 
     /**
-     *
+     * The year of the currently selected analysis date range which will be displayed in the history.
      */
     var analysisRangeYearString = MutableLiveData("")
 
@@ -134,10 +133,6 @@ class HistoryViewModel(
         range: Int
     ) {
         analysisDate.let {
-
-            val actualMonth = LocalDate.now().withDayOfMonth(
-                LocalDate.now().lengthOfMonth()
-            ).toEpochDay()
 
             when (range) {
                 0 -> {
@@ -243,7 +238,7 @@ class HistoryViewModel(
             val mobilePosition = it.userSleepSessionEntity.mobilePosition
             val isSleepStateSleeping = it.sleepApiRawDataEntity.any { x -> x.sleepState == SleepState.SLEEPING }
             val isSleepStateUnidentified = it.sleepApiRawDataEntity.any { x -> x.sleepState == SleepState.NONE }
-            
+
             if (isSleepStateUnidentified) {
                 sleepCalculationHandler.checkIsUserSleeping(
                     LocalDateTime.ofInstant(
