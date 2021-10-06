@@ -12,7 +12,9 @@ class HistoryTabViewAdapter(fragment: Fragment) : FragmentStateAdapter(fragment)
 
     override fun getItemCount(): Int = 3
 
-    override fun createFragment(position: Int): Fragment {
+    override fun createFragment(
+        position: Int
+    ): Fragment {
         // Return a NEW fragment instance in createFragment(int)
 
         when (count) {

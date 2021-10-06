@@ -24,8 +24,20 @@ class HistoryMonthFragment : Fragment() {
     private val actualContext: Context by lazy { requireActivity().applicationContext }
 
     private lateinit var binding: FragmentHistoryMonthBinding
+
+    /**
+     * Contains the BarChart for the [HistoryMonthFragment] sleep phases analysis.
+     */
     private lateinit var barChart: BarChart
+
+    /**
+     * Contains the dates of the current analysis month.
+     */
     private lateinit var barChartDates :  Pair<Int, LocalDate>
+
+    /**
+     * Contains the LineChart for the [HistoryMonthFragment] activity analysis.
+     */
     private lateinit var activityChart: LineChart
 
     override fun onCreateView(
@@ -33,65 +45,54 @@ class HistoryMonthFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
+        val height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics)
         binding = FragmentHistoryMonthBinding.inflate(inflater, container, false)
         binding.historyMonthViewModel = viewModelMonth
         binding.lifecycleOwner = this
 
+        // Initial set up for the monthly sleep analysis bar chart.
         barChartDates = getEndOfMonth()
         barChart = viewModel.setBarChart(
             BarChart(actualContext),
             barChartDates.first,
             barChartDates.second,
-            DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext))
+            DesignUtil.colorDarkMode(
+                DesignUtil.checkDarkModeActive(actualContext)
+            )
         )
+
+        binding.lLSleepAnalysisChartsMonthSleepPhases.addView(barChart)
+        barChart.layoutParams.height = height.toInt()
+        barChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+
+        // Initial set up for the monthly activity analysis bar chart.
         activityChart = viewModel.setActivityChart(
             LineChart(context),
             barChartDates.first,
             barChartDates.second,
-            DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext))
+            DesignUtil.colorDarkMode(
+                DesignUtil.checkDarkModeActive(actualContext)
+            )
         )
 
-        binding.lLSleepAnalysisChartsMonthSleepPhases.addView(barChart)
         binding.lLActivityAnalysisChartMonth.addView(activityChart)
-
-        val height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200F, resources.displayMetrics)
-        barChart.layoutParams.height = height.toInt()
-        barChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-        barChart.invalidate()
-
         activityChart.layoutParams.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150F, resources.displayMetrics).toInt()
         activityChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+
+        barChart.invalidate()
         activityChart.invalidate()
 
+        // Listener for changes in the analysis date.
         viewModel.analysisDate.observe(viewLifecycleOwner) {
-            barChartDates = getEndOfMonth()
-
-            viewModel.updateBarChart(
-                barChart,
-                barChartDates.first,
-                barChartDates.second,
-                DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext)
-                )
-            )
-
-            barChart.invalidate()
-
-            viewModel.updateActivityChart(
-                activityChart,
-                barChartDates.first,
-                barChartDates.second,
-                DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext)
-                )
-            )
-
-            activityChart.invalidate()
+            updateCharts()
         }
 
+        // Listener for the actual information button which was selected.
         viewModelMonth.actualExpand.observe(viewLifecycleOwner) {
             TransitionManager.beginDelayedTransition(binding.lLLinearAnimationLayoutMonthlyAnalysis)
         }
 
+        // Listener for changes of the visibility manager
         viewModel.visibilityManagerMonthDiagrams.observe(viewLifecycleOwner) {
             viewModel.visibilityManagerMonthDiagrams.value?.let { visibility ->
                 maintainVisibilityMonthHistory(visibility)
@@ -102,7 +103,34 @@ class HistoryMonthFragment : Fragment() {
     }
 
     /**
-     * Returns the length and the end of the current month.
+     * Calls all update functions for the charts in this fragment.
+     */
+    private fun updateCharts() {
+        barChartDates = getEndOfMonth()
+
+        viewModel.updateBarChart(
+            barChart,
+            barChartDates.first,
+            barChartDates.second,
+            DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext)
+            )
+        )
+
+        barChart.invalidate()
+
+        viewModel.updateActivityChart(
+            activityChart,
+            barChartDates.first,
+            barChartDates.second,
+            DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext)
+            )
+        )
+
+        activityChart.invalidate()
+    }
+
+    /**
+     * Determines the [LocalDate] of the last day of the passed days month.
      */
     private fun getEndOfMonth(): Pair<Int, LocalDate> {
         viewModel.analysisDate.value?.let {
@@ -117,9 +145,12 @@ class HistoryMonthFragment : Fragment() {
     }
 
     /**
-     * Maintains the visibility of the diagrams in the day fragment.
+     * Maintains the visibility settings of the monthly sleep analysis.
+     * If no data is to be shown, the diagrams disappear and an information will appear.
      */
-    private fun maintainVisibilityMonthHistory(setVisibility: Boolean) {
+    private fun maintainVisibilityMonthHistory(
+        setVisibility: Boolean
+    ) {
         if (setVisibility) {
             binding.iVNoDataAvailable.visibility = View.GONE
             binding.tVNoDataAvailable.visibility = View.GONE

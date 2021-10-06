@@ -348,9 +348,12 @@
     <string name="settings_export_failed">Export failed</string>
     <string name="settings_unable_to_find_market">\" unable to find market app\"</string>
     <string name="alarm_type">Alarm type</string>
-    <string name="header">header</string>
-    <string name="history">history</string>
-    <string name="sleep">sleep</string>
-    <string name="profile">profile</string>
+    <string name="header">Alarm</string>
+    <string name="history">History</string>
+    <string name="sleep">Sleep settings</string>
+    <string name="profile">Settings</string>
+    <string name="history_sleep_phases_header_light_sleep">Light sleep</string>
+    <string name="history_sleep_phases_header_deep_sleep">Deep sleep</string>
+    <string name="history_sleep_phases_header_rem_sleep">REM sleep</string>
 
 </resources>
