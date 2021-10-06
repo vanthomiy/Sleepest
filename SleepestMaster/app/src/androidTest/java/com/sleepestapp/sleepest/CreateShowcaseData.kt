@@ -69,7 +69,7 @@ class CreateShowcaseData {
         val sleepStartTimeLate = LocalTime.of(23,30)
 
         val sleepDurationMax = 9 * 60 // min
-        val sleepDurationMin = 5 * 60 // min
+        val sleepDurationMin = 6 * 60 // min
 
         val positionInBedPercentage = 75 // 80 out of 100 in bed
         val awakeInSleepTime = 10 // 10 out of 100 is awake
