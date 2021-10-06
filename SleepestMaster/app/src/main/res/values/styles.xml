@@ -12,8 +12,7 @@
         <!--item name="android:background">@color/primary_button_color</item!-->
     </style>
 
-    <style name="TimePickerTheme" parent="Theme.AppCompat.DayNight.Dialog">
-        <item name="colorAccent">@color/accent_text_color</item>
+    <style name="TimePickerTheme" parent="Theme.AppCompat.Dialog">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:headerBackground">@color/colorAccent</item>
@@ -24,6 +23,14 @@
         <item name="android:amPmTextColor">@color/primary_text_color</item>
     </style>
 
-    <!-- Base application theme. -->
+    <style name="DatePickerTheme" parent="Theme.AppCompat.Dialog" >
+        <item name="android:colorAccent">@color/accent_text_color</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="colorPrimary">@color/tertiary_app_background</item>
+        <item name="colorPrimaryDark">@color/primary_app_background</item>
+        <item name="android:background">@color/primary_app_background</item>
+        <item name="colorAccent">@color/accent_text_color</item>
+    </style>
 
 </resources>
