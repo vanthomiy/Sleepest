@@ -60,6 +60,8 @@ class HistoryMonthFragment : Fragment() {
                 DesignUtil.checkDarkModeActive(actualContext)
             )
         )
+
+        binding.lLSleepAnalysisChartsMonthSleepPhases.addView(barChart)
         barChart.layoutParams.height = height.toInt()
         barChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
 
@@ -72,11 +74,10 @@ class HistoryMonthFragment : Fragment() {
                 DesignUtil.checkDarkModeActive(actualContext)
             )
         )
+
+        binding.lLActivityAnalysisChartMonth.addView(activityChart)
         activityChart.layoutParams.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150F, resources.displayMetrics).toInt()
         activityChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-
-        binding.lLSleepAnalysisChartsMonthSleepPhases.addView(barChart)
-        binding.lLActivityAnalysisChartMonth.addView(activityChart)
 
         barChart.invalidate()
         activityChart.invalidate()

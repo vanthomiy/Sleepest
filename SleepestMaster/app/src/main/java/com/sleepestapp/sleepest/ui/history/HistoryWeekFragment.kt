@@ -55,6 +55,8 @@ class HistoryWeekFragment : Fragment() {
                 DesignUtil.checkDarkModeActive(actualContext)
             )
         )
+
+        binding.lLSleepAnalysisChartsWeekSleepPhases.addView(barChart)
         barChart.layoutParams.height = height.toInt()
         barChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
 
@@ -67,11 +69,10 @@ class HistoryWeekFragment : Fragment() {
                 DesignUtil.checkDarkModeActive(actualContext)
             )
         )
+
+        binding.lLActivityAnalysisChartWeek.addView(activityChart)
         activityChart.layoutParams.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150F, resources.displayMetrics).toInt()
         activityChart.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-
-        binding.lLSleepAnalysisChartsWeekSleepPhases.addView(barChart)
-        binding.lLActivityAnalysisChartWeek.addView(activityChart)
 
         barChart.invalidate()
         activityChart.invalidate()

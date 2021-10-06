@@ -352,10 +352,13 @@
     <string name="settings_export_failed">Export fehlgeschlagen</string>
     <string name="settings_unable_to_find_market">\" App wurde nicht gefunden\"</string>
     <string name="alarm_type">Alarm typ</string>
-    <string name="header">header</string>
-    <string name="history">history</string>
-    <string name="sleep">sleep</string>
-    <string name="profile">profile</string>
+    <string name="header">Wecker</string>
+    <string name="history">Schlafverlauf</string>
+    <string name="sleep">Schlafeinstellungen</string>
+    <string name="profile">Einstellungen</string>
+    <string name="history_sleep_phases_header_light_sleep">Leichtschlaf</string>
+    <string name="history_sleep_phases_header_deep_sleep">Tiefschlaf</string>
+    <string name="history_sleep_phases_header_rem_sleep">Traumschlaf</string>
     <!--endregion-->
 
 

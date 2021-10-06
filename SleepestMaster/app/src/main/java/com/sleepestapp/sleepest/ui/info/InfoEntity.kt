@@ -43,21 +43,21 @@ data class InfoEntity (
                     InfoEntity(
                         image = null,
                         lottie = null,
-                        textHeader = "Light Sleep Phase",
+                        textHeader = context.resources.getString(R.string.history_sleep_phases_header_light_sleep),
                         textDescription = context.resources.getString(R.string.history_sleep_phases_information_light),
                         infoEntityStyle = InfoEntityStyle.PICTURE_LEFT
                     ),
                     InfoEntity(
                         image = null,
                         lottie = null,
-                        textHeader = "Deep Sleep Phase",
+                        textHeader = context.resources.getString(R.string.history_sleep_phases_header_deep_sleep),
                         textDescription = context.resources.getString(R.string.history_sleep_phases_information_deep),
                         infoEntityStyle = InfoEntityStyle.PICTURE_LEFT
                     ),
                     InfoEntity(
                         image = null,
                         lottie = null,
-                        textHeader = "REM Sleep Phase",
+                        textHeader = context.resources.getString(R.string.history_sleep_phases_header_rem_sleep),
                         textDescription = context.resources.getString(R.string.history_sleep_phases_information_rem),
                         infoEntityStyle = InfoEntityStyle.PICTURE_LEFT
                     )
