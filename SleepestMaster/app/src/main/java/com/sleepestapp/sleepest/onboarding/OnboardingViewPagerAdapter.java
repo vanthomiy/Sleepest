@@ -1,5 +1,6 @@
 package com.sleepestapp.sleepest.onboarding;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -337,6 +338,7 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
                 PermissionsUtil.isNotificationPolicyAccessGranted(context);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

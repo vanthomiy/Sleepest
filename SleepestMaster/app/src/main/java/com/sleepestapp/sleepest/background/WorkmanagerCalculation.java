@@ -36,22 +36,17 @@ public class WorkmanagerCalculation extends Worker {
     @Override
     public Result doWork() {
 
-        try {
-            //Defines the new wakeup
-            BackgroundAlarmTimeHandler.Companion.getHandler(context).defineNewUserWakeup(null, true);
 
-            Calendar calendar = Calendar.getInstance();
-            SharedPreferences pref = context.getSharedPreferences("WorkmanagerCalculation", 0);
-            SharedPreferences.Editor ed = pref.edit();
-            ed.putInt("day", calendar.get(Calendar.DAY_OF_WEEK));
-            ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
-            ed.putInt("minute", calendar.get(Calendar.MINUTE));
-            ed.apply();
+        //Defines the new wakeup
+        BackgroundAlarmTimeHandler.Companion.getHandler(context).defineNewUserWakeup(null, true);
 
-            return Result.success();
-        } catch (Exception e) {
-            Result.retry();
-        }
+        Calendar calendar = Calendar.getInstance();
+        SharedPreferences pref = context.getSharedPreferences("WorkmanagerCalculation", 0);
+        SharedPreferences.Editor ed = pref.edit();
+        ed.putInt("day", calendar.get(Calendar.DAY_OF_WEEK));
+        ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
+        ed.putInt("minute", calendar.get(Calendar.MINUTE));
+        ed.apply();
 
         return Result.success();
     }
