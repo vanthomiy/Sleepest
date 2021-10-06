@@ -184,7 +184,6 @@ class HistoryViewModel(
                 }
             }
             checkSessionIntegrity()
-            dataReceived.value = true
         }
     }
 
@@ -192,8 +191,9 @@ class HistoryViewModel(
      * Checks if the currently used data set from the database contains any unusual values.
      * If so, the [SleepCalculationHandler] is called to correct them.
      */
-    private fun checkSessionIntegrity() {
+    private suspend fun checkSessionIntegrity() {
         onWork = true
+        var data = false
 
         sleepAnalysisData.forEach {
             val mobilePosition = it.userSleepSessionEntity.mobilePosition
@@ -201,44 +201,48 @@ class HistoryViewModel(
             val isSleepStateUnidentified = it.sleepApiRawDataEntity.any { x -> x.sleepState == SleepState.NONE }
 
             if (isSleepStateUnidentified) {
-                viewModelScope.launch {
-                    sleepCalculationHandler.checkIsUserSleeping(
-                        LocalDateTime.ofInstant(
-                            Instant.ofEpochMilli(it.userSleepSessionEntity.sleepTimes.sleepTimeStart.toLong() * 1000),
-                            ZoneOffset.systemDefault()
-                        ),
-                        true
-                    )
-                }
+                sleepCalculationHandler.checkIsUserSleeping(
+                    LocalDateTime.ofInstant(
+                        Instant.ofEpochMilli(it.sleepSessionId.toLong() * 1000),
+                        ZoneOffset.systemDefault()
+                    ),
+                    false
+                )
+                data = true
             }
 
             if (mobilePosition == MobilePosition.INBED && isSleepStateSleeping) {
-                viewModelScope.launch {
-                    sleepCalculationHandler.defineUserWakeup(
-                        LocalDateTime.ofInstant(
-                            Instant.ofEpochMilli(it.userSleepSessionEntity.sleepTimes.sleepTimeStart.toLong() * 1000),
-                            ZoneOffset.systemDefault()
-                        ),
-                        false
-                    )
-                }
+                sleepCalculationHandler.defineUserWakeup(
+                    LocalDateTime.ofInstant(
+                        Instant.ofEpochMilli(it.sleepSessionId.toLong() * 1000),
+                        ZoneOffset.systemDefault()
+                    ),
+                    false
+                )
+                data = true
+
             }
 
             if (mobilePosition == MobilePosition.UNIDENTIFIED) {
-                viewModelScope.launch {
-                    sleepCalculationHandler.defineUserWakeup(
-                        LocalDateTime.ofInstant(
-                            Instant.ofEpochMilli(it.userSleepSessionEntity.sleepTimes.sleepTimeStart.toLong() * 1000),
-                            ZoneOffset.systemDefault()
-                        ),
-                        false,
-                        recalculateMobilePosition = true
-                    )
-                }
+                sleepCalculationHandler.defineUserWakeup(
+                    LocalDateTime.ofInstant(
+                        Instant.ofEpochMilli(it.sleepSessionId.toLong() * 1000),
+                        ZoneOffset.systemDefault()
+                    ),
+                    false,
+                    recalculateMobilePosition = true
+                )
+                data = true
             }
         }
 
-        onWork = false
+        if (data) {
+            sleepAnalysisData.clear()
+            getSleepData()
+        } else {
+            dataReceived.value = true
+            onWork = false
+        }
     }
 
     /**
