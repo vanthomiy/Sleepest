@@ -204,7 +204,7 @@ class HistoryViewModel(
                 viewModelScope.launch {
                     sleepCalculationHandler.checkIsUserSleeping(
                         LocalDateTime.ofInstant(
-                            Instant.ofEpochMilli(it.userSleepSessionEntity.sleepTimes.sleepTimeStart.toLong() * 1000),
+                            Instant.ofEpochMilli(it.sleepSessionId.toLong() * 1000),
                             ZoneOffset.systemDefault()
                         ),
                         true
@@ -216,7 +216,7 @@ class HistoryViewModel(
                 viewModelScope.launch {
                     sleepCalculationHandler.defineUserWakeup(
                         LocalDateTime.ofInstant(
-                            Instant.ofEpochMilli(it.userSleepSessionEntity.sleepTimes.sleepTimeStart.toLong() * 1000),
+                            Instant.ofEpochMilli(it.sleepSessionId.toLong() * 1000),
                             ZoneOffset.systemDefault()
                         ),
                         false
@@ -228,7 +228,7 @@ class HistoryViewModel(
                 viewModelScope.launch {
                     sleepCalculationHandler.defineUserWakeup(
                         LocalDateTime.ofInstant(
-                            Instant.ofEpochMilli(it.userSleepSessionEntity.sleepTimes.sleepTimeStart.toLong() * 1000),
+                            Instant.ofEpochMilli(it.sleepSessionId.toLong() * 1000),
                             ZoneOffset.systemDefault()
                         ),
                         false,
