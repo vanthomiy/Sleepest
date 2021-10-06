@@ -30,6 +30,7 @@ import android.app.ActivityManager
 import android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
 import android.content.Context.ACTIVITY_SERVICE
 import com.sleepestapp.sleepest.model.data.Constants
+import com.sleepestapp.sleepest.util.SleepTimeValidationUtil
 import kotlinx.coroutines.flow.first
 
 
@@ -676,7 +677,8 @@ class BackgroundAlarmTimeHandler(val context: Context) {
      * Checks if the user is in sleep time
      */
     private suspend fun checkInSleepTime() : Boolean =
-        dataStoreRepository.isInSleepTime(null)
+        SleepTimeValidationUtil.getActualAlarmTimeData(dataStoreRepository).isInSleepTime
+        //dataStoreRepository.isInSleepTime(null)
 
     /**
      * Get foreground service status

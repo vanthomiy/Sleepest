@@ -12,6 +12,7 @@ import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler
 import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
 import com.sleepestapp.sleepest.util.NotificationUtil
+import com.sleepestapp.sleepest.util.SleepTimeValidationUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -67,7 +68,7 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
                     Toast.makeText(applicationContext, ForegroundService.getForegroundServiceTime(applicationContext).toString(), Toast.LENGTH_LONG).show()
 
                     // Check if data were received regularly
-                    if (ForegroundService.getForegroundServiceTime(applicationContext) >= 1200 && ((actualTimestampSeconds - lastTimestampInSeconds) > 600) && dataStoreRepository.isInSleepTime(null)) {
+                    if (ForegroundService.getForegroundServiceTime(applicationContext) >= 1200 && ((actualTimestampSeconds - lastTimestampInSeconds) > 600) && SleepTimeValidationUtil.getActualAlarmTimeData(dataStoreRepository).isInSleepTime) {
                         val notificationsUtil =
                             NotificationUtil(
                                 applicationContext,

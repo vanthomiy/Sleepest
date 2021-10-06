@@ -2,7 +2,6 @@ package com.sleepestapp.sleepest.ui.history
 
 import android.graphics.drawable.Drawable
 import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -37,12 +36,12 @@ class HistoryViewModel(
     var analysisDate = MutableLiveData(LocalDate.now())
 
     /**
-     *
+     * Currently selected analysis date range which will be displayed in the history.
      */
     var analysisRangeString = MutableLiveData("")
 
     /**
-     *
+     * The year of the currently selected analysis date range which will be displayed in the history.
      */
     var analysisRangeYearString = MutableLiveData("")
 
@@ -135,10 +134,6 @@ class HistoryViewModel(
     ) {
         analysisDate.let {
 
-            val actualMonth = LocalDate.now().withDayOfMonth(
-                LocalDate.now().lengthOfMonth()
-            ).toEpochDay()
-
             when (range) {
                 0 -> {
                     if (LocalDate.now().toEpochDay() >= it.value?.plusDays(1L)?.toEpochDay()!!) {
@@ -228,7 +223,6 @@ class HistoryViewModel(
                 }
             }
             checkSessionIntegrity()
-            dataReceived.value = true
         }
     }
 
@@ -236,69 +230,58 @@ class HistoryViewModel(
      * Checks if the currently used data set from the database contains any unusual values.
      * If so, the [SleepCalculationHandler] is called to correct them.
      */
-    private fun checkSessionIntegrity() {
+    private suspend fun checkSessionIntegrity() {
         onWork = true
-        var reloadData = false
+        var data = false
 
         sleepAnalysisData.forEach {
             val mobilePosition = it.userSleepSessionEntity.mobilePosition
             val isSleepStateSleeping = it.sleepApiRawDataEntity.any { x -> x.sleepState == SleepState.SLEEPING }
             val isSleepStateUnidentified = it.sleepApiRawDataEntity.any { x -> x.sleepState == SleepState.NONE }
 
-
-
             if (isSleepStateUnidentified) {
-
-                viewModelScope.launch {
-                    sleepCalculationHandler.checkIsUserSleeping(
-                        LocalDateTime.ofInstant(
-                            Instant.ofEpochMilli(it.sleepSessionId.toLong() * 1000),
-                            ZoneOffset.systemDefault()
-                        ),
-                        false
-                    )
-
-                    reloadData = true
-                }
+                sleepCalculationHandler.checkIsUserSleeping(
+                    LocalDateTime.ofInstant(
+                        Instant.ofEpochMilli(it.sleepSessionId.toLong() * 1000),
+                        ZoneOffset.systemDefault()
+                    ),
+                    false
+                )
+                data = true
             }
 
             if (mobilePosition == MobilePosition.INBED && isSleepStateSleeping) {
-                viewModelScope.launch {
-                    sleepCalculationHandler.defineUserWakeup(
-                        LocalDateTime.ofInstant(
-                            Instant.ofEpochMilli(it.sleepSessionId.toLong() * 1000),
-                            ZoneOffset.systemDefault()
-                        ),
-                        false
-                    )
+                sleepCalculationHandler.defineUserWakeup(
+                    LocalDateTime.ofInstant(
+                        Instant.ofEpochMilli(it.sleepSessionId.toLong() * 1000),
+                        ZoneOffset.systemDefault()
+                    ),
+                    false
+                )
+                data = true
 
-                    reloadData = true
-
-                }
             }
 
             if (mobilePosition == MobilePosition.UNIDENTIFIED) {
-                viewModelScope.launch {
-                    sleepCalculationHandler.defineUserWakeup(
-                        LocalDateTime.ofInstant(
-                            Instant.ofEpochMilli(it.sleepSessionId.toLong() * 1000),
-                            ZoneOffset.systemDefault()
-                        ),
-                        false,
-                        recalculateMobilePosition = true
-                    )
-
-                    reloadData = true
-
-                }
+                sleepCalculationHandler.defineUserWakeup(
+                    LocalDateTime.ofInstant(
+                        Instant.ofEpochMilli(it.sleepSessionId.toLong() * 1000),
+                        ZoneOffset.systemDefault()
+                    ),
+                    false,
+                    recalculateMobilePosition = true
+                )
+                data = true
             }
         }
 
-        if (reloadData) {
+        if (data) {
+            sleepAnalysisData.clear()
             getSleepData()
+        } else {
+            dataReceived.value = true
+            onWork = false
         }
-
-        onWork = false
     }
 
     /**
