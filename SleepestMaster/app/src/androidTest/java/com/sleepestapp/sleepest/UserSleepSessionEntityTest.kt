@@ -2,6 +2,8 @@ package com.sleepestapp.sleepest
 
 import android.content.Context
 import androidx.test.platform.app.InstrumentationRegistry
+import com.sleepestapp.sleepest.model.data.SleepState
+import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler
 import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
 import com.sleepestapp.sleepest.storage.db.SleepDatabase
@@ -12,9 +14,7 @@ import org.hamcrest.CoreMatchers
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import java.time.LocalDate
-import java.time.LocalTime
-import java.time.ZoneOffset
+import java.time.*
 
 class UserSleepSessionEntityTest{
 
@@ -114,5 +114,46 @@ class UserSleepSessionEntityTest{
         a = idDate1
         a = idDate2
         var b = sessionAvailable
+    }
+
+    /**
+     *
+     */
+    @Test
+    fun recalculateLastSession(): Unit = runBlocking {
+
+        val sleepCalculationHandler = SleepCalculationHandler(context)
+
+        // get session
+        val session = sleepDbRepository.allUserSleepSessions.first().maxByOrNull { x -> x.id }
+
+        // update a few values of last session
+        val id = sleepDbRepository.allSleepApiRawData.first()?.maxByOrNull { x -> x.timestampSeconds }?.timestampSeconds
+
+        id?.let{
+            sleepDbRepository.updateSleepApiRawDataSleepState(it, SleepState.NONE)
+        }
+
+        session?.let{
+            val time = LocalDateTime.ofInstant(
+                Instant.ofEpochMilli(session.id.toLong() * 1000),
+                ZoneOffset.systemDefault()
+            )
+
+            sleepCalculationHandler.checkIsUserSleeping(
+                time,
+                false
+            )
+
+            sleepCalculationHandler.defineUserWakeup(
+                LocalDateTime.ofInstant(
+                    Instant.ofEpochMilli(it.id.toLong() * 1000),
+                    ZoneOffset.systemDefault()
+                ),
+                false
+            )
+        }
+
+
     }
 }
