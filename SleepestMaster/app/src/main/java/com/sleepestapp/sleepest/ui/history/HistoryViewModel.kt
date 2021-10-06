@@ -460,6 +460,7 @@ class HistoryViewModel(
         val barWidth: Any
         val axisMaximum: Any
         val labelCount: Any
+        xAxisValues.clear()
 
         if (range > 21) {
             for (i in diagramData.second.indices) {
@@ -520,15 +521,15 @@ class HistoryViewModel(
         barChart.legend.setCustom(legendEntryList)
 
         barChart.axisRight.isEnabled = true
-        barChart.axisRight.spaceTop = 1f
-        barChart.axisRight.axisMinimum = 0f
-        barChart.axisRight.axisMaximum = proportion
+        barChart.axisRight.spaceTop = 0F
+        barChart.axisRight.axisMinimum = 0F
+        barChart.axisRight.axisMaximum = 0F
         barChart.axisRight.labelCount = 0
         barChart.axisRight.setDrawGridLines(false)
         barChart.axisRight.setDrawLabels(false)
 
         barChart.axisLeft.isEnabled = true
-        barChart.axisLeft.spaceTop = 60f
+        barChart.axisLeft.spaceTop = 0f
         barChart.axisLeft.axisMinimum = 0f
         barChart.axisLeft.axisMaximum = proportion
         barChart.axisLeft.textColor = colorDarkMode
