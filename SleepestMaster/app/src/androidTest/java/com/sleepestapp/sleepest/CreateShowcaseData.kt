@@ -2,6 +2,7 @@ package com.sleepestapp.sleepest
 
 import android.content.Context
 import androidx.test.platform.app.InstrumentationRegistry
+import com.sleepestapp.sleepest.model.data.ActivityOnDay
 import com.sleepestapp.sleepest.model.data.LightConditions
 import com.sleepestapp.sleepest.model.data.MobilePosition
 import com.sleepestapp.sleepest.model.data.SleepState
@@ -56,13 +57,13 @@ class CreateShowcaseData {
         // remove all old sleep data and sessions
         sleepDatabaseRepository.deleteAllUserSleepSessions()
         sleepDatabaseRepository.deleteSleepApiRawData()
-        
+
         val actualDate = LocalDate.now()
         val sessionsToFill = 3 * 30 // 3 months
         val sleepFailsPercentage = 10 // 10 out of 100
 
-        val sleepSessionMinAmount = 30
-        val sleepSessionMaxAmount = 60
+        val sleepSessionMinAmount = 20
+        val sleepSessionMaxAmount = 40
 
         val sleepStartTimeEarly = LocalTime.of(20,0)
         val sleepStartTimeLate = LocalTime.of(23,30)
@@ -123,6 +124,8 @@ class CreateShowcaseData {
             userSleepSession.sleepTimes.lightSleepDuration = SleepApiRawDataEntity.getSleepTimeByState(sleepDataList, SleepState.LIGHT)
             userSleepSession.sleepTimes.deepSleepDuration = SleepApiRawDataEntity.getSleepTimeByState(sleepDataList, SleepState.DEEP)
             userSleepSession.sleepTimes.remSleepDuration = SleepApiRawDataEntity.getSleepTimeByState(sleepDataList, SleepState.REM)
+
+            userSleepSession.userSleepRating.activityOnDay = ActivityOnDay.values()[(0..5).random().toInt()]
 
             sleepDatabaseRepository.insertUserSleepSession(userSleepSession)
 
