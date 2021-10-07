@@ -7,7 +7,6 @@ import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler
 import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
 import com.sleepestapp.sleepest.storage.db.SleepDatabase
-import com.sleepestapp.sleepest.storage.db.UserSleepSessionEntity
 import com.sleepestapp.sleepest.storage.db.UserSleepSessionEntity.Companion.getIdByDateTimeWithTimeZone
 import com.sleepestapp.sleepest.storage.db.UserSleepSessionEntity.Companion.getIdByTimeStampWithTimeZone
 import kotlinx.coroutines.flow.first
@@ -81,7 +80,7 @@ class UserSleepSessionEntityTest{
         var actualDateTimeUtc = actualDateTime.minusDays(0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
 
         var idDate1 = getIdByDateTimeWithTimeZone(actualDate)
-        var idDate2 = UserSleepSessionEntity.getIdByTimeStampWithTimeZone(actualDateTimeUtc)
+        var idDate2 = getIdByTimeStampWithTimeZone(actualDateTimeUtc)
 
         var sessionAvailable = sleepDbRepository.getSleepSessionById(idDate2).first().firstOrNull()
 
@@ -95,7 +94,7 @@ class UserSleepSessionEntityTest{
         actualDateTimeUtc = actualDateTime.minusDays(0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
 
         idDate1 = getIdByDateTimeWithTimeZone(actualDate)
-        idDate2 = UserSleepSessionEntity.getIdByTimeStampWithTimeZone(actualDateTimeUtc)
+        idDate2 = getIdByTimeStampWithTimeZone(actualDateTimeUtc)
 
         sessionAvailable = sleepDbRepository.getSleepSessionById(idDate2).first().firstOrNull()
 
@@ -109,7 +108,7 @@ class UserSleepSessionEntityTest{
         actualDateTimeUtc = actualDateTime.minusDays(0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
 
         idDate1 = getIdByDateTimeWithTimeZone(actualDate)
-        idDate2 = UserSleepSessionEntity.getIdByTimeStampWithTimeZone(actualDateTimeUtc)
+        idDate2 = getIdByTimeStampWithTimeZone(actualDateTimeUtc)
 
         sessionAvailable = sleepDbRepository.getSleepSessionById(idDate2).first().firstOrNull()
 

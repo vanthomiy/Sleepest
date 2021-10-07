@@ -20,7 +20,6 @@ import org.hamcrest.CoreMatchers
 import org.junit.Before
 import org.junit.Test
 import kotlinx.coroutines.runBlocking
-import okhttp3.internal.Util.UTC
 import java.io.BufferedReader
 import java.time.*
 import java.time.ZoneId.systemDefault
@@ -948,10 +947,10 @@ class SleepCalculationHandlerTest
     @Test
     fun sleepCalculationLast30MinutesTest(): Unit = runBlocking {
 
-        val now = LocalDateTime.now(ZoneOffset.UTC)
+        val now = LocalDateTime.now(UTC)
 
         // LocalDateTime to epoch seconds
-        val actualTimeSeconds = now.minusDays(2).atZone(ZoneOffset.UTC).toEpochSecond().toInt()
+        val actualTimeSeconds = now.minusDays(2).atZone(UTC).toEpochSecond().toInt()
         val sleepCalculationHandler = SleepCalculationHandler(context)
         val sleepList5 = mutableListOf<SleepApiRawDataEntity>()
 

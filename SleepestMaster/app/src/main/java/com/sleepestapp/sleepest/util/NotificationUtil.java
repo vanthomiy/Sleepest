@@ -2,6 +2,7 @@ package com.sleepestapp.sleepest.util;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -169,6 +170,7 @@ public class NotificationUtil {
                 .build();
     }
 
+    @SuppressLint("IconColors")
     public Notification createForegroundNotification() {
 
         notificationUsage = NotificationUsage.NOTIFICATION_FOREGROUND_SERVICE;

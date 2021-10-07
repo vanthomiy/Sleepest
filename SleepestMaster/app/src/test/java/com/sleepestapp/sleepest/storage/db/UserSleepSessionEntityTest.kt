@@ -2,18 +2,14 @@ package com.sleepestapp.sleepest.storage.db
 
 import android.content.Context
 import androidx.test.platform.app.InstrumentationRegistry
-import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
 import com.sleepestapp.sleepest.storage.db.UserSleepSessionEntity.Companion.getIdByDateTimeWithTimeZone
 import com.sleepestapp.sleepest.storage.db.UserSleepSessionEntity.Companion.getIdByTimeStampWithTimeZone
-import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers
-import org.junit.Assert.*
+import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
 import java.time.LocalDate
-import java.time.LocalTime
-import java.time.ZoneOffset
 
 class UserSleepSessionEntityTest{
 
