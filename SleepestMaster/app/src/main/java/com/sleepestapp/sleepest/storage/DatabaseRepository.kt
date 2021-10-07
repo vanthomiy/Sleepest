@@ -320,6 +320,12 @@ class DatabaseRepository(
     }
 
     /**
+     * returns the id of the oldest [UserSleepSessionEntity] in the database
+     */
+    fun getOldestId(): Flow<Int> =
+        userSleepSessionDao.getOldestEntry()
+
+    /**
      * Inserts or updates a [UserSleepSessionEntity]
      */
     suspend fun insertUserSleepSession(userSleepSession: UserSleepSessionEntity) {

@@ -24,6 +24,8 @@ import com.sleepestapp.sleepest.storage.db.UserSleepSessionEntity.Companion.getI
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class HistoryViewModel(
     val dataStoreRepository: DataStoreRepository,
@@ -45,6 +47,11 @@ class HistoryViewModel(
      * The year of the currently selected analysis date range which will be displayed in the history.
      */
     var analysisRangeYearString = MutableLiveData("")
+
+    /**
+     * The first date for which sleep data is available.
+     */
+    var firstDayWithData = 0
 
     /**
      * Indicates that [checkSessionIntegrity] is currently working.
@@ -120,9 +127,51 @@ class HistoryViewModel(
     ) {
         analysisDate.let {
             when (range) {
-                0 -> it.value = it.value?.minusDays(1L)
-                1 -> it.value = it.value?.minusWeeks(1L)
-                2 -> it.value = it.value?.minusMonths(1L)
+                0 -> {
+                    val fistDayWithData = LocalDateTime.ofEpochSecond(
+                        firstDayWithData.toLong(),
+                        0,
+                        ZoneOffset.UTC
+                    ).toLocalDate().toEpochDay()
+
+                    if (it.value?.minusDays(1L)?.toEpochDay()!! >= fistDayWithData) {
+                        it.value = it.value?.minusDays(1L)
+                    }
+                }
+                1 -> {
+                    val fistDayWithData = LocalDateTime.ofEpochSecond(
+                        firstDayWithData.toLong(),
+                        0,
+                        ZoneOffset.UTC
+                    ).toLocalDate()
+
+                    val firstDayOfWeekWithData : Long = when (fistDayWithData.dayOfWeek.value) {
+                        1 -> fistDayWithData.plusDays(0L).toEpochDay() // Monday
+                        2 -> fistDayWithData.minusDays(1L).toEpochDay() // Tuesday
+                        3 -> fistDayWithData.minusDays(2L).toEpochDay() // Wednesday
+                        4 -> fistDayWithData.minusDays(3L).toEpochDay() // Thursday
+                        5 -> fistDayWithData.minusDays(4L).toEpochDay() // Friday
+                        6 -> fistDayWithData.minusDays(5L).toEpochDay() // Saturday
+                        else -> fistDayWithData.minusDays(6L).toEpochDay() // Sunday
+                    }
+
+                    val analysisDay = it.value?.minusWeeks(1L)?.toEpochDay()!!
+
+                    if (analysisDay >= firstDayOfWeekWithData) {
+                        it.value = it.value?.minusWeeks(1L)
+                    }
+                }
+                2 -> {
+                    val fistMonthWithData = LocalDateTime.ofEpochSecond(
+                        firstDayWithData.toLong(),
+                        0,
+                        ZoneOffset.UTC
+                    ).toLocalDate().withDayOfMonth(1).toEpochDay()
+
+                    if (it.value?.minusMonths(1L)?.withDayOfMonth(1)?.toEpochDay()!! >= fistMonthWithData) {
+                        it.value = it.value?.minusMonths(1L)
+                    }
+                }
             }
         }
     }
@@ -223,6 +272,7 @@ class HistoryViewModel(
                     )
                 }
             }
+            firstDayWithData = dataBaseRepository.getOldestId().first()
             checkSessionIntegrity()
         }
     }

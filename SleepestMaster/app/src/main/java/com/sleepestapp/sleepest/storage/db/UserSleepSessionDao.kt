@@ -22,6 +22,9 @@ interface UserSleepSessionDao {
     @Query("SELECT * FROM user_sleep_session_entity WHERE id >= :time ORDER BY id DESC")
     fun getSince(time:Int): Flow<List<UserSleepSessionEntity>>
 
+    @Query("SELECT min(id) FROM user_sleep_session_entity")
+    fun getOldestEntry(): Flow<Int>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(sleepSegmentEventEntityRaw: UserSleepSessionEntity)
 
@@ -36,4 +39,6 @@ interface UserSleepSessionDao {
 
     @Query("UPDATE user_sleep_session_entity SET sleepRatingmoodAfterSleep =:mood WHERE id LIKE :sessionId")
     suspend fun updateMoodAfterSleep(mood: MoodType, sessionId: Int)
+
+
 }

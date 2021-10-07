@@ -129,6 +129,7 @@ class HistoryTabView : Fragment() {
             }
 
             dpd?.datePicker?.maxDate = System.currentTimeMillis()
+            dpd?.datePicker?.minDate = viewModel.firstDayWithData.toLong() * 1000
             dpd?.show()
         }
 
@@ -254,10 +255,10 @@ class HistoryTabView : Fragment() {
         viewModel.analysisDate.value?.let {
 
             information = when {
-                actualDay.dayOfYear == it.dayOfYear -> {
+                actualDay.toEpochDay() == it.toEpochDay() -> {
                     actualContext.getString(R.string.history_today_title)
                 }
-                (actualDay.dayOfYear - 1) == it.dayOfYear -> {
+                (actualDay.toEpochDay() - 1) == it.toEpochDay() -> {
                     actualContext.getString(R.string.history_yesterday_title)
                 }
                 else -> {
@@ -279,21 +280,19 @@ class HistoryTabView : Fragment() {
 
         viewModel.analysisDate.value?.let {
             val analysisDate = LocalDate.of(it.year, it.monthValue, it.dayOfMonth)
+            val analysisWeekOfYear = analysisDate.get(WeekFields.of(Locale.GERMANY).weekOfYear())
+            val year = (analysisDate.year == actualDate.year)
 
-            when (analysisDate.get(WeekFields.of(Locale.GERMANY).weekOfYear())) {
-                actualWeekOfYear -> {
-                    information = getString(R.string.history_currentWeek_title)
-                    binding.tVActualYearTabView.visibility = View.GONE
-
-                }
-                (actualWeekOfYear - 1) -> {
-                    information = getString(R.string.history_previousWeek_title)
-                    binding.tVActualYearTabView.visibility = View.GONE
-
-                }
-                else -> {
-                    information = getWeekRange(it)
-                }
+            if ((actualWeekOfYear == analysisWeekOfYear) && year) {
+                information = getString(R.string.history_currentWeek_title)
+                binding.tVActualYearTabView.visibility = View.GONE
+            }
+            else if (((actualWeekOfYear -1) == analysisWeekOfYear) && year) {
+                information = getString(R.string.history_previousWeek_title)
+                binding.tVActualYearTabView.visibility = View.GONE
+            }
+            else {
+                information = getWeekRange(it)
             }
         }
 
