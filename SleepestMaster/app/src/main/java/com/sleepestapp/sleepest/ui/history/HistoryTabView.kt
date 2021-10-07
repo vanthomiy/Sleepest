@@ -4,21 +4,15 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.transition.TransitionManager
-import android.transition.Visibility
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.viewpager2.widget.ViewPager2
-import com.github.mikephil.charting.data.LineRadarDataSet
 import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.databinding.FragmentHistoryTabviewBinding
 import com.google.android.material.tabs.TabLayout
@@ -135,6 +129,7 @@ class HistoryTabView : Fragment() {
             }
 
             dpd?.datePicker?.maxDate = System.currentTimeMillis()
+            dpd?.datePicker?.minDate = viewModel.firstDayWithData.toLong() * 1000
             dpd?.show()
         }
 
@@ -260,10 +255,10 @@ class HistoryTabView : Fragment() {
         viewModel.analysisDate.value?.let {
 
             information = when {
-                actualDay.dayOfYear == it.dayOfYear -> {
+                actualDay.toEpochDay() == it.toEpochDay() -> {
                     actualContext.getString(R.string.history_today_title)
                 }
-                (actualDay.dayOfYear - 1) == it.dayOfYear -> {
+                (actualDay.toEpochDay() - 1) == it.toEpochDay() -> {
                     actualContext.getString(R.string.history_yesterday_title)
                 }
                 else -> {
@@ -285,21 +280,19 @@ class HistoryTabView : Fragment() {
 
         viewModel.analysisDate.value?.let {
             val analysisDate = LocalDate.of(it.year, it.monthValue, it.dayOfMonth)
+            val analysisWeekOfYear = analysisDate.get(WeekFields.of(Locale.GERMANY).weekOfYear())
+            val year = (analysisDate.year == actualDate.year)
 
-            when (analysisDate.get(WeekFields.of(Locale.GERMANY).weekOfYear())) {
-                actualWeekOfYear -> {
-                    information = getString(R.string.history_currentWeek_title)
-                    binding.tVActualYearTabView.visibility = View.GONE
-
-                }
-                (actualWeekOfYear - 1) -> {
-                    information = getString(R.string.history_previousWeek_title)
-                    binding.tVActualYearTabView.visibility = View.GONE
-
-                }
-                else -> {
-                    information = getWeekRange(it)
-                }
+            if ((actualWeekOfYear == analysisWeekOfYear) && year) {
+                information = getString(R.string.history_currentWeek_title)
+                binding.tVActualYearTabView.visibility = View.GONE
+            }
+            else if (((actualWeekOfYear -1) == analysisWeekOfYear) && year) {
+                information = getString(R.string.history_previousWeek_title)
+                binding.tVActualYearTabView.visibility = View.GONE
+            }
+            else {
+                information = getWeekRange(it)
             }
         }
 
