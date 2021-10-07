@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity"
+    android:id="@+id/layoutLockscreen"
     style="@style/Theme.AppCompat.DayNight">
 
     <com.airbnb.lottie.LottieAnimationView
@@ -23,10 +24,12 @@
         android:text="@string/alarm_clock_swipe_up"
         android:textColor="@color/accent_text_color"
         android:textSize="30sp"
+        android:id="@+id/tvSwipeUpText"
         android:gravity="center_horizontal"
         android:layout_marginBottom="100dp"/>
 
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnSnoozeAlarmLockScreen"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.1"
