@@ -31,7 +31,6 @@ import com.google.gson.Gson
 import com.sleepestapp.sleepest.DontKillMyAppFragment
 import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.R
-import com.sleepestapp.sleepest.alarmclock.AlarmClockReceiver
 import com.sleepestapp.sleepest.databinding.FragmentSettingsBinding
 import com.sleepestapp.sleepest.model.data.*
 import com.sleepestapp.sleepest.model.data.credits.CreditsSites
@@ -41,12 +40,9 @@ import com.sleepestapp.sleepest.onboarding.OnboardingActivity
 import com.sleepestapp.sleepest.util.IconAnimatorUtil.isDarkThemeOn
 import com.sleepestapp.sleepest.util.PermissionsUtil
 import com.sleepestapp.sleepest.util.SmileySelectorUtil
-import com.sleepestapp.sleepest.util.TimeConverterUtil
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.*
-import java.time.LocalTime
-import java.util.*
 
 
 class SettingsFragment : Fragment() {
@@ -134,11 +130,7 @@ class SettingsFragment : Fragment() {
 
         }
         binding.btnImportantSettings.setOnClickListener {
-            //DontKillMyAppFragment.show(requireActivity())
-            val calendar = TimeConverterUtil.getAlarmDate(LocalTime.now().toSecondOfDay() + 60)
-            AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(
-                Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), actualContext, AlarmClockReceiverUsage.START_ALARMCLOCK)
-
+            DontKillMyAppFragment.show(requireActivity())
         }
 
         viewModel.aboutUsSelection.observe(viewLifecycleOwner){

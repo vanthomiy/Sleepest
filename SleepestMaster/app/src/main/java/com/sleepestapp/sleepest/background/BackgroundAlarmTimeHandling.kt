@@ -188,7 +188,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
             AlarmClockAudio.getInstance().stopAlarm(false, isScreenOn)
 
             //Stops the foreground service
-            //stopForegroundService()
+            stopForegroundService()
             Toast.makeText(context, "Alarmclock stopped", Toast.LENGTH_LONG).show()
             val calendar = Calendar.getInstance()
             val pref: SharedPreferences = context.getSharedPreferences("AlarmClock", 0)
@@ -199,9 +199,9 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
 
             //Updated the alarm that it was fired. So it can not be called again
-            /*if (checkAlarmActive()) {
+            if (checkAlarmActive()) {
                 dataBaseRepository.updateAlarmWasFired(true, dataBaseRepository.getNextActiveAlarm(dataStoreRepository)!!.id)
-            }*/
+            }
         }
     }
 
