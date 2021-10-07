@@ -178,20 +178,8 @@ public class ForegroundService extends LifecycleService {
         int time;
         if (foregroundServiceStartTime <= LocalTime.now().toSecondOfDay()) {
             time = LocalTime.now().toSecondOfDay() - foregroundServiceStartTime;
-            SharedPreferences pref = context.getSharedPreferences("ForegroundServiceTime", 0);
-            SharedPreferences.Editor ed = pref.edit();
-            ed.putInt("time", time);
-            ed.putInt("usage", 1);
-            ed.putInt("sod", LocalTime.now().toSecondOfDay());
-            ed.apply();
         } else {
             time = Constants.DAY_IN_SECONDS - foregroundServiceStartTime + LocalTime.now().toSecondOfDay();
-            SharedPreferences pref = context.getSharedPreferences("ForegroundServiceTime", 0);
-            SharedPreferences.Editor ed = pref.edit();
-            ed.putInt("time", time);
-            ed.putInt("usage", 2);
-            ed.putInt("sod", LocalTime.now().toSecondOfDay());
-            ed.apply();
         }
 
         return time;

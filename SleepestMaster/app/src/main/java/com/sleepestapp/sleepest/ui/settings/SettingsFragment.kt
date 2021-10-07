@@ -157,15 +157,6 @@ class SettingsFragment : Fragment() {
 
         viewModel.actualExpand.value = (caseOfEntry)
 
-
-        var version = "XX"
-        try {
-            val packageInfo = actualContext.packageManager.getPackageInfo(actualContext.packageName, 0)
-            version = packageInfo.versionName
-        } catch (e: PackageManager.NameNotFoundException) {
-            e.printStackTrace()
-        }
-
         return binding.root
 
     }
@@ -178,8 +169,7 @@ class SettingsFragment : Fragment() {
         lifecycleScope.launch {
 
             val settings = viewModel.dataStoreRepository.settingsDataFlow.first()
-
-
+            
             if ((settings.designAutoDarkMode  && actualContext.isDarkThemeOn()) || !settings.designAutoDarkMode && settings.designDarkMode)
                 binding.lottieDarkMode.setMinAndMaxFrame(0, 240) //to play the first half
             else

@@ -47,6 +47,8 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
             // Check if foreground is active
             if (dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
 
+                val endTime = dataStoreRepository.sleepParameterFlow.first().sleepTimeEnd
+
                 //Get sleep data table
                 val sleepApiRawDataEntity =
                     dataBaseRepository.getSleepApiRawDataFromDateLive(LocalDateTime.now(), endTime).first()
@@ -93,15 +95,6 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
         }
 
         scope.launch {
-            val sleepValueAmount = dataStoreRepository.sleepApiDataFlow.first().sleepApiValuesAmount
-            val isSubscribed = dataStoreRepository.getSleepSubscribeStatus()
-
-            pref = applicationContext.getSharedPreferences("SleepValue", 0)
-            ed = pref.edit()
-            ed.putInt("value", sleepValueAmount)
-            ed.putBoolean("status", isSubscribed)
-            ed.apply()
-
             sleepCalculationHandler.checkIsUserSleeping(null)
         }
 
