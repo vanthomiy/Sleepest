@@ -79,7 +79,7 @@
                             tools:ignore="ContentDescription"
                             android:layout_gravity="start"
                             app:tint="@color/primary_text_color"
-                            android:src="@drawable/ic_baseline_night_shelter_24"
+                            android:src="@drawable/ic_baseline_hotel_24"
                             android:tag="1"/>
 
                         <TextView
