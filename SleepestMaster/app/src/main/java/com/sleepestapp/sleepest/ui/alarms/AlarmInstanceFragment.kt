@@ -8,13 +8,16 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.lifecycleScope
 import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.databinding.AlarmEntityBinding
+import com.sleepestapp.sleepest.storage.db.AlarmEntity
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil
 import com.sleepestapp.sleepest.util.StringUtil
 import com.sleepestapp.sleepest.util.WeekDaysUtil
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import java.time.LocalTime
 
 class AlarmInstanceFragment(val applicationContext: Context, private var alarmId: Int) : Fragment() {
@@ -23,6 +26,8 @@ class AlarmInstanceFragment(val applicationContext: Context, private var alarmId
 
     var factory = object : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            @Suppress("UNCHECKED_CAST")
+            // Workaround because we know that we can cast to T
             return  AlarmsViewModel(
                 (actualContext as MainApplication).dataStoreRepository,
                 (actualContext as MainApplication).dataBaseRepository
@@ -31,6 +36,8 @@ class AlarmInstanceFragment(val applicationContext: Context, private var alarmId
     }
     var instanceFactory = object : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            @Suppress("UNCHECKED_CAST")
+            // Workaround because we know that we can cast to T
             return  AlarmInstanceViewModel(
                 (actualContext as MainApplication).dataStoreRepository,
                 (actualContext as MainApplication).dataBaseRepository,
@@ -62,19 +69,17 @@ class AlarmInstanceFragment(val applicationContext: Context, private var alarmId
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = AlarmEntityBinding.inflate(inflater, container, false)
         binding.alarmInstanceViewModel = viewModel
         binding.alarmsViewModel = alarmsViewModel
-        binding.lifecycleOwner = this;
-
-        viewModel.transitionsContainer = (binding.cLAlarmEntityInnerLayer)
+        binding.lifecycleOwner = this
 
         val minData = SleepTimeValidationUtil.createMinutePickerHelper()
-        binding.npMinutes.minValue = 1;
-        binding.npMinutes.maxValue = minData.size;
-        binding.npMinutes.displayedValues = minData;
+        binding.npMinutes.minValue = 1
+        binding.npMinutes.maxValue = minData.size
+        binding.npMinutes.displayedValues = minData
 
         return binding.root
     }
@@ -101,22 +106,23 @@ class AlarmInstanceFragment(val applicationContext: Context, private var alarmId
 
         // Used to update the sleep end and start time if it changes from the alarms fragments
         viewModel.actualAlarmLiveData.observe(viewLifecycleOwner){
-            it?.let{
-                viewModel.wakeUpEarly = LocalTime.ofSecondOfDay(it.wakeupEarly.toLong())
-                viewModel.wakeUpLate = LocalTime.ofSecondOfDay(it.wakeupLate.toLong())
-
-                val sleepDuration = LocalTime.ofSecondOfDay(it.sleepDuration.toLong())
-
-                binding.npHours.value = sleepDuration.hour
-                binding.npMinutes.value = (sleepDuration.minute / 15) + 1
-                viewModel.sleepDuration = sleepDuration.toSecondOfDay()
-                viewModel.sleepDurationString.value = (sleepDuration.toString() + " " + getString(R.string.alarm_instance_alarm_header))
-
-                viewModel.wakeUpEarlyValue.value = ((if (viewModel.wakeUpEarly.hour < 10) "0" else "") + viewModel.wakeUpEarly.hour.toString() + ":" + (if (viewModel.wakeUpEarly.minute < 10) "0" else "") + viewModel.wakeUpEarly.minute.toString())
-                viewModel.wakeUpLateValue.value = ((if (viewModel.wakeUpLate.hour < 10) "0" else "") + viewModel.wakeUpLate.hour.toString() + ":" + (if (viewModel.wakeUpLate.minute < 10) "0" else "") + viewModel.wakeUpLate.minute.toString())
-
+            alarm ->
+            alarm?.let{
+                setUpAlarm(it)
             }
         }
+
+        viewModel.actualAlarmParameterLiveData.observe(viewLifecycleOwner){
+            lifecycleScope.launch{
+                val alarm = viewModel.dataBaseRepository.getAlarmById(alarmId).first()
+                alarm?.let{
+                    setUpAlarm(alarm)
+                }
+            }
+        }
+
+
+
 
         binding.cLAlarmEntityInnerLayer.setOnClickListener{
 
@@ -129,17 +135,33 @@ class AlarmInstanceFragment(val applicationContext: Context, private var alarmId
         }
 
         // Expand an alarm view
-        alarmsViewModel.alarmExpandId.observe(this){
+        alarmsViewModel.alarmExpandId.observe(viewLifecycleOwner){
             if(it != alarmId)
                 viewModel.extendedAlarmEntity.value = (false)
         }
 
         viewModel.alarmName.value = StringUtil.getStringXml(R.string.alarm_instance_alarm, requireActivity().application)
-        viewModel.is24HourFormat = SleepTimeValidationUtil.Is24HourFormat(actualContext)
+        viewModel.is24HourFormat = SleepTimeValidationUtil.is24HourFormat(actualContext)
 
-        viewModel.selectedDays.observe(this){
+        viewModel.selectedDays.observe(viewLifecycleOwner){
             setDaysSelectedString(it)
         }
+    }
+
+    private fun setUpAlarm(alarm : AlarmEntity){
+        viewModel.wakeUpEarly = LocalTime.ofSecondOfDay(alarm.wakeupEarly.toLong())
+        viewModel.wakeUpLate = LocalTime.ofSecondOfDay(alarm.wakeupLate.toLong())
+
+        val sleepDuration = LocalTime.ofSecondOfDay(alarm.sleepDuration.toLong())
+
+        binding.npHours.value = sleepDuration.hour
+        binding.npMinutes.value = (sleepDuration.minute / 15) + 1
+        viewModel.sleepDuration = sleepDuration.toSecondOfDay()
+        viewModel.sleepDurationString.value = (sleepDuration.toString() + " " + getString(R.string.alarm_instance_alarm_header))
+
+        viewModel.wakeUpEarlyValue.value = ((if (viewModel.wakeUpEarly.hour < 10) "0" else "") + viewModel.wakeUpEarly.hour.toString() + ":" + (if (viewModel.wakeUpEarly.minute < 10) "0" else "") + viewModel.wakeUpEarly.minute.toString())
+        viewModel.wakeUpLateValue.value = ((if (viewModel.wakeUpLate.hour < 10) "0" else "") + viewModel.wakeUpLate.hour.toString() + ":" + (if (viewModel.wakeUpLate.minute < 10) "0" else "") + viewModel.wakeUpLate.minute.toString())
+
     }
 
     /**

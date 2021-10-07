@@ -7,7 +7,6 @@ import com.sleepestapp.sleepest.model.data.InfoEntityStyle
 
 /**
  * This is used to display information to the user in the
- * [SleepFragment], and in all [HistoryFragment] tabs
  * We can handle the information at one point and it provides the same layout for all sites.
  */
 data class InfoEntity (
@@ -15,7 +14,7 @@ data class InfoEntity (
     val lottie : Int?,
     val textHeader : String?,
     val textDescription : String?,
-    val infoEntityStlye : InfoEntityStyle = InfoEntityStyle.RANDOM
+    val infoEntityStyle : InfoEntityStyle = InfoEntityStyle.RANDOM
 )
 {
     companion object{
@@ -30,6 +29,39 @@ data class InfoEntity (
                 Info.WEEK_HISTORY -> weekHistoryInfo(id, context)
                 Info.SETTINGS -> settingsInfo(id, context)
                 Info.SLEEP -> sleepInfo(id, context)
+                Info.HISTORY -> historyInfo(id, context)
+                else -> noInfo(context)
+            }
+        }
+
+        /**
+         * Actual information for the [Info.HISTORY]
+         */
+        private fun historyInfo(id:Int, context: Context) : List<InfoEntity>{
+            return when(id){
+                0 ->  listOf(
+                    InfoEntity(
+                        image = null,
+                        lottie = null,
+                        textHeader = context.resources.getString(R.string.history_sleep_phases_header_light_sleep),
+                        textDescription = context.resources.getString(R.string.history_sleep_phases_information_light),
+                        infoEntityStyle = InfoEntityStyle.PICTURE_LEFT
+                    ),
+                    InfoEntity(
+                        image = null,
+                        lottie = null,
+                        textHeader = context.resources.getString(R.string.history_sleep_phases_header_deep_sleep),
+                        textDescription = context.resources.getString(R.string.history_sleep_phases_information_deep),
+                        infoEntityStyle = InfoEntityStyle.PICTURE_LEFT
+                    ),
+                    InfoEntity(
+                        image = null,
+                        lottie = null,
+                        textHeader = context.resources.getString(R.string.history_sleep_phases_header_rem_sleep),
+                        textDescription = context.resources.getString(R.string.history_sleep_phases_information_rem),
+                        infoEntityStyle = InfoEntityStyle.PICTURE_LEFT
+                    )
+                )
                 else -> noInfo(context)
             }
         }
@@ -45,7 +77,7 @@ data class InfoEntity (
                         lottie = null,
                         textHeader = null,
                         textDescription = context.resources.getString(R.string.history_day_information_sleepPhases_lineChart),
-                        infoEntityStlye = InfoEntityStyle.PICTURE_LEFT
+                        infoEntityStyle = InfoEntityStyle.PICTURE_LEFT
                     )
                 )
                 1 ->  listOf(
@@ -54,7 +86,7 @@ data class InfoEntity (
                         lottie = null,
                         textHeader = null,
                         textDescription = context.resources.getString(R.string.history_day_information_timeInPhase),
-                        infoEntityStlye = InfoEntityStyle.PICTURE_LEFT
+                        infoEntityStyle = InfoEntityStyle.PICTURE_LEFT
                     )
                 )
                 2 ->  listOf(
@@ -63,7 +95,7 @@ data class InfoEntity (
                         lottie = null,
                         textHeader = null,
                         textDescription = context.resources.getString(R.string.history_day_information_sleepQualityRating),
-                        infoEntityStlye = InfoEntityStyle.PICTURE_LEFT
+                        infoEntityStyle = InfoEntityStyle.PICTURE_LEFT
                     )
                 )
                 3 ->  listOf(
@@ -72,7 +104,7 @@ data class InfoEntity (
                         lottie = null,
                         textHeader = null,
                         textDescription = context.resources.getString(R.string.history_day_information_activity),
-                        infoEntityStlye = InfoEntityStyle.PICTURE_LEFT
+                        infoEntityStyle = InfoEntityStyle.PICTURE_LEFT
                     )
                 )
                 else -> noInfo(context)
@@ -90,7 +122,7 @@ data class InfoEntity (
                         lottie = null,
                         textHeader = null,
                         textDescription = context.resources.getString(R.string.history_week_information_sleepPhases_barChart),
-                        infoEntityStlye = InfoEntityStyle.PICTURE_LEFT
+                        infoEntityStyle = InfoEntityStyle.PICTURE_LEFT
                     )
                 )
                 1 ->  listOf(
@@ -99,7 +131,7 @@ data class InfoEntity (
                         lottie = null,
                         textHeader = null,
                         textDescription = context.resources.getString(R.string.history_week_information_activity_lineChart),
-                        infoEntityStlye = InfoEntityStyle.PICTURE_LEFT
+                        infoEntityStyle = InfoEntityStyle.PICTURE_LEFT
                     )
                 )
                 else -> noInfo(context)
@@ -117,7 +149,7 @@ data class InfoEntity (
                         lottie = null,
                         textHeader = null,
                         textDescription = context.resources.getString(R.string.history_month_information_sleepPhases_barChart),
-                        infoEntityStlye = InfoEntityStyle.PICTURE_LEFT
+                        infoEntityStyle = InfoEntityStyle.PICTURE_LEFT
                     )
                 )
                 1 ->  listOf(
@@ -126,7 +158,7 @@ data class InfoEntity (
                         lottie = null,
                         textHeader = null,
                         textDescription = context.resources.getString(R.string.history_month_information_activity_lineChart),
-                        infoEntityStlye = InfoEntityStyle.PICTURE_LEFT
+                        infoEntityStyle = InfoEntityStyle.PICTURE_LEFT
                     )
                 )
                 else -> noInfo(context)
@@ -143,7 +175,7 @@ data class InfoEntity (
                     lottie = null,
                     textHeader = "",
                     textDescription = context.resources.getString(R.string.sleep_general_info_1),
-                    infoEntityStlye = InfoEntityStyle.PICTURE_LEFT
+                    infoEntityStyle = InfoEntityStyle.PICTURE_LEFT
                     )
                 )
                 else -> noInfo(context)
@@ -161,7 +193,7 @@ data class InfoEntity (
                     lottie = R.raw.sleeping_polar_bear,
                     textHeader = null,
                     textDescription = context.resources.getString(R.string.sleep_general_info_1),
-                    infoEntityStlye = InfoEntityStyle.PICTURE_TOP
+                    infoEntityStyle = InfoEntityStyle.PICTURE_TOP
                     ),
 
                     InfoEntity(
@@ -169,7 +201,7 @@ data class InfoEntity (
                     lottie = null,
                     textHeader = null,
                     textDescription = context.resources.getString(R.string.sleep_general_info_2),
-                    infoEntityStlye = InfoEntityStyle.PICTURE_RIGHT
+                    infoEntityStyle = InfoEntityStyle.PICTURE_RIGHT
                     ),
 
                     InfoEntity(
@@ -177,7 +209,7 @@ data class InfoEntity (
                         lottie = R.raw.gold_scores_icon,
                         textHeader = null,
                         textDescription = context.resources.getString(R.string.sleep_general_info_3),
-                        infoEntityStlye = InfoEntityStyle.PICTURE_LEFT
+                        infoEntityStyle = InfoEntityStyle.PICTURE_LEFT
                     )
                 )
                 0 ->  listOf(InfoEntity(
@@ -185,21 +217,21 @@ data class InfoEntity (
                         lottie = null,
                         textHeader = null,
                         textDescription = context.resources.getString(R.string.sleep_sleeptimes_info_1),
-                    infoEntityStlye = InfoEntityStyle.PICTURE_RIGHT
+                    infoEntityStyle = InfoEntityStyle.PICTURE_RIGHT
                     ),
                     InfoEntity(
                         image = R.drawable.monitoring,
                         lottie = null,
                         textHeader = null,
                         textDescription = context.resources.getString(R.string.sleep_sleeptimes_info_2),
-                        infoEntityStlye = InfoEntityStyle.PICTURE_RIGHT
+                        infoEntityStyle = InfoEntityStyle.PICTURE_RIGHT
                     ),
                     InfoEntity(
                         image = R.drawable.light_bulb,
                         lottie = null,
                         textHeader = null,
                         textDescription = context.resources.getString(R.string.sleep_sleeptimes_info_3),
-                        infoEntityStlye = InfoEntityStyle.PICTURE_LEFT
+                        infoEntityStyle = InfoEntityStyle.PICTURE_LEFT
                     )
                 )
                 1 ->  listOf(InfoEntity(
@@ -207,14 +239,14 @@ data class InfoEntity (
                     lottie = null,
                     textHeader = null,
                     textDescription = context.resources.getString(R.string.sleep_sleepduration_info_1),
-                    infoEntityStlye = InfoEntityStyle.PICTURE_LEFT
+                    infoEntityStyle = InfoEntityStyle.PICTURE_LEFT
                 ),
                     InfoEntity(
                         image = R.drawable.light_bulb,
                         lottie = null,
                         textHeader = null,
                         textDescription = context.resources.getString(R.string.sleep_sleepduration_info_2),
-                        infoEntityStlye = InfoEntityStyle.PICTURE_LEFT
+                        infoEntityStyle = InfoEntityStyle.PICTURE_LEFT
                     )
                 )
                 6 ->  listOf(InfoEntity(
@@ -222,14 +254,14 @@ data class InfoEntity (
                     lottie = null,
                     textHeader = null,
                     textDescription = context.resources.getString(R.string.sleep_lightcondition_info_1),
-                    infoEntityStlye = InfoEntityStyle.PICTURE_RIGHT
+                    infoEntityStyle = InfoEntityStyle.PICTURE_RIGHT
                 ),
                     InfoEntity(
                         image = R.drawable.light_bulb,
                         lottie = null,
                         textHeader = null,
                         textDescription = context.resources.getString(R.string.sleep_lightcondition_info_2),
-                        infoEntityStlye = InfoEntityStyle.PICTURE_RIGHT
+                        infoEntityStyle = InfoEntityStyle.PICTURE_RIGHT
                     )
                 )
                 2 ->  listOf(InfoEntity(
@@ -237,14 +269,14 @@ data class InfoEntity (
                     lottie = null,
                     textHeader = null,
                     textDescription = context.resources.getString(R.string.sleep_phoneposition_info_1),
-                    infoEntityStlye = InfoEntityStyle.PICTURE_LEFT
+                    infoEntityStyle = InfoEntityStyle.PICTURE_LEFT
                 ),
                     InfoEntity(
                         image = R.drawable.light_bulb,
                         lottie = null,
                         textHeader = null,
                         textDescription = context.resources.getString(R.string.sleep_phoneposition_info_2),
-                        infoEntityStlye = InfoEntityStyle.PICTURE_LEFT
+                        infoEntityStyle = InfoEntityStyle.PICTURE_LEFT
                     )
                 )
                 3 ->  listOf(InfoEntity(
@@ -252,14 +284,14 @@ data class InfoEntity (
                     lottie = R.raw.using_mobile_phone,
                     textHeader = null,
                     textDescription = context.resources.getString(R.string.sleep_phoneusage_info_1),
-                    infoEntityStlye = InfoEntityStyle.PICTURE_LEFT
+                    infoEntityStyle = InfoEntityStyle.PICTURE_LEFT
                 ),
                     InfoEntity(
                         image = R.drawable.light_bulb,
                         lottie = null,
                         textHeader = null,
                         textDescription = context.resources.getString(R.string.sleep_phoneusage_info_2),
-                        infoEntityStlye = InfoEntityStyle.PICTURE_RIGHT
+                        infoEntityStyle = InfoEntityStyle.PICTURE_RIGHT
                     )
                 )
                 4 ->  listOf(InfoEntity(
@@ -267,14 +299,14 @@ data class InfoEntity (
                     lottie = R.raw.character_walk,
                     textHeader = null,
                     textDescription = context.resources.getString(R.string.sleep_activitytracking_info_1),
-                    infoEntityStlye = InfoEntityStyle.PICTURE_TOP
+                    infoEntityStyle = InfoEntityStyle.PICTURE_TOP
                 ),
                     InfoEntity(
                         image = R.drawable.light_bulb,
                         lottie = null,
                         textHeader = null,
                         textDescription = context.resources.getString(R.string.sleep_activitytracking_info_2),
-                        infoEntityStlye = InfoEntityStyle.PICTURE_LEFT
+                        infoEntityStyle = InfoEntityStyle.PICTURE_LEFT
                     )
                 )
                 else -> noInfo(context)

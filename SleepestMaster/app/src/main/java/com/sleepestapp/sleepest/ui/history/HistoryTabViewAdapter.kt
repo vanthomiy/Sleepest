@@ -8,20 +8,22 @@ private const val ARG_OBJECT = "object"
 
 
 class HistoryTabViewAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
-    private var COUNT = 1
+    private var count = 1
 
     override fun getItemCount(): Int = 3
 
-    override fun createFragment(position: Int): Fragment {
+    override fun createFragment(
+        position: Int
+    ): Fragment {
         // Return a NEW fragment instance in createFragment(int)
 
-        when (COUNT) {
+        when (count) {
             1 -> {
                 val fragment = HistoryDayFragment()
                 fragment.arguments = Bundle().apply {
                     putInt(ARG_OBJECT, position + 1)
                 }
-                COUNT += 1
+                count += 1
                 return fragment
             }
             2 -> {
@@ -29,7 +31,7 @@ class HistoryTabViewAdapter(fragment: Fragment) : FragmentStateAdapter(fragment)
                 fragment.arguments = Bundle().apply {
                     putInt(ARG_OBJECT, position + 1)
                 }
-                COUNT += 1
+                count += 1
                 return fragment
             }
             else -> {

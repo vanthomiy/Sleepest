@@ -34,7 +34,7 @@
             android:layout_height="36dp"
             android:layout_margin="10dp"
             android:maxWidth="300dp"
-            android:text="@string/history_day_information_noDataAvailable"
+            android:text="@string/history_information_noDataAvailable"
             android:textAlignment="center"
             android:textColor="@color/accent_text_color"
             android:textSize="@dimen/valueSize"
@@ -47,7 +47,7 @@
             android:id="@+id/tV_activitySmileyNoSleepDataAvailable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{historyDayViewModel.activitySmiley}"
+            android:text="@{historyDayViewModel.activitySmileyTag}"
             android:textColor="@color/primary_text_color"
             android:textSize="72sp"
             app:layout_constraintEnd_toEndOf="@+id/tV_noDataAvailable"
@@ -87,18 +87,19 @@
                         <ImageView
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
+                            tools:ignore="ContentDescription"
                             android:layout_gravity="start"
                             app:tint="@color/primary_text_color"
-                            android:src="@drawable/ic_baseline_night_shelter_24"
+                            android:src="@drawable/ic_baseline_hotel_24"
                             android:tag="1"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/img_header_magrin"
+                            android:layout_marginStart="@dimen/img_header_margin"
                             android:text="@string/history_sleepPhases_title"
                             android:textColor="@color/primary_text_color"
-                                                        android:textSize="@dimen/headerSize"
+                            android:textSize="@dimen/headerSize"
                             android:textStyle="bold"
                             android:layout_gravity="start|center"/>
 
@@ -106,8 +107,9 @@
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
+                            tools:ignore="ContentDescription"
                             app:tint="@color/primary_text_color"
-                            android:src="@drawable/info_help"
+                            android:src="@{historyDayViewModel.actualExpand == 0 ? @drawable/info_help_start : @drawable/info_help}"
                             android:onClick="@{historyDayViewModel::onInfoClicked}"
                             android:tag="0"/>
                     </FrameLayout>
@@ -117,7 +119,8 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:visibility="@{historyDayViewModel.actualExpand == 0 ? historyDayViewModel.visibleState:historyDayViewModel.goneState, default=gone}">
-                        <fragment
+                        <androidx.fragment.app.FragmentContainerView
+                            android:id="@+id/fcv0"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
@@ -141,7 +144,7 @@
                             android:clickable="true"
                             android:tag="BeginOfSleep"
                             android:onClick="@{historyDayViewModel::manualChangeSleepTimes}"
-                            android:background="@drawable/bgrounded_button">
+                            android:background="@drawable/background_rounded_button">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -177,7 +180,7 @@
                             android:layout_width="150dp"
                             android:layout_height="match_parent"
                             android:layout_gravity="end"
-                            android:background="@drawable/bgrounded_button"
+                            android:background="@drawable/background_rounded_button"
                             android:clickable="true"
                             android:tag="EndOfSleep"
                             android:onClick="@{historyDayViewModel::manualChangeSleepTimes}">
@@ -233,14 +236,15 @@
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="start"
+                            tools:ignore="ContentDescription"
                             app:tint="@color/primary_text_color"
-                            android:src="@drawable/moon"
+                            android:src="@drawable/ic_baseline_pie_chart_24"
                             android:tag="1"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/img_header_magrin"
+                            android:layout_marginStart="@dimen/img_header_margin"
                             android:text="@string/history_day_sleepPhases_time_in_phase_title"
                             android:textColor="@color/primary_text_color"
                                                         android:textSize="@dimen/headerSize"
@@ -251,8 +255,9 @@
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
+                            tools:ignore="ContentDescription"
                             app:tint="@color/primary_text_color"
-                            android:src="@drawable/info_help"
+                            android:src="@{historyDayViewModel.actualExpand == 1 ? @drawable/info_help_start : @drawable/info_help}"
                             android:onClick="@{historyDayViewModel::onInfoClicked}"
                             android:tag="1"/>
                     </FrameLayout>
@@ -262,7 +267,8 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:visibility="@{historyDayViewModel.actualExpand == 1 ? historyDayViewModel.visibleState:historyDayViewModel.goneState, default=gone}">
-                        <fragment
+                        <androidx.fragment.app.FragmentContainerView
+                            android:id="@+id/fcv1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
@@ -282,12 +288,19 @@
                             android:id="@+id/lL_sleepAnalysisChartsDaySleepPhasesAmount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_weight="2"
                             android:orientation="vertical"/>
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                        <View
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical" >
+                            android:layout_weight="1"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -296,34 +309,7 @@
                                 android:layout_marginTop="16dp"
                                 android:text="@{historyDayViewModel.awakeTime}"
                                 android:textColor="@color/primary_text_color"
-                                android:textSize="16sp"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:layout_marginTop="4dp"
-                                android:text="@{historyDayViewModel.lightSleepTime}"
-                                android:textColor="@color/primary_text_color"
-                                android:textSize="16sp"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:layout_marginTop="4dp"
-                                android:text="@{historyDayViewModel.deepSleepTime}"
-                                android:textColor="@color/primary_text_color"
-                                android:textSize="16sp"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:layout_marginTop="4dp"
-                                android:text="@{historyDayViewModel.remSleepTime}"
-                                android:textColor="@color/primary_text_color"
-                                android:textSize="16sp"/>
+                                android:textSize="16sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -332,7 +318,37 @@
                                 android:layout_marginTop="4dp"
                                 android:text="@{historyDayViewModel.sleepTime}"
                                 android:textColor="@color/primary_text_color"
-                                android:textSize="16sp"/>
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:layout_marginTop="4dp"
+                                android:text="@{historyDayViewModel.lightSleepTime}"
+                                android:textColor="@color/primary_text_color"
+                                android:textSize="16sp"
+                                android:visibility="@{historyDayViewModel.timeInSleepPhaseTextField}" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:layout_marginTop="4dp"
+                                android:text="@{historyDayViewModel.deepSleepTime}"
+                                android:textColor="@color/primary_text_color"
+                                android:textSize="16sp"
+                                android:visibility="@{historyDayViewModel.timeInSleepPhaseTextField}" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:layout_marginTop="4dp"
+                                android:text="@{historyDayViewModel.remSleepTime}"
+                                android:textColor="@color/primary_text_color"
+                                android:textSize="16sp"
+                                android:visibility="@{historyDayViewModel.timeInSleepPhaseTextField}" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -355,14 +371,15 @@
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="start"
+                            tools:ignore="ContentDescription"
                             app:tint="@color/primary_text_color"
-                            android:src="@drawable/ic_arrow_down_"
+                            android:src="@drawable/ic_baseline_favorite_border_24"
                             android:tag="1"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/img_header_magrin"
+                            android:layout_marginStart="@dimen/img_header_margin"
                             android:text="@string/history_day_sleep_quality_rating_title"
                             android:textColor="@color/primary_text_color"
                                                         android:textSize="@dimen/headerSize"
@@ -373,8 +390,9 @@
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
+                            tools:ignore="ContentDescription"
                             app:tint="@color/primary_text_color"
-                            android:src="@drawable/info_help"
+                            android:src="@{historyDayViewModel.actualExpand == 2 ? @drawable/info_help_start : @drawable/info_help}"
                             android:onClick="@{historyDayViewModel::onInfoClicked}"
                             android:tag="2"/>
                     </FrameLayout>
@@ -384,7 +402,8 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:visibility="@{historyDayViewModel.actualExpand == 2 ? historyDayViewModel.visibleState:historyDayViewModel.goneState, default=gone}">
-                        <fragment
+                        <androidx.fragment.app.FragmentContainerView
+                            android:id="@+id/fcv2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
@@ -472,6 +491,7 @@
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="start"
+                            tools:ignore="ContentDescription"
                             app:tint="@color/primary_text_color"
                             android:src="@drawable/ic_baseline_pending_actions_24"
                             android:tag="1"/>
@@ -479,7 +499,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/img_header_magrin"
+                            android:layout_marginStart="@dimen/img_header_margin"
                             android:text="@string/history_activity_title"
                             android:textColor="@color/primary_text_color"
                                                         android:textSize="@dimen/headerSize"
@@ -491,7 +511,8 @@
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
                             app:tint="@color/primary_text_color"
-                            android:src="@drawable/info_help"
+                            tools:ignore="ContentDescription"
+                            android:src="@{historyDayViewModel.actualExpand == 3 ? @drawable/info_help_start : @drawable/info_help}"
                             android:onClick="@{historyDayViewModel::onInfoClicked}"
                             android:tag="3"/>
                     </FrameLayout>
@@ -501,7 +522,8 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:visibility="@{historyDayViewModel.actualExpand == 3 ? historyDayViewModel.visibleState:historyDayViewModel.goneState, default=gone}">
-                        <fragment
+                        <androidx.fragment.app.FragmentContainerView
+                            android:id="@+id/fcv3"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
@@ -521,7 +543,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/lL_activityAnalysisChartDay"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            tools:ignore="UselessParent">
 
                             <View
                                 android:layout_width="0dp"
@@ -533,7 +556,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="2"
                                 android:layout_marginTop="16dp"
-                                android:text="@{historyDayViewModel.activitySmiley}"
+                                android:text="@{historyDayViewModel.activitySmileyTag}"
                                 android:textColor="@color/primary_text_color"
                                 android:textSize="72sp"
                                 android:textAlignment="center"/>

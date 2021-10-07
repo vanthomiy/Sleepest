@@ -1,8 +1,5 @@
 package com.sleepestapp.sleepest.alarmclock;
 
-/**This Activity shows a view on the lock screen when alarm was fired. The user can
- * cancel or snooze the alarm with buttons.
- */
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,32 +13,23 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.DisplayMetrics;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.sleepestapp.sleepest.MainApplication;
 import com.sleepestapp.sleepest.R;
 import com.sleepestapp.sleepest.background.BackgroundAlarmTimeHandler;
 import com.sleepestapp.sleepest.databinding.ActivityLockScreenAlarmBinding;
-import com.sleepestapp.sleepest.model.data.Actions;
-import com.sleepestapp.sleepest.model.data.AlarmReceiverUsage;
 import com.sleepestapp.sleepest.model.data.Constants;
-import com.sleepestapp.sleepest.model.data.NotificationUsage;
-import com.sleepestapp.sleepest.storage.DataStoreRepository;
-import com.sleepestapp.sleepest.storage.DatabaseRepository;
-import com.sleepestapp.sleepest.background.BackgroundAlarmTimeHandler;
 
+/**
+ * This Activity shows a view on the lock screen when alarm was fired. The user can
+ * cancel or snooze the alarm with buttons.
+ */
+@SuppressWarnings("unused")
 public class LockScreenAlarmActivity extends AppCompatActivity {
 
-    private SwipeListener swipeListener;
+    public SwipeListener swipeListener;
     private boolean isStarted = false;
     private CountDownTimer countDownTimer = null;
     private ActivityLockScreenAlarmBinding binding;
@@ -135,15 +123,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
 
         ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
 
-        colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
-            @Override
-            public void onAnimationUpdate(ValueAnimator animator) {
-
-                binding.tvSwipeUpText.setTextColor((Integer)animator.getAnimatedValue());
-
-            }
-        });
+        colorAnimation.addUpdateListener(animator -> textView.setTextColor((Integer)animator.getAnimatedValue()));
 
         colorAnimation.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -160,6 +140,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
     /**
      * Class to detect swiping on the lockscreen
      */
+    @SuppressWarnings("unused")
     private class SwipeListener implements View.OnTouchListener {
 
         GestureDetector gestureDetector;
@@ -183,18 +164,12 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
                     try {
                         if(Math.abs(xDiff) > Math.abs((yDiff))) {
                             if ((Math.abs(xDiff) > threshold) && (Math.abs(velocityX) > velocity)) {
-                                if (xDiff > 0) {
-                                    //Swipe right
-                                } else {
-                                    //Swipe left
-                                }
+
                                 return true;
                             }
                         } else {
                             if ((Math.abs(yDiff) > threshold) && (Math.abs(velocityY) > velocity)) {
-                                if (yDiff > 0) {
-                                    //Swipe down
-                                } else {
+                                if (!(yDiff > 0)) {
                                     //Swipe up -> Cancel alarm
                                     BackgroundAlarmTimeHandler.Companion.getHandler(getApplicationContext()).alarmClockRang(false);
                                     if (countDownTimer != null) {
@@ -213,12 +188,13 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
                 }
             };
 
-            gestureDetector = new GestureDetector(listener);
+            gestureDetector = new GestureDetector(getApplicationContext(), listener);
             view.setOnTouchListener(this);
         }
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
+            v.performClick(); // without is warning
             return gestureDetector.onTouchEvent(event);
         }
     }

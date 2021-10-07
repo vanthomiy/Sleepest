@@ -26,7 +26,6 @@
             android:layout_gravity="center"
             android:textSize="@dimen/bigSize"
             android:layout_marginTop="10dp"
-            android:fontFamily="@font/salina"
             android:textStyle="bold"
             />
 
@@ -44,6 +43,7 @@
                 android:layout_height="75dp"
                 android:layout_gravity="center"
                 android:layout_weight="1.5"
+                tools:ignore="ContentDescription"
                 android:layout_margin="10dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_baseline_wb_sunny_24"
@@ -67,7 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{infoViewModel.textDescription, default = Description}"
-                android:visibility="@{infoViewModel.descrriptionVisible}"
+                android:visibility="@{infoViewModel.descriptionVisible}"
                 android:textAlignment="center"
                 android:gravity="center"
                 android:layout_gravity="center"

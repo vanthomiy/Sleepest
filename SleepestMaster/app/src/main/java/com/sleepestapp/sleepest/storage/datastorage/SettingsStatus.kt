@@ -1,6 +1,5 @@
 package com.sleepestapp.sleepest.storage.datastorage
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import com.sleepestapp.sleepest.SettingsData
 import kotlinx.coroutines.flow.Flow
@@ -22,7 +21,6 @@ class SettingsStatus(private val dataStore: DataStore<SettingsData>) {
     val settingsData: Flow<SettingsData> = dataStore.data
             .catch { exception->
                 if(exception is IOException){
-                    Log.d("Error", exception.message.toString())
                     emit(SettingsData.getDefaultInstance())
                 }else{
                     throw exception
@@ -30,7 +28,7 @@ class SettingsStatus(private val dataStore: DataStore<SettingsData>) {
             }
 
 
-    suspend fun updateBannerShowAlarmActiv(isActive:Boolean){
+    suspend fun updateBannerShowAlarmActive(isActive:Boolean){
         dataStore.updateData{preference->
             preference.toBuilder().setBannerShowAlarmActiv(isActive).build()
         }
@@ -58,7 +56,7 @@ class SettingsStatus(private val dataStore: DataStore<SettingsData>) {
         }
     }
 
-    suspend fun updateAutoDarkModeAckn(isActive:Boolean){
+    suspend fun updateAutoDarkModeAcknowledge(isActive:Boolean){
         dataStore.updateData{preference->
             preference.toBuilder().setDesignDarkModeAckn(isActive).build()
         }

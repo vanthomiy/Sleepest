@@ -1,6 +1,5 @@
 package com.sleepestapp.sleepest.storage.datastorage
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import com.sleepestapp.sleepest.AlarmParameters
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +13,6 @@ class AlarmParameterStatus(private val dataStore: DataStore<AlarmParameters>) {
     val alarmParameters: Flow<AlarmParameters> = dataStore.data
         .catch { exception->
             if(exception is IOException){
-                Log.d("Error", exception.message.toString())
                 emit(AlarmParameters.getDefaultInstance())
             }else{
                 throw exception
@@ -49,6 +47,12 @@ class AlarmParameterStatus(private val dataStore: DataStore<AlarmParameters>) {
     suspend fun updateAlarmName(tone:String){
         dataStore.updateData{preference->
             preference.toBuilder().setAlarmName(tone).build()
+        }
+    }
+
+    suspend fun triggerObserver(){
+        dataStore.updateData{preference->
+            preference.toBuilder().setTriggerObservable(!preference.triggerObservable).build()
         }
     }
 

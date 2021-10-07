@@ -33,20 +33,20 @@
     <string name="workmanager2_tag">Workmanager 2</string>
     <string name="alarmmanager_key">com.sleepestapp.sleepest.background.AlarmIntentKey</string>
     <string name="error_start_foreground">Etwas lief schief. Versuche alle Alarme neuzustarten.</string>
-    <string name="disable_alarm_message">Du kannst den Alarm jederzeit reaktivieren.</string>
-    <string name="not_sleeping_message">Schlafenszeiten bis jetzt gelöscht.</string>
-    <string name="currently_not_sleeping_message">Die letzten Minuten an Schlaf wurden gelöscht.</string>
+    <string name="disable_alarm_message">Du kannst den Alarm jederzeit reaktivieren</string>
+    <string name="not_sleeping_message">Schlafenszeiten bis jetzt gelöscht</string>
+    <string name="currently_not_sleeping_message">Die letzten Minuten an Schlaf wurden gelöscht</string>
     <string name="btn_not_sleeping_text">Kein Schlaf</string>
     <string name="btn_currently_not_sleeping_text">Aktuell wach</string>
-    <string name="btn_disable_alarm">Alarm deaktivieren.</string>
-    <string name="btn_reactivate_alarm">Alarm reaktivieren.</string>
-    <string name="alarm_status_false">Alarm inaktiv.</string>
-    <string name="alarm_status_true">Alarm aktiv.</string>
+    <string name="btn_disable_alarm">Alarm deaktivieren</string>
+    <string name="btn_reactivate_alarm">Alarm reaktivieren</string>
+    <string name="alarm_status_false">Alarm inaktiv</string>
+    <string name="alarm_status_true">Alarm aktiv</string>
     <string name="wakelock_tag">Foregroundservice_lock</string>
-    <string name="sleep_status_false">Du schläfst momentan nicht.</string>
-    <string name="sleep_status_true">Du schläfst momentan.</string>
-    <string name="information_notification_text_sleeptime_problem">Schlafdauer kann nicht erreicht werden.</string>
-    <string name="information_notification_text_sleep_api_problem">Schlafdaten können nicht empfangen werden.</string>
+    <string name="sleep_status_false">Du schläfst momentan nicht</string>
+    <string name="sleep_status_true">Du schläfst momentan</string>
+    <string name="information_notification_text_sleeptime_problem">Schlafdauer kann nicht erreicht werden</string>
+    <string name="information_notification_text_sleep_api_problem">Schlafdaten können nicht empfangen werden</string>
     <string name="information_notification_title">Achtung</string>
     <string name="notification_information_api_problem_btn">Problem lösen</string>
     <string name="notification_information_user_should_sleep_btn_left">Gute Nacht</string>
@@ -62,8 +62,6 @@
     <!--endregion-->
 
     <!--region AlarmSettings-->
-    <string name="alarm_fragment_btn_disable_alarm_disable">Nächsten Alarm ausschalten</string>
-    <string name="alarm_fragment_btn_disable_alarm_reactivate">Reaktiviere nächsten Alarm</string>
 
     <string name="alarm_entity_day_fr">Fr</string>
     <string name="alarm_entity_day_sa">Sa</string>
@@ -96,7 +94,6 @@
     <string name="alarms_type_selection_alarm_vibration">Ton und Vibration</string>
     <string name="alarms_type_selection_only_vibration">Nur Vibration</string>
     <string name="alarms_type_selection_default">Standard</string>
-    <string name="alarms_information_temporary_disabled">Nächster Alarm ist temporär ausgeschalten</string>
     <string name="alarms_ringtone_set">Weiter</string>
     <string name="alarms_ringtone_cancel">Abbrechen</string>
     <string name="alarms_ringtone_header">Wähle einen Ton</string>
@@ -166,7 +163,7 @@
     <string name="sleep_activitytracking_info_2">
         Mit "In Schlafenszeit einbeziehen" gibt dir die App mehr oder weniger Schlaf, je nach dem wie viel Bewegung du am Tag hattest
     </string>
-    <string name="sleep_trackactivity_header">Tägliche aktivitäten aufzeichnen</string>
+    <string name="sleep_trackactivity_header">Tägliche Aktivitäten aufzeichnen</string>
     <string name="sleep_trackactivity_include_in_wakeup">In Schlafzeit einbeziehen</string>
     <string name="sleep_alarm_header">&#9200; Wecker</string>
 
@@ -256,13 +253,16 @@
 
     <!--region History Fragment texts -->
 
-    <string name="history_day_information_noDataAvailable">Keine Daten zum Anzeigen gefunden.</string>
+    <string name="history_information_noDataAvailable">Keine Daten zum Anzeigen gefunden.</string>
     <string name="history_sleepPhases_title">Schlafphasen:</string>
     <string name="history_day_sleepPhases_time_in_phase_title">Zeit in Phase:</string>
-    <string name="history_fragment_title">&#128197; History</string>
+    <string name="history_fragment_title">&#128197; Schlafverlauf</string>
     <string name="history_button_analysisDate_previous">Zurück</string>
     <string name="history_button_analysisDate_next">Nächste</string>
-    <string name="history_day_information_sleepPhases_lineChart">Dieses Diagramm zeigt Deine Schlafphasen der letzten Nacht an. Links und rechts über dem Diagramm kannst Du die, von der App erkannten, Einschlaf- und Aufwachzeitpunkte sehen. Die Nacht ist, je nachdem wo sich dein Handy in dieser Nacht befand, in zwei oder drei Schlafstati eingeteilt. Befand sich das Gerät neben dem Bett kannst Du die Phasen \"Wach\" und \"Schlaf\" erkennen. Lag es im Bett wird die Nacht in die Phasen \"Tiefschlaf\", \"Leichtschlaf\" und \"Wach\" eingeteilt. Das Diagramm ist linear über die Nacht aufgeteilt.</string>
+    <string name="history_sleep_phases_information_light">"Die Leichtschlafphase, welche sich durch einen bewusstlosen Schlaf mit entspannten Muskeln und nahezu ohne Augenbewegungen äußert, macht etwa die Hälfte des gesamten Schlafvolumens aus. "</string>
+    <string name="history_sleep_phases_information_deep">"Die Tiefschlafphase ist von besonderer Bedeutung für die Erholung des Körpers und Geistes. Dies wird durch eine sehr hohe körperliche und geistige Entspanntheit erreicht. Der Körper reagiert auf diese Phase mit einer weiteren Senkung der Atem- und Herzfrequenz, die Körpertemperatur verringert sich und der Blutdruck fällt. In dieser Phase sind keine Augenbewegungen feststellbar.  In der Tiefschlafphase findet die Regeneration und Reparatur von Zellen statt und das Immunsystem ist äußerst aktiv. "</string>
+    <string name="history_sleep_phases_information_rem">"Die Traumphase äußert sich durch rasante Augenbewegungen unter geschlossenen Lidern. Zudem erhöht sich sowohl die Atemfrequenz als auch die Atemtiefe. Neben der Verarbeitung von Infor-mationen und emotionalen Sinneseindrücken werden Tagesereignisse mit dem Langzeitgedächtnis verknüpft. Um diesen Vorgang möglichst ungestört ablaufen lassen zu können, werden weitgehend alle äußeren Sinneseindrücke ausgeblendet. Dies hat zur Folge, dass das Aufwecken in dieser Phase äußerst schwerfällt. An die in dieser Phase erlebten Träume kann man sich am häufigsten nach dem Aufwachen erinnern. "</string>
+    <string name="history_day_information_sleepPhases_lineChart">Dieses Diagramm zeigt Deine Schlafphasen der letzten Nacht an. Links und rechts über dem Diagramm kannst Du die, von der App erkannten, Einschlaf- und Aufwachzeitpunkte sehen. Die Nacht ist, je nachdem wo sich dein Handy in dieser Nacht befand, in zwei oder drei Schlafphasen eingeteilt. Befand sich das Gerät neben dem Bett kannst Du die Phasen \"Wach\" und \"Schlaf\" erkennen. Lag es im Bett wird die Nacht in die Phasen \"Tiefschlaf\", \"Leichtschlaf\" und \"Wach\" eingeteilt. Das Diagramm ist linear über die Nacht aufgeteilt.</string>
     <string name="history_day_sleep_quality_rating_title">Schlafqualität:</string>
     <string name="history_activity_title">Aktivität:</string>
     <string name="history_day_information_timeInPhase">Dieses Diagramm zeigt Dir die prozentuale Verteilung der Schlafphasen über die Nacht an.</string>
@@ -334,13 +334,28 @@
     <string name="onboarding_toast_read_to_end">Bitte lies das ganze Tutorial</string>
     <string name="onboarding_toast_permission_already_granted">Diese Berechtigung wurde schon akzeptiert</string>
     <string name="onboarding_toast_find_permission_in_list">Bitte suche nach "Sleepest" in der Liste</string>
+    <string name="onboarding_start_time_text_first_start">Wähle Startzeit</string>
+    <string name="onboarding_end_time_text_first_start">Wähle Endzeit</string>
+    <string name="onboarding_start_time_text_not_first_start">Start</string>
+    <string name="onboarding_end_time_text_not_first_start">Ende</string>
+    <string name="onboarding_btn_text_start">Start</string>
 
     <string name="privacy_police">Datenschutzerklärung</string>
 
     <!--endregion-->
 
     <!--region info-->
-        <string name="info_no_info_found">Keine Informationen gefunden</string>
+    <string name="info_no_info_found">Keine Informationen gefunden</string>
+    <string name="settings_export_failed">Export fehlgeschlagen</string>
+    <string name="settings_unable_to_find_market">\" App wurde nicht gefunden\"</string>
+    <string name="alarm_type">Alarm typ</string>
+    <string name="header">Wecker</string>
+    <string name="history">Schlafverlauf</string>
+    <string name="sleep">Schlafeinstellungen</string>
+    <string name="profile">Einstellungen</string>
+    <string name="history_sleep_phases_header_light_sleep">Leichtschlaf</string>
+    <string name="history_sleep_phases_header_deep_sleep">Tiefschlaf</string>
+    <string name="history_sleep_phases_header_rem_sleep">Traumschlaf</string>
     <!--endregion-->
 
 

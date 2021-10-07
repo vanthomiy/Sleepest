@@ -15,6 +15,34 @@
         android:layout_height="match_parent"
         android:background="@color/primary_app_background">
 
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/iV_noDataAvailable"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginBottom="96dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_rawRes="@raw/empty"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"/>
+
+        <TextView
+            android:id="@id/tV_noDataAvailable"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_margin="10dp"
+            android:maxWidth="300dp"
+            android:text="@string/history_information_noDataAvailable"
+            android:textAlignment="center"
+            android:textColor="@color/accent_text_color"
+            android:textSize="@dimen/valueSize"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/iV_noDataAvailable"
+            app:layout_constraintStart_toStartOf="@+id/iV_noDataAvailable"
+            app:layout_constraintTop_toBottomOf="@+id/iV_noDataAvailable" />
+
         <ScrollView
             android:id="@+id/sV_sleepAnalysisChartsWeek"
             android:layout_width="match_parent"
@@ -48,14 +76,16 @@
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="start"
+                            tools:ignore="ContentDescription"
                             app:tint="@color/primary_text_color"
-                            android:src="@drawable/ic_baseline_night_shelter_24"
+                            android:src="@drawable/ic_baseline_hotel_24"
                             android:tag="1"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/img_header_magrin"
+                            tools:ignore="ContentDescription"
+                            android:layout_marginStart="@dimen/img_header_margin"
                             android:text="@string/history_sleepPhases_title"
                             android:textColor="@color/primary_text_color"
                                                         android:textSize="@dimen/headerSize"
@@ -67,8 +97,9 @@
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
                             app:tint="@color/primary_text_color"
+                            tools:ignore="ContentDescription"
                             android:onClick="@{historyWeekViewModel::onInfoClicked}"
-                            android:src="@drawable/info_help"
+                            android:src="@{historyWeekViewModel.actualExpand == 0 ? @drawable/info_help_start : @drawable/info_help}"
                             android:tag="0" />
                     </FrameLayout>
 
@@ -77,7 +108,8 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:visibility="@{historyWeekViewModel.actualExpand == 0 ? historyWeekViewModel.visibleState:historyWeekViewModel.goneState, default=gone}">
-                        <fragment
+                        <androidx.fragment.app.FragmentContainerView
+                            android:id="@+id/fcv0"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"
@@ -114,6 +146,7 @@
                             android:layout_width="@dimen/img_header_size"
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="start"
+                            tools:ignore="ContentDescription"
                             app:tint="@color/primary_text_color"
                             android:src="@drawable/ic_baseline_pending_actions_24"
                             android:tag="1"/>
@@ -121,7 +154,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/img_header_magrin"
+                            android:layout_marginStart="@dimen/img_header_margin"
                             android:text="@string/history_activity_title"
                             android:textColor="@color/primary_text_color"
                                                         android:textSize="@dimen/headerSize"
@@ -133,7 +166,8 @@
                             android:layout_height="@dimen/img_header_size"
                             android:layout_gravity="end"
                             app:tint="@color/primary_text_color"
-                            android:src="@drawable/info_help"
+                            tools:ignore="ContentDescription"
+                            android:src="@{historyWeekViewModel.actualExpand == 1 ? @drawable/info_help_start : @drawable/info_help}"
                             android:onClick="@{historyWeekViewModel::onInfoClicked}"
                             android:tag="1"/>
                     </FrameLayout>
@@ -143,7 +177,8 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:visibility="@{historyWeekViewModel.actualExpand == 1 ? historyWeekViewModel.visibleState:historyWeekViewModel.goneState, default=gone}">
-                        <fragment
+                        <androidx.fragment.app.FragmentContainerView
+                            android:id="@+id/fcv1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:name="com.sleepestapp.sleepest.ui.info.InfoFragment"

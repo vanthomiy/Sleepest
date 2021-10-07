@@ -22,7 +22,7 @@ interface SleepApiRawDataDao {
     suspend fun insert(sleepSegmentEventEntityRaw: SleepApiRawDataEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(sleepSegmentEventEntityRaws: List<SleepApiRawDataEntity>)
+    suspend fun insertAll(sleepSegmentEventEntityRaw: List<SleepApiRawDataEntity>)
 
     @Query("UPDATE sleep_api_raw_data_table SET sleepState = :sleepState WHERE time_stamp_seconds = :id")
     suspend fun updateSleepState(id: Int, sleepState: SleepState)
@@ -33,8 +33,8 @@ interface SleepApiRawDataDao {
     @Query("UPDATE sleep_api_raw_data_table SET wakeUpTime = :wakeUp WHERE time_stamp_seconds = :id")
     suspend fun updateWakeUp(id: Int, wakeUp: Int)
 
-    @Delete
-    suspend fun delete(sleepSegmentEventEntityRaw: SleepApiRawDataEntity)
+    @Query("DELETE FROM sleep_api_raw_data_table WHERE time_stamp_seconds = :id")
+    suspend fun delete(id: Int)
 
     @Query("DELETE FROM sleep_api_raw_data_table")
     suspend fun deleteAll()

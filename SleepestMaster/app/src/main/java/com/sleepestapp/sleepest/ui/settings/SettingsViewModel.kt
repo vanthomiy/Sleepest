@@ -1,9 +1,6 @@
 package com.sleepestapp.sleepest.ui.settings
-import android.transition.TransitionManager
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -27,17 +24,18 @@ class SettingsViewModel(
     /**
      * Dark mode toggled handler
      */
+    @Suppress("UNUSED_PARAMETER")
     fun darkModeToggled(view: View) {
         viewModelScope.launch {
             darkMode.value?.let {
                 dataStoreRepository.updateDarkMode(it)
-                dataStoreRepository.updateAutoDarkModeAckn(true)
+                dataStoreRepository.updateAutoDarkModeAcknowledge(true)
                 AppCompatDelegate
                         .setDefaultNightMode(
                             if (it)
                                 AppCompatDelegate.MODE_NIGHT_YES else
                                 AppCompatDelegate.MODE_NIGHT_NO
-                        );
+                        )
             }
         }
     }
@@ -47,13 +45,14 @@ class SettingsViewModel(
     /**
      * Auto dark mode toggled handler
      */
+    @Suppress("UNUSED_PARAMETER")
     fun autoDarkModeToggled(view: View) {
-        TransitionManager.beginDelayedTransition(transitionsContainer);
+        //TransitionManager.beginDelayedTransition(transitionsContainer)
 
         viewModelScope.launch {
             autoDarkMode.value?.let {
                 dataStoreRepository.updateAutoDarkMode(it)
-                dataStoreRepository.updateAutoDarkModeAckn(true)
+                dataStoreRepository.updateAutoDarkModeAcknowledge(true)
             }
         }
 
@@ -71,7 +70,7 @@ class SettingsViewModel(
     }
 
 
-    val showAlarmActiv = MutableLiveData(true)
+    val showAlarmActive = MutableLiveData(true)
     val showActualWakeUpPoint = MutableLiveData(true)
     val showActualSleepTime = MutableLiveData(true)
     val showDetailedSleepTime = MutableLiveData(true)
@@ -84,8 +83,8 @@ class SettingsViewModel(
 
         viewModelScope.launch {
             when (view.tag.toString()) {
-                "show_alarm_active" -> showAlarmActiv.value
-                    ?.let { dataStoreRepository.updateBannerShowAlarmActiv(it) }
+                "show_alarm_active" -> showAlarmActive.value
+                    ?.let { dataStoreRepository.updateBannerShowAlarmActive(it) }
                 "show_actual_wakeup" -> showActualWakeUpPoint.value
                     ?.let { dataStoreRepository.updateBannerShowActualWakeUpPoint(it) }
                 "show_actual_sleep_time" -> showActualSleepTime.value
@@ -123,19 +122,19 @@ class SettingsViewModel(
     val dailyPermissionDescription = MutableLiveData(View.GONE)
     val notificationPrivacyPermissionDescription = MutableLiveData(View.GONE)
     val overlayPermissionDescription = MutableLiveData(View.GONE)
-
+    val descriptionChanged = MutableLiveData(false)
 
 
     /**
      * Show permission info for each permission
      */
     fun showPermissionInfo(permission: String){
-        TransitionManager.beginDelayedTransition(transitionsContainer);
-
+        //TransitionManager.beginDelayedTransition(transitionsContainer)
         activityPermissionDescription.value = (if (permission == "sleepActivity") if (activityPermissionDescription.value != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
         dailyPermissionDescription.value = (if (permission == "dailyActivity") if (dailyPermissionDescription.value != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
         notificationPrivacyPermissionDescription.value = (if (permission == "notificationPrivacy") if (notificationPrivacyPermissionDescription.value != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
         overlayPermissionDescription.value = (if (permission == "overlay") if (overlayPermissionDescription.value != View.VISIBLE) View.VISIBLE else View.GONE else View.GONE)
+        descriptionChanged.value = descriptionChanged.value == false
     }
 
 
@@ -154,7 +153,7 @@ class SettingsViewModel(
     fun onDataClicked(view: View) {
         when(view.tag.toString()){
             "remove" -> {
-                TransitionManager.beginDelayedTransition(transitionsContainer);
+                //TransitionManager.beginDelayedTransition(transitionsContainer)
 
                 removeExpand.value = (removeExpand.value != true)
                 removeButtonText.value = (if (removeExpand.value == false)
@@ -187,15 +186,16 @@ class SettingsViewModel(
      * Expand a topic is clicked
      */
     fun onExpandClicked(view: View) {
-        updateExpandChanged(view.tag.toString(), true)
+        updateExpandChanged(view.tag.toString())
     }
 
     /**
      * Expand the actual topic and hide all other topics
      */
-    private fun updateExpandChanged(value: String, toggle: Boolean = false) {
+    @Suppress("UNUSED_PARAMETER")
+    private fun updateExpandChanged(value: String) {
 
-        TransitionManager.beginDelayedTransition(transitionsContainer);
+        //TransitionManager.beginDelayedTransition(transitionsContainer)
 
         actualExpand.value = (if (actualExpand.value == value.toIntOrNull()) -1 else value.toIntOrNull())
         removeExpand.value = (if (actualExpand.value == 4) removeExpand.value else false)
@@ -211,22 +211,15 @@ class SettingsViewModel(
          */
         viewModelScope.launch {
 
-            var settingsParams = dataStoreRepository.settingsDataFlow.first()
+            val settingsParams = dataStoreRepository.settingsDataFlow.first()
             darkMode.value = (settingsParams.designDarkMode)
             autoDarkMode.value = (settingsParams.designAutoDarkMode)
 
-            showAlarmActiv.value = (settingsParams.bannerShowAlarmActiv)
+            showAlarmActive.value = (settingsParams.bannerShowAlarmActiv)
             showActualWakeUpPoint.value = (settingsParams.bannerShowActualWakeUpPoint)
             showActualSleepTime.value = (settingsParams.bannerShowActualSleepTime)
             showSleepState.value = (settingsParams.bannerShowSleepState)
 
         }
     }
-
-    //region animation
-
-    lateinit var transitionsContainer : ViewGroup
-    lateinit var animatedTopView : MotionLayout
-
-    //endregion
 }

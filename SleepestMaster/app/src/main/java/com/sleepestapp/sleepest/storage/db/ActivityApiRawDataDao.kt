@@ -21,7 +21,7 @@ interface ActivityApiRawDataDao {
     suspend fun insert(activitySegmentEventEntityRaw: ActivityApiRawDataEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(activitySegmentEventEntityRaws: List<ActivityApiRawDataEntity>)
+    suspend fun insertAll(activitySegmentEventEntityRaw: List<ActivityApiRawDataEntity>)
 
     @Delete
     suspend fun delete(activitySegmentEventEntityRaw: ActivityApiRawDataEntity)

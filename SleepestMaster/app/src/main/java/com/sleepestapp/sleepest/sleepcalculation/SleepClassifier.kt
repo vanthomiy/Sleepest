@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.first
  */
 class SleepClassifier constructor(private val context: Context) {
 
-
     /**
      * With [dataStoreRepository] we can access all the data from the proto store
      */
@@ -84,23 +83,23 @@ class SleepClassifier constructor(private val context: Context) {
      */
     fun switchToFrequency(list: List<SleepApiRawDataEntity>, fromCount: Int, toCount: Int): List<SleepApiRawDataEntity>
     {
-        var timeNormedData = mutableListOf<SleepApiRawDataEntity>()
+        val timeNormedData = mutableListOf<SleepApiRawDataEntity>()
 
         // 30 / 10 = 3 or 5 / 10 = 0.5
-        val frequenceFactor = toCount.toFloat() / fromCount.toFloat()
+        val frequencyFactor = toCount.toFloat() / fromCount.toFloat()
 
 
-        var sleepDataBuffer = mutableListOf<SleepApiRawDataEntity>()
+        val sleepDataBuffer = mutableListOf<SleepApiRawDataEntity>()
 
         for (i in 0 until list.count()){
-            if (frequenceFactor > 1){
-                for (j in 0 until frequenceFactor.toInt())
+            if (frequencyFactor > 1){
+                for (j in 0 until frequencyFactor.toInt())
                     timeNormedData.add(list[i])
             }
             else{
                 sleepDataBuffer.add(list[i])
 
-                if(sleepDataBuffer.count() >= (1/frequenceFactor).toInt()){
+                if(sleepDataBuffer.count() >= (1/frequencyFactor).toInt()){
                     timeNormedData.add(SleepApiRawDataEntity(
                         timestampSeconds = sleepDataBuffer[0].timestampSeconds,
                         confidence = sleepDataBuffer.sumOf {x -> x.confidence} / sleepDataBuffer.count(),
@@ -127,7 +126,7 @@ class SleepClassifier constructor(private val context: Context) {
      * It handles pre-prediction and after-prediction
      *  1. It checks if the user already slept. Else it checks for the sleep start borders
      *  2. When user already slept or sleep border is given. We check the sleep clean up borders
-     *  3. When sleep clean up is okay. We are checking if the acutal params are sleeping or not
+     *  3. When sleep clean up is okay. We are checking if the actual params are sleeping or not
      *  returns [SleepState.AWAKE] or [SleepState.SLEEPING]
      */
     fun isUserSleeping(
@@ -231,8 +230,8 @@ class SleepClassifier constructor(private val context: Context) {
                 }
                 else{
                     avgThreshold.confidence += ((sortedSleepListBefore[i].confidence + sortedSleepListAfter!![i].confidence) / 2).toFloat() * i * i
-                    avgThreshold.light += ((sortedSleepListBefore[i].light + sortedSleepListAfter!![i].light) / 2).toFloat() * i * i
-                    avgThreshold.motion += ((sortedSleepListBefore[i].motion + sortedSleepListAfter!![i].motion) / 2).toFloat() * i * i
+                    avgThreshold.light += ((sortedSleepListBefore[i].light + sortedSleepListAfter[i].light) / 2).toFloat() * i * i
+                    avgThreshold.motion += ((sortedSleepListBefore[i].motion + sortedSleepListAfter[i].motion) / 2).toFloat() * i * i
                 }
             }
 
@@ -306,32 +305,10 @@ class SleepClassifier constructor(private val context: Context) {
         avgThreshold.motion = avgThreshold.motion / factor
 
         return when {
-            actualParams.lightSleepParams.checkIfThreshold(false, 1, avgThreshold) -> SleepState.LIGHT
-            actualParams.remSleepParams.checkIfThreshold(true, 2, avgThreshold) -> SleepState.REM
-            actualParams.deepSleepParams.checkIfThreshold(true, 2, avgThreshold) -> SleepState.DEEP
+            actualParams.remSleepParams.checkIfDifferenceThreshold(true, 3, avgThreshold) -> SleepState.REM
+            actualParams.deepSleepParams.checkIfThreshold(true, 3, avgThreshold) -> SleepState.DEEP
+            //actualParams.lightSleepParams.checkIfThreshold(false, 1, avgThreshold) -> SleepState.LIGHT
             else -> SleepState.LIGHT
-        }
-    }
-
-
-    /**
-     * Companion object is used for static fields in kotlin
-     */
-    companion object {
-        // For Singleton instantiation
-        @Volatile
-        private var INSTANCE: SleepClassifier? = null
-
-        /**
-         * This should be used to create or get the actual instance of the [SleepClassifier] class
-         */
-        fun getHandler(context: Context): SleepClassifier {
-            return INSTANCE ?: synchronized(this) {
-                val instance = SleepClassifier(context)
-                INSTANCE = instance
-                // return instance
-                instance
-            }
         }
     }
 }

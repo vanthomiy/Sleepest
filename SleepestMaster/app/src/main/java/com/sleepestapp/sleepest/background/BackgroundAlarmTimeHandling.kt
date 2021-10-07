@@ -1,5 +1,6 @@
 package com.sleepestapp.sleepest.background
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.widget.Toast
@@ -24,11 +25,11 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.*
 import java.util.concurrent.TimeUnit
-
 import android.app.ActivityManager
-
+import android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
 import android.content.Context.ACTIVITY_SERVICE
 import com.sleepestapp.sleepest.model.data.Constants
+import com.sleepestapp.sleepest.util.SleepTimeValidationUtil
 import kotlinx.coroutines.flow.first
 
 
@@ -47,10 +48,10 @@ class BackgroundAlarmTimeHandler(val context: Context) {
         (context.applicationContext as MainApplication).dataStoreRepository
     }
     private val sleepHandler : SleepHandler by lazy {
-        SleepHandler.getHandler(context)
+        SleepHandler(context)
     }
     private val sleepCalculationHandler : SleepCalculationHandler by lazy {
-        SleepCalculationHandler.getHandler(context)
+        SleepCalculationHandler(context)
     }
     private val scope: CoroutineScope = MainScope()
 
@@ -91,7 +92,8 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                 else if (checkInSleepTime() && (sleepTimeEndTemp != getSleepTimeEndValue())) {
                     //Change the end of sleep time alarm
                     val calendar = TimeConverterUtil.getAlarmDate(getSleepTimeEndValue() + 60)
-                    AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context.applicationContext, AlarmReceiverUsage.STOP_WORKMANAGER);
+                    AlarmReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context.applicationContext, AlarmReceiverUsage.STOP_WORKMANAGER)
+                    beginOfSleepTime(false)
                 }
 
                 //User changes sleep time begin and is not in sleep time
@@ -132,8 +134,10 @@ class BackgroundAlarmTimeHandler(val context: Context) {
             //Alarm is already active and user is already in sleep time
             if (checkInSleepTime() && checkAlarmActive() && checkForegroundStatus() && !checkAlarmFired() && !checkAlarmTempDisabled() && !listEmpty) {
 
+                val alarmCycleState = AlarmCycleState(context)
+
                 //User changes first wakeup time of the alarm
-                if (getFirstWakeup() != firstWakeupTemp) {
+                if (getFirstWakeup() != firstWakeupTemp && alarmCycleState.getState() == AlarmCycleStates.BETWEEN_SLEEPTIME_START_AND_CALCULATION) {
                     val calenderCalculation = TimeConverterUtil.getAlarmDate(getFirstWakeup() - Constants.CALCULATION_START_DIFFERENCE)
                     AlarmReceiver.startAlarmManager(
                         calenderCalculation[Calendar.DAY_OF_WEEK],
@@ -141,12 +145,15 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                         calenderCalculation[Calendar.MINUTE],
                         context,
                         AlarmReceiverUsage.START_WORKMANAGER_CALCULATION)
+                } else if (getFirstWakeup() != firstWakeupTemp && alarmCycleState.getState() == AlarmCycleStates.BETWEEN_CALCULATION_AND_FIRST_WAKEUP ||
+                    alarmCycleState.getState() == AlarmCycleStates.BETWEEN_FIRST_AND_LAST_WAKEUP) {
+                    WorkmanagerCalculation.startPeriodicWorkmanager(Constants.WORK_MANAGER_CALCULATION_DURATION, context)
                 }
 
                 //User changes the last wakeup time of the alarm
                 if (getLastWakeup() != lastWakeupTemp) {
                     val calendar = TimeConverterUtil.getAlarmDate(getLastWakeup())
-                    AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context.applicationContext, AlarmClockReceiverUsage.LATEST_WAKEUP_ALARMCLOCK);
+                    AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context.applicationContext, AlarmClockReceiverUsage.LATEST_WAKEUP_ALARMCLOCK)
                 }
             }
 
@@ -176,29 +183,31 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
             //Updated the alarm that it was fired. So it can not be called again
             if (checkAlarmActive()) {
-                dataBaseRepository.updateAlarmWasFired(true, dataBaseRepository.getNextActiveAlarm()!!.id)
+                dataBaseRepository.updateAlarmWasFired(true, dataBaseRepository.getNextActiveAlarm(dataStoreRepository)!!.id)
             }
         }
     }
 
     /**
      * This function stops the foreground service and do all things to restart it on a specific time
-     * @param inActivity true, if user is not in app
      */
     fun stopForegroundService() = runBlocking{
 
             if (checkForegroundStatus()) {
 
                 //Stops the calculation and all alarm clocks
-                WorkmanagerCalculation.stopPeriodicWorkmanager()
-                AlarmClockReceiver.cancelAlarm(context.applicationContext, AlarmClockReceiverUsage.START_ALARMCLOCK);
-                AlarmClockReceiver.cancelAlarm(context.applicationContext, AlarmClockReceiverUsage.LATEST_WAKEUP_ALARMCLOCK);
+
+
+                //Cancel periodic work by tag
+                WorkManager.getInstance(context.applicationContext).cancelAllWorkByTag(context.getString(R.string.workmanager2_tag))
+                AlarmClockReceiver.cancelAlarm(context.applicationContext, AlarmClockReceiverUsage.START_ALARMCLOCK)
+                AlarmClockReceiver.cancelAlarm(context.applicationContext, AlarmClockReceiverUsage.LATEST_WAKEUP_ALARMCLOCK)
 
                 //Cancel Alarm for starting Workmanager
                 AlarmReceiver.cancelAlarm(context, AlarmReceiverUsage.START_WORKMANAGER_CALCULATION)
 
                 //Stops the foreground service depending on the screen status (on/off)
-                if (isUserInApp()) {
+                if (!isUserInApp()) {
                     val startForegroundIntent = Intent(context, ForegroundActivity::class.java)
                     startForegroundIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                     startForegroundIntent.putExtra("intent", 2)
@@ -211,7 +220,6 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
     /**
      * This function starts the foreground service
-     * @param inActivity true, if user is not in app
      */
     private suspend fun startForegroundService() {
 
@@ -258,12 +266,12 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                         )
                     } else if ((alarmCycleState.getState() == AlarmCycleStates.BETWEEN_FIRST_AND_LAST_WAKEUP) || (alarmCycleState.getState() == AlarmCycleStates.BETWEEN_CALCULATION_AND_FIRST_WAKEUP)) {
                         WorkmanagerCalculation.startPeriodicWorkmanager(
-                            Constants.WORKMANAGER_CALCULATION_DURATION, context)
+                            Constants.WORK_MANAGER_CALCULATION_DURATION, context)
                     }
 
                     //Set the alarm clock for the latest wakeup
                     val calendar = TimeConverterUtil.getAlarmDate(getLastWakeup())
-                    AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context.applicationContext, AlarmClockReceiverUsage.LATEST_WAKEUP_ALARMCLOCK);
+                    AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), context.applicationContext, AlarmClockReceiverUsage.LATEST_WAKEUP_ALARMCLOCK)
                 }
             }
 
@@ -273,14 +281,16 @@ class BackgroundAlarmTimeHandler(val context: Context) {
     }
 
     private fun isUserInApp() : Boolean {
-        val am = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
-        val tasks = am.getRunningTasks(1)
-        val task = tasks[0] // current task
-        val rootActivity = task.baseActivity //current activity
-        val currentPackageName = rootActivity!!.packageName //current packagename
 
-        if (currentPackageName == "com.sleepestapp.sleepest") {
-            return true
+        val activityManager = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
+        val processInfo = activityManager.runningAppProcesses
+
+        if (processInfo.size > 0) {
+            for (i in processInfo.indices) {
+                if (processInfo[i].processName == context.packageName && processInfo[i].importance == IMPORTANCE_FOREGROUND) {
+                    return true
+                }
+            }
         }
 
         return false
@@ -294,7 +304,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
         //Start Workmanager at sleeptime
         val periodicDataWork: PeriodicWorkRequest = PeriodicWorkRequest.Builder(Workmanager::class.java,
-            Constants.WORKMANAGER_DURATION.toLong(),
+            Constants.WORK_MANAGER_DURATION.toLong(),
             TimeUnit.MINUTES)
             .addTag(context.getString(R.string.workmanager1_tag)) //Tag is needed for canceling the periodic work
             .build()
@@ -385,15 +395,16 @@ class BackgroundAlarmTimeHandler(val context: Context) {
     fun disableAlarmTemporaryInApp(fromApp : Boolean, reactivate : Boolean) {
 
         scope.launch {
+
             //Alarm was disabled in AlarmFragment
             if (fromApp && !reactivate) {
                 stopForegroundService()
-                dataBaseRepository.updateAlarmTempDisabled(true, dataBaseRepository.getNextActiveAlarm()!!.id)
+                dataBaseRepository.updateAlarmTempDisabled(true, dataBaseRepository.getNextActiveAlarm(dataStoreRepository)!!.id)
             }
             //Alarm was disabled in notification
             else if (!fromApp && !reactivate) {
                 if (checkAlarmActive() && !checkAlarmTempDisabled()) {
-                    dataBaseRepository.updateAlarmTempDisabled(true, dataBaseRepository.getNextActiveAlarm()!!.id)
+                    dataBaseRepository.updateAlarmTempDisabled(true, dataBaseRepository.getNextActiveAlarm(dataStoreRepository)!!.id)
                     val calendarStopForeground = Calendar.getInstance()
                     calendarStopForeground.add(Calendar.MINUTE, Constants.DISABLE_ALARM_DELAY)
                     AlarmReceiver.startAlarmManager(calendarStopForeground.get(Calendar.DAY_OF_WEEK), calendarStopForeground.get(Calendar.HOUR_OF_DAY), calendarStopForeground.get(Calendar.MINUTE), context.applicationContext, AlarmReceiverUsage.STOP_FOREGROUND)
@@ -403,13 +414,13 @@ class BackgroundAlarmTimeHandler(val context: Context) {
             //Alarm was reactivated in notification
             else if (!fromApp && reactivate) {
                 if (checkAlarmActive() && checkAlarmTempDisabled()) {
-                    dataBaseRepository.updateAlarmTempDisabled(false, dataBaseRepository.getNextActiveAlarm()!!.id)
+                    dataBaseRepository.updateAlarmTempDisabled(false, dataBaseRepository.getNextActiveAlarm(dataStoreRepository)!!.id)
                     AlarmReceiver.cancelAlarm(context.applicationContext, AlarmReceiverUsage.STOP_FOREGROUND)
                 }
             }
             //Alarm was reactivated in AlarmFragment
             else if (fromApp && reactivate) {
-                dataBaseRepository.updateAlarmTempDisabled(false, dataBaseRepository.getNextActiveAlarm()!!.id)
+                dataBaseRepository.updateAlarmTempDisabled(false, dataBaseRepository.getNextActiveAlarm(dataStoreRepository)!!.id)
                 startForegroundService()
             }
         }
@@ -479,7 +490,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
                     startForegroundService()
                     AlarmReceiver.cancelAlarm(context, AlarmReceiverUsage.START_WORKMANAGER_CALCULATION)
                     WorkmanagerCalculation.startPeriodicWorkmanager(
-                        Constants.WORKMANAGER_CALCULATION_DURATION, context)
+                        Constants.WORK_MANAGER_CALCULATION_DURATION, context)
                 }
                 4 -> {
                     setForegroundStatus(false)
@@ -527,15 +538,18 @@ class BackgroundAlarmTimeHandler(val context: Context) {
     /**
      * Get the first wakeup of the next active alarm
      */
-    private suspend fun getFirstWakeup() =
-        (dataBaseRepository.getNextActiveAlarm()!!.wakeupEarly)
+    private suspend fun getFirstWakeup() : Int {
+        return (dataBaseRepository.getNextActiveAlarm(dataStoreRepository)!!.wakeupEarly)
+    }
 
     /**
      * Get the last wakeup of the next active alarm
      */
-    private suspend fun getLastWakeup() =
-        (dataBaseRepository.getNextActiveAlarm()!!.wakeupLate)
-
+    private suspend fun getLastWakeup() : Int {
+        return (dataBaseRepository.getNextActiveAlarm(
+            dataStoreRepository
+        )!!.wakeupLate)
+    }
     /**
      * Get the status of the foreground service
      */
@@ -545,26 +559,31 @@ class BackgroundAlarmTimeHandler(val context: Context) {
     /**
      * Check, if an alarm is active for the next day
      */
-    private suspend fun checkAlarmActive(): Boolean =
-        (dataBaseRepository.getNextActiveAlarm() != null)
+    private suspend fun checkAlarmActive(): Boolean {
+        return (dataBaseRepository.getNextActiveAlarm(dataStoreRepository) != null)
+    }
 
     /**
      * Get alarm fired status
      */
-    private suspend fun checkAlarmFired(): Boolean =
-        (checkAlarmActive() && dataBaseRepository.getNextActiveAlarm()!!.wasFired)
+    private suspend fun checkAlarmFired(): Boolean {
+        return (checkAlarmActive() && dataBaseRepository.getNextActiveAlarm(dataStoreRepository)!!.wasFired)
+    }
 
     /**
      * Get alarm temporary disabled status
      */
-    private suspend fun checkAlarmTempDisabled(): Boolean =
-        (checkAlarmActive() && dataBaseRepository.getNextActiveAlarm()!!.tempDisabled)
+    private suspend fun checkAlarmTempDisabled(): Boolean {
+        return (checkAlarmActive() && dataBaseRepository.getNextActiveAlarm(dataStoreRepository)!!.tempDisabled)
+    }
+
 
     /**
      * Checks if the user is in sleep time
      */
     private suspend fun checkInSleepTime() : Boolean =
-        dataStoreRepository.isInSleepTime(null)
+        SleepTimeValidationUtil.getActualAlarmTimeData(dataStoreRepository).isInSleepTime
+        //dataStoreRepository.isInSleepTime(null)
 
     /**
      * Get foreground service status
@@ -578,6 +597,7 @@ class BackgroundAlarmTimeHandler(val context: Context) {
      */
     companion object {
         // For Singleton instantiation
+        @SuppressLint("StaticFieldLeak")
         @Volatile
         private var INSTANCE: BackgroundAlarmTimeHandler? = null
 

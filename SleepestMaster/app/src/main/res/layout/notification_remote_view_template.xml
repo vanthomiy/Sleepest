@@ -2,13 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:background="@color/transparent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -18,6 +19,7 @@
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="50dp"
+                tools:ignore="ContentDescription"
                 android:layout_margin="5dp"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/warning" />
@@ -33,7 +35,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="1dp"
                     android:textSize="13sp"
-                    android:text=" "
+                    android:text=""
                     android:textColor="@color/primary_text_color"/>
 
             </LinearLayout>
@@ -54,12 +56,12 @@
                 android:layout_weight="0.5"
                 android:layout_height="@dimen/valuesHeight"
                 android:layout_margin="5dp"
-                android:background="@drawable/bgrounded_button"
+                android:background="@drawable/background_rounded_button"
                 android:backgroundTint="@color/error_color"
                 android:layout_gravity="center_horizontal"
                 android:textSize="15sp"
                 android:textColor="@color/primary_text_color"
-                >
+                style="?android:attr/buttonBarButtonStyle">
             </Button>
 
             <Button
@@ -68,12 +70,12 @@
                 android:layout_weight="0.5"
                 android:layout_height="@dimen/valuesHeight"
                 android:layout_margin="5dp"
-                android:background="@drawable/bgrounded_button"
+                android:background="@drawable/background_rounded_button"
                 android:backgroundTint="@color/warning_color"
                 android:layout_gravity="center_horizontal"
                 android:textSize="15sp"
                 android:textColor="@color/primary_text_color"
-                >
+                style="?android:attr/buttonBarButtonStyle">
             </Button>
 
         </LinearLayout>

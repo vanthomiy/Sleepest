@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.sleepestapp.sleepest.databinding.FragmentInfoEntityBinding
@@ -32,11 +33,11 @@ class InfoEntityFragment(val applicationContext: Context, private val infoEntity
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = FragmentInfoEntityBinding.inflate(inflater, container, false)
         binding.infoViewModel = viewModel
-        binding.lifecycleOwner = this;
+        binding.lifecycleOwner = this
 
         // Setup the layout for the actual Info Entity
         if(style == InfoEntityStyle.PICTURE_LEFT || style == InfoEntityStyle.PICTURE_TOP){
@@ -63,7 +64,7 @@ class InfoEntityFragment(val applicationContext: Context, private val infoEntity
         }
 
         if (infoEntity.textDescription != null && infoEntity.textDescription != "") {
-            viewModel.descrriptionVisible.value = (View.VISIBLE)
+            viewModel.descriptionVisible.value = (View.VISIBLE)
             viewModel.textDescription.value = (infoEntity.textDescription)
         }
 
@@ -74,7 +75,7 @@ class InfoEntityFragment(val applicationContext: Context, private val infoEntity
 
         if (infoEntity.image != null) {
             viewModel.imageVisible.value = (View.VISIBLE)
-            binding.imageView.setImageDrawable(resources.getDrawable(infoEntity.image))
+            binding.imageView.setImageDrawable(ResourcesCompat.getDrawable(resources, infoEntity.image, null))
         }
 
 

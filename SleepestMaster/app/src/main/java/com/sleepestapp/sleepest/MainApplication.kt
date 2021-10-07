@@ -5,7 +5,6 @@ import android.content.Context
 import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
 import com.sleepestapp.sleepest.storage.db.SleepDatabase
-import java.util.*
 
 /**
  * Sets up repository for all stored data

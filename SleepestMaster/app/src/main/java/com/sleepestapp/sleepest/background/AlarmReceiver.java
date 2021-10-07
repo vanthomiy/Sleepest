@@ -1,10 +1,7 @@
 package com.sleepestapp.sleepest.background;
 
-/**This class inherits from Broadcastreceiver and starts an alarm at a specific time and date**/
 
 import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 
 import android.app.PendingIntent;
@@ -13,26 +10,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-import com.sleepestapp.sleepest.MainActivity;
 import com.sleepestapp.sleepest.MainApplication;
 import com.sleepestapp.sleepest.R;
 import com.sleepestapp.sleepest.model.data.AlarmReceiverUsage;
 import com.sleepestapp.sleepest.model.data.Constants;
-import com.sleepestapp.sleepest.googleapi.SleepHandler;
 import com.sleepestapp.sleepest.model.data.NotificationUsage;
 import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler;
 import com.sleepestapp.sleepest.storage.DataStoreRepository;
 import com.sleepestapp.sleepest.storage.DatabaseRepository;
+import com.sleepestapp.sleepest.storage.db.AlarmEntity;
 import com.sleepestapp.sleepest.util.TimeConverterUtil;
-import com.sleepestapp.sleepest.MainActivity;
-import com.sleepestapp.sleepest.MainApplication;
-import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler;
 //import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler;
 
-import java.time.LocalTime;
 import java.util.Calendar;
 
 import static android.content.Context.ALARM_SERVICE;
+/**This class inherits from Broadcastreceiver and starts an alarm at a specific time and date**/
 
 public class AlarmReceiver extends BroadcastReceiver {
 
@@ -41,7 +34,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         //Init repos
         DatabaseRepository databaseRepository = ((MainApplication)context.getApplicationContext()).getDataBaseRepository();
-        SleepCalculationHandler sleepCalculationHandler = SleepCalculationHandler.Companion.getHandler(MainApplication.Companion.applicationContext());
+        DataStoreRepository dataStoreRepository = ((MainApplication)context.getApplicationContext()).getDataStoreRepository();
+        SleepCalculationHandler sleepCalculationHandler = new SleepCalculationHandler(MainApplication.Companion.applicationContext());
 
         switch (AlarmReceiverUsage.valueOf(intent.getStringExtra((context.getString(R.string.alarmmanager_key))))) {
             case START_FOREGROUND:
@@ -54,11 +48,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case DISABLE_ALARM:
                     //Disables the next active alarm temporary
-                    if ((databaseRepository.getNextActiveAlarmJob() != null) && (!databaseRepository.getNextActiveAlarmJob().getTempDisabled())) {
-                        BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, false);
-                    } else {
-                        BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, true);
-                    }
+                AlarmEntity nextAlarm = databaseRepository.getNextActiveAlarmJob(dataStoreRepository);
+                BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).disableAlarmTemporaryInApp(false, nextAlarm == null || (nextAlarm.getTempDisabled()));
                 break;
             case NOT_SLEEPING:
                 //Button not Sleeping, only in the first 2 hours of sleep
@@ -67,22 +58,22 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case START_WORKMANAGER_CALCULATION:
                 //Start the workmanager for the calculation of the sleep
-                WorkmanagerCalculation.startPeriodicWorkmanager(Constants.WORKMANAGER_CALCULATION_DURATION, context.getApplicationContext());
+                WorkmanagerCalculation.startPeriodicWorkmanager(Constants.WORK_MANAGER_CALCULATION_DURATION, context.getApplicationContext());
                 break;
             case START_WORKMANAGER:
                 //In the moment unused, but could be interesting for the future development
                 break;
             case STOP_WORKMANAGER:
                 //Stops the workmanager outside sleep time
-                if (databaseRepository.getNextActiveAlarmJob() != null && !databaseRepository.getNextActiveAlarmJob().getWasFired()) {
+                /*if (databaseRepository.getNextActiveAlarmJob(dataStoreRepository) != null && !databaseRepository.getNextActiveAlarmJob(dataStoreRepository).getWasFired()) {
                     Calendar calendarNewAlarm = TimeConverterUtil.getAlarmDate(LocalTime.now().toSecondOfDay() + 600);
                     AlarmReceiver.startAlarmManager(
                             calendarNewAlarm.get(Calendar.DAY_OF_WEEK),
                             calendarNewAlarm.get(Calendar.HOUR_OF_DAY),
                             calendarNewAlarm.get(Calendar.MINUTE), context, AlarmReceiverUsage.STOP_WORKMANAGER);
-                } else {
+                } else {*/
                     BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).endOfSleepTime(true);
-                }
+               // }
 
                  break;
             case CURRENTLY_NOT_SLEEPING:
@@ -118,7 +109,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         Intent intent = new Intent(alarmContext, AlarmReceiver.class);
         intent.putExtra(alarmContext.getString(R.string.alarmmanager_key), alarmReceiverUsage.name());
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(alarmContext, AlarmReceiverUsage.Companion.getCount(alarmReceiverUsage), intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(alarmContext, AlarmReceiverUsage.Companion.getCount(alarmReceiverUsage), intent, PendingIntent.FLAG_IMMUTABLE);
         AlarmManager alarmManager = (AlarmManager) alarmContext.getSystemService(ALARM_SERVICE);
 
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calenderAlarm.getTimeInMillis(), pendingIntent);
@@ -131,62 +122,11 @@ public class AlarmReceiver extends BroadcastReceiver {
     public static void cancelAlarm(Context cancelAlarmContext, AlarmReceiverUsage alarmReceiverUsage) {
 
         Intent intent = new Intent(cancelAlarmContext, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(cancelAlarmContext, AlarmReceiverUsage.Companion.getCount(alarmReceiverUsage), intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(cancelAlarmContext, AlarmReceiverUsage.Companion.getCount(alarmReceiverUsage), intent, PendingIntent.FLAG_IMMUTABLE);
         AlarmManager alarmManager = (AlarmManager) cancelAlarmContext.getSystemService(ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
         pendingIntent.cancel();
    }
 
-    /**
-     * Checks if a specific alarm is active
-     * @param alarmActiveContext Context
-     * @param alarmReceiverUsage Usage of alarm
-     * @return true = active
-     */
-    public static boolean isAlarmManagerActive(Context alarmActiveContext, AlarmReceiverUsage alarmReceiverUsage) {
-        Intent intent = new Intent(alarmActiveContext, AlarmReceiver.class);
 
-        return (PendingIntent.getBroadcast(alarmActiveContext, AlarmReceiverUsage.Companion.getCount(alarmReceiverUsage), intent, PendingIntent.FLAG_NO_CREATE) != null);
-    }
-
-    /**
-     * Create the notification to inform the user about problems
-     * @return
-     */
-    public static Notification createInformationNotification(Context context, String information) {
-        //Get Channel id
-        String notificationChannelId = context.getApplicationContext().getString(R.string.information_notification_channel);
-
-        //Create intent if user tap on notification
-        Intent intent = new Intent(context.getApplicationContext(), MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        //Create manager and channel
-        NotificationManager notificationManager = (NotificationManager) context.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationChannel channel = new NotificationChannel(
-                notificationChannelId,
-                context.getApplicationContext().getString(R.string.information_notification_channel_name),
-                NotificationManager.IMPORTANCE_HIGH
-        );
-
-        //Set channel description
-        channel.setDescription(context.getApplicationContext().getString(R.string.information_notification_channel_description));
-        if (notificationManager != null) {
-            notificationManager.createNotificationChannel(channel);
-        }
-
-        //Build the notification and return it
-        Notification.Builder builder;
-        builder = new Notification.Builder(context.getApplicationContext(), notificationChannelId);
-
-        return builder
-                .setContentTitle(context.getApplicationContext().getString(R.string.information_notification_title))
-                .setContentText(information)
-                .setStyle(new Notification.DecoratedCustomViewStyle())
-                .setSmallIcon(R.drawable.logofulllinesoutlineround)
-                .setContentIntent(pendingIntent)
-                .setOnlyAlertOnce(true)
-                .build();
-    }
 }

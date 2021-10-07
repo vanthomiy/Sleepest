@@ -24,6 +24,9 @@ import com.sleepestapp.sleepest.storage.db.AlarmEntity
 import com.sleepestapp.sleepest.util.IconAnimatorUtil
 import com.sleepestapp.sleepest.util.PermissionsUtil
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog
+import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.getActiveAlarms
+import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.getTimeBetweenSecondsOfDay
+import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.subtractMinutesFromSecondsOfDay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -31,12 +34,14 @@ import kotlinx.coroutines.launch
 /**
  * A fragment representing a list of Items.
  */
-class AlarmsFragment() : Fragment() {
+class AlarmsFragment : Fragment() {
 
     // region init
 
     var factory = object : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            @Suppress("UNCHECKED_CAST")
+            // Workaround because we know that we can cast to T
             return  AlarmsViewModel(
                 (actualContext as MainApplication).dataStoreRepository,
                 (actualContext as MainApplication).dataBaseRepository
@@ -95,8 +100,30 @@ class AlarmsFragment() : Fragment() {
             }
         }
         lifecycleScope.launch {
-            var sleepTime = viewModel.dataStoreRepository.getSleepDuration()
-            viewModel.dataBaseRepository.insertAlarm(AlarmEntity(newId, sleepDuration = sleepTime))
+            val sleepParams = viewModel.dataStoreRepository.sleepParameterFlow.first()
+            val sleepTime = sleepParams.sleepDuration
+
+            val maxTimeMinutes = getTimeBetweenSecondsOfDay(
+                sleepParams.sleepTimeEnd,
+                sleepParams.sleepTimeStart) / 60
+            val offset = 240
+            val timeOffset = if(maxTimeMinutes < offset)
+                (maxTimeMinutes / 2) else offset
+
+            val wakeUpEarly = subtractMinutesFromSecondsOfDay(
+                sleepParams.sleepTimeEnd,
+                timeOffset)
+            val wakeUpLate = subtractMinutesFromSecondsOfDay(
+                sleepParams.sleepTimeEnd,
+                timeOffset / 2)
+
+            viewModel.dataBaseRepository.insertAlarm(
+                AlarmEntity(
+                id = newId,
+                sleepDuration = sleepTime
+                , wakeupEarly = wakeUpEarly
+                , wakeupLate = wakeUpLate)
+            )
         }
         addAlarmEntity(actualContext, newId)
         viewModel.usedIds.add(newId)
@@ -112,7 +139,7 @@ class AlarmsFragment() : Fragment() {
     private fun addAlarmEntity(context: Context, alarmId: Int) {
 
         viewModel.transactions[alarmId] = childFragmentManager.beginTransaction()
-        viewModel.transactions[alarmId]?.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+        viewModel.transactions[alarmId]?.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit)
         viewModel.fragments[alarmId] = AlarmInstanceFragment(context, alarmId)
         viewModel.transactions[alarmId]?.add(R.id.lL_containerAlarmEntities, viewModel.fragments[alarmId]!!)?.commit()
     }
@@ -122,9 +149,9 @@ class AlarmsFragment() : Fragment() {
      */
     fun removeAlarmEntity(alarmId: Int) {
 
-        TransitionManager.beginDelayedTransition(viewModel.transitionsContainer);
+        TransitionManager.beginDelayedTransition(binding.cLParent)
 
-        viewModel.transactions[alarmId]?.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+        viewModel.transactions[alarmId]?.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit)
 
         childFragmentManager.beginTransaction().remove(viewModel.fragments[alarmId]!!).commit()
         viewModel.transactions.remove(alarmId)
@@ -188,13 +215,12 @@ class AlarmsFragment() : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = FragmentAlarmsBinding.inflate(inflater, container, false)
 
-        viewModel.transitionsContainer = (binding.cLParent)
         binding.alarmsViewModel = viewModel
-        binding.lifecycleOwner = this;
+        binding.lifecycleOwner = this
 
         INSTANCE = this
 
@@ -203,25 +229,41 @@ class AlarmsFragment() : Fragment() {
         viewModel.fragments = mutableMapOf()
 
         // Update the disable next alarm button by checking the settings of all alarms
-        viewModel.activeAlarmsLiveData.observe(this){
-            activeAlarms ->
+        viewModel.alarmsLiveData.observe(viewLifecycleOwner) {
+            alarms ->
+            lifecycleScope.launch{
+                val activeAlarms = getActiveAlarms(alarms, dataStoreRepository = viewModel.dataStoreRepository)
+                TransitionManager.beginDelayedTransition(binding.cLParent)
 
-            TransitionManager.beginDelayedTransition(viewModel.transitionsContainer);
-
-            if (activeAlarms.isNotEmpty()){
-                val nextAlarm = activeAlarms.minByOrNull { x-> x.wakeupEarly }
-                viewModel.tempDisabledVisible.value = nextAlarm?.wasFired == false
-                viewModel.isTempDisabled.value = nextAlarm?.tempDisabled
+                if (activeAlarms.isNotEmpty()){
+                    val nextAlarm = activeAlarms.minByOrNull { x-> x.wakeupEarly }
+                    viewModel.tempDisabledVisible.value = nextAlarm?.wasFired == false
+                    viewModel.isTempDisabled.value = nextAlarm?.tempDisabled
+                }
+                else{
+                    viewModel.tempDisabledVisible.value = false
+                }
             }
-            else{
-                viewModel.tempDisabledVisible.value = false
+        }
+
+        // Update the disable next alarm button by checking the settings of all alarms
+        viewModel.sleepParameterLiveData.observe(viewLifecycleOwner){
+            lifecycleScope.launch {
+                val nextAlarm = viewModel.dataBaseRepository.getNextActiveAlarm(viewModel.dataStoreRepository)
+                if (nextAlarm != null){
+                    viewModel.tempDisabledVisible.value = nextAlarm.wasFired == false
+                    viewModel.isTempDisabled.value = nextAlarm.tempDisabled
+                }
+                else{
+                    viewModel.tempDisabledVisible.value = false
+                }
             }
         }
 
         // new alarm is added
         binding.btnAddAlarmEntity.setOnClickListener {
 
-            if (PermissionsUtil.checkAllNeccessaryPermissions(actualContext)) {
+            if (PermissionsUtil.checkAllNecessaryPermissions(actualContext)) {
                 onAddAlarm(it)
             } else {
 
@@ -237,13 +279,13 @@ class AlarmsFragment() : Fragment() {
             viewModel.actualExpand.value = (View.GONE)
         }
 
+
         // new click on alarm sound settings
         binding.lLAlarmSoundSettings.onFocusChangeListener =
             View.OnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
                     viewModel.actualExpand.value = (View.GONE)
                     viewModel.rotateState.value = (0)
-                } else {
                 }
             }
 
@@ -255,17 +297,18 @@ class AlarmsFragment() : Fragment() {
         // temp disable alarm was clicked
         binding.btnTemporaryDisableAlarm.setOnClickListener {
             lifecycleScope.launch {
-                if (viewModel.dataBaseRepository.getNextActiveAlarm() != null) {
-                    if (viewModel.dataBaseRepository.getNextActiveAlarm()!!.tempDisabled && !viewModel.dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
-                        BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(true, true)
+                val nextAlarm = viewModel.dataBaseRepository.getNextActiveAlarm(viewModel.dataStoreRepository)
+                if (nextAlarm != null) {
+                    if (nextAlarm.tempDisabled && !viewModel.dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
+                        BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(fromApp = true, reactivate = true)
                         viewModel.isTempDisabled.value = false
                     }
-                    else if (viewModel.dataBaseRepository.getNextActiveAlarm()!!.tempDisabled && viewModel.dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
-                        BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(false, true)
+                    else if (nextAlarm.tempDisabled && viewModel.dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
+                        BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(fromApp = false, reactivate = true)
                         viewModel.isTempDisabled.value = false
                     }
                     else  {
-                        BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(true, false)
+                        BackgroundAlarmTimeHandler.getHandler(actualContext).disableAlarmTemporaryInApp(fromApp = true, reactivate = false)
                         viewModel.isTempDisabled.value = true
                     }
                 }
@@ -283,6 +326,15 @@ class AlarmsFragment() : Fragment() {
 
         viewModel.alarmArtSelections.value = (mutableListOf((actualContext.getString(R.string.alarms_type_selection_only_alarm)), (actualContext.getString(R.string.alarms_type_selection_alarm_vibration)), (actualContext.getString(R.string.alarms_type_selection_only_vibration))))
         viewModel.alarmSoundName.value = (actualContext.getString(R.string.alarms_type_selection_default))
+
+        viewModel.expandToggled.observe(viewLifecycleOwner){
+            TransitionManager.beginDelayedTransition(binding.cLParent)
+
+            if(viewModel.actualExpand.value == View.GONE)
+                binding.lottieSettings.playAnimation()
+            else
+                binding.lottieSettings.pauseAnimation()
+        }
     }
 
     companion object {

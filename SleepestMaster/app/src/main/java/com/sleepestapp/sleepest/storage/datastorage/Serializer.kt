@@ -9,9 +9,10 @@ import com.google.protobuf.InvalidProtocolBufferException
 import java.io.InputStream
 import java.io.OutputStream
 
-class SleepApiDataSerializer() : Serializer<SleepApiData> {
+@Suppress("BlockingMethodInNonBlockingContext")
+object SleepApiDataSerializer : Serializer<SleepApiData> {
 
-    override fun readFrom(input: InputStream): SleepApiData {
+    override suspend fun readFrom(input: InputStream): SleepApiData {
         try {
             return SleepApiData.parseFrom(input)
         } catch (exception: InvalidProtocolBufferException) {
@@ -19,17 +20,18 @@ class SleepApiDataSerializer() : Serializer<SleepApiData> {
         }
     }
 
-    override fun writeTo(t: SleepApiData, output: OutputStream) {
-        t.writeTo(output)
-    }
+    override suspend fun writeTo(
+        t: SleepApiData,
+        output: OutputStream
+    ): Unit = t.writeTo(output)
 
     override val defaultValue: SleepApiData = SleepApiData.getDefaultInstance()
 }
 
+@Suppress("BlockingMethodInNonBlockingContext")
+object ActivityApiDataSerializer : Serializer<ActivityApiData> {
 
-class ActivityApiDataSerializer() : Serializer<ActivityApiData> {
-
-    override fun readFrom(input: InputStream): ActivityApiData {
+    override suspend fun readFrom(input: InputStream): ActivityApiData {
         try {
             return ActivityApiData.parseFrom(input)
         } catch (exception: InvalidProtocolBufferException) {
@@ -37,17 +39,18 @@ class ActivityApiDataSerializer() : Serializer<ActivityApiData> {
         }
     }
 
-    override fun writeTo(t: ActivityApiData, output: OutputStream) {
-        t.writeTo(output)
-    }
+    override suspend fun writeTo(
+        t: ActivityApiData,
+        output: OutputStream
+    ): Unit = t.writeTo(output)
 
     override val defaultValue: ActivityApiData = ActivityApiData.getDefaultInstance()
 }
 
+@Suppress("BlockingMethodInNonBlockingContext")
+object SettingsDataSerializer : Serializer<SettingsData> {
 
-class SettingsDataSerializer() : Serializer<SettingsData> {
-
-    override fun readFrom(input: InputStream): SettingsData {
+    override suspend fun readFrom(input: InputStream): SettingsData {
         try {
             return SettingsData.parseFrom(input)
         } catch (exception: InvalidProtocolBufferException) {
@@ -55,9 +58,10 @@ class SettingsDataSerializer() : Serializer<SettingsData> {
         }
     }
 
-    override fun writeTo(t: SettingsData, output: OutputStream) {
-        t.writeTo(output)
-    }
+    override suspend fun writeTo(
+        t: SettingsData,
+        output: OutputStream
+    ): Unit = t.writeTo(output)
 
     override val defaultValue: SettingsData = SettingsData.newBuilder()
         .setBannerShowActualSleepTime(true)
@@ -69,10 +73,10 @@ class SettingsDataSerializer() : Serializer<SettingsData> {
 }
 
 
+@Suppress("BlockingMethodInNonBlockingContext")
+object LiveUserSleepActivitySerializer : Serializer<LiveUserSleepActivity> {
 
-class LiveUserSleepActivitySerializer() : Serializer<LiveUserSleepActivity> {
-
-    override fun readFrom(input: InputStream): LiveUserSleepActivity {
+    override suspend fun readFrom(input: InputStream): LiveUserSleepActivity {
         try {
             return LiveUserSleepActivity.parseFrom(input)
         } catch (exception: InvalidProtocolBufferException) {
@@ -80,16 +84,18 @@ class LiveUserSleepActivitySerializer() : Serializer<LiveUserSleepActivity> {
         }
     }
 
-    override fun writeTo(t: LiveUserSleepActivity, output: OutputStream) {
-        t.writeTo(output)
-    }
+    override suspend fun writeTo(
+        t: LiveUserSleepActivity,
+        output: OutputStream
+    ): Unit = t.writeTo(output)
 
     override val defaultValue: LiveUserSleepActivity = LiveUserSleepActivity.getDefaultInstance()
 }
 
-class SleepParameterSerializer() : Serializer<SleepParameters> {
+@Suppress("BlockingMethodInNonBlockingContext")
+object SleepParameterSerializer : Serializer<SleepParameters> {
 
-    override fun readFrom(input: InputStream): SleepParameters {
+    override suspend fun readFrom(input: InputStream): SleepParameters {
         try {
             return SleepParameters.parseFrom(input)
         } catch (exception: InvalidProtocolBufferException) {
@@ -97,9 +103,10 @@ class SleepParameterSerializer() : Serializer<SleepParameters> {
         }
     }
 
-    override fun writeTo(t: SleepParameters, output: OutputStream) {
-        t.writeTo(output)
-    }
+    override suspend fun writeTo(
+        t: SleepParameters,
+        output: OutputStream
+    ): Unit = t.writeTo(output)
 
     override val defaultValue: SleepParameters = SleepParameters.newBuilder()
         .setStandardMobilePosition(MobilePosition.UNIDENTIFIED.ordinal)
@@ -115,9 +122,10 @@ class SleepParameterSerializer() : Serializer<SleepParameters> {
         .build()
 }
 
-class AlarmParameterSerializer() : Serializer<AlarmParameters> {
+@Suppress("BlockingMethodInNonBlockingContext")
+object AlarmParameterSerializer : Serializer<AlarmParameters> {
 
-    override fun readFrom(input: InputStream): AlarmParameters {
+    override suspend fun readFrom(input: InputStream): AlarmParameters {
         try {
             return AlarmParameters.parseFrom(input)
         } catch (exception: InvalidProtocolBufferException) {
@@ -125,9 +133,10 @@ class AlarmParameterSerializer() : Serializer<AlarmParameters> {
         }
     }
 
-    override fun writeTo(t: AlarmParameters, output: OutputStream) {
-        t.writeTo(output)
-    }
+    override suspend fun writeTo(
+        t: AlarmParameters,
+        output: OutputStream
+    ): Unit = t.writeTo(output)
 
     override val defaultValue: AlarmParameters = AlarmParameters.newBuilder()
         .setAlarmTone("null")
@@ -135,9 +144,10 @@ class AlarmParameterSerializer() : Serializer<AlarmParameters> {
         .build()
 }
 
-class BackgroundServiceSerializer() : Serializer<BackgroundService> {
+@Suppress("BlockingMethodInNonBlockingContext")
+object BackgroundServiceSerializer : Serializer<BackgroundService> {
 
-    override fun readFrom(input: InputStream): BackgroundService {
+    override suspend fun readFrom(input: InputStream): BackgroundService {
         try {
             return BackgroundService.parseFrom(input)
         } catch (exception: InvalidProtocolBufferException) {
@@ -145,9 +155,10 @@ class BackgroundServiceSerializer() : Serializer<BackgroundService> {
         }
     }
 
-    override fun writeTo(t: BackgroundService, output: OutputStream) {
-        t.writeTo(output)
-    }
+    override suspend fun writeTo(
+        t: BackgroundService,
+        output: OutputStream
+    ): Unit = t.writeTo(output)
 
     override val defaultValue: BackgroundService = BackgroundService.newBuilder()
         .setIsForegroundActive(false)
@@ -155,9 +166,10 @@ class BackgroundServiceSerializer() : Serializer<BackgroundService> {
         .build()
 }
 
-class TutorialStatusSerializer() : Serializer<Tutorial> {
+@Suppress("BlockingMethodInNonBlockingContext")
+object TutorialStatusSerializer : Serializer<Tutorial> {
 
-    override fun readFrom(input: InputStream): Tutorial {
+    override suspend fun readFrom(input: InputStream): Tutorial {
         try {
             return Tutorial.parseFrom(input)
         } catch (exception: InvalidProtocolBufferException) {
@@ -165,9 +177,10 @@ class TutorialStatusSerializer() : Serializer<Tutorial> {
         }
     }
 
-    override fun writeTo(t: Tutorial, output: OutputStream) {
-        t.writeTo(output)
-    }
+    override suspend fun writeTo(
+        t: Tutorial,
+        output: OutputStream
+    ): Unit = t.writeTo(output)
 
     override val defaultValue: Tutorial = Tutorial.newBuilder()
         .setEnergyOptionsShown(false)

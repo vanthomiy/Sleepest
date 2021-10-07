@@ -1,24 +1,17 @@
 package com.sleepestapp.sleepest.ui.history
 
-import android.app.Application
-import android.content.Context
-import android.graphics.Color
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.ContextCompat
-import androidx.databinding.*
-import androidx.lifecycle.AndroidViewModel
-import com.sleepestapp.sleepest.MainApplication
-import com.sleepestapp.sleepest.R
-import com.sleepestapp.sleepest.model.data.Constants
+import android.graphics.drawable.Drawable
+import android.view.View
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.sleepestapp.sleepest.model.data.MobilePosition
 import com.sleepestapp.sleepest.model.data.SleepState
 import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler
 import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
-import com.sleepestapp.sleepest.storage.db.SleepApiRawDataEntity
 import com.sleepestapp.sleepest.storage.db.UserSleepSessionEntity
 import com.sleepestapp.sleepest.util.SmileySelectorUtil
-import com.sleepestapp.sleepest.util.StringUtil
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Legend
@@ -26,100 +19,233 @@ import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
+import com.sleepestapp.sleepest.model.data.SleepDataAnalysis
+import com.sleepestapp.sleepest.storage.db.UserSleepSessionEntity.Companion.getIdByDateTimeWithTimeZone
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.*
+import java.util.*
+import kotlin.collections.ArrayList
 
-class HistoryViewModel(application: Application) : AndroidViewModel(application) {
+class HistoryViewModel(
+    val dataStoreRepository: DataStoreRepository,
+    val dataBaseRepository: DatabaseRepository,
+    val sleepCalculationHandler: SleepCalculationHandler
+    ) : ViewModel() {
 
-    private val scope: CoroutineScope = MainScope()
-    val context: Context by lazy { getApplication<Application>().applicationContext }
+    /**
+     * Currently selected analysis date which will be displayed in the history.
+     */
+    var analysisDate = MutableLiveData(LocalDate.now())
 
-    /**  */
-    val dataBaseRepository: DatabaseRepository by lazy { (context as MainApplication).dataBaseRepository }
+    /**
+     * Currently selected analysis date range which will be displayed in the history.
+     */
+    var analysisRangeString = MutableLiveData("")
 
-    /**  */
-    private val dataStoreRepository: DataStoreRepository by lazy { (context as MainApplication).dataStoreRepository }
+    /**
+     * The year of the currently selected analysis date range which will be displayed in the history.
+     */
+    var analysisRangeYearString = MutableLiveData("")
 
-    /** Contains the current date which will be displayed at the history fragment. */
-    var analysisDate = ObservableField(LocalDate.now())
+    /**
+     * The first date for which sleep data is available.
+     */
+    var firstDayWithData = 0
 
-    /** Indicates whether darkmode is on or off. */
-    var darkMode = false
-
-    /** Indicates whether the user has set the app up for automatically detect the devices dark mode settings. */
-    var autoDarkMode = false
-
-    /** Indicates if the sleep phase assessment algorithm is currently working. */
+    /**
+     * Indicates that [checkSessionIntegrity] is currently working.
+     */
     var onWork = false
 
-    /** Container for the x-axis values of the bar Charts. */
-    private val xAxisValues = ArrayList<String>()
+    /**
+     * Container for the x-axis values of the bar charts.
+     */
+    var xAxisValues = ArrayList<String>()
 
-    /** Indicates that [getSleepData] has finished and fresh data was received from the database. */
-    val dataReceived = ObservableBoolean(false)
+    /**
+     * Container for the labels of the weekly charts.
+     */
+    var xAxisValuesWeek = ArrayList<String>()
 
-    /** <Int: Sleep session id, Triple<List<[SleepApiRawDataEntity]>, Int: Sleep duration, [UserSleepSessionEntity]>> */
-    val sleepSessionData = mutableMapOf<Int, Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>>()
+    /**
+     * Container for the strings of the [SleepState] for the legend of the diagrams.
+     */
+    var sleepStateString = mutableMapOf<SleepState, String>()
 
-    init {
-        //getSleepData()
-        scope.launch {
-            darkMode = dataStoreRepository.settingsDataFlow.first().designDarkMode
-            autoDarkMode = dataStoreRepository.settingsDataFlow.first().designAutoDarkMode
-        }
+    /**
+     * Container for the colors of the [SleepState] for the legend of the diagrams.
+     */
+    var sleepStateColor = mutableMapOf<SleepState, Int>()
 
+    /**
+     * Maintains the visibility of the diagrams in the weekly analysis based on the available information.
+     */
+    val visibilityManagerWeekDiagrams = MutableLiveData(false)
 
+    /**
+     * Maintains the visibility of the diagrams in the monthly analysis based on the available information.
+     */
+    val visibilityManagerMonthDiagrams = MutableLiveData(false)
+
+    /**
+     * Container for the background drawable of the activity analysis [LineChart].
+     */
+    var activityBackgroundDrawable : Drawable? = null
+
+    /**
+     * Indicates that [getSleepData] has finished and new data was pulled from the database.
+     */
+    val dataReceived = MutableLiveData(false)
+
+    /**
+     * List of the currently loaded [UserSleepSessionEntity] data from the database.
+     */
+    val sleepAnalysisData = mutableListOf<SleepDataAnalysis>()
+
+    /**
+     * Maintains the visibility of the information buttons and its text fields.
+     */
+    val actualExpand = MutableLiveData(-1)
+
+    val goneState = MutableLiveData(View.GONE)
+
+    val visibleState = MutableLiveData(View.VISIBLE)
+
+    fun onInfoClicked(
+        view: View
+    ){
+        val value = view.tag.toString()
+        actualExpand.value = if(actualExpand.value == value.toIntOrNull()) -1 else value.toIntOrNull()
     }
 
-    /** Onclick handler for altering the [analysisDate] based on the currently selected analysis Range. */
-    fun onPreviousDateClick(range: Int) {
-        analysisDate.let {
-            when (range) {
-                0 -> it.set(it.get()?.minusDays(1L))
-                1 -> it.set(it.get()?.minusWeeks(1L))
-                2 -> it.set(it.get()?.minusMonths(1L))
-            }
-        }
-    }
-
-    /** Onclick handler for altering the [analysisDate] based on the currently selected analysis Range. */
-    fun onNextDateClick(range: Int) {
+    /**
+     * Handler for altering the [analysisDate] based on the currently selected analysis range.
+     */
+    fun onPreviousDateClick(
+        range: Int
+    ) {
         analysisDate.let {
             when (range) {
                 0 -> {
-                    if (LocalDate.now().dayOfYear >= it.get()?.plusDays(1L)?.dayOfYear!!) {
-                        it.set(it.get()?.plusDays(1L))
+                    val fistDayWithData = LocalDateTime.ofEpochSecond(
+                        firstDayWithData.toLong(),
+                        0,
+                        ZoneOffset.UTC
+                    ).toLocalDate().toEpochDay()
+
+                    if (it.value?.minusDays(1L)?.toEpochDay()!! >= fistDayWithData) {
+                        it.value = it.value?.minusDays(1L)
                     }
                 }
                 1 -> {
-                    if (LocalDate.now().dayOfYear >= it.get()?.plusWeeks(1L)?.dayOfYear!!) {
-                        it.set(it.get()?.plusWeeks(1L))
+                    val fistDayWithData = LocalDateTime.ofEpochSecond(
+                        firstDayWithData.toLong(),
+                        0,
+                        ZoneOffset.UTC
+                    ).toLocalDate()
+
+                    val firstDayOfWeekWithData : Long = when (fistDayWithData.dayOfWeek.value) {
+                        1 -> fistDayWithData.plusDays(0L).toEpochDay() // Monday
+                        2 -> fistDayWithData.minusDays(1L).toEpochDay() // Tuesday
+                        3 -> fistDayWithData.minusDays(2L).toEpochDay() // Wednesday
+                        4 -> fistDayWithData.minusDays(3L).toEpochDay() // Thursday
+                        5 -> fistDayWithData.minusDays(4L).toEpochDay() // Friday
+                        6 -> fistDayWithData.minusDays(5L).toEpochDay() // Saturday
+                        else -> fistDayWithData.minusDays(6L).toEpochDay() // Sunday
+                    }
+
+                    val analysisDay = it.value?.minusWeeks(1L)?.toEpochDay()!!
+
+                    if (analysisDay >= firstDayOfWeekWithData) {
+                        it.value = it.value?.minusWeeks(1L)
                     }
                 }
                 2 -> {
-                    if (LocalDate.now().dayOfYear >= it.get()?.plusMonths(1L)?.dayOfYear!!) {
-                        it.set(it.get()?.plusMonths(1L))
+                    val fistMonthWithData = LocalDateTime.ofEpochSecond(
+                        firstDayWithData.toLong(),
+                        0,
+                        ZoneOffset.UTC
+                    ).toLocalDate().withDayOfMonth(1).toEpochDay()
+
+                    if (it.value?.minusMonths(1L)?.withDayOfMonth(1)?.toEpochDay()!! >= fistMonthWithData) {
+                        it.value = it.value?.minusMonths(1L)
                     }
                 }
             }
         }
-
     }
 
-    /** Starts the process of requesting data from the database. */
+    /**
+     * Handler for altering the [analysisDate] based on the currently selected analysis range.
+     */
+    fun onNextDateClick(
+        range: Int
+    ) {
+        analysisDate.let {
+
+            when (range) {
+                0 -> {
+                    if (LocalDate.now().toEpochDay() >= it.value?.plusDays(1L)?.toEpochDay()!!) {
+                        it.value = it.value?.plusDays(1L)
+                    }
+                }
+
+                1 -> {
+                    val actualDate = LocalDate.now()
+                    val actualEndOfWeekDate : Long = when (actualDate.dayOfWeek.value) {
+                        1 -> actualDate.plusDays(6L).toEpochDay() // Monday
+                        2 -> actualDate.plusDays(5L).toEpochDay() // Tuesday
+                        3 -> actualDate.plusDays(4L).toEpochDay() // Wednesday
+                        4 -> actualDate.plusDays(3L).toEpochDay() // Thursday
+                        5 -> actualDate.plusDays(2L).toEpochDay() // Friday
+                        6 -> actualDate.plusDays(1L).toEpochDay() // Saturday
+                        else -> actualDate.plusDays(0L).toEpochDay() // Sunday
+                    }
+
+                    val analysisDay = it.value?.plusWeeks(1L)?.toEpochDay()!!
+
+                    if (actualEndOfWeekDate >= analysisDay) {
+                        if (analysisDay > LocalDate.now().toEpochDay()) {
+                            it.value = LocalDate.now()
+                        } else {
+                            it.value = it.value?.plusWeeks(1L)
+                        }
+                    }
+                }
+                
+                2 -> {
+                    val actualEndOfMonthDate = LocalDate.now().withDayOfMonth(
+                        LocalDate.now().lengthOfMonth()
+                    ).toEpochDay()
+
+                    val analysisDay = it.value?.plusMonths(1L)?.toEpochDay()!!
+
+                    if (actualEndOfMonthDate >= analysisDay) {
+                        if (analysisDay > LocalDate.now().toEpochDay()) {
+                            it.value = LocalDate.now()
+                        } else {
+                            it.value = it.value?.plusMonths(1L)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Pulls the required data from the database and fills the [sleepAnalysisData] with [SleepDataAnalysis] instances.
+     */
     fun getSleepData() {
         val ids = mutableSetOf<Int>()
-        analysisDate.get()?.let {
+        analysisDate.value?.let {
             val startDayToGet = it.minusMonths(1L).withDayOfMonth(1)
             val endDayToGet = it.withDayOfMonth(it.lengthOfMonth())
             val dayDifference = (endDayToGet.toEpochDay() - startDayToGet.toEpochDay()).toInt()
 
             for (day in 0..dayDifference) {
                 ids.add(
-                    UserSleepSessionEntity.getIdByDateTime(
+                    getIdByDateTimeWithTimeZone(
                         LocalDate.of(
                             startDayToGet.plusDays(day.toLong()).year,
                             startDayToGet.plusDays(day.toLong()).month,
@@ -130,109 +256,103 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
             }
         }
 
-        scope.launch {
+        viewModelScope.launch {
             for (id in ids) {
                 val session = dataBaseRepository.getSleepSessionById(id).first().firstOrNull()
+
                 session?.let {
-                    sleepSessionData[id] = Triple(
-                        dataBaseRepository.getSleepApiRawDataBetweenTimestamps(
-                            session.sleepTimes.sleepTimeStart,
-                            session.sleepTimes.sleepTimeEnd).first()?.sortedBy { x -> x.timestampSeconds },
-                        session.sleepTimes.sleepDuration,
-                        session
-                    ) as Triple<List<SleepApiRawDataEntity>, Int, UserSleepSessionEntity>
+                    sleepAnalysisData.add(
+                        SleepDataAnalysis(
+                            id,
+                            dataBaseRepository.getSleepApiRawDataBetweenTimestamps(
+                                session.sleepTimes.sleepTimeStart,
+                                session.sleepTimes.sleepTimeEnd).first()?.sortedBy { x -> x.timestampSeconds }?: listOf(),
+                            session
+                        )
+                    )
                 }
             }
+            firstDayWithData = dataBaseRepository.getOldestId().first()
             checkSessionIntegrity()
-            dataReceived.set(true)
         }
     }
 
-    /** Checks if the previously received sleep session data is correct and contains no errors.
-     * If unusual data was received, the sleep phase determination algorithm ist triggered again to interpret the api data. */
-    private fun checkSessionIntegrity() {
+    /**
+     * Checks if the currently used data set from the database contains any unusual values.
+     * If so, the [SleepCalculationHandler] is called to correct them.
+     */
+    private suspend fun checkSessionIntegrity() {
         onWork = true
-        for (key in sleepSessionData.keys) {
-            val session = sleepSessionData[key]?.first
-            session?.let {
-                val mobilePosition = sleepSessionData[key]?.third?.mobilePosition
-                val isSleeping = it.any { x -> x.sleepState == SleepState.SLEEPING }
-                val isUnidentified = it.any { x -> x.sleepState == SleepState.NONE }
+        var data = false
 
-                if ((isUnidentified)) {
-                    scope.launch {
-                        SleepCalculationHandler.getHandler(context).checkIsUserSleeping(
-                            LocalDateTime.ofInstant(
-                                Instant.ofEpochMilli((sleepSessionData[key]?.third?.sleepTimes?.sleepTimeStart?.toLong())!! * 1000),
-                                ZoneOffset.systemDefault()
-                            ),
-                            true
-                        )
-                    }
-                }
+        sleepAnalysisData.forEach {
+            val mobilePosition = it.userSleepSessionEntity.mobilePosition
+            val isSleepStateSleeping = it.sleepApiRawDataEntity.any { x -> x.sleepState == SleepState.SLEEPING }
+            val isSleepStateUnidentified = it.sleepApiRawDataEntity.any { x -> x.sleepState == SleepState.NONE }
 
-                if ((mobilePosition == MobilePosition.INBED && isSleeping)) { // || isUnidentified) {
-                    scope.launch {
-                        SleepCalculationHandler.getHandler(context).defineUserWakeup(
-                            LocalDateTime.ofInstant(
-                                Instant.ofEpochMilli((sleepSessionData[key]?.third?.sleepTimes?.sleepTimeStart?.toLong())!! * 1000),
-                                ZoneOffset.systemDefault()
-                            ),
-                            false
-                        )
-                    }
-                }
+            if (isSleepStateUnidentified) {
+                sleepCalculationHandler.checkIsUserSleeping(
+                    LocalDateTime.ofInstant(
+                        Instant.ofEpochMilli(it.sleepSessionId.toLong() * 1000),
+                        ZoneOffset.systemDefault()
+                    ),
+                    false
+                )
+                data = true
+            }
+
+            if (mobilePosition == MobilePosition.INBED && isSleepStateSleeping) {
+                sleepCalculationHandler.defineUserWakeup(
+                    LocalDateTime.ofInstant(
+                        Instant.ofEpochMilli(it.sleepSessionId.toLong() * 1000),
+                        ZoneOffset.systemDefault()
+                    ),
+                    false
+                )
+                data = true
+
+            }
+
+            if (mobilePosition == MobilePosition.UNIDENTIFIED) {
+                sleepCalculationHandler.defineUserWakeup(
+                    LocalDateTime.ofInstant(
+                        Instant.ofEpochMilli(it.sleepSessionId.toLong() * 1000),
+                        ZoneOffset.systemDefault()
+                    ),
+                    false,
+                    recalculateMobilePosition = true
+                )
+                data = true
             }
         }
-        onWork = false
-    }
 
-    /** Checks if the passed date has an entry in the [sleepSessionData]. */
-    fun checkId(time: LocalDate) : Boolean {
-        return sleepSessionData.containsKey(UserSleepSessionEntity.getIdByDateTime(time))
-    }
-
-    /** Auxiliary function the determine if the device is currently in dark mode. */
-    fun checkDarkMode() : Int {
-        var color = Color.BLACK
-        if (autoDarkMode) {
-            if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-                color = Color.WHITE
-            }
-        } else if (darkMode) {
-            color = Color.WHITE
+        if (data) {
+            sleepAnalysisData.clear()
+            getSleepData()
+        } else {
+            dataReceived.value = true
+            onWork = false
         }
-        return color
     }
 
-    /** Auxiliary function the determine if the device is currently in dark mode and invert colors. */
-    fun checkDarkModeInverse() : Int {
-        var color = Color.WHITE
-        if (autoDarkMode) {
-            if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-                color = Color.BLACK
-            }
-        }
-        if (darkMode) {
-            color = Color.BLACK
-        }
-        return color
-    }
-
-
-    /** Generates all the relevant information for the Bar Charts by searching the database for the correct period of time.
-     * TODO(Check this)
-     * */
-    fun generateDataBarChart(range: Int, endDateOfDiagram: LocalDate): Triple<ArrayList<BarEntry>, List<Int>, Int> {
+    /**
+     * Auxiliary function for generating entries for the weekly and monthly sleep analysis [BarChart].
+     * Analysis the [sleepAnalysisData] for the currently selected range and creates a [BarEntry] for every day within the range.
+     */
+    fun generateDataBarChart(
+        range: Int,
+        endDateOfDiagram: LocalDate
+    ): Triple<ArrayList<BarEntry>, List<Int>, Int> {
         val entries = ArrayList<BarEntry>()
         val xAxisLabels = mutableListOf<Int>()
         var xIndex = 0.5f
         var maxSleepTime = 0f
+        var visibilityManager = false
 
         val ids = mutableSetOf<Int>()
         for (i in -(range-2)..1) {
             ids.add(
-                UserSleepSessionEntity.getIdByDateTime(
+                getIdByDateTimeWithTimeZone(
                     LocalDate.ofEpochDay(
                         endDateOfDiagram.toEpochDay().plus((i - 1).toLong())
                     )
@@ -242,14 +362,18 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
         ids.reversed()
         for (id in ids) {
-            if (sleepSessionData.containsKey(id)) {
-                val values = sleepSessionData[id]!!
 
-                val awake = values.third.sleepTimes.awakeTime / 60f
-                val sleep = values.third.sleepTimes.sleepDuration / 60f
-                val lightSleep = values.third.sleepTimes.lightSleepDuration / 60f
-                val deepSleep = values.third.sleepTimes.deepSleepDuration / 60f
-                val remSleep = values.third.sleepTimes.remSleepDuration / 60f
+            sleepAnalysisData.firstOrNull {
+                    x -> x.sleepSessionId == id
+            }?.let {
+                if (it.userSleepSessionEntity.sleepTimes.sleepDuration > 0) {
+                    visibilityManager = true
+                }
+                val awake = it.userSleepSessionEntity.sleepTimes.awakeTime / 60f
+                val sleep = it.userSleepSessionEntity.sleepTimes.sleepDuration / 60f
+                val lightSleep = it.userSleepSessionEntity.sleepTimes.lightSleepDuration / 60f
+                val deepSleep = it.userSleepSessionEntity.sleepTimes.deepSleepDuration / 60f
+                val remSleep = it.userSleepSessionEntity.sleepTimes.remSleepDuration / 60f
 
                 if (((sleep + awake) * 60f) > maxSleepTime) {
                     maxSleepTime = (sleep + awake) * 60f
@@ -268,7 +392,8 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                         )
                     )
 
-                } else {
+                }
+                else {
                     entries.add(
                         BarEntry(
                             xIndex, floatArrayOf(
@@ -281,32 +406,63 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                         )
                     )
                 }
+            } ?: kotlin.run {
+                entries.add(
+                    BarEntry(
+                        xIndex, floatArrayOf(
+                            0F,
+                            0F,
+                            0F,
+                            0F,
+                            0F
+                        )
+                    )
+                )
+            }
 
-            } else { entries.add(BarEntry(xIndex, floatArrayOf(0F, 0F, 0F, 0F, 0F))) }
             xAxisLabels.add(id)
             xIndex += 1
+        }
+
+        if (range < 21) {
+            visibilityManagerWeekDiagrams.value = visibilityManager
+        }
+        else if (range > 21) {
+            visibilityManagerMonthDiagrams.value = visibilityManager
         }
 
         return Triple(entries, xAxisLabels, maxSleepTime.toInt())
     }
 
-    /** Auxiliary function for creating a BarDataSet. */
-    private fun generateBarDataSet(barEntries: ArrayList<BarEntry>) : BarDataSet {
+    /**
+     * Auxiliary function for generating a [BarDataSet] for the weekly and monthly sleep analysis [BarChart].
+     * Adds fitting colors for every [BarEntry] of the diagram.
+     */
+    private fun generateBarDataSet(
+        barEntries: ArrayList<BarEntry>
+    ) : BarDataSet {
         val barDataSet = BarDataSet(barEntries, "")
-        barDataSet.setColors(
-            ContextCompat.getColor(context, R.color.light_sleep_color),
-            ContextCompat.getColor(context, R.color.deep_sleep_color),
-            ContextCompat.getColor(context, R.color.rem_sleep_color),
-            ContextCompat.getColor(context, R.color.sleep_sleep_color),
-            ContextCompat.getColor(context, R.color.awake_sleep_color)
-        )
+        val barDataColors = mutableListOf<Int>()
+        val sleepStates = SleepState.getListOfSleepStates()
+
+        sleepStates.forEach {
+            barDataColors.add(
+                sleepStateColor[it] ?: 0
+            )
+        }
+
+        barDataSet.colors = barDataColors
         barDataSet.setDrawValues(false)
 
         return barDataSet
     }
 
-    /** Auxiliary function for setting the correct size of the chart. */
-    private fun getBarChartYAxisProportion(sleepAmount: Int) : Float {
+    /**
+     * Auxiliary function to determine the height of the weekly and monthly sleep analysis [BarChart].
+     * */
+    private fun getBarChartYAxisProportion(
+        sleepAmount: Int
+    ) : Float {
         return if ((sleepAmount >= 540) && (sleepAmount < 660)) {
             12F
         } else if ((sleepAmount >= 660) && (sleepAmount < 780)) {
@@ -320,202 +476,187 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    /** Create a new Bar Chart entity. */
-    fun setBarChart(range: Int, endDateOfDiagram: LocalDate) : BarChart {
-        //http://developine.com/android-grouped-stacked-bar-chart-using-mpchart-kotlin/
-        val barChart = BarChart(context)
-        val diagramData = generateDataBarChart(range, endDateOfDiagram)
-        val barData = BarData(generateBarDataSet(diagramData.first))
+    /**
+     * Function for creating a new [BarChart] entity.
+     * */
+    fun setBarChart(
+        barChart: BarChart,
+        range: Int,
+        endDateOfDiagram: LocalDate,
+        colorDarkMode: Int
+    ) : BarChart {
+        val diagramData = generateDataBarChart(
+            range,
+            endDateOfDiagram
+        )
+
+        val barData = BarData(
+            generateBarDataSet(
+                diagramData.first
+            )
+        )
+
         barChart.data = barData
-        visualSetUpBarChart(barChart, diagramData, range)
+
+        visualSetUpBarChart(
+            barChart,
+            diagramData,
+            range,
+            colorDarkMode
+        )
+
         return barChart
     }
 
-    /** Update an existing Bar Chart entity. */
-    fun updateBarChart(barChart: BarChart, range: Int, endDateOfDiagram: LocalDate) {
-        val diagramData = generateDataBarChart(range, endDateOfDiagram)
-        val barData = BarData(generateBarDataSet(diagramData.first))
+    /**
+     * Function for updating an existing [BarChart] entity.
+     * */
+    fun updateBarChart(
+        barChart: BarChart,
+        range: Int,
+        endDateOfDiagram: LocalDate,
+        colorDarkMode: Int
+    ) {
+        val diagramData = generateDataBarChart(
+            range,
+            endDateOfDiagram
+        )
+
+        val barData = BarData(
+            generateBarDataSet(
+                diagramData.first
+            )
+        )
+
         barChart.data = barData
-        visualSetUpBarChart(barChart, diagramData, range)
+
+        visualSetUpBarChart(
+            barChart,
+            diagramData,
+            range,
+            colorDarkMode
+        )
         barChart.invalidate()
     }
 
-    /** Visual setup for Bar Chart entities. With separation between monthly and weekly bar charts. */
-    private fun visualSetUpBarChart(barChart: BarChart,
-                                    diagramData: Triple<ArrayList<BarEntry>, List<Int>, Int>,
-                                    range: Int) {
-        barChart.description.isEnabled = false
-        barChart.data.isHighlightEnabled = false
-
-        //val xAxisValues = ArrayList<String>()
-        barChart.xAxis.setDrawGridLines(false)
-        barChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
-
+    /**
+     * Auxiliary function for setting up or updating the visual settings of a [BarChart].
+     */
+    private fun visualSetUpBarChart(
+        barChart: BarChart,
+        diagramData: Triple<ArrayList<BarEntry>, List<Int>, Int>,
+        range: Int,
+        colorDarkMode: Int
+    ) {
+        val proportion = getBarChartYAxisProportion(diagramData.third)
+        val legendEntryList = mutableListOf<LegendEntry>()
+        val sleepStates = SleepState.getListOfSleepStates()
+        val barWidth: Any
+        val axisMaximum: Any
+        val labelCount: Any
         xAxisValues.clear()
 
         if (range > 21) {
             for (i in diagramData.second.indices) {
                 val date = LocalDateTime.ofInstant(
-                    Instant.ofEpochMilli((diagramData.second[i].toLong() + Constants.DAY_IN_SECONDS) * 1000),
-                    ZoneOffset.systemDefault())
+                    Instant.ofEpochMilli(
+                        (diagramData.second[i].toLong()) * 1000), //Constants.DAY_IN_SECONDS
+                    ZoneOffset.systemDefault()
+                )
 
                 if (i == 0 || i == 10 || i == 20  || i == (diagramData.second.size - 1)) {
                     xAxisValues.add(date.dayOfMonth.toString())
                 }
-                else { xAxisValues.add("") }
+                else {
+                    xAxisValues.add("")
+                }
             }
 
-            barChart.barData.barWidth = 0.5f
-            barChart.xAxis.axisMaximum = (diagramData.second.size).toFloat()
-            barChart.xAxis.labelCount = (diagramData.second.size)
+            barWidth = 0.5f
+            axisMaximum = (diagramData.second.size).toFloat()
+            labelCount = diagramData.second.size
         }
         else {
-            xAxisValues.add(
-                StringUtil.getStringXml(
-                    R.string.alarm_entity_day_mo,
-                    getApplication()
-                )
-            )
-            xAxisValues.add(
-                StringUtil.getStringXml(
-                    R.string.alarm_entity_day_tu,
-                    getApplication()
-                )
-            )
-            xAxisValues.add(
-                StringUtil.getStringXml(
-                    R.string.alarm_entity_day_we,
-                    getApplication()
-                )
-            )
-            xAxisValues.add(
-                StringUtil.getStringXml(
-                    R.string.alarm_entity_day_th,
-                    getApplication()
-                )
-            )
-            xAxisValues.add(
-                StringUtil.getStringXml(
-                    R.string.alarm_entity_day_fr,
-                    getApplication()
-                )
-            )
-            xAxisValues.add(
-                StringUtil.getStringXml(
-                    R.string.alarm_entity_day_sa,
-                    getApplication()
-                )
-            )
-            xAxisValues.add(
-                StringUtil.getStringXml(
-                    R.string.alarm_entity_day_su,
-                    getApplication()
-                )
-            )
+            // Set up the chart for weekly analysis
+            xAxisValues.addAll(xAxisValuesWeek)
+            barWidth = 0.75f
+            axisMaximum = 7f
+            labelCount = 7
+        }
 
-            barChart.barData.barWidth = 0.75f
-            barChart.xAxis.axisMaximum = 7f
-            barChart.xAxis.labelCount = 7
+        sleepStates.forEach {
+            legendEntryList.add(
+                LegendEntry(
+                    sleepStateString[it],
+                    Legend.LegendForm.SQUARE,
+                    8f,
+                    8f,
+                    null,
+                    sleepStateColor[it]?: 1
+                )
+            )
         }
 
         barChart.xAxis.valueFormatter = IndexAxisValueFormatter(xAxisValues)
-        barChart.setFitBars(true)
-
+        barChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
         barChart.xAxis.axisMinimum = 0f
+        barChart.xAxis.axisMaximum = axisMaximum
+        barChart.xAxis.labelCount = labelCount
+        barChart.xAxis.textColor = colorDarkMode
         barChart.xAxis.setCenterAxisLabels(true)
-        barChart.xAxis.textColor = checkDarkMode()
+        barChart.xAxis.setDrawGridLines(false)
 
-
-        // set bar label
+        barChart.legend.textSize = 12f
+        barChart.legend.textColor = colorDarkMode
         barChart.legend.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
         barChart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
         barChart.legend.orientation = Legend.LegendOrientation.HORIZONTAL
         barChart.legend.setDrawInside(false)
-        barChart.legend.textSize = 12f
-        barChart.legend.textColor = checkDarkMode()
+        barChart.legend.setCustom(legendEntryList)
 
-        barChart.legend.setCustom(
-            listOf(
-                LegendEntry(
-                    StringUtil.getStringXml(R.string.history_day_timeInPhase_lightSleep, getApplication()),
-                    Legend.LegendForm.SQUARE,
-                    8f,
-                    8f,
-                    null,
-                    ContextCompat.getColor(context, R.color.light_sleep_color)
-                ),
-                LegendEntry(
-                    StringUtil.getStringXml(R.string.history_day_timeInPhase_deepSleep, getApplication()),
-                    Legend.LegendForm.SQUARE,
-                    8f,
-                    8f,
-                    null,
-                    ContextCompat.getColor(context, R.color.deep_sleep_color)
-                ),
-                LegendEntry(
-                    StringUtil.getStringXml(R.string.history_day_timeInPhase_remSleep, getApplication()),
-                    Legend.LegendForm.SQUARE,
-                    8f,
-                    8f,
-                    null,
-                    ContextCompat.getColor(context, R.color.rem_sleep_color)
-                ),
-                LegendEntry(
-                    StringUtil.getStringXml(R.string.history_day_timeInPhase_sleepSum, getApplication()),
-                    Legend.LegendForm.SQUARE,
-                    8f,
-                    8f,
-                    null,
-                    ContextCompat.getColor(context, R.color.sleep_sleep_color)
-                ),
-                LegendEntry(
-                    StringUtil.getStringXml(R.string.history_day_timeInPhase_awake, getApplication()),
-                    Legend.LegendForm.SQUARE,
-                    8f,
-                    8f,
-                    null,
-                    ContextCompat.getColor(context, R.color.awake_sleep_color)
-                )
-            )
-        )
-
-        barChart.isDragEnabled = false
-
-        //Y-axis
         barChart.axisRight.isEnabled = true
-        barChart.axisRight.axisMinimum = 0f
+        barChart.axisRight.spaceTop = 0F
+        barChart.axisRight.axisMinimum = 0F
+        barChart.axisRight.axisMaximum = 0F
         barChart.axisRight.labelCount = 0
         barChart.axisRight.setDrawGridLines(false)
         barChart.axisRight.setDrawLabels(false)
 
-        barChart.axisLeft.spaceTop = 60f
+        barChart.axisLeft.isEnabled = true
+        barChart.axisLeft.spaceTop = 0f
         barChart.axisLeft.axisMinimum = 0f
-        barChart.axisLeft.labelCount = 10
-        barChart.axisLeft.setDrawGridLines(false)
-        barChart.axisLeft.textColor = checkDarkMode()
-
-        val proportion = getBarChartYAxisProportion(diagramData.third)
-        barChart.axisRight.axisMaximum = proportion
         barChart.axisLeft.axisMaximum = proportion
+        barChart.axisLeft.textColor = colorDarkMode
         barChart.axisLeft.labelCount = proportion.toInt()
+        barChart.axisLeft.setDrawGridLines(false)
+        barChart.axisRight.setDrawLabels(true)
 
+        barChart.description.isEnabled = false
+        barChart.data.isHighlightEnabled = false
+        barChart.barData.barWidth = barWidth
+        barChart.isDragEnabled = false
+        barChart.isDoubleTapToZoomEnabled = false
+        barChart.setFitBars(true)
         barChart.setScaleEnabled(false)
         barChart.setTouchEnabled(false)
         barChart.setPinchZoom(false)
-        barChart.isDoubleTapToZoomEnabled = false
     }
 
-    /** Generates all the relevant information for the activity chart by searching the [sleepSessionData] for the correct period of time.
-     * TODO(Check this)
-     * */
-    private fun generateDataActivityChart(range: Int, endDateOfDiagram: LocalDate): ArrayList<Entry> {
+    /**
+     * Auxiliary function for generating entries for the weekly and monthly activity analysis chart.
+     * Analysis the [sleepAnalysisData] for the currently selected range and creates a [Entry] for each day.
+     */
+    private fun generateDataActivityChart(
+        range: Int,
+        endDateOfDiagram: LocalDate
+    ): ArrayList<Entry> {
         val entries = ArrayList<Entry>()
         var xValue = 0
 
         val ids = mutableSetOf<Int>()
-        for (i in -(range-2)..1) {
+        for (i in -(range - 2)..1) {
             ids.add(
-                UserSleepSessionEntity.getIdByDateTime(
+                getIdByDateTimeWithTimeZone(
                     LocalDate.ofEpochDay(
                         endDateOfDiagram.toEpochDay().plus((i - 1).toLong())
                     )
@@ -525,91 +666,137 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
         ids.reversed()
         for (id in ids) {
-            if (sleepSessionData.containsKey(id)) {
-                val values = sleepSessionData[id]?.third!!
 
-                entries.add(Entry(xValue.toFloat(), values.userSleepRating.activityOnDay.ordinal.toFloat()))
-            }
-            else {
+            sleepAnalysisData.firstOrNull {
+                    x -> x.sleepSessionId == id
+            }?.let {
+                entries.add(
+                    Entry(
+                        xValue.toFloat(),
+                        it.userSleepSessionEntity.userSleepRating.activityOnDay.ordinal.toFloat()
+                    )
+                )
+            } ?: kotlin.run {
                 entries.add(Entry(xValue.toFloat(), 0f))
             }
+
             xValue += 1
         }
         return entries
     }
 
-    /** Create a new Activity Chart [LineChart] entity. */
-    fun setActivityChart(range: Int, endDateOfDiagram: LocalDate) : LineChart {
-        val chart = LineChart(context)
-        val lineDataSet = LineDataSet(generateDataActivityChart(range, endDateOfDiagram), "")
-        visualSetUpActivityChart(chart, lineDataSet)
+    /**
+     * Function for creating a new [LineChart] entity.
+     */
+    fun setActivityChart(
+        chart: LineChart,
+        range: Int,
+        endDateOfDiagram: LocalDate,
+        colorDarkMode: Int
+    ) : LineChart {
+        val lineDataSet = LineDataSet(
+            generateDataActivityChart(
+                range,
+                endDateOfDiagram
+            ),
+            ""
+        )
+
+        visualSetUpActivityChart(
+            chart,
+            lineDataSet,
+            colorDarkMode
+        )
+
         chart.data = LineData(lineDataSet)
         return chart
     }
 
-    /** Updates the information in an existing Activity Chart. */
-    fun updateActivityChart(chart: LineChart, range: Int, endDateOfDiagram: LocalDate) {
-        val lineDataSet = LineDataSet(generateDataActivityChart(range, endDateOfDiagram), "")
-        visualSetUpActivityChart(chart, lineDataSet)
+    /**
+     * Function for updating an existing [LineChart] entity.
+     */
+    fun updateActivityChart(
+        chart: LineChart,
+        range: Int,
+        endDateOfDiagram: LocalDate,
+        colorDarkMode: Int
+    ) {
+        val lineDataSet = LineDataSet(
+            generateDataActivityChart(
+                range,
+                endDateOfDiagram
+            ),
+            ""
+        )
+
+        visualSetUpActivityChart(
+            chart,
+            lineDataSet,
+            colorDarkMode
+        )
+
         chart.data = LineData(lineDataSet)
     }
 
-    /** Visual setup for the Activity Chart. With separation between monthly and weekly bar charts. */
-    private fun visualSetUpActivityChart(chart: LineChart, lineDataSet: LineDataSet) {
+    /**
+     * Auxiliary function for setting up or updating the visual settings of a [LineChart].
+     */
+    private fun visualSetUpActivityChart(
+        chart: LineChart,
+        lineDataSet: LineDataSet,
+        colorDarkMode: Int
+    ) {
+        val yAxisValues = arrayListOf(
+            "",
+            SmileySelectorUtil.getSmileyActivity(1),
+            "",
+            SmileySelectorUtil.getSmileyActivity(2),
+            "",
+            SmileySelectorUtil.getSmileyActivity(3)
+        )
+
+        val labelCount = if (xAxisValues.size > 21) {
+            xAxisValues.size
+        } else {
+            6
+        }
+
+        lineDataSet.color = sleepStateColor[SleepState.SLEEPING] ?: 1
+        lineDataSet.fillColor = sleepStateColor[SleepState.SLEEPING] ?: 1
+        lineDataSet.fillDrawable = activityBackgroundDrawable
+        lineDataSet.fillAlpha = 255
+        lineDataSet.lineWidth = 2f
+        lineDataSet.mode = LineDataSet.Mode.HORIZONTAL_BEZIER
         lineDataSet.setDrawValues(false)
         lineDataSet.setDrawFilled(true)
         lineDataSet.setDrawCircles(false)
-        lineDataSet.lineWidth = 2f
-        lineDataSet.fillColor = ContextCompat.getColor(context, R.color.sleep_sleep_color)
-        lineDataSet.fillAlpha = 255
-        lineDataSet.color = ContextCompat.getColor(context, R.color.sleep_sleep_color)
-        lineDataSet.fillDrawable = ContextCompat.getDrawable(context, R.drawable.bg_spark_line)
 
-        val yAxisValues = ArrayList<String>()
-        yAxisValues.add("")
-        yAxisValues.add(SmileySelectorUtil.getSmileyActivity(1))
-        yAxisValues.add("")
-        yAxisValues.add(SmileySelectorUtil.getSmileyActivity(2))
-        yAxisValues.add("")
-        yAxisValues.add(SmileySelectorUtil.getSmileyActivity(3))
-
-        chart.axisLeft.labelCount = 5
-        chart.axisLeft.axisMaximum = 5.05f
-
-        chart.axisLeft.valueFormatter = IndexAxisValueFormatter(yAxisValues)
-        chart.axisLeft.axisMinimum = -0.05f
-        chart.axisLeft.setDrawGridLines(false)
-        chart.axisLeft.textColor = checkDarkMode()
-        chart.axisLeft.textSize = 16f
-        chart.legend.isEnabled= false
-
-        chart.axisRight.setDrawLabels(false)
-        chart.axisRight.setDrawGridLines(false)
-
+        chart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+        chart.xAxis.textColor = colorDarkMode
+        chart.xAxis.labelCount = labelCount
+        chart.xAxis.valueFormatter = IndexAxisValueFormatter(xAxisValues)
+        chart.xAxis.setCenterAxisLabels(false)
         chart.xAxis.setDrawGridLines(false)
         chart.xAxis.setDrawLabels(true)
 
-        chart.xAxis.textColor = checkDarkMode()
-        chart.xAxis.setCenterAxisLabels(false)
-        chart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+        chart.legend.isEnabled= false
 
-        if (xAxisValues.size > 21) {
-            chart.xAxis.labelCount = xAxisValues.size
-            lineDataSet.mode = LineDataSet.Mode.HORIZONTAL_BEZIER
-        }
-        else {
-            chart.xAxis.labelCount = 6
-            lineDataSet.mode = LineDataSet.Mode.HORIZONTAL_BEZIER
-        }
+        chart.axisRight.setDrawGridLines(false)
+        chart.axisRight.setDrawLabels(false)
 
-        chart.xAxis.valueFormatter = IndexAxisValueFormatter(xAxisValues)
+        chart.axisLeft.textSize = 16f
+        chart.axisLeft.textColor = colorDarkMode
+        chart.axisLeft.labelCount = 5
+        chart.axisLeft.axisMinimum = -0.05f
+        chart.axisLeft.axisMaximum = 5.05f
+        chart.axisLeft.valueFormatter = IndexAxisValueFormatter(yAxisValues)
+        chart.axisLeft.setDrawGridLines(false)
 
         chart.description.isEnabled = false
+        chart.isDoubleTapToZoomEnabled = false
         chart.setScaleEnabled(false)
         chart.setTouchEnabled(false)
         chart.setPinchZoom(false)
-        chart.isDoubleTapToZoomEnabled = false
-
         chart.animateX(500)
     }
 }

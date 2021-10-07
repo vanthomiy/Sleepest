@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Parcelable
 import android.widget.Toast
 import com.sleepestapp.sleepest.R
-import com.sleepestapp.sleepest.model.data.LightConditions
 import com.sleepestapp.sleepest.storage.DatabaseRepository
 import com.sleepestapp.sleepest.storage.db.SleepApiRawDataEntity
 import com.sleepestapp.sleepest.storage.db.UserSleepSessionEntity
@@ -26,9 +25,9 @@ object ImportUtil {
         uri?.let {
             val importJson = readTextFromUri(it, actualContext)
 
-            var data = mutableListOf<UserSleepExportData>()
+            val data = mutableListOf<UserSleepExportData>()
             try {
-                var gson = Gson()
+                val gson = Gson()
 
                 data.addAll(
                     gson.fromJson(importJson, Array<UserSleepExportData>::class.java).asList()
@@ -42,8 +41,8 @@ object ImportUtil {
 
             try {
 
-                var sessions = mutableListOf<UserSleepSessionEntity>()
-                var sleepApiRawDataEntity = mutableListOf<SleepApiRawDataEntity>()
+                val sessions = mutableListOf<UserSleepSessionEntity>()
+                val sleepApiRawDataEntity = mutableListOf<SleepApiRawDataEntity>()
 
                 data.forEach { session ->
 
@@ -51,7 +50,7 @@ object ImportUtil {
                         UserSleepSessionEntity(
                             session.id,
                             session.mobilePosition,
-                            session.lightConditions?:LightConditions.UNIDENTIFIED,
+                            session.lightConditions,
                             session.sleepTimes,
                             session.userSleepRating,
                             session.userCalculationRating

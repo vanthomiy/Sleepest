@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- TODO Remove the following "exclude" elements to make them a part of the auto backup -->
+    <!-- Exclude the shared preferences file that contains the GCM registrationId -->
+    <exclude
+        domain="sharedpref"
+        path="AlarmSet.xml" />
+    <exclude
+        domain="sharedpref"
+        path="SleepTime.xml" />
+    <exclude
+        domain="sharedpref"
+        path="AlarmChanged.xml" />
+    <exclude
+        domain="sharedpref"
+        path="StopException.xml" />
+    <exclude
+        domain="sharedpref"
+        path="AlarmReceiver.xml" />
+    <exclude
+        domain="sharedpref"
+        path="StopService.xml" />
+    <exclude
+        domain="sharedpref"
+        path="WorkmanagerCalculation.xml" />
+    <exclude
+        domain="sharedpref"
+        path="SleepValue.xml" />
+    <exclude
+        domain="sharedpref"
+        path="StartService.xml" />
+</full-backup-content>

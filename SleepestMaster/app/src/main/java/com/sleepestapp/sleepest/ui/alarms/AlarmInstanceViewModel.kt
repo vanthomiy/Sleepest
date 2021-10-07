@@ -1,22 +1,16 @@
 package com.sleepestapp.sleepest.ui.alarms
 
-import android.app.Application
 import android.app.TimePickerDialog
 import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.model.data.AlarmSleepChangeFrom
 import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil
-import com.sleepestapp.sleepest.util.WeekDaysUtil.getWeekDayByNumber
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
@@ -32,9 +26,13 @@ class AlarmInstanceViewModel(
     //region Alarm Instance
 
     // The actual id of the alarm instance
-
     val actualAlarmLiveData by lazy{
         dataBaseRepository.getAlarmById(alarmId).asLiveData()
+    }
+
+    // The actual id of the alarm instance
+    val actualAlarmParameterLiveData by lazy{
+        dataStoreRepository.alarmParameterFlow.asLiveData()
     }
 
     val isAlarmActive = MutableLiveData(false)
@@ -43,13 +41,11 @@ class AlarmInstanceViewModel(
     /**
      * Alarm active/disabled is toggled
      */
+    @Suppress("UNUSED_PARAMETER")
     fun onAlarmActiveToggled(view: View) {
         viewModelScope.launch {
             isAlarmActive.value?.let {
                 dataBaseRepository.updateIsActive(it, alarmId)
-                /*if (dataBaseRepository.getAlarmById(alarmId).first().isActive && dataBaseRepository.getAlarmById(alarmId).first().tempDisabled) {
-                    Toast.makeText(context, context.getString(R.string.alarms_information_temporary_disabled), Toast.LENGTH_LONG).show()
-                }*/
             }
         }
 
@@ -63,6 +59,7 @@ class AlarmInstanceViewModel(
      * Alarm name can be changed here
      * TODO(Not implemented yet)
      */
+    @Suppress("UNUSED_PARAMETER")
     fun onAlarmNameClick(view: View) {
         extendedAlarmEntity.value = (extendedAlarmEntity.value == false)
     }
@@ -83,7 +80,7 @@ class AlarmInstanceViewModel(
         val tpd = TimePickerDialog(
             view.context,
             R.style.TimePickerTheme,
-            { pickerView, h, m ->
+            { _, h, m ->
 
                 val tempWakeup = LocalTime.of(h, m)
 
@@ -117,7 +114,7 @@ class AlarmInstanceViewModel(
         val tpd = TimePickerDialog(
             view.context,
             R.style.TimePickerTheme,
-            { view, h, m ->
+            { _, h, m ->
                 val tempWakeup = LocalTime.of(h, m)
 
                 viewModelScope.launch {
@@ -208,7 +205,7 @@ class AlarmInstanceViewModel(
          */
         viewModelScope.launch {
 
-            var alarmSettings = dataBaseRepository.getAlarmById(alarmId).first()
+            val alarmSettings = dataBaseRepository.getAlarmById(alarmId).first()
 
             alarmSettings?.let{
                 val wakeupEarly = LocalTime.ofSecondOfDay(alarmSettings.wakeupEarly.toLong())
@@ -233,13 +230,6 @@ class AlarmInstanceViewModel(
             }
         }
     }
-
-    //region animation
-
-    lateinit var transitionsContainer : ViewGroup
-
-
-    //endregion
 }
 
 

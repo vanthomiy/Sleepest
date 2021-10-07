@@ -25,7 +25,7 @@ public class TimeConverterUtil {
 
     public static String toTimeFormat(int hour, int minute) {
 
-        String hourText = null, minuteText = null;
+        String hourText, minuteText;
 
         if(hour < 10) {
             hourText = "0" + hour;
@@ -41,19 +41,6 @@ public class TimeConverterUtil {
 
         return hourText + ":" + minuteText;
 
-    }
-
-    /**
-     * Convert the date to secondsOfDay
-     * @param calendar date
-     * @return secondsOfDay
-     */
-    public static int calendarToSecondsOfDay(Calendar calendar) {
-        int day = calendar.get(Calendar.HOUR_OF_DAY) * 3600;
-        int minute = calendar.get(Calendar.MINUTE) * 60;
-        int second = calendar.get(Calendar.SECOND);
-
-        return day + minute + second;
     }
 
     /**

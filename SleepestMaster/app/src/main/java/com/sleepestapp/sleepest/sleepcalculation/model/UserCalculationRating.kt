@@ -16,7 +16,7 @@ data class UserCalculationRating(
          */
         val sleepStartDetection	: SleepTimeAdjustment = SleepTimeAdjustment.NONE,
         /**
-         * The user can choose [SleepTimeAdjustment.AWAKETOLATE] or [SleepTimeAdjustment.AWAKETOEARLY]
+         * The user can choose [SleepTimeAdjustment.WAKEUPTOLATE] or [SleepTimeAdjustment.WAKEUPTOEARLY]
          */
         val sleepEndDetection	: SleepTimeAdjustment= SleepTimeAdjustment.NONE,
         /**

@@ -1,6 +1,5 @@
 package com.sleepestapp.sleepest.storage.datastorage
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import com.sleepestapp.sleepest.LiveUserSleepActivity
 import kotlinx.coroutines.flow.Flow
@@ -20,7 +19,6 @@ class LiveUserSleepActivityStatus(private val dataStore: DataStore<LiveUserSleep
     val liveUserSleepActivity: Flow<LiveUserSleepActivity> = dataStore.data
         .catch { exception ->
             if (exception is IOException) {
-                Log.d("Error", exception.message.toString())
                 emit(LiveUserSleepActivity.getDefaultInstance())
             } else {
                 throw exception
