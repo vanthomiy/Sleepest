@@ -269,6 +269,7 @@ class MainActivity : AppCompatActivity() {
                     applicationContext, AlarmReceiverUsage.START_FOREGROUND)
 
                 SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
+                    applicationContext,
                     viewModel.dataStoreRepository,
                     viewModel.dataBaseRepository,
                     bundle.getInt(getString(R.string.onboarding_intent_starttime)),
@@ -279,6 +280,7 @@ class MainActivity : AppCompatActivity() {
                 )
 
                 SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
+                    applicationContext,
                     viewModel.dataStoreRepository,
                     viewModel.dataBaseRepository,
                     bundle.getInt(getString(R.string.onboarding_intent_starttime)),
@@ -289,6 +291,7 @@ class MainActivity : AppCompatActivity() {
                 )
 
                 SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
+                    applicationContext,
                     viewModel.dataStoreRepository,
                     viewModel.dataBaseRepository,
                     bundle.getInt(getString(R.string.onboarding_intent_starttime)),

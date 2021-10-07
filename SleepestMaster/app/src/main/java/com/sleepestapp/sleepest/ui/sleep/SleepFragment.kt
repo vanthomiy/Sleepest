@@ -9,13 +9,17 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.databinding.FragmentSleepBinding
 import com.sleepestapp.sleepest.googleapi.ActivityTransitionHandler
+import com.sleepestapp.sleepest.model.data.SleepSleepChangeFrom
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.is24HourFormat
 import com.sleepestapp.sleepest.util.StringUtil
+import kotlinx.coroutines.launch
 import java.time.LocalTime
 
 
@@ -87,14 +91,14 @@ class SleepFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Hours changed from the duration changer
-        binding.npHours.setOnValueChangedListener { _, _, newVal -> viewModel.onDurationChange(
+        binding.npHours.setOnValueChangedListener { _, _, newVal -> onDurationChange(
             newVal,
             binding.npMinutes.value
         )
         }
 
         // Minutes changed from the duration changer
-        binding.npMinutes.setOnValueChangedListener { _, _, newVal -> viewModel.onDurationChange(
+        binding.npMinutes.setOnValueChangedListener { _, _, newVal -> onDurationChange(
             binding.npHours.value,
             newVal
         )
@@ -156,6 +160,31 @@ class SleepFragment : Fragment() {
             }
 
 
+        }
+    }
+
+    /**
+     * Sleep duration changed handler
+     */
+    fun onDurationChange(hour: Int, minute: Int) {
+
+        var hourSetter = hour
+        if(hour >= 24)
+            hourSetter = 23
+
+        val time = LocalTime.of(hourSetter, (minute-1) * 15)
+
+        lifecycleScope.launch {
+            SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
+                actualContext,
+                viewModel.dataStoreRepository,
+                viewModel.dataBaseRepository,
+                viewModel.sleepStartTime.toSecondOfDay(),
+                viewModel.sleepEndTime.toSecondOfDay(),
+                time.toSecondOfDay(),
+                viewModel.autoSleepTime.value == true,
+                SleepSleepChangeFrom.DURATION
+            )
         }
     }
 }

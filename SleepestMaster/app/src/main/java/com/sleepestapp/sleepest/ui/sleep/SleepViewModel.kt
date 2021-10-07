@@ -36,29 +36,6 @@ class SleepViewModel(
 
     var sleepDuration : Int = 0
 
-    /**
-     * Sleep duration changed handler
-     */
-    fun onDurationChange(hour: Int, minute: Int) {
-
-        var hourSetter = hour
-        if(hour >= 24)
-            hourSetter = 23
-
-        val time = LocalTime.of(hourSetter, (minute-1) * 15)
-
-        viewModelScope.launch {
-            SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
-                dataStoreRepository,
-                dataBaseRepository,
-                sleepStartTime.toSecondOfDay(),
-                sleepEndTime.toSecondOfDay(),
-                time.toSecondOfDay(),
-                autoSleepTime.value == true,
-                SleepSleepChangeFrom.DURATION
-            )
-        }
-    }
 
     val sleepStartValue = MutableLiveData("07:30")
     val sleepEndValue = MutableLiveData("07:30")
@@ -84,6 +61,7 @@ class SleepViewModel(
                     viewModelScope.launch {
 
                         SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
+                            view.context,
                             dataStoreRepository,
                             dataBaseRepository,
                             tempWakeup.toSecondOfDay(),
@@ -119,6 +97,7 @@ class SleepViewModel(
                 viewModelScope.launch {
 
                     SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
+                        view.context,
                         dataStoreRepository,
                         dataBaseRepository,
                         sleepStartTime.toSecondOfDay(),

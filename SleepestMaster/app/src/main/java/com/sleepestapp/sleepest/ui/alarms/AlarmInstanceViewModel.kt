@@ -87,6 +87,7 @@ class AlarmInstanceViewModel(
                 viewModelScope.launch {
 
                     SleepTimeValidationUtil.checkAlarmActionIsAllowedAndDoAction(
+                        view.context,
                         alarmId,
                         dataBaseRepository,
                         dataStoreRepository,
@@ -120,6 +121,7 @@ class AlarmInstanceViewModel(
                 viewModelScope.launch {
 
                     SleepTimeValidationUtil.checkAlarmActionIsAllowedAndDoAction(
+                        view.context,
                         alarmId,
                         dataBaseRepository,
                         dataStoreRepository,
@@ -140,30 +142,6 @@ class AlarmInstanceViewModel(
 
     var sleepDuration : Int = 0
     val sleepDurationString = MutableLiveData("07:00")
-
-    /**
-     * Sleep duration changed by user
-     */
-    fun onDurationChange(hour: Int, minute: Int) {
-
-        var hourSetter = hour
-        if(hour >= 24)
-            hourSetter = 23
-
-        val time = LocalTime.of(hourSetter, (minute-1) * 15)
-
-        viewModelScope.launch {
-            SleepTimeValidationUtil.checkAlarmActionIsAllowedAndDoAction(
-                alarmId,
-                dataBaseRepository,
-                dataStoreRepository,
-                wakeUpEarly.toSecondOfDay(),
-                wakeUpLate.toSecondOfDay(),
-                time.toSecondOfDay(),
-                AlarmSleepChangeFrom.DURATION
-            )
-        }
-    }
 
     val selectedDays = MutableLiveData<MutableList<Int>>()
     val selectedDaysInfo = MutableLiveData("")

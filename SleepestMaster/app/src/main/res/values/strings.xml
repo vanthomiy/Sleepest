@@ -353,4 +353,12 @@
     <string name="history_sleep_phases_header_deep_sleep">Deep sleep</string>
     <string name="history_sleep_phases_header_rem_sleep">REM sleep</string>
 
+    <string name="time_validation_sleep_time_end">Out of sleep time! Change the sleep time end</string>
+    <string name="time_validation_sleep_time_window_latest_wakeup">Not possible! Change the sleep time window or the latest wakeup point</string>
+    <string name="time_validation_latest_sleep_start_is_set">Conflicts with set sleep duration. Latest sleep time start is set</string>
+    <string name="time_validation_max_sleep_time_is_set">Conflicts with sleep times. Max possible sleep duration is set</string>
+    <string name="time_validation_sleep_earliest_sleep_start_is_set">Conflicts with set sleep duration. Earliest sleep time end is set</string>
+    <string name="time_validation_alarm_earliest_sleep_start_is_set">Conflicts with an alarm! Earliest possible sleep start time is set</string>
+    <string name="time_validation_latest_sleep_end_is_set">Conflicts with an alarm! Latest possible sleep end time is set</string>
+
 </resources>

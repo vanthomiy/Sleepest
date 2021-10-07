@@ -9,9 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.databinding.AlarmEntityBinding
+import com.sleepestapp.sleepest.model.data.AlarmSleepChangeFrom
 import com.sleepestapp.sleepest.storage.db.AlarmEntity
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil
 import com.sleepestapp.sleepest.util.StringUtil
@@ -93,13 +95,13 @@ class AlarmInstanceFragment(val applicationContext: Context, private var alarmId
         }
 
         // hours of alarm changed
-        binding.npHours.setOnValueChangedListener { _, _, newVal -> viewModel.onDurationChange(
+        binding.npHours.setOnValueChangedListener { _, _, newVal -> onDurationChange(
             newVal,
             binding.npMinutes.value
         ) }
 
         // minutes of alarm changed
-        binding.npMinutes.setOnValueChangedListener { _, _, newVal -> viewModel.onDurationChange(
+        binding.npMinutes.setOnValueChangedListener { _, _, newVal -> onDurationChange(
             binding.npHours.value,
             newVal
         )  }
@@ -200,6 +202,31 @@ class AlarmInstanceFragment(val applicationContext: Context, private var alarmId
         }
 
         viewModel.selectedDaysInfo.value = (info)
+    }
+
+    /**
+     * Sleep duration changed by user
+     */
+    fun onDurationChange(hour: Int, minute: Int) {
+
+        var hourSetter = hour
+        if(hour >= 24)
+            hourSetter = 23
+
+        val time = LocalTime.of(hourSetter, (minute-1) * 15)
+
+        lifecycleScope.launch {
+            SleepTimeValidationUtil.checkAlarmActionIsAllowedAndDoAction(
+                actualContext,
+                alarmId,
+                viewModel.dataBaseRepository,
+                viewModel.dataStoreRepository,
+                viewModel.wakeUpEarly.toSecondOfDay(),
+                viewModel.wakeUpLate.toSecondOfDay(),
+                time.toSecondOfDay(),
+                AlarmSleepChangeFrom.DURATION
+            )
+        }
     }
 }
 
