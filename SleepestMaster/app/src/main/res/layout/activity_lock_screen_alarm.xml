@@ -23,8 +23,8 @@
         android:layout_weight="0.15"
         android:text="@string/alarm_clock_swipe_up"
         android:textColor="@color/accent_text_color"
-        android:id="@+id/tvSwipeUpText"
         android:textSize="30sp"
+        android:id="@+id/tvSwipeUpText"
         android:gravity="center_horizontal"
         android:layout_marginBottom="100dp"/>
 

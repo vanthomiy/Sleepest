@@ -15,8 +15,8 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:showAsAction="always|withText"
+        android:id="@+id/bottomBar"
         app:elevation="0dp"
-        android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_gravity="bottom"

@@ -62,8 +62,6 @@
     <!--endregion-->
 
     <!--region AlarmSettings-->
-    <string name="alarm_fragment_btn_disable_alarm_disable">Nächsten Alarm ausschalten</string>
-    <string name="alarm_fragment_btn_disable_alarm_reactivate">Reaktiviere nächsten Alarm</string>
 
     <string name="alarm_entity_day_fr">Fr</string>
     <string name="alarm_entity_day_sa">Sa</string>
@@ -96,7 +94,6 @@
     <string name="alarms_type_selection_alarm_vibration">Ton und Vibration</string>
     <string name="alarms_type_selection_only_vibration">Nur Vibration</string>
     <string name="alarms_type_selection_default">Standard</string>
-    <string name="alarms_information_temporary_disabled">Nächster Alarm ist temporär ausgeschaltet</string>
     <string name="alarms_ringtone_set">Weiter</string>
     <string name="alarms_ringtone_cancel">Abbrechen</string>
     <string name="alarms_ringtone_header">Wähle einen Ton</string>

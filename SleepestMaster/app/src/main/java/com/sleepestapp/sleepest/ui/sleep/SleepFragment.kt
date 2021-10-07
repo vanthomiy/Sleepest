@@ -117,6 +117,8 @@ class SleepFragment : Fragment() {
         }
 
         viewModel.activityTracking.observe(viewLifecycleOwner){
+            TransitionManager.beginDelayedTransition(binding.linearAnimationlayout)
+
             if(it)
                 ActivityTransitionHandler(actualContext).startActivityHandler()
             else
@@ -153,9 +155,6 @@ class SleepFragment : Fragment() {
                 TransitionManager.beginDelayedTransition(binding.linearAnimationlayout)
             }
 
-            viewModel.activityTracking.observe(viewLifecycleOwner){
-                TransitionManager.beginDelayedTransition(binding.linearAnimationlayout)
-            }
 
         }
     }

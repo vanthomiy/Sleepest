@@ -63,8 +63,6 @@
     <!--endregion-->
 
     <!--region AlarmSettings-->
-    <string name="alarm_fragment_btn_disable_alarm_disable">Disable next alarm</string>
-    <string name="alarm_fragment_btn_disable_alarm_reactivate">Reactivate next alarm</string>
 
     <string name="alarm_entity_day_fr">Fr</string>
     <string name="alarm_entity_day_sa">Sa</string>
@@ -97,7 +95,6 @@
     <string name="alarms_type_selection_alarm_vibration">Sound and vibration</string>
     <string name="alarms_type_selection_only_vibration">Only vibration</string>
     <string name="alarms_type_selection_default">Default</string>
-    <string name="alarms_information_temporary_disabled">Next alarm is temporary disabled</string>
 
     <!--endregion-->
 
