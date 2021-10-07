@@ -3,6 +3,7 @@ package com.sleepestapp.sleepest.storage
 import android.content.Context
 import androidx.test.platform.app.InstrumentationRegistry
 import com.sleepestapp.sleepest.storage.db.SleepDatabase
+import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.getActualAlarmTimeData
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers
 import org.junit.Assert.*
@@ -46,11 +47,11 @@ class DataStoreRepositoryTest{
         sleepStoreRepository.updateSleepTimeEnd(endTime.toSecondOfDay())
 
         var actualTime = LocalTime.of(5,0,0)
-        var result = sleepStoreRepository.isInSleepTime(actualTime)
+        var result = getActualAlarmTimeData(sleepStoreRepository, actualTime).isInSleepTime
         assertThat(result, CoreMatchers.equalTo(true))
 
         actualTime = LocalTime.of(11,0,0)
-        result = sleepStoreRepository.isInSleepTime(actualTime)
+        result = getActualAlarmTimeData(sleepStoreRepository, actualTime).isInSleepTime
         assertThat(result, CoreMatchers.equalTo(false))
 
         startTime = LocalTime.of(1,0,0)
@@ -60,11 +61,11 @@ class DataStoreRepositoryTest{
         sleepStoreRepository.updateSleepTimeEnd(endTime.toSecondOfDay())
 
         actualTime = LocalTime.of(5,0,0)
-        result = sleepStoreRepository.isInSleepTime(actualTime)
+        result = getActualAlarmTimeData(sleepStoreRepository, actualTime).isInSleepTime
         assertThat(result, CoreMatchers.equalTo(true))
 
         actualTime = LocalTime.of(15,0,0)
-        result = sleepStoreRepository.isInSleepTime(actualTime)
+        result = getActualAlarmTimeData(sleepStoreRepository, actualTime).isInSleepTime
         assertThat(result, CoreMatchers.equalTo(false))
 
     }

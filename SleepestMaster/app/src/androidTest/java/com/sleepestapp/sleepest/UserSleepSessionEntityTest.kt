@@ -9,6 +9,7 @@ import com.sleepestapp.sleepest.storage.DatabaseRepository
 import com.sleepestapp.sleepest.storage.db.SleepDatabase
 import com.sleepestapp.sleepest.storage.db.UserSleepSessionEntity
 import com.sleepestapp.sleepest.storage.db.UserSleepSessionEntity.Companion.getIdByDateTimeWithTimeZone
+import com.sleepestapp.sleepest.storage.db.UserSleepSessionEntity.Companion.getIdByTimeStampWithTimeZone
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers
@@ -48,11 +49,11 @@ class UserSleepSessionEntityTest{
 
         var idDate = getIdByDateTimeWithTimeZone(LocalDate.of(2021, 6, 3))
         // 7:36
-        var idStamp = UserSleepSessionEntity.getIdByTimeStamp(1622612190)
+        var idStamp = getIdByTimeStampWithTimeZone(1622612190)
         assertThat(idDate, CoreMatchers.equalTo(idStamp))
 
         // 20:36
-        idStamp = UserSleepSessionEntity.getIdByTimeStamp(1622650832)
+        idStamp = getIdByTimeStampWithTimeZone(1622650832)
         assertThat((idDate != idStamp), CoreMatchers.equalTo(true))
 
         idDate = getIdByDateTimeWithTimeZone(LocalDate.of(2021, 6, 4))
@@ -79,7 +80,7 @@ class UserSleepSessionEntityTest{
         var actualDateTime = actualDate.atTime(actualTime)
         var actualDateTimeUtc = actualDateTime.minusDays(0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
 
-        var idDate1 = UserSleepSessionEntity.getIdByDateTimeWithTimeZone(actualDate)
+        var idDate1 = getIdByDateTimeWithTimeZone(actualDate)
         var idDate2 = UserSleepSessionEntity.getIdByTimeStampWithTimeZone(actualDateTimeUtc)
 
         var sessionAvailable = sleepDbRepository.getSleepSessionById(idDate2).first().firstOrNull()
@@ -93,7 +94,7 @@ class UserSleepSessionEntityTest{
         actualDateTime = actualDate.atTime(actualTime)
         actualDateTimeUtc = actualDateTime.minusDays(0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
 
-        idDate1 = UserSleepSessionEntity.getIdByDateTimeWithTimeZone(actualDate)
+        idDate1 = getIdByDateTimeWithTimeZone(actualDate)
         idDate2 = UserSleepSessionEntity.getIdByTimeStampWithTimeZone(actualDateTimeUtc)
 
         sessionAvailable = sleepDbRepository.getSleepSessionById(idDate2).first().firstOrNull()
@@ -107,7 +108,7 @@ class UserSleepSessionEntityTest{
         actualDateTime = actualDate.atTime(actualTime)
         actualDateTimeUtc = actualDateTime.minusDays(0).atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
 
-        idDate1 = UserSleepSessionEntity.getIdByDateTimeWithTimeZone(actualDate)
+        idDate1 = getIdByDateTimeWithTimeZone(actualDate)
         idDate2 = UserSleepSessionEntity.getIdByTimeStampWithTimeZone(actualDateTimeUtc)
 
         sessionAvailable = sleepDbRepository.getSleepSessionById(idDate2).first().firstOrNull()

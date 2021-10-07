@@ -390,6 +390,7 @@ public class NotificationUtil {
         NotificationManagerCompat.from(context).cancel(NotificationUsage.Companion.getCount(notificationUsage));
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isNotificationActive(NotificationUsage notificationUsage, Context context) {
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
