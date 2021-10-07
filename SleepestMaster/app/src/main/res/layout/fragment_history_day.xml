@@ -543,7 +543,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/lL_activityAnalysisChartDay"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            tools:ignore="UselessParent">
 
                             <View
                                 android:layout_width="0dp"

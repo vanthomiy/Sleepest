@@ -40,7 +40,7 @@ public class SmileySelectorUtil {
     public static String getSmileyAlarmClock() {
         return new String(Character.toChars(smileyAlarmClock));
     }
-
+    @SuppressWarnings({"unused"})
     public static String getSmileyHeart() {
         return new String(Character.toChars(smileyHeart));
     }

@@ -6,7 +6,6 @@ import com.sleepestapp.sleepest.model.data.ActivityOnDay
 import com.sleepestapp.sleepest.model.data.LightConditions
 import com.sleepestapp.sleepest.model.data.MobilePosition
 import com.sleepestapp.sleepest.model.data.SleepState
-import com.sleepestapp.sleepest.sleepcalculation.model.SleepTimes
 import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
 import com.sleepestapp.sleepest.storage.db.SleepApiRawDataEntity
@@ -16,10 +15,8 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneOffset
-import java.util.stream.IntStream.range
 
 class CreateShowcaseData {
 
@@ -135,7 +132,7 @@ class CreateShowcaseData {
                     SleepApiRawDataEntity.getSleepTimeByState(sleepDataList, SleepState.REM)
 
                 userSleepSession.userSleepRating.activityOnDay =
-                    ActivityOnDay.values()[(0..5).random().toInt()]
+                    ActivityOnDay.values()[(0..5).random()]
 
                 sleepDatabaseRepository.insertUserSleepSession(userSleepSession)
             }

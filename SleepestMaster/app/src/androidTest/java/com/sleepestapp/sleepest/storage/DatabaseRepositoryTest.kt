@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.sleepestapp.sleepest.model.data.SleepState
 import com.sleepestapp.sleepest.sleepcalculation.model.SleepTimes
 import com.sleepestapp.sleepest.storage.db.*
+import com.sleepestapp.sleepest.storage.db.UserSleepSessionEntity.Companion.getIdByTimeStampWithTimeZone
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Before
@@ -64,14 +65,15 @@ class DatabaseRepositoryTest {
                 continue
             }
 
-            val startTime = dataTrue[i].filter { x -> x.real != "awake" }.minByOrNull { y -> y.timestampSeconds }!!.timestampSeconds
-            val endTimeTime = dataTrue[i].filter { x -> x.real != "awake" }.maxByOrNull { y -> y.timestampSeconds }!!.timestampSeconds
+            val startTime = dataTrue[i].filter { x -> x.real != "awake" }
+                .minByOrNull { y -> y.timestampSeconds }!!.timestampSeconds
+            val endTimeTime = dataTrue[i].filter { x -> x.real != "awake" }
+                .maxByOrNull { y -> y.timestampSeconds }!!.timestampSeconds
 
 
             val rawDataList = mutableListOf<SleepApiRawDataEntity>()
 
-            dataTrue[i].forEach{
-                singledata->
+            dataTrue[i].forEach { singledata ->
 
                 var sleepstate = SleepState.NONE
 
@@ -94,7 +96,13 @@ class DatabaseRepositoryTest {
                 }
 
 
-                val rawData = SleepApiRawDataEntity(singledata.timestampSeconds, singledata.confidence, singledata.motion, singledata.light, sleepstate)
+                val rawData = SleepApiRawDataEntity(
+                    singledata.timestampSeconds,
+                    singledata.confidence,
+                    singledata.motion,
+                    singledata.light,
+                    sleepstate
+                )
 
                 rawDataList.add(rawData)
                 sleepDatabaseRepository.insertSleepApiRawData(rawData)
@@ -102,11 +110,14 @@ class DatabaseRepositoryTest {
 
             val sleepTime = SleepTimes(sleepTimeStart = startTime, sleepTimeEnd = endTimeTime)
             sleepTime.awakeTime = SleepApiRawDataEntity.getAwakeTime(rawDataList)
-            sleepTime.lightSleepDuration = SleepApiRawDataEntity.getSleepTimeByState(rawDataList, SleepState.LIGHT)
-            sleepTime.deepSleepDuration = SleepApiRawDataEntity.getSleepTimeByState(rawDataList, SleepState.DEEP)
-            sleepTime.remSleepDuration = SleepApiRawDataEntity.getSleepTimeByState(rawDataList, SleepState.REM)
+            sleepTime.lightSleepDuration =
+                SleepApiRawDataEntity.getSleepTimeByState(rawDataList, SleepState.LIGHT)
+            sleepTime.deepSleepDuration =
+                SleepApiRawDataEntity.getSleepTimeByState(rawDataList, SleepState.DEEP)
+            sleepTime.remSleepDuration =
+                SleepApiRawDataEntity.getSleepTimeByState(rawDataList, SleepState.REM)
             sleepTime.sleepDuration = SleepApiRawDataEntity.getSleepTime(rawDataList)
-            val id = UserSleepSessionEntity.getIdByTimeStamp(startTime)
+            val id = getIdByTimeStampWithTimeZone(startTime)
             val session = UserSleepSessionEntity(id, sleepTimes = sleepTime)
             sleepDatabaseRepository.insertUserSleepSession(session)
 

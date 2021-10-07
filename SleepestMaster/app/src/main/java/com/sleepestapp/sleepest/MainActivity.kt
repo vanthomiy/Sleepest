@@ -38,6 +38,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 import android.app.NotificationManager
+import com.sleepestapp.sleepest.googleapi.ActivityTransitionHandler
 import com.sleepestapp.sleepest.model.data.Constants
 
 
@@ -196,6 +197,11 @@ class MainActivity : AppCompatActivity() {
             else {
                 setupFragments(savedInstanceState == null)
                 setContentView(binding.root)
+            }
+
+            // start/restart activity tracking from main
+            if(viewModel.dataStoreRepository.sleepParameterFlow.first().userActivityTracking){
+                ActivityTransitionHandler(actualContext).startActivityHandler()
             }
         }
 

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="IconColors">
+        <ignore path="src/main/res/drawable/logofullroundtransparentwhite.png" />
+    </issue>
+    <issue id="IconLauncherShape">
+        <ignore path="src/main/res/drawable/logov4.png" />
+    </issue>
+    <issue id="IconLocation">
+        <ignore path="src/main/res/drawable/analytics.png" />
+        <ignore path="src/main/res/drawable/arrow_swipe_up.png" />
+        <ignore path="src/main/res/drawable/banner_foregroundservice_english.png" />
+        <ignore path="src/main/res/drawable/banner_foregroundservice_german.png" />
+        <ignore path="src/main/res/drawable/empty_alarms.png" />
+        <ignore path="src/main/res/drawable/history_fragment_german.png" />
+        <ignore path="src/main/res/drawable/light_bulb.png" />
+        <ignore path="src/main/res/drawable/logofullroundtransparent.png" />
+        <ignore path="src/main/res/drawable/logofullroundtransparentwhite.png" />
+        <ignore path="src/main/res/drawable/logov4.png" />
+        <ignore path="src/main/res/drawable/logov4round.png" />
+        <ignore path="src/main/res/drawable/monitoring.png" />
+        <ignore path="src/main/res/drawable/moon.png" />
+        <ignore path="src/main/res/drawable/phone_position_final.png" />
+        <ignore path="src/main/res/drawable/sleep_background.jpeg" />
+        <ignore path="src/main/res/drawable/sleep_mood_bad.png" />
+        <ignore path="src/main/res/drawable/sleep_mood_bad_grey.png" />
+        <ignore path="src/main/res/drawable/sleep_mood_empowered.png" />
+        <ignore path="src/main/res/drawable/sleep_mood_empowered_grey.png" />
+        <ignore path="src/main/res/drawable/sleep_mood_excellent.png" />
+        <ignore path="src/main/res/drawable/sleep_mood_excellent_grey.png" />
+        <ignore path="src/main/res/drawable/sleep_mood_good.png" />
+        <ignore path="src/main/res/drawable/sleep_mood_good_grey.png" />
+        <ignore path="src/main/res/drawable/sleep_mood_tired.png" />
+        <ignore path="src/main/res/drawable/sleep_mood_tired_grey.png" />
+        <ignore path="src/main/res/drawable/warning.png" />
+    </issue>
+</lint>
