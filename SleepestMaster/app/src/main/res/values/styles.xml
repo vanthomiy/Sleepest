@@ -17,8 +17,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:colorAccent">@color/accent_text_color</item>
         <item name="android:windowBackground">@color/primary_app_background</item>
-        <item name="android:textColorPrimaryInverse">@color/light_gray</item>
-        <item name="android:textColorSecondaryInverse">@color/primary_text_color</item>
+        <item name="android:textColorPrimaryInverse">@color/primary_text_color</item>
+        <item name="android:textColorSecondaryInverse">@color/light_gray</item>
         <item name="android:textColorPrimary">@color/tertiary_app_background</item>
         <item name="android:textColorSecondary">@color/tertiary_app_background</item>
         <item name="colorAccent">@color/accent_text_color</item>
@@ -29,8 +29,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:colorAccent">@color/accent_text_color</item>
         <item name="android:windowBackground">@color/primary_app_background</item>
-        <item name="android:textColorPrimaryInverse">@color/light_gray</item>
-        <item name="android:textColorSecondaryInverse">@color/primary_text_color</item>
+        <item name="android:textColorPrimaryInverse">@color/primary_text_color</item>
+        <item name="android:textColorSecondaryInverse">@color/light_gray</item>
         <item name="android:textColorPrimary">@color/tertiary_app_background</item>
         <item name="android:textColorSecondary">@color/tertiary_app_background</item>
         <item name="colorAccent">@color/accent_text_color</item>
