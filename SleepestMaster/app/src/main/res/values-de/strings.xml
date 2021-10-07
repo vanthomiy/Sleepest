@@ -356,6 +356,14 @@
     <string name="history_sleep_phases_header_light_sleep">Leichtschlaf</string>
     <string name="history_sleep_phases_header_deep_sleep">Tiefschlaf</string>
     <string name="history_sleep_phases_header_rem_sleep">Traumschlaf</string>
+
+    <string name="time_validation_sleep_time_end">Außerhalb der Schlafzeit! Ändere dein Schlafende</string>
+    <string name="time_validation_sleep_time_window_latest_wakeup">Nicht möglich! Ändere deine Schlafenszeiten oder deinen spätesten Aufwachzeitpunkt</string>
+    <string name="time_validation_latest_sleep_start_is_set">Problem mit deiner Schlafdauer. Spätester Schlafstart wird gesetzt</string>
+    <string name="time_validation_max_sleep_time_is_set">Problem mit deiner Schlafzeit. Maximale Schlafdauer wird gesetzt</string>
+    <string name="time_validation_sleep_earliest_sleep_start_is_set">Problem mit deiner Schlafdauer. Frühestes Schlafende wird gesetzt</string>
+    <string name="time_validation_alarm_earliest_sleep_start_is_set">Problem mit einem Alarm. Frühester Schlafstart wird gesetzt</string>
+    <string name="time_validation_latest_sleep_end_is_set">Problem mit einem Alarm. Spätestes Schlafende wird gesetzt</string>
     <!--endregion-->
 
 
