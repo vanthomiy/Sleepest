@@ -235,14 +235,27 @@
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:maxWidth="300dp"
                 android:textAlignment="center"
+                android:layout_gravity="center_horizontal"
+                android:layout_height="match_parent"
+                android:text="@string/alarms_no_alarms_header"
+                android:textColor="@color/accent_text_color"
+                android:textSize="@dimen/headerSize"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_margin="5dp"
+                android:maxWidth="300dp"
+                android:textAlignment="center"
+                android:layout_gravity="center_horizontal"
                 android:layout_height="match_parent"
                 android:text="@string/alarms_no_alarms"
                 android:textColor="@color/accent_text_color"
                 android:textSize="@dimen/valueSize"
-                android:textStyle="bold" />
+                android:textStyle="normal" />
         </LinearLayout>
 
         <FrameLayout
