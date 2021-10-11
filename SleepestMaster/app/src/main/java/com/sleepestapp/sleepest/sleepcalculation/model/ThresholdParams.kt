@@ -222,7 +222,7 @@ data class ThresholdParams(
                         return ThresholdParams(
                                 confidence = when(lightConditions){
                                         LightConditions.DARK -> 1f
-                                        else -> 0.9f
+                                        else -> 0.85f
                                 },
                                 motion = when(lightConditions){
                                         LightConditions.DARK -> 1f
@@ -230,7 +230,7 @@ data class ThresholdParams(
                                 },
                                 light = when(lightConditions){
                                         LightConditions.DARK -> 1f
-                                        else -> 1.1f
+                                        else -> 1.15f
                                 }
                         )
                 }
@@ -242,7 +242,7 @@ data class ThresholdParams(
                         return ThresholdParams(
                                 confidence = when(lightConditions){
                                         LightConditions.DARK -> 1f
-                                        else -> 0.9f
+                                        else -> 0.85f
                                 },
                                 motion = when(lightConditions){
                                         LightConditions.DARK -> 1f
@@ -250,7 +250,7 @@ data class ThresholdParams(
                                 },
                                 light = when(lightConditions){
                                         LightConditions.DARK -> 1f
-                                        else -> 1.1f
+                                        else -> 1.15f
                                 }
                         )
                 }
