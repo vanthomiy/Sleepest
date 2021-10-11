@@ -1,6 +1,7 @@
 package com.sleepestapp.sleepest.ui.history
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.transition.TransitionManager
 import android.util.TypedValue
@@ -99,13 +100,21 @@ class HistoryDayFragment : Fragment() {
         // Initial set up for the daily sleep analysis bar chart.
         barChartSleepAnalysis = setBarChart(
             DesignUtil.colorDarkMode(
-                DesignUtil.checkDarkModeActive(actualContext)
+                DesignUtil.checkDarkModeActive(
+                    actualContext,
+                    viewModel.appSettingsDarkMode,
+                    viewModel.appAutoDarkMode
+                )
             )
         )
         updateBarChart(
             barChartSleepAnalysis,
             DesignUtil.colorDarkMode(
-                DesignUtil.checkDarkModeActive(actualContext)
+                DesignUtil.checkDarkModeActive(
+                    actualContext,
+                    viewModel.appSettingsDarkMode,
+                    viewModel.appAutoDarkMode
+                )
             )
         )
         binding.lLSleepAnalysisChartsDaySleepPhases.addView(barChartSleepAnalysis)
@@ -121,10 +130,18 @@ class HistoryDayFragment : Fragment() {
         // Initial set up for the daily sleep analysis pie chart.
         pieChartSleepAnalysis = setPieChart(
             DesignUtil.colorDarkMode(
-                DesignUtil.checkDarkModeActive(actualContext)
+                DesignUtil.checkDarkModeActive(
+                    actualContext,
+                    viewModel.appSettingsDarkMode,
+                    viewModel.appAutoDarkMode
+                )
             ),
             DesignUtil.determineHoleColorPieChart(
-                DesignUtil.checkDarkModeActive(actualContext)
+                DesignUtil.checkDarkModeActive(
+                    actualContext,
+                    viewModel.appSettingsDarkMode,
+                    viewModel.appAutoDarkMode
+                )
             )
         )
         binding.lLSleepAnalysisChartsDaySleepPhasesAmount.addView(pieChartSleepAnalysis)
@@ -169,14 +186,32 @@ class HistoryDayFragment : Fragment() {
     private fun updateCharts() {
         updateBarChart(
             barChartSleepAnalysis,
-            DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext))
+            DesignUtil.colorDarkMode(
+                DesignUtil.checkDarkModeActive(
+                    actualContext,
+                    viewModel.appSettingsDarkMode,
+                    viewModel.appAutoDarkMode
+                )
+            )
         )
         barChartSleepAnalysis.invalidate()
 
         updatePieChart(
             pieChartSleepAnalysis,
-            DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext)),
-            DesignUtil.determineHoleColorPieChart(DesignUtil.checkDarkModeActive(actualContext))
+            DesignUtil.colorDarkMode(
+                DesignUtil.checkDarkModeActive(
+                    actualContext,
+                    viewModel.appSettingsDarkMode,
+                    viewModel.appAutoDarkMode
+                )
+            ),
+            DesignUtil.determineHoleColorPieChart(
+                DesignUtil.checkDarkModeActive(
+                    actualContext,
+                    viewModel.appSettingsDarkMode,
+                    viewModel.appAutoDarkMode
+                )
+            )
         )
         pieChartSleepAnalysis.invalidate()
 
@@ -644,7 +679,7 @@ class HistoryDayFragment : Fragment() {
         //chart.legend.textColor = viewModel.checkDarkMode()
 
         chart.description.isEnabled = false
-        chart.setCenterTextColor(colorDarkMode)
+        chart.setEntryLabelColor(Color.WHITE)
         chart.isDrawHoleEnabled = true
         chart.setHoleColor(holeColorPieChart)
         chart.setTouchEnabled(false)

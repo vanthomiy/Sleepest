@@ -88,7 +88,8 @@
     <string name="alarm_instance_wake_up_range">Aufweckzeitraum:</string>
     <string name="alarm_instance_sleep_duration">Schlafdauer:</string>
     <string name="alarms_alarme">&#9200; Wecker</string>
-    <string name="alarms_no_alarms">Keine aktiven Wecker. Füge über den + Button einen neuen Alarm hinzu!</string>
+    <string name="alarms_no_alarms_header">Keine aktiven Wecker.</string>
+    <string name="alarms_no_alarms">Füge über den + Button einen neuen Alarm hinzu!</string>
 
     <string name="alarms_type_selection_only_alarm">Nur Ton</string>
     <string name="alarms_type_selection_alarm_vibration">Ton und Vibration</string>
@@ -262,7 +263,7 @@
     <string name="history_sleep_phases_information_light">"Die Leichtschlafphase, welche sich durch einen bewusstlosen Schlaf mit entspannten Muskeln und nahezu ohne Augenbewegungen äußert, macht etwa die Hälfte des gesamten Schlafvolumens aus. "</string>
     <string name="history_sleep_phases_information_deep">"Die Tiefschlafphase ist von besonderer Bedeutung für die Erholung des Körpers und Geistes. Dies wird durch eine sehr hohe körperliche und geistige Entspanntheit erreicht. Der Körper reagiert auf diese Phase mit einer weiteren Senkung der Atem- und Herzfrequenz, die Körpertemperatur verringert sich und der Blutdruck fällt. In dieser Phase sind keine Augenbewegungen feststellbar.  In der Tiefschlafphase findet die Regeneration und Reparatur von Zellen statt und das Immunsystem ist äußerst aktiv. "</string>
     <string name="history_sleep_phases_information_rem">"Die Traumphase äußert sich durch rasante Augenbewegungen unter geschlossenen Lidern. Zudem erhöht sich sowohl die Atemfrequenz als auch die Atemtiefe. Neben der Verarbeitung von Infor-mationen und emotionalen Sinneseindrücken werden Tagesereignisse mit dem Langzeitgedächtnis verknüpft. Um diesen Vorgang möglichst ungestört ablaufen lassen zu können, werden weitgehend alle äußeren Sinneseindrücke ausgeblendet. Dies hat zur Folge, dass das Aufwecken in dieser Phase äußerst schwerfällt. An die in dieser Phase erlebten Träume kann man sich am häufigsten nach dem Aufwachen erinnern. "</string>
-    <string name="history_day_information_sleepPhases_lineChart">Dieses Diagramm zeigt Deine Schlafphasen der letzten Nacht an. Links und rechts über dem Diagramm kannst Du die, von der App erkannten, Einschlaf- und Aufwachzeitpunkte sehen. Die Nacht ist, je nachdem wo sich dein Handy in dieser Nacht befand, in zwei oder drei Schlafphasen eingeteilt. Befand sich das Gerät neben dem Bett kannst Du die Phasen \"Wach\" und \"Schlaf\" erkennen. Lag es im Bett wird die Nacht in die Phasen \"Tiefschlaf\", \"Leichtschlaf\" und \"Wach\" eingeteilt. Das Diagramm ist linear über die Nacht aufgeteilt.</string>
+    <string name="history_day_information_sleepPhases_lineChart">Dieses Diagramm zeigt Deine Schlafphasen der letzten Nacht an. Links und rechts über dem Diagramm kannst Du die, von der App erkannten, Einschlaf- und Aufwachzeitpunkte sehen. Die Nacht ist, je nachdem wo sich dein Handy in dieser Nacht befand, in zwei oder drei Schlafphasen eingeteilt. Befand sich das Gerät neben dem Bett kannst Du die Phasen \"Wach\" und \"Schlaf\" erkennen. Lag es im Bett wird die Nacht in die Phasen \"Tiefschlaf\", \"Leichtschlaf\" und \"Wach\" eingeteilt. Das Diagramm ist linear über die Nacht aufgeteilt.\n Die in diesem Diagramm aufgezeigten Schlafphasen können von den tatsächlichen Schlafphasen abweichen.</string>
     <string name="history_day_sleep_quality_rating_title">Schlafqualität:</string>
     <string name="history_activity_title">Aktivität:</string>
     <string name="history_day_information_timeInPhase">Dieses Diagramm zeigt Dir die prozentuale Verteilung der Schlafphasen über die Nacht an.</string>

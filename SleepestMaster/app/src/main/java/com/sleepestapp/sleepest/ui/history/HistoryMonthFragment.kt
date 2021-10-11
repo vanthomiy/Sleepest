@@ -57,7 +57,11 @@ class HistoryMonthFragment : Fragment() {
             barChartDates.first,
             barChartDates.second,
             DesignUtil.colorDarkMode(
-                DesignUtil.checkDarkModeActive(actualContext)
+                DesignUtil.checkDarkModeActive(
+                    actualContext,
+                    viewModel.appSettingsDarkMode,
+                    viewModel.appAutoDarkMode
+                )
             )
         )
 
@@ -71,7 +75,11 @@ class HistoryMonthFragment : Fragment() {
             barChartDates.first,
             barChartDates.second,
             DesignUtil.colorDarkMode(
-                DesignUtil.checkDarkModeActive(actualContext)
+                DesignUtil.checkDarkModeActive(
+                    actualContext,
+                    viewModel.appSettingsDarkMode,
+                    viewModel.appAutoDarkMode
+                )
             )
         )
 
@@ -112,7 +120,12 @@ class HistoryMonthFragment : Fragment() {
             barChart,
             barChartDates.first,
             barChartDates.second,
-            DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext)
+            DesignUtil.colorDarkMode(
+                DesignUtil.checkDarkModeActive(
+                    actualContext,
+                    viewModel.appSettingsDarkMode,
+                    viewModel.appAutoDarkMode
+                )
             )
         )
 
@@ -122,7 +135,12 @@ class HistoryMonthFragment : Fragment() {
             activityChart,
             barChartDates.first,
             barChartDates.second,
-            DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext)
+            DesignUtil.colorDarkMode(
+                DesignUtil.checkDarkModeActive(
+                    actualContext,
+                    viewModel.appSettingsDarkMode,
+                    viewModel.appAutoDarkMode
+                )
             )
         )
 

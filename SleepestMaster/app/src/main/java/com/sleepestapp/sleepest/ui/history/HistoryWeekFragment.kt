@@ -51,7 +51,11 @@ class HistoryWeekFragment : Fragment() {
             7,
             getSundayOfWeek(),
             DesignUtil.colorDarkMode(
-                DesignUtil.checkDarkModeActive(actualContext)
+                DesignUtil.checkDarkModeActive(
+                    actualContext,
+                    viewModel.appSettingsDarkMode,
+                    viewModel.appAutoDarkMode
+                )
             )
         )
 
@@ -65,7 +69,11 @@ class HistoryWeekFragment : Fragment() {
             7,
             getSundayOfWeek(),
             DesignUtil.colorDarkMode(
-                DesignUtil.checkDarkModeActive(actualContext)
+                DesignUtil.checkDarkModeActive(
+                    actualContext,
+                    viewModel.appSettingsDarkMode,
+                    viewModel.appAutoDarkMode
+                )
             )
         )
 
@@ -104,7 +112,13 @@ class HistoryWeekFragment : Fragment() {
             barChart,
             7,
             getSundayOfWeek(),
-            DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext))
+            DesignUtil.colorDarkMode(
+                DesignUtil.checkDarkModeActive(
+                    actualContext,
+                    viewModel.appSettingsDarkMode,
+                    viewModel.appAutoDarkMode
+                )
+            )
         )
         barChart.invalidate()
 
@@ -112,7 +126,13 @@ class HistoryWeekFragment : Fragment() {
             activityChart,
             7,
             getSundayOfWeek(),
-            DesignUtil.colorDarkMode(DesignUtil.checkDarkModeActive(actualContext))
+            DesignUtil.colorDarkMode(
+                DesignUtil.checkDarkModeActive(
+                    actualContext,
+                    viewModel.appSettingsDarkMode,
+                    viewModel.appAutoDarkMode
+                )
+            )
         )
         activityChart.invalidate()
     }

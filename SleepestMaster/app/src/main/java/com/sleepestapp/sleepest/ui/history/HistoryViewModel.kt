@@ -104,6 +104,16 @@ class HistoryViewModel(
     val sleepAnalysisData = mutableListOf<SleepDataAnalysis>()
 
     /**
+     *
+     */
+    var appSettingsDarkMode = false
+
+    /**
+     *
+     */
+    var appAutoDarkMode = false
+
+    /**
      * Maintains the visibility of the information buttons and its text fields.
      */
     val actualExpand = MutableLiveData(-1)
@@ -257,6 +267,9 @@ class HistoryViewModel(
         }
 
         viewModelScope.launch {
+            appSettingsDarkMode = dataStoreRepository.settingsDataFlow.first().designDarkMode
+            appAutoDarkMode = dataStoreRepository.settingsDataFlow.first().designAutoDarkMode
+
             for (id in ids) {
                 val session = dataBaseRepository.getSleepSessionById(id).first().firstOrNull()
 
@@ -322,6 +335,11 @@ class HistoryViewModel(
                     false,
                     recalculateMobilePosition = true
                 )
+                data = true
+            }
+
+            if (it.userSleepSessionEntity.sleepTimes.sleepTimeStart == 0) {
+                dataBaseRepository.deleteUserSleepSession(it.userSleepSessionEntity)
                 data = true
             }
         }
