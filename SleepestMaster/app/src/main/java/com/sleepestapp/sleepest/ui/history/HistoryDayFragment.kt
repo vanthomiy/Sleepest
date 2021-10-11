@@ -1,6 +1,7 @@
 package com.sleepestapp.sleepest.ui.history
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.transition.TransitionManager
 import android.util.TypedValue
@@ -678,7 +679,7 @@ class HistoryDayFragment : Fragment() {
         //chart.legend.textColor = viewModel.checkDarkMode()
 
         chart.description.isEnabled = false
-        chart.setEntryLabelColor(colorDarkMode)
+        chart.setEntryLabelColor(Color.WHITE)
         chart.isDrawHoleEnabled = true
         chart.setHoleColor(holeColorPieChart)
         chart.setTouchEnabled(false)
