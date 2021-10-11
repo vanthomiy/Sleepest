@@ -3,7 +3,6 @@ package com.sleepestapp.sleepest
 import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 
 import android.os.Build
 
@@ -16,9 +15,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-
-import com.sleepestapp.sleepest.background.AlarmCycleState
-
 import com.sleepestapp.sleepest.background.AlarmReceiver
 import com.sleepestapp.sleepest.background.BackgroundAlarmTimeHandler
 import com.sleepestapp.sleepest.databinding.ActivityMainBinding
@@ -259,7 +255,6 @@ class MainActivity : AppCompatActivity() {
         val bundle :Bundle ?=intent.extras
 
         //Get default settings of tutorial and save it in datastore
-        //TODO("Shared prefs!")
         if (bundle != null && bundle.getBoolean(getString(R.string.onboarding_intent_data_available))) {
             lifecycleScope.launch {
                 if (viewModel.dataStoreRepository.tutorialStatusFlow.first().tutorialCompleted && !viewModel.dataStoreRepository.tutorialStatusFlow.first().energyOptionsShown) {
@@ -308,34 +303,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val alarmCycleState = AlarmCycleState(applicationContext)
-        var pref: SharedPreferences = getSharedPreferences("State", 0)
-        var ed = pref.edit()
-        ed.putString("state", alarmCycleState.getState().toString())
-        ed.apply()
-
-        val mNotificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        val notifications = mNotificationManager.activeNotifications
-        if (notifications.isEmpty()) {
-            pref = getSharedPreferences("ActiveNotification", 0)
-            ed = pref.edit()
-            ed.putBoolean("foregroundService", false)
-            ed.apply()
-        }
-        for (notification in notifications) {
-            if (notification.id == Constants.FOREGROUND_SERVICE_ID) {
-                pref = getSharedPreferences("ActiveNotification", 0)
-                ed = pref.edit()
-                ed.putBoolean("foregroundService", true)
-                ed.apply()
-                break
-            } else {
-                pref = getSharedPreferences("ActiveNotification", 0)
-                ed = pref.edit()
-                ed.putBoolean("foregroundService", false)
-                ed.apply()
-            }
-        }
     }
 
     private fun startTutorial() {
