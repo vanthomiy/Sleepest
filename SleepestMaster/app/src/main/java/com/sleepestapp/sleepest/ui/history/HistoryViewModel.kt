@@ -337,6 +337,11 @@ class HistoryViewModel(
                 )
                 data = true
             }
+
+            if (it.userSleepSessionEntity.sleepTimes.sleepTimeStart == 0) {
+                dataBaseRepository.deleteUserSleepSession(it.userSleepSessionEntity)
+                data = true
+            }
         }
 
         if (data) {
