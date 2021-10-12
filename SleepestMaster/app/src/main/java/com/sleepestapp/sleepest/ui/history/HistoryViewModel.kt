@@ -51,7 +51,7 @@ class HistoryViewModel(
     /**
      * The first date for which sleep data is available.
      */
-    var firstDayWithData = 0L
+    var firstDayWithData = 0
 
     /**
      * Indicates that [checkSessionIntegrity] is currently working.
@@ -139,7 +139,7 @@ class HistoryViewModel(
             when (range) {
                 0 -> {
                     val fistDayWithData = LocalDateTime.ofEpochSecond(
-                        firstDayWithData,
+                        firstDayWithData.toLong(),
                         0,
                         ZoneOffset.UTC
                     ).toLocalDate().toEpochDay()
@@ -150,7 +150,7 @@ class HistoryViewModel(
                 }
                 1 -> {
                     val fistDayWithData = LocalDateTime.ofEpochSecond(
-                        firstDayWithData,
+                        firstDayWithData.toLong(),
                         0,
                         ZoneOffset.UTC
                     ).toLocalDate()
@@ -285,7 +285,7 @@ class HistoryViewModel(
                     )
                 }
             }
-            firstDayWithData = (dataBaseRepository.getOldestId().first()?: getIdByDateTimeWithTimeZone(LocalDate.now())).toLong()
+            firstDayWithData = dataBaseRepository.getOldestId().first()
             checkSessionIntegrity()
         }
     }

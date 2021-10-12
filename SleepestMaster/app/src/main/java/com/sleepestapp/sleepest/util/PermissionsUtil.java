@@ -113,4 +113,5 @@ public class PermissionsUtil {
         Intent intent = new Intent(context, PermissionActivity.class);
         context.startActivity(intent);
     }
+
 }

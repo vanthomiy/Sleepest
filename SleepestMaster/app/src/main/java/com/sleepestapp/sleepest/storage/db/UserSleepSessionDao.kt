@@ -23,7 +23,7 @@ interface UserSleepSessionDao {
     fun getSince(time:Int): Flow<List<UserSleepSessionEntity>>
 
     @Query("SELECT min(id) FROM user_sleep_session_entity")
-    fun getOldestEntry(): Flow<Int?>
+    fun getOldestEntry(): Flow<Int>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(sleepSegmentEventEntityRaw: UserSleepSessionEntity)
