@@ -8,7 +8,6 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.widget.Toast;
 
 import com.sleepestapp.sleepest.MainApplication;
@@ -37,14 +36,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         DatabaseRepository databaseRepository = ((MainApplication)context.getApplicationContext()).getDataBaseRepository();
         DataStoreRepository dataStoreRepository = ((MainApplication)context.getApplicationContext()).getDataStoreRepository();
         SleepCalculationHandler sleepCalculationHandler = new SleepCalculationHandler(MainApplication.Companion.applicationContext());
-
-        Calendar calendar = Calendar.getInstance();
-        SharedPreferences pref = context.getSharedPreferences("AlarmReceiver", 0);
-        SharedPreferences.Editor ed = pref.edit();
-        ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
-        ed.putInt("minute", calendar.get(Calendar.MINUTE));
-        ed.putString("intent", intent.getStringExtra(context.getString(R.string.alarmmanager_key)));
-        ed.apply();
 
         switch (AlarmReceiverUsage.valueOf(intent.getStringExtra((context.getString(R.string.alarmmanager_key))))) {
             case START_FOREGROUND:
@@ -122,10 +113,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         AlarmManager alarmManager = (AlarmManager) alarmContext.getSystemService(ALARM_SERVICE);
 
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calenderAlarm.getTimeInMillis(), pendingIntent);
-
-        Toast.makeText(alarmContext, "AlarmManager set to " + calenderAlarm.get(Calendar.DAY_OF_WEEK) + ": "
-                + calenderAlarm.get(Calendar.HOUR_OF_DAY) + ":" + calenderAlarm.get(Calendar.MINUTE) + ", usage: " + AlarmReceiverUsage.Companion.getCount(alarmReceiverUsage), Toast.LENGTH_LONG).show();
-    }
+   }
 
     /**
      * Cancel a specific alarm by pending intent
@@ -138,9 +126,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         AlarmManager alarmManager = (AlarmManager) cancelAlarmContext.getSystemService(ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
         pendingIntent.cancel();
-
-        Toast.makeText(cancelAlarmContext, "AlarmManager canceled: " + AlarmReceiverUsage.Companion.getCount(alarmReceiverUsage), Toast.LENGTH_LONG).show();
-    }
+   }
 
 
 }
