@@ -32,10 +32,7 @@ import com.sleepestapp.sleepest.util.TimeConverterUtil
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.*
-
-import android.app.NotificationManager
 import com.sleepestapp.sleepest.googleapi.ActivityTransitionHandler
-import com.sleepestapp.sleepest.model.data.Constants
 
 
 class MainActivity : AppCompatActivity() {
