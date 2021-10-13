@@ -74,8 +74,9 @@ public class PermissionsUtil {
         } catch (ActivityNotFoundException e) {
             Intent intent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
             context.startActivity(intent);
-            Toast.makeText(context, context.getString(R.string.onboarding_toast_find_permission_in_list), Toast.LENGTH_LONG).show();
         }
+
+        Toast.makeText(context, context.getString(R.string.onboarding_toast_find_permission_in_list), Toast.LENGTH_LONG).show();
 
     }
 
@@ -100,8 +101,9 @@ public class PermissionsUtil {
             Intent intent = new Intent();
             intent.setAction(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
             context.startActivity(intent);
-            Toast.makeText(context, context.getString(R.string.onboarding_toast_find_permission_in_list), Toast.LENGTH_LONG).show();
         }
+
+        Toast.makeText(context, context.getString(R.string.onboarding_toast_find_permission_in_list), Toast.LENGTH_LONG).show();
 
     }
 
