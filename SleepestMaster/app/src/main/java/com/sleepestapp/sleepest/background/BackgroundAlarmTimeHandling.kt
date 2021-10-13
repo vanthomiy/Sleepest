@@ -32,6 +32,7 @@ import android.content.Context.ACTIVITY_SERVICE
 import com.sleepestapp.sleepest.model.data.Constants
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil
 import kotlinx.coroutines.flow.first
+import java.time.LocalDate
 
 
 /**
@@ -382,7 +383,10 @@ class BackgroundAlarmTimeHandler(val context: Context) {
 
             //Unsubscribe to SleepApi
             sleepHandler.stopSleepHandler()
-            defineNewUserWakeup(null, false)
+            val date = LocalDate.now()
+            val time = LocalTime.ofSecondOfDay(getSleepTimeEndValue().toLong()).minusMinutes(5)
+
+            defineNewUserWakeup(date.atTime(time), false)
 
             //Set AlarmManager to start Workmanager at begin of sleeptime
             val calendar = TimeConverterUtil.getAlarmDate(getSleepTimeBeginValue())
