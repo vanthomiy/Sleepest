@@ -34,18 +34,30 @@ import com.sleepestapp.sleepest.storage.db.AlarmEntity;
 
 import java.util.ArrayList;
 
+/**
+ * Util for handle all notifications of the app
+ */
 public class NotificationUtil {
 
     private final Context context;
     private NotificationUsage notificationUsage;
     private final ArrayList<Object> arrayList;
 
+    /**
+     * Constructor
+     * @param context Application context
+     * @param notificationUsage Enum value for usage
+     * @param arrayList Config for foreground service notification
+     */
     public NotificationUtil(Context context, NotificationUsage notificationUsage, ArrayList<Object> arrayList) {
         this.context = context;
         this.notificationUsage = notificationUsage;
         this.arrayList = arrayList;
     }
 
+    /**
+     * Different cases for the different usages
+     */
     @RequiresApi(api = Build.VERSION_CODES.P)
     public void chooseNotification() {
 
@@ -69,6 +81,7 @@ public class NotificationUtil {
 
         }
 
+        //Set foreground service notification id explicit
         if (notification != null && notificationUsage == NotificationUsage.NOTIFICATION_FOREGROUND_SERVICE) {
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
             notificationManager.notify(1, notification);
@@ -79,7 +92,12 @@ public class NotificationUtil {
 
     }
 
-
+    /**
+     * Create a new channel for the notification
+     * @param channelId ID, depending on usage
+     * @param channelName Name of channel which the user can see in app info
+     * @param channelDescription Description of channel which the user can see in app info
+     */
     private void createNotificationChannel(String channelId, String channelName, String channelDescription) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
         NotificationChannel channel = new NotificationChannel(
@@ -94,6 +112,11 @@ public class NotificationUtil {
         }
     }
 
+    /**
+     * Create notification for quick information to the user
+     * @param usage Usage NoApiData or GoToSleep information
+     * @return new notification
+     */
     private Notification createInformationNotification(int usage) {
         //Get Channel id
         String notificationChannelId = context.getApplicationContext().getString(R.string.information_notification_channel);
@@ -170,6 +193,10 @@ public class NotificationUtil {
                 .build();
     }
 
+    /**
+     * Permanent notification of foreground service
+     * @return notification
+     */
     @SuppressLint("IconColors")
     public Notification createForegroundNotification() {
 
@@ -312,6 +339,10 @@ public class NotificationUtil {
                 .build();
     }
 
+    /**
+     * Heads up notification of alarm clock if user is interactive
+     * @return notification
+     */
     @RequiresApi(api = Build.VERSION_CODES.P)
     private Notification createAlarmClockNotification() {
 
@@ -358,6 +389,10 @@ public class NotificationUtil {
                 .build();
     }
 
+    /**
+     * Notification of alarm clock on lock screen if user is not interactive
+     * @return notification
+     */
     private Notification createAlarmClockLockScreen() {
         createNotificationChannel(context.getString(R.string.alarm_clock_channel), context.getString(R.string.alarm_clock_channel_name), context.getString(R.string.alarm_clock_channel_description));
 
@@ -392,7 +427,12 @@ public class NotificationUtil {
         NotificationManagerCompat.from(context).cancel(NotificationUsage.Companion.getCount(notificationUsage));
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    /**
+     * Check if notification is still shown to the user
+     * @param notificationUsage usage by enum
+     * @param context Application context
+     * @return is still shown
+     */
     public static boolean isNotificationActive(NotificationUsage notificationUsage, Context context) {
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);

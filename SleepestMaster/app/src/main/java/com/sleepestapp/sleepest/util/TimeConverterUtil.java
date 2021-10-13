@@ -3,8 +3,16 @@ package com.sleepestapp.sleepest.util;
 import java.time.LocalTime;
 import java.util.Calendar;
 
+/**
+ * Util to convert times to other formats
+ */
 public class TimeConverterUtil {
 
+    /**
+     * Minute to hour and minute format
+     * @param minute minutes
+     * @return formatted time in array
+     */
     public static int[] minuteToTimeFormat(int minute) {
         int[] time = new int[2];
         int rest = minute % 60;
@@ -14,15 +22,26 @@ public class TimeConverterUtil {
         return time;
     }
 
-    public static int[] millisToTimeFormat(int milliseconds) {
+    /**
+     * Seconds to hour and minute format
+     * @param seconds seconds
+     * @return formatted time in array
+     */
+    public static int[] millisToTimeFormat(int seconds) {
         int[] time = new int[2];
-        int rest = milliseconds % 3600;
-        time[0] = milliseconds / 3600;
+        int rest = seconds % 3600;
+        time[0] = seconds / 3600;
         time[1] = rest / 60;
 
         return time;
     }
 
+    /**
+     * Time to formatted time string for number picker dialog
+     * @param hour hour
+     * @param minute minute
+     * @return formatted String
+     */
     public static String toTimeFormat(int hour, int minute) {
 
         String hourText, minuteText;

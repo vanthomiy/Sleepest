@@ -18,8 +18,16 @@ import androidx.core.content.ContextCompat;
 import com.sleepestapp.sleepest.R;
 import com.sleepestapp.sleepest.onboarding.PermissionActivity;
 
+/**
+ * Util to check and set all permissions which are necessary
+ */
 public class PermissionsUtil {
 
+    /**
+     * Check permission for do not disturb
+     * @param context Activity Context
+     * @return is granted
+     */
     public static boolean isNotificationPolicyAccessGranted(Context context) {
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(AppCompatActivity.NOTIFICATION_SERVICE);
@@ -27,11 +35,21 @@ public class PermissionsUtil {
         return notificationManager.isNotificationPolicyAccessGranted();
     }
 
+    /**
+     * Check permission to overlay app
+     * @param context Activity Context
+     * @return is granted
+     */
     public static boolean isOverlayPermissionGranted(Context context) {
 
         return Settings.canDrawOverlays(context);
     }
 
+    /**
+     * Check Activity Recognition permission
+     * @param context Activity Context
+     * @return is granted
+     */
     public static boolean isActivityRecognitionPermissionGranted(Context context) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -47,6 +65,11 @@ public class PermissionsUtil {
         return false;
     }
 
+    /**
+     * Check all necessary permissions for the app
+     * @param context ActivityContext
+     * @return all permissions granted
+     */
     public static boolean checkAllNecessaryPermissions(Context context) {
         return PermissionsUtil.isNotificationPolicyAccessGranted(context) && PermissionsUtil.isOverlayPermissionGranted(context) &&
                 PermissionsUtil.isActivityRecognitionPermissionGranted(context);
