@@ -89,7 +89,7 @@
     <string name="alarm_instance_wake_up_range">Wake-Up window:</string>
     <string name="alarm_instance_sleep_duration">Sleep duration:</string>
     <string name="alarms_alarme">&#9200; Alarms</string>
-    <string name="alarms_no_alarms_header">No active alarms. </string>
+    <string name="alarms_no_alarms_header">No active alarms</string>
     <string name="alarms_no_alarms">Add a new alarm with the + button!</string>
     <string name="alarms_type_selection_only_alarm">Only sound</string>
     <string name="alarms_type_selection_alarm_vibration">Sound and vibration</string>
@@ -101,17 +101,17 @@
     <!--region Sleep Fragment texts -->
     <string name="sleep_show_tips">Show tips</string>
     <string name="sleep_general_info_1">
-        You can set general parameter of your sleep
+        You can set general parameter of your sleep.
     </string>
     <string name="sleep_general_info_2">
-        The score between 50 and 100 indicates how well we can monitor your sleep.
+        The score between 50 and 100 indicates how well the app can monitor your sleep.
     </string>
     <string name="sleep_general_info_3">
-        The higher the value, the better we can determine your sleep only with your mobile phone.
+        The higher the value, the better the app can determine your sleep only with your mobile phone.
     </string>
     <string name="sleep_sleeptimes_header">Sleep times</string>
     <string name="sleep_sleeptimes_info_1">
-        Sleep time should always capture the entire time you sleep
+        The Sleep time should always capture the entire time you sleep.
     </string>
     <string name="sleep_sleeptimes_info_2">
         The app only track sleep data during this time and can thus recognize your sleep.
@@ -123,7 +123,7 @@
     <string name="sleep_sleeptime_end">End:</string>
     <string name="sleep_sleepduration_header">Sleep duration</string>
     <string name="sleep_sleepduration_info_1">
-        You can use the sleep duration to set how long you want to sleep by default
+        You can use the sleep duration to set how long you want to sleep by default.
     </string>
     <string name="sleep_sleepduration_info_2">
         You can also adjust the sleep duration for each alarm.
@@ -140,23 +140,23 @@
         For a good sleep determination, the mobile phone should be in bed while sleeping.
     </string>
     <string name="sleep_phoneposition_info_2">
-        You can also have the cell phone next to the bed or in the room, so we only try to determine your sleep times.
+        You can also have the mobile phone next to the bed or in the room, then the app only determines your sleep times.
     </string>
     <string name="sleep_phoneusage_header">Phone usage</string>
     <string name="sleep_phoneusage_info_1">
-        The more you regularly use your mobile phone, the more precisely we can determine when you fall asleep.
+        The more you regularly use your mobile phone, the more precisely the app can determine when you fall asleep.
     </string>
     <string name="sleep_phoneusage_info_2">
-        If you use your mobile phone very rarely, the app cannot reliably determine when to fall asleep.
+        If you use your mobile phone very rarely, the app cannot reliably determine when you fall asleep.
     </string>
     <string name="sleep_phoneusage_less">Little</string>
     <string name="sleep_phoneusage_often">Often</string>
     <string name="sleep_activitytracking_header">Activity tracking</string>
     <string name="sleep_activitytracking_info_1">
-        If you activate the activity tracking, we determine your activity over the day and show the progress for the individual days.
+        If you activate the activity tracking, the app determine your activity throughout the day and show the progress for the individual days.
     </string>
     <string name="sleep_activitytracking_info_2">
-        With "Include in bedtime" the app gives you more or less sleep, depending on how much exercise you had during the day.
+        With \"Include in bedtime\" the app gives you more or less sleep, depending on how much exercise you had during the day.
     </string>
     <string name="sleep_trackactivity_header">Track daily activity tracking</string>
     <string name="sleep_trackactivity_include_in_wakeup">Include in bedtime</string>
@@ -206,15 +206,15 @@
     </string>
     <string name="settings_daily_activity">Daily activities</string>
     <string name="settings_permission_daily_activity">
-                The app needs this permission to record your activity during the day
+                The app needs this permission to record your activity during the day.
     </string>
     <string name="settings_notification_privacy">Notification Privacy</string>
     <string name="settings_permission_notification_privacy">
-                This authorization is required that the alarm is going to ring also in silent mode
+                This authorization is required that the alarm is going to ring also in silent mode.
     </string>
     <string name="settings_overlapp_app">App overlay</string>
     <string name="settings_permission_overlapp_app">
-                The app needs this authorization so that it can wake you up even if your mobile phone is locked
+                The app needs this authorization so that it can wake you up even if your mobile phone is locked.
     </string>
 
 
@@ -247,7 +247,7 @@
     <!--endregion-->
 
     <!--region History Fragment texts -->
-    <string name="history_information_noDataAvailable">No data found to show here.</string>
+    <string name="history_information_noDataAvailable">No data found to show here</string>
     <string name="history_sleepPhases_title">Sleep phases:</string>
     <string name="history_day_sleepPhases_time_in_phase_title">Time in phase:</string>
     <string name="history_fragment_title">&#128197; History</string>
@@ -256,11 +256,11 @@
     <string name="history_sleep_phases_information_light">"The light sleep phase, which is expressed by unconscious sleep with relaxed muscles and almost no eye movements, accounts for about half of the total sleep volume. "</string>
     <string name="history_sleep_phases_information_deep">The deep sleep phase is of particular importance for the recovery of the body and mind. This is achieved by a very high level of physical and mental relaxation. The body reacts to this phase with a further reduction in breathing and heart rate, the body temperature decreases and the blood pressure falls. No eye movements can be detected during this phase.  In the deep sleep phase, the regeneration and repair of cells takes place and the immune system is extremely active.</string>
     <string name="history_sleep_phases_information_rem">The dream phase is expressed by rapid eye movements under closed eyelids. In addition, both the breathing frequency and the depth of breathing increase. In addition to processing information and emotional sensory impressions, daily events are linked to the long-term memory. To allow this process to run as undisturbed as possible, all external sensory impressions are largely blocked out. As a result, waking up in this phase is extremely difficult. The dreams experienced in this phase are most often remembered after waking up.</string>
-    <string name="history_day_information_sleepPhases_lineChart">This diagram shows your sleep phases of the last night. On the left and right above the diagram you can see the times when you fell asleep and woke up, as detected by the app. The night is divided into two or three sleep stages, depending on where your phone was that night. If the device was next to the bed, you can see the phases \"awake\" and \"sleep\". If it was in bed, the night is divided into the phases \"deep sleep\", \"light sleep\" and \"awake\". The diagram is divided linearly over the night.\n The sleep phases shown in this diagram may differ from the actual sleep phases.</string>
+    <string name="history_day_information_sleepPhases_lineChart">This diagram shows your sleep phases of the last night. On the left and right above the diagram you can see the times when you fell asleep and woke up, as detected by the app. The night is divided into two or three sleep stages, depending on where your phone was that night. If the device was next to the bed, you can see the phases \"awake\" and \"sleep\". If it was in bed, the night is divided into the phases \"deep sleep\", \"light sleep\", \"rem sleep\" and \"awake\". The diagram is divided linearly over the night.\n The sleep phases shown in this diagram may differ from the actual sleep phases.</string>
     <string name="history_day_sleep_quality_rating_title">Sleep quality rating:</string>
     <string name="history_activity_title">Activity:</string>
     <string name="history_day_information_timeInPhase">This diagram shows you the percentage distribution of sleep phases over the night.</string>
-    <string name="history_day_information_sleepQualityRating">" Here you can ener your state of mind after waking up. You can distinguish between the values \"bad\", \"good\", \"excellent\", \"full of energy\" and \"tired\". "</string>
+    <string name="history_day_information_sleepQualityRating">" Here you can enter your state of mind after waking up. You can distinguish between the values \"bad\", \"good\", \"excellent\", \"full of energy\" and \"tired\". "</string>
     <string name="history_day_information_activity">This chart shows your activity level for the day. You can get three different medals.</string>
     <string name="history_week_information_sleepPhases_barChart">This diagram shows you the distribution of the different sleep phases for the respective week. Depending on where your phone was during the night, the diagram varies between two different display options. The values of the y-axis correspond to hours.</string>
     <string name="history_week_information_activity_lineChart">Here you can view your activity levels for the week.</string>
@@ -310,7 +310,7 @@
     <string name="onboarding_title_page_8">Settings</string>
     <string name="onboarding_title_page_9">Permissions</string>
     <string name="onboarding_title_page_10">Battery optimization</string>
-    <string name="onboarding_content_page_1">We want to give you the best possible sleep</string>
+    <string name="onboarding_content_page_1">The app wants to give you the best possible sleep</string>
     <string name="onboarding_content_page_2">The app detects when you fall asleep</string>
     <string name="onboarding_content_page_3">The app tracks your sleep and differs awake and light or deep sleep</string>
     <string name="onboarding_content_page_4">The wake-up time is calculated based on the quality of sleep in order to achieve the set sleep duration</string>
@@ -344,7 +344,7 @@
     <string name="info_no_info_found">No Information found</string>
     <string name="settings_export_failed">Export failed</string>
     <string name="settings_unable_to_find_market">\" unable to find market app\"</string>
-    <string name="alarm_type">Alarm type</string>
+    <string name="alarm_type">Sound type</string>
     <string name="header">Alarm</string>
     <string name="history">History</string>
     <string name="sleep">Sleep settings</string>
