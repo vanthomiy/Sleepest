@@ -6,7 +6,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 
 private const val ARG_OBJECT = "object"
 
-
 class HistoryTabViewAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
     private var count = 1
 
