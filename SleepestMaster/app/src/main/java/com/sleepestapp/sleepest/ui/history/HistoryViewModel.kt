@@ -104,12 +104,12 @@ class HistoryViewModel(
     val sleepAnalysisData = mutableListOf<SleepDataAnalysis>()
 
     /**
-     *
+     * Contains the dark mode settings of the app.
      */
     var appSettingsDarkMode = false
 
     /**
-     *
+     * Contains the auto dark mode settings of the app.
      */
     var appAutoDarkMode = false
 
