@@ -55,17 +55,17 @@ data class UserSleepSessionEntity(
 
                         val time = LocalTime.of(15,0)
                         val datetime = LocalDateTime.of(date.minusDays(0), time)
-                        return@runBlocking datetime.atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+                        return@runBlocking datetime.atZone(ZoneOffset.UTC).toEpochSecond().toInt()
                 }
 
                 /**
-                 * Returns the id for the assigned stored data of a sleep from a local date
+                 * Returns the id for the day of a sleep from a local date
                  */
                 fun getIdByDateTimeWithTimeZone(date : LocalDate) : Int {
 
                         val time = LocalTime.of(15,0)
                         val datetime = LocalDateTime.of(date.minusDays(0), time)
-                        return datetime.atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+                        return datetime.atZone(ZoneOffset.UTC).toEpochSecond().toInt()
                 }
 
                 /**
@@ -80,7 +80,7 @@ data class UserSleepSessionEntity(
 
                         val dateTime = LocalDateTime.of(date, newTime)
 
-                        return dateTime.atZone(ZoneOffset.systemDefault()).toEpochSecond().toInt()
+                        return dateTime.atZone(ZoneOffset.UTC).toEpochSecond().toInt()
                 }
 
                 /**
