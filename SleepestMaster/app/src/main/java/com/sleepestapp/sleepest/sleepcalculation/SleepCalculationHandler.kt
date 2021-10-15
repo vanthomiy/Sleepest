@@ -414,9 +414,10 @@ class SleepCalculationHandler(val context: Context) {
         // we define the user sleep with the define user wake up. That will make it more accurate in the morning
         checkIsUserSleeping(time, setAlarm, true)
 
-        val sleepApiRawDataEntity = if (!setAlarm)
+        val sleepApiRawDataEntity = if (!setAlarm && sleepSessionEntity.sleepTimes.sleepTimeStart != 0){
             dataBaseRepository.getSleepApiRawDataBetweenTimestamps(sleepSessionEntity.sleepTimes.sleepTimeStart, sleepSessionEntity.sleepTimes.sleepTimeEnd).first()
                 ?.sortedBy { x -> x.timestampSeconds }
+        }
         else
             dataBaseRepository.getSleepApiRawDataFromDate(date, endTime, startTime).first()
                 ?.sortedBy { x -> x.timestampSeconds }
