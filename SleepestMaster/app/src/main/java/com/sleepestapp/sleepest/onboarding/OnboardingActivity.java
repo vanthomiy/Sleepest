@@ -45,5 +45,23 @@ public class OnboardingActivity extends AppCompatActivity {
         //Set the adapter
         onboardingViewPagerAdapter = new OnboardingViewPagerAdapter(OnboardingActivity.this, OnboardingActivity.this, arrayList);
         viewPager.setAdapter(onboardingViewPagerAdapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position >= (onboardingViewPagerAdapter.getCount() - 1)) {
+                    onboardingViewPagerAdapter.enableStartApp = true;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 }

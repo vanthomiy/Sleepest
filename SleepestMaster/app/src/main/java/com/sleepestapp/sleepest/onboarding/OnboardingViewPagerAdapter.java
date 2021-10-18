@@ -19,6 +19,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import com.airbnb.lottie.LottieAnimationView;
 import com.sleepestapp.sleepest.MainActivity;
 import com.sleepestapp.sleepest.R;
+import com.sleepestapp.sleepest.alarmclock.LockScreenAlarmActivity;
 import com.sleepestapp.sleepest.storage.DataStoreRepository;
 import com.sleepestapp.sleepest.util.PermissionsUtil;
 import com.sleepestapp.sleepest.util.TimeConverterUtil;
@@ -37,7 +38,7 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
     private final Context context;
     private final Activity activityContext;
 
-    private boolean enableStartApp = false;
+    public boolean enableStartApp = false;
 
     private int starttime = 72000;
     private int endtime = 32400;
@@ -52,7 +53,7 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
 
     private final List<ImageView> dots = new ArrayList<>();
 
-    final Timer timer;
+    private final Timer timer;
 
     public OnboardingViewPagerAdapter(Context context, Activity activityContext, ArrayList<Object> arrayList) {
 
@@ -90,6 +91,13 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
     public boolean isViewFromObject(@NonNull @NotNull View view, @NonNull @NotNull Object object) {
         return view == object;
     }
+
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        return super.getItemPosition(object);
+    }
+
+
 
     @NonNull
     @NotNull
@@ -315,8 +323,6 @@ public class OnboardingViewPagerAdapter extends PagerAdapter implements View.OnC
                 lottieAnimationViewSearch.setVisibility(View.VISIBLE);
                 lottieAnimationViewSearch.setAnimation(R.raw.animation_battery_optimization);
                 dots.get(position).setImageResource(R.drawable.onboarding_indicator_selected);
-
-                enableStartApp = true;
                 break;
         }
 
