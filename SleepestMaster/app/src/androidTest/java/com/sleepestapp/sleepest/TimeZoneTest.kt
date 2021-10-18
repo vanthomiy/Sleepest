@@ -30,6 +30,4 @@ class TimeZoneTest {
         Log.v(tag, "Seconds:" + secondsUTC)
 
     }
-
-
 }

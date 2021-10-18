@@ -2,6 +2,8 @@ package com.sleepestapp.sleepest.storage.db
 
 import android.content.Context
 import androidx.room.*
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 private const val DATABASE_NAME = "sleepest_database"
 
@@ -10,9 +12,9 @@ private const val DATABASE_NAME = "sleepest_database"
  */
 
 @Database(
-        entities = [SleepApiRawDataEntity::class, UserSleepSessionEntity::class, AlarmEntity::class, ActivityApiRawDataEntity::class],
-        version = 8,
-        exportSchema = false
+    entities = [SleepApiRawDataEntity::class, UserSleepSessionEntity::class, AlarmEntity::class, ActivityApiRawDataEntity::class],
+    version = 8,
+    exportSchema = true
 )
 
 @TypeConverters(Converters::class)
@@ -23,11 +25,21 @@ abstract class SleepDatabase : RoomDatabase() {
     abstract fun alarmDao(): AlarmDao
     abstract fun activityApiRawDataDao(): ActivityApiRawDataDao
 
+
     companion object {
         // For Singleton instantiation
         @Volatile
         private var INSTANCE: SleepDatabase? = null
         lateinit var instance:SleepDatabase
+
+        /**
+         * Manual migration for the database when changes are being made
+         */
+        val MIGRATION_7_8 = object : Migration(7, 8) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                // Add the neccessary tables
+            }
+        }
 
         /**
          * This should only once be called by the MainApplication to provide a singleton database
@@ -41,9 +53,9 @@ abstract class SleepDatabase : RoomDatabase() {
                 )
                         .addCallback(object:RoomDatabase.Callback(){
                         })
-                        // Wipes and rebuilds instead of migrating if no Migration object.
-                        // Migration is not part of this sample.
-                        .fallbackToDestructiveMigration()
+                        // .fallbackToDestructiveMigration()
+                        // Migrate to new version
+                        .addMigrations(MIGRATION_7_8)
                         .build()
                 INSTANCE = instance
                 // return instance
