@@ -35,9 +35,10 @@ abstract class SleepDatabase : RoomDatabase() {
         /**
          * Manual migration for the database when changes are being made
          */
-        val MIGRATION_7_8 = object : Migration(7, 8) {
+        private val MIGRATION_7_8 = object : Migration(7, 8) {
             override fun migrate(database: SupportSQLiteDatabase) {
-                // Add the neccessary tables
+                // Add the neccessary columns / tables
+                // database.execSQL("ALTER TABLE Book ADD COLUMN pub_year INTEGER")
             }
         }
 
