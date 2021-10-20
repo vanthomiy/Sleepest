@@ -659,7 +659,7 @@ class SleepCalculationHandlerTest
             SleepState.DEEP to 0,
             SleepState.REM to 0)
 
-        for (i in 1 until 3)
+        for (i in 1 until 49)
         {
             val data = dataUnPred[i]
 
@@ -876,7 +876,7 @@ class SleepCalculationHandlerTest
 
         val session = sessions.maxByOrNull { x -> x.id }!!
 
-        val sleepApiRawDataEntityList = sleepDbRepository.getSleepApiRawDataBetweenTimestamps(session.id, session.sleepTimes.sleepTimeEnd).first()
+        val sleepApiRawDataEntityList = sleepDbRepository.getSleepApiRawDataBetweenTimestamps(session.sleepTimes.sleepTimeStart, session.sleepTimes.sleepTimeEnd).first()
 
         sleepApiRawDataEntityList?.forEach { data ->
             data.oldSleepState = SleepState.NONE
@@ -895,7 +895,7 @@ class SleepCalculationHandlerTest
         sleepCalculationHandler.checkIsUserSleeping(newNow)
         sleepCalculationHandler.checkIsUserSleeping(newNow)
 
-        sleepCalculationHandler.defineUserWakeup(newNow)
+        sleepCalculationHandler.defineUserWakeup(newNow, false)
 
     }
 
@@ -930,7 +930,7 @@ class SleepCalculationHandlerTest
                     .toLocalDateTime()
 
                 if(dt.toLocalTime().hour > 6 && dt.dayOfYear >= day.dayOfYear) {
-                    sleepCalculationHandler.defineUserWakeup(day)
+                    sleepCalculationHandler.defineUserWakeup(day, false)
                 }
             } catch (e:Exception){
                 val a = 2
@@ -950,7 +950,7 @@ class SleepCalculationHandlerTest
         val now = LocalDateTime.now(UTC)
 
         // LocalDateTime to epoch seconds
-        val actualTimeSeconds = now.minusDays(2).atZone(UTC).toEpochSecond().toInt()
+        val actualTimeSeconds = now.minusDays(0).atZone(UTC).toEpochSecond().toInt()
         val sleepCalculationHandler = SleepCalculationHandler(context)
         val sleepList5 = mutableListOf<SleepApiRawDataEntity>()
 

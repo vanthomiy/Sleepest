@@ -12,6 +12,7 @@ import com.sleepestapp.sleepest.storage.DatabaseRepository
 import com.sleepestapp.sleepest.storage.db.AlarmEntity
 import kotlinx.coroutines.flow.first
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 
 object SleepTimeValidationUtil {
@@ -284,6 +285,10 @@ object SleepTimeValidationUtil {
 
     }
 
+    /**
+     * Returns all active alarms for the actual time
+     * It takes in account the actual sleep time and alarm time
+     */
     suspend fun getActiveAlarms(allAlarms : List<AlarmEntity>, dataStoreRepository: DataStoreRepository) : List<AlarmEntity>
     {
         val activeAlarms = mutableListOf<AlarmEntity>()
@@ -293,14 +298,21 @@ object SleepTimeValidationUtil {
 
             val alarmTimeData = getActualAlarmTimeData(dataStoreRepository)
 
-            val dateTime = LocalDate.now()
+            val dateTime = LocalDateTime.now()
 
             val date = if(alarmTimeData.alarmIsOnSameDay)
                 dateTime
             else
                 dateTime.plusDays(1)
 
-            if(alarm.activeDayOfWeek.contains(date.dayOfWeek) && alarm.isActive)
+            // check if the late wakeup is after the actual time.
+            // then its not an active alarm at all
+            val sleepEndTime = dataStoreRepository.getSleepTimeEnd()
+            val isAllowedToday = (!alarmTimeData.alarmIsOnSameDay ||
+                getTimeBetweenSecondsOfDay(sleepEndTime, alarm.wakeupLate) >
+                getTimeBetweenSecondsOfDay(sleepEndTime, dateTime.toLocalTime().toSecondOfDay()))
+
+            if(alarm.activeDayOfWeek.contains(date.dayOfWeek) && alarm.isActive && isAllowedToday)
                 activeAlarms.add(alarm)
         }
 
