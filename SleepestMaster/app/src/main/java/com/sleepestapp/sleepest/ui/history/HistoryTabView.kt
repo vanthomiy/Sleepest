@@ -152,6 +152,7 @@ class HistoryTabView : Fragment() {
 
         viewModel.dataBaseRepository.allUserSleepSessions.asLiveData().observe(viewLifecycleOwner) {
             if (!viewModel.onWork) {
+                viewModel.sleepAnalysisData.clear()
                 viewModel.getSleepData()
             }
         }
