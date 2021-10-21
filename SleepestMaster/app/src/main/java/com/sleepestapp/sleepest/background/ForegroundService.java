@@ -4,10 +4,8 @@ package com.sleepestapp.sleepest.background;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.PowerManager;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LifecycleService;
@@ -135,23 +133,14 @@ public class ForegroundService extends LifecycleService {
             wakeLock.acquire(Constants.WAKE_LOCK_TIMEOUT);
         }
 
-        Toast.makeText(getApplicationContext(), "Foregroundservice started", Toast.LENGTH_LONG).show();
-
         //Call function with null to transfer actual(local) time for correct calculation
         sleepCalculationHandler.checkIsUserSleepingJob(null);
         userSleepTime = 0;
-
-        Calendar calendar = Calendar.getInstance();
-        SharedPreferences pref = getSharedPreferences("StartService", 0);
-        SharedPreferences.Editor ed = pref.edit();
-        ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
-        ed.putInt("minute", calendar.get(Calendar.MINUTE));
-        ed.apply();
     }
 
     // Stop the foreground service
     private void stopService() {
-        Toast.makeText(this, "Service stopping", Toast.LENGTH_SHORT).show();
+
         try {
             //Release wakelock in order to lock foregroundservice against automatic restart
             if (wakeLock != null && wakeLock.isHeld()) {
@@ -160,35 +149,9 @@ public class ForegroundService extends LifecycleService {
             stopForeground(true);
             stopSelf();
 
-            SharedPreferences pref = getSharedPreferences("StopException", 0);
-            SharedPreferences.Editor ed = pref.edit();
-            ed.putString("exception", "No Exception");
-            ed.apply();
-
             isServiceStarted = false;
             foregroundObserver.setForegroundStatus(false);
-
-            Toast.makeText(getApplicationContext(), "Foregroundservice stopped", Toast.LENGTH_LONG).show();
-
-            Calendar calendar = Calendar.getInstance();
-            pref = getSharedPreferences("StopService", 0);
-            ed = pref.edit();
-            ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
-            ed.putInt("minute", calendar.get(Calendar.MINUTE));
-            ed.apply();
-
-            pref = getSharedPreferences("SleepTime", 0);
-            ed = pref.edit();
-            ed.putInt("sleeptime", userSleepTime);
-            ed.apply();
-
-
         } catch (Exception e) {
-            SharedPreferences pref = getSharedPreferences("StopException", 0);
-            SharedPreferences.Editor ed = pref.edit();
-            ed.putString("exception", e.toString());
-            ed.apply();
-
             //Try stopping foregroundservice after 1 minute again if an error occurs
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.SECOND, 60);
@@ -214,20 +177,8 @@ public class ForegroundService extends LifecycleService {
         int time;
         if (foregroundServiceStartTime <= LocalTime.now().toSecondOfDay()) {
             time = LocalTime.now().toSecondOfDay() - foregroundServiceStartTime;
-            SharedPreferences pref = context.getSharedPreferences("ForegroundServiceTime", 0);
-            SharedPreferences.Editor ed = pref.edit();
-            ed.putInt("time", time);
-            ed.putInt("usage", 1);
-            ed.putInt("sod", LocalTime.now().toSecondOfDay());
-            ed.apply();
         } else {
             time = Constants.DAY_IN_SECONDS - foregroundServiceStartTime + LocalTime.now().toSecondOfDay();
-            SharedPreferences pref = context.getSharedPreferences("ForegroundServiceTime", 0);
-            SharedPreferences.Editor ed = pref.edit();
-            ed.putInt("time", time);
-            ed.putInt("usage", 2);
-            ed.putInt("sod", LocalTime.now().toSecondOfDay());
-            ed.apply();
         }
 
         return time;
@@ -266,13 +217,6 @@ public class ForegroundService extends LifecycleService {
         showForegroundNotification();
         sendUserInformation();
 
-        SharedPreferences pref = getSharedPreferences("AlarmChanged", 0);
-        SharedPreferences.Editor ed = pref.edit();
-        ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
-        ed.putInt("minute", calendar.get(Calendar.MINUTE));
-        ed.putInt("actualWakeup", time.getActualWakeup());
-        ed.apply();
-
         //Calculate the difference between now and the actual wakeup
         int secondsOfDay = LocalTime.now().toSecondOfDay();
         int timeDifference = time.getActualWakeup() - secondsOfDay;
@@ -290,16 +234,12 @@ public class ForegroundService extends LifecycleService {
 
             AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
 
-            setPreferences(calendar, alarmTimeInSeconds, 4);
-
             return;
             
         } else if((secondsOfDay > time.getActualWakeup()) && checkPossibleAlarm() && (secondsOfDay < time.getWakeupEarly())) {
             Calendar earliestWakeup = TimeConverterUtil.getAlarmDate(time.getWakeupEarly());
 
             AlarmClockReceiver.startAlarmManager(earliestWakeup.get(Calendar.DAY_OF_WEEK), earliestWakeup.get(Calendar.HOUR_OF_DAY), earliestWakeup.get(Calendar.MINUTE), getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
-
-            setPreferences(earliestWakeup, time.getWakeupEarly(), 8);
 
             return;
         }
@@ -314,8 +254,6 @@ public class ForegroundService extends LifecycleService {
 
             AlarmClockReceiver.startAlarmManager(latestWakeup.get(Calendar.DAY_OF_WEEK), latestWakeup.get(Calendar.HOUR_OF_DAY), latestWakeup.get(Calendar.MINUTE), getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
 
-            setPreferences(latestWakeup, time.getWakeupLate(), 1);
-
             return;
         }
 
@@ -328,8 +266,6 @@ public class ForegroundService extends LifecycleService {
 
                 AlarmClockReceiver.startAlarmManager(earliestWakeup.get(Calendar.DAY_OF_WEEK), earliestWakeup.get(Calendar.HOUR_OF_DAY), earliestWakeup.get(Calendar.MINUTE), getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
 
-                setPreferences(earliestWakeup, time.getWakeupEarly(), 2);
-
                 return;
             }
 
@@ -339,8 +275,6 @@ public class ForegroundService extends LifecycleService {
 
                 AlarmClockReceiver.startAlarmManager(latestWakeup.get(Calendar.DAY_OF_WEEK), latestWakeup.get(Calendar.HOUR_OF_DAY), latestWakeup.get(Calendar.MINUTE), getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
 
-                setPreferences(latestWakeup, time.getWakeupLate(), 3);
-
                 return;
             }
 
@@ -349,26 +283,8 @@ public class ForegroundService extends LifecycleService {
                 calendar.add(Calendar.SECOND, timeDifference);
 
                 AlarmClockReceiver.startAlarmManager(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 1, getApplicationContext(), AlarmClockReceiverUsage.START_ALARMCLOCK);
-
-                setPreferences(calendar, time.getActualWakeup(), 5);
             }
         }
-    }
-
-    private void setPreferences(Calendar calendar, int time, int use) {
-        SharedPreferences pref = getSharedPreferences("AlarmChanged", 0);
-        SharedPreferences.Editor ed = pref.edit();
-        ed.putInt("alarmUse", use);
-        ed.apply();
-
-        pref = getSharedPreferences("AlarmSet", 0);
-        ed = pref.edit();
-        ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY));
-        ed.putInt("minute", calendar.get(Calendar.MINUTE));
-        ed.putInt("hour1", Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
-        ed.putInt("minute1", Calendar.getInstance().get(Calendar.MINUTE));
-        ed.putInt("actualWakeup", time);
-        ed.apply();
     }
 
     /**
@@ -390,13 +306,6 @@ public class ForegroundService extends LifecycleService {
 
         showForegroundNotification();
         sendUserInformation();
-
-        SharedPreferences pref = getSharedPreferences("SleepValue", 0);
-        SharedPreferences.Editor ed = pref.edit();
-        ed.putInt("value", sleepValueAmount);
-        ed.putBoolean("status", isSubscribed);
-        ed.apply();
-
     }
 
     /**
@@ -409,14 +318,8 @@ public class ForegroundService extends LifecycleService {
         userSleepTime = liveUserSleepActivity.getUserSleepTime();
         isSleeping = liveUserSleepActivity.getIsUserSleeping();
 
-        SharedPreferences pref = getSharedPreferences("SleepTime", 0);
-        SharedPreferences.Editor ed = pref.edit();
-        ed.putInt("sleeptime", userSleepTime);
-        ed.apply();
-
         showForegroundNotification();
         sendUserInformation();
-
     }
 
     /**

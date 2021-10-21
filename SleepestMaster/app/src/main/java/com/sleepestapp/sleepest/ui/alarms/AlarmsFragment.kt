@@ -269,7 +269,7 @@ class AlarmsFragment : Fragment() {
 
                 (activity as MainActivity).switchToMenu(R.id.profile, changeType = 3)
 
-                Toast.makeText(actualContext, "Please grant all permissions", Toast.LENGTH_LONG)
+                Toast.makeText(actualContext, actualContext.getString(R.string.onboarding_grant_all_permissions), Toast.LENGTH_LONG)
                     .show()
             }
         }

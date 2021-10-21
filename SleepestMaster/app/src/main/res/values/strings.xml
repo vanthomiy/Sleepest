@@ -55,7 +55,7 @@
                 With the buttons you can choose, whether you want to be woken up at the latest wakeup time or change sleep time settings.</string>
     <string name="notification_information_api_problem_content_expanded">There is a problem receiving sleep data.
                 Click the button to try to solve the problem. You will get further information if the problem isn\'t solved.</string>
-
+    <string name="toast_restarted_sleep_data">Restarted sleepdata tracking</string>
     <!--endregion-->
 
     <!--region SleepSettings-->
@@ -334,6 +334,8 @@
     <string name="onboarding_start_time_text_not_first_start">Start</string>
     <string name="onboarding_end_time_text_not_first_start">End</string>
     <string name="onboarding_btn_text_start">Get started</string>
+    <string name="onboarding_grant_all_permissions">Please grant all permissions</string>
+
 
     <string name="privacy_police">Privacy Police</string>
     <string name="alarms_ringtone_set">Set</string>

@@ -36,7 +36,6 @@ class CreateShowcaseData {
     fun init() {
         context = InstrumentationRegistry.getInstrumentation().targetContext
 
-
         sleepDatabaseRepository = DatabaseRepository.getRepo(
             dbDatabase.sleepApiRawDataDao(),
             dbDatabase.userSleepSessionDao(),
