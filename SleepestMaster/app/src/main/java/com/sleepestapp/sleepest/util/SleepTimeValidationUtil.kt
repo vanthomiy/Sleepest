@@ -309,7 +309,7 @@ object SleepTimeValidationUtil {
             // then its not an active alarm at all
             val sleepEndTime = dataStoreRepository.getSleepTimeEnd()
             val isAllowedToday = (!alarmTimeData.alarmIsOnSameDay ||
-                getTimeBetweenSecondsOfDay(sleepEndTime, alarm.wakeupLate) >
+                getTimeBetweenSecondsOfDay(sleepEndTime, alarm.wakeupLate) <
                 getTimeBetweenSecondsOfDay(sleepEndTime, dateTime.toLocalTime().toSecondOfDay()))
 
             if(alarm.activeDayOfWeek.contains(date.dayOfWeek) && alarm.isActive && isAllowedToday)
