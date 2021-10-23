@@ -58,14 +58,14 @@ class CreateShowcaseData {
         val sessionsToFill = 24 * 30 // 3 months
         val sleepFailsPercentage = 3 // 10 out of 100
 
-        val sleepSessionMinAmount = 20
-        val sleepSessionMaxAmount = 40
+        val sleepSessionMinAmount = 15
+        val sleepSessionMaxAmount = 30
 
-        val sleepStartTimeEarly = LocalTime.of(20,0)
-        val sleepStartTimeLate = LocalTime.of(23,30)
+        val sleepStartTimeEarly = LocalTime.of(21,0)
+        val sleepStartTimeLate = LocalTime.of(23,55)
 
-        val sleepDurationMax = 9 * 60 // min
-        val sleepDurationMin = 6 * 60 // min
+        val sleepDurationMax = 10 * 60 // min
+        val sleepDurationMin = 7 * 60 // min
 
         val positionInBedPercentage = 75 // 80 out of 100 in bed
         val awakeInSleepTime = 10 // 10 out of 100 is awake

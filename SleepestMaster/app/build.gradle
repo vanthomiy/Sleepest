@@ -20,7 +20,7 @@ android {
         applicationId "com.sleepestapp.sleepest"
         minSdkVersion 28
         targetSdkVersion 31
-        versionCode 10
+        versionCode 11
         versionName "1.0.4.0"
 
 
