@@ -1,557 +1,478 @@
-<!DOCTYPE html>
+<!doctype html>
 <html class="no-js" lang="en">
+
 <head>
-
-    <!--- basic page needs
-    ================================================== -->
     <meta charset="utf-8">
-    <title>Sleepest</title>
+    
+    <!--====== Title ======-->
+    <title>AppLand - App Landing Page Template</title>
+    
     <meta name="description" content="">
-    <meta name="author" content="">
-
-    <!-- mobile specific metas
-    ================================================== -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- CSS
-    ================================================== -->
-    <link rel="stylesheet" href="css/base.css">
-    <link rel="stylesheet" href="css/vendor.css">
-    <link rel="stylesheet" href="css/main.css">
-
-    <!-- script
-    ================================================== -->
-    <script src="js/modernizr.js"></script>
-    <script src="js/pace.min.js"></script>
-
-    <!-- favicons
-    ================================================== -->
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-
+    <!--====== Favicon Icon ======-->
+    <link rel="shortcut icon" href="assets/images/favicon.png" type="image/png">
+        
+    <!--====== Animate CSS ======-->
+    <link rel="stylesheet" href="assets/css/animate.css">
+        
+    <!--====== lineicons CSS ======-->
+    <link rel="stylesheet" href="assets/css/lineicons.css">
+        
+    <!--====== Bootstrap CSS ======-->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    
+    <!--====== Default CSS ======-->
+    <link rel="stylesheet" href="assets/css/default.css">
+    
+    <!--====== Style CSS ======-->
+    <link rel="stylesheet" href="assets/css/style.css">
+    
 </head>
 
-<body id="top">
-
-    <!-- preloader
-    ================================================== -->
-    <div id="preloader">
-        <div id="loader" class="dots-jump">
-            <div></div>
-            <div></div>
-            <div></div>
+<body>
+    <!--[if IE]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+    
+    <!--====== PRELOADER PART START ======-->
+    <div class="preloader">
+        <div class="loader">
+            <div class="ytp-spinner">
+                <div class="ytp-spinner-container">
+                    <div class="ytp-spinner-rotator">
+                        <div class="ytp-spinner-left">
+                            <div class="ytp-spinner-circle"></div>
+                        </div>
+                        <div class="ytp-spinner-right">
+                            <div class="ytp-spinner-circle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-
-    <!-- header 
-    ================================================== -->
-    <header class="s-header">
-
-        <div class="row">
-            <div class="header-logo">
-                <a class="site-logo" href="index.html">
-                    <img src="images/logo.svg" alt="Homepage">
-                </a>
-            </div>
+    <!--====== PRELOADER PART ENDS ======-->
     
-            <nav class="header-nav-wrap">
-                <ul class="header-main-nav">
-                    <li class="current"><a class="smoothscroll" href="#home" title="intro">Intro</a></li>
-                    <li><a class="smoothscroll" href="#about" title="about">About</a></li>
-                    <li><a class="smoothscroll" href="#features" title="features">Features</a></li>
-                    <li><a class="smoothscroll" href="#download" title="download">Download</a></li>	
-                </ul>
-    
-                <div class="header-cta">
-                    <a href="#download" class="btn btn--primary header-cta__btn smoothscroll">Get The App</a>
-                </div>
-            </nav> <!-- end header-nav-wrap -->
-    
-            <a class="header-menu-toggle" href="#"><span>Menu</span></a>
-        </div>
-
-    </header> <!-- end header -->
-
-
-    <!-- home
-    ================================================== -->
-    <section id="home" class="s-home target-section" data-parallax="scroll" data-image-src="images/hero-bg.jpg" data-natural-width=3000 data-natural-height=2000 data-position-y=center>
-
-        <div class="shadow-overlay"></div>
-
-        <div class="home-content">
-
-            <div class="row home-content__main">
-
-                <div class="home-content__left">
-                    <h1>
-                    Be free and rested. <br>
-                    Be Sleepest.
-                    </h1>
-    
-                    <h3>
-                        Sleepest redefines the alarm clock. Adapted to mobile working hours and new ways of life, the alarm clock can wake you up within a period of time and not at a specific time.
-                    </h3>
-    
-                    <div class="home-content__btn-wrap">
-                        <a href="#download" class="btn btn--primary home-content__btn smoothscroll">
-                            Get The App
-                        </a>
-                    </div>
-                </div> <!-- end home-content__left-->
-
-                <div class="home-content__right">
-                    <img src="images/hero-app-screens-800.png" srcset="images/hero-app-screens-800.png 1x, images/hero-app-screens-1600.png 2x">
-                </div> <!-- end home-content__right -->
-
-            </div> <!-- end home-content__main -->
-
-            <ul class="home-content__social">
-                <li><a href="#0">Instagram</a></li>
-            </ul>
-
-        </div> <!-- end home-content -->
-
-        <a href="#about" class="home-scroll smoothscroll">
-            <span class="home-scroll__text">Scroll</span>
-            <span class="home-scroll__icon"></span>
-        </a> 
-
-    </section> <!-- end s-home -->
-
-
-    <!-- about
-    ================================================== -->
-    <section id="about" class="s-about target-section">
-
-        <div class="row section-header has-bottom-sep" data-aos="fade-up">
-            <div class="col-full">
-                <h1 class="display-1">
-                    Why this app ist simply the best out there?
-                </h1>
-                <p class="lead">
-                    - Hardly any battery consumption: In contrast to other sleep trackers, no charging necessary!
-                    - Automatic sleep detection: You don't have to tell that you are sleeping now!
-                    - The app works completely in the background: the app does not have to be in the task manager
-                    - The alarm clock can wake you up after your desired sleep duration
-                </p>
-            </div>
-        </div> <!-- end section-header -->
-
-        <div class="row wide about-desc" data-aos="fade-up">
-
-            <div class="col-full slick-slider about-desc__slider">
-
-                <div class="about-desc__slide">
-                    <h3 class="item-title">Smart.</h3>
-
-                    <p>
-                        Set your desired sleep duration and you will be woken up within your wake-up time window after your wanted sleep duration.
-                    </p>
-                </div>  <!-- end about-desc__slide -->
-
-                <div class="about-desc__slide">
-                    <h3 class="item-title">Automatic.</h3>
-
-                    <p>
-                        The app automatically detects your sleep. You don't have to open the app or tell the app that you are sleeping. All of this is automatically detected by algorithms.
-                    </p>
-                </div>  <!-- end about-desc__slide -->
-
-                <div class="about-desc__slide">
-                    <h3 class="item-title">Powerful.</h3>
-
-                    <p>
-                        You can look at your sleep cycles for each night. You can also compare the duration and sleep phase distribution during the week or month. The algorithm recognizes light, deep and rem sleep phases. Sleepest uses various sensors on your mobile phone to detect the individual sleep phases.
-
-                    </p>
-                </div>  <!-- end about-desc__slide -->
-
-                <div class="about-desc__slide">
-                    <h3 class="item-title">Secure.</h3>
-
-                    <p>
-                    Your data is always safe and in your own hands. The data is stored only on your local device and can always be deleted or exported by you.
-                    </p>
-                </div>  <!-- end about-desc__slide -->
-
-            </div> <!-- end about-desc__slider -->
-            
-        </div> <!-- end about-desc -->
-
-    </section> <!-- end s-about -->
-
-
-    <!-- about-how
-    ================================================== -->
-    <section id="about-how" class="s-about-how">
-
-        <div class="row">
-           <div class="col-full video-bg" data-aos="fade-up">
-
-                <div class="shadow-overlay"></div>
-
-                <a class="btn-video" href="https://player.vimeo.com/video/14592941?color=00a650&title=0&byline=0&portrait=0" data-lity>
-                    <span class="video-icon"></span>
-                </a>
-
-                <div class="stats">
-                    <div class="item-stats">
-                        <span class="item-stats__num">
-                            0
-                        </span>
-                        <span class="item-stats__title">
-                            Downloads
-                        </span>
-                    </div> <!-- end item-stats -->
-                    <div class="item-stats">
-                        <span class="item-stats__num">
-                            0
-                        </span>
-                        <span class="item-stats__title">
-                            Positive Reviews
-                        </span>
-                    </div> <!-- end item-stats -->
-                </div>
-           </div> <!-- end video-bg -->
-        </div>
-
-        <div class="row process-wrap">
-
-            <h2 class="display-2 text-center" data-aos="fade-up">How The App Works?</h2>
-
-            <div class="process" data-aos="fade-up">
-                <div class="process__steps block-1-2 block-tab-full group">
-
-                    <div class="col-block step">
-                        <h3 class="item-title">Download</h3>
-                        <p>Download the app in the playstore of any of your android devices.
-                        </p> 
-                    </div>
-
-                    <div class="col-block step">
-                        <h3 class="item-title">Setup</h3>
-                        <p>Make an inital setup in the app to provide necessary information for the app to detect your sleep correctly.
-                        </p> 
-                    </div>
-               
-                    <div class="col-block step">
-                        <h3 class="item-title">Use</h3>
-                        <p>Now you dont have to open the app again. Everything will work in the background and the app does not require to be opened.
-                        </p> 
-                    </div>
-
-                    <div class="col-block step">
-                        <h3 class="item-title">Sleep better</h3>
-                        <p>Use the app to reach your desired sleep duration. Also you can track your sleep behaviour and get information about your sleep phases.
-                        </p> 
-                    </div>  
-
-                </div> <!-- end process__steps -->
-           </div> <!-- end process -->
-        </div> <!-- end about-how -->
-
-    </section> <!-- end s-about-how -->
-
-
-    <!-- features
-    ================================================== -->
-    <section id="features" class="s-features target-section">
-
-        <div class="row section-header has-bottom-sep" data-aos="fade-up">
-            <div class="col-full">
-                <h1 class="display-1">
-                    The target group.
-                </h1>
-                <p class="lead">
-                    - You want to record and view your sleep behavior in an uncomplicated way and only with your mobile phone
-                    - Getting enough sleep is important to you, but you don't want to go without an alarm clock
-                    - You want an alarm clock that has adapted to the new work and living environment
-                    - You want to go to bed whenever you want and be woken up by an alarm clock the next morning when you are well rested.
-                </p>
-            </div>
-        </div> <!-- end section-header -->
-
-        <div class="row features block-1-3 block-m-1-2">
-
-            <div class="col-block item-feature" data-aos="fade-up">
-                <div class="item-feature__icon">
-                    <i class="icon-upload"></i>
-                </div>
-                <div class="item-feature__text">
-                    <h3 class="item-title">Cloud Based</h3>
-                    <p>Nemo cupiditate ab quibusdam quaerat impedit magni. Earum suscipit ipsum laudantium. 
-                    Quo delectus est. Maiores voluptas ab sit natus veritatis ut. Debitis nulla cumque veritatis.
-                    Sunt suscipit voluptas ipsa in tempora esse soluta sint.
-                    </p>
-                </div>
-            </div>
-
-            <div class="col-block item-feature" data-aos="fade-up">
-                <div class="item-feature__icon">
-                    <i class="icon-video-camera"></i>
-                </div>
-                <div class="item-feature__text">
-                    <h3 class="item-title">Voice & Video</h3>
-                    <p>Nemo cupiditate ab quibusdam quaerat impedit magni. Earum suscipit ipsum laudantium. 
-                    Quo delectus est. Maiores voluptas ab sit natus veritatis ut. Debitis nulla cumque veritatis.
-                    Sunt suscipit voluptas ipsa in tempora esse soluta sint.
-                    </p>
-                </div>
-            </div>
-
-            <div class="col-block item-feature" data-aos="fade-up">
-                <div class="item-feature__icon">
-                    <i class="icon-shield"></i>
-                </div>  
-                <div class="item-feature__text">
-                    <h3 class="item-title">Always Secure</h3>
-                    <p>Nemo cupiditate ab quibusdam quaerat impedit magni. Earum suscipit ipsum laudantium. 
-                    Quo delectus est. Maiores voluptas ab sit natus veritatis ut. Debitis nulla cumque veritatis.
-                    Sunt suscipit voluptas ipsa in tempora esse soluta sint.
-                    </p>
-                </div>
-            </div>
-
-            <div class="col-block item-feature" data-aos="fade-up">
-                <div class="item-feature__icon">
-                    <i class="icon-lego-block"></i>
-                </div>
-                <div class="item-feature__text">
-                    <h3 class="item-title">Play Games</h3>
-                    <p>Nemo cupiditate ab quibusdam quaerat impedit magni. Earum suscipit ipsum laudantium. 
-                    Quo delectus est. Maiores voluptas ab sit natus veritatis ut. Debitis nulla cumque veritatis.
-                    Sunt suscipit voluptas ipsa in tempora esse soluta sint.
-                    </p>
-                </div>
-            </div>
-
-            <div class="col-block item-feature" data-aos="fade-up">
-                <div class="item-feature__icon">
-                    <i class="icon-chat"></i>
-                </div>
-                <div class="item-feature__text">
-                    <h3 class="item-title">Group Chat</h3>
-                    <p>Nemo cupiditate ab quibusdam quaerat impedit magni. Earum suscipit ipsum laudantium. 
-                    Quo delectus est. Maiores voluptas ab sit natus veritatis ut. Debitis nulla cumque veritatis.
-                    Sunt suscipit voluptas ipsa in tempora esse soluta sint.
-                    </p>
-                </div>
-            </div>
-    
-            <div class="col-block item-feature" data-aos="fade-up">
-                <div class="item-feature__icon">
-                    <i class="icon-wallet"></i>
-                </div>
-                <div class="item-feature__text">
-                    <h3 class="item-title">Payments</h3>
-                    <p>Nemo cupiditate ab quibusdam quaerat impedit magni. Earum suscipit ipsum laudantium. 
-                    Quo delectus est. Maiores voluptas ab sit natus veritatis ut. Debitis nulla cumque veritatis.
-                    Sunt suscipit voluptas ipsa in tempora esse soluta sint.
-                    </p>
-                </div>
-            </div>
-
-        </div> <!-- end features -->
-
-        <div class="testimonials-wrap" data-aos="fade-up">
-
-            <div class="row">
-                <div class="col-full testimonials-header">
-                    <h2 class="display-2">Our Users Love Our App!</h2>
-                </div>
-            </div>
-
-            <div class="row testimonials">
-
-                <div class="col-full slick-slider testimonials__slider">
-
-                    <div class="testimonials__slide">
-                        <img src="images/avatars/user-03.jpg" alt="Author image" class="testimonials__avatar">
-                        
-                        <p>Qui ipsam temporibus quisquam velMaiores eos cumque distinctio nam accusantium ipsum. 
-                        Laudantium quia consequatur molestias delectus culpa facere hic dolores aperiam. Accusantium praesentium corpori.</p>
-
-                        <div class="testimonials__author">
-                            <span class="testimonials__name">Naruto Uzumaki</span>
-                            <a href="#0" class="testimonials__link">@narutouzumaki</a>
-                        </div>
-                    </div> <!-- end testimonials__slide -->
-
-                    <div class="testimonials__slide">
-                        <img src="images/avatars/user-05.jpg" alt="Author image" class="testimonials__avatar">
-                        
-                        <p>Excepturi nam cupiditate culpa doloremque deleniti repellat. Veniam quos repellat voluptas animi adipisci.
-                        Nisi eaque consequatur. Quasi voluptas eius distinctio. Atque eos maxime. Qui ipsam temporibus quisquam vel.</p>
-                        
-                        <div class="testimonials__author">
-                            <span class="testimonials__name">Sasuke Uchiha</span>
-                            <a href="#0" class="testimonials__link">@sasukeuchiha</a>
-                        </div>
-                    </div> <!-- end testimonials__slide -->
-
-                    <div class="testimonials__slide">
-                        <img src="images/avatars/user-01.jpg" alt="Author image" class="testimonials__avatar">
-                        
-                        <p>Repellat dignissimos libero. Qui sed at corrupti expedita voluptas odit. Nihil ea quia nesciunt. Ducimus aut sed ipsam.  
-                        Autem eaque officia cum exercitationem sunt voluptatum accusamus. Quasi voluptas eius distinctio.</p>
-
-                        <div class="testimonials__author">
-                            <span class="testimonials__name">Shikamaru Nara</span>
-                            <a href="#0" class="testimonials__link">@shikamarunara</a>
-                        </div>
-                    </div> <!-- end testimonials__slide -->
-                    
-                </div> <!-- end testimonials__slider -->
-
-            </div> <!-- end testimonials -->
-
-        </div> <!-- end testimonials-wrap -->
-
-    </section> <!-- end s-features -->
-
-    <!-- download
-    ================================================== -->
-    <section id="download" class="s-download target-section">
-
-        <div class="row section-header align-center" data-aos="fade-up">
-            <div class="col-full">
-                <h1 class="display-1">
-                    Join Our Community of 3,000,000+ Users.
-                </h1>
-                <p class="lead">
-                    Et nihil atque ex. Reiciendis et rerum ut voluptate. Omnis molestiae nemo est. 
-                    Ut quis enim rerum quia assumenda repudiandae non cumque qui. Amet repellat 
-                    omnis ea.
-                </p>
-            </div>
-        </div> <!-- end section-header -->
-
-        <div class="row">
-            <div class="col-full text-center">
-                <ul class="download-badges" data-aos="fade-up">
-                    <li><a href="#0" title="" class="badge-appstore">App Store</a></li>
-                    <li><a href="#0" title="" class="badge-googleplay">Play Store</a></li>
-                </ul>
-            </div> 
-        </div>
-
-        <div class="row download-bottom-image" data-aos="fade-up">
-            <img src="images/app-screen-1400.png" 
-                srcset="images/app-screen-600.png 600w, 
-                        images/app-screen-1400.png 1400w, 
-                        images/app-screen-2800.png 2800w" 
-                sizes="(max-width: 2800px) 100vw, 2800px" 
-                alt="App Screenshots"> 
-        </div>
-
-    </section> <!-- end s-download -->
-
-
-    <!-- footer
-    ================================================== -->
-    <footer class="s-footer footer">
-
-        <div class="row section-header align-center">
-            <div class="col-full">
-                <h1 class="display-1">
-                    Let's Stay In Touch.
-                </h1>
-                <p class="lead">
-                Subscribe for updates, special offers, and other amazing stuff.
-                </p>
-            </div>
-        </div> <!-- end section-header -->
-
-        <div class="row footer__top">
-
-            <div class="col-full footer__subscribe end">
-                <div class="subscribe-form">
-                    <form id="mc-form" class="group" novalidate="true">
-
-                        <input type="email" value="" name="EMAIL" class="email" id="mc-email" placeholder="Email Address" required="">
-            
-                        <input type="submit" name="subscribe" value="Sign Up">
-            
-                        <label for="mc-email" class="subscribe-message"></label>
-            
-                    </form>
-                </div>
-            </div>
-
-        </div> <!-- end footer__top -->
-
-        <div class="row footer__bottom">
-
-            <div class="footer__about col-five tab-full left">
-
-                <h4>About Kairos.</h4>
-
-                <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed 
-                do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco 
-                laboris nisi ut aliquip ex consectetur adipisicing elit do eiusmod tempor.
-                </p>
-
-                <ul class="footer__social">
-                    <li><a href="#0"><i class="fab fa-facebook-f" aria-hidden="true"></i></a></li>
-                    <li><a href="#0"><i class="fab fa-twitter" aria-hidden="true"></i></a></li>
-                    <li><a href="#0"><i class="fab fa-instagram" aria-hidden="true"></i></a></li>
-                </ul>
-            </div>
-
-            <div class="col-five md-seven tab-full right end">
+    <!--====== HEADER PART START ======-->
+    <header class="header-area">
+        <div class="navbar-area">
+            <div class="container">
                 <div class="row">
+                    <div class="col-lg-12">
+                        <nav class="navbar navbar-expand-lg">
+                            <a class="navbar-brand" href="index.html">
+                                <img src="assets/images/LogoFullTransparent.png" alt="Logo" height="42">
+                            </a>
+                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="toggler-icon"></span>
+                                <span class="toggler-icon"></span>
+                                <span class="toggler-icon"></span>
+                            </button>
 
-                    <div class="footer__site-links col-five mob-full">
-                        <h4>Site links.</h4>
-
-                        <ul class="footer__site-links">
-                            <li><a href="#home" class="smoothscroll">Intro</a></li>
-                            <li><a href="#about" class="smoothscroll">About</a></li>
-                            <li><a href="#features" class="smoothscroll">Features</a></li>
-                            <li><a href="#pricing" class="smoothscroll">Pricing</a></li>
-                            <li><a href="#download" class="smoothscroll">Download</a></li>
-                            <li><a href="#0">Privacy Policy</a></li>
-                        </ul>
+                            <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
+                                <ul id="nav" class="navbar-nav ml-auto">
+                                    <li class="nav-item active">
+                                        <a class="page-scroll" href="#home">Home</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="page-scroll" href="#why">Why</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="page-scroll" href="#features">Features</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="page-scroll" href="#team">Team</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="page-scroll" href="#download">Download</a>
+                                    </li>
+                                </ul>
+                            </div> <!-- navbar collapse -->
+                        </nav> <!-- navbar -->
                     </div>
+                </div> <!-- row -->
+            </div> <!-- container -->
+        </div> <!-- navbar area -->
 
-                    <div class="footer__contact col-seven mob-full">
-                        <h4>Contact Us.</h4>
-
-                        <p>
-                        Phone: (+63) 555 1212 <br>
-                        Fax: (+63) 555 0100
-                        </p>
-                        <p>
-                        Need help or have a question? Contact us at: <br>
-                        <a href="mailto:#0" class="footer__mail-link">support@kairos.com</a>
-                        </p>
+        <div id="home" class="header-hero bg_cover d-lg-flex align-items-center">
+            
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+            <div class="shape shape-5"></div>
+            <div class="shape shape-6"></div>
+            
+            <div class="container">
+                <div class="row align-items-center justify-content-center justify-content-lg-between">
+                    <div class="col-lg-6 col-md-10">
+                        <div class="header-hero-content">
+                            <h3 class="header-title wow fadeInLeftBig" data-wow-duration="1.3s" data-wow-delay="0.2s">Be free and rested. </br> Be <span> Sleepest</span> </h3>
+                            <p class="text wow fadeInLeftBig" data-wow-duration="1.3s" data-wow-delay="0.6s">
+                                Sleepest redefines the alarm clock. Adapted to mobile working hours and new ways of life, the alarm clock can wake you up within a period of time and not at a specific time.
+                            </p>
+                            <div class="download-content1 mt-45 wow fadeInLeftBig" data-wow-duration="1.3s" data-wow-delay="0.5s">
+                                <ul>
+                                    <li><a class="play-store" href="https://play.google.com/store/apps/details?id=com.sleepestapp.sleepest"><img src="assets/images/play-store.png" alt="store"></a></li>
+                                </ul>
+                            </div> <!-- download image -->
+                        </div> <!-- header hero content -->
                     </div>
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-10">
+                        <div class="header-image">
+                            <img src="assets/images/sleepdetection.png" alt="app" class="image wow fadeInRightBig" data-wow-duration="1.3s" data-wow-delay="0.5s">
+                            <div class="image-shape wow fadeInRightBig" data-wow-duration="1.3s" data-wow-delay="0.8s">
+                                <img src="assets/images/download-shape.svg" alt="shape">
+                            </div>
+                        </div> <!-- header image -->
+                    </div>
+                </div> <!-- row -->
+            </div> <!-- container -->
+            <div class="header-shape-1"></div> <!-- header shape -->
+            <div class="header-shape-2">
+                <img src="assets/images/header-shape-2.svg" alt="shape">
+            </div> <!-- header shape -->
+        </div> <!-- header hero -->
+    </header>
 
+    <!--====== HEADER PART ENDS ======-->
+    
+    <!--====== SERVICES PART START ======-->
+    <section id="why" class="services-area pt-110 pb-120">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-7">
+                    <div class="section-title text-center pb-25">
+                        <h3 class="title">Why you should choose Sleepest</h3>
+                        <p class="text">
+                            Sleepest redefines the alarm clock. Adapted to mobile working hours and new ways of life, the alarm clock can wake you up within a period of time and not at a specific time.
+                        </p>
+                    </div> <!-- section title -->
                 </div>
-            </div>
+            </div> <!-- row -->
+            <div class="row">
+                <div class="col-lg-3 col-sm-6">
+                    <div class="single-services services-color-1 text-center mt-30 wow fadeInUpBig" data-wow-duration="1.3s" data-wow-delay="0.2s">
+                        <div class="services-icon d-flex align-items-center justify-content-center">
+                            <i class="lni lni-layers"></i>
+                        </div>
+                        <div class="services-content">
+                            <h4 class="services-title"><a href="#">Background</a></h4>
+                            <p class="text">The app works completely in the background. It does not have to be opened at any time.</p>
+                        </div>
+                    </div> <!-- single services -->
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div class="single-services services-color-2 text-center mt-30 wow fadeInUpBig" data-wow-duration="1.3s" data-wow-delay="0.4s">
+                        <div class="services-icon d-flex align-items-center justify-content-center">
+                            <i class="lni lni-layout"></i>
+                        </div>
+                        <div class="services-content">
+                            <h4 class="services-title"><a href="#">Auto detection</a></h4>
+                            <p class="text">Automatic sleep detection. You don't have to tell the app that you are going to sleep.</p>
+                        </div>
+                    </div> <!-- single services -->
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div class="single-services services-color-3 text-center mt-30 wow fadeInUpBig" data-wow-duration="1.3s" data-wow-delay="0.6s">
+                        <div class="services-icon d-flex align-items-center justify-content-center">
+                            <i class="lni lni-bolt"></i>
+                        </div>
+                        <div class="services-content">
+                            <h4 class="services-title"><a href="#">Battery friendly</a></h4>
+                            <p class="text">Hardly any battery consumption. In contrast to other sleep trackers, no charging necessary!</p>
+                        </div>
+                    </div> <!-- single services -->
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div class="single-services services-color-4 text-center mt-30 wow fadeInUpBig" data-wow-duration="1.3s" data-wow-delay="0.8s">
+                        <div class="services-icon d-flex align-items-center justify-content-center">
+                            <i class="lni lni-protection"></i>
+                        </div>
+                        <div class="services-content">
+                            <h4 class="services-title"><a href="#">Secure</a></h4>
+                            <p class="text">The data is stored only on your local device and can always be deleted or exported by you.</p>
+                        </div>
+                    </div> <!-- single services -->
+                </div>
+            </div> <!-- row -->
+        </div> <!-- container -->
+    </section>
+    <!--====== SERVICES PART ENDS ======-->
+    
+    <!--====== ABOUT PART START ======--> 
+    <section id="features" class="about-area pt-70 pb-120">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="about-image mt-50 wow fadeInLeftBig" data-wow-duration="1.3s" data-wow-delay="0.5s">
+                        <div class="about-shape"></div>
+                        <img class="app" src="assets/images/Alarms.png" alt="app">
+                    </div> <!-- about image -->
+                </div>
+                <div class="col-lg-6">
+                    <div class="about-content mt-50 wow fadeInRightBig" data-wow-duration="1.3s" data-wow-delay="0.5s">
+                        <div class="section-title">
+                            <h3 class="title">The smartest alarm clock you've ever had</h3>
+                            <p class="text">
+                                Set your desired sleep duration and you will be woken up within your wake-up time window after your desired sleep duration.
+                            </p>
+                        <!--a href="https://play.google.com/store/apps/details?id=com.sleepestapp.sleepest" rel="noreferrer noopener" class="main-btn">Download Now</a!-->
+                    </div> <!-- about content -->
+                </div>
+            </div> <!-- row -->
+        </div> <!-- container -->
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="about-content mt-50 wow fadeInRightBig" data-wow-duration="1.3s" data-wow-delay="0.5s">
+                        <div class="section-title">
+                            <h3 class="title">Track your sleep behaviour</h3>
+                            <p class="text">
+                            You can compare the duration and sleep phase distribution for a week or a month. The algorithm recognizes light, deep and dream sleep phases.  
+                            </p>
+                        </div> <!-- section title -->
+                        <!--a href="https://play.google.com/store/apps/details?id=com.sleepestapp.sleepest" rel="noreferrer noopener" class="main-btn">Download Now</a!-->
+                    </div> <!-- about content -->
+                </div>
+                <div class="col-lg-6">
+                    <div class="about1-image mt-50 wow fadeInRightBig" data-wow-duration="1.3s" data-wow-delay="0.5s">
+                        <div class="about-shape"></div>
+                        <img class="app" src="assets/images/history_day.png" alt="app">
+                    </div> <!-- about image -->
+                </div>
+               
+            </div> <!-- row -->
+        </div> <!-- container -->
+    </section>
+    <!--====== ABOUT PART ENDS ======-->
 
-            <div class="col-full ss-copyright">
-                <span>&copy; Copyright Kairos 2018</span> 
-                <span>Design by <a href="https://www.styleshout.com/">styleshout</a></span>
-            </div>
+        <!--====== SERVICES PART START ======-->
+    <section id="team" class="services-area pt-110 pb-120">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-7">
+                    <div class="section-title text-center pb-25">
+                        <h3 class="title">Team</h3>
+                        <p class="text">
+                            We are 3 students who developed the Sleepest-App as part of a student project. Since Sleepest worked very well for us, we decided to make the app available to the public, i.e. you.                        </p>
+                    </div> <!-- section title -->
+                </div>
+            </div> <!-- row -->
+            <div class="row justify-content-center">
+                <div class="col-lg-3 col-sm-6">
+                    <div class="single-services services-color-1 text-center mt-30 wow fadeInUpBig" data-wow-duration="1.3s" data-wow-delay="0.2s">
+                        <div class="services-icon d-flex align-items-center justify-content-center">
+                            <i class="lni lni-layers"></i>
+                        </div>
+                        <div class="services-content">
+                            <h4 class="services-title"><a href="#">Fabian</a></h4>
+                            <p class="text">Developer</p>
+                        </div>
+                    </div> <!-- single services -->
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div class="single-services services-color-2 text-center mt-30 wow fadeInUpBig" data-wow-duration="1.3s" data-wow-delay="0.4s">
+                        <div class="services-icon d-flex align-items-center justify-content-center">
+                            <img src="assets/images/thomaspng.png" alt="shape">
+                        </div>
+                        <div class="services-content">
+                            <h4 class="services-title"><a href="#">Thomas</a></h4>
+                            <p class="text">Developer</p>
+                        </div>
+                    </div> <!-- single services -->
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div class="single-services services-color-3 text-center mt-30 wow fadeInUpBig" data-wow-duration="1.3s" data-wow-delay="0.6s">
+                        <div class="services-icon d-flex align-items-center justify-content-center">
+                            <img src="assets/images/timpng.png" alt="shape">
+                        </div>
+                        <div class="services-content">
+                            <h4 class="services-title"><a href="#">Tim</a></h4>
+                            <p class="text">Developer</p>
+                        </div>
+                    </div> <!-- single services -->
+                </div>
+            </div> <!-- row -->
+        </div> <!-- container -->
+    </section>
+    <!--====== SERVICES PART ENDS ======-->
 
-        </div> <!-- end footer__bottom -->
-
-        <div class="go-top">
-            <a class="smoothscroll" title="Back to Top" href="#top"></a>
+    
+    <!--====== DOWNLOAD PART START ======-->  
+    <section id="download" class="download-area pt-70 pb-40">
+        <div class="container">
+            <div class="row justify-content-center align-items-center">
+                <div class="col-lg-6 col-md-9">
+                    <div class="download-image mt-50 wow fadeInRightBig" data-wow-duration="1.3s" data-wow-delay="0.2s">
+                        <img class="image" src="assets/images/sleepdetection1.png" alt="download">
+                        
+                        <div class="download-shape-1"></div>
+                        <div class="download-shape-2">
+                            <img class="svg" src="assets/images/download-shape.svg" alt="shape">
+                        </div>
+                    </div> <!-- download image -->
+                </div>
+                <div class="col-lg-6">
+                    <div class="download-content mt-45 wow fadeInLeftBig" data-wow-duration="1.3s" data-wow-delay="0.5s">
+                        <h3 class="download-title">Download and start being Sleepest</h3>
+                        <p class="text">
+                            Sleepest is currently available for free. In future versions, Sleepest will switch to a subscription version. Users who have previously used the app can continue to use the app for free. </p>
+                        </p>
+                        <ul>
+                            <li><a class="play-store" href="https://play.google.com/store/apps/details?id=com.sleepestapp.sleepest"><img src="assets/images/play-store.png" alt="store"></a></li>
+                        </ul>
+                    </div> <!-- download image -->
+                </div>
+            </div> <!-- row -->
+        </div> <!-- container -->
+    </section>
+    
+    <!--====== DOWNLOAD PART ENDS ======-->
+    
+    <!--====== PART START ======-->
+    
+    <footer id="footer" class="footer-area">
+        
+        <div class="footer-shape shape-1"></div>
+        <div class="footer-shape shape-2"></div>
+        <div class="footer-shape shape-3"></div>
+        <div class="footer-shape shape-4"></div>
+        <div class="footer-shape shape-5"></div>
+        <div class="footer-shape shape-6"></div>
+        <div class="footer-shape shape-7"></div>
+        <div class="footer-shape shape-8">
+            <img class="svg" src="assets/images/footer-shape.svg" alt="Shape">
         </div>
+        
+        <div class="footer-widget pt-30 pb-80">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="footer-about mt-50 wow fadeIn" data-wow-duration="1.3s" data-wow-delay="0.2s">
+                            <div class="footer-title">
+                                <h4 class="title">Social</h4>
+                            </div>
+                            <ul class="social">
+                                <li><a href="https://www.instagram.com/sleepestapp/"><i class="lni lni-instagram"></i></a></li>
+                                <li><a href="https://www.linkedin.com/in/thomas-kreidl-0b287618b/"><i class="lni lni-linkedin"></i></a></li>
+                            </ul>
+                        </div> <!-- footer about -->
+                    </div> 
+                    <div class="col-lg-5 col-md-6">
+                        <div class="footer-link d-flex flex-wrap">                            
+                            <div class="footer-link-wrapper mt-45 wow fadeIn" data-wow-duration="1.3s" data-wow-delay="0.6s">
+                                <div class="footer-title">
+                                    <h4 class="title">Support</h4>
+                                </div>
+                                <ul class="link">
+                                    <li><a class="" href="#">FAQ</a></li>
+                                    <li><a class="" href="https://pages.flycricket.io/sleepest/privacy.html">Privacy Policy</a></li>
+                                </ul>
+                            </div> <!-- footer link wrapper -->
+                        </div> <!-- footer link -->
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="footer-contact mt-45 wow fadeIn" data-wow-duration="1.3s" data-wow-delay="0.8s">
+                            <div class="footer-title">
+                                <h4 class="title">Quick Link</h4>
+                            </div>
+                            <ul class="contact-list">
+                                <li>
+                                    <div class="contact-info d-flex">
+                                        <div class="info-content media-body">
+                                            <p class="text"><a href="#"><i class="lni lni-envelope"></i> sleepest@gmail.com</a></p>
+                                        </div>
+                                    </div> <!-- contact info -->
+                                </li>
+                                <!--li>
+                                    <div class="contact-info d-flex">
+                                        <div class="info-content media-body">
+                                            <p class="text"><a href="#"><i class="lni lni-world"></i> www.sleepest.com</a></p>
+                                        </div>
+                                    </div>
+                                </li-->
+                                <li>
+                                    <div class="contact-info d-flex">
+                                        <div class="info-content media-body">
+                                            <p class="text"><i class="lni lni-map"></i> 90461, Germany</p>
+                                        </div>
+                                    </div> <!-- contact info -->
+                                </li>
+                            </ul> <!-- contact list -->
+                        </div> <!-- footer contact -->
+                    </div>
+                </div> <!-- row -->
+            </div> <!-- container -->
+        </div> <!-- footer widget -->
+        
+        <div class="footer-copyright">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="copyright d-sm-flex justify-content-between">
+                            <div class="copyright-text text-center">
+                                <p class="text">Made with 💚 in Bavaria</p>
+                            </div> <!-- copyright text -->
+                            
+                            <div class="copyright-privacy text-center">
+                                <a href="#">Go to start</a>
+                            </div> <!-- copyright privacy -->
+                        </div> <!-- copyright -->
+                    </div>
+                </div> <!-- row -->
+            </div> <!-- container -->
+        </div> <!-- footer copyright -->
+    </footer>
+    
+    <!--====== PART ENDS ======-->
+    
+    <!--====== BACK TOP TOP PART START ======-->
 
-    </footer> <!-- end s-footer -->
+    <a href="#" class="back-to-top"><i class="lni lni-chevron-up"></i></a>
+
+    <!--====== BACK TOP TOP PART ENDS ======-->
+    
+    <!--====== PART START ======-->
+    
+<!--
+    <section class="">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-"></div> 
+            </div>
+        </div>
+    </section>
+-->
+    
+    <!--====== PART ENDS ======-->
+    
 
 
-    <!-- Java Script
-    ================================================== -->
-    <script src="js/jquery-3.2.1.min.js"></script>
-    <script src="js/plugins.js"></script>
-    <script src="js/main.js"></script>
 
+
+    <!--====== Jquery js ======-->
+    <script src="assets/js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="assets/js/vendor/modernizr-3.7.1.min.js"></script>
+    
+    <!--====== Bootstrap js ======-->
+    <script src="assets/js/popper.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    
+    
+    <!--====== WOW js ======-->
+    <script src="assets/js/wow.min.js"></script>
+    
+    
+    <!--====== Scrolling Nav js ======-->
+    <script src="assets/js/jquery.easing.min.js"></script>
+    <script src="assets/js/scrolling-nav.js"></script>
+    
+    <!--====== Main js ======-->
+    <script src="assets/js/main.js"></script>
+    
 </body>
+
+</html>
