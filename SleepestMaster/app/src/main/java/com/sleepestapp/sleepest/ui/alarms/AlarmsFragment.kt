@@ -330,10 +330,10 @@ class AlarmsFragment : Fragment() {
         viewModel.expandToggled.observe(viewLifecycleOwner){
             TransitionManager.beginDelayedTransition(binding.cLParent)
 
-            if(viewModel.actualExpand.value == View.GONE)
+            /*if(viewModel.actualExpand.value == View.GONE)
                 binding.lottieSettings.playAnimation()
             else
-                binding.lottieSettings.pauseAnimation()
+                binding.lottieSettings.pauseAnimation()*/
         }
     }
 

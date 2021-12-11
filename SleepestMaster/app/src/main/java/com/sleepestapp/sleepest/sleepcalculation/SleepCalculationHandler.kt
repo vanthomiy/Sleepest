@@ -366,6 +366,27 @@ class SleepCalculationHandler(val context: Context) {
             }
         }
 
+        // check if user actually is detected as awake and slept in the past
+        if(sleepApiRawDataEntity.last().sleepState == SleepState.AWAKE && sleepApiRawDataEntity.any { x -> (x.sleepState != SleepState.AWAKE && x.sleepState != SleepState.NONE)}){
+            // get the complete sleep time before and the time awake since then
+            var lastSlept = sleepApiRawDataEntity.findLast { x -> x.sleepState != SleepState.AWAKE }
+
+            lastSlept?.let{
+                var timeAwake = (sleepApiRawDataEntity.last().timestampSeconds - it.timestampSeconds) / 60
+                var sleptOverall = SleepApiRawDataEntity.getSleepTime(sleepApiRawDataEntity)
+
+                if (timeAwake > sleptOverall)
+                {
+                    sleepApiRawDataEntity.forEach { data ->
+                        dataBaseRepository.updateSleepApiRawDataSleepState(
+                            data.timestampSeconds,
+                            SleepState.AWAKE
+                        )
+                    }
+                }
+            }
+        }
+
         // update live user sleep activity
         dataStoreRepository.updateIsUserSleeping(sleepApiRawDataEntity.last().sleepState == SleepState.SLEEPING)
         dataStoreRepository.updateUserSleepTime(

@@ -125,8 +125,8 @@ data class ThresholdParams(
                                         else -> 45f
                                 },
                                 motion = when(mobilePosition){
-                                        MobilePosition.INBED -> 2f
-                                        else -> 2f
+                                        MobilePosition.INBED -> 1.2f
+                                        else -> 1f
                                 },
                                 light = when(mobilePosition){
                                         MobilePosition.INBED -> 6f
@@ -141,8 +141,8 @@ data class ThresholdParams(
                 fun createCleanUp(mobilePosition: MobilePosition) : ThresholdParams{
                         return ThresholdParams(
                                 confidence = when(mobilePosition){
-                                        MobilePosition.INBED -> 15f
-                                        else -> 20f
+                                        MobilePosition.INBED -> 20f
+                                        else -> 30f
                                 },
                                 motion = when(mobilePosition){
                                         MobilePosition.INBED -> 3f
