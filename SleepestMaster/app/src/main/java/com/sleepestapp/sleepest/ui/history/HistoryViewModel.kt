@@ -397,7 +397,7 @@ class HistoryViewModel(
                     maxSleepTime = (sleep + awake) * 60f
                 }
 
-                if (lightSleep != 0f && deepSleep != 0f && remSleep != 0f) {
+                if (it.userSleepSessionEntity.mobilePosition == MobilePosition.INBED) {
                     entries.add(
                         BarEntry(
                             xIndex, floatArrayOf(
