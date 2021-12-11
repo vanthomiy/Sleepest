@@ -147,7 +147,7 @@ class SleepCalculationHandler(val context: Context) {
     private suspend fun getUserActivityOnDay(time:LocalDateTime) : ActivityOnDay{
 
         val userActivity =
-            dataBaseRepository.getActivityApiRawDataFromDate(time.minusDays(1)).first()
+            dataBaseRepository.getActivityApiRawDataFromDate(time.minusDays(0)).first()
                 .sortedBy { x -> x.timestampSeconds }
 
         var activityCount = 0
