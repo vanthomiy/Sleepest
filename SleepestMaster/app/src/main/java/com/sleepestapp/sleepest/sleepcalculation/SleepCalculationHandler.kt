@@ -275,6 +275,7 @@ class SleepCalculationHandler(val context: Context) {
         // check for each sleep state
         sleepApiRawDataEntity.forEach { data ->
             // First definition without future data
+            /*
             if(data.sleepState == SleepState.NONE) {
 
                 // get normed list
@@ -309,8 +310,9 @@ class SleepCalculationHandler(val context: Context) {
                     data.sleepState
                 )
             }
+            */
 
-            if (data.sleepState != SleepState.NONE && data.oldSleepState == SleepState.NONE){
+            if (data.sleepState == SleepState.NONE) { // && data.oldSleepState == SleepState.NONE){
                 // get normed list
                 val (normedSleepApiDataBefore, frequency1) = createTimeNormedData(
                     1f,
