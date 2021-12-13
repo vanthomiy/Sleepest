@@ -396,7 +396,6 @@ class SleepCalculationHandler(val context: Context) {
                 sleepApiRawDataEntity
             )
         )
-
     }
 
     /**

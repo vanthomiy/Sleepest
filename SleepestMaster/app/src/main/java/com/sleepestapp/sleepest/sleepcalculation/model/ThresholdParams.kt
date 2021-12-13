@@ -141,8 +141,8 @@ data class ThresholdParams(
                 fun createCleanUp(mobilePosition: MobilePosition) : ThresholdParams{
                         return ThresholdParams(
                                 confidence = when(mobilePosition){
-                                        MobilePosition.INBED -> 20f
-                                        else -> 30f
+                                        MobilePosition.INBED -> 15f
+                                        else -> 20f
                                 },
                                 motion = when(mobilePosition){
                                         MobilePosition.INBED -> 3f
