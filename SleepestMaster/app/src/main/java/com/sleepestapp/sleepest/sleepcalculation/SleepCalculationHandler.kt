@@ -368,16 +368,43 @@ class SleepCalculationHandler(val context: Context) {
             }
         }
 
+        //sleepApiRawDataEntity.last().timestampSeconds == 1639435282
         // check if user actually is detected as awake and slept in the past
+        var lastDefined = sleepApiRawDataEntity.findLast { x -> x.sleepState != SleepState.NONE }
+        lastDefined?.let{ lastAwake ->
+            // when user was awake but sleeping before
+            if(lastAwake.sleepState == SleepState.AWAKE){
+                // find last sleep
+                var lastSleepDefined = sleepApiRawDataEntity.findLast { x -> x.sleepState != SleepState.AWAKE && x.sleepState != SleepState.NONE }
+                lastSleepDefined?.let { lastSlept ->
+                    var timeAwakeSinceLastSleep = (lastAwake.timestampSeconds - lastSlept.timestampSeconds) / 60
+                    var sleptOverall = SleepApiRawDataEntity.getSleepTime(sleepApiRawDataEntity)
+
+                    if ((timeAwakeSinceLastSleep >= sleptOverall && sleptOverall < 60 * 4) || (sleptOverall < 12 && timeAwakeSinceLastSleep >= 5))
+                    {
+                        sleepApiRawDataEntity.forEach { data ->
+                            if(data.sleepState != SleepState.NONE){
+                                dataBaseRepository.updateSleepApiRawDataSleepState(
+                                    data.timestampSeconds,
+                                    SleepState.AWAKE
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /*
         if(sleepApiRawDataEntity.last().sleepState == SleepState.AWAKE && sleepApiRawDataEntity.any { x -> (x.sleepState != SleepState.AWAKE && x.sleepState != SleepState.NONE)}){
             // get the complete sleep time before and the time awake since then
-            var lastSlept = sleepApiRawDataEntity.findLast { x -> x.sleepState != SleepState.AWAKE }
+            var lastSlept = sleepApiRawDataEntity.findLast { x -> x.sleepState != SleepState.AWAKE && x.sleepState != SleepState.NONE }
 
             lastSlept?.let{
                 var timeAwake = (sleepApiRawDataEntity.last().timestampSeconds - it.timestampSeconds) / 60
                 var sleptOverall = SleepApiRawDataEntity.getSleepTime(sleepApiRawDataEntity)
 
-                if (timeAwake > sleptOverall)
+                if ((timeAwake >= sleptOverall && sleptOverall < 60 * 4) || (sleptOverall < 12 && timeAwake >= 5))
                 {
                     sleepApiRawDataEntity.forEach { data ->
                         dataBaseRepository.updateSleepApiRawDataSleepState(
@@ -388,6 +415,7 @@ class SleepCalculationHandler(val context: Context) {
                 }
             }
         }
+        */
 
         // update live user sleep activity
         dataStoreRepository.updateIsUserSleeping(sleepApiRawDataEntity.last().sleepState == SleepState.SLEEPING)

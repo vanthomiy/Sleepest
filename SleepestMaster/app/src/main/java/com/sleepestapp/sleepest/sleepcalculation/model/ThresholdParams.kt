@@ -125,8 +125,8 @@ data class ThresholdParams(
                                         else -> 45f
                                 },
                                 motion = when(mobilePosition){
-                                        MobilePosition.INBED -> 1.2f
-                                        else -> 1f
+                                        MobilePosition.INBED -> 2f
+                                        else -> 1.2f
                                 },
                                 light = when(mobilePosition){
                                         MobilePosition.INBED -> 6f
