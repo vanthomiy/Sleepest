@@ -380,7 +380,7 @@ class SleepCalculationHandler(val context: Context) {
                     var timeAwakeSinceLastSleep = (lastAwake.timestampSeconds - lastSlept.timestampSeconds) / 60
                     var sleptOverall = SleepApiRawDataEntity.getSleepTime(sleepApiRawDataEntity)
 
-                    if ((timeAwakeSinceLastSleep >= sleptOverall && sleptOverall < 60 * 4) || (sleptOverall < 12 && timeAwakeSinceLastSleep >= 5))
+                    if ((timeAwakeSinceLastSleep >= (sleptOverall / 2) && sleptOverall < 60 * 4) || (sleptOverall < 12 && timeAwakeSinceLastSleep >= 5))
                     {
                         sleepApiRawDataEntity.forEach { data ->
                             if(data.sleepState != SleepState.NONE){

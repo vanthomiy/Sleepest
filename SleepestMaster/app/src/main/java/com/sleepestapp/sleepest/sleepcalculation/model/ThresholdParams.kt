@@ -101,8 +101,8 @@ data class ThresholdParams(
                 fun createSleepStartBorder(mobilePosition: MobilePosition) : ThresholdParams{
                         return ThresholdParams(
                                 confidence = when(mobilePosition){
-                                        MobilePosition.INBED -> 10f
-                                        else -> 20f
+                                        MobilePosition.INBED -> 5f
+                                        else -> 10f
                                 },
                                 motion = when(mobilePosition){
                                         MobilePosition.INBED -> 0f
