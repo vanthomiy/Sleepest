@@ -307,11 +307,9 @@ class HistoryViewModel(
                 sleepCalculationHandler.checkIsUserSleeping(
                     LocalDateTime.ofInstant(
                         Instant.ofEpochMilli(it.sleepSessionId.toLong() * 1000),
-                        ZoneOffset.systemDefault(),
-
+                        ZoneOffset.systemDefault()
                     ),
-                    false,
-                    true
+                    false
                 )
                 data = true
             }
