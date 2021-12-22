@@ -272,99 +272,97 @@ class SleepCalculationHandler(val context: Context) {
         val mobileUseFrequency = MobileUseFrequency.getCount(sleepParam.mobileUseFrequency)
 
 
-        if(finalCalc){
-            // check for each sleep state
-            sleepApiRawDataEntity.forEach { data ->
-                // First definition without future data
-                if(data.sleepState == SleepState.NONE) {
+        // check for each sleep state
+        sleepApiRawDataEntity.forEach { data ->
+            // First definition without future data
+            if(finalCalc && data.sleepState == SleepState.NONE) {
 
-                    // get normed list
-                    val (normedSleepApiDataBefore, frequency) = createTimeNormedData(
-                        1f,
-                        false,
-                        data.timestampSeconds,
-                        sleepApiRawDataEntity.toList()
-                    )
+                // get normed list
+                val (normedSleepApiDataBefore, frequency) = createTimeNormedData(
+                    1f,
+                    false,
+                    data.timestampSeconds,
+                    sleepApiRawDataEntity.toList()
+                )
 
-                    if (frequency == SleepDataFrequency.NONE) {
+                if (frequency == SleepDataFrequency.NONE) {
 
-                        dataBaseRepository.updateSleepApiRawDataSleepState(
-                            data.timestampSeconds,
-                            SleepState.AWAKE
-                        )
-
-                        return@forEach
-                    }
-
-                    // call the ml model
-                    data.sleepState = sleepClassifier.isUserSleeping(
-                        normedSleepApiDataBefore,
-                        null,
-                        mobilePosition,
-                        lightConditions,
-                        mobileUseFrequency
-                    )
-
-                    dataBaseRepository.updateSleepApiRawDataSleepState(
-                        data.timestampSeconds,
-                        data.sleepState
-                    )
-                }
-
-                if (data.sleepState == SleepState.NONE) { // && data.oldSleepState == SleepState.NONE){
-                    // get normed list
-                    val (normedSleepApiDataBefore, frequency1) = createTimeNormedData(
-                        1f,
-                        false,
-                        data.timestampSeconds,
-                        sleepApiRawDataEntity.toList()
-                    )
-
-                    val (normedSleepApiDataAfter, frequency2) = createTimeNormedData(
-                        if(!fromDefineUserWakeUp) 1f else 0.25f,
-                        true,
-                        data.timestampSeconds,
-                        sleepApiRawDataEntity.toList()
-                    )
-
-
-                    if(frequency1 == SleepDataFrequency.NONE || frequency2 == SleepDataFrequency.NONE){
-
-                        dataBaseRepository.updateSleepApiRawDataSleepState(
-                            data.timestampSeconds,
-                            data.sleepState
-                        )
-
-                        return@forEach
-                    }
-
-                    // call the ml model
-                    data.sleepState = sleepClassifier.isUserSleeping(
-                        normedSleepApiDataBefore,
-                        normedSleepApiDataAfter,
-                        mobilePosition,
-                        lightConditions,
-                        mobileUseFrequency
-                    )
-
-                    dataBaseRepository.updateSleepApiRawDataSleepState(
-                        data.timestampSeconds,
-                        data.sleepState
-                    )
-
-                    dataBaseRepository.updateOldSleepApiRawDataSleepState(
-                        data.timestampSeconds,
-                        data.sleepState
-                    )
-                }
-
-                // Workaround to prevent NONE Sleep States
-                if(!setAlarm && data.sleepState == SleepState.NONE){
                     dataBaseRepository.updateSleepApiRawDataSleepState(
                         data.timestampSeconds,
                         SleepState.AWAKE
                     )
+
+                    return@forEach
                 }
+
+                // call the ml model
+                data.sleepState = sleepClassifier.isUserSleeping(
+                    normedSleepApiDataBefore,
+                    null,
+                    mobilePosition,
+                    lightConditions,
+                    mobileUseFrequency
+                )
+
+                dataBaseRepository.updateSleepApiRawDataSleepState(
+                    data.timestampSeconds,
+                    data.sleepState
+                )
+            }
+
+            if (data.sleepState == SleepState.NONE) { // && data.oldSleepState == SleepState.NONE){
+                // get normed list
+                val (normedSleepApiDataBefore, frequency1) = createTimeNormedData(
+                    1f,
+                    false,
+                    data.timestampSeconds,
+                    sleepApiRawDataEntity.toList()
+                )
+
+                val (normedSleepApiDataAfter, frequency2) = createTimeNormedData(
+                    if(!fromDefineUserWakeUp) 1f else 0.25f,
+                    true,
+                    data.timestampSeconds,
+                    sleepApiRawDataEntity.toList()
+                )
+
+
+                if(frequency1 == SleepDataFrequency.NONE || frequency2 == SleepDataFrequency.NONE){
+
+                    dataBaseRepository.updateSleepApiRawDataSleepState(
+                        data.timestampSeconds,
+                        data.sleepState
+                    )
+
+                    return@forEach
+                }
+
+                // call the ml model
+                data.sleepState = sleepClassifier.isUserSleeping(
+                    normedSleepApiDataBefore,
+                    normedSleepApiDataAfter,
+                    mobilePosition,
+                    lightConditions,
+                    mobileUseFrequency
+                )
+
+                dataBaseRepository.updateSleepApiRawDataSleepState(
+                    data.timestampSeconds,
+                    data.sleepState
+                )
+
+                dataBaseRepository.updateOldSleepApiRawDataSleepState(
+                    data.timestampSeconds,
+                    data.sleepState
+                )
+            }
+
+            // Workaround to prevent NONE Sleep States
+            if(!setAlarm && data.sleepState == SleepState.NONE){
+                dataBaseRepository.updateSleepApiRawDataSleepState(
+                    data.timestampSeconds,
+                    SleepState.AWAKE
+                )
             }
         }
 
