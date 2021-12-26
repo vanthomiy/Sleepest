@@ -768,6 +768,8 @@ class SleepCalculationHandler(val context: Context) {
             val actualStartTime = sessionEntity.sleepTimes.sleepTimeStart
             val sleptLonger = (startTimeEpoch < actualStartTime)
 
+            sessionEntity.sleepTimes.sleepTimeStart = startTimeEpoch
+
             if(sleptLonger)
             {
                 // get all api data before the sleep
@@ -820,6 +822,8 @@ class SleepCalculationHandler(val context: Context) {
             val actualEndTime = sessionEntity.sleepTimes.sleepTimeEnd
             val sleptLonger = (endTimeEpoch > actualEndTime)
 
+            sessionEntity.sleepTimes.sleepTimeEnd = endTimeEpoch
+
             if(sleptLonger){
                 // get all api data in between the sleep
                 val sleepDataAfter = dataBaseRepository.getSleepApiRawDataBetweenTimestamps(actualEndTime, endTimeEpoch).first()
@@ -844,6 +848,8 @@ class SleepCalculationHandler(val context: Context) {
                 }
             }
         }
+
+        dataBaseRepository.insertUserSleepSession(sessionEntity)
 
         /*
         // check in between
