@@ -9,7 +9,8 @@ plugins {
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
     id 'com.google.firebase.firebase-perf'
-
+    id 'kotlin-android-extensions'
+    id 'org.jetbrains.kotlin.android.extensions'
 }
 
 android {
@@ -245,6 +246,25 @@ dependencies {
     implementation "androidx.activity:activity-ktx:1.3.1"
     implementation "androidx.fragment:fragment-ktx:1.3.6"
 
+    // Tutorial
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.core:core-ktx:1.5.0-alpha04'
+
+    implementation 'com.google.android.material:material:1.2.1'
+
+    //motionLayout
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+
+    //viewPager2 library
+    implementation 'androidx.viewpager2:viewpager2:1.1.0-alpha01'
+
+    //stepper library
+    implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:4.1.2'
+
+    testImplementation 'junit:junit:4.13'
+    androidTestImplementation 'androidx.test:runner:1.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
 }
 

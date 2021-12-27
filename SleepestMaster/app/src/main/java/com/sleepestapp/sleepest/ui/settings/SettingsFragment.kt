@@ -36,7 +36,7 @@ import com.sleepestapp.sleepest.model.data.*
 import com.sleepestapp.sleepest.model.data.credits.CreditsSites
 import com.sleepestapp.sleepest.model.data.export.ImportUtil
 import com.sleepestapp.sleepest.model.data.export.UserSleepExportData
-import com.sleepestapp.sleepest.onboarding.OnboardingActivity
+import com.sleepestapp.sleepest.onboarding.OnBoardingActivity
 import com.sleepestapp.sleepest.util.IconAnimatorUtil.isDarkThemeOn
 import com.sleepestapp.sleepest.util.PermissionsUtil
 import com.sleepestapp.sleepest.util.SmileySelectorUtil
@@ -119,11 +119,11 @@ class SettingsFragment : Fragment() {
         }
         binding.btnTutorial.setOnClickListener {
             lifecycleScope.launch {
-                val intent = Intent(activity, OnboardingActivity::class.java)
-                intent.putExtra(getString(R.string.onboarding_intent_not_first_app_start), true)
-                intent.putExtra(getString(R.string.onboarding_intent_starttime), viewModel.dataStoreRepository.getSleepTimeBegin())
-                intent.putExtra(getString(R.string.onboarding_intent_endtime), viewModel.dataStoreRepository.getSleepTimeEnd())
-                intent.putExtra(getString(R.string.onboarding_intent_duration), viewModel.dataStoreRepository.getSleepDuration())
+                val intent = Intent(activity, OnBoardingActivity::class.java)
+                //intent.putExtra(getString(R.string.onboarding_intent_not_first_app_start), true)
+                //intent.putExtra(getString(R.string.onboarding_intent_starttime), viewModel.dataStoreRepository.getSleepTimeBegin())
+                //intent.putExtra(getString(R.string.onboarding_intent_endtime), viewModel.dataStoreRepository.getSleepTimeEnd())
+                //intent.putExtra(getString(R.string.onboarding_intent_duration), viewModel.dataStoreRepository.getSleepDuration())
 
                 startActivity(intent)
             }

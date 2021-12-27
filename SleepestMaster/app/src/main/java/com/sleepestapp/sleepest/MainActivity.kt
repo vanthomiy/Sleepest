@@ -26,7 +26,6 @@ import com.sleepestapp.sleepest.databinding.ActivityMainBinding
 import com.sleepestapp.sleepest.model.data.AlarmReceiverUsage
 import com.sleepestapp.sleepest.model.data.SleepSleepChangeFrom
 import com.sleepestapp.sleepest.model.data.export.ImportUtil
-import com.sleepestapp.sleepest.onboarding.OnboardingActivity
 import com.sleepestapp.sleepest.ui.alarms.AlarmsFragment
 import com.sleepestapp.sleepest.ui.history.HistoryTabView
 import com.sleepestapp.sleepest.ui.settings.SettingsFragment
@@ -39,6 +38,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 import com.sleepestapp.sleepest.googleapi.ActivityTransitionHandler
 import com.sleepestapp.sleepest.model.data.Constants
+import com.sleepestapp.sleepest.onboarding.OnBoardingActivity
 
 
 class MainActivity : AppCompatActivity() {
@@ -258,54 +258,7 @@ class MainActivity : AppCompatActivity() {
         val bundle :Bundle ?=intent.extras
 
         //Get default settings of tutorial and save it in datastore
-        //TODO("Shared prefs!")
-        if (bundle != null && bundle.getBoolean(getString(R.string.onboarding_intent_data_available))) {
-            lifecycleScope.launch {
-                if (viewModel.dataStoreRepository.tutorialStatusFlow.first().tutorialCompleted && !viewModel.dataStoreRepository.tutorialStatusFlow.first().energyOptionsShown) {
-                    DontKillMyAppFragment.show(this@MainActivity)
-                }
-                //Start a alarm for the new foreground service start time
-                val calendar = TimeConverterUtil.getAlarmDate(bundle.getInt(getString(R.string.onboarding_intent_starttime)))
-                AlarmReceiver.startAlarmManager(
-                    calendar[Calendar.DAY_OF_WEEK],
-                    calendar[Calendar.HOUR_OF_DAY],
-                    calendar[Calendar.MINUTE],
-                    applicationContext, AlarmReceiverUsage.START_FOREGROUND)
 
-                SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
-                    applicationContext,
-                    viewModel.dataStoreRepository,
-                    viewModel.dataBaseRepository,
-                    bundle.getInt(getString(R.string.onboarding_intent_starttime)),
-                    bundle.getInt(getString(R.string.onboarding_intent_endtime)),
-                    bundle.getInt(getString(R.string.onboarding_intent_duration)),
-                    false,
-                    SleepSleepChangeFrom.DURATION
-                )
-
-                SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
-                    applicationContext,
-                    viewModel.dataStoreRepository,
-                    viewModel.dataBaseRepository,
-                    bundle.getInt(getString(R.string.onboarding_intent_starttime)),
-                    bundle.getInt(getString(R.string.onboarding_intent_endtime)),
-                    bundle.getInt(getString(R.string.onboarding_intent_duration)),
-                    false,
-                    SleepSleepChangeFrom.SLEEPTIMEEND
-                )
-
-                SleepTimeValidationUtil.checkSleepActionIsAllowedAndDoAction(
-                    applicationContext,
-                    viewModel.dataStoreRepository,
-                    viewModel.dataBaseRepository,
-                    bundle.getInt(getString(R.string.onboarding_intent_starttime)),
-                    bundle.getInt(getString(R.string.onboarding_intent_endtime)),
-                    bundle.getInt(getString(R.string.onboarding_intent_duration)),
-                    false,
-                    SleepSleepChangeFrom.SLEEPTIMESTART
-                )
-            }
-        }
 
         val alarmCycleState = AlarmCycleState(applicationContext)
         var pref: SharedPreferences = getSharedPreferences("State", 0)
@@ -338,7 +291,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startTutorial() {
-        val intent = Intent(this, OnboardingActivity::class.java)
+        val intent = Intent(this, OnBoardingActivity::class.java)
         startActivity(intent)
         finish()
     }
