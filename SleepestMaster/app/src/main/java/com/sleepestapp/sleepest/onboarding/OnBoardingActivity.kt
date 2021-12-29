@@ -260,7 +260,7 @@ class OnBoardingActivity : AppCompatActivity() {
             if (!PermissionsUtil.isNotificationPolicyAccessGranted(this)){
                 color = R.color.error_color
                 text = resources.getText(R.string.settings_notification_privacy).toString()
-                text += resources.getText(R.string.permission_string)
+                text += " " + resources.getText(R.string.permission_string)
             }
         }
         else if(position == 5)
