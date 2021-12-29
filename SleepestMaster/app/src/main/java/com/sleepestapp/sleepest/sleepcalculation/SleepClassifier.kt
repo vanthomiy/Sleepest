@@ -91,13 +91,15 @@ class SleepClassifier constructor(private val context: Context) {
 
         val sleepDataBuffer = mutableListOf<SleepApiRawDataEntity>()
 
+        val listReversed = list.reversed();
+
         for (i in 0 until list.count()){
             if (frequencyFactor > 1){
                 for (j in 0 until frequencyFactor.toInt())
-                    timeNormedData.add(list[i])
+                    timeNormedData.add(listReversed[i])
             }
             else{
-                sleepDataBuffer.add(list[i])
+                sleepDataBuffer.add(listReversed[i])
 
                 if(sleepDataBuffer.count() >= (1/frequencyFactor).toInt()){
                     timeNormedData.add(SleepApiRawDataEntity(

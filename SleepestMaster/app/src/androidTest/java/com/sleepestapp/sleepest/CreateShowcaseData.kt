@@ -164,9 +164,9 @@ class CreateShowcaseData {
 
             val data = SleepApiRawDataEntity(
                 startTimeStamp + (i * 60),
-                10,
-                1,
-                1,
+                10.0,
+                1.0,
+                1.0,
                 sleepState,
                 sleepState,
             )

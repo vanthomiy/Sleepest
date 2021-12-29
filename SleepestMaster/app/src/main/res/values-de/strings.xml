@@ -301,45 +301,51 @@
     <!--endregion-->
 
     <!--region onboarding-->
-    <string name="onboarding_intent_data_available">OnboardingDataAvailable</string>
-    <string name="onboarding_intent_starttime">StartTime</string>
-    <string name="onboarding_intent_endtime">EndTime</string>
-    <string name="onboarding_intent_duration">Duration</string>
-    <string name="onboarding_intent_not_first_app_start">NotFirstAppStart</string>
-    <string name="onboarding_title_page_1">Sleepest</string>
-    <string name="onboarding_title_page_2">Schlaferkennung</string>
-    <string name="onboarding_title_page_3">Schlafaufzeichnung</string>
-    <string name="onboarding_title_page_4">Kalkulation des Weckzeitpunktes</string>
-    <string name="onboarding_title_page_5">Darstellung des Schlafes</string>
-    <string name="onboarding_title_page_6">Smartphone Position</string>
-    <string name="onboarding_title_page_7">Alarm Status</string>
-    <string name="onboarding_title_page_8">Einstellungen</string>
-    <string name="onboarding_title_page_9">Berechtigungen</string>
-    <string name="onboarding_title_page_10">Akku Optimierung</string>
-    <string name="onboarding_content_page_1">Unser Ziel ist es, dir den bestmöglichen Schlaf zu geben</string>
-    <string name="onboarding_content_page_2">Die App erkennt, wenn du einschläfst</string>
-    <string name="onboarding_content_page_3">Die App zeichnet deinen Schlaf auf und unterscheidet in wach, Leicht- und Tiefschlafphasen</string>
-    <string name="onboarding_content_page_4">Der Aufweckzeitpunt wird anhand der Qualität des Schlafes berechnet, um die eingestellte Schlafdauer zu erreichen</string>
-    <string name="onboarding_content_page_5">Du kannst deinen vergangenen Schlaf betrachten und analysieren</string>
-    <string name="onboarding_content_page_6">Um deinen Schlaf korrekt aufzuzeichnen, solltest du dein Smartphone in deinem Bett positionieren, bestenfalls neben oder unter das Kopfkissen. Der Schlaf wird mithilfe der Sensoren deines Smartphones aufgezeichnet.</string>
-    <string name="onboarding_content_page_7">In deiner eingestellten Schlafenszeit wird die obenstehende Benachrichtigung angezeigt. Wenn nicht, könnte ein Fehler vorliegen.\n
-                        Diese Benachrichtigung besitzt einige nützliche Dinge und garantiert, dass die App im Hintergrund aktiv bleibt.\n
-                        Mit der linken Schaltfläche kannst du deinen nächsten Alarm ausschalten.\n
-                        Mit der rechten Schaltfläche kannst du eine falsche Schlaferkennung korrigieren.</string>
-    <string name="onboarding_content_page_8">Stelle deine ungefähre Schlafenszeit und Schlafdauer ein\n
-                        Du kannst diese zu einem späteren Zeitpunkt jederzeit anpassen.\n
-                        Tipp: Setze deine ungefähre Schlafzeit großzügig, um eine gute Schlaferkennung zu ermöglichen</string>
-    <string name="onboarding_content_page_9">Um eine korrekte Ausführung der App zu gewährleisten, musst du die oben stehenden Berechtigungen akzeptieren</string>
-    <string name="onboarding_content_page_10">Die App muss im Hintergrund aktiv bleiben, um deinen Schlaf aufzuzeichnen. Deshalb solltest du die nachfolgenden Anweisungen zur Akku Optimierung befolgen.\n Bitte lies die Anweisungen sorgfältig.</string>
-    <string name="onboarding_toast_permissions">Bitte akzeptiere alle Berechtigungen</string>
-    <string name="onboarding_toast_read_to_end">Bitte lies das ganze Tutorial</string>
-    <string name="onboarding_toast_permission_already_granted">Diese Berechtigung wurde schon akzeptiert</string>
-    <string name="onboarding_toast_find_permission_in_list">Bitte suche nach "Sleepest" in der Liste</string>
-    <string name="onboarding_start_time_text_first_start">Wähle Startzeit</string>
-    <string name="onboarding_end_time_text_first_start">Wähle Endzeit</string>
-    <string name="onboarding_start_time_text_not_first_start">Start</string>
-    <string name="onboarding_end_time_text_not_first_start">Ende</string>
-    <string name="onboarding_btn_text_start">Start</string>
+    <string name="onboarding_toast_find_permission_in_list">Wähle die Sleepest-App in der Liste aus</string>
+
+    <string name="onboarding_slide1_title">Hallo bei</string>
+    <string name="onboarding_slide1_subtitle">Sleepest</string>
+    <string name="onboarding_slide1_desc">Der neue, automatische und intelligente Wecker.
+        Sleepest ist an neue Lebensweißen und Home-Office angepasst.
+        Es Hilft dir genug Schlaf zu bekommen und trotzdem Produktiv zu sein. </string>
+
+    <string name="onboarding_slide2_title">Schlafzeiten</string>
+    <string name="onboarding_slide2_subtitle">Automatische Schlaferkennung</string>
+    <string name="onboarding_slide2_desc">
+        Sleepest kann automatisch erkennen wenn du einschläfst.
+        Die App muss dazu nicht aktiv sein.
+        Umso häufiger du dein Gerät verwendest, umso besser funktioniert die App.
+    </string>
+
+    <string name="onboarding_slide3_title">Schlafphasen</string>
+    <string name="onboarding_slide3_subtitle">Schlafanalyse und Verlauf</string>
+    <string name="onboarding_slide3_desc">
+        Du kannst dein Schlafverhalten betrachten.
+        Sleepest kann die Schlafphasen während deines Schlafs bestimmen, wenn dein Gerät beim Schlafen mit im Bett liegt.</string>
+
+    <string name="onboarding_slide4_title">Aufwachen</string>
+    <string name="onboarding_slide4_subtitle">Deine Schlafdauer ist wichtig</string>
+    <string name="onboarding_slide4_desc">
+        Lange Verabredung? Kein Problem!
+        Sleepest weckt dich nach deiner geschwünschten Schlafdauer
+        innerhalb deines Aufweckzeitraums.</string>
+
+    <string name="onboarding_slide5_title">Benachrichtigung</string>
+    <string name="onboarding_slide5_subtitle">Aktiver Wecker</string>
+    <string name="onboarding_slide5_desc">
+        Sleepest benachrichtigt dich wenn ein Wecker aktiv ist.
+        Du hast die volle kontrolle über die Alarme und deinen frühesten und spätesten Aufweckzeitpunkt.
+    </string>
+
+    <string name="onboarding_slide6_title">Akkuschonend</string>
+    <string name="onboarding_slide6_subtitle">Zuverlässigkeit der App</string>
+    <string name="onboarding_slide6_desc">Es sind für viele Geräte spezfische Einstellungen nötig um zu gewährleisten, dass die App richtig funktioniert.
+        Im folgenden wird ein Popup erscheinen, welches die Anweisungen für dein Gerät erklärt.
+        Wenn du dies befolgst funktioniert Sleepest zuverlässig aus dem Hintergrund.</string>
+
+    <string name="next">Weiter</string>
+    <string name="skip">Überspringen</string>
+    <string name="get_started">Loslegen</string>
 
     <string name="privacy_police">Datenschutzerklärung</string>
 

@@ -21,13 +21,13 @@ data class SleepApiRawDataEntity(
         val timestampSeconds: Int,
 
         @ColumnInfo(name = "confidence")
-        var confidence: Int,
+        var confidence: Double,
 
         @ColumnInfo(name = "motion")
-        val motion: Int,
+        val motion: Double,
 
         @ColumnInfo(name = "light")
-        val light: Int,
+        val light: Double,
 
         @ColumnInfo(name = "sleepState")
         var sleepState: SleepState = SleepState.NONE,
@@ -43,9 +43,9 @@ data class SleepApiRawDataEntity(
                 fun from(sleepClassifyEvent: SleepClassifyEvent): SleepApiRawDataEntity {
                         return SleepApiRawDataEntity(
                                 timestampSeconds = (sleepClassifyEvent.timestampMillis / 1000).toInt(),
-                                confidence = sleepClassifyEvent.confidence,
-                                motion = sleepClassifyEvent.motion,
-                                light = sleepClassifyEvent.light,
+                                confidence = sleepClassifyEvent.confidence.toDouble(),
+                                motion = sleepClassifyEvent.motion.toDouble(),
+                                light = sleepClassifyEvent.light.toDouble(),
                                 sleepState = SleepState.NONE,
                                 oldSleepState = SleepState.NONE
                         )
@@ -169,11 +169,11 @@ data class SleepApiRawDataEntity(
 data class SleepApiRawDataRealEntity(
         val timestampSeconds: Int,
 
-        val confidence: Int,
+        val confidence: Double,
 
-        val motion: Int,
+        val motion: Double,
 
-        val light: Int,
+        val light: Double,
 
         val real: String
 )

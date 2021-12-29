@@ -307,9 +307,11 @@ class HistoryViewModel(
                 sleepCalculationHandler.checkIsUserSleeping(
                     LocalDateTime.ofInstant(
                         Instant.ofEpochMilli(it.sleepSessionId.toLong() * 1000),
-                        ZoneOffset.systemDefault()
+                        ZoneOffset.systemDefault(),
+
                     ),
-                    false
+                    false,
+                    true
                 )
                 data = true
             }
@@ -397,7 +399,7 @@ class HistoryViewModel(
                     maxSleepTime = (sleep + awake) * 60f
                 }
 
-                if (lightSleep != 0f && deepSleep != 0f && remSleep != 0f) {
+                if (it.userSleepSessionEntity.mobilePosition == MobilePosition.INBED) {
                     entries.add(
                         BarEntry(
                             xIndex, floatArrayOf(
