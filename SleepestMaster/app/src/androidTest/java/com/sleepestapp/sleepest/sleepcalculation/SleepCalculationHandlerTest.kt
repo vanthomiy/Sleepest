@@ -52,10 +52,6 @@ class SleepCalculationHandlerTest
             sleepCalcDatabase.activityApiRawDataDao()
 
         )
-
-
-
-
     }
 
     @Test
@@ -80,7 +76,7 @@ class SleepCalculationHandlerTest
         // add some data that is not in the last two hours ( 45 mins per file)
         for(i in 0..twohours step (45*60))
         {
-            val data = SleepApiRawDataEntity(actualtime-i, 1,2,3,sleepState = SleepState.AWAKE)
+            val data = SleepApiRawDataEntity(actualtime-i, 1.0,2.0,3.0,sleepState = SleepState.AWAKE)
             sleepList.add(data)
         }
 
@@ -92,7 +88,7 @@ class SleepCalculationHandlerTest
         // add some data that is not in the last two hours ( 25 mins per file)
         for(i in 0..twohours step (25*60))
         {
-            val data = SleepApiRawDataEntity(actualtime-i, 1,2,3,sleepState = SleepState.AWAKE)
+            val data = SleepApiRawDataEntity(actualtime-i, 1.0,2.0,3.0,sleepState = SleepState.AWAKE)
             sleepList.add(data)
         }
 
@@ -104,7 +100,7 @@ class SleepCalculationHandlerTest
         // add some data that is not in the last two hours ( 8 mins per file)
         for(i in 0..twohours step (8*60))
         {
-            val data = SleepApiRawDataEntity(actualtime-i, 1,2,3,sleepState = SleepState.AWAKE)
+            val data = SleepApiRawDataEntity(actualtime-i, 1.0,2.0,3.0,sleepState = SleepState.AWAKE)
             sleepList.add(data)
         }
 
@@ -116,7 +112,7 @@ class SleepCalculationHandlerTest
         // add some data that is not in the last two hours ( 8 mins per file) and plus and minus time
         for(i in -twohours/2..twohours/2 step (8*60))
         {
-            val data = SleepApiRawDataEntity(actualtime-i, 1,2,3,sleepState = SleepState.AWAKE)
+            val data = SleepApiRawDataEntity(actualtime-i, 1.0,2.0,3.0,sleepState = SleepState.AWAKE)
             sleepList.add(data)
         }
 
@@ -146,7 +142,7 @@ class SleepCalculationHandlerTest
         // add some data that is not in the last two hours ( 45 mins per file)
         for(i in 0..twohours step (45*60))
         {
-            val data = SleepApiRawDataEntity(actualtime-i, 1,2,3,sleepState = SleepState.AWAKE)
+            val data = SleepApiRawDataEntity(actualtime-i, 1.0,2.0,3.0,sleepState = SleepState.AWAKE)
             sleepList.add(data)
         }
 
@@ -160,7 +156,7 @@ class SleepCalculationHandlerTest
         // add some data that is not in the last two hours ( 25 mins per file)
         for(i in 0..twohours step (25*60))
         {
-            val data = SleepApiRawDataEntity(actualtime-i, 1,2,3,sleepState = SleepState.AWAKE)
+            val data = SleepApiRawDataEntity(actualtime-i, 1.0,2.0,3.0,sleepState = SleepState.AWAKE)
             sleepList.add(data)
         }
 
@@ -174,7 +170,7 @@ class SleepCalculationHandlerTest
         // add some data that is not in the last two hours ( 8 mins per file)
         for(i in 0..twohours step (8*60))
         {
-            val data = SleepApiRawDataEntity(actualtime-i, 1,2,3,sleepState = SleepState.AWAKE)
+            val data = SleepApiRawDataEntity(actualtime-i, 1.0,2.0,3.0,sleepState = SleepState.AWAKE)
             sleepList.add(data)
         }
 
@@ -188,7 +184,7 @@ class SleepCalculationHandlerTest
         // add some data that is not in the last two hours ( 8 mins per file) and plus and minus time
         for(i in -twohours/2..twohours/2 step (8*60))
         {
-            val data = SleepApiRawDataEntity(actualtime-i, 1,2,3,sleepState = SleepState.AWAKE)
+            val data = SleepApiRawDataEntity(actualtime-i, 1.0,2.0,3.0,sleepState = SleepState.AWAKE)
             sleepList.add(data)
         }
 
@@ -216,7 +212,7 @@ class SleepCalculationHandlerTest
 
         for(i in 0..10)
         {
-            val data = SleepApiRawDataEntity(actualtimeSeconds-i, 1,2,3,sleepState = SleepState.SLEEPING)
+            val data = SleepApiRawDataEntity(actualtimeSeconds-i, 1.0,2.0,3.0,sleepState = SleepState.SLEEPING)
             sleepList.add(data)
             sleepDbRepository.insertSleepApiRawData((sleepList))
         }
@@ -243,7 +239,7 @@ class SleepCalculationHandlerTest
 
         for(i in 0..10)
         {
-            val data = SleepApiRawDataEntity(actualtimeSeconds-i, 1,2,3,sleepState = SleepState.SLEEPING)
+            val data = SleepApiRawDataEntity(actualtimeSeconds-i, 1.0,2.0,3.0,sleepState = SleepState.SLEEPING)
             sleepList.add(data)
             sleepDbRepository.insertSleepApiRawData((sleepList))
         }
@@ -294,14 +290,14 @@ class SleepCalculationHandlerTest
         // add 5 freuquency data with table
         for(i in 0..25 step 5) // 2 hours / 20  < 10
         {
-            val data = SleepApiRawDataEntity(actualTimeSeconds-(i*5*60), 96,1,1,sleepState = SleepState.SLEEPING)
+            val data = SleepApiRawDataEntity(actualTimeSeconds-(i*5*60), 96.0,1.0,1.0,sleepState = SleepState.SLEEPING)
             sleepList5.add(data)
         }
 
         // add 5 freuquency data with table
         for(i in 0..180 step 30) // 2 hours / 20  < 10
         {
-            val data = SleepApiRawDataEntity(actualTimeSeconds-(i*30*60), 96,1,1,sleepState = SleepState.SLEEPING)
+            val data = SleepApiRawDataEntity(actualTimeSeconds-(i*30*60), 96.0,1.0,1.0,sleepState = SleepState.SLEEPING)
             sleepList30.add(data)
         }
 
@@ -316,14 +312,14 @@ class SleepCalculationHandlerTest
         // add 5 freuquency data with bed
         for(i in 0..25 step 5) // 2 hours / 20  < 10
         {
-            val data = SleepApiRawDataEntity(actualTimeSeconds-(i*5*60), 85,2,1,sleepState = SleepState.SLEEPING)
+            val data = SleepApiRawDataEntity(actualTimeSeconds-(i*5*60), 85.0,2.0,1.0,sleepState = SleepState.SLEEPING)
             sleepList5.add(data)
         }
 
         // add 5 freuquency data with bed
         for(i in 0..180 step 30) // 2 hours / 20  < 10
         {
-            val data = SleepApiRawDataEntity(actualTimeSeconds-(i*30*60), 85,3,1,sleepState = SleepState.SLEEPING)
+            val data = SleepApiRawDataEntity(actualTimeSeconds-(i*30*60), 85.0,3.0,1.0,sleepState = SleepState.SLEEPING)
             sleepList30.add(data)
         }
 
@@ -361,7 +357,7 @@ class SleepCalculationHandlerTest
         // add 5 freuquency data with table but all in past
         for(i in 0..20 step 5) // 2 hours / 20  < 10
         {
-            val data = SleepApiRawDataEntity(actualTimeSeconds-(i*5*60), 96,1,1,sleepState = SleepState.SLEEPING)
+            val data = SleepApiRawDataEntity(actualTimeSeconds-(i*5*60), 96.0,1.0,1.0,sleepState = SleepState.SLEEPING)
             sleepList5.add(data)
         }
 
@@ -372,7 +368,7 @@ class SleepCalculationHandlerTest
         // add 5 freuquency data in future but to less
         for(i in 0..1 step 5) // 2 hours / 20  < 10
         {
-            val data = SleepApiRawDataEntity(actualTimeSeconds+(i*5*60), 96,1,1,sleepState = SleepState.SLEEPING)
+            val data = SleepApiRawDataEntity(actualTimeSeconds+(i*5*60), 96.0,1.0,1.0,sleepState = SleepState.SLEEPING)
             sleepList5.add(data)
         }
 
@@ -382,7 +378,7 @@ class SleepCalculationHandlerTest
         // add 5 freuquency data in future enought
         for(i in 1..20 step 5)
         {
-            val data = SleepApiRawDataEntity(actualTimeSeconds+(i*5*60), 96,1,1,sleepState = SleepState.SLEEPING)
+            val data = SleepApiRawDataEntity(actualTimeSeconds+(i*5*60), 96.0,1.0,1.0,sleepState = SleepState.SLEEPING)
             sleepList5.add(data)
         }
 
@@ -909,7 +905,7 @@ class SleepCalculationHandlerTest
 
         val sleepParameters = sleepStoreRepository.sleepParameterFlow.first()
 
-        val day = LocalDateTime.now().minusDays(1)
+        val day = LocalDateTime.now().minusDays(11)
         val sleepApiRawDataEntityList = sleepDbRepository.getSleepApiRawDataFromDate(day, sleepParameters.sleepTimeEnd, sleepParameters.sleepTimeStart).first()
         val sleepApiRawDataEntityListNew = mutableListOf<SleepApiRawDataEntity>()
         sleepApiRawDataEntityList?.forEach { data ->
@@ -935,9 +931,14 @@ class SleepCalculationHandlerTest
             } catch (e:Exception){
                 val a = 2
                 val s = 2
+                sleepApiRawDataEntityList?.let{
+                    sleepDbRepository.insertSleepApiRawData(it)
+                }
             }
 
+
         }
+        sleepCalculationHandler.defineUserWakeup(day, false)
     }
 
 
@@ -968,9 +969,9 @@ class SleepCalculationHandlerTest
         {
             val data = SleepApiRawDataEntity(
                 actualTimeSeconds + (i * 5 * 60),
-                5,
-                1,
-                1,
+                5.0,
+                1.0,
+                1.0,
                 sleepState = SleepState.NONE
             )
             sleepList5.add(data)
@@ -981,9 +982,9 @@ class SleepCalculationHandlerTest
         {
             val data = SleepApiRawDataEntity(
                 actualTimeSeconds + (i * 5 * 60),
-                96,
-                1,
-                1,
+                96.0,
+                1.0,
+                1.0,
                 sleepState = SleepState.NONE
             )
             sleepList5.add(data)
@@ -1013,9 +1014,9 @@ class SleepCalculationHandlerTest
         {
             val data = SleepApiRawDataEntity(
                 actualTimeSeconds + (i * 5 * 60),
-                5,
-                1,
-                1,
+                5.0,
+                1.0,
+                1.0,
                 sleepState = SleepState.NONE
             )
             sleepList5.add(data)

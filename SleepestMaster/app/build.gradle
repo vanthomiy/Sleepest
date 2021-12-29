@@ -9,7 +9,8 @@ plugins {
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
     id 'com.google.firebase.firebase-perf'
-
+    id 'kotlin-android-extensions'
+    id 'org.jetbrains.kotlin.android.extensions'
 }
 
 android {
@@ -244,6 +245,14 @@ dependencies {
 
     implementation "androidx.activity:activity-ktx:1.3.1"
     implementation "androidx.fragment:fragment-ktx:1.3.6"
+
+    // Tutorial
+
+    //stepper library
+    implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:4.1.2'
+
+    //viewPager2 library
+    implementation 'androidx.viewpager2:viewpager2:1.1.0-alpha01'
 
 
 }

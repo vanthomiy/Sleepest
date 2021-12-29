@@ -147,7 +147,7 @@ class SleepCalculationHandler(val context: Context) {
     private suspend fun getUserActivityOnDay(time:LocalDateTime) : ActivityOnDay{
 
         val userActivity =
-            dataBaseRepository.getActivityApiRawDataFromDate(time.minusDays(1)).first()
+            dataBaseRepository.getActivityApiRawDataFromDate(time.minusDays(0)).first()
                 .sortedBy { x -> x.timestampSeconds }
 
         var activityCount = 0
@@ -218,7 +218,7 @@ class SleepCalculationHandler(val context: Context) {
      * [localTime] the actual time in seconds
      * Call fromDefineUserWakeUp to make count lesser to 30 min instead of 1hour
      */
-    suspend fun checkIsUserSleeping(localTime: LocalDateTime? = null, setAlarm: Boolean = true, fromDefineUserWakeUp:Boolean = false){
+    suspend fun checkIsUserSleeping(localTime: LocalDateTime? = null, setAlarm: Boolean = true, fromDefineUserWakeUp:Boolean = false, finalCalc:Boolean = false){
 
         val date = localTime ?: LocalDateTime.now()
 
@@ -275,7 +275,7 @@ class SleepCalculationHandler(val context: Context) {
         // check for each sleep state
         sleepApiRawDataEntity.forEach { data ->
             // First definition without future data
-            if(data.sleepState == SleepState.NONE) {
+            if(finalCalc && data.sleepState == SleepState.NONE) {
 
                 // get normed list
                 val (normedSleepApiDataBefore, frequency) = createTimeNormedData(
@@ -310,7 +310,7 @@ class SleepCalculationHandler(val context: Context) {
                 )
             }
 
-            if (data.sleepState != SleepState.NONE && data.oldSleepState == SleepState.NONE){
+            if (data.sleepState == SleepState.NONE) { // && data.oldSleepState == SleepState.NONE){
                 // get normed list
                 val (normedSleepApiDataBefore, frequency1) = createTimeNormedData(
                     1f,
@@ -320,7 +320,7 @@ class SleepCalculationHandler(val context: Context) {
                 )
 
                 val (normedSleepApiDataAfter, frequency2) = createTimeNormedData(
-                    if(!fromDefineUserWakeUp) 1f else 0.5f,
+                    if(!fromDefineUserWakeUp) 1f else 0.25f,
                     true,
                     data.timestampSeconds,
                     sleepApiRawDataEntity.toList()
@@ -366,6 +366,33 @@ class SleepCalculationHandler(val context: Context) {
             }
         }
 
+        //sleepApiRawDataEntity.last().timestampSeconds == 1639435282
+        // check if user actually is detected as awake and slept in the past
+        var lastDefined = sleepApiRawDataEntity.findLast { x -> x.sleepState != SleepState.NONE }
+        lastDefined?.let{ lastAwake ->
+            // when user was awake but sleeping before
+            if(lastAwake.sleepState == SleepState.AWAKE){
+                // find last sleep
+                var lastSleepDefined = sleepApiRawDataEntity.findLast { x -> x.sleepState != SleepState.AWAKE && x.sleepState != SleepState.NONE }
+                lastSleepDefined?.let { lastSlept ->
+                    var timeAwakeSinceLastSleep = (lastAwake.timestampSeconds - lastSlept.timestampSeconds) / 60
+                    var sleptOverall = SleepApiRawDataEntity.getSleepTime(sleepApiRawDataEntity)
+
+                    if ((timeAwakeSinceLastSleep >= (sleptOverall / 2) && sleptOverall < 60 * 4) || (sleptOverall < 12 && timeAwakeSinceLastSleep >= 5))
+                    {
+                        sleepApiRawDataEntity.forEach { data ->
+                            if(data.sleepState != SleepState.NONE){
+                                dataBaseRepository.updateSleepApiRawDataSleepState(
+                                    data.timestampSeconds,
+                                    SleepState.AWAKE
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         // update live user sleep activity
         dataStoreRepository.updateIsUserSleeping(sleepApiRawDataEntity.last().sleepState == SleepState.SLEEPING)
         dataStoreRepository.updateUserSleepTime(
@@ -373,7 +400,6 @@ class SleepCalculationHandler(val context: Context) {
                 sleepApiRawDataEntity
             )
         )
-
     }
 
     /**
@@ -742,6 +768,8 @@ class SleepCalculationHandler(val context: Context) {
             val actualStartTime = sessionEntity.sleepTimes.sleepTimeStart
             val sleptLonger = (startTimeEpoch < actualStartTime)
 
+            sessionEntity.sleepTimes.sleepTimeStart = startTimeEpoch
+
             if(sleptLonger)
             {
                 // get all api data before the sleep
@@ -794,6 +822,8 @@ class SleepCalculationHandler(val context: Context) {
             val actualEndTime = sessionEntity.sleepTimes.sleepTimeEnd
             val sleptLonger = (endTimeEpoch > actualEndTime)
 
+            sessionEntity.sleepTimes.sleepTimeEnd = endTimeEpoch
+
             if(sleptLonger){
                 // get all api data in between the sleep
                 val sleepDataAfter = dataBaseRepository.getSleepApiRawDataBetweenTimestamps(actualEndTime, endTimeEpoch).first()
@@ -818,6 +848,8 @@ class SleepCalculationHandler(val context: Context) {
                 }
             }
         }
+
+        dataBaseRepository.insertUserSleepSession(sessionEntity)
 
         /*
         // check in between

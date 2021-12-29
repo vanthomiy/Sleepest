@@ -101,8 +101,8 @@ data class ThresholdParams(
                 fun createSleepStartBorder(mobilePosition: MobilePosition) : ThresholdParams{
                         return ThresholdParams(
                                 confidence = when(mobilePosition){
-                                        MobilePosition.INBED -> 10f
-                                        else -> 20f
+                                        MobilePosition.INBED -> 5f
+                                        else -> 10f
                                 },
                                 motion = when(mobilePosition){
                                         MobilePosition.INBED -> 0f
@@ -126,7 +126,7 @@ data class ThresholdParams(
                                 },
                                 motion = when(mobilePosition){
                                         MobilePosition.INBED -> 2f
-                                        else -> 2f
+                                        else -> 1.2f
                                 },
                                 light = when(mobilePosition){
                                         MobilePosition.INBED -> 6f
@@ -377,9 +377,9 @@ data class ThresholdParams(
                  */
                 fun createDeepSleepBorder() : ThresholdParams{
                         return ThresholdParams(
-                                confidence = 95f,
-                                motion = 1.85f,
-                                light = 3f
+                                confidence = 90f,
+                                motion = 1.55f,
+                                light = 5f
                         )
                 }
 
@@ -389,7 +389,7 @@ data class ThresholdParams(
                 fun createRemSleepBorder() : ThresholdParams{
                         return ThresholdParams(
                                 confidence = 85f,
-                                motion = 2.15f,
+                                motion = 2.25f,
                                 light = 0f
                         )
                 }

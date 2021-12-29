@@ -295,47 +295,53 @@
     <!--endregion-->
 
     <!--region onboarding-->
-    <string name="onboarding_intent_data_available">OnboardingDataAvailable</string>
-    <string name="onboarding_intent_starttime">StartTime</string>
-    <string name="onboarding_intent_endtime">EndTime</string>
-    <string name="onboarding_intent_duration">Duration</string>
-    <string name="onboarding_intent_not_first_app_start">NotFirstAppStart</string>
-    <string name="onboarding_title_page_1">Sleepest</string>
-    <string name="onboarding_title_page_2">Sleep detection</string>
-    <string name="onboarding_title_page_3">Sleep tracking</string>
-    <string name="onboarding_title_page_4">Calculating wakeup</string>
-    <string name="onboarding_title_page_5">Illustration of sleep</string>
-    <string name="onboarding_title_page_6">Phone position</string>
-    <string name="onboarding_title_page_7">Alarm status</string>
-    <string name="onboarding_title_page_8">Settings</string>
-    <string name="onboarding_title_page_9">Permissions</string>
-    <string name="onboarding_title_page_10">Battery optimization</string>
-    <string name="onboarding_content_page_1">The app wants to give you the best possible sleep</string>
-    <string name="onboarding_content_page_2">The app detects when you fall asleep</string>
-    <string name="onboarding_content_page_3">The app tracks your sleep and differs awake and light or deep sleep</string>
-    <string name="onboarding_content_page_4">The wake-up time is calculated based on the quality of sleep in order to achieve the set sleep duration</string>
-    <string name="onboarding_content_page_5">You can look at your past sleep and analyze it</string>
-    <string name="onboarding_content_page_6">To track your sleep correctly, you should position your phone in your bed, preferably next or under your pillow. The sleep is tracked with the help of your phone sensors</string>
-    <string name="onboarding_content_page_7">In your set sleep time the notification above is shown. If not there is something wrong.\n
-                        This notification some useful things and guarantees, that the app is working in the background.\n
-                        With the left button you can easily disable your next alarm.\n
-                        With the right button you can correct a wrong sleep detection. </string>
-    <string name="onboarding_content_page_8">Set your ordinary sleep time and your preferred sleep duration.\n
-                        You can change them later.\n
-                        Tip: Set your ordinary sleep time generously to achieve a good sleep detection.</string>
-    <string name="onboarding_content_page_9">To guarantee that the app works correct you must accept the permissions above.</string>
-    <string name="onboarding_content_page_10">The app must run in the background to track your sleep. That\'s why you must follow the instructions to disable battery optimization for your device model.\n Please read carefully</string>
-    <string name="onboarding_toast_permissions">Please grant all permissions</string>
-    <string name="onboarding_toast_read_to_end">Please read the hole tutorial</string>
-    <string name="onboarding_toast_permission_already_granted">This permission is already granted</string>
-    <string name="onboarding_toast_find_permission_in_list">Please search for "Sleepest" in the list</string>
-    <string name="onboarding_start_time_text_first_start">Select start time</string>
-    <string name="onboarding_end_time_text_first_start">Select end time</string>
-    <string name="onboarding_start_time_text_not_first_start">Start</string>
-    <string name="onboarding_end_time_text_not_first_start">End</string>
-    <string name="onboarding_btn_text_start">Get started</string>
-    <string name="onboarding_grant_all_permissions">Please grant all permissions</string>
+    <string name="onboarding_toast_find_permission_in_list">find the sleepest app in the list</string>
+    <string name="onboarding_slide1_title">Welcome to</string>
+    <string name="onboarding_slide1_subtitle">Sleepest</string>
+    <string name="onboarding_slide1_desc">The new automatic and intelligent alarm clock.
+        Sleepest is adapted to new ways of life and home office.
+        It helps you to maintain your mental health and still stay productive. </string>
 
+    <string name="onboarding_slide2_title">Sleep times</string>
+    <string name="onboarding_slide2_subtitle">Automatic sleep detection</string>
+    <string name="onboarding_slide2_desc">
+        Sleepest can automatically detect when you are falling asleep.
+        The app must not be active for it.
+        The more you use your mobile phone, the better the app works.
+    </string>
+
+    <string name="onboarding_slide3_title">Sleep phases</string>
+    <string name="onboarding_slide3_subtitle">Sleep analytics and history</string>
+    <string name="onboarding_slide3_desc">
+        You can analyze your sleeping behaviour.
+        Sleepest can also detect sleep phases of your sleep, if
+        your mobile phone is in the bed at night.</string>
+
+    <string name="onboarding_slide4_title">Wake up</string>
+    <string name="onboarding_slide4_subtitle">Your sleep duration is key</string>
+    <string name="onboarding_slide4_desc">
+        Long date night? No problem!
+        Sleepest wakes you up after your desired sleep
+        duration in between a time window.</string>
+
+    <string name="onboarding_slide5_title">Notification</string>
+    <string name="onboarding_slide5_subtitle">Alarm active</string>
+    <string name="onboarding_slide5_desc">
+        Sleepest notifies you when an alarm is active.
+        You have full control over your alarms and can see your earliest and latest wake up point.
+    </string>
+
+    <string name="onboarding_slide6_title">Battery friendly</string>
+    <string name="onboarding_slide6_subtitle">Reliability of the app</string>
+    <string name="onboarding_slide6_desc">Its necessary for many devices that you
+    follow some further device-specific instructions that you can see in the following popup.
+    That makes sure that sleepest can stay in the background without the need to open
+        the app at any time.</string>
+
+    <string name="next">Next</string>
+    <string name="skip">Skip</string>
+    <string name="get_started">Get started</string>
+    <!--endregion-->
 
     <string name="privacy_police">Privacy Police</string>
     <string name="alarms_ringtone_set">Set</string>
