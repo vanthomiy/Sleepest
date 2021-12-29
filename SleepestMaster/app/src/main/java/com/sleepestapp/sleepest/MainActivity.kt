@@ -192,21 +192,20 @@ class MainActivity : AppCompatActivity() {
                         else AppCompatDelegate.MODE_NIGHT_NO
                     )
                 recreate()
-            }
-            else {
+            } else {
                 setupFragments(savedInstanceState == null)
                 setContentView(binding.root)
             }
 
             // start/restart activity tracking from main
-            if(viewModel.dataStoreRepository.sleepParameterFlow.first().userActivityTracking){
+            if (viewModel.dataStoreRepository.sleepParameterFlow.first().userActivityTracking) {
                 ActivityTransitionHandler(actualContext).startActivityHandler()
             }
         }
 
         supportActionBar?.hide()
 
-        viewModel.alarmsLiveData.observe(this){ alarms ->
+        viewModel.alarmsLiveData.observe(this) { alarms ->
             // check the list if empty or not
             lifecycleScope.launch {
                 val activeAlarms = SleepTimeValidationUtil.getActiveAlarms(
@@ -226,8 +225,7 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.settingsLiveData.observe(this) { settings ->
 
-            if(settings.restartApp && settings.afterRestartApp)
-            {
+            if (settings.restartApp && settings.afterRestartApp) {
                 lifecycleScope.launch {
                     viewModel.dataStoreRepository.updateRestartApp(false)
                     recreate()
@@ -242,22 +240,46 @@ class MainActivity : AppCompatActivity() {
             Intent.ACTION_SEND -> {
                 if ("application/json" == intent.type) {
                     lifecycleScope.launch {
-                        ImportUtil.getLoadFileFromIntent(intent, applicationContext, viewModel.dataBaseRepository)
+                        ImportUtil.getLoadFileFromIntent(
+                            intent,
+                            applicationContext,
+                            viewModel.dataBaseRepository
+                        )
                     }
                 }
             }
             Intent.ACTION_VIEW -> {
                 if ("application/json" == intent.type) {
                     lifecycleScope.launch {
-                        ImportUtil.getLoadFileFromIntent(intent, applicationContext, viewModel.dataBaseRepository)
+                        ImportUtil.getLoadFileFromIntent(
+                            intent,
+                            applicationContext,
+                            viewModel.dataBaseRepository
+                        )
                     }
                 }
             }
         }
 
-        val bundle :Bundle ?=intent.extras
+        val bundle: Bundle? = intent.extras
 
-        //Get default settings of tutorial and save it in datastore
+        if(bundle != null && bundle.getBoolean("from_onboarding"))
+        {
+            lifecycleScope.launch {
+                //Get default settings of tutorial and save it in datastore
+                if (viewModel.dataStoreRepository.tutorialStatusFlow.first().tutorialCompleted && !viewModel.dataStoreRepository.tutorialStatusFlow.first().energyOptionsShown) {
+                    DontKillMyAppFragment.show(this@MainActivity)
+                }
+
+                val calendar = TimeConverterUtil.getAlarmDate(viewModel.dataStoreRepository.getSleepTimeStart())
+                AlarmReceiver.startAlarmManager(
+                    calendar[Calendar.DAY_OF_WEEK],
+                    calendar[Calendar.HOUR_OF_DAY],
+                    calendar[Calendar.MINUTE],
+                    applicationContext, AlarmReceiverUsage.START_FOREGROUND)
+            }
+        }
+
 
 
         val alarmCycleState = AlarmCycleState(applicationContext)

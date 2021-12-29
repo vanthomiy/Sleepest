@@ -905,7 +905,7 @@ class SleepCalculationHandlerTest
 
         val sleepParameters = sleepStoreRepository.sleepParameterFlow.first()
 
-        val day = LocalDateTime.now().minusDays(2)
+        val day = LocalDateTime.now().minusDays(11)
         val sleepApiRawDataEntityList = sleepDbRepository.getSleepApiRawDataFromDate(day, sleepParameters.sleepTimeEnd, sleepParameters.sleepTimeStart).first()
         val sleepApiRawDataEntityListNew = mutableListOf<SleepApiRawDataEntity>()
         sleepApiRawDataEntityList?.forEach { data ->
@@ -935,7 +935,10 @@ class SleepCalculationHandlerTest
                     sleepDbRepository.insertSleepApiRawData(it)
                 }
             }
+
+
         }
+        sleepCalculationHandler.defineUserWakeup(day, false)
     }
 
 
