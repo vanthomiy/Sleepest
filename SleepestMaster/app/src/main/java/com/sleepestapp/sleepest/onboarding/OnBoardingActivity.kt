@@ -126,14 +126,18 @@ class OnBoardingActivity : AppCompatActivity() {
         if (requestCode == 282) {
             //ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS
             if(PermissionsUtil.isNotificationPolicyAccessGranted(applicationContext))
-                navigateToNextSlide()
+                lifecycleScope.launch {
+                    delay(1000)
+                    navigateToNextSlide()
+                }
         } else if (requestCode == 283) {
             lifecycleScope.launch {
                 var times = 0
-                while (times < 1000){
-                    delay(100)
+                while (times < 25){
+                    delay(4000)
                     times++
                     if(PermissionsUtil.isOverlayPermissionGranted(applicationContext)) {
+                        slideChangedAction(actualPage+1, true)
                         navigateToNextSlide()
                         times = 1100
                     }
@@ -206,16 +210,17 @@ class OnBoardingActivity : AppCompatActivity() {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels)
                 if (numberOfPages > 1) {
 
-                    slideChangedAction(position)
+                    slideChangedAction(position, false)
                     binding.onboardingMotion.progress = positionOffset
                 }
             }
         })
     }
 
-    private fun slideChangedAction(position:Int){
+    private fun slideChangedAction(position:Int, future:Boolean){
 
-        actualPage = position
+        if(!future)
+            actualPage = position
         var color = R.color.accent_text_color
         var text = resources.getText(R.string.next)
 

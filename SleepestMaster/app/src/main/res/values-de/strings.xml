@@ -302,9 +302,11 @@
     <!--endregion-->
 
     <!--region onboarding-->
+    <string name="onboarding_grant_all_permissions">Bitte erteile der App die benötigten Berechtigungen</string>
+
     <string name="onboarding_toast_find_permission_in_list">Wähle die Sleepest-App in der Liste aus</string>
 
-    <string name="onboarding_slide1_title">Hallo bei</string>
+    <string name="onboarding_slide1_title">Willkommen zu</string>
     <string name="onboarding_slide1_subtitle">Sleepest</string>
     <string name="onboarding_slide1_desc">Der neue, automatische und intelligente Wecker.
         Sleepest ist an neue Lebensweißen und Home-Office angepasst.

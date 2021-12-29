@@ -295,6 +295,7 @@
     <!--endregion-->
 
     <!--region onboarding-->
+    <string name="onboarding_grant_all_permissions">Please grant all permissions</string>
     <string name="onboarding_toast_find_permission_in_list">find the sleepest app in the list</string>
     <string name="onboarding_slide1_title">Welcome to</string>
     <string name="onboarding_slide1_subtitle">Sleepest</string>

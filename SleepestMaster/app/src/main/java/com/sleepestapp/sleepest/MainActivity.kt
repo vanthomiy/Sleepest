@@ -285,7 +285,11 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun checkPermissions() {
         // check permission
-        if (!PermissionsUtil.isActivityRecognitionPermissionGranted(applicationContext)) {
+
+        if(!PermissionsUtil.checkAllNecessaryPermissions(this))
+            startTutorial()
+
+        /*if (!PermissionsUtil.isActivityRecognitionPermissionGranted(applicationContext)) {
             requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
         }
 
@@ -295,7 +299,7 @@ class MainActivity : AppCompatActivity() {
 
         if (!PermissionsUtil.isNotificationPolicyAccessGranted(applicationContext)) {
             PermissionsUtil.setOverlayPermission(this@MainActivity)
-        }
+        }*/
     }
 
 
@@ -306,7 +310,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 // Permission was granted (either by approval or Android version below Q).
 
-                DontKillMyAppFragment.show(this@MainActivity)
+                //DontKillMyAppFragment.show(this@MainActivity)
 
                 lifecycleScope.launch {
                     val calendar = TimeConverterUtil.getAlarmDate(viewModel.dataStoreRepository.getSleepTimeBegin())
