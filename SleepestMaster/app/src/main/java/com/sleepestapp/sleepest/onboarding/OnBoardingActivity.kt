@@ -127,21 +127,16 @@ class OnBoardingActivity : AppCompatActivity() {
             //ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS
             if(PermissionsUtil.isNotificationPolicyAccessGranted(applicationContext))
                 lifecycleScope.launch {
-                    delay(1000)
+                    delay(500)
                     navigateToNextSlide()
                 }
         } else if (requestCode == 283) {
             lifecycleScope.launch {
-                var times = 0
-                while (times < 25){
-                    delay(4000)
-                    times++
-                    if(PermissionsUtil.isOverlayPermissionGranted(applicationContext)) {
-                        slideChangedAction(actualPage+1, true)
-                        navigateToNextSlide()
-                        times = 1100
-                    }
-                }
+                delay(1000)
+                var color = R.color.accent_text_color
+                var text = resources.getText(R.string.next)
+                binding.permissionBtn.background.setTint(resources.getColor(color))
+                binding.permissionBtn.text = text
             }
         }
     }
@@ -234,7 +229,8 @@ class OnBoardingActivity : AppCompatActivity() {
 
             if (!PermissionsUtil.isActivityRecognitionPermissionGranted(this)){
                 color = R.color.error_color
-                text = resources.getText(R.string.settings_notification_privacy)
+                text = resources.getText(R.string.settings_sleepdata).toString()
+                text += resources.getText(R.string.permission_string)
             }
         }
         else if(position == 2)
@@ -251,7 +247,8 @@ class OnBoardingActivity : AppCompatActivity() {
 
             if (!PermissionsUtil.isOverlayPermissionGranted(this)){
                 color = R.color.error_color
-                text = resources.getText(R.string.settings_overlapp_app)
+                text = resources.getText(R.string.settings_overlapp_app).toString()
+                text += resources.getText(R.string.permission_string)
             }
         }
         else if(position == 4)
@@ -262,7 +259,8 @@ class OnBoardingActivity : AppCompatActivity() {
 
             if (!PermissionsUtil.isNotificationPolicyAccessGranted(this)){
                 color = R.color.error_color
-                text = resources.getText(R.string.settings_notification_privacy)
+                text = resources.getText(R.string.settings_notification_privacy).toString()
+                text += resources.getText(R.string.permission_string)
             }
         }
         else if(position == 5)
