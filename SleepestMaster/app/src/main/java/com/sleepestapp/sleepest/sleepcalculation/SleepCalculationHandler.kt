@@ -274,41 +274,7 @@ class SleepCalculationHandler(val context: Context) {
 
         // check for each sleep state
         sleepApiRawDataEntity.forEach { data ->
-            // First definition without future data
-            if(finalCalc && data.sleepState == SleepState.NONE) {
 
-                // get normed list
-                val (normedSleepApiDataBefore, frequency) = createTimeNormedData(
-                    1f,
-                    false,
-                    data.timestampSeconds,
-                    sleepApiRawDataEntity.toList()
-                )
-
-                if (frequency == SleepDataFrequency.NONE) {
-
-                    dataBaseRepository.updateSleepApiRawDataSleepState(
-                        data.timestampSeconds,
-                        SleepState.AWAKE
-                    )
-
-                    return@forEach
-                }
-
-                // call the ml model
-                data.sleepState = sleepClassifier.isUserSleeping(
-                    normedSleepApiDataBefore,
-                    null,
-                    mobilePosition,
-                    lightConditions,
-                    mobileUseFrequency
-                )
-
-                dataBaseRepository.updateSleepApiRawDataSleepState(
-                    data.timestampSeconds,
-                    data.sleepState
-                )
-            }
 
             if (data.sleepState == SleepState.NONE) { // && data.oldSleepState == SleepState.NONE){
                 // get normed list
@@ -320,7 +286,7 @@ class SleepCalculationHandler(val context: Context) {
                 )
 
                 val (normedSleepApiDataAfter, frequency2) = createTimeNormedData(
-                    if(!fromDefineUserWakeUp) 1f else 0.25f,
+                    1f, //if(!fromDefineUserWakeUp) 1f else 0.1f,
                     true,
                     data.timestampSeconds,
                     sleepApiRawDataEntity.toList()
@@ -352,6 +318,42 @@ class SleepCalculationHandler(val context: Context) {
                 )
 
                 dataBaseRepository.updateOldSleepApiRawDataSleepState(
+                    data.timestampSeconds,
+                    data.sleepState
+                )
+            }
+
+            // First definition without future data
+            if((finalCalc || fromDefineUserWakeUp) && data.sleepState == SleepState.NONE) {
+
+                // get normed list
+                val (normedSleepApiDataBefore, frequency) = createTimeNormedData(
+                    1f,
+                    false,
+                    data.timestampSeconds,
+                    sleepApiRawDataEntity.toList()
+                )
+
+                if (frequency == SleepDataFrequency.NONE) {
+
+                    dataBaseRepository.updateSleepApiRawDataSleepState(
+                        data.timestampSeconds,
+                        SleepState.AWAKE
+                    )
+
+                    return@forEach
+                }
+
+                // call the ml model
+                data.sleepState = sleepClassifier.isUserSleeping(
+                    normedSleepApiDataBefore,
+                    null,
+                    mobilePosition,
+                    lightConditions,
+                    mobileUseFrequency
+                )
+
+                dataBaseRepository.updateSleepApiRawDataSleepState(
                     data.timestampSeconds,
                     data.sleepState
                 )
