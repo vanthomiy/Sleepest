@@ -300,27 +300,27 @@ class SleepCalculationHandler(val context: Context) {
                         data.sleepState
                     )
 
-                    return@forEach
                 }
+                else{
+                    // call the ml model
+                    data.sleepState = sleepClassifier.isUserSleeping(
+                        normedSleepApiDataBefore,
+                        normedSleepApiDataAfter,
+                        mobilePosition,
+                        lightConditions,
+                        mobileUseFrequency
+                    )
 
-                // call the ml model
-                data.sleepState = sleepClassifier.isUserSleeping(
-                    normedSleepApiDataBefore,
-                    normedSleepApiDataAfter,
-                    mobilePosition,
-                    lightConditions,
-                    mobileUseFrequency
-                )
+                    dataBaseRepository.updateSleepApiRawDataSleepState(
+                        data.timestampSeconds,
+                        data.sleepState
+                    )
 
-                dataBaseRepository.updateSleepApiRawDataSleepState(
-                    data.timestampSeconds,
-                    data.sleepState
-                )
-
-                dataBaseRepository.updateOldSleepApiRawDataSleepState(
-                    data.timestampSeconds,
-                    data.sleepState
-                )
+                    dataBaseRepository.updateOldSleepApiRawDataSleepState(
+                        data.timestampSeconds,
+                        data.sleepState
+                    )
+                }
             }
 
             // First definition without future data
