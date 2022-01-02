@@ -295,10 +295,10 @@ class SleepCalculationHandler(val context: Context) {
 
                 if(frequency1 == SleepDataFrequency.NONE || frequency2 == SleepDataFrequency.NONE){
 
-                    dataBaseRepository.updateSleepApiRawDataSleepState(
+                    /*dataBaseRepository.updateSleepApiRawDataSleepState(
                         data.timestampSeconds,
                         data.sleepState
-                    )
+                    )*/
 
                 }
                 else{
