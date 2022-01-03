@@ -5,12 +5,15 @@ import android.Manifest
 import android.content.ActivityNotFoundException
 import android.content.ContentResolver
 import android.content.Context
+import android.content.Context.POWER_SERVICE
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
 import android.provider.DocumentsContract
+import android.provider.Settings
 import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
@@ -409,9 +412,8 @@ class SettingsFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun onPermissionClicked(view: View) {
         when (view.tag.toString()) {
-            "dailyActivity" -> if (viewModel.dailyPermission.value != true) requestPermissionLauncher.launch(
-                Manifest.permission.ACTIVITY_RECOGNITION
-            ) else viewModel.showPermissionInfo("dailyActivity")
+            "dailyActivity" -> if (viewModel.dailyPermission.value != true) checkBatteryOptimization(requireActivity())
+              else checkBatteryOptimization(requireActivity())
             "sleepActivity" -> if (viewModel.activityPermission.value != true) requestPermissionLauncher.launch(
                 Manifest.permission.ACTIVITY_RECOGNITION
             ) else viewModel.showPermissionInfo("sleepActivity")
@@ -419,6 +421,19 @@ class SettingsFragment : Fragment() {
             ) else viewModel.showPermissionInfo("notificationPrivacy")
             "overlay" -> if (viewModel.overlayPermission.value != true) PermissionsUtil.setOverlayPermission(requireActivity()
                 ) else viewModel.showPermissionInfo("overlay")
+        }
+    }
+
+    fun checkBatteryOptimization(mContext: Context) {
+
+        val powerManager =
+            mContext.getSystemService(POWER_SERVICE) as PowerManager
+        val packageName = mContext.packageName
+        val i = Intent()
+        if (!powerManager.isIgnoringBatteryOptimizations(packageName)) {
+            i.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+            i.data = Uri.parse("package:$packageName")
+            mContext.startActivity(i)
         }
     }
 

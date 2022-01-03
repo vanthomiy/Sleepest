@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.widget.Toast;
 
@@ -101,6 +102,17 @@ public class PermissionsUtil {
 
         Toast.makeText(context, context.getString(R.string.onboarding_toast_find_permission_in_list), Toast.LENGTH_LONG).show();
 
+    }
+
+    public static void setPowerPermission(Activity context){
+        PowerManager powerManager = (PowerManager) context.getSystemService(context.POWER_SERVICE);
+        String packageName = "org.traccar.client";
+        Intent i = new Intent();
+        if (!powerManager.isIgnoringBatteryOptimizations(packageName)) {
+            i.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+            i.setData(Uri.parse("package:" + packageName));
+            context.startActivityForResult(i, 284);
+        }
     }
 
     /**
