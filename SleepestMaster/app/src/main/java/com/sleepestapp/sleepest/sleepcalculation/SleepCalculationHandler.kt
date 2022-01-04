@@ -414,13 +414,13 @@ class SleepCalculationHandler(val context: Context) {
 
         val sleepClassifier = SleepClassifier(context)
 
-        val date = localTime ?: LocalDateTime.now()
+        val time = localTime ?: LocalDateTime.now()
 
         // calculate all sleep states when the user is sleeping
         val id = if (setAlarm)
-            UserSleepSessionEntity.getIdByDateTimeWithTimeZoneLive(dataStoreRepository, date)
+            UserSleepSessionEntity.getIdByDateTimeWithTimeZoneLive(dataStoreRepository, time)
         else
-            UserSleepSessionEntity.getIdByDateTimeWithTimeZone(date.toLocalDate())
+            UserSleepSessionEntity.getIdByDateTimeWithTimeZone(time.toLocalDate())
 
         val sleepSessionEntity = dataBaseRepository.getOrCreateSleepSessionById(id)
 
@@ -436,18 +436,15 @@ class SleepCalculationHandler(val context: Context) {
             endTime = dataStoreRepository.getSleepTimeEnd()
         }
 
-        // for each sleeping time, we have to define the sleep state
-        val time = localTime ?: LocalDateTime.now()
-
         // we define the user sleep with the define user wake up. That will make it more accurate in the morning
-        checkIsUserSleeping(time, setAlarm, true)
+        checkIsUserSleeping(time, true, true)
 
         val sleepApiRawDataEntity = if (!setAlarm && sleepSessionEntity.sleepTimes.sleepTimeStart != 0){
             dataBaseRepository.getSleepApiRawDataBetweenTimestamps(sleepSessionEntity.sleepTimes.sleepTimeStart, sleepSessionEntity.sleepTimes.sleepTimeEnd).first()
                 ?.sortedBy { x -> x.timestampSeconds }
         }
         else
-            dataBaseRepository.getSleepApiRawDataFromDate(date, endTime, startTime).first()
+            dataBaseRepository.getSleepApiRawDataFromDate(time, endTime, startTime).first()
                 ?.sortedBy { x -> x.timestampSeconds }
 
 
