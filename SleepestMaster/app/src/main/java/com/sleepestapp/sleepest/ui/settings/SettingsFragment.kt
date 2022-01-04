@@ -7,7 +7,6 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.Context.POWER_SERVICE
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -43,6 +42,7 @@ import com.sleepestapp.sleepest.onboarding.OnBoardingActivity
 import com.sleepestapp.sleepest.util.IconAnimatorUtil.isDarkThemeOn
 import com.sleepestapp.sleepest.util.PermissionsUtil
 import com.sleepestapp.sleepest.util.SmileySelectorUtil
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.*
@@ -105,7 +105,7 @@ class SettingsFragment : Fragment() {
         binding.sleepActivityPermission.setOnClickListener {
             onPermissionClicked(it)
         }
-        binding.dailyActivityPermission.setOnClickListener {
+        binding.powerOptimizationPermission.setOnClickListener {
             onPermissionClicked(it)
         }
         binding.notificationPrivacyPermission.setOnClickListener {
@@ -411,9 +411,10 @@ class SettingsFragment : Fragment() {
      */
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun onPermissionClicked(view: View) {
+        checkPermissions()
         when (view.tag.toString()) {
-            "dailyActivity" -> if (viewModel.dailyPermission.value != true) checkBatteryOptimization(requireActivity())
-              else checkBatteryOptimization(requireActivity())
+            "powerOptimization" -> if (viewModel.powerOptimizationDisabled.value != true) PermissionsUtil.setPowerPermission(requireActivity()
+            ) else viewModel.showPermissionInfo("powerOptimization")
             "sleepActivity" -> if (viewModel.activityPermission.value != true) requestPermissionLauncher.launch(
                 Manifest.permission.ACTIVITY_RECOGNITION
             ) else viewModel.showPermissionInfo("sleepActivity")
@@ -424,17 +425,9 @@ class SettingsFragment : Fragment() {
         }
     }
 
-    fun checkBatteryOptimization(mContext: Context) {
-
-        val powerManager =
-            mContext.getSystemService(POWER_SERVICE) as PowerManager
-        val packageName = mContext.packageName
-        val i = Intent()
-        if (!powerManager.isIgnoringBatteryOptimizations(packageName)) {
-            i.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-            i.data = Uri.parse("package:$packageName")
-            mContext.startActivity(i)
-        }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        checkPermissions()
     }
 
     /**
@@ -481,8 +474,8 @@ class SettingsFragment : Fragment() {
                 PermissionsUtil.isActivityRecognitionPermissionGranted(actualContext)
                 )
 
-        viewModel.dailyPermission.value = (
-                PermissionsUtil.isActivityRecognitionPermissionGranted(actualContext)
+        viewModel.powerOptimizationDisabled.value = (
+                PermissionsUtil.isPowerPermissionGranted(actualContext)
                 )
 
         viewModel.notificationPrivacyPermission.value = (

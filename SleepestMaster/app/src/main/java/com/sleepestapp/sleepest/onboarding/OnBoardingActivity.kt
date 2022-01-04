@@ -138,6 +138,15 @@ class OnBoardingActivity : AppCompatActivity() {
                 binding.permissionBtn.background.setTint(resources.getColor(color))
                 binding.permissionBtn.text = text
             }
+        } else if (requestCode == 284) {
+            if(PermissionsUtil.isPowerPermissionGranted(applicationContext))
+                lifecycleScope.launch {
+                    delay(500)
+                    var color = R.color.accent_text_color
+                    var text = resources.getText(R.string.get_started)
+                    binding.permissionBtn.background.setTint(resources.getColor(color))
+                    binding.permissionBtn.text = text
+                }
         }
     }
 
@@ -268,7 +277,14 @@ class OnBoardingActivity : AppCompatActivity() {
             if (!PermissionsUtil.isNotificationPolicyAccessGranted(this))
                 navigateToPreviousSlide()
 
-            text = resources.getText(R.string.get_started)
+            if (!PermissionsUtil.isPowerPermissionGranted(this)){
+                color = R.color.error_color
+                text = resources.getText(R.string.power_optimization_activity).toString()
+                text += " " + resources.getText(R.string.permission_string)
+            }
+            else{
+                text = resources.getText(R.string.get_started)
+            }
         }
         binding.permissionBtn.background.setTint(resources.getColor(color))
         binding.permissionBtn.text = text
@@ -297,7 +313,12 @@ class OnBoardingActivity : AppCompatActivity() {
                     else
                         navigateToNextSlide()
                 }
-                5 -> navigateToMainActivity()
+                5 -> {
+                    if (!PermissionsUtil.isPowerPermissionGranted(this))
+                        PermissionsUtil.setPowerPermission(this)
+                    else
+                        navigateToMainActivity()
+                }
                 else -> navigateToNextSlide()
             }
         }

@@ -212,16 +212,16 @@
     <string name="settings_permission_sleepdata">
         Die App benötigen diese Berechtigung, um den Schlaf mit Hilfe deines Handys zu überwachen. Ohne diese Berechtigung funktioniert die App nicht!
     </string>
-    <string name="settings_daily_activity">Tägliche Aktivität</string>
-    <string name="settings_permission_daily_activity">
-        Die App benötigt diese Berechtigung, um deine Aktivität am Tag aufzuzeichnen
+    <string name="power_optimization_activity">Akku-Optimierung</string>
+    <string name="settings_permission_power_optimization">
+        Die App benötigt diese Berechtigung, um zuverlässig im Hintergrund zu funktionieren.
     </string>
     <string name="settings_permission_notification_privacy">
-        Um den Wecker auch im lautlosen Modus klingeln zu lassen, wird diese Berechtigung benötigt
+        Um den Wecker auch im lautlosen Modus klingeln zu lassen, wird diese Berechtigung benötigt.
     </string>
     <string name="settings_overlapp_app">App überlappen</string>
     <string name="settings_permission_overlapp_app">
-        Die App benötigt diese Berechtigung, damit sie dich auch bei gesperrtem Handy wecken kann
+        Die App benötigt diese Berechtigung, damit sie dich auch bei gesperrtem Handy wecken kann.
     </string>
     <string name="settings_notification_privacy">Nicht stören</string>
     <string name="settings_data">Daten</string>

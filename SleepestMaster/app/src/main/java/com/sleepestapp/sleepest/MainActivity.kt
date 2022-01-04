@@ -263,7 +263,7 @@ class MainActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 //Get default settings of tutorial and save it in datastore
                 if (viewModel.dataStoreRepository.tutorialStatusFlow.first().tutorialCompleted && !viewModel.dataStoreRepository.tutorialStatusFlow.first().energyOptionsShown) {
-                    DontKillMyAppFragment.show(this@MainActivity)
+                    //DontKillMyAppFragment.show(this@MainActivity)
                 }
 
                 val calendar = TimeConverterUtil.getAlarmDate(viewModel.dataStoreRepository.getSleepTimeStart())
