@@ -345,7 +345,8 @@
     <string name="onboarding_slide6_title">Akkuschonend</string>
     <string name="onboarding_slide6_subtitle">Zuverlässigkeit der App</string>
     <string name="onboarding_slide6_desc">Es sind für viele Geräte spezfische Einstellungen nötig um zu gewährleisten, dass die App richtig funktioniert.
-        Im folgenden wird ein Popup erscheinen, welches die Anweisungen für dein Gerät erklärt.
+        Unter "Einstellungen / Hilfe / ENERGIEEINSTELLUNGEN" werden die nötigen Schritte für dein Gerät erklärt.
+        Wenn das Banner nicht zur Schlafzeit an geht ist das ein hinweiß auf falsche Energieeinstellungen. Dann solltest du den Anweißungen folgen um die App funktionsfähig zu machen.
         Wenn du dies befolgst funktioniert Sleepest zuverlässig aus dem Hintergrund.</string>
 
     <string name="next">Weiter</string>

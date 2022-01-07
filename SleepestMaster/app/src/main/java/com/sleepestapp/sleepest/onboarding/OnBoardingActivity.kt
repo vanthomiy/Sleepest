@@ -277,7 +277,7 @@ class OnBoardingActivity : AppCompatActivity() {
             if (!PermissionsUtil.isNotificationPolicyAccessGranted(this))
                 navigateToPreviousSlide()
 
-            if (!PermissionsUtil.isPowerPermissionGranted(this)){
+            if (!PermissionsUtil.isPowerPermissionGranted(this) || !PermissionsUtil.isAutoStartGranted(this)){
                 color = R.color.error_color
                 text = resources.getText(R.string.power_optimization_activity).toString()
                 text += " " + resources.getText(R.string.permission_string)
@@ -314,7 +314,7 @@ class OnBoardingActivity : AppCompatActivity() {
                         navigateToNextSlide()
                 }
                 5 -> {
-                    if (!PermissionsUtil.isPowerPermissionGranted(this))
+                    if (!PermissionsUtil.isPowerPermissionGranted(this) || !PermissionsUtil.isAutoStartGranted(this))
                         PermissionsUtil.setPowerPermission(this)
                     else
                         navigateToMainActivity()

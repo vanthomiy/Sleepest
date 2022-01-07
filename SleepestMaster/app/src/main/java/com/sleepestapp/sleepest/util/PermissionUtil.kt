@@ -14,6 +14,7 @@ import android.provider.Settings
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.judemanutd.autostarter.AutoStartPermissionHelper
 import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.onboarding.PermissionActivity
 
@@ -54,6 +55,17 @@ object PermissionsUtil {
     }
 
     /**
+     * Check permission to enable auto start
+     * @param context Activity Context
+     * @return is granted
+     */
+    fun isAutoStartGranted(context: Context): Boolean {
+        if (!AutoStartPermissionHelper.getInstance().isAutoStartPermissionAvailable(context))
+            return true
+        return AutoStartPermissionHelper.getInstance().getAutoStartPermission(context)
+    }
+
+    /**
      * Check Activity Recognition permission
      * @param context Activity Context
      * @return is granted
@@ -84,6 +96,7 @@ object PermissionsUtil {
     fun checkAllNecessaryPermissions(context: Context): Boolean {
         return isNotificationPolicyAccessGranted(context) && isOverlayPermissionGranted(context) &&
                 isActivityRecognitionPermissionGranted(context) && isPowerPermissionGranted(context)
+                && isAutoStartGranted(context)
     }
 
     /**
@@ -127,6 +140,17 @@ object PermissionsUtil {
             i.data = Uri.parse("package:$packageName")
             context.startActivityForResult(i, 284)
         }
+        setAutoStartGranted(context)
+    }
+
+    /**
+     * Set permission to enable auto start
+     * @param context Activity Context
+     * @return is granted
+     */
+    fun setAutoStartGranted(context: Context) {
+
+        AutoStartPermissionHelper.getInstance().getAutoStartPermission(context, true)
     }
 
     /**

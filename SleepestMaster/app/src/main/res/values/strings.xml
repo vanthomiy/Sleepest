@@ -337,8 +337,9 @@
     <string name="onboarding_slide6_title">Battery friendly</string>
     <string name="onboarding_slide6_subtitle">Reliability of the app</string>
     <string name="onboarding_slide6_desc">Its necessary for many devices that you
-    follow some further device-specific instructions that you can see in the following popup.
-    That makes sure that sleepest can stay in the background without the need to open
+    follow some further device-specific instructions that can be found under "Settings / Help / ENERGY SETTINGS".
+    If the banner dont show app at the sleep time you should check this for further information.
+        That makes sure that sleepest can stay in the background without the need to open
         the app at any time.</string>
 
     <string name="next">Next</string>
