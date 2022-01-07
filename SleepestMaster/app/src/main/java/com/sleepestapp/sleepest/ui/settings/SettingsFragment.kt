@@ -475,7 +475,8 @@ class SettingsFragment : Fragment() {
                 )
 
         viewModel.powerOptimizationDisabled.value = (
-                PermissionsUtil.isPowerPermissionGranted(actualContext)
+                PermissionsUtil.isPowerPermissionGranted(actualContext) &&
+                        PermissionsUtil.isAutoStartGranted(actualContext)
                 )
 
         viewModel.notificationPrivacyPermission.value = (

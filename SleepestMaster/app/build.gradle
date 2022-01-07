@@ -78,6 +78,8 @@ configurations.all {
 }
 
 dependencies {
+    // Auto start permission
+    implementation 'com.github.judemanutd:autostarter:1.1.0'
 
     implementation 'com.google.firebase:firebase-appindexing:20.0.0'
     implementation 'com.google.firebase:firebase-dynamic-links:20.1.1'
