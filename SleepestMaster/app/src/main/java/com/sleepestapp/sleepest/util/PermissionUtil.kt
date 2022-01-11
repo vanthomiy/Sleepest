@@ -1,6 +1,8 @@
 package com.sleepestapp.sleepest.util
 
 import android.Manifest
+import android.Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.NotificationManager
 import android.content.ActivityNotFoundException
@@ -12,11 +14,16 @@ import android.os.Build
 import android.os.PowerManager
 import android.provider.Settings
 import android.widget.Toast
+import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.judemanutd.autostarter.AutoStartPermissionHelper
 import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.onboarding.PermissionActivity
+import androidx.core.content.ContextCompat.startActivity
+
+
+
 
 /**
  * Util to check and set all permissions which are necessary
@@ -62,7 +69,7 @@ object PermissionsUtil {
     fun isAutoStartGranted(context: Context): Boolean {
         if (!AutoStartPermissionHelper.getInstance().isAutoStartPermissionAvailable(context))
             return true
-        return AutoStartPermissionHelper.getInstance().getAutoStartPermission(context)
+        return AutoStartPermissionHelper.getInstance().getAutoStartPermission(context, false)
     }
 
     /**
@@ -131,6 +138,7 @@ object PermissionsUtil {
     * Set the permission for disable power safer
     * @param context Activity context
     */
+    @SuppressLint("BatteryLife")
     fun setPowerPermission(context: Activity) {
         val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
         val packageName = context.packageName
@@ -140,7 +148,43 @@ object PermissionsUtil {
             i.data = Uri.parse("package:$packageName")
             context.startActivityForResult(i, 284)
         }
+
+        val intent = Intent()
+        intent.action = Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS
+        context.startActivity(intent)
+
         setAutoStartGranted(context)
+
+    }
+
+    enum class WhiteListedInBatteryOptimizations {
+        WHITE_LISTED, NOT_WHITE_LISTED, ERROR_GETTING_STATE, IRRELEVANT_OLD_ANDROID_API
+    }
+
+    fun getIfAppIsWhiteListedFromBatteryOptimizations(context: Context, packageName: String = context.packageName): WhiteListedInBatteryOptimizations {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return WhiteListedInBatteryOptimizations.IRRELEVANT_OLD_ANDROID_API
+        val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager?
+            ?: return WhiteListedInBatteryOptimizations.ERROR_GETTING_STATE
+        return if (pm.isIgnoringBatteryOptimizations(packageName)) WhiteListedInBatteryOptimizations.WHITE_LISTED else WhiteListedInBatteryOptimizations.NOT_WHITE_LISTED
+    }
+
+    //@TargetApi(VERSION_CODES.M)
+    @SuppressLint("BatteryLife", "InlinedApi")
+    @RequiresPermission(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+    fun prepareIntentForWhiteListingOfBatteryOptimization(context: Context, packageName: String = context.packageName, alsoWhenWhiteListed: Boolean = false): Intent? {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+            return null
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS) == PackageManager.PERMISSION_DENIED)
+            return null
+        val appIsWhiteListedFromPowerSave: WhiteListedInBatteryOptimizations = getIfAppIsWhiteListedFromBatteryOptimizations(context, packageName)
+        var intent: Intent? = null
+        when (appIsWhiteListedFromPowerSave) {
+            WhiteListedInBatteryOptimizations.WHITE_LISTED -> if (alsoWhenWhiteListed) intent = Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
+            WhiteListedInBatteryOptimizations.NOT_WHITE_LISTED -> intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).setData(Uri.parse("package:$packageName"))
+            WhiteListedInBatteryOptimizations.ERROR_GETTING_STATE, WhiteListedInBatteryOptimizations.IRRELEVANT_OLD_ANDROID_API -> {
+            }
+        }
+        return intent
     }
 
     /**

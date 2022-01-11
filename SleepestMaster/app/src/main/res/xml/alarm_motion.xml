@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <ConstraintSet android:id="@+id/start">
+
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end">
+        <Constraint
+            android:id="@+id/im_lock"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintTop_toTopOf="parent" />
+
+        <!--        <Constraint-->
+        <!--            android:id="@+id/lay_lock_main">-->
+        <!--            <CustomAttribute-->
+        <!--                motion:attributeName="background"-->
+        <!--                motion:customColorDrawableValue="@drawable/shape_round_rectable"/>-->
+        <!--        </Constraint>-->
+
+        <Constraint
+            android:id="@+id/tv_lable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent">
+
+            <!--            <CustomAttribute-->
+            <!--                motion:attributeName="customStringValue"-->
+            <!--                motion:customStringValue="@string/unlocked_lable"/>-->
+
+
+        </Constraint>
+    </ConstraintSet>
+
+    <Transition
+        motion:constraintSetEnd="@+id/end"
+        motion:constraintSetStart="@+id/start" >
+        <OnSwipe
+            motion:touchAnchorId="@+id/im_lock"
+            motion:dragDirection="dragLeft"
+            motion:touchAnchorSide="left"
+            />
+    </Transition>
+</MotionScene>

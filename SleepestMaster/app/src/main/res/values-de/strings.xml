@@ -16,7 +16,7 @@
     <string name="alarm_notification_button_2">Schlummern</string>
     <string name="alarm_clock_user_should_sleep">"Gute Nacht</string>
     <string name="alarm_clock_snooze">Schlummern</string>
-    <string name="alarm_clock_swipe_up">Hoch wischen, um Alarm abzubrechen</string>
+    <string name="alarm_clock_swipe_up">Wischen zum beenden</string>
     <!--endregion-->
 
     <!--region Background-->

@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".DontKillMyAppFragment">
 
-    <TextView
+    <!--TextView
         android:id="@+id/tvNoticeDontKillMyApp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,9 +21,16 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:textSize="17sp"
-        android:textColor="@color/light_gray"/>
+        android:textColor="@color/light_gray"/-->
 
     <dev.doubledot.doki.views.DokiContentView
+        android:id="@+id/doki_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:dokiExplanationTitle="The Explanation"
+        app:dokiSolutionTitle="The Solution"/>
+
+    <!--dev.doubledot.doki.views.DokiContentView
         android:id="@+id/doki_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -37,6 +44,6 @@
         app:dokiBackgroundColor="@color/gray_blue"
         app:dokiHeaderBackgroundColor="@color/dark_gray"
         app:dokiDividerColor="@color/yellow"
-        app:dokiImgBorderColor="@color/dark_green"/>
+        app:dokiImgBorderColor="@color/dark_green"/-->
 
 </LinearLayout>

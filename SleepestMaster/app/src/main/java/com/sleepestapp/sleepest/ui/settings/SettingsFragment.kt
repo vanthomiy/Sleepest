@@ -33,6 +33,7 @@ import com.google.gson.Gson
 import com.sleepestapp.sleepest.DontKillMyAppFragment
 import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.R
+import com.sleepestapp.sleepest.alarmclock.LockScreenAlarmActivity
 import com.sleepestapp.sleepest.databinding.FragmentSettingsBinding
 import com.sleepestapp.sleepest.model.data.*
 import com.sleepestapp.sleepest.model.data.credits.CreditsSites
@@ -54,7 +55,7 @@ class SettingsFragment : Fragment() {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
             // Workaround because we know that we can cast to T
-            return  SettingsViewModel(
+            return SettingsViewModel(
                 (actualContext as MainApplication).dataStoreRepository,
                 (actualContext as MainApplication).dataBaseRepository
             ) as T
@@ -64,11 +65,18 @@ class SettingsFragment : Fragment() {
     /**
      * View model of the [SettingsFragment]
      */
-    private val viewModel by lazy { ViewModelProvider(this, factory).get(SettingsViewModel::class.java) }
+    private val viewModel by lazy {
+        ViewModelProvider(
+            this,
+            factory
+        ).get(SettingsViewModel::class.java)
+    }
+
     /**
      * Binding XML Code to Fragment
      */
     private lateinit var binding: FragmentSettingsBinding
+
     /**
      * Get actual context
      */
@@ -83,9 +91,9 @@ class SettingsFragment : Fragment() {
     /**
      * Open the selected information view if [caseOfEntry] is not -1
      */
-    fun setCaseOfEntry(case: Int){
+    fun setCaseOfEntry(case: Int) {
         caseOfEntry = case
-        if(this::binding.isInitialized)
+        if (this::binding.isInitialized)
             viewModel.actualExpand.value = (caseOfEntry)
     }
 
@@ -136,23 +144,23 @@ class SettingsFragment : Fragment() {
             DontKillMyAppFragment.show(requireActivity())
         }
 
-        viewModel.aboutUsSelection.observe(viewLifecycleOwner){
+        viewModel.aboutUsSelection.observe(viewLifecycleOwner) {
             onAboutUsClicked(it)
         }
 
-        viewModel.autoDarkMode.observe(viewLifecycleOwner){
+        viewModel.autoDarkMode.observe(viewLifecycleOwner) {
             TransitionManager.beginDelayedTransition(binding.linearAnimationlayout)
         }
 
-        viewModel.removeExpand.observe(viewLifecycleOwner){
+        viewModel.removeExpand.observe(viewLifecycleOwner) {
             TransitionManager.beginDelayedTransition(binding.linearAnimationlayout)
         }
 
-        viewModel.actualExpand.observe(viewLifecycleOwner){
+        viewModel.actualExpand.observe(viewLifecycleOwner) {
             TransitionManager.beginDelayedTransition(binding.linearAnimationlayout)
         }
 
-        viewModel.descriptionChanged.observe(viewLifecycleOwner){
+        viewModel.descriptionChanged.observe(viewLifecycleOwner) {
             TransitionManager.beginDelayedTransition(binding.linearAnimationlayout)
         }
 
@@ -173,7 +181,7 @@ class SettingsFragment : Fragment() {
             val settings = viewModel.dataStoreRepository.settingsDataFlow.first()
 
 
-            if ((settings.designAutoDarkMode  && actualContext.isDarkThemeOn()) || !settings.designAutoDarkMode && settings.designDarkMode)
+            if ((settings.designAutoDarkMode && actualContext.isDarkThemeOn()) || !settings.designAutoDarkMode && settings.designDarkMode)
                 binding.lottieDarkMode.setMinAndMaxFrame(0, 240) //to play the first half
             else
                 binding.lottieDarkMode.setMinAndMaxFrame(240, 481) //to play the second half
@@ -193,12 +201,12 @@ class SettingsFragment : Fragment() {
     /**
      * create the credits for the credits view
      */
-    private fun createCredits(){
+    private fun createCredits() {
         val creditsSites = CreditsSites.createCreditSites()
 
-        creditsSites.forEach{ site ->
+        creditsSites.forEach { site ->
 
-            if(site.site != Websites.PRIVACY_POLICE) {
+            if (site.site != Websites.PRIVACY_POLICE) {
 
                 var creditsText = ""
 
@@ -219,8 +227,15 @@ class SettingsFragment : Fragment() {
                 val marginParams = button.layoutParams as ViewGroup.MarginLayoutParams
                 marginParams.setMargins(10, 50, 10, 5)
 
-                button.setTextColor(ResourcesCompat.getColor(resources, R.color.accent_text_color, null))
-                button.background = (ResourcesCompat.getDrawable(resources, R.drawable.transparentrounded, null))
+                button.setTextColor(
+                    ResourcesCompat.getColor(
+                        resources,
+                        R.color.accent_text_color,
+                        null
+                    )
+                )
+                button.background =
+                    (ResourcesCompat.getDrawable(resources, R.drawable.transparentrounded, null))
                 button.textAlignment = TEXT_ALIGNMENT_CENTER
                 button.text = site.name
                 button.tag = site.site
@@ -238,7 +253,13 @@ class SettingsFragment : Fragment() {
                 )
                 textView.setPadding(40, 5, 0, 30)
                 textView.textSize = 16f
-                textView.setTextColor(ResourcesCompat.getColor(resources, R.color.primary_text_color, null))
+                textView.setTextColor(
+                    ResourcesCompat.getColor(
+                        resources,
+                        R.color.primary_text_color,
+                        null
+                    )
+                )
                 textView.text = creditsText
                 // add text to LinearLayout
                 binding.llCredits.addView(textView)
@@ -260,7 +281,8 @@ class SettingsFragment : Fragment() {
      * About us clicked
      * Improvement, Rate, Error or Police
      */
-    fun onAboutUsClicked(tag:String) {
+    fun onAboutUsClicked(tag: String) {
+        //Starts the alarm with a new intent
         when (tag) {
             "improvement" -> {
                 val intent = Intent(Intent.ACTION_SENDTO)
@@ -301,8 +323,10 @@ class SettingsFragment : Fragment() {
 
                 actualContext.startActivity(intent)
             }
-        }
+            }
     }
+
+
 
 
     /**
