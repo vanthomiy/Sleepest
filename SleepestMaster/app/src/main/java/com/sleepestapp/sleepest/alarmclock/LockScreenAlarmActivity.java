@@ -38,11 +38,15 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
     private CountDownTimer countDownTimer = null;
     private ActivityLockScreenAlarmV2Binding binding;
 
+    private AlarmClockSleepCalculationHandling asch;
+
     @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lock_screen_alarm_v2);
+
+        asch = new AlarmClockSleepCalculationHandling(this);
 
         binding = ActivityLockScreenAlarmV2Binding.inflate(getLayoutInflater());
         View view = binding.getRoot();
@@ -64,6 +68,11 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
                     if (countDownTimer != null) {
                         countDownTimer.cancel();
                     }
+                    
+                    if(asch != null){
+                        asch.defineNewUserWakeup(null, false);
+                    }
+
                     finish();
 
                 }
@@ -99,7 +108,6 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
             //Start the ring tone
             AlarmClockAudio.getInstance().init(getApplicationContext());
             AlarmClockAudio.getInstance().startAlarm(false);
-
 
             //Delay for motion, workaround
             new CountDownTimer(Constants.DELAY, Constants.COUNTDOWN_TICK_INTERVAL) {

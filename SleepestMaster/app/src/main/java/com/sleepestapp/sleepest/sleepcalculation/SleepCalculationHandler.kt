@@ -242,12 +242,13 @@ class SleepCalculationHandler(val context: Context) {
             endTime = dataStoreRepository.getSleepTimeEnd()
         }
 
-        val sleepApiRawDataEntity = if (!setAlarm && sessionAvailable != null)
-            dataBaseRepository.getSleepApiRawDataBetweenTimestamps(sessionAvailable.sleepTimes.sleepTimeStart, sessionAvailable.sleepTimes.sleepTimeEnd).first()
-                ?.sortedBy { x -> x.timestampSeconds }
+        val sleepApiRawDataEntity =
+            if (!setAlarm && sessionAvailable != null)
+                dataBaseRepository.getSleepApiRawDataBetweenTimestamps(sessionAvailable.sleepTimes.sleepTimeStart, sessionAvailable.sleepTimes.sleepTimeEnd).first()
+                    ?.sortedBy { x -> x.timestampSeconds }
             else
-            dataBaseRepository.getSleepApiRawDataFromDate(date, endTime, startTime).first()
-                ?.sortedBy { x -> x.timestampSeconds }
+                dataBaseRepository.getSleepApiRawDataFromDate(date, endTime, startTime).first()
+                    ?.sortedBy { x -> x.timestampSeconds }
 
         if (sleepApiRawDataEntity == null || sleepApiRawDataEntity.count() == 0) {
             // do something!
@@ -849,24 +850,6 @@ class SleepCalculationHandler(val context: Context) {
         }
 
         dataBaseRepository.insertUserSleepSession(sessionEntity)
-
-        /*
-        // check in between
-        if (newStartTime || newEndTime){
-
-            // get all api data in between the sleep
-            val sleepDataWhileSleep = dataBaseRepository.getSleepApiRawDataBetweenTimestamps(startTimeEpoch, endTimeEpoch).first()
-
-            // Check if a old sleep state is now in between these times and retrieve it
-            sleepDataWhileSleep?.forEach { sleepData ->
-
-                if((sleepData.sleepState == SleepState.AWAKE || sleepData.sleepState == SleepState.NONE) && (sleepData.oldSleepState != SleepState.AWAKE && sleepData.oldSleepState != SleepState.NONE)){
-                    dataBaseRepository.updateSleepApiRawDataSleepState(sleepData.timestampSeconds, sleepData.oldSleepState)
-                    dataBaseRepository.updateOldSleepApiRawDataSleepState(sleepData.timestampSeconds, SleepState.NONE)
-                }
-            }
-
-        }*/
 
         defineUserWakeup(dateTime, false)
     }
