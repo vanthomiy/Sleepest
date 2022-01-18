@@ -68,7 +68,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
                     if (countDownTimer != null) {
                         countDownTimer.cancel();
                     }
-                    
+
                     if(asch != null){
                         asch.defineNewUserWakeup(null, false);
                     }
