@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.PowerManager;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import com.sleepestapp.sleepest.MainApplication;
@@ -16,12 +15,14 @@ import com.sleepestapp.sleepest.R;
 import com.sleepestapp.sleepest.background.BackgroundAlarmTimeHandler;
 import com.sleepestapp.sleepest.model.data.AlarmClockReceiverUsage;
 import com.sleepestapp.sleepest.model.data.NotificationUsage;
+import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler;
 import com.sleepestapp.sleepest.storage.DataStoreRepository;
 import com.sleepestapp.sleepest.storage.DatabaseRepository;
 import com.sleepestapp.sleepest.storage.db.AlarmEntity;
 import com.sleepestapp.sleepest.util.NotificationUtil;
 import com.sleepestapp.sleepest.util.TimeConverterUtil;
 
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import static android.content.Context.ALARM_SERVICE;
 
@@ -43,6 +44,8 @@ public class AlarmClockReceiver extends BroadcastReceiver {
         DataStoreRepository dataStoreRepository = ((MainApplication)context.getApplicationContext()).getDataStoreRepository();
         AlarmEntity alarmEntity = databaseRepository.getNextActiveAlarmJob(dataStoreRepository);
 
+        AlarmClockSleepCalculationHandling asch = new AlarmClockSleepCalculationHandling(context);
+
         //Different actions for the alarm clock depending on the usage
         switch (AlarmClockReceiverUsage.valueOf(intent.getStringExtra((context.getString(R.string.alarm_clock_intent_key))))) {
             case START_ALARMCLOCK: //Init Alarmclock
@@ -59,9 +62,11 @@ public class AlarmClockReceiver extends BroadcastReceiver {
                 break;
             case STOP_ALARMCLOCK: //Stop button of ScreenOn notification
                 BackgroundAlarmTimeHandler.Companion.getHandler(context.getApplicationContext()).alarmClockRang(true);
+                asch.defineNewUserWakeup(null, false);
                 break;
             case SNOOZE_ALARMCLOCK: //Snooze button of ScreenOn notification
                 AlarmClockAudio.getInstance().stopAlarm(true, true);
+                asch.defineNewUserWakeup(null, false);
                 break;
             case LATEST_WAKEUP_ALARMCLOCK: //Latest wakeup action
                 if (alarmEntity != null && !alarmEntity.getTempDisabled() && !alarmEntity.getWasFired()) {
@@ -74,6 +79,7 @@ public class AlarmClockReceiver extends BroadcastReceiver {
                         notificationsUtil.chooseNotification();
                     }
                 }
+                asch.defineNewUserWakeup(null, false);
                 break;
         }
     }
@@ -101,9 +107,6 @@ public class AlarmClockReceiver extends BroadcastReceiver {
         AlarmManager alarmManager = (AlarmManager) alarmClockContext.getSystemService(ALARM_SERVICE);
 
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-
-        Toast.makeText(alarmClockContext, "AlarmClock set to " + calendar.get(Calendar.DAY_OF_WEEK) + ": "
-                + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE), Toast.LENGTH_LONG).show();
     }
 
     /**

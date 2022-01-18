@@ -1,9 +1,7 @@
 package com.sleepestapp.sleepest.background
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Build
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.work.*
 import com.sleepestapp.sleepest.MainApplication
@@ -48,11 +46,6 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
             // Check if foreground is active
             if (dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {
 
-                val pref: SharedPreferences = applicationContext.getSharedPreferences("ForegroundServiceTime", 0)
-                val ed = pref.edit()
-                ed.putInt("time", ForegroundService.getForegroundServiceTime(applicationContext))
-                ed.apply()
-
                 val endTime = dataStoreRepository.sleepParameterFlow.first().sleepTimeEnd
 
                 //Get sleep data table
@@ -64,8 +57,6 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
                 if (sleepApiRawDataEntity != null && sleepApiRawDataEntity.count() > 0) {
                     val lastTimestampInSeconds = sleepApiRawDataEntity.first().timestampSeconds
                     val actualTimestampSeconds = System.currentTimeMillis()/1000
-                    Toast.makeText(applicationContext, (actualTimestampSeconds - lastTimestampInSeconds).toString(), Toast.LENGTH_LONG).show()
-                    Toast.makeText(applicationContext, ForegroundService.getForegroundServiceTime(applicationContext).toString(), Toast.LENGTH_LONG).show()
 
                     // Check if data were received regularly
                     if (ForegroundService.getForegroundServiceTime(applicationContext) >= 1200 && ((actualTimestampSeconds - lastTimestampInSeconds) > 600) && SleepTimeValidationUtil.getActualAlarmTimeData(dataStoreRepository).isInSleepTime) {
@@ -77,7 +68,6 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
                             )
                         notificationsUtil.chooseNotification()
                         //Restarts the subscribing of data in case of an receiving error
-                        Toast.makeText(applicationContext,"Restarted sleepdata tracking", Toast.LENGTH_LONG).show()
                         BackgroundAlarmTimeHandler.getHandler(applicationContext.applicationContext).startWorkmanager()
                     } else {
                         if (NotificationUtil.isNotificationActive(NotificationUsage.NOTIFICATION_NO_API_DATA, applicationContext)) {
@@ -92,7 +82,6 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
                             null
                         )
                     notificationsUtil.chooseNotification()
-                    Toast.makeText(applicationContext,"Restarted sleepdata tracking", Toast.LENGTH_LONG).show()
                     BackgroundAlarmTimeHandler.getHandler(applicationContext.applicationContext).startWorkmanager()
                 } else {
                     if (NotificationUtil.isNotificationActive(NotificationUsage.NOTIFICATION_NO_API_DATA, applicationContext)) {
@@ -102,27 +91,7 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
             }
         }
 
-        val calendar: Calendar = Calendar.getInstance()
-
-        var pref: SharedPreferences = applicationContext.getSharedPreferences("Workmanager", 0)
-        var ed = pref.edit()
-        ed.putInt("day", calendar.get(Calendar.DAY_OF_WEEK))
-        ed.putInt("hour", calendar.get(Calendar.HOUR_OF_DAY))
-        ed.putInt("minute", calendar.get(Calendar.MINUTE))
-        ed.apply()
-
-
-
         scope.launch {
-            val sleepValueAmount = dataStoreRepository.sleepApiDataFlow.first().sleepApiValuesAmount
-            val isSubscribed = dataStoreRepository.getSleepSubscribeStatus()
-
-            pref = applicationContext.getSharedPreferences("SleepValue", 0)
-            ed = pref.edit()
-            ed.putInt("value", sleepValueAmount)
-            ed.putBoolean("status", isSubscribed)
-            ed.apply()
-
             sleepCalculationHandler.checkIsUserSleeping(null)
         }
 

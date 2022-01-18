@@ -5,12 +5,14 @@ import android.Manifest
 import android.content.ActivityNotFoundException
 import android.content.ContentResolver
 import android.content.Context
+import android.content.Context.POWER_SERVICE
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
 import android.provider.DocumentsContract
+import android.provider.Settings
 import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
@@ -31,6 +33,7 @@ import com.google.gson.Gson
 import com.sleepestapp.sleepest.DontKillMyAppFragment
 import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.R
+import com.sleepestapp.sleepest.alarmclock.LockScreenAlarmActivity
 import com.sleepestapp.sleepest.databinding.FragmentSettingsBinding
 import com.sleepestapp.sleepest.model.data.*
 import com.sleepestapp.sleepest.model.data.credits.CreditsSites
@@ -40,6 +43,7 @@ import com.sleepestapp.sleepest.onboarding.OnBoardingActivity
 import com.sleepestapp.sleepest.util.IconAnimatorUtil.isDarkThemeOn
 import com.sleepestapp.sleepest.util.PermissionsUtil
 import com.sleepestapp.sleepest.util.SmileySelectorUtil
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.*
@@ -51,7 +55,7 @@ class SettingsFragment : Fragment() {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
             // Workaround because we know that we can cast to T
-            return  SettingsViewModel(
+            return SettingsViewModel(
                 (actualContext as MainApplication).dataStoreRepository,
                 (actualContext as MainApplication).dataBaseRepository
             ) as T
@@ -61,11 +65,18 @@ class SettingsFragment : Fragment() {
     /**
      * View model of the [SettingsFragment]
      */
-    private val viewModel by lazy { ViewModelProvider(this, factory).get(SettingsViewModel::class.java) }
+    private val viewModel by lazy {
+        ViewModelProvider(
+            this,
+            factory
+        ).get(SettingsViewModel::class.java)
+    }
+
     /**
      * Binding XML Code to Fragment
      */
     private lateinit var binding: FragmentSettingsBinding
+
     /**
      * Get actual context
      */
@@ -80,9 +91,9 @@ class SettingsFragment : Fragment() {
     /**
      * Open the selected information view if [caseOfEntry] is not -1
      */
-    fun setCaseOfEntry(case: Int){
+    fun setCaseOfEntry(case: Int) {
         caseOfEntry = case
-        if(this::binding.isInitialized)
+        if (this::binding.isInitialized)
             viewModel.actualExpand.value = (caseOfEntry)
     }
 
@@ -102,7 +113,7 @@ class SettingsFragment : Fragment() {
         binding.sleepActivityPermission.setOnClickListener {
             onPermissionClicked(it)
         }
-        binding.dailyActivityPermission.setOnClickListener {
+        binding.powerOptimizationPermission.setOnClickListener {
             onPermissionClicked(it)
         }
         binding.notificationPrivacyPermission.setOnClickListener {
@@ -133,23 +144,23 @@ class SettingsFragment : Fragment() {
             DontKillMyAppFragment.show(requireActivity())
         }
 
-        viewModel.aboutUsSelection.observe(viewLifecycleOwner){
+        viewModel.aboutUsSelection.observe(viewLifecycleOwner) {
             onAboutUsClicked(it)
         }
 
-        viewModel.autoDarkMode.observe(viewLifecycleOwner){
+        viewModel.autoDarkMode.observe(viewLifecycleOwner) {
             TransitionManager.beginDelayedTransition(binding.linearAnimationlayout)
         }
 
-        viewModel.removeExpand.observe(viewLifecycleOwner){
+        viewModel.removeExpand.observe(viewLifecycleOwner) {
             TransitionManager.beginDelayedTransition(binding.linearAnimationlayout)
         }
 
-        viewModel.actualExpand.observe(viewLifecycleOwner){
+        viewModel.actualExpand.observe(viewLifecycleOwner) {
             TransitionManager.beginDelayedTransition(binding.linearAnimationlayout)
         }
 
-        viewModel.descriptionChanged.observe(viewLifecycleOwner){
+        viewModel.descriptionChanged.observe(viewLifecycleOwner) {
             TransitionManager.beginDelayedTransition(binding.linearAnimationlayout)
         }
 
@@ -157,122 +168,9 @@ class SettingsFragment : Fragment() {
 
         viewModel.actualExpand.value = (caseOfEntry)
 
-
-        var version = "XX"
-        try {
-            val packageInfo = actualContext.packageManager.getPackageInfo(actualContext.packageName, 0)
-            version = packageInfo.versionName
-        } catch (e: PackageManager.NameNotFoundException) {
-            e.printStackTrace()
-        }
-
-        //region Test
-        val textVersion = "Version: $version\n"
-        var pref = actualContext.getSharedPreferences("AlarmChanged", 0)
-        val textAlarm = """
-            Last Alarm changed: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt(
-            "actualWakeup",
-            0
-        )},${pref.getInt("alarmUse", 0)}
-            
-            """.trimIndent()
-        pref = actualContext.getSharedPreferences("StartService", 0)
-        val textStartService = """
-            Last service start: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
-            
-            """.trimIndent()
-        pref = actualContext.getSharedPreferences("StopService", 0)
-        val textStopService = """
-            Last service stop: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
-            
-            """.trimIndent()
-        pref = actualContext.getSharedPreferences("Workmanager", 0)
-        val textLastWorkmanager = """
-            Last workmanager call: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt("day", 0)}
-            
-            """.trimIndent()
-        pref = actualContext.getSharedPreferences("WorkmanagerCalculation", 0)
-        val textLastWorkmanagerCalculation = """
-            Last workmanagerCalc call: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt("day", 0)}
-            
-            """.trimIndent()
-        pref = actualContext.getSharedPreferences("AlarmClock", 0)
-        val textCalc1 = """
-            Alarmclock: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)}
-            
-            """.trimIndent()
-        pref = actualContext.getSharedPreferences("AlarmSet", 0)
-        val textCalc2 = """
-            AlarmSet: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getInt(
-            "hour1",
-            0
-        )}:${pref.getInt("minute1", 0)},${
-            pref.getInt("actualWakeup", 0)}
-            
-            """.trimIndent()
-        pref = actualContext.getSharedPreferences("AlarmReceiver", 0)
-        val textAlarmReceiver = """
-            AlarmReceiver: ${pref.getInt("hour", 0)}:${pref.getInt("minute", 0)},${pref.getString(
-
-            "intent",
-            "XX"
-        )}
-            
-            """.trimIndent()
-        pref = actualContext.getSharedPreferences("SleepTime", 0)
-        val textSleepTime= """
-            SleepTime: ${pref.getInt("sleeptime", 0)}
-            
-            """.trimIndent()
-        pref = actualContext.getSharedPreferences("StopException", 0)
-        val textStopException = """
-            Exc.: ${pref.getString("exception", "XX")}
-            
-            """.trimIndent()
-        pref = actualContext.getSharedPreferences("AlarmReceiver1", 0)
-        val textAlarmReceiver1 = """
-            AlarmReceiver1: ${pref.getString("usage", "XX")},${pref.getInt("day", 0)},${pref.getInt(
-            "hour",
-            0
-        )},${pref.getInt("minute", 0)}
-            
-            """.trimIndent()
-        pref = actualContext.getSharedPreferences("BootTime1", 0)
-        val textBooReceiver1= """
-            Last Boot: ${pref.getInt("hour", 0)},${pref.getInt("minute", 0)},${pref.getInt("usage", 0)}
-            
-            """.trimIndent()
-        pref = actualContext.getSharedPreferences("State", 0)
-        val textActualState= """
-            Actual State: ${pref.getString("state", "XX")}
-            
-            """.trimIndent()
-        pref = actualContext.getSharedPreferences("ForegroundServiceTime", 0)
-        val textForegroundServiceTime= """
-            FS Time: ${pref.getInt("time", 0)}, usage:${pref.getInt("usage", 0)}, sod:${pref.getInt("sod", 0)}
-            
-            """.trimIndent()
-        pref = actualContext.getSharedPreferences("SleepValue", 0)
-        val textSleepValue= """
-            Sleep value amount: ${pref.getInt("value", 0)},${pref.getBoolean("status",false)}
-            
-            """.trimIndent()
-        pref = actualContext.getSharedPreferences("ActiveNotification", 0)
-        val textNotificationActive= """
-            Notification active: ${pref.getBoolean("foregroundService",false)}
-            
-            """.trimIndent()
-
-        val textGesamt = textVersion + textAlarm + textStartService + textStopService + textLastWorkmanager + textLastWorkmanagerCalculation + textCalc1 + textCalc2 + textAlarmReceiver + textSleepTime + textBooReceiver1 + textStopException + textAlarmReceiver1 + textActualState + textForegroundServiceTime + textSleepValue +textNotificationActive
-
-
-        binding.testText.text = textGesamt
-
-
         return binding.root
 
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -283,7 +181,7 @@ class SettingsFragment : Fragment() {
             val settings = viewModel.dataStoreRepository.settingsDataFlow.first()
 
 
-            if ((settings.designAutoDarkMode  && actualContext.isDarkThemeOn()) || !settings.designAutoDarkMode && settings.designDarkMode)
+            if ((settings.designAutoDarkMode && actualContext.isDarkThemeOn()) || !settings.designAutoDarkMode && settings.designDarkMode)
                 binding.lottieDarkMode.setMinAndMaxFrame(0, 240) //to play the first half
             else
                 binding.lottieDarkMode.setMinAndMaxFrame(240, 481) //to play the second half
@@ -303,12 +201,12 @@ class SettingsFragment : Fragment() {
     /**
      * create the credits for the credits view
      */
-    private fun createCredits(){
+    private fun createCredits() {
         val creditsSites = CreditsSites.createCreditSites()
 
-        creditsSites.forEach{ site ->
+        creditsSites.forEach { site ->
 
-            if(site.site != Websites.PRIVACY_POLICE) {
+            if (site.site != Websites.PRIVACY_POLICE) {
 
                 var creditsText = ""
 
@@ -329,8 +227,15 @@ class SettingsFragment : Fragment() {
                 val marginParams = button.layoutParams as ViewGroup.MarginLayoutParams
                 marginParams.setMargins(10, 50, 10, 5)
 
-                button.setTextColor(ResourcesCompat.getColor(resources, R.color.accent_text_color, null))
-                button.background = (ResourcesCompat.getDrawable(resources, R.drawable.transparentrounded, null))
+                button.setTextColor(
+                    ResourcesCompat.getColor(
+                        resources,
+                        R.color.accent_text_color,
+                        null
+                    )
+                )
+                button.background =
+                    (ResourcesCompat.getDrawable(resources, R.drawable.transparentrounded, null))
                 button.textAlignment = TEXT_ALIGNMENT_CENTER
                 button.text = site.name
                 button.tag = site.site
@@ -348,7 +253,13 @@ class SettingsFragment : Fragment() {
                 )
                 textView.setPadding(40, 5, 0, 30)
                 textView.textSize = 16f
-                textView.setTextColor(ResourcesCompat.getColor(resources, R.color.primary_text_color, null))
+                textView.setTextColor(
+                    ResourcesCompat.getColor(
+                        resources,
+                        R.color.primary_text_color,
+                        null
+                    )
+                )
                 textView.text = creditsText
                 // add text to LinearLayout
                 binding.llCredits.addView(textView)
@@ -370,7 +281,8 @@ class SettingsFragment : Fragment() {
      * About us clicked
      * Improvement, Rate, Error or Police
      */
-    fun onAboutUsClicked(tag:String) {
+    fun onAboutUsClicked(tag: String) {
+        //Starts the alarm with a new intent
         when (tag) {
             "improvement" -> {
                 val intent = Intent(Intent.ACTION_SENDTO)
@@ -411,8 +323,10 @@ class SettingsFragment : Fragment() {
 
                 actualContext.startActivity(intent)
             }
-        }
+            }
     }
+
+
 
 
     /**
@@ -521,10 +435,10 @@ class SettingsFragment : Fragment() {
      */
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun onPermissionClicked(view: View) {
+        checkPermissions()
         when (view.tag.toString()) {
-            "dailyActivity" -> if (viewModel.dailyPermission.value != true) requestPermissionLauncher.launch(
-                Manifest.permission.ACTIVITY_RECOGNITION
-            ) else viewModel.showPermissionInfo("dailyActivity")
+            "powerOptimization" -> if (viewModel.powerOptimizationDisabled.value != true) PermissionsUtil.setPowerPermission(requireActivity()
+            ) else viewModel.showPermissionInfo("powerOptimization")
             "sleepActivity" -> if (viewModel.activityPermission.value != true) requestPermissionLauncher.launch(
                 Manifest.permission.ACTIVITY_RECOGNITION
             ) else viewModel.showPermissionInfo("sleepActivity")
@@ -533,6 +447,11 @@ class SettingsFragment : Fragment() {
             "overlay" -> if (viewModel.overlayPermission.value != true) PermissionsUtil.setOverlayPermission(requireActivity()
                 ) else viewModel.showPermissionInfo("overlay")
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        checkPermissions()
     }
 
     /**
@@ -579,8 +498,9 @@ class SettingsFragment : Fragment() {
                 PermissionsUtil.isActivityRecognitionPermissionGranted(actualContext)
                 )
 
-        viewModel.dailyPermission.value = (
-                PermissionsUtil.isActivityRecognitionPermissionGranted(actualContext)
+        viewModel.powerOptimizationDisabled.value = (
+                PermissionsUtil.isPowerPermissionGranted(actualContext) &&
+                        PermissionsUtil.isAutoStartGranted(actualContext)
                 )
 
         viewModel.notificationPrivacyPermission.value = (

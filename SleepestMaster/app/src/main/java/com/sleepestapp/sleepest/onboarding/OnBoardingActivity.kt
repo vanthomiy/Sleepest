@@ -126,19 +126,27 @@ class OnBoardingActivity : AppCompatActivity() {
         if (requestCode == 282) {
             //ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS
             if(PermissionsUtil.isNotificationPolicyAccessGranted(applicationContext))
-                navigateToNextSlide()
+                lifecycleScope.launch {
+                    delay(500)
+                    navigateToNextSlide()
+                }
         } else if (requestCode == 283) {
             lifecycleScope.launch {
-                var times = 0
-                while (times < 1000){
-                    delay(100)
-                    times++
-                    if(PermissionsUtil.isOverlayPermissionGranted(applicationContext)) {
-                        navigateToNextSlide()
-                        times = 1100
-                    }
-                }
+                delay(1000)
+                var color = R.color.accent_text_color
+                var text = resources.getText(R.string.next)
+                binding.permissionBtn.background.setTint(resources.getColor(color))
+                binding.permissionBtn.text = text
             }
+        } else if (requestCode == 284) {
+            if(PermissionsUtil.isPowerPermissionGranted(applicationContext))
+                lifecycleScope.launch {
+                    delay(500)
+                    var color = R.color.accent_text_color
+                    var text = resources.getText(R.string.get_started)
+                    binding.permissionBtn.background.setTint(resources.getColor(color))
+                    binding.permissionBtn.text = text
+                }
         }
     }
 
@@ -206,16 +214,17 @@ class OnBoardingActivity : AppCompatActivity() {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels)
                 if (numberOfPages > 1) {
 
-                    slideChangedAction(position)
+                    slideChangedAction(position, false)
                     binding.onboardingMotion.progress = positionOffset
                 }
             }
         })
     }
 
-    private fun slideChangedAction(position:Int){
+    private fun slideChangedAction(position:Int, future:Boolean){
 
-        actualPage = position
+        if(!future)
+            actualPage = position
         var color = R.color.accent_text_color
         var text = resources.getText(R.string.next)
 
@@ -229,7 +238,8 @@ class OnBoardingActivity : AppCompatActivity() {
 
             if (!PermissionsUtil.isActivityRecognitionPermissionGranted(this)){
                 color = R.color.error_color
-                text = resources.getText(R.string.settings_notification_privacy)
+                text = resources.getText(R.string.settings_sleepdata).toString()
+                text += resources.getText(R.string.permission_string)
             }
         }
         else if(position == 2)
@@ -246,7 +256,8 @@ class OnBoardingActivity : AppCompatActivity() {
 
             if (!PermissionsUtil.isOverlayPermissionGranted(this)){
                 color = R.color.error_color
-                text = resources.getText(R.string.settings_overlapp_app)
+                text = resources.getText(R.string.settings_overlapp_app).toString()
+                text += resources.getText(R.string.permission_string)
             }
         }
         else if(position == 4)
@@ -257,7 +268,8 @@ class OnBoardingActivity : AppCompatActivity() {
 
             if (!PermissionsUtil.isNotificationPolicyAccessGranted(this)){
                 color = R.color.error_color
-                text = resources.getText(R.string.settings_notification_privacy)
+                text = resources.getText(R.string.settings_notification_privacy).toString()
+                text += " " + resources.getText(R.string.permission_string)
             }
         }
         else if(position == 5)
@@ -265,7 +277,14 @@ class OnBoardingActivity : AppCompatActivity() {
             if (!PermissionsUtil.isNotificationPolicyAccessGranted(this))
                 navigateToPreviousSlide()
 
-            text = resources.getText(R.string.get_started)
+            if (!PermissionsUtil.isPowerPermissionGranted(this) || !PermissionsUtil.isAutoStartGranted(this)){
+                color = R.color.error_color
+                text = resources.getText(R.string.power_optimization_activity).toString()
+                text += " " + resources.getText(R.string.permission_string)
+            }
+            else{
+                text = resources.getText(R.string.get_started)
+            }
         }
         binding.permissionBtn.background.setTint(resources.getColor(color))
         binding.permissionBtn.text = text
@@ -294,7 +313,12 @@ class OnBoardingActivity : AppCompatActivity() {
                     else
                         navigateToNextSlide()
                 }
-                5 -> navigateToMainActivity()
+                5 -> {
+                    if (!PermissionsUtil.isPowerPermissionGranted(this) || !PermissionsUtil.isAutoStartGranted(this))
+                        PermissionsUtil.setPowerPermission(this)
+                    else
+                        navigateToMainActivity()
+                }
                 else -> navigateToNextSlide()
             }
         }

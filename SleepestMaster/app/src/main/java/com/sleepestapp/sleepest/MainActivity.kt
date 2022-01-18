@@ -4,10 +4,7 @@ import android.Manifest
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
-
 import android.os.Build
-
 import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,9 +14,9 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-
+import com.sleepestapp.sleepest.alarmclock.AlarmClockReceiver
+import com.sleepestapp.sleepest.alarmclock.LockScreenAlarmActivity
 import com.sleepestapp.sleepest.background.AlarmCycleState
-
 import com.sleepestapp.sleepest.background.AlarmReceiver
 import com.sleepestapp.sleepest.background.BackgroundAlarmTimeHandler
 import com.sleepestapp.sleepest.databinding.ActivityMainBinding
@@ -37,6 +34,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.*
 import com.sleepestapp.sleepest.googleapi.ActivityTransitionHandler
+import com.sleepestapp.sleepest.model.data.AlarmClockReceiverUsage
 import com.sleepestapp.sleepest.model.data.Constants
 import com.sleepestapp.sleepest.onboarding.OnBoardingActivity
 
@@ -268,7 +266,7 @@ class MainActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 //Get default settings of tutorial and save it in datastore
                 if (viewModel.dataStoreRepository.tutorialStatusFlow.first().tutorialCompleted && !viewModel.dataStoreRepository.tutorialStatusFlow.first().energyOptionsShown) {
-                    DontKillMyAppFragment.show(this@MainActivity)
+                    //DontKillMyAppFragment.show(this@MainActivity)
                 }
 
                 val calendar = TimeConverterUtil.getAlarmDate(viewModel.dataStoreRepository.getSleepTimeStart())
@@ -277,37 +275,6 @@ class MainActivity : AppCompatActivity() {
                     calendar[Calendar.HOUR_OF_DAY],
                     calendar[Calendar.MINUTE],
                     applicationContext, AlarmReceiverUsage.START_FOREGROUND)
-            }
-        }
-
-
-
-        val alarmCycleState = AlarmCycleState(applicationContext)
-        var pref: SharedPreferences = getSharedPreferences("State", 0)
-        var ed = pref.edit()
-        ed.putString("state", alarmCycleState.getState().toString())
-        ed.apply()
-
-        val mNotificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        val notifications = mNotificationManager.activeNotifications
-        if (notifications.isEmpty()) {
-            pref = getSharedPreferences("ActiveNotification", 0)
-            ed = pref.edit()
-            ed.putBoolean("foregroundService", false)
-            ed.apply()
-        }
-        for (notification in notifications) {
-            if (notification.id == Constants.FOREGROUND_SERVICE_ID) {
-                pref = getSharedPreferences("ActiveNotification", 0)
-                ed = pref.edit()
-                ed.putBoolean("foregroundService", true)
-                ed.apply()
-                break
-            } else {
-                pref = getSharedPreferences("ActiveNotification", 0)
-                ed = pref.edit()
-                ed.putBoolean("foregroundService", false)
-                ed.apply()
             }
         }
     }
@@ -321,7 +288,11 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun checkPermissions() {
         // check permission
-        if (!PermissionsUtil.isActivityRecognitionPermissionGranted(applicationContext)) {
+
+        if(!PermissionsUtil.checkAllNecessaryPermissions(this))
+            startTutorial()
+
+        /*if (!PermissionsUtil.isActivityRecognitionPermissionGranted(applicationContext)) {
             requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
         }
 
@@ -331,7 +302,7 @@ class MainActivity : AppCompatActivity() {
 
         if (!PermissionsUtil.isNotificationPolicyAccessGranted(applicationContext)) {
             PermissionsUtil.setOverlayPermission(this@MainActivity)
-        }
+        }*/
     }
 
 
@@ -342,7 +313,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 // Permission was granted (either by approval or Android version below Q).
 
-                DontKillMyAppFragment.show(this@MainActivity)
+                //DontKillMyAppFragment.show(this@MainActivity)
 
                 lifecycleScope.launch {
                     val calendar = TimeConverterUtil.getAlarmDate(viewModel.dataStoreRepository.getSleepTimeBegin())

@@ -599,9 +599,9 @@
                                 android:layout_marginVertical="5dp"
                                 android:layout_marginEnd="50dp"
                                 android:background="@drawable/background_rounded_button"
-                                android:tag="dailyActivity"
-                                android:id="@+id/dailyActivityPermission"
-                                android:text="@string/settings_daily_activity"
+                                android:tag="powerOptimization"
+                                android:id="@+id/powerOptimizationPermission"
+                                android:text="@string/power_optimization_activity"
                                 android:textColor="@color/primary_text_color"
                                 android:textSize="@dimen/valueSize" />
 
@@ -611,8 +611,8 @@
                                 android:layout_marginTop="5dp"
                                 android:layout_gravity="end"
                                 android:foregroundGravity="center_vertical"
-                                android:src="@{profileViewModel.dailyPermission ? @drawable/ic_baseline_gpp_good_24 :@drawable/ic_baseline_gpp_bad_24}"
-                                android:tint="@{profileViewModel.dailyPermission ? @color/accent_text_color :@color/error_color}"/>
+                                android:src="@{profileViewModel.powerOptimizationDisabled ? @drawable/ic_baseline_gpp_good_24 :@drawable/ic_baseline_gpp_bad_24}"
+                                android:tint="@{profileViewModel.powerOptimizationDisabled ? @color/accent_text_color :@color/error_color}"/>
 
                         </FrameLayout>
 
@@ -620,7 +620,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:visibility="@{profileViewModel.dailyPermissionDescription}"
+                            android:visibility="@{profileViewModel.powerOptimizationDescription}"
                             android:layout_margin="10dp"
                             >
 
@@ -630,7 +630,7 @@
                                 android:textSize="@dimen/headerSize"
                                 android:layout_gravity="start"
                                 android:textColor="@color/primary_text_color"
-                                android:text="@string/settings_permission_daily_activity"/>
+                                android:text="@string/settings_permission_power_optimization"/>
 
                         </LinearLayout>
 

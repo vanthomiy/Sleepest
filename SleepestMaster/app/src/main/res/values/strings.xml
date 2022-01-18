@@ -16,7 +16,7 @@
     <string name="alarm_notification_button_2">"Snooze"</string>
     <string name="alarm_clock_user_should_sleep">"Good night</string>
     <string name="alarm_clock_snooze">Snooze</string>
-    <string name="alarm_clock_swipe_up">Swipe up to cancel</string>
+    <string name="alarm_clock_swipe_up">Swipe to cancel</string>
     <!--endregion-->
 
     <!--region Background-->
@@ -55,7 +55,7 @@
                 With the buttons you can choose, whether you want to be woken up at the latest wakeup time or change sleep time settings.</string>
     <string name="notification_information_api_problem_content_expanded">There is a problem receiving sleep data.
                 Click the button to try to solve the problem. You will get further information if the problem isn\'t solved.</string>
-
+    <string name="toast_restarted_sleep_data">Restarted sleepdata tracking</string>
     <!--endregion-->
 
     <!--region SleepSettings-->
@@ -204,9 +204,9 @@
     <string name="settings_permission_sleepdata">
                 The app needs this permission to monitor sleep with the help of your mobile phone. The app will not work without this permission!
     </string>
-    <string name="settings_daily_activity">Daily activities</string>
-    <string name="settings_permission_daily_activity">
-                The app needs this permission to record your activity during the day.
+    <string name="power_optimization_activity">Battery optimization</string>
+    <string name="settings_permission_power_optimization">
+                The app needs this permission to stay active in the background reliable.
     </string>
     <string name="settings_notification_privacy">Notification Privacy</string>
     <string name="settings_permission_notification_privacy">
@@ -295,6 +295,9 @@
     <!--endregion-->
 
     <!--region onboarding-->
+    <string name="permission_string">permission</string>
+
+    <string name="onboarding_grant_all_permissions">Please grant all permissions</string>
     <string name="onboarding_toast_find_permission_in_list">find the sleepest app in the list</string>
     <string name="onboarding_slide1_title">Welcome to</string>
     <string name="onboarding_slide1_subtitle">Sleepest</string>
@@ -334,9 +337,8 @@
     <string name="onboarding_slide6_title">Battery friendly</string>
     <string name="onboarding_slide6_subtitle">Reliability of the app</string>
     <string name="onboarding_slide6_desc">Its necessary for many devices that you
-    follow some further device-specific instructions that you can see in the following popup.
-    That makes sure that sleepest can stay in the background without the need to open
-        the app at any time.</string>
+    follow device-specific instructions that can be found under "Settings / Help / ENERGY SETTINGS".
+    If the banner dont show app with an alarm setup at your sleep time you should follow those instructions.</string>
 
     <string name="next">Next</string>
     <string name="skip">Skip</string>

@@ -16,7 +16,7 @@
     <string name="alarm_notification_button_2">Schlummern</string>
     <string name="alarm_clock_user_should_sleep">"Gute Nacht</string>
     <string name="alarm_clock_snooze">Schlummern</string>
-    <string name="alarm_clock_swipe_up">Hoch wischen, um Alarm abzubrechen</string>
+    <string name="alarm_clock_swipe_up">Wischen zum beenden</string>
     <!--endregion-->
 
     <!--region Background-->
@@ -55,6 +55,7 @@
                 Du kannst mit den Schaltflächen entscheiden, ob du am spätesten Weckzeitpunkt geweckt werden oder deine Schlafenszeit anpassen willst.</string>
     <string name="notification_information_api_problem_content_expanded">Es gibt ein Problem beim Empfangen der Schlafdaten.
                 Mithilfe der Schaltfläche wird versucht, das Problem zu lösen. Wird das Problem nicht gelöst, erhälst du weitere Informationen.</string>
+    <string name="toast_restarted_sleep_data">Schlafaufzeichnung neu gestartet</string>
     <!--endregion-->
 
     <!--region SleepSettings-->
@@ -211,16 +212,16 @@
     <string name="settings_permission_sleepdata">
         Die App benötigen diese Berechtigung, um den Schlaf mit Hilfe deines Handys zu überwachen. Ohne diese Berechtigung funktioniert die App nicht!
     </string>
-    <string name="settings_daily_activity">Tägliche Aktivität</string>
-    <string name="settings_permission_daily_activity">
-        Die App benötigt diese Berechtigung, um deine Aktivität am Tag aufzuzeichnen
+    <string name="power_optimization_activity">Akku-Optimierung</string>
+    <string name="settings_permission_power_optimization">
+        Die App benötigt diese Berechtigung, um zuverlässig im Hintergrund zu funktionieren.
     </string>
     <string name="settings_permission_notification_privacy">
-        Um den Wecker auch im lautlosen Modus klingeln zu lassen, wird diese Berechtigung benötigt
+        Um den Wecker auch im lautlosen Modus klingeln zu lassen, wird diese Berechtigung benötigt.
     </string>
     <string name="settings_overlapp_app">App überlappen</string>
     <string name="settings_permission_overlapp_app">
-        Die App benötigt diese Berechtigung, damit sie dich auch bei gesperrtem Handy wecken kann
+        Die App benötigt diese Berechtigung, damit sie dich auch bei gesperrtem Handy wecken kann.
     </string>
     <string name="settings_notification_privacy">Nicht stören</string>
     <string name="settings_data">Daten</string>
@@ -301,9 +302,13 @@
     <!--endregion-->
 
     <!--region onboarding-->
+    <string name="permission_string">Berechtigung</string>
+
+    <string name="onboarding_grant_all_permissions">Bitte erteile der App die benötigten Berechtigungen</string>
+
     <string name="onboarding_toast_find_permission_in_list">Wähle die Sleepest-App in der Liste aus</string>
 
-    <string name="onboarding_slide1_title">Hallo bei</string>
+    <string name="onboarding_slide1_title">Willkommen zu</string>
     <string name="onboarding_slide1_subtitle">Sleepest</string>
     <string name="onboarding_slide1_desc">Der neue, automatische und intelligente Wecker.
         Sleepest ist an neue Lebensweißen und Home-Office angepasst.
@@ -340,9 +345,8 @@
     <string name="onboarding_slide6_title">Akkuschonend</string>
     <string name="onboarding_slide6_subtitle">Zuverlässigkeit der App</string>
     <string name="onboarding_slide6_desc">Es sind für viele Geräte spezfische Einstellungen nötig um zu gewährleisten, dass die App richtig funktioniert.
-        Im folgenden wird ein Popup erscheinen, welches die Anweisungen für dein Gerät erklärt.
-        Wenn du dies befolgst funktioniert Sleepest zuverlässig aus dem Hintergrund.</string>
-
+        Unter "Einstellungen / Hilfe / ENERGIEEINSTELLUNGEN" werden die nötigen Schritte für dein Gerät erklärt.
+        Bitte folge diesen Anweisungen, wenn das Banner bei eingeschaltetem Wecker während deiner Schlafzeit nicht erscheint.</string>
     <string name="next">Weiter</string>
     <string name="skip">Überspringen</string>
     <string name="get_started">Loslegen</string>

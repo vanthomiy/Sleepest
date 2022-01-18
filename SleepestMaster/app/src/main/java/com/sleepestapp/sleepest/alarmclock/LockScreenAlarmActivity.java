@@ -3,6 +3,9 @@ package com.sleepestapp.sleepest.alarmclock;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.motion.widget.MotionLayout;
+import androidx.constraintlayout.motion.widget.TransitionAdapter;
+import androidx.core.content.ContextCompat;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -20,6 +23,7 @@ import android.widget.TextView;
 import com.sleepestapp.sleepest.R;
 import com.sleepestapp.sleepest.background.BackgroundAlarmTimeHandler;
 import com.sleepestapp.sleepest.databinding.ActivityLockScreenAlarmBinding;
+import com.sleepestapp.sleepest.databinding.ActivityLockScreenAlarmV2Binding;
 import com.sleepestapp.sleepest.model.data.Constants;
 
 /**
@@ -29,18 +33,22 @@ import com.sleepestapp.sleepest.model.data.Constants;
 @SuppressWarnings("unused")
 public class LockScreenAlarmActivity extends AppCompatActivity {
 
-    public SwipeListener swipeListener;
+    //public SwipeListener swipeListener;
     private boolean isStarted = false;
     private CountDownTimer countDownTimer = null;
-    private ActivityLockScreenAlarmBinding binding;
+    private ActivityLockScreenAlarmV2Binding binding;
+
+    private AlarmClockSleepCalculationHandling asch;
 
     @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lock_screen_alarm);
+        setContentView(R.layout.activity_lock_screen_alarm_v2);
 
-        binding = ActivityLockScreenAlarmBinding.inflate(getLayoutInflater());
+        asch = new AlarmClockSleepCalculationHandling(this);
+
+        binding = ActivityLockScreenAlarmV2Binding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
 
@@ -48,6 +56,33 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
             AlarmClockAudio.getInstance().stopAlarm(true, false);
             finish();
         });
+
+        binding.layLockMain.setTransitionListener(new TransitionAdapter() {
+            public void onTransitionChange(MotionLayout motionLayout, int startId, int endId, float progress) {
+            }
+
+            public void onTransitionCompleted(MotionLayout motionLayout, int currentId) {
+                if (motionLayout.getProgress() > 0)
+                {
+                    BackgroundAlarmTimeHandler.Companion.getHandler(getApplicationContext()).alarmClockRang(false);
+                    if (countDownTimer != null) {
+                        countDownTimer.cancel();
+                    }
+
+                    if(asch != null){
+                        asch.defineNewUserWakeup(null, false);
+                    }
+
+                    finish();
+
+                }
+            }
+            public void onTransitionStarted(MotionLayout motionLayout, int startId, int endId) {
+            }
+            public void onTransitionTrigger(MotionLayout motionLayout, int triggerId, boolean positive, float progress) {
+            }
+        });
+
 
         //Enable view when screen is locked
         setShowWhenLocked(true);
@@ -58,7 +93,7 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
         keyguardManager.requestDismissKeyguard(LockScreenAlarmActivity.this, null);
 
         //Init swipe listener
-        swipeListener = new SwipeListener(binding.layoutLockscreen);
+        //swipeListener = new SwipeListener(binding.layoutLockscreen);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.P)
@@ -68,12 +103,11 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
 
         if (!isStarted) {
             isStarted = true; //Workaround because OnResume is sometimes calling twice (Android bug)
-            fadeColor(binding.tvSwipeUpText);
+            //fadeColor(binding.tvSwipeUpText);
 
             //Start the ring tone
             AlarmClockAudio.getInstance().init(getApplicationContext());
             AlarmClockAudio.getInstance().startAlarm(false);
-
 
             //Delay for motion, workaround
             new CountDownTimer(Constants.DELAY, Constants.COUNTDOWN_TICK_INTERVAL) {
@@ -137,9 +171,11 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
         colorAnimation.start();
     }
 
+
     /**
      * Class to detect swiping on the lockscreen
      */
+    /*
     @SuppressWarnings("unused")
     private class SwipeListener implements View.OnTouchListener {
 
@@ -198,4 +234,5 @@ public class LockScreenAlarmActivity extends AppCompatActivity {
             return gestureDetector.onTouchEvent(event);
         }
     }
+    */
 }

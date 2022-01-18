@@ -1,5 +1,6 @@
 package com.sleepestapp.sleepest
 
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -10,6 +11,10 @@ import androidx.fragment.app.FragmentActivity
 import dev.doubledot.doki.views.DokiContentView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
+import android.content.DialogInterface
+import android.graphics.Color
+import kotlinx.android.synthetic.main.fragment_sleep.*
+
 
 class DontKillMyAppFragment : DialogFragment() {
 
@@ -35,22 +40,22 @@ class DontKillMyAppFragment : DialogFragment() {
             it.loadContent()
         }
         //Set the topic text
-        val tvNoticeDontKillMyApp : TextView = dokiCustomView.findViewById(R.id.tvNoticeDontKillMyApp)
-        tvNoticeDontKillMyApp.text = getString(R.string.notice_dont_kill_my_app)
+        //val tvNoticeDontKillMyApp : TextView = dokiCustomView.findViewById(R.id.tvNoticeDontKillMyApp)
+        //tvNoticeDontKillMyApp.text = getString(R.string.notice_dont_kill_my_app)
 
         //Set the text for the user to let him know what to do
-        val tvDescriptionDontKillMyApp : TextView = dokiCustomView.findViewById(R.id.tvDescriptionDontKillMyApp)
-        tvDescriptionDontKillMyApp.text = getString(R.string.description_dont_kill_my_app)
-
+        //val tvDescriptionDontKillMyApp : TextView = dokiCustomView.findViewById(R.id.tvDescriptionDontKillMyApp)
+        //tvDescriptionDontKillMyApp.text = getString(R.string.description_dont_kill_my_app)
+        //AlertDialog(requireContext()).sho()
         //return a new dialog window
         return MaterialDialog(requireContext()).show {
             customView(view = dokiCustomView)
-
             //Set the close button
             positiveButton(R.string.doki_close) {
                 dataStoreRepository.updateEnergyOptionsShownJob(true)
                 dismiss()
             }
+
         }
     }
 
