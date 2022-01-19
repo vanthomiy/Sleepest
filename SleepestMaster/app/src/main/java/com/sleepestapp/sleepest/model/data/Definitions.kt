@@ -407,7 +407,7 @@ enum class Websites {
             return when (type) {
                 FLATICON -> "https://flaticon.com/"
                 LOTTIEFILES -> "https://lottiefiles.com/"
-                PRIVACY_POLICE -> "https://sleepest.flycricket.io/privacy.html"
+                PRIVACY_POLICE -> "https://www.sleepest.ga/privacy.html"
             }
         }
 
