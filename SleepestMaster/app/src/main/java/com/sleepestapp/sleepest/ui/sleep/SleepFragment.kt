@@ -26,7 +26,7 @@ import java.time.LocalTime
 class SleepFragment : Fragment() {
 
     var factory = object : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
             // Workaround because we know that we can cast to T
             return  SleepViewModel(

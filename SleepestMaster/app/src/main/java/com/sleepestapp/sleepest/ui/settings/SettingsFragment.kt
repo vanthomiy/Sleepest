@@ -52,14 +52,13 @@ import java.io.*
 class SettingsFragment : Fragment() {
 
     var factory = object : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
             // Workaround because we know that we can cast to T
             return SettingsViewModel(
                 (actualContext as MainApplication).dataStoreRepository,
                 (actualContext as MainApplication).dataBaseRepository
-            ) as T
-        }
+            ) as T        }
     }
 
     /**
@@ -372,9 +371,11 @@ class SettingsFragment : Fragment() {
 
                     userSessions.forEach { session ->
 
+                        val startTime = if (session.sleepTimes.possibleSleepTimeStart != null) session.sleepTimes.possibleSleepTimeStart else session.sleepTimes.sleepTimeStart
+                        val endTime = if (session.sleepTimes.possibleSleepTimeEnd != null) session.sleepTimes.possibleSleepTimeEnd else session.sleepTimes.sleepTimeEnd
                         val sessionSleepData = viewModel.dataBaseRepository.getSleepApiRawDataBetweenTimestamps(
-                            session.sleepTimes.sleepTimeStart,
-                            session.sleepTimes.sleepTimeEnd
+                            startTime!!,
+                            endTime!!
                         ).first()
 
                         val userExportSession = sessionSleepData?.let {

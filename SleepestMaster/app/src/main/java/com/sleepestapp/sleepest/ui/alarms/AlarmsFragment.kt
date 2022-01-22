@@ -37,16 +37,12 @@ import kotlinx.coroutines.launch
 class AlarmsFragment : Fragment() {
 
     // region init
-
-    var factory = object : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            @Suppress("UNCHECKED_CAST")
-            // Workaround because we know that we can cast to T
+    var factory = object : ViewModelProvider.Factory{
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return  AlarmsViewModel(
                 (actualContext as MainApplication).dataStoreRepository,
                 (actualContext as MainApplication).dataBaseRepository
-            ) as T
-        }
+            ) as T        }
     }
 
     /**
