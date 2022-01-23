@@ -128,7 +128,11 @@ class OnBoardingActivity : AppCompatActivity() {
             if(PermissionsUtil.isNotificationPolicyAccessGranted(applicationContext))
                 lifecycleScope.launch {
                     delay(500)
-                    navigateToNextSlide()
+                    //navigateToNextSlide()
+                    var color = R.color.accent_text_color
+                    var text = resources.getText(R.string.next)
+                    binding.permissionBtn.background.setTint(resources.getColor(color))
+                    binding.permissionBtn.text = text
                 }
         } else if (requestCode == 283) {
             lifecycleScope.launch {
@@ -180,7 +184,11 @@ class OnBoardingActivity : AppCompatActivity() {
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
-                navigateToNextSlide()
+                //navigateToNextSlide()
+                var color = R.color.accent_text_color
+                var text = resources.getText(R.string.next)
+                binding.permissionBtn.background.setTint(resources.getColor(color))
+                binding.permissionBtn.text = text
             } else {
                 // Explain to the user that the feature is unavailable because the
                 // features requires a permission that the user has denied. At the

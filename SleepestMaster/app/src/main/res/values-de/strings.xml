@@ -344,9 +344,7 @@
 
     <string name="onboarding_slide6_title">Akkuschonend</string>
     <string name="onboarding_slide6_subtitle">Zuverlässigkeit der App</string>
-    <string name="onboarding_slide6_desc">Es sind für viele Geräte spezfische Einstellungen nötig um zu gewährleisten, dass die App richtig funktioniert.
-        Unter "Einstellungen / Hilfe / ENERGIEEINSTELLUNGEN" werden die nötigen Schritte für dein Gerät erklärt.
-        Bitte folge diesen Anweisungen, wenn das Banner bei eingeschaltetem Wecker während deiner Schlafzeit nicht erscheint.</string>
+    <string name="onboarding_slide6_desc">Wenn die Schlafaufzeichnung oder der Wecker nicht Funktioniert solltest du den Anweisungen folgen, welche in den Einstellungen unter Hilfe zu finden sind.</string>
     <string name="next">Weiter</string>
     <string name="skip">Überspringen</string>
     <string name="get_started">Loslegen</string>
