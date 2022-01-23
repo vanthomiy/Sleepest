@@ -371,11 +371,13 @@ class SettingsFragment : Fragment() {
 
                     userSessions.forEach { session ->
 
-                        val startTime = if (session.sleepTimes.possibleSleepTimeStart != null) session.sleepTimes.possibleSleepTimeStart else session.sleepTimes.sleepTimeStart
-                        val endTime = if (session.sleepTimes.possibleSleepTimeEnd != null) session.sleepTimes.possibleSleepTimeEnd else session.sleepTimes.sleepTimeEnd
+                        val startTime = session.id - (60 * 60 * 24)
+
+                        val endTime = session.id
+
                         val sessionSleepData = viewModel.dataBaseRepository.getSleepApiRawDataBetweenTimestamps(
-                            startTime!!,
-                            endTime!!
+                            startTime,
+                            endTime
                         ).first()
 
                         val userExportSession = sessionSleepData?.let {
