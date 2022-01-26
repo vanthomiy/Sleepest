@@ -302,6 +302,7 @@ class HistoryViewModel(
             val mobilePosition = it.userSleepSessionEntity.mobilePosition
             val isSleepStateSleeping = it.sleepApiRawDataEntity.any { x -> x.sleepState == SleepState.SLEEPING }
             val isSleepStateUnidentified = it.sleepApiRawDataEntity.any { x -> x.sleepState == SleepState.NONE }
+            val endNotDefined = it.userSleepSessionEntity.sleepTimes.sleepTimeEnd == 0;
 
             if (isSleepStateUnidentified) {
                 sleepCalculationHandler.checkIsUserSleeping(
@@ -316,13 +317,14 @@ class HistoryViewModel(
                 data = true
             }
 
-            if (mobilePosition == MobilePosition.INBED && isSleepStateSleeping) {
+            if ((mobilePosition == MobilePosition.INBED && isSleepStateSleeping) || endNotDefined) {
                 sleepCalculationHandler.defineUserWakeup(
                     LocalDateTime.ofInstant(
                         Instant.ofEpochMilli(it.sleepSessionId.toLong() * 1000),
                         ZoneOffset.systemDefault()
                     ),
-                    false
+                    false,
+                    defineUserWakuepTime = true
                 )
                 data = true
 
@@ -335,7 +337,8 @@ class HistoryViewModel(
                         ZoneOffset.systemDefault()
                     ),
                     false,
-                    recalculateMobilePosition = true
+                    recalculateMobilePosition = true,
+                    defineUserWakuepTime = true
                 )
                 data = true
             }

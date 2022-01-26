@@ -411,7 +411,7 @@ class SleepCalculationHandler(val context: Context) {
      * Stores alarm data in the main
      * [localTime] = the actual time in seconds
      */
-    suspend fun defineUserWakeup(localTime: LocalDateTime? = null, setAlarm:Boolean = true, recalculateMobilePosition: Boolean = false) {
+    suspend fun defineUserWakeup(localTime: LocalDateTime? = null, setAlarm:Boolean = true, recalculateMobilePosition: Boolean = false, defineUserWakuepTime : Boolean = false) {
 
         val sleepClassifier = SleepClassifier(context)
 
@@ -441,18 +441,38 @@ class SleepCalculationHandler(val context: Context) {
         checkIsUserSleeping(time, true, true)
 
         val sleepApiRawDataEntity = if (!setAlarm && sleepSessionEntity.sleepTimes.sleepTimeStart != 0){
-            dataBaseRepository.getSleepApiRawDataBetweenTimestamps(sleepSessionEntity.sleepTimes.sleepTimeStart, sleepSessionEntity.sleepTimes.sleepTimeEnd).first()
+            var end = sleepSessionEntity.sleepTimes.sleepTimeEnd
+            if(end == 0){
+                var seconds = sleepSessionEntity.sleepTimes.possibleSleepTimeEnd?.let {
+                    sleepSessionEntity.sleepTimes.possibleSleepTimeStart?.let { it1 ->
+                        SleepTimeValidationUtil.getTimeBetweenSecondsOfDay(
+                            it, it1
+                        )
+                    }
+                }
+
+                if (seconds == null){
+                    // if seconds null then use 12 hours mfg
+                    seconds = 60 * 60 * 12
+                }
+
+                end = sleepSessionEntity.sleepTimes.sleepTimeStart + seconds
+            }
+
+            dataBaseRepository.getSleepApiRawDataBetweenTimestamps(sleepSessionEntity.sleepTimes.sleepTimeStart, end).first()
                 ?.sortedBy { x -> x.timestampSeconds }
         }
-        else
+        else{
             dataBaseRepository.getSleepApiRawDataFromDate(time, endTime, startTime).first()
                 ?.sortedBy { x -> x.timestampSeconds }
+        }
 
+        print(endTime)
 
 
         if (sleepApiRawDataEntity == null || sleepApiRawDataEntity.count() == 0) {
             // do something!
-
+            print("no data")
             return
         }
 
@@ -581,12 +601,15 @@ class SleepCalculationHandler(val context: Context) {
 
             sleepApiRawDataEntity.last().wakeUpTime = wakeUpTime
 
-            sleepSessionEntity.sleepTimes.sleepTimeEnd = last
+            if(defineUserWakuepTime)
+                sleepSessionEntity.sleepTimes.sleepTimeEnd = last
 
         }
         else {
-            sleepSessionEntity.sleepTimes.sleepTimeEnd =
-                SleepApiRawDataEntity.getSleepEndTime(sleepApiRawDataEntity)
+            if(defineUserWakuepTime || sleepSessionEntity.sleepTimes.sleepTimeEnd == 0)
+                sleepSessionEntity.sleepTimes.sleepTimeEnd =
+                    SleepApiRawDataEntity.getSleepEndTime(sleepApiRawDataEntity)
+
 
             // Check if no sleep was in the sleep time
             if (sleepSessionEntity.sleepTimes.sleepTimeEnd == 0 && sleepSessionEntity.sleepTimes.sleepTimeStart == 0){
