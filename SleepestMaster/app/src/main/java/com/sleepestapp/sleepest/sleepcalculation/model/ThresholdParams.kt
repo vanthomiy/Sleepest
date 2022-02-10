@@ -176,6 +176,27 @@ data class ThresholdParams(
                 }
 
                 /**
+                 * Helper function to create general sleep threshold for a specific time [ThresholdParams]
+                 */
+                fun createGeneralThresholdForDefineUserWakeup(mobilePosition: MobilePosition) : ThresholdParams{
+                        return ThresholdParams(
+                                confidence = when(mobilePosition){
+                                        MobilePosition.INBED -> 10f
+                                        else -> 20f
+                                },
+                                motion = when(mobilePosition){
+                                        MobilePosition.INBED -> 5f
+                                        else -> 2f
+                                },
+                                light = when(mobilePosition){
+                                        MobilePosition.INBED -> 4f
+                                        else -> 4f
+                                }
+                        )
+                }
+
+
+                /**
                  * Helper function to create sleep start border factor by [LightConditions]
                  */
                 fun createSleepStartBorder(lightConditions: LightConditions) : ThresholdParams{
