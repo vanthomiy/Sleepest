@@ -136,7 +136,8 @@ class SleepClassifier constructor(private val context: Context) {
         normedSleepApiDataAfter: List<SleepApiRawDataEntity>?,
         mobilePosition: MobilePosition,
         lightConditions: LightConditions,
-        mobileUseFrequency: MobileUseFrequency
+        mobileUseFrequency: MobileUseFrequency,
+        fromDefineUserWakeUp : Boolean = false
     ) : SleepState {
 
         // check for standard mobile position.
@@ -254,7 +255,12 @@ class SleepClassifier constructor(private val context: Context) {
             actualThreshold.light = sortedSleepListBefore.last().light.toFloat()
             actualThreshold.motion = sortedSleepListBefore.last().motion.toFloat()
 
-            isSleeping = actualThreshold.checkIfThreshold(false, 3, actualParams.generalThreshold)
+            // if its from define user wakup we have to handle it not that hard. Mostly in the morning we have to
+            // check it different.
+            isSleeping = if(!fromDefineUserWakeUp)
+                actualThreshold.checkIfThreshold(false, 3, actualParams.generalThreshold)
+            else
+                actualThreshold.checkIfThreshold(false, 3, actualParams.generalThresholdFromDefineUserWakeup)
         }
 
 

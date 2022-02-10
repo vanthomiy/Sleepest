@@ -32,6 +32,11 @@ data class SleepingParams(
          */
         var generalThreshold: ThresholdParams,
 
+        /**
+         * It is used to create a [ThresholdParams] to check if the actual data is over a specific threshold
+         */
+        var generalThresholdFromDefineUserWakeup: ThresholdParams,
+
         )
 {
         /**
@@ -42,6 +47,7 @@ data class SleepingParams(
                 sleepStartThreshold.mergeParameters(factorParams = factorParams.sleepStartThreshold)
                 sleepCleanUp.mergeParameters(factorParams = factorParams.sleepCleanUp)
                 generalThreshold.mergeParameters(factorParams = factorParams.generalThreshold)
+                generalThresholdFromDefineUserWakeup.mergeParameters(factorParams = factorParams.generalThreshold)
         }
 
         companion object{
@@ -54,7 +60,8 @@ data class SleepingParams(
                                 sleepStartBorder = ThresholdParams.createSleepStartBorder(mobilePosition),
                                 sleepStartThreshold = ThresholdParams.createSleepStartThreshold(mobilePosition),
                                 sleepCleanUp = ThresholdParams.createCleanUp(mobilePosition),
-                                generalThreshold = ThresholdParams.createGeneralThreshold(mobilePosition)
+                                generalThreshold = ThresholdParams.createGeneralThreshold(mobilePosition) ,
+                                generalThresholdFromDefineUserWakeup = ThresholdParams.createGeneralThresholdForDefineUserWakeup(mobilePosition)
                         )
                 }
 
@@ -66,7 +73,8 @@ data class SleepingParams(
                                 sleepStartBorder = ThresholdParams.createSleepStartBorder(lightCondition),
                                 sleepStartThreshold = ThresholdParams.createSleepStartThreshold(lightCondition),
                                 sleepCleanUp = ThresholdParams.createCleanUp(lightCondition),
-                                generalThreshold = ThresholdParams.createGeneralThreshold(lightCondition)
+                                generalThreshold = ThresholdParams.createGeneralThreshold(lightCondition),
+                                generalThresholdFromDefineUserWakeup = ThresholdParams.createGeneralThreshold(lightCondition)
                         )
                 }
 
@@ -78,7 +86,8 @@ data class SleepingParams(
                                 sleepStartBorder = ThresholdParams.createSleepStartBorder(mobileUseFrequency),
                                 sleepStartThreshold = ThresholdParams.createSleepStartThreshold(mobileUseFrequency),
                                 sleepCleanUp = ThresholdParams.createCleanUp(mobileUseFrequency),
-                                generalThreshold = ThresholdParams.createGeneralThreshold(mobileUseFrequency)
+                                generalThreshold = ThresholdParams.createGeneralThreshold(mobileUseFrequency),
+                                generalThresholdFromDefineUserWakeup = ThresholdParams.createGeneralThreshold(mobileUseFrequency)
                         )
                 }
 
