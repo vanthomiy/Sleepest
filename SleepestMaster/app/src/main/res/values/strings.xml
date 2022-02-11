@@ -298,7 +298,7 @@
     <string name="permission_string">permission</string>
 
     <string name="onboarding_grant_all_permissions">Please grant all permissions</string>
-    <string name="onboarding_toast_find_permission_in_list">find the sleepest app in the list</string>
+    <string name="onboarding_toast_find_permission_in_list">Find the sleepest app in the list</string>
     <string name="onboarding_slide1_title">Welcome to</string>
     <string name="onboarding_slide1_subtitle">Sleepest</string>
     <string name="onboarding_slide1_desc">The new automatic and intelligent alarm clock.
@@ -336,8 +336,11 @@
 
     <string name="onboarding_slide6_title">Battery friendly</string>
     <string name="onboarding_slide6_subtitle">Reliability of the app</string>
-    <string name="onboarding_slide6_desc">
-        If the sleep tracking or the alarm clock is not working, you should follow the instructions that can be found in the settings under Help tab.</string>
+
+    <string name="onboarding_slide6_desc">Its necessary for many devices that you
+    follow device-specific instructions that can be found under "Settings / Help / ENERGY SETTINGS".
+    If the banner don't show app with an alarm setup at your sleep time you should follow those instructions.</string>
+
 
     <string name="next">Next</string>
     <string name="skip">Skip</string>
