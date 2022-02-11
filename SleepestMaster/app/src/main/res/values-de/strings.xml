@@ -310,14 +310,14 @@
 
     <string name="onboarding_slide1_title">Willkommen zu</string>
     <string name="onboarding_slide1_subtitle">Sleepest</string>
-    <string name="onboarding_slide1_desc">Der neue, automatische und intelligente Wecker.
-        Sleepest ist an neue Lebensweißen und Home-Office angepasst.
-        Es Hilft dir genug Schlaf zu bekommen und trotzdem Produktiv zu sein. </string>
+    <string name="onboarding_slide1_desc">Der neue automatische und intelligente Wecker.
+        Sleepest ist an neue Lebensweisen und Home-Office angepasst.
+        Es hilft dir, genug Schlaf zu bekommen und trotzdem produktiv zu sein. </string>
 
     <string name="onboarding_slide2_title">Schlafzeiten</string>
     <string name="onboarding_slide2_subtitle">Automatische Schlaferkennung</string>
     <string name="onboarding_slide2_desc">
-        Sleepest kann automatisch erkennen wenn du einschläfst.
+        Sleepest kann automatisch erkennen, wenn du einschläfst.
         Die App muss dazu nicht aktiv sein.
         Umso häufiger du dein Gerät verwendest, umso besser funktioniert die App.
     </string>
@@ -338,13 +338,13 @@
     <string name="onboarding_slide5_title">Benachrichtigung</string>
     <string name="onboarding_slide5_subtitle">Aktiver Wecker</string>
     <string name="onboarding_slide5_desc">
-        Sleepest benachrichtigt dich wenn ein Wecker aktiv ist.
-        Du hast die volle kontrolle über die Alarme und deinen frühesten und spätesten Aufweckzeitpunkt.
+        Sleepest benachrichtigt dich, wenn ein Wecker aktiv ist.
+        Du hast die volle Kontrolle über die Alarme und deinen frühesten und spätesten Aufweckzeitpunkt.
     </string>
 
     <string name="onboarding_slide6_title">Akkuschonend</string>
     <string name="onboarding_slide6_subtitle">Zuverlässigkeit der App</string>
-    <string name="onboarding_slide6_desc">Es sind für viele Geräte spezfische Einstellungen nötig um zu gewährleisten, dass die App richtig funktioniert.
+    <string name="onboarding_slide6_desc">Es sind für viele Geräte spezfische Einstellungen nötig, um zu gewährleisten, dass die App richtig funktioniert.
         Unter "Einstellungen / Hilfe / ENERGIEEINSTELLUNGEN" werden die nötigen Schritte für dein Gerät erklärt.
         Bitte folge diesen Anweisungen, wenn das Banner bei eingeschaltetem Wecker während deiner Schlafzeit nicht erscheint.</string>
     <string name="next">Weiter</string>
