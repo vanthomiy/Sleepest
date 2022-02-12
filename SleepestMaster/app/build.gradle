@@ -21,8 +21,13 @@ android {
         applicationId "com.sleepestapp.sleepest"
         minSdkVersion 28
         targetSdkVersion 31
+<<<<<<< Updated upstream
         versionCode 15
         versionName "1.0.5.3"
+=======
+        versionCode 24
+        versionName "1.0.6"
+>>>>>>> Stashed changes
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

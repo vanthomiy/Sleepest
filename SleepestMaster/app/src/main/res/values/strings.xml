@@ -135,6 +135,12 @@
     <string name="sleep_lightcondition_info_2">
         If you want to have a very good sleep monitor, you should sleep in the dark.
     </string>
+    <string name="sleep_lightcondition_info_3_header">
+        Shutters Up?
+    </string>
+    <string name="sleep_lightcondition_info_3">
+        Put your phone upside down so the light wont affect the sleep detection.
+    </string>
     <string name="sleep_phoneposition_header">Phone position</string>
     <string name="sleep_phoneposition_info_1">
         For a good sleep determination, the mobile phone should be in bed while sleeping.
@@ -338,7 +344,8 @@
     <string name="onboarding_slide6_subtitle">Reliability of the app</string>
     <string name="onboarding_slide6_desc">Its necessary for many devices that you
     follow device-specific instructions that can be found under "Settings / Help / ENERGY SETTINGS".
-    If the banner don't show app with an alarm setup at your sleep time you should follow those instructions.</string>
+    If the banner is not displayed in your sleep time when an alarm is setup, you should follow those instructions.
+    </string>
 
     <string name="next">Next</string>
     <string name="skip">Skip</string>
