@@ -262,6 +262,13 @@ data class InfoEntity (
                         textHeader = null,
                         textDescription = context.resources.getString(R.string.sleep_lightcondition_info_2),
                         infoEntityStyle = InfoEntityStyle.PICTURE_RIGHT
+                    ),
+                    InfoEntity(
+                        image = null,
+                        lottie = null,
+                        textHeader = context.resources.getString(R.string.sleep_lightcondition_info_3_header),
+                        textDescription = context.resources.getString(R.string.sleep_lightcondition_info_3),
+                        infoEntityStyle = InfoEntityStyle.PICTURE_RIGHT
                     )
                 )
                 2 ->  listOf(InfoEntity(

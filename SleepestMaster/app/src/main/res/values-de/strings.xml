@@ -142,6 +142,12 @@
     <string name="sleep_lightcondition_info_2">
         Wenn du eine sehr gute Schlafüberwachung haben willst, solltest du im Dunkeln schlafen.
     </string>
+    <string name="sleep_lightcondition_info_3_header">
+        Rolläden oben?
+    </string>
+    <string name="sleep_lightcondition_info_3">
+        Drehe dein Handy um, damit das Licht die Schlafüberwachung nicht beeinträchtigt.
+    </string>
     <string name="sleep_phoneposition_header">Handyposition</string>
     <string name="sleep_phoneposition_info_1">
         Für eine gute Schlafbestimmung sollte das Handy beim Schlafen mit im Bett liegen.
