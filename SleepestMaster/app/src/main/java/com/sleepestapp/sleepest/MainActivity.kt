@@ -1,7 +1,5 @@
 package com.sleepestapp.sleepest
 
-import android.Manifest
-import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -14,14 +12,10 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.sleepestapp.sleepest.alarmclock.AlarmClockReceiver
-import com.sleepestapp.sleepest.alarmclock.LockScreenAlarmActivity
-import com.sleepestapp.sleepest.background.AlarmCycleState
 import com.sleepestapp.sleepest.background.AlarmReceiver
 import com.sleepestapp.sleepest.background.BackgroundAlarmTimeHandler
 import com.sleepestapp.sleepest.databinding.ActivityMainBinding
 import com.sleepestapp.sleepest.model.data.AlarmReceiverUsage
-import com.sleepestapp.sleepest.model.data.SleepSleepChangeFrom
 import com.sleepestapp.sleepest.model.data.export.ImportUtil
 import com.sleepestapp.sleepest.ui.alarms.AlarmsFragment
 import com.sleepestapp.sleepest.ui.history.HistoryTabView
@@ -34,8 +28,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.*
 import com.sleepestapp.sleepest.googleapi.ActivityTransitionHandler
-import com.sleepestapp.sleepest.model.data.AlarmClockReceiverUsage
-import com.sleepestapp.sleepest.model.data.Constants
 import com.sleepestapp.sleepest.onboarding.OnBoardingActivity
 
 

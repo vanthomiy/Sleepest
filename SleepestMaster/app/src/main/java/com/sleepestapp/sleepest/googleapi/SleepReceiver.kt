@@ -64,14 +64,14 @@ class SleepReceiver : BroadcastReceiver() {
         /**
          * The actual intent for the subscription
          */
-        @SuppressLint("UnspecifiedImmutableFlag")
+        //@SuppressLint("UnspecifiedImmutableFlag")
         fun createSleepReceiverPendingIntent(context: Context): PendingIntent {
             val sleepIntent = Intent(context, SleepReceiver::class.java)
             return PendingIntent.getBroadcast(
                     context,
                     SleepApiUsage.getCount(SleepApiUsage.REQUEST_CODE),
                     sleepIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT
+                PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         }
     }

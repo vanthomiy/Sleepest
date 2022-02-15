@@ -70,14 +70,14 @@ class ActivityTransitionReceiver : BroadcastReceiver() {
         /**
          * The actual intent for the subscription
          */
-        @SuppressLint("UnspecifiedImmutableFlag")
+        //@SuppressLint("UnspecifiedImmutableFlag")
         fun createActivityTransitionReceiverPendingIntent(context: Context): PendingIntent {
             val intent = Intent(context, ActivityTransitionReceiver::class.java)
             return PendingIntent.getBroadcast(
                 context,
                 ActivityTransitionUsage.getCount(ActivityTransitionUsage.REQUEST_CODE),
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         }
     }
