@@ -21,8 +21,8 @@ android {
         applicationId "com.sleepestapp.sleepest"
         minSdkVersion 28
         targetSdkVersion 31
-        versionCode 26
-        versionName "1.0.6"
+        versionCode 28
+        versionName "1.0.7"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

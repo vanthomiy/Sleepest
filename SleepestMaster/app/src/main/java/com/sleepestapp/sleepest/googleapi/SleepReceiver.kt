@@ -71,7 +71,7 @@ class SleepReceiver : BroadcastReceiver() {
                     context,
                     SleepApiUsage.getCount(SleepApiUsage.REQUEST_CODE),
                     sleepIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                PendingIntent.FLAG_CANCEL_CURRENT
             )
         }
     }
