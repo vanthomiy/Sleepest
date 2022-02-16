@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.model.data.SleepApiUsage
 import com.sleepestapp.sleepest.storage.DataStoreRepository
@@ -66,12 +67,17 @@ class SleepReceiver : BroadcastReceiver() {
          */
         //@SuppressLint("UnspecifiedImmutableFlag")
         fun createSleepReceiverPendingIntent(context: Context): PendingIntent {
+            var flags = PendingIntent.FLAG_CANCEL_CURRENT
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                flags = flags or PendingIntent.FLAG_MUTABLE // <-- FLAG_IMMUTABLE breaks the code!
+            }
+
             val sleepIntent = Intent(context, SleepReceiver::class.java)
             return PendingIntent.getBroadcast(
                     context,
                     SleepApiUsage.getCount(SleepApiUsage.REQUEST_CODE),
                     sleepIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_MUTABLE
+                flags
             )
         }
     }

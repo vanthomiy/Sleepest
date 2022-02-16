@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.storage.db.ActivityApiRawDataEntity
 import com.google.android.gms.location.ActivityTransitionResult
@@ -72,12 +73,17 @@ class ActivityTransitionReceiver : BroadcastReceiver() {
          */
         //@SuppressLint("UnspecifiedImmutableFlag")
         fun createActivityTransitionReceiverPendingIntent(context: Context): PendingIntent {
+            var flags = PendingIntent.FLAG_CANCEL_CURRENT
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                flags = flags or PendingIntent.FLAG_MUTABLE // <-- FLAG_IMMUTABLE breaks the code!
+            }
+
             val intent = Intent(context, ActivityTransitionReceiver::class.java)
             return PendingIntent.getBroadcast(
                 context,
                 ActivityTransitionUsage.getCount(ActivityTransitionUsage.REQUEST_CODE),
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+                flags
             )
         }
     }
