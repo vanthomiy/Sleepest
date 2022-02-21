@@ -111,7 +111,7 @@ dependencies {
 
     testImplementation 'org.robolectric:robolectric:4.6.1'
 
-    implementation 'com.google.code.gson:gson:2.8.8'
+    implementation 'com.google.code.gson:gson:2.9.0'
 
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0-M1-1.4.0-rc"
 
@@ -255,7 +255,11 @@ dependencies {
     //viewPager2 library
     implementation 'androidx.viewpager2:viewpager2:1.1.0-alpha01'
 
+    //Spotify remote API
+    implementation files('libs/spotify-app-remote-release-0.7.2.aar')
 
+    //Sliding up Panel library
+    implementation 'com.github.hannesa2:AndroidSlidingUpPanel:3.5.0'
 }
 
 repositories {

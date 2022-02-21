@@ -7,6 +7,7 @@ import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Bundle
 import android.transition.TransitionManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,6 +28,8 @@ import com.kevalpatel.ringtonepicker.RingtonePickerDialog
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.getActiveAlarms
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.getTimeBetweenSecondsOfDay
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.subtractMinutesFromSecondsOfDay
+import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import kotlinx.android.synthetic.main.fragment_alarms.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -331,6 +334,17 @@ class AlarmsFragment : Fragment() {
             else
                 binding.lottieSettings.pauseAnimation()*/
         }
+
+        sliding_layout.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
+            override fun onPanelSlide(panel: View, slideOffset: Float) {
+
+            }
+
+            override fun onPanelStateChanged(panel: View, previousState: SlidingUpPanelLayout.PanelState, newState: SlidingUpPanelLayout.PanelState) {
+
+            }
+        })
+        sliding_layout.setFadeOnClickListener { sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED) }
     }
 
     companion object {
