@@ -255,6 +255,8 @@
     <string name="settings_banner_configuration_sleeptime">Aktuelle Schlafzeit anzeigen</string>
     <string name="settings_banner_configuration_sleepstate">Aktuellen Schlafstatus anzeigen</string>
 
+    <string name="settings_useful_tools">Nützliche Tools</string>
+    <string name="settings_connect_to_spotify">Mit Spotify verbinden</string>
 
     <!--endregion-->
 

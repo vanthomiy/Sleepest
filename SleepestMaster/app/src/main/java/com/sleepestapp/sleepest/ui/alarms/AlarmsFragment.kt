@@ -25,6 +25,8 @@ import com.sleepestapp.sleepest.storage.db.AlarmEntity
 import com.sleepestapp.sleepest.util.IconAnimatorUtil
 import com.sleepestapp.sleepest.util.PermissionsUtil
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog
+import com.sleepestapp.sleepest.tools.SpotifyHandler
+import com.sleepestapp.sleepest.util.SleepTimeValidationUtil
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.getActiveAlarms
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.getTimeBetweenSecondsOfDay
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.subtractMinutesFromSecondsOfDay
@@ -63,6 +65,8 @@ class AlarmsFragment : Fragment() {
      * View model of the [AlarmsFragment]
      */
     private val viewModel by lazy { ViewModelProvider(requireActivity(), factory).get(AlarmsViewModel::class.java) }
+
+    private val spotifyHandler : SpotifyHandler = SpotifyHandler()
 
 
     // endregion
@@ -123,6 +127,10 @@ class AlarmsFragment : Fragment() {
                 , wakeupEarly = wakeUpEarly
                 , wakeupLate = wakeUpLate)
             )
+
+
+            val spotifyConnected = viewModel.dataStoreRepository.getSpotifyConnected()
+            viewModel.isSpotifyConnected.value = !spotifyConnected
         }
         addAlarmEntity(actualContext, newId)
         viewModel.usedIds.add(newId)
@@ -255,6 +263,44 @@ class AlarmsFragment : Fragment() {
                 }
                 else{
                     viewModel.tempDisabledVisible.value = false
+                }
+            }
+        }
+
+        viewModel.spotifyLiveData.observe(viewLifecycleOwner) {
+            lifecycleScope.launch {
+
+                //Try to connect after enable spotify in settings
+                if (viewModel.dataStoreRepository.getSpotifyEnabled() && !viewModel.dataStoreRepository.getSpotifyConnected()) {
+                    try {
+                        spotifyHandler.connect(actualContext)
+                        viewModel.dataStoreRepository.updateSpotifyConnected(true)
+
+                        //Disconnect after first connection if not in sleep time
+                        if (!SleepTimeValidationUtil.getActualAlarmTimeData(viewModel.dataStoreRepository).isInSleepTime) {
+                            spotifyHandler.disconnect()
+                        }
+                    } catch (error: Throwable) {
+                        viewModel.dataStoreRepository.updateSpotifyConnected(false)
+                    }
+                }
+
+                if (viewModel.dataStoreRepository.getSpotifyEnabled()) {
+                    viewModel.isSpotifyEnabled.value = View.VISIBLE
+
+                    if (!viewModel.dataStoreRepository.getSpotifyConnected() || (spotifyHandler.isConnected() == false)) {
+
+                        try {
+                            spotifyHandler.connect(actualContext)
+                            viewModel.dataStoreRepository.updateSpotifyConnected(true)
+                        } catch (error: Throwable) {
+                            viewModel.dataStoreRepository.updateSpotifyConnected(false)
+                        }
+                    }
+                } else {
+                    viewModel.isSpotifyEnabled.value = View.GONE
+                    spotifyHandler.disconnect()
+                    viewModel.dataStoreRepository.updateSpotifyConnected(false)
                 }
             }
         }

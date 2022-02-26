@@ -249,6 +249,9 @@
     <string name="settings_banner_configuration_sleeptime">Show sleep time</string>
     <string name="settings_banner_configuration_sleepstate">Show sleep state</string>
 
+    <string name="settings_useful_tools">Useful Tools</string>
+    <string name="settings_connect_to_spotify">Connect to Spotify</string>
+
 
     <!--endregion-->
 

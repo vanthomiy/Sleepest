@@ -24,6 +24,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
@@ -47,6 +48,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.*
+import java.time.LocalTime
 
 
 class SettingsFragment : Fragment() {
@@ -143,6 +145,13 @@ class SettingsFragment : Fragment() {
             DontKillMyAppFragment.show(requireActivity())
         }
 
+        binding.setOnSpotifyEnableToggleButtonChange() { _, isChecked ->
+            viewModel.enableSpotify.value = isChecked
+            lifecycleScope.launch {
+                viewModel.dataStoreRepository.updateSpotifyEnabled(isChecked)
+            }
+        }
+
         viewModel.aboutUsSelection.observe(viewLifecycleOwner) {
             onAboutUsClicked(it)
         }
@@ -195,6 +204,7 @@ class SettingsFragment : Fragment() {
 
         checkPermissions()
         createCredits()
+
     }
 
     /**

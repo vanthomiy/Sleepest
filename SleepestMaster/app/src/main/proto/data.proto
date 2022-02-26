@@ -289,4 +289,19 @@ message Tutorial{
 
 }
 
+message Spotify{
+  /**
+   * If user enables spotify in settings, this value will be set
+   */
+  bool spotifyEnabled = 1;
+  /**
+ * Spotify was connected successfully to sleepest
+ */
+  bool spotifyConnected = 2;
+  /**
+ * The spotify player is playing
+ */
+  bool spotifyIsPlaying = 3;
+}
+
 

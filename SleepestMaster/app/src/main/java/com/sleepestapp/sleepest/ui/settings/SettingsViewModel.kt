@@ -1,8 +1,11 @@
 package com.sleepestapp.sleepest.ui.settings
 import android.view.View
+import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.SwitchCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
@@ -204,6 +207,12 @@ class SettingsViewModel(
 
     //endregion
 
+    //region spotify
+
+    val enableSpotify = MutableLiveData(false)
+
+    //endregion
+
     init {
 
         /**
@@ -219,6 +228,9 @@ class SettingsViewModel(
             showActualWakeUpPoint.value = (settingsParams.bannerShowActualWakeUpPoint)
             showActualSleepTime.value = (settingsParams.bannerShowActualSleepTime)
             showSleepState.value = (settingsParams.bannerShowSleepState)
+
+            val spotifyFlow = dataStoreRepository.spotifyStatusFlow.first()
+            enableSpotify.value = spotifyFlow.spotifyEnabled
 
         }
     }

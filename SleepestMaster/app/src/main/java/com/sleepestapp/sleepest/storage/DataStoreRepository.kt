@@ -48,6 +48,7 @@ class DataStoreRepository(context: Context) {
         sleepApiDataStatus.loadDefault()
         sleepParameterStatus.loadDefault()
         tutorialStatus.loadDefault()
+        spotifyStatus
 
         updateRestartApp(true)
         updateAfterRestartApp(true)
@@ -649,6 +650,48 @@ class DataStoreRepository(context: Context) {
      */
     fun getTutorialCompletedJob(): Boolean = runBlocking {
         return@runBlocking tutorialStatusFlow.first().tutorialCompleted
+    }
+
+    //endregion
+
+    //region spotify
+
+    val Context.spotifyDataStore: DataStore<Spotify> by dataStore(
+        fileName = SPOTIFY_STATUS_NAME,
+        serializer = SpotifyStatusSerializer
+    )
+    private val spotifyStatus by lazy { SpotifyStatus(context.spotifyDataStore) }
+
+    val spotifyStatusFlow: Flow<Spotify> = spotifyStatus.spotifyData
+
+    /**
+     * Update energy options shown
+     */
+    suspend fun updateSpotifyEnabled(value: Boolean): Unit =
+        spotifyStatus.updateSpotifyEnabled(value)
+
+    /**
+     * Update energy options shown
+     */
+    suspend fun updateSpotifyConnected(value: Boolean): Unit =
+        spotifyStatus.updateSpotifyConnected(value)
+
+    /**
+     * Update energy options shown
+     */
+    suspend fun updateSpotifyPlaying(value: Boolean): Unit =
+        spotifyStatus.updateSpotifyPlaying(value)
+
+    suspend fun getSpotifyEnabled(): Boolean {
+        return spotifyStatus.spotifyData.first().spotifyEnabled
+    }
+
+    suspend fun getSpotifyConnected(): Boolean {
+        return spotifyStatus.spotifyData.first().spotifyConnected
+    }
+
+    suspend fun getSpotifyPlaying(): Boolean {
+        return spotifyStatus.spotifyData.first().spotifyIsPlaying
     }
 
     //endregion

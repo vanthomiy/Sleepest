@@ -187,3 +187,26 @@ object TutorialStatusSerializer : Serializer<Tutorial> {
         .setTutorialCompleted(false)
         .build()
 }
+
+@Suppress("BlockingMethodInNonBlockingContext")
+object SpotifyStatusSerializer : Serializer<Spotify> {
+
+    override suspend fun readFrom(input: InputStream): Spotify {
+        try {
+            return Spotify.parseFrom(input)
+        } catch (exception: InvalidProtocolBufferException) {
+            throw CorruptionException("Cannot read proto.", exception)
+        }
+    }
+
+    override suspend fun writeTo(
+        t: Spotify,
+        output: OutputStream
+    ): Unit = t.writeTo(output)
+
+    override val defaultValue: Spotify = Spotify.newBuilder()
+        .setSpotifyIsPlaying(false)
+        .setSpotifyEnabled(false)
+        .setSpotifyConnected(false)
+        .build()
+}

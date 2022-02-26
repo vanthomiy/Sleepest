@@ -9,6 +9,7 @@ import com.sleepestapp.sleepest.model.data.NotificationUsage
 import com.sleepestapp.sleepest.sleepcalculation.SleepCalculationHandler
 import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
+import com.sleepestapp.sleepest.tools.SpotifyHandler
 import com.sleepestapp.sleepest.util.NotificationUtil
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil
 import kotlinx.coroutines.CoroutineScope
@@ -42,6 +43,22 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
 
 
         scope.launch {
+
+            if (dataStoreRepository.liveUserSleepActivityFlow.first().isUserSleeping && dataStoreRepository.getSpotifyEnabled()) {
+                val spotifyHandler = SpotifyHandler()
+                if (spotifyHandler.isConnected() == true) {
+                    spotifyHandler.stopPlayer()
+                    spotifyHandler.disconnect()
+                } else {
+                    try {
+                        spotifyHandler.connect(applicationContext)
+                        spotifyHandler.stopPlayer()
+                        spotifyHandler.disconnect()
+                    } catch (error: Throwable) {
+
+                    }
+                }
+            }
 
             // Check if foreground is active
             if (dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {

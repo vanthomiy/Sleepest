@@ -9,6 +9,9 @@
         <variable
             name="profileViewModel"
             type="com.sleepestapp.sleepest.ui.settings.SettingsViewModel" />
+        <variable
+            name="onSpotifyEnableToggleButtonChange"
+            type="android.widget.CompoundButton.OnCheckedChangeListener"/>
     </data>
 
 
@@ -67,7 +70,7 @@
                             android:layout_height="@dimen/img_header_size"
                             tools:ignore="ContentDescription"
                             android:layout_gravity="start"
-                            android:src="@drawable/ic_baseline_build_24"
+                            android:src="@drawable/ic_baseline_design_services_24"
                             app:tint="@color/primary_text_color" />
                         <TextView
                             android:layout_width="wrap_content"
@@ -921,6 +924,92 @@
 
                     </LinearLayout>
 
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="10dp"
+                    >
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:onClick="@{profileViewModel::onExpandClicked}"
+                        android:tag="6"
+                        >
+                        <ImageView
+                            android:layout_width="@dimen/img_header_size"
+                            android:layout_height="@dimen/img_header_size"
+                            android:layout_gravity="start"
+                            tools:ignore="ContentDescription"
+                            android:src="@drawable/ic_baseline_build_24"
+                            app:tint="@color/primary_text_color" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/img_header_margin"
+                            android:textSize="@dimen/headerSize"
+                            android:textStyle="bold"
+                            android:layout_gravity="start|center"
+                            android:textColor="@color/primary_text_color"
+                            android:text="@string/settings_useful_tools"/>
+
+                        <ImageView
+                            android:layout_width="@dimen/img_header_size"
+                            android:layout_height="@dimen/img_header_size"
+                            android:layout_gravity="end"
+                            tools:ignore="ContentDescription"
+                            android:src="@drawable/ic_baseline_expand_more_24"
+                            android:rotation="@{profileViewModel.actualExpand == 6 ? profileViewModel.rotatedState:profileViewModel.normalRotationState}"
+                            android:onClick="@{profileViewModel::onExpandClicked}"
+                            android:tag="6"
+                            app:tint="@color/primary_text_color" />
+
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:orientation="vertical"
+                        android:visibility="@{profileViewModel.actualExpand == 6 ? View.VISIBLE:View.GONE, default=gone}"
+                        >
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_gravity="start"
+                            android:layout_marginStart="0dp"
+                            android:layout_height="@dimen/valuesHeight"
+                            android:orientation="horizontal"
+                            android:layout_marginVertical="10dp"
+                            android:background="@drawable/background_rounded_button">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="start"
+                                android:gravity="center_vertical"
+                                android:layout_marginStart="10dp"
+                                android:textSize="@dimen/valueSize"
+                                android:textColor="@color/primary_text_color"
+                                android:text="@string/settings_connect_to_spotify"
+                                />
+
+                            <androidx.appcompat.widget.SwitchCompat
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:id="@+id/tbtnEnableSpotify"
+                                android:layout_gravity="end"
+                                android:gravity="center_vertical"
+                                android:layout_marginEnd="10dp"
+                                android:checked="@={profileViewModel.enableSpotify}"
+                                android:onCheckedChanged="@{onSpotifyEnableToggleButtonChange}"
+                                />
+                        </FrameLayout>
+
+                    </LinearLayout>
                 </LinearLayout>
 
                 <View

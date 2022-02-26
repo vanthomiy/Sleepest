@@ -307,7 +307,8 @@
             android:clickable="true"
             android:focusable="false"
             android:background="#ffffff"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="@{alarmsViewModel.isSpotifyEnabled}">
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="68dp"
@@ -316,7 +317,8 @@
 
                 <ImageButton
                     android:id="@+id/follow"
-                    android:src="@drawable/ic_baseline_pause_24"
+                    android:onClick="@{alarmsViewModel::onPlayClicked}"
+                    android:src="@{alarmsViewModel.isSpotifyPlaying ? @drawable/ic_baseline_pause_24 : @drawable/ic_baseline_play_arrow_24}"
                     android:backgroundTint="@color/transparent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

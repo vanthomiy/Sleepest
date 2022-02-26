@@ -7,6 +7,7 @@ import androidx.lifecycle.*
 import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
 import com.sleepestapp.sleepest.storage.db.AlarmEntity
+import com.sleepestapp.sleepest.tools.SpotifyHandler
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -56,6 +57,7 @@ class AlarmsViewModel(
     val actualExpand = MutableLiveData(View.GONE)
     val rotateState = MutableLiveData(0)
     val expandToggled = MutableLiveData(false)
+
     /**
      * Expands the alarm settings of the alarms view
      */
@@ -68,6 +70,7 @@ class AlarmsViewModel(
         alarmExpandId.value = (-1)
 
         expandToggled.value = expandToggled.value == false
+
     }
 
     /**
@@ -117,6 +120,34 @@ class AlarmsViewModel(
 
     //endregion
 
+    //region spotify player
+    val isSpotifyEnabled = MutableLiveData(View.VISIBLE)
+    val isSpotifyConnected = MutableLiveData(false)
+    val isSpotifyPlaying = MutableLiveData(false)
+    /**
+     * Expands the alarm settings of the alarms view
+     */
+    @Suppress("UNUSED_PARAMETER")
+    fun onPlayClicked(view: View) {
+
+        viewModelScope.launch {
+
+            isSpotifyPlaying.value?.let { isSpotifyPlaying.value = !it }
+            isSpotifyPlaying.value?.let { dataStoreRepository.updateSpotifyPlaying(it) }
+
+        }
+
+    }
+
+    /**
+     * Observable live data of the sleep parameter flow
+     */
+    val spotifyLiveData by lazy {
+        dataStoreRepository.spotifyStatusFlow.asLiveData()
+    }
+
+
+    //endregion
 
     init {
 
@@ -131,6 +162,16 @@ class AlarmsViewModel(
 
             if(settings.alarmName != "") {
                 alarmSoundName.value = (settings.alarmName)
+            }
+
+            val spotifyFlow = dataStoreRepository.spotifyStatusFlow.first()
+
+            isSpotifyPlaying.value = spotifyFlow.spotifyIsPlaying
+
+            if(spotifyFlow.spotifyEnabled) {
+                isSpotifyEnabled.value = View.VISIBLE
+            } else {
+                isSpotifyEnabled.value = View.GONE
             }
         }
     }
