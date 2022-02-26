@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.databinding.BindingAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -30,7 +31,6 @@ import com.sleepestapp.sleepest.util.SleepTimeValidationUtil
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.getActiveAlarms
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.getTimeBetweenSecondsOfDay
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.subtractMinutesFromSecondsOfDay
-import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import kotlinx.android.synthetic.main.fragment_alarms.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -287,6 +287,7 @@ class AlarmsFragment : Fragment() {
 
                 if (viewModel.dataStoreRepository.getSpotifyEnabled()) {
                     viewModel.isSpotifyEnabled.value = View.VISIBLE
+                    viewModel.isSpotifyPlayerVisible.value = true
 
                     if (!viewModel.dataStoreRepository.getSpotifyConnected() || (spotifyHandler.isConnected() == false)) {
 
@@ -299,11 +300,19 @@ class AlarmsFragment : Fragment() {
                     }
                 } else {
                     viewModel.isSpotifyEnabled.value = View.GONE
+                    viewModel.isSpotifyPlayerVisible.value = false
                     spotifyHandler.disconnect()
                     viewModel.dataStoreRepository.updateSpotifyConnected(false)
                 }
             }
         }
+
+        var pref = actualContext.getSharedPreferences("SpotifyStopTime", 0)
+        val text = pref.getString("time", "")
+
+        //binding.tvSlidingPanel.text = text
+
+
 
         // new alarm is added
         binding.btnAddAlarmEntity.setOnClickListener {
@@ -380,18 +389,9 @@ class AlarmsFragment : Fragment() {
             else
                 binding.lottieSettings.pauseAnimation()*/
         }
-
-        sliding_layout.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
-            override fun onPanelSlide(panel: View, slideOffset: Float) {
-
-            }
-
-            override fun onPanelStateChanged(panel: View, previousState: SlidingUpPanelLayout.PanelState, newState: SlidingUpPanelLayout.PanelState) {
-
-            }
-        })
-        sliding_layout.setFadeOnClickListener { sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED) }
     }
+
+
 
     companion object {
         // For Singleton instantiation

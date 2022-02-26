@@ -1,6 +1,7 @@
 package com.sleepestapp.sleepest.background
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.work.*
@@ -41,24 +42,53 @@ class Workmanager(context: Context, workerParams: WorkerParameters) : Worker(con
 
         val sleepCalculationHandler = SleepCalculationHandler(applicationContext)
 
+        //region spotify
 
         scope.launch {
 
             if (dataStoreRepository.liveUserSleepActivityFlow.first().isUserSleeping && dataStoreRepository.getSpotifyEnabled()) {
+
                 val spotifyHandler = SpotifyHandler()
                 if (spotifyHandler.isConnected() == true) {
                     spotifyHandler.stopPlayer()
                     spotifyHandler.disconnect()
+
+                    if (dataStoreRepository.liveUserSleepActivityFlow.first().userSleepTime < 13) {
+                        val time = """  ${LocalDateTime.now().hour}:${LocalDateTime.now().minute} """.trimIndent()
+
+                        val pref: SharedPreferences = applicationContext.getSharedPreferences("SpotifyStopTime", 0)
+                        val ed = pref.edit()
+                        ed.putString("time", time)
+                        ed.apply()
+                    }
+
+
                 } else {
                     try {
                         spotifyHandler.connect(applicationContext)
                         spotifyHandler.stopPlayer()
                         spotifyHandler.disconnect()
+
+                        if (dataStoreRepository.liveUserSleepActivityFlow.first().userSleepTime < 13) {
+                            val time = """  ${LocalDateTime.now().hour}:${LocalDateTime.now().minute} """.trimIndent()
+
+                            val pref: SharedPreferences = applicationContext.getSharedPreferences("SpotifyStopTime", 0)
+                            val ed = pref.edit()
+                            ed.putString("time", time)
+                            ed.apply()
+                        }
+
                     } catch (error: Throwable) {
 
+                        val pref: SharedPreferences = applicationContext.getSharedPreferences("SpotifyStopTime", 0)
+                        val ed = pref.edit()
+                        ed.putString("time", error.toString())
+                        ed.apply()
                     }
                 }
             }
+
+            //endregion
 
             // Check if foreground is active
             if (dataStoreRepository.backgroundServiceFlow.first().isForegroundActive) {

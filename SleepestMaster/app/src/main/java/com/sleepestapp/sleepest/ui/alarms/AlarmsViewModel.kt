@@ -124,6 +124,7 @@ class AlarmsViewModel(
     val isSpotifyEnabled = MutableLiveData(View.VISIBLE)
     val isSpotifyConnected = MutableLiveData(false)
     val isSpotifyPlaying = MutableLiveData(false)
+    val isSpotifyPlayerVisible = MutableLiveData(false)
     /**
      * Expands the alarm settings of the alarms view
      */
@@ -170,8 +171,10 @@ class AlarmsViewModel(
 
             if(spotifyFlow.spotifyEnabled) {
                 isSpotifyEnabled.value = View.VISIBLE
+                isSpotifyPlayerVisible.value = true
             } else {
                 isSpotifyEnabled.value = View.GONE
+                isSpotifyPlayerVisible.value = false
             }
         }
     }

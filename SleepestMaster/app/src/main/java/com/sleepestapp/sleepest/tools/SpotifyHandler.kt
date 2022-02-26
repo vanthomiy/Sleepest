@@ -45,9 +45,31 @@ class SpotifyHandler() {
         return SpotifyClient.spotifyAppRemote?.isConnected
     }
 
-    fun isPlaying() : Boolean? {
-        return SpotifyClient.spotifyAppRemote?.playerApi?.playerState?.isCanceled
-    }
+    /*fun isPlaying() : Boolean {
+        SpotifyClient.spotifyAppRemote?.let {
+            it.playerApi
+                .playerState
+                .setResultCallback { playerState ->
+                    if (playerState.isPaused) {
+
+                        it.playerApi
+                            .resume()
+                            .setResultCallback { logMessage(getString(R.string.command_feedback, "play")) }
+                            .setErrorCallback(errorCallback)
+
+
+                    } else {
+                        it.playerApi
+                            .pause()
+                            .setResultCallback { logMessage(getString(R.string.command_feedback, "pause")) }
+                            .setErrorCallback(errorCallback)
+                    }
+                }
+            return true
+        } ?: run {
+            return false
+        }
+    }*/
 
     fun stopPlayer() {
         SpotifyClient.spotifyAppRemote?.playerApi?.pause()

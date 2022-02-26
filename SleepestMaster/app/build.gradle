@@ -257,9 +257,6 @@ dependencies {
 
     //Spotify remote API
     implementation files('libs/spotify-app-remote-release-0.7.2.aar')
-
-    //Sliding up Panel library
-    implementation 'com.github.hannesa2:AndroidSlidingUpPanel:3.5.0'
 }
 
 repositories {
