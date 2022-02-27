@@ -19,6 +19,4 @@
     <dimen name="img_header_size">25dp</dimen>
     <dimen name="img_header_margin">40dp</dimen>
 
-    <dimen name="margin_with_player">78dp</dimen>
-    <dimen name="margin_without_player">10dp</dimen>
 </resources>

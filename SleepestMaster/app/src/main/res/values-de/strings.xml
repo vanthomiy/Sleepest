@@ -101,6 +101,8 @@
     <string name="alarms_ringtone_header">Wähle einen Ton</string>
     <string name="alarms_ringtone_information">Erhöhe die Lautstärke um den Ton zu hören</string>
 
+    <string name="alarms_spotify_default_status">No status available</string>
+
     <!--endregion-->
 
     <!--region Sleep Fragment texts -->

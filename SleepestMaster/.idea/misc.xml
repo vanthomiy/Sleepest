@@ -10,10 +10,13 @@
         <entry key="..\:/GitHub/Sleepest/SleepestMaster/app/src/main/res/drawable/ic_baseline_expand_more_24.xml" value="0.1" />
         <entry key="..\:/GitHub/Sleepest/SleepestMaster/app/src/main/res/drawable/ic_baseline_pause_24.xml" value="0.1" />
         <entry key="..\:/GitHub/Sleepest/SleepestMaster/app/src/main/res/drawable/ic_baseline_play_arrow_24.xml" value="0.1" />
+        <entry key="..\:/GitHub/Sleepest/SleepestMaster/app/src/main/res/drawable/ic_baseline_skip_next_24.xml" value="0.1" />
+        <entry key="..\:/GitHub/Sleepest/SleepestMaster/app/src/main/res/drawable/ic_baseline_skip_previous_24.xml" value="0.1" />
         <entry key="..\:/GitHub/Sleepest/SleepestMaster/app/src/main/res/drawable/ic_settings_black_24dp.xml" value="0.1" />
+        <entry key="..\:/GitHub/Sleepest/SleepestMaster/app/src/main/res/drawable/ic_settings_fill_black_24dp.xml" value="0.1" />
         <entry key="..\:/GitHub/Sleepest/SleepestMaster/app/src/main/res/drawable/info_help.xml" value="0.20945945945945946" />
         <entry key="..\:/GitHub/Sleepest/SleepestMaster/app/src/main/res/layout/alarm_entity.xml" value="0.25" />
-        <entry key="..\:/GitHub/Sleepest/SleepestMaster/app/src/main/res/layout/fragment_alarms.xml" value="0.14166666666666666" />
+        <entry key="..\:/GitHub/Sleepest/SleepestMaster/app/src/main/res/layout/fragment_alarms.xml" value="0.25" />
         <entry key="..\:/GitHub/Sleepest/SleepestMaster/app/src/main/res/layout/fragment_dont_kill_my_app.xml" value="0.25416666666666665" />
         <entry key="..\:/GitHub/Sleepest/SleepestMaster/app/src/main/res/layout/fragment_history_day.xml" value="0.33" />
         <entry key="..\:/GitHub/Sleepest/SleepestMaster/app/src/main/res/layout/fragment_history_month.xml" value="0.18243243243243243" />

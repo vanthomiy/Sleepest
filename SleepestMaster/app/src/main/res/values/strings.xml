@@ -96,6 +96,8 @@
     <string name="alarms_type_selection_only_vibration">Only vibration</string>
     <string name="alarms_type_selection_default">Default</string>
 
+    <string name="alarms_spotify_default_status">No status available</string>
+
     <!--endregion-->
 
     <!--region Sleep Fragment texts -->

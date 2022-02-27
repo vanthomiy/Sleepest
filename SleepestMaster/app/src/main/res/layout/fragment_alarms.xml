@@ -267,58 +267,81 @@
                 android:textStyle="normal" />
         </LinearLayout>
 
-        <FrameLayout
-            android:layout_width="55dp"
-            android:layout_height="55dp"
-            android:layout_gravity="bottom|center"
-            android:background="@drawable/roundedbutton"
-            app:layoutMarginBottom="@{alarmsViewModel.isSpotifyPlayerVisible ? @dimen/margin_with_player : @dimen/margin_without_player}"
-            android:backgroundTint="@color/accent_text_color">
-            <ImageView
-                android:id="@+id/btn_addAlarmEntity"
-                android:layout_width="match_parent"
-                app:tint="@color/primary_text_color"
-                tools:ignore="ContentDescription"
-                android:layout_height="match_parent"
-                android:src="@drawable/add_anim"/>
-        </FrameLayout>
 
-        <FrameLayout
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="68dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom|center"
-            android:background="@color/sleep_indicator_perfect"
-            android:orientation="horizontal"
-            android:visibility="@{alarmsViewModel.isSpotifyEnabled()}">
+            android:orientation="vertical">
 
-            <ImageButton
-                android:id="@+id/btnPreviousSong"
-                android:onClick="@{alarmsViewModel::onPlayClicked}"
-                android:src="@drawable/ic_baseline_skip_previous_24"
-                android:backgroundTint="@color/transparent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"/>
+            <FrameLayout
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:background="@drawable/roundedbutton"
+                android:layout_marginBottom="10dp"
+                android:backgroundTint="@color/accent_text_color"
+                android:layout_gravity="center">
+                <ImageView
+                    android:id="@+id/btn_addAlarmEntity"
+                    android:layout_width="match_parent"
+                    app:tint="@color/primary_text_color"
+                    tools:ignore="ContentDescription"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/add_anim"/>
+            </FrameLayout>
 
-            <ImageButton
-                android:id="@+id/btnPlayOrPauseSong"
-                android:onClick="@{alarmsViewModel::onPlayClicked}"
-                android:src="@{alarmsViewModel.isSpotifyPlaying ? @drawable/ic_baseline_pause_24 : @drawable/ic_baseline_play_arrow_24}"
-                android:backgroundTint="@color/transparent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="68dp"
+                android:background="@color/sleep_indicator_perfect"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:visibility="@{alarmsViewModel.isSpotifyEnabled()}">
 
-            <ImageButton
-                android:id="@+id/btnNextSong"
-                android:onClick="@{alarmsViewModel::onPlayClicked}"
-                android:src="@drawable/ic_baseline_skip_next_24"
-                android:backgroundTint="@color/transparent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-        </FrameLayout>
+                    <ImageButton
+                        android:id="@+id/btnPreviousSong"
+                        android:src="@drawable/ic_baseline_skip_previous_24"
+                        android:backgroundTint="@color/transparent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"/>
+
+                    <ImageButton
+                        android:id="@+id/btnPlayOrPauseSong"
+                        android:src="@{alarmsViewModel.isSpotifyPlaying ? @drawable/ic_baseline_pause_24 : @drawable/ic_baseline_play_arrow_24}"
+                        android:backgroundTint="@color/transparent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <ImageButton
+                        android:id="@+id/btnNextSong"
+                        android:src="@drawable/ic_baseline_skip_next_24"
+                        android:backgroundTint="@color/transparent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"/>
+                </LinearLayout>
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/tvSpotifyStatus"
+                    android:layout_gravity="bottom|center"
+                    android:ellipsize="marquee"
+                    android:text="@{alarmsViewModel.spotifyStatus}"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
 
 
     </FrameLayout>

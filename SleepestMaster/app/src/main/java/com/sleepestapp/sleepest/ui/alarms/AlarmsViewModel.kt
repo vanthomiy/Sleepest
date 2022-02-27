@@ -1,9 +1,15 @@
 package com.sleepestapp.sleepest.ui.alarms
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.res.Resources
 import android.view.View
 import android.widget.AdapterView
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.*
+import com.google.rpc.context.AttributeContext
+import com.sleepestapp.sleepest.R
 import com.sleepestapp.sleepest.storage.DataStoreRepository
 import com.sleepestapp.sleepest.storage.DatabaseRepository
 import com.sleepestapp.sleepest.storage.db.AlarmEntity
@@ -124,29 +130,14 @@ class AlarmsViewModel(
     val isSpotifyEnabled = MutableLiveData(View.VISIBLE)
     val isSpotifyConnected = MutableLiveData(false)
     val isSpotifyPlaying = MutableLiveData(false)
-    val isSpotifyPlayerVisible = MutableLiveData(false)
-    /**
-     * Expands the alarm settings of the alarms view
-     */
-    @Suppress("UNUSED_PARAMETER")
-    fun onPlayClicked(view: View) {
-
-        viewModelScope.launch {
-
-            isSpotifyPlaying.value?.let { isSpotifyPlaying.value = !it }
-            isSpotifyPlaying.value?.let { dataStoreRepository.updateSpotifyPlaying(it) }
-
-        }
-
-    }
+    val spotifyStatus = MutableLiveData("Status")
 
     /**
-     * Observable live data of the sleep parameter flow
+     * Observable live data of the spotify flow
      */
     val spotifyLiveData by lazy {
         dataStoreRepository.spotifyStatusFlow.asLiveData()
     }
-
 
     //endregion
 
@@ -171,10 +162,8 @@ class AlarmsViewModel(
 
             if(spotifyFlow.spotifyEnabled) {
                 isSpotifyEnabled.value = View.VISIBLE
-                isSpotifyPlayerVisible.value = true
             } else {
                 isSpotifyEnabled.value = View.GONE
-                isSpotifyPlayerVisible.value = false
             }
         }
     }

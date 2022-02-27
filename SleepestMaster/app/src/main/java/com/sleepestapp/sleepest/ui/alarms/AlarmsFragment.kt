@@ -1,7 +1,10 @@
 package com.sleepestapp.sleepest.ui.alarms
 
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.media.AudioManager
 import android.media.RingtoneManager
 import android.net.Uri
@@ -17,6 +20,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.sleepestapp.sleepest.MainActivity
 import com.sleepestapp.sleepest.MainApplication
 import com.sleepestapp.sleepest.R
@@ -26,6 +30,7 @@ import com.sleepestapp.sleepest.storage.db.AlarmEntity
 import com.sleepestapp.sleepest.util.IconAnimatorUtil
 import com.sleepestapp.sleepest.util.PermissionsUtil
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog
+import com.sleepestapp.sleepest.model.data.Constants
 import com.sleepestapp.sleepest.tools.SpotifyHandler
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil
 import com.sleepestapp.sleepest.util.SleepTimeValidationUtil.getActiveAlarms
@@ -287,7 +292,6 @@ class AlarmsFragment : Fragment() {
 
                 if (viewModel.dataStoreRepository.getSpotifyEnabled()) {
                     viewModel.isSpotifyEnabled.value = View.VISIBLE
-                    viewModel.isSpotifyPlayerVisible.value = true
 
                     if (!viewModel.dataStoreRepository.getSpotifyConnected() || (spotifyHandler.isConnected() == false)) {
 
@@ -300,7 +304,6 @@ class AlarmsFragment : Fragment() {
                     }
                 } else {
                     viewModel.isSpotifyEnabled.value = View.GONE
-                    viewModel.isSpotifyPlayerVisible.value = false
                     spotifyHandler.disconnect()
                     viewModel.dataStoreRepository.updateSpotifyConnected(false)
                 }
@@ -369,6 +372,19 @@ class AlarmsFragment : Fragment() {
             }
         }
 
+        binding.tvSpotifyStatus.setSingleLine()
+        binding.tvSpotifyStatus.isSelected = true
+        binding.btnPlayOrPauseSong.setOnClickListener {
+            onPlayClicked()
+        }
+        binding.btnNextSong.setOnClickListener {
+            onSkipNextClicked()
+        }
+
+        binding.btnPreviousSong.setOnClickListener {
+            onSkipPreviousClicked()
+        }
+
         // setup the alarms
         setupAlarms()
 
@@ -391,7 +407,42 @@ class AlarmsFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
 
+        lifecycleScope.launch {
+            spotifyHandler.connect(actualContext)
+        }
+
+        //spotifyHandler.subscribeToPlayerState(actualContext)
+        LocalBroadcastManager.getInstance(actualContext).registerReceiver(playerStateReceiver, IntentFilter(Constants.SPOTIFY_BROADCAST_RECEIVER_INTENT))
+
+    }
+
+    override fun onPause() {
+        super.onPause()
+        spotifyHandler.disconnect()
+        LocalBroadcastManager.getInstance(actualContext).unregisterReceiver(playerStateReceiver)
+    }
+
+    private fun onPlayClicked() {
+         spotifyHandler.onPlayClicked()
+    }
+
+    private fun onSkipNextClicked() {
+        spotifyHandler.onSkipNextButtonClicked()
+    }
+
+    private fun onSkipPreviousClicked() {
+        spotifyHandler.onSkipPreviousButtonClicked()
+    }
+
+    private val playerStateReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val state = intent?.getBooleanExtra("PlayPauseStatus", false)
+            viewModel.isSpotifyPlaying.value = state
+        }
+    }
 
     companion object {
         // For Singleton instantiation

@@ -20,5 +20,6 @@ public class Constants {
     public static final int LOCKSCREEN_COLOR_ANIMATION_DURATION = 2000;
     public static final int FOREGROUND_SERVICE_NOTIFICATION_DELAY_SLEEP_TIME = 20;
     public static final int DELAY_USER_ALREADY_AWAKE = 60;
+    public static final String SPOTIFY_BROADCAST_RECEIVER_INTENT = "SpotifyStatus";
 
 }
